@@ -14,25 +14,35 @@
 
 ## 2. Xác thực và hồ sơ người dùng
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| POST | `/api/auth/register` | Đăng ký tài khoản mới. |
-| POST | `/api/auth/login` | Xác thực người dùng và đăng nhập. |
-| POST | `/api/auth/logout` | Đăng xuất người dùng hiện tại. |
-| GET | `/api/me` | Lấy thông tin hồ sơ của người dùng đã xác thực. |
-| PATCH | `/api/me` | Cập nhật thông tin hồ sơ. |
-| GET | `/api/me/skills` | Lấy danh sách kỹ năng được ghi nhận trong hồ sơ người dùng. |
-| PATCH | `/api/me/skills` | Thêm, cập nhật hoặc xóa kỹ năng trong hồ sơ người dùng. |
-| GET | `/api/me/courses` | Lấy danh sách khóa học người dùng đang theo dõi, mặc định loại trừ các khóa học đã từ bỏ. |
-| GET | `/api/me/courses?status=ongoing` | Lấy danh sách khóa học người dùng đã tham gia và đang theo dõi. |
-| GET | `/api/me/courses?status=bookmarked` | Lấy danh sách khóa học đã lưu để học sau. |
-| GET | `/api/me/courses?status=completed` | Lấy danh sách khóa học được đánh dấu đã hoàn thành. |
+> Cập nhật theo sheet "Endpoint (bản mới)" của `docs/EduMentor_Checklist_Da_Sua_API.xlsx`. Contract chi tiết (request, response, lỗi, quy tắc): `docs/modules/auth-profile.md`.
+
+| Method | Endpoint | Mô tả | Quyền |
+|---|---|---|---|
+| POST | `/api/auth/register` | Đăng ký tài khoản mới. `role` luôn là `student`, không nhận từ client. *(T09)* | Công khai |
+| POST | `/api/auth/login` | Xác thực và trả access token kèm thông tin người dùng (gồm `role`). | Công khai |
+| POST | `/api/auth/logout` | Đăng xuất. JWT không lưu trạng thái: client xóa token, server trả 200. *(D08)* | Người dùng |
+| POST | `/api/auth/forgot-password` | Yêu cầu đặt lại mật khẩu qua email; luôn trả cùng một thông báo. *(T01)* | Công khai |
+| POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng mã trong email (dùng một lần, có hạn). *(T02)* | Công khai |
+| GET | `/api/me` | Lấy hồ sơ của người dùng đã xác thực. | Người dùng |
+| PATCH | `/api/me` | Cập nhật hồ sơ: chỉ `full_name`, `avatar_url` (không có `email`, `role`). *(T04, D06, T09)* | Người dùng |
+| POST | `/api/me/avatar` | Tải ảnh đại diện lên (tùy chọn, giai đoạn 2). *(T04, D07)* | Người dùng |
+| POST | `/api/me/change-password` | Đổi mật khẩu khi đã đăng nhập. *(T03)* | Người dùng |
+| GET | `/api/me/summary` | Số liệu tổng hợp cho trang Profile. *(T05)* | Người dùng |
+| GET | `/api/me/skills` | Kỹ năng trong hồ sơ; lọc `?status=known\|learning`. *(T07)* | Người dùng |
+| PATCH | `/api/me/skills` | Thêm/sửa/xóa kỹ năng (`add`, `update`, `remove`) trong một transaction. *(T06)* | Người dùng |
+| GET | `/api/me/courses` | Khóa học đang theo dõi, mặc định loại trừ `abandoned`. | Người dùng |
+| GET | `/api/me/courses?status=ongoing` | Khóa học đã tham gia và đang theo dõi. | Người dùng |
+| GET | `/api/me/courses?status=bookmarked` | Khóa học đã lưu để học sau. | Người dùng |
+| GET | `/api/me/courses?status=completed` | Khóa học đã hoàn thành. | Người dùng |
+| GET | `/api/me/courses?status=abandoned` | Khóa học đã bỏ (xem lịch sử). *(T08)* | Người dùng |
+
+> `/api/me/courses*` thuộc module theo dõi khóa học (`routers/me_courses.py`, `course_tracking_service`), không thuộc module Xác thực & Hồ sơ.
 
 ### Quy tắc cập nhật kỹ năng người dùng
 
-Sau khi người dùng hoàn thành bài kiểm tra ôn tập gắn với một khóa học, hệ thống cập nhật hồ sơ người dùng bằng các kỹ năng liên quan đến khóa học đó.
-
-Frontend có thể sử dụng `PATCH /api/me/skills` để cập nhật hồ sơ kỹ năng thủ công. Tuy nhiên, trong quy trình ôn tập, backend nên tự động cập nhật hồ sơ thông qua logic nghiệp vụ, thay vì yêu cầu frontend gửi thêm một request riêng.
+- Khi người dùng **làm đạt** bài ôn tập của một khóa học, backend tự thêm hoặc cập nhật `known` cho mọi kỹ năng của khóa đó (qua `CourseSkillRelation`), trong cùng transaction nộp bài. Frontend **không** gửi request cập nhật kỹ năng riêng. *(T13)*
+- Khi người dùng bấm tham gia khóa học (`POST /api/courses/{course_id}/join`), backend thêm các kỹ năng của khóa ở trạng thái `learning`; kỹ năng đã `known` giữ nguyên. *(D05)*
+- Frontend có thể dùng `PATCH /api/me/skills` để cập nhật thủ công. *(T06)*
 
 ---
 
@@ -80,7 +90,7 @@ EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 2. Tham gia khóa học sẽ ghi nhận trạng thái `ongoing` và trả về URL khóa học bên ngoài. Thao tác này không đăng ký khóa học thay người dùng trên nền tảng bên ngoài.
 3. Xóa bookmark sẽ xóa bản ghi bookmark. Thao tác này không tự động chuyển khóa học sang `abandoned`, trừ khi đã có bản ghi theo dõi khóa học và người dùng chủ động từ bỏ khóa học.
 4. Các khóa học ở trạng thái `abandoned` bị loại khỏi danh sách mặc định, nhưng có thể được xem thông qua bộ lọc lịch sử nếu cần.
-5. Hoàn thành bài kiểm tra ôn tập sẽ đánh dấu khóa học là `completed` và kích hoạt cập nhật các kỹ năng liên quan trong hồ sơ người dùng.
+5. Làm **đạt** bài ôn tập của khóa học (≥ `REVIEW_PASS_PERCENT`, xem §10) sẽ đánh dấu khóa học là `completed` và cập nhật các kỹ năng liên quan trong hồ sơ người dùng. *(T13, D02)*
 6. Không đánh dấu khóa học là hoàn thành chỉ vì người dùng đã mở URL bên ngoài.
 
 ---
@@ -205,32 +215,40 @@ Chức năng tạo lộ trình và chức năng gia sư có thể cùng sử d�
 
 ## 10. Hệ thống ôn tập và đánh giá kiến thức
 
-Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ liệu và ghi nhận các lần làm bài của người dùng. Mỗi bài kiểm tra ôn tập theo kỹ năng gồm 20 câu hỏi trắc nghiệm.
+Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ liệu và ghi nhận các lần làm bài của người dùng. Bài ôn tập tính **theo khóa học** *(D01 = A, T11)*: mỗi bài gồm **20 câu trắc nghiệm** lấy từ các kỹ năng mà khóa học đó dạy.
 
-### API ôn tập theo kỹ năng
+> Cập nhật theo sheet "Endpoint (bản mới)" của `docs/EduMentor_Checklist_Da_Sua_API.xlsx`. Contract chi tiết: `docs/modules/review-assessment.md`.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/skills/{skill_id}/review` | Kiểm tra xem kỹ năng có bài ôn tập khả dụng hay không. |
-| POST | `/api/skills/{skill_id}/review-attempts` | Bắt đầu một lần ôn tập cho kỹ năng đã chọn. |
-| GET | `/api/review-attempts/{attempt_id}` | Lấy trạng thái và câu hỏi của lần ôn tập khi phù hợp. |
-| POST | `/api/review-attempts/{attempt_id}/submit` | Gửi câu trả lời, tính điểm và hoàn tất lần ôn tập. |
-| GET | `/api/me/review-history` | Lấy lịch sử ôn tập của người dùng. |
-| GET | `/api/me/review-history/{attempt_id}` | Lấy chi tiết một kết quả ôn tập. |
-| GET | `/api/me/skills` | Lấy các kỹ năng được ghi nhận trong hồ sơ người dùng và trạng thái của chúng. |
-| PATCH | `/api/me/skills` | Cập nhật thủ công các bản ghi kỹ năng của người dùng khi được phép. |
+### API ôn tập theo khóa học
+
+| Method | Endpoint | Mô tả | Quyền |
+|---|---|---|---|
+| GET | `/api/courses/{course_id}/review` | Kiểm tra khóa học có bài ôn tập khả dụng không (`available` và lý do nếu không). | Người dùng |
+| POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu một lần ôn tập: tạo lần làm bài và 20 câu (không kèm đáp án đúng). | Người dùng |
+| GET | `/api/review-attempts/{attempt_id}` | Lấy trạng thái và câu hỏi của lần ôn tập. Không phải chủ sở hữu → 404. | Người dùng |
+| POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài, chấm điểm, cập nhật hồ sơ trong một transaction; trả kết quả ngay rồi gửi email kết quả chạy nền. *(T13, T29)* | Người dùng |
+| GET | `/api/me/review-history` | Lịch sử ôn tập; lọc `?course_id=`, `?passed=true\|false`; phân trang. *(T17)* | Người dùng |
+| GET | `/api/me/review-history/{attempt_id}` | Chi tiết một lần: từng câu, đáp án đã chọn, đáp án đúng, giải thích (chỉ sau khi nộp). | Người dùng |
+
+Các endpoint cũ **đã bỏ** *(T11)*:
+- `GET /api/skills/{skill_id}/review` → thay bằng `GET /api/courses/{course_id}/review`.
+- `POST /api/skills/{skill_id}/review-attempts` → thay bằng `POST /api/courses/{course_id}/review-attempts`.
+
+`GET/PATCH /api/me/skills`: xem §2. *(Đề xuất T12 xóa hai dòng lặp này khỏi §10 chưa được nhóm tick — xem `docs/decisions.md`, ND-30.)*
 
 ### Quy trình ôn tập
 
-1. Truy xuất 20 câu hỏi phù hợp với các kỹ năng liên quan đến khóa học.
-2. Trả về nội dung câu hỏi và các lựa chọn, không để lộ đáp án đúng trước khi người dùng nộp bài.
-3. Chấm các câu trả lời đã gửi và tính kết quả.
-4. Lưu lần làm bài, điểm số và trạng thái hoàn thành.
-5. Đánh dấu khóa học là `completed` sau khi bài ôn tập được hoàn tất, theo chính sách hoàn thành đã thống nhất.
-6. Cập nhật các kỹ năng được ghi nhận của người dùng dựa trên mối quan hệ giữa khóa học và kỹ năng.
-7. Cung cấp kết quả thông qua lịch sử ôn tập.
+1. Kiểm tra khóa học có bài ôn tập: tổng số câu `is_active` của các kỹ năng khóa dạy ≥ 20. *(D04)*
+2. Bắt đầu: người dùng phải đang theo dõi khóa ở `ongoing` hoặc `completed` (ôn lại). Mỗi khóa tối đa một bài đang dở; bắt đầu lại thì trả bài dở đó. *(D03, D10)*
+3. Server chọn 20 câu (chia đều giữa các kỹ năng, ngẫu nhiên) và lưu sẵn danh sách câu của lần làm bài. *(T14)*
+4. Trả nội dung câu hỏi và các lựa chọn, **không** để lộ đáp án đúng hay giải thích trước khi nộp. *(T15)*
+5. Chấm đúng 20 câu đã lưu; câu bỏ trống tính là sai. *(T16)*
+6. Lưu điểm phần trăm và kết quả đạt (`≥ REVIEW_PASS_PERCENT`, nhóm chốt 60%). *(D02)*
+7. Nếu đạt: đánh dấu khóa học `completed` (ôn lại không đổi trạng thái) và cập nhật kỹ năng `known` cho mọi kỹ năng của khóa — cùng một transaction với bước 5–6. *(T13)*
+8. Sau khi lưu thành công: trả kết quả ngay, rồi gửi email kết quả chạy nền (lỗi gửi không ảnh hưởng kết quả). *(T29)*
+9. Cung cấp kết quả qua lịch sử ôn tập.
 
-API ôn tập cần xác định liệu người dùng có được làm lại nhiều lần hay không và có yêu cầu điểm tối thiểu cho việc công nhận kỹ năng hay không.
+Chính sách: làm lại **không giới hạn** *(D03)*; điểm đạt **60%** *(D02)*.
 
 ---
 
@@ -254,6 +272,12 @@ API ôn tập cần xác định liệu người dùng có được làm lại n
 | POST | `/api/admin/skill-relations` | Tạo quan hệ `prerequisite`, `extension` hoặc `related` giữa các kỹ năng. |
 | PATCH | `/api/admin/skill-relations/{from_skill_id}/{to_skill_id}` | Cập nhật quan hệ giữa hai kỹ năng. |
 | DELETE | `/api/admin/skill-relations/{from_skill_id}/{to_skill_id}` | Xóa quan hệ giữa hai kỹ năng. |
+| GET | `/api/admin/questions` | Danh sách câu hỏi ôn tập (lọc `?skill_id=`, phân trang), kèm số câu đang hoạt động theo kỹ năng. *(T19)* |
+| POST | `/api/admin/questions` | Thêm câu hỏi: `skill_id`, `content`, `options` (đúng 4 đáp án), `correct_index` (0–3), `explanation`. *(T19)* |
+| GET | `/api/admin/questions/{question_id}` | Chi tiết câu hỏi (có đáp án đúng). *(T19)* |
+| PATCH | `/api/admin/questions/{question_id}` | Sửa câu hỏi. *(T19)* |
+| DELETE | `/api/admin/questions/{question_id}` | Chưa từng dùng trong bài làm → xóa thật; đã dùng → `is_active = false`. Response nêu rõ đã xóa hay vô hiệu hóa. *(T20)* |
+| POST | `/api/admin/questions/import` | (Tùy chọn) Nhập hàng loạt từ CSV/JSON, trả báo cáo theo dòng. *(T21)* |
 
 Các endpoint quản trị chỉ được phép sử dụng bởi quản trị viên đã được cấp quyền.
 

@@ -11,6 +11,7 @@ Tài liệu này mô tả cấu trúc thư mục của dự án và cách mỗi 
 ```
 edumentor-ai/
 ├── README.md
+├── CLAUDE.md                       # Chỉ thị cấp project cho Claude Code
 ├── CONVENTIONS.md
 ├── SETUP.md
 ├── STRUCTURE.md
@@ -18,9 +19,23 @@ edumentor-ai/
 ├── .env.example
 ├── .gitignore
 │
+├── .claude/
+│   └── skills/
+│       ├── auth-profile/SKILL.md       # Điểm vào module Xác thực & Hồ sơ
+│       └── review-assessment/SKILL.md  # Điểm vào module Ôn tập & Đánh giá
+│
 ├── docs/
 │   ├── api-endpoints.md            # Đặc tả endpoint (bảng nhóm đã thống nhất)
-│   ├── database-design.md          # ERD, mô tả bảng, khóa chính tổng hợp
+│   ├── database-design.md          # Thiết kế CSDL chính thức (21 bảng, FK, ràng buộc)
+│   ├── decisions.md                # Quyết định đã chốt, mâu thuẫn, [NEEDS DECISION]
+│   ├── backend-rules.md            # Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình)
+│   ├── modules/
+│   │   ├── auth-profile.md               # Đặc tả + API contract Xác thực & Hồ sơ
+│   │   ├── auth-profile.tests.md         # Kịch bản kiểm thử
+│   │   ├── review-assessment.md          # Đặc tả + API contract Ôn tập & Đánh giá
+│   │   └── review-assessment.tests.md    # Kịch bản kiểm thử
+│   ├── EduMentor_Database_Design_Da_Sua.docx   # Nguồn gốc thiết kế CSDL đã sửa
+│   ├── EduMentor_Checklist_Da_Sua_API.xlsx     # Nguồn gốc checklist API, quyết định D01–D11
 │   └── wireframes/                 # Ảnh/PDF wireframe giao diện
 │
 ├── backend/
@@ -38,11 +53,12 @@ edumentor-ai/
 │   │   │   ├── security.py         # Hash mật khẩu, tạo/kiểm tra token
 │   │   │   ├── dependencies.py     # get_current_user, require_admin, get_db
 │   │   │   ├── errors.py           # Exception chung + handler lỗi thống nhất
-│   │   │   └── pagination.py       # Tham số và response phân trang
+│   │   │   ├── pagination.py       # Tham số và response phân trang
+│   │   │   └── email.py            # send_email dùng chung: quên mật khẩu, email kết quả ôn tập
 │   │   │
 │   │   ├── routers/                # Lớp HTTP: nhận request, gọi service
-│   │   │   ├── auth.py                     # §2  /api/auth/*
-│   │   │   ├── me.py                       # §2  /api/me, /api/me/skills
+│   │   │   ├── auth.py                     # §2  /api/auth/* (register, login, logout, forgot-password, reset-password)
+│   │   │   ├── me.py                       # §2  /api/me, /api/me/avatar, /api/me/change-password, /api/me/summary, /api/me/skills
 │   │   │   ├── me_courses.py               # §2,4 /api/me/courses*, /api/me/bookmarks*
 │   │   │   ├── courses.py                  # §3  /api/courses*
 │   │   │   ├── course_tracking.py          # §4  /api/courses/{id}/join
@@ -52,10 +68,11 @@ edumentor-ai/
 │   │   │   ├── node_course_suggestions.py  # §8  .../nodes/{skill_id}/courses
 │   │   │   ├── chat_consultant.py          # §5  /api/chat/learning-path
 │   │   │   ├── chat_tutor.py               # §9  /api/chat/sessions*
-│   │   │   ├── reviews.py                  # §10 /api/skills/{id}/review*, /api/review-attempts*, /api/me/review-history*
+│   │   │   ├── reviews.py                  # §10 /api/courses/{course_id}/review*, /api/review-attempts*, /api/me/review-history*
 │   │   │   └── admin/
 │   │   │       ├── courses.py                  # §11
 │   │   │       ├── skills.py                   # §11
+│   │   │       ├── questions.py                # §11 /api/admin/questions* (ngân hàng câu hỏi ôn tập)
 │   │   │       ├── course_skill_relations.py   # §11
 │   │   │       ├── skill_relations.py          # §11
 │   │   │       ├── base_learning_paths.py      # §12 (kèm nodes, edges của mẫu)
@@ -72,15 +89,16 @@ edumentor-ai/
 │   │   │   ├── base_path.py
 │   │   │   └── common.py           # Lỗi, phân trang, enum dùng chung
 │   │   │
-│   │   ├── models/                 # SQLAlchemy ORM
-│   │   │   ├── user.py
+│   │   ├── models/                 # SQLAlchemy ORM — khớp docs/database-design.md
+│   │   │   ├── user.py                     # Bảng users
 │   │   │   ├── user_skill.py
+│   │   │   ├── password_reset_token.py     # Mã đặt lại mật khẩu (lưu bản băm)
 │   │   │   ├── course.py
 │   │   │   ├── skill.py
-│   │   │   ├── course_skill.py             # Liên kết course ↔ skill
+│   │   │   ├── course_skill.py             # Liên kết course ↔ skill (CourseSkillRelation)
 │   │   │   ├── skill_relation.py           # prerequisite / extension / related
-│   │   │   ├── bookmark.py
-│   │   │   ├── user_course.py              # Theo dõi: ongoing/completed/abandoned
+│   │   │   ├── bookmark.py                 # ⚠ CSDL không có bảng Bookmark (StudentCourse dùng cho cả bookmark) — ND-32
+│   │   │   ├── student_course.py           # StudentCourse: bookmarked/ongoing/completed/abandoned (thay user_course.py)
 │   │   │   ├── learning_path.py
 │   │   │   ├── learning_path_node.py       # PK (path_id, skill_id)
 │   │   │   ├── learning_path_edge.py
@@ -88,20 +106,23 @@ edumentor-ai/
 │   │   │   ├── historical_path.py          # Dữ liệu lịch sử cho Collaborative Filtering
 │   │   │   ├── chat_session.py             # Có trường loại phiên (consultant/tutor)
 │   │   │   ├── chat_message.py
-│   │   │   ├── review_question.py
-│   │   │   └── review_attempt.py
+│   │   │   ├── question.py                 # Question: ngân hàng câu hỏi (thay review_question.py)
+│   │   │   ├── review_attempt.py           # Một lần làm bài, gắn StudentCourse
+│   │   │   ├── review_answer.py            # 20 câu của một lần làm bài + câu trả lời
+│   │   │   ├── feedback.py                 # Chưa có endpoint chính thức — ND-35
+│   │   │   └── course_contact.py           # Chưa có endpoint chính thức — ND-35
 │   │   │
 │   │   ├── repositories/           # Truy vấn CSDL, không chứa logic nghiệp vụ
 │   │   │
 │   │   ├── services/               # Logic nghiệp vụ, transaction
-│   │   │   ├── auth_service.py
-│   │   │   ├── user_service.py             # Hồ sơ, cập nhật kỹ năng
+│   │   │   ├── auth_service.py             # Đăng ký, đăng nhập, quên/đặt lại mật khẩu
+│   │   │   ├── user_service.py             # Hồ sơ, đổi mật khẩu, avatar, summary, cập nhật kỹ năng
 │   │   │   ├── course_service.py           # Tìm kiếm, lọc, sắp xếp
 │   │   │   ├── course_tracking_service.py  # Bookmark, join, chuyển trạng thái
 │   │   │   ├── learning_path_service.py    # Lưu/cập nhật/abandon lộ trình
 │   │   │   ├── path_graph_service.py       # Node/edge, xóa node kèm cạnh (transaction)
 │   │   │   ├── recommendation_service.py   # Gợi ý khóa học theo kỹ năng
-│   │   │   ├── review_service.py           # Tạo bài, chấm điểm, completed, cập nhật kỹ năng
+│   │   │   ├── review_service.py           # Bài ôn tập theo khóa học: tạo bài, chấm điểm, completed, cập nhật kỹ năng, email kết quả
 │   │   │   ├── tutor_service.py
 │   │   │   ├── consultant_service.py       # Điều phối quy trình tạo lộ trình (§12)
 │   │   │   ├── base_path_service.py
@@ -150,7 +171,7 @@ edumentor-ai/
         ├── api/                             # 1 file = 1 nhóm endpoint backend
         │   ├── client.js                    # Base URL, gắn token, xử lý lỗi thống nhất
         │   ├── auth.api.js                  # §2  /api/auth/*
-        │   ├── me.api.js                    # §2  /api/me, /api/me/skills
+        │   ├── me.api.js                    # §2  /api/me*, /api/me/skills
         │   ├── courses.api.js               # §3  /api/courses*
         │   ├── courseTracking.api.js        # §4  bookmarks, join, status, /api/me/courses*
         │   ├── learningPaths.api.js         # §5  /api/learning-paths*, /api/me/learning-paths
@@ -164,7 +185,9 @@ edumentor-ai/
         ├── pages/
         │   ├── auth/
         │   │   ├── LoginPage.jsx
-        │   │   └── RegisterPage.jsx
+        │   │   ├── RegisterPage.jsx
+        │   │   ├── ForgotPasswordPage.jsx   # POST /api/auth/forgot-password
+        │   │   └── ResetPasswordPage.jsx    # POST /api/auth/reset-password
         │   ├── profile/
         │   │   └── ProfilePage.jsx          # Trang hồ sơ người dùng
         │   ├── catalog/
@@ -184,6 +207,7 @@ edumentor-ai/
         │       ├── AdminCoursesPage.jsx
         │       ├── AdminSkillsPage.jsx
         │       ├── AdminRelationsPage.jsx       # course-skill + skill-relations
+        │       ├── AdminQuestionsPage.jsx       # /api/admin/questions*
         │       ├── AdminBasePathsPage.jsx       # Mẫu lộ trình cơ sở
         │       └── AdminHistoricalPage.jsx      # Tùy chọn
         │
@@ -192,7 +216,8 @@ edumentor-ai/
         │   ├── common/                      # Button, Modal, Pagination, ErrorMessage
         │   ├── profile/
         │   │   ├── ProfileHeader.jsx            # GET /api/me
-        │   │   ├── ProfileEditForm.jsx          # PATCH /api/me
+        │   │   ├── ProfileEditForm.jsx          # PATCH /api/me (email chỉ đọc)
+        │   │   ├── ChangePasswordForm.jsx       # POST /api/me/change-password
         │   │   ├── SkillList.jsx                # GET/PATCH /api/me/skills
         │   │   ├── CurrentPathCard.jsx          # GET /api/me/learning-paths
         │   │   ├── MyCoursesTabs.jsx            # GET /api/me/courses?status=
@@ -235,8 +260,9 @@ edumentor-ai/
 | §7 | `.../edges*` | `routers/learning_path_edges.py` | `path_graph_service` |
 | §8 | `.../nodes/{skill_id}/courses` | `routers/node_course_suggestions.py` | `recommendation_service` |
 | §9 | `/api/chat/sessions*` | `routers/chat_tutor.py` | `tutor_service` |
-| §10 | review, review-attempts, review-history | `routers/reviews.py` | `review_service` |
+| §10 | `/api/courses/{course_id}/review*`, `/api/review-attempts*`, `/api/me/review-history*` | `routers/reviews.py` | `review_service` |
 | §11 | `/api/admin/courses`, `skills`, `course-skill-relations`, `skill-relations` | `routers/admin/*.py` | `course_service`, `base_path_service`… |
+| §11 | `/api/admin/questions*` | `routers/admin/questions.py` | (chưa đặt tên service trong tài liệu) |
 | §12 | `/api/admin/base-learning-paths*` | `routers/admin/base_learning_paths.py` | `base_path_service` |
 | §13 | `/api/admin/historical-learning-path*` | `routers/admin/historical_paths.py` | `historical_import_service` |
 
@@ -246,15 +272,15 @@ edumentor-ai/
 
 | Trang (route) | File | Endpoint backend sử dụng |
 |---|---|---|
-| `/login`, `/register` | `pages/auth/*` | `POST /api/auth/login`, `/register`, `/logout` |
-| `/profile` | `pages/profile/ProfilePage.jsx` | `GET/PATCH /api/me`, `GET/PATCH /api/me/skills`, `GET /api/me/learning-paths`, `GET /api/me/courses?status=`, `GET /api/me/review-history` |
+| `/login`, `/register`, quên/đặt lại mật khẩu | `pages/auth/*` | `POST /api/auth/login`, `/register`, `/logout`, `/forgot-password`, `/reset-password` |
+| `/profile` | `pages/profile/ProfilePage.jsx` | `GET/PATCH /api/me`, `POST /api/me/change-password`, `POST /api/me/avatar`, `GET /api/me/summary`, `GET/PATCH /api/me/skills`, `GET /api/me/learning-paths`, `GET /api/me/courses?status=`, `GET /api/me/review-history` |
 | `/courses` | `CatalogPage.jsx` | `GET /api/courses` (`search`, `skill_id`, `level`, `sort_by`), `POST /api/me/bookmarks` |
 | `/courses/:courseId` | `CourseDetailPage.jsx` | `GET /api/courses/{id}`, `GET /api/courses/{id}/skills`, `POST /api/courses/{id}/join`, `POST/DELETE /api/me/bookmarks`, `GET/PATCH /api/me/courses/{id}/status` |
 | `/learning-paths/new` | `ConsultantChatPage.jsx` | `POST /api/chat/learning-path`, `POST /api/learning-paths` (lưu khi người dùng xác nhận) |
 | `/learning-paths` | `LearningPathListPage.jsx` | `GET /api/me/learning-paths`, `DELETE /api/learning-paths/{id}` (abandon) |
 | `/learning-paths/:pathId` | `LearningPathDetailPage.jsx` | `GET/PATCH /api/learning-paths/{id}`, nodes `GET/POST/PATCH/DELETE`, edges `GET/POST/PATCH/DELETE`, `GET .../nodes/{skill_id}/courses` |
 | `/tutor` | `TutorPage.jsx` | `POST/GET /api/chat/sessions`, `GET/POST .../messages`, `DELETE /api/chat/sessions/{id}` |
-| `/review/:skillId` | `ReviewAttemptPage.jsx` | `GET /api/skills/{id}/review`, `POST .../review-attempts`, `GET /api/review-attempts/{id}`, `POST .../submit` |
+| `/review/:courseId` | `ReviewAttemptPage.jsx` | `GET /api/courses/{course_id}/review`, `POST /api/courses/{course_id}/review-attempts`, `GET /api/review-attempts/{id}`, `POST .../submit` |
 | `/review/history` | `ReviewHistoryPage.jsx`, `ReviewResultPage.jsx` | `GET /api/me/review-history`, `GET /api/me/review-history/{attempt_id}` |
 | `/admin/*` | `pages/admin/*` | `/api/admin/*` (§11–§13) |
 
@@ -296,15 +322,22 @@ edumentor-ai/
 **Gợi ý khóa học theo node**
 `node_course_suggestions.py` → `recommendation_service` → kiểm tra kỹ năng thuộc lộ trình → `recommender/course_ranking` (độ liên quan kỹ năng là yếu tố hàng đầu; **không** dùng điểm ôn tập).
 
-**Ôn tập và hoàn thành khóa học**
-`reviews.py` → `review_service`: lấy 20 câu (ẩn đáp án) → chấm điểm khi nộp → lưu lần làm → đánh dấu khóa học `completed` → cập nhật `user_skill` trong cùng transaction.
+**Ôn tập và hoàn thành khóa học** (theo khóa học — D01)
+`reviews.py` → `review_service`: bắt đầu → chọn và lưu sẵn 20 câu từ các kỹ năng của khóa (ẩn đáp án) → khi nộp: chấm điểm, lưu lần làm, nếu đạt (≥ `REVIEW_PASS_PERCENT`) thì đánh dấu khóa học `completed` và cập nhật `user_skill` — tất cả trong một transaction → sau commit gửi email kết quả chạy nền qua `core/email.py`. Chi tiết: `docs/modules/review-assessment.md`.
+
+**Quên mật khẩu**
+`auth.py` → `auth_service` → tạo `password_reset_token` (lưu bản băm) → `core/email.py` gửi link → `reset-password` kiểm tra mã và đổi mật khẩu. Chi tiết: `docs/modules/auth-profile.md`.
 
 ---
 
 ## 6. Điểm cần nhóm chốt trước khi code
 
-- Thêm trường `is_required` vào node để xác định lộ trình đã `completed`.
-- Lưu **kỹ năng mục tiêu** riêng, không gộp với `node_role`.
-- Chính sách làm lại bài ôn tập và điểm tối thiểu để công nhận kỹ năng.
-- Chính sách `DELETE /api/chat/sessions/{id}`: xóa hay lưu trữ.
-- Giá trị `relation_type` của cạnh khớp thiết kế bảng.
+Các điểm trước đây được liệt kê ở mục này đã được giải quyết trong `docs/database-design.md`:
+
+- `is_required` của node → `LearningPathNode.is_required`.
+- Kỹ năng mục tiêu lưu riêng → `LearningPathNode.is_target`.
+- Chính sách làm lại bài ôn tập và điểm tối thiểu → D03 (không giới hạn), D02 (60%).
+- `DELETE /api/chat/sessions/{id}` → chuyển `ChatSession.status` sang `archived`.
+- `relation_type` của cạnh → `prerequisite`, `optional`.
+
+Các điểm còn mở (cho 2 module Xác thực & Hồ sơ, Ôn tập & Đánh giá) được theo dõi tập trung tại `docs/decisions.md`.
