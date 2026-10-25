@@ -14,8 +14,8 @@ Các tài liệu khác chỉ tham chiếu mã (`D05`, `T13`, `ND-24`…), không
 Thứ tự ưu tiên khi các nguồn khác nhau, cho 2 module trên:
 
 1. `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (bản đã sửa, D01–D11 đã chốt) — **nguồn nghiệp vụ mới nhất**. Đã được chép vào `docs/database-design.md` và `docs/api-endpoints.md`.
-2. `STRUCTURE.md` — nguồn kiến trúc nền (phân lớp Router → Service → Repository → Model, cây thư mục).
-3. `CONVENTIONS.md`, `SETUP.md`, `README.md`.
+2. `docs/structure.md` (trước đây là `STRUCTURE.md` ở root) — nguồn kiến trúc nền (phân lớp Router → Service → Repository → Model, cây thư mục).
+3. `docs/conventions.md` (trước đây là `CONVENTIONS.md` ở root), `SETUP.md`, `README.md`.
 4. Wireframe trong `docs/wireframes/` — chỉ mô tả giao diện; **không** tạo quy tắc API khi chưa có trong 1–3.
 
 Không tự tạo quy tắc khi tài liệu chưa quy định → ghi `[NEEDS DECISION]` ở mục 4.
@@ -37,10 +37,39 @@ Nguồn: sheet "Quyết định cần chốt" — tất cả đã tick "Đã ch�
 | D05 | `UserSkill.status = learning` đặt khi nào? | **A — khi bấm Tham gia khóa (join)**: thêm kỹ năng của khóa ở `learning` nếu chưa `known` | Auth/Profile (bảng UserSkill) ↔ Course Tracking |
 | D06 | Cho đổi email? | **A — không** (ô email chỉ đọc) | Auth/Profile |
 | D07 | Ảnh đại diện: upload hay URL? | **B — tải file lên server** (`POST /api/me/avatar`); T04 ghi: giai đoạn 1 nhập URL qua `PATCH /api/me`, giai đoạn 2 upload | Auth/Profile |
-| D08 | Đăng xuất hoạt động thế nào? | **A — JWT không lưu trạng thái**: client xóa token, server trả 200; không có bảng thu hồi token | Auth/Profile |
+| D08 | Đăng xuất hoạt động thế nào? | **A — JWT không lưu trạng thái**: client xóa token, server trả 200; không có bảng thu hồi token. **Đã bị D-AUTH-03 thay thế một phần (2026-10-24):** access token vẫn stateless, nhưng logout nay phải thu hồi refresh token lưu trong PostgreSQL | Auth/Profile |
 | D09 | Làm quên mật khẩu trong bản đầu? | **A — có** (T01, T02, T28) | Auth/Profile |
 | D10 | Khóa đã completed có cho ôn lại? | **B — có**: kết quả mới chỉ lưu thêm vào lịch sử, không đổi `completed` | Review |
 | D11 | Danh sách "Loại phản hồi" | A (ghi "không làm") | Ngoài phạm vi |
+
+### Phân công (ownership) — quyết định chính thức
+
+**D-OWN-01** (Tuấn xác nhận, 2026-10-24): **Tuấn phụ trách chính thức hai module Xác thực & Hồ sơ người dùng và Ôn tập & Đánh giá kiến thức.** Quyết định này thay cho mọi thông tin phân công cũ.
+
+| Module | Owner | Trạng thái đặc tả | Implementation | Nguồn |
+|---|---|---|---|---|
+| Xác thực & Hồ sơ (Auth & Profile) | **Tuấn** | SPEC CONFIRMED (một số quyết định bảo mật/nghiệp vụ còn PENDING — §4.1) | NOT IMPLEMENTED | D-OWN-01 |
+| Ôn tập & Đánh giá (Review & Assessment) | **Tuấn** | SPEC CONFIRMED (một số quy tắc BLOCKED/PENDING — §3 T16, §4.2) | NOT IMPLEMENTED | D-OWN-01; sheet Endpoint "Phụ trách = Tuấn" |
+| Course Tracking (`/api/me/courses*`, `/api/me/bookmarks*`, `join`) | Không phải Tuấn | OUT OF SCOPE | — | ND-SCOPE-3 (Giai đoạn 2); sheet Endpoint ghi Hòa cho `/api/me/courses*` |
+| Feedback & liên hệ (T22–T25) | Chưa rõ: sheet Endpoint ghi Khôi, sheet "Danh sách thay đổi" ghi Tâm | PENDING | — | ND-35 |
+| Learning Path (gồm cập nhật trạng thái sau ôn tập — T18) | Người khác (T18 ghi Tâm) | OUT OF SCOPE | — | T18 |
+| Quản trị câu hỏi `/api/admin/questions*` (T19–T21) | **CONFLICT**: sheet Endpoint ghi Tuấn; Tuấn đã loại khỏi phạm vi skill (ND-SCOPE-2) | DO NOT ASSUME | — | CONFLICT-SCOPE-01 |
+
+Quy ước trạng thái: **SPEC CONFIRMED** = phạm vi/quy tắc đã được xác nhận; **IMPLEMENTED** = đã có code chạy; **PENDING** = còn quyết định chưa chốt; **BLOCKED** = bị chặn bởi quyết định khác; **CONFLICT** = các nguồn mâu thuẫn. Không dùng "DONE" cho phần chưa có code.
+
+> **Ghi chú lịch sử (giữ để audit):** sheet "Endpoint (bản mới)" của `EduMentor_Checklist_Da_Sua_API.xlsx` ghi "Phụ trách = Hòa" cho toàn bộ §2, còn sheet "Danh sách thay đổi" ghi T01–T10 "Phụ trách đề xuất = Tuấn". Lần đồng bộ skill Giai đoạn 2.2 đánh dấu điểm này là CONFLICT-OWN-01. **Đã giải quyết bằng D-OWN-01** — cột "Phụ trách" của §2 trong Excel là thông tin cũ (stale), cần nhóm cập nhật trong Excel.
+
+### Quyết định xác thực (D-AUTH-01 … D-AUTH-05)
+
+Tuấn (owner Auth & Profile, D-OWN-01) xác nhận ngày 2026-10-24, thay cho phần tương ứng của ND-01 … ND-05. Chi tiết còn mở được tách thành `ND-40` … `ND-48` (§4.1). Không phần nào ở đây đã được implement.
+
+| Mã | Thay cho | Nội dung đã xác nhận | Còn mở |
+|---|---|---|---|
+| D-AUTH-01 | ND-01 | Xác thực bằng **JWT access token**, ký **HS256** bằng `SECRET_KEY` (biến môi trường; chuỗi ngẫu nhiên đủ mạnh; không commit lên Git). Client gửi qua header `Authorization: Bearer <access_token>`. JWT chứa claim chuẩn `sub` (user_id), `iat`, `exp`. Backend xác minh chữ ký, thời hạn và **chỉ chấp nhận thuật toán HS256**. Người dùng hiện tại và **vai trò được lấy từ database** khi kiểm tra quyền — không chỉ dựa vào claim vai trò trong JWT. Frontend đang định hướng lưu token trong `sessionStorage` (ghi nhận rủi ro ở `docs/modules/auth-profile.md` §8; không thay đổi khi chưa được phê duyệt). | ND-44 (thư viện JWT) |
+| D-AUTH-02 | ND-02 | Access token hết hạn sau **30 phút** (`ACCESS_TOKEN_EXPIRE_MINUTES=30`). Backend từ chối access token hết hạn. Khi access token hết hạn, frontend thử làm mới phiên bằng refresh token; chỉ yêu cầu đăng nhập lại khi làm mới thất bại. | "Ghi nhớ đăng nhập" (wireframe 01) — xem ND-41 |
+| D-AUTH-03 | ND-03 | **V1 CÓ dùng refresh token** (thay quyết định cũ "không dùng"). Làm mới qua `POST /api/auth/refresh`. Backend xác minh refresh token trước khi cấp token mới. **Rotation**: làm mới thành công thì cấp refresh token mới và vô hiệu refresh token cũ. Trạng thái refresh token **lưu trong PostgreSQL** (hết hạn, thu hồi, rotation, đăng xuất), **chỉ lưu bản băm**. Logout: backend thu hồi refresh token tương ứng, frontend xóa token phía client. Refresh token hết hạn / bị thu hồi / không hợp lệ / đã bị xoay vòng → làm mới thất bại, frontend yêu cầu đăng nhập lại. Access token **không** thu hồi được tức thì (vẫn sống tối đa 30 phút). | ND-40, ND-41, ND-42, ND-43, ND-48 |
+| D-AUTH-04 | ND-04 | Băm mật khẩu bằng **Argon2id**; chỉ lưu bản băm trong `User.hashed_password` (VARCHAR 255 — đủ chứa chuỗi băm Argon2id); không lưu mật khẩu thuần; đăng nhập dùng hàm xác minh của thư viện. | ND-45 (thư viện, tham số) |
+| D-AUTH-05 | ND-05 | Chính sách mật khẩu, áp dụng **giống nhau** cho `register`, `reset-password`, `change-password`: (1) tối thiểu **8 ký tự**; (2) tối đa **128 byte** sau khi mã hóa UTF-8; (3) ≥ 1 chữ hoa ASCII `A-Z`; (4) ≥ 1 chữ thường ASCII `a-z`; (5) ≥ 1 chữ số `0-9`; (6) ≥ 1 ký tự đặc biệt; (7) không chứa khoảng trắng. Khi request có `confirm_password`, backend kiểm `password` khớp `confirm_password`; không lưu `confirm_password`; chỉ lưu bản băm. Không ghi mật khẩu, mật khẩu xác nhận hay token gốc vào log. Mã lỗi theo ND-15. | ND-46 (tập ký tự đặc biệt, khoảng trắng, ký tự non-ASCII), ND-47 (endpoint nào nhận `confirm_password`) |
 
 ### Mâu thuẫn đã được giải quyết bằng quyết định trên
 
@@ -52,6 +81,8 @@ Nguồn: sheet "Quyết định cần chốt" — tất cả đã tick "Đã ch�
 | X4 | STRUCTURE không có module email | Thêm `core/email.py` (T29, T01) |
 | X5 | Sheet Endpoint ghi `POST .../review-attempts` → 409 khi "đã completed" | D10 = B thắng: khóa `completed` **được** ôn lại |
 | X6 | T03 ghi sai mật khẩu hiện tại → "400/401"; `.docx` ghi 400 | Theo `.docx`: **400** |
+| X8 | D08: logout stateless, không có bảng token; D-AUTH-03: lưu refresh token trong PostgreSQL, logout thu hồi | D-AUTH-03 (mới hơn, do owner xác nhận) thay phần logout của D08; access token vẫn stateless. Wireframe 02 chỉ ghi "Tối thiểu 8 ký tự" — chính sách đầy đủ theo D-AUTH-05; dòng hướng dẫn trên giao diện cần nhóm frontend cập nhật |
+| X7 (CONFLICT-OWN-01) | Excel sheet Endpoint: §2 thuộc Hòa; sheet "Danh sách thay đổi": T01–T10 đề xuất Tuấn | **RESOLVED** bằng D-OWN-01: Auth & Profile thuộc Tuấn |
 
 ---
 
@@ -76,7 +107,7 @@ Nguồn: sheet "Danh sách thay đổi". ☑ = nhóm đã đồng ý; ☐ = chư
 | T13 | Nộp bài trong một transaction | Review | ☑ (bước 5 "tạm thời chưa quyết định" → ND-24) |
 | T14 | Chọn 20 câu, tạo sẵn 20 ReviewAnswer | Review | ☑ (thuật toán chi tiết → ND-20) |
 | T15 | Không lộ đáp án; chỉ chủ sở hữu xem attempt (404) | Review | ☑ |
-| T16 | Điều kiện bắt đầu và lỗi 409 | Review | **☐** — nhưng nội dung đã được D03, D10 và `.docx` 6.2 xác định; áp dụng theo `.docx` |
+| T16 | Điều kiện bắt đầu và lỗi 409 | Review | **☐ → BLOCKED**. Phần trùng với D03, D10 (một bài dở; được ôn lại khóa completed) đã chốt qua D03, D10. Phần chỉ có nguồn từ T16/`.docx` 6.2 — 409 khi chưa tham gia/thiếu câu (RV-R03), câu bỏ trống = sai (RV-R10), nộp lần hai → 409 (RV-R13) — **chưa được coi là đã chốt** (AUD-01) |
 | T17 | review-history: bộ lọc và phân trang | Review | ☑ |
 | T18 | Cập nhật LearningPath sau khi ôn tập đạt | Learning Path (Tâm) | **☐** → ND-24 |
 | T19–T21 | Quản trị câu hỏi `/api/admin/questions*` | Admin | ☑ — **ngoài phạm vi skill Review**, chỉ là dependency dữ liệu |
@@ -96,11 +127,20 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 
 | Mã | Câu hỏi | Bối cảnh / nguồn |
 |---|---|---|
-| ND-01 | Thuật toán ký JWT, payload (ví dụ có `role` không), cách gửi token (header `Authorization: Bearer` hay cookie)? | STRUCTURE chỉ ghi `security.py` "tạo/kiểm tra token"; frontend `client.js` "gắn token", `authStore (user, token)` |
-| ND-02 | Thời hạn access token? `SETUP.md` có ví dụ `ACCESS_TOKEN_EXPIRE_MINUTES=60` — đây có phải giá trị chính thức? Ô "Ghi nhớ đăng nhập" (wireframe 01) có ảnh hưởng thời hạn không? | SETUP §3, wireframe 01 |
-| ND-03 | Có refresh token không? | Không tài liệu nào nhắc |
-| ND-04 | Thuật toán băm mật khẩu (bcrypt, argon2…)? | `.docx` 3.1 chỉ ghi "đã mã hóa" |
-| ND-05 | Chính sách mật khẩu ở API (độ dài, độ phức tạp) cho register, reset-password, change-password? Wireframe 02 ghi "Tối thiểu 8 ký tự" và có ô "Nhập lại mật khẩu" — có phải rule của API không, hay chỉ kiểm tra ở giao diện? | Wireframe 02 |
+| ~~ND-01~~ | Thuật toán ký JWT, payload, cách gửi token — **phần chính đã chốt → D-AUTH-01**; còn ND-44 | (lịch sử) STRUCTURE `security.py`, `client.js`, `authStore` |
+| ~~ND-02~~ | Thời hạn access token — **đã chốt 30 phút → D-AUTH-02**; "Ghi nhớ đăng nhập" chuyển sang ND-41 | (lịch sử) SETUP §3 từng ghi 60 |
+| ~~ND-03~~ | Có refresh token không — **đã chốt CÓ → D-AUTH-03**; còn ND-40, 41, 42, 43, 48 | — |
+| ~~ND-04~~ | Thuật toán băm — **đã chốt Argon2id → D-AUTH-04**; còn ND-45 | (lịch sử) `.docx` 3.1 "đã mã hóa" |
+| ~~ND-05~~ | Chính sách mật khẩu — **đã chốt → D-AUTH-05**; còn ND-46, ND-47 | (lịch sử) wireframe 02 |
+| ND-40 | Thời hạn **refresh token** chính thức? Đề xuất 7 ngày (biến dự kiến `REFRESH_TOKEN_EXPIRE_DAYS`) — chưa được xác nhận. | D-AUTH-03 |
+| ND-41 | Refresh token: **định dạng** (chuỗi ngẫu nhiên opaque hay JWT), **cách gửi** (JSON body hay cookie `httpOnly`), **nơi lưu phía client** (cùng `sessionStorage` với access token hay chỗ khác). `sessionStorage` mất khi đóng tab — ô "Ghi nhớ đăng nhập" (wireframe 01) có ý nghĩa gì? | D-AUTH-01, D-AUTH-02, D-AUTH-03, wireframe 01 |
+| ND-42 | Phát hiện **tái sử dụng** refresh token đã bị xoay vòng/thu hồi: chỉ từ chối request đó, hay thu hồi toàn bộ chuỗi token/phiên của người dùng? | D-AUTH-03 |
+| ND-43 | Thiết kế bảng lưu refresh token (`docs/database-design.md` §3.5, trạng thái PROPOSED): tên bảng, cột, thuật toán băm token, có lưu liên kết rotation (`replaced_by`/family) không, cho phép nhiều phiên/thiết bị đồng thời không, dọn bản ghi hết hạn thế nào. Cần duyệt trước khi tạo model/migration. | D-AUTH-03 |
+| ND-44 | Thư viện JWT (ví dụ PyJWT) và kiểm tra tương thích Python 3.11+. Chưa có dependency nào trong `requirements.txt`/`pyproject.toml` (đang rỗng). | D-AUTH-01, `CLAUDE.md` (không thêm thư viện ngoài tài liệu) |
+| ND-45 | Thư viện Argon2id và tham số (memory cost, time cost, parallelism); có dùng tham số nhẹ hơn cho môi trường test không. | D-AUTH-04 |
+| ND-46 | Tập **ký tự đặc biệt** hợp lệ cho D-AUTH-05 (6); "khoảng trắng" gồm những gì (dấu cách, tab, xuống dòng, khoảng trắng Unicode); ký tự non-ASCII (chữ có dấu, emoji) có được phép không và có tính là ký tự đặc biệt không. Dự án chưa có quy định. | D-AUTH-05 |
+| ND-47 | Endpoint nào nhận `confirm_password`: `register` (wireframe 02 có ô "Nhập lại mật khẩu"), `reset-password`, `change-password`? Tên trường ở reset/change là `confirm_password` hay khác? Đây là thay đổi API contract. | D-AUTH-05, wireframe 02 |
+| ND-48 | Hợp đồng `POST /api/auth/refresh` và logout: request/response chính xác; mã lỗi khi làm mới thất bại; logout gửi refresh token nào để thu hồi, thu hồi một phiên hay mọi phiên; logout có bắt buộc access token còn hạn không. | D-AUTH-03, ND-15, ND-19 |
 | ND-06 | Có giới hạn số lần thử đăng nhập / gửi forgot-password không? | Không tài liệu nào nhắc |
 | ND-07 | Email có chuẩn hóa (chữ thường, bỏ khoảng trắng) trước khi lưu/so sánh không? | `.docx`: email UQ |
 | ND-08 | Register trả token (đăng nhập luôn) hay chỉ "201 + thông tin người dùng"? Wireframe 04 cho chọn kỹ năng ngay sau đăng ký — việc này cần đã xác thực. | Sheet Endpoint, wireframe 04 |
@@ -110,8 +150,8 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 | ND-12 | `POST /api/me/avatar`: dung lượng tối đa, định dạng cho phép, nơi lưu file, URL công khai? `avatar_url` nhập tay có kiểm tra định dạng URL không? | T04, `.docx` chỉ có mã 413/415 |
 | ND-13 | `GET /api/me/summary`: ghi chú của nhóm ở T05 "Đếm từ StudentCourse, UserSkill, LearningPath (nhóm chưa chốt)" — cách đếm chính thức? | T05 |
 | ND-18 | Client gửi trường không được phép (`role` ở register; `email`/`role` ở `PATCH /api/me`): bỏ qua hay trả 422? | T09, `.docx` 3.1: "không nhận" — chưa nói cách xử lý |
-| ND-19 | Hình dạng response của login (tên trường token, có `token_type` không) và các trường thông tin người dùng đi kèm? | Sheet Endpoint: "access token + thông tin người dùng (gồm role)" |
-| ND-36 | Do D08 (JWT stateless), token đã cấp vẫn hợp lệ sau khi đổi/đặt lại mật khẩu cho tới khi hết hạn. Nhóm có chấp nhận hệ quả này không? | Hệ quả của D08 + T02/T03 |
+| ND-19 | Hình dạng response của login (tên trường token, có `token_type` không, có trả refresh token trong body không — phụ thuộc ND-41) và các trường thông tin người dùng đi kèm? | Sheet Endpoint: "access token + thông tin người dùng (gồm role)"; D-AUTH-03 |
+| ND-36 | Sau khi đổi/đặt lại mật khẩu: có thu hồi mọi refresh token của người dùng không (nay khả thi nhờ D-AUTH-03)? Access token đã cấp vẫn hợp lệ tối đa 30 phút (D-AUTH-02) — nhóm có chấp nhận không? | D-AUTH-02, D-AUTH-03, T02, T03 |
 | ND-37 | `full_name` có bắt buộc khi đăng ký không? CSDL cho phép NULL, nhưng sheet Endpoint liệt kê nó trong body register và wireframe 02 có ô "Họ và tên". | `.docx` 3.1, sheet Endpoint |
 | ND-38 | Wireframe Profile hiển thị nguồn của kỹ năng ("Từ bài ôn tập khóa học" / "Thêm thủ công"), nhưng `UserSkill` không có cột nguồn. Bỏ nhãn này trên giao diện hay bổ sung cột? | Wireframe Profile, `.docx` 3.2 |
 | ND-39 | `forgot-password`: gửi email đồng bộ hay chạy nền? Nếu gửi lỗi thì vẫn trả thông báo chung (để không lộ email) và chỉ ghi log? Mã đã tạo có giữ lại không? | T01 chỉ quy định thông báo luôn giống nhau |
@@ -157,7 +197,10 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 
 Theo sheet "File cần sửa" — chưa thực hiện vì không thuộc danh sách file của giai đoạn chuẩn bị tri thức:
 
-- `.env.example` (đang rỗng) và `SETUP.md`: thêm `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `FRONTEND_URL`, `RESET_TOKEN_EXPIRE_MINUTES`, `REVIEW_PASS_PERCENT`. *(T28)*
-- `README.md`: bảng "Tổng quan API" vẫn ghi `/api/skills/{id}/review*`.
-- File code rỗng đã có sẵn trong `backend/` theo tên cũ (`models/review_question.py`, `models/user_course.py`) — đổi tên/tạo mới khi bắt đầu implement, theo `STRUCTURE.md`.
+- `.env.example` và `SETUP.md` §3: đã thêm biến xác thực và email (2026-10-24); **còn thiếu `REVIEW_PASS_PERCENT`** (thuộc module Ôn tập, chưa thêm trong lần cập nhật xác thực). *(T28)*
+- `docs/structure.md`: thêm file model cho bảng RefreshToken sau khi ND-43 được duyệt.
+- ~~`README.md`: bảng "Tổng quan API" vẫn ghi `/api/skills/{id}/review*`.~~ — đã sửa (2026-10-24); `docs/conventions.md` §2 "Ôn tập" cũng đã thay bằng liên kết tới tài liệu module (AUD-03, AUD-04).
+- File code rỗng đã có sẵn trong `backend/` theo tên cũ (`models/review_question.py`, `models/user_course.py`) — đổi tên/tạo mới khi bắt đầu implement, theo `docs/structure.md`.
 - `TASKS.md`, mẫu giao diện Profile (T10).
+- Excel `EduMentor_Checklist_Da_Sua_API.xlsx`: cột "Phụ trách" của §2 (sheet "Endpoint (bản mới)") còn ghi Hòa — cập nhật theo D-OWN-01.
+- `AGENTS.md` và `.agents/skills/*` (bản cho Codex) là bản sao cũ của skill Giai đoạn 2 — chưa có trạng thái T16, D-OWN-01; cần đồng bộ lại nếu còn dùng.

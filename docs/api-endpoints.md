@@ -18,15 +18,16 @@
 
 | Method | Endpoint | Mô tả | Quyền |
 |---|---|---|---|
-| POST | `/api/auth/register` | Đăng ký tài khoản mới. `role` luôn là `student`, không nhận từ client. *(T09)* | Công khai |
-| POST | `/api/auth/login` | Xác thực và trả access token kèm thông tin người dùng (gồm `role`). | Công khai |
-| POST | `/api/auth/logout` | Đăng xuất. JWT không lưu trạng thái: client xóa token, server trả 200. *(D08)* | Người dùng |
+| POST | `/api/auth/register` | Đăng ký tài khoản mới. `role` luôn là `student`, không nhận từ client. Mật khẩu theo chính sách D-AUTH-05. *(T09)* | Công khai |
+| POST | `/api/auth/login` | Xác thực; trả access token (JWT, 30 phút), refresh token và thông tin người dùng (gồm `role`). *(D-AUTH-01, 02, 03; hình dạng response: ND-19, ND-41)* | Công khai |
+| POST | `/api/auth/refresh` | Đổi refresh token hợp lệ lấy access token mới; xoay vòng refresh token (token cũ bị vô hiệu). *(D-AUTH-03; request/response chi tiết: ND-48)* | Công khai — xác thực bằng refresh token |
+| POST | `/api/auth/logout` | Đăng xuất: backend thu hồi refresh token tương ứng; client xóa token. Access token không bị thu hồi tức thì. *(D-AUTH-03 thay một phần D08; chi tiết: ND-48)* | Người dùng *(có bắt buộc access token còn hạn không: ND-48)* |
 | POST | `/api/auth/forgot-password` | Yêu cầu đặt lại mật khẩu qua email; luôn trả cùng một thông báo. *(T01)* | Công khai |
-| POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng mã trong email (dùng một lần, có hạn). *(T02)* | Công khai |
+| POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng mã trong email (dùng một lần, có hạn). Mật khẩu theo D-AUTH-05. *(T02)* | Công khai |
 | GET | `/api/me` | Lấy hồ sơ của người dùng đã xác thực. | Người dùng |
 | PATCH | `/api/me` | Cập nhật hồ sơ: chỉ `full_name`, `avatar_url` (không có `email`, `role`). *(T04, D06, T09)* | Người dùng |
 | POST | `/api/me/avatar` | Tải ảnh đại diện lên (tùy chọn, giai đoạn 2). *(T04, D07)* | Người dùng |
-| POST | `/api/me/change-password` | Đổi mật khẩu khi đã đăng nhập. *(T03)* | Người dùng |
+| POST | `/api/me/change-password` | Đổi mật khẩu khi đã đăng nhập. Mật khẩu mới theo D-AUTH-05. *(T03)* | Người dùng |
 | GET | `/api/me/summary` | Số liệu tổng hợp cho trang Profile. *(T05)* | Người dùng |
 | GET | `/api/me/skills` | Kỹ năng trong hồ sơ; lọc `?status=known\|learning`. *(T07)* | Người dùng |
 | PATCH | `/api/me/skills` | Thêm/sửa/xóa kỹ năng (`add`, `update`, `remove`) trong một transaction. *(T06)* | Người dùng |
@@ -37,6 +38,12 @@
 | GET | `/api/me/courses?status=abandoned` | Khóa học đã bỏ (xem lịch sử). *(T08)* | Người dùng |
 
 > `/api/me/courses*` thuộc module theo dõi khóa học (`routers/me_courses.py`, `course_tracking_service`), không thuộc module Xác thực & Hồ sơ.
+
+### Quy tắc xác thực (tóm tắt — chi tiết: `docs/modules/auth-profile.md`)
+
+- Endpoint "Người dùng" yêu cầu header `Authorization: Bearer <access_token>`; access token là JWT ký HS256, hết hạn sau 30 phút. *(D-AUTH-01, D-AUTH-02)*
+- Access token hết hạn → frontend gọi `POST /api/auth/refresh`; làm mới thất bại → yêu cầu đăng nhập lại. *(D-AUTH-02, D-AUTH-03)*
+- Chính sách mật khẩu (`register`, `reset-password`, `change-password`): 8 ký tự – 128 byte UTF-8, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt, không khoảng trắng. *(D-AUTH-05; tập ký tự đặc biệt: ND-46; `confirm_password`: ND-47)*
 
 ### Quy tắc cập nhật kỹ năng người dùng
 

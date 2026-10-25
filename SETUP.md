@@ -30,8 +30,19 @@ Các biến chính trong `.env`:
 ```env
 # Ứng dụng
 APP_ENV=development
-SECRET_KEY=doi-thanh-chuoi-bi-mat
-ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+# Xác thực (docs/decisions.md D-AUTH-01 … D-AUTH-03)
+SECRET_KEY=thay-bang-chuoi-ngau-nhien-xem-huong-dan-ben-duoi
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7        # đề xuất — CHƯA CHỐT (ND-40)
+RESET_TOKEN_EXPIRE_MINUTES=30      # đề xuất 15–30 phút (.docx 3.4)
+
+# Email — quên mật khẩu, email kết quả ôn tập (T28)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-smtp-user
+SMTP_PASSWORD=your-smtp-password
+FRONTEND_URL=http://localhost:5173
 
 # Cơ sở dữ liệu
 DATABASE_URL=postgresql://edumentor:edumentor@localhost:5432/edumentor
@@ -45,6 +56,12 @@ VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
 > Không commit file `.env`. Chỉ commit `.env.example`.
+
+**Tạo `SECRET_KEY`:** khóa này dùng để ký JWT (HS256) — ai có khóa có thể giả mạo token của mọi người dùng. Tạo một chuỗi ngẫu nhiên đủ dài cho **mỗi** môi trường (máy cá nhân, server demo…), không dùng lại giá trị mẫu, không chia sẻ qua chat hay commit lên Git:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(64))"
+```
 
 ## 4. Cơ sở dữ liệu
 

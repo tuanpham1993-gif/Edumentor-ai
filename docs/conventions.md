@@ -47,7 +47,7 @@ Endpoint trả danh sách nhận `page` và `page_size`, trả về `items`, `to
 - Khóa học trỏ tới nền tảng MOOC bên ngoài. EduMentor **không** lưu nội dung và **không** đăng ký thay người dùng.
 - Trạng thái theo dõi: `bookmarked`, `ongoing`, `completed`, `abandoned`. Đây là trạng thái của EduMentor, không phải của nền tảng ngoài.
 - `POST /api/courses/{course_id}/join` ghi nhận `ongoing` và trả URL ngoài.
-- **Không** đánh dấu `completed` chỉ vì người dùng mở URL ngoài. `completed` chỉ đến từ việc hoàn tất bài ôn tập.
+- **Không** đánh dấu `completed` chỉ vì người dùng mở URL ngoài. `completed` chỉ đến từ việc **làm đạt** bài ôn tập của khóa học (D02, T13 — xem `docs/decisions.md`).
 - Xóa bookmark chỉ xóa bản ghi bookmark, không tự chuyển `abandoned`.
 - Danh sách mặc định loại trừ `abandoned`.
 - Chỉ theo dõi tiến trình ở mức cơ bản; không theo dõi bài học, video hay mức độ hoàn thành nội dung.
@@ -71,9 +71,7 @@ Endpoint trả danh sách nhận `page` và `page_size`, trả về `items`, `to
 - **Không** đưa điểm ôn tập vào xếp hạng khóa học.
 
 ### Ôn tập
-- Mỗi bài ôn tập theo kỹ năng gồm **20 câu trắc nghiệm** lấy từ CSDL.
-- Không trả đáp án đúng trước khi người dùng nộp bài.
-- Sau khi hoàn tất: lưu lần làm → đánh dấu khóa học `completed` → cập nhật kỹ năng người dùng (backend tự làm, frontend không gửi request riêng).
+- Bài ôn tập tính **theo khóa học** (D01). Toàn bộ quy tắc — điều kiện làm bài, chọn câu hỏi, chấm điểm, điều kiện `completed`, cập nhật kỹ năng, transaction, cùng các phần đang BLOCKED/PENDING — chỉ được ghi tại [`modules/review-assessment.md`](modules/review-assessment.md); kịch bản kiểm thử tại [`modules/review-assessment.tests.md`](modules/review-assessment.tests.md). Không chép lại quy tắc vào đây.
 
 ### AI
 - Mô hình AI chỉ diễn giải mục tiêu; backend chịu trách nhiệm ánh xạ kỹ năng, mở rộng quan hệ, tham khảo lộ trình lịch sử và lưu kết quả.

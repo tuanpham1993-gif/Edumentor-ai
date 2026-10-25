@@ -1,0 +1,29 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EduMentor AI – Giao diện web</title><style>body{margin:0;background:#100e0c;color:#f3efe8;font-family:"Be Vietnam Pro",system-ui,sans-serif;padding:40px 24px}h1{margin:0 0 6px}p{color:#a39d93;margin:0 0 28px}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}.c{display:flex;flex-direction:column;gap:10px;padding:12px;background:#16171a;border:1px solid #2c2b29;border-radius:14px;color:#f3efe8;text-decoration:none}.c:hover{border-color:#f5a524}.c img{width:100%;height:180px;object-fit:cover;object-position:top;border-radius:8px}</style></head><body><h1>EduMentor AI – Giao diện web</h1><p>29 trang. Bấm vào thẻ để mở trang HTML (cần mạng để tải font); ảnh PNG đầy đủ nằm trong thư mục png/.</p><div class="g"><a class="c" href="html/Main.html"><img loading="lazy" src="png/Main.png" alt=""><span>Đăng nhập · POST /api/auth/login</span></a>
+<a class="c" href="html/Register.html"><img loading="lazy" src="png/Register.png" alt=""><span>Đăng ký · POST /api/auth/register</span></a>
+<a class="c" href="html/ForgotPassword.html"><img loading="lazy" src="png/ForgotPassword.png" alt=""><span>Quên mật khẩu · POST /api/auth/forgot-password</span></a>
+<a class="c" href="html/ForgotSent.html"><img loading="lazy" src="png/ForgotSent.png" alt=""><span>Đã gửi yêu cầu (thông báo chung)</span></a>
+<a class="c" href="html/ResetPassword.html"><img loading="lazy" src="png/ResetPassword.png" alt=""><span>Đặt lại mật khẩu · POST /api/auth/reset-password</span></a>
+<a class="c" href="html/ResetExpired.html"><img loading="lazy" src="png/ResetExpired.png" alt=""><span>Đặt lại mật khẩu · lỗi 400</span></a>
+<a class="c" href="html/Profile.html"><img loading="lazy" src="png/Profile.png" alt=""><span>Hồ sơ · GET /api/me, /api/me/summary, /api/me/courses</span></a>
+<a class="c" href="html/EditProfile.html"><img loading="lazy" src="png/EditProfile.png" alt=""><span>Sửa hồ sơ · PATCH /api/me, POST /api/me/avatar</span></a>
+<a class="c" href="html/ChangePassword.html"><img loading="lazy" src="png/ChangePassword.png" alt=""><span>Đổi mật khẩu · POST /api/me/change-password</span></a>
+<a class="c" href="html/Skills.html"><img loading="lazy" src="png/Skills.png" alt=""><span>Kỹ năng của tôi · GET/PATCH /api/me/skills</span></a>
+<a class="c" href="html/Logout.html"><img loading="lazy" src="png/Logout.png" alt=""><span>Xác nhận đăng xuất · POST /api/auth/logout</span></a>
+<a class="c" href="html/ReviewStart.html"><img loading="lazy" src="png/ReviewStart.png" alt=""><span>Bắt đầu ôn tập · GET /api/courses/{id}/review</span></a>
+<a class="c" href="html/ReviewQuiz.html"><img loading="lazy" src="png/ReviewQuiz.png" alt=""><span>Làm bài · POST /api/courses/{id}/review-attempts</span></a>
+<a class="c" href="html/ReviewResult.html"><img loading="lazy" src="png/ReviewResult.png" alt=""><span>Kết quả · POST /api/review-attempts/{id}/submit</span></a>
+<a class="c" href="html/ReviewHistory.html"><img loading="lazy" src="png/ReviewHistory.png" alt=""><span>Lịch sử ôn tập · GET /api/me/review-history</span></a>
+<a class="c" href="html/ReviewDetail.html"><img loading="lazy" src="png/ReviewDetail.png" alt=""><span>Chi tiết lần làm · GET /api/me/review-history/{id}</span></a>
+<a class="c" href="html/Courses.html"><img loading="lazy" src="png/Courses.png" alt=""><span>Danh mục khóa học · GET /api/courses</span></a>
+<a class="c" href="html/CourseDetail.html"><img loading="lazy" src="png/CourseDetail.png" alt=""><span>Chi tiết khóa học · GET /api/courses/{id}, /skills, /status</span></a>
+<a class="c" href="html/JoinDialog.html"><img loading="lazy" src="png/JoinDialog.png" alt=""><span>Tham gia khóa học · POST /api/courses/{id}/join</span></a>
+<a class="c" href="html/MyCourses.html"><img loading="lazy" src="png/MyCourses.png" alt=""><span>Khóa học của tôi · /api/me/bookmarks, /api/me/courses</span></a>
+<a class="c" href="html/Consultant.html"><img loading="lazy" src="png/Consultant.png" alt=""><span>AI tư vấn lộ trình · POST /api/chat/learning-path</span></a>
+<a class="c" href="html/MyPaths.html"><img loading="lazy" src="png/MyPaths.png" alt=""><span>Lộ trình của tôi · GET /api/me/learning-paths</span></a>
+<a class="c" href="html/PathDetail.html"><img loading="lazy" src="png/PathDetail.png" alt=""><span>Chi tiết lộ trình · nodes, edges, gợi ý khóa học</span></a>
+<a class="c" href="html/PathEdit.html"><img loading="lazy" src="png/PathEdit.png" alt=""><span>Thêm node / cạnh · POST …/nodes, …/edges</span></a>
+<a class="c" href="html/Tutor.html"><img loading="lazy" src="png/Tutor.png" alt=""><span>AI Tutor · /api/chat/sessions*</span></a>
+<a class="c" href="html/AdminCourses.html"><img loading="lazy" src="png/AdminCourses.png" alt=""><span>Quản trị khóa học · /api/admin/courses, course-skill-relations</span></a>
+<a class="c" href="html/AdminSkills.html"><img loading="lazy" src="png/AdminSkills.png" alt=""><span>Quản trị kỹ năng · /api/admin/skills, skill-relations</span></a>
+<a class="c" href="html/AdminBasePaths.html"><img loading="lazy" src="png/AdminBasePaths.png" alt=""><span>Mẫu lộ trình · /api/admin/base-learning-paths*</span></a>
+<a class="c" href="html/AdminHistorical.html"><img loading="lazy" src="png/AdminHistorical.png" alt=""><span>Dữ liệu lịch sử (tùy chọn) · /api/admin/historical-*</span></a></div></body></html>

@@ -12,9 +12,7 @@ Tài liệu này mô tả cấu trúc thư mục của dự án và cách mỗi 
 edumentor-ai/
 ├── README.md
 ├── CLAUDE.md                       # Chỉ thị cấp project cho Claude Code
-├── CONVENTIONS.md
 ├── SETUP.md
-├── STRUCTURE.md
 ├── docker-compose.yml
 ├── .env.example
 ├── .gitignore
@@ -25,6 +23,8 @@ edumentor-ai/
 │       └── review-assessment/SKILL.md  # Điểm vào module Ôn tập & Đánh giá
 │
 ├── docs/
+│   ├── structure.md                # Tài liệu này: cây thư mục, ánh xạ endpoint → file
+│   ├── conventions.md              # Quy ước API, mã nguồn, Git, kiểm thử
 │   ├── api-endpoints.md            # Đặc tả endpoint (bảng nhóm đã thống nhất)
 │   ├── database-design.md          # Thiết kế CSDL chính thức (21 bảng, FK, ràng buộc)
 │   ├── decisions.md                # Quyết định đã chốt, mâu thuẫn, [NEEDS DECISION]

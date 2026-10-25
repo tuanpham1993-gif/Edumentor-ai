@@ -1,6 +1,6 @@
 # Quy tắc backend dùng chung — Xác thực/Hồ sơ và Ôn tập/Đánh giá
 
-Tài liệu này gom các quy tắc kỹ thuật mà **cả hai** module cùng tuân theo, để `docs/modules/*.md` không phải lặp lại. Mọi nội dung truy xuất từ `STRUCTURE.md` §4, `CONVENTIONS.md`, `SETUP.md`, `docs/api-endpoints.md` §14 và `docs/database-design.md`. Điểm còn mở trỏ tới `docs/decisions.md`.
+Tài liệu này gom các quy tắc kỹ thuật mà **cả hai** module cùng tuân theo, để `docs/modules/*.md` không phải lặp lại. Mọi nội dung truy xuất từ `docs/structure.md` §4, `docs/conventions.md`, `SETUP.md`, `docs/api-endpoints.md` §14 và `docs/database-design.md`. Điểm còn mở trỏ tới `docs/decisions.md`.
 
 ---
 
@@ -33,7 +33,7 @@ Nguồn: STRUCTURE §4, CONVENTIONS §3.
 |---|---|---|
 | `core/config.py` | Đọc biến môi trường | Mọi bí mật, ngưỡng, thời hạn lấy từ đây; không hard-code |
 | `core/database.py` | Engine, session, transaction helper | Lớp nào commit: `[NEEDS DECISION ND-16]` |
-| `core/security.py` | Băm mật khẩu, tạo/kiểm tra token | Thuật toán: `[NEEDS DECISION ND-01, ND-04]` |
+| `core/security.py` | Băm mật khẩu, tạo/kiểm tra token | JWT HS256 (D-AUTH-01), Argon2id (D-AUTH-04); thư viện: `[NEEDS DECISION ND-44, ND-45]` |
 | `core/dependencies.py` | `get_current_user`, `require_admin`, `get_db` | Mọi endpoint người dùng dùng `get_current_user` |
 | `core/errors.py` | Exception chung + handler lỗi thống nhất | Mục 4 |
 | `core/pagination.py` | Tham số và response phân trang | Mục 5 |
@@ -52,7 +52,9 @@ Nguồn: STRUCTURE §4, CONVENTIONS §3.
 - Endpoint `/api/me/...` chỉ thao tác trên dữ liệu của **người dùng đã xác thực**; không bao giờ nhận `user_id` từ client. (CONVENTIONS §1)
 - Thiếu token / token không hợp lệ → **401**. Đã xác thực nhưng không đủ quyền (ví dụ không phải admin) → **403**. (CONVENTIONS §1)
 - Frontend ẩn giao diện theo quyền (`ProtectedRoute`, `AdminRoute`), nhưng **backend vẫn phải tự kiểm tra quyền**. (STRUCTURE §3)
-- Cơ chế token, thời hạn, refresh: `[NEEDS DECISION ND-01, ND-02, ND-03]`. Đăng xuất = JWT không lưu trạng thái (D08).
+- Cơ chế token (chi tiết: `docs/modules/auth-profile.md` AP-R21, AP-R22):
+  - Access token: JWT HS256 ký bằng `SECRET_KEY`, claim `sub`/`iat`/`exp`, hết hạn 30 phút, gửi qua `Authorization: Bearer <access_token>`; backend chỉ chấp nhận HS256 và lấy vai trò từ database. (D-AUTH-01, D-AUTH-02)
+  - Refresh token: lưu bản băm trong PostgreSQL, rotation khi làm mới, logout thu hồi. Access token không thu hồi tức thì được. (D-AUTH-03; còn mở ND-40 … ND-43, ND-48)
 
 ### Quyền sở hữu tài nguyên (chống IDOR)
 
@@ -111,8 +113,9 @@ Endpoint trả danh sách nhận `page` và `page_size`, trả về `items`, `to
 
 | Biến | Dùng cho | Nguồn |
 |---|---|---|
-| `SECRET_KEY` | Ký token | SETUP §3 |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Thời hạn token (ví dụ `60` trong SETUP — `[NEEDS DECISION ND-02]`) | SETUP §3 |
+| `SECRET_KEY` | Ký JWT (HS256). Chuỗi ngẫu nhiên đủ mạnh, mỗi môi trường một giá trị riêng, không commit; cách tạo: `SETUP.md` §3 | SETUP §3, D-AUTH-01 |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Thời hạn access token = **30** | D-AUTH-02 |
+| `REFRESH_TOKEN_EXPIRE_DAYS` | Thời hạn refresh token — đề xuất 7, **chưa chốt** `[NEEDS DECISION ND-40]` | D-AUTH-03 |
 | `DATABASE_URL` | Kết nối CSDL | SETUP §3 |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | Gửi email | T28 |
 | `FRONTEND_URL` | Link trong email (đặt lại mật khẩu, xem kết quả ôn tập) | T28 |
@@ -135,6 +138,8 @@ Không commit `.env`; chỉ commit `.env.example`. (SETUP §3)
 
 - Không lưu mật khẩu gốc; không trả `hashed_password` trong bất kỳ response nào. (`.docx` 3.1)
 - Mã đặt lại mật khẩu chỉ lưu dạng băm (`token_hash`). (`.docx` 3.4)
+- Refresh token chỉ lưu dạng băm. (D-AUTH-03)
+- Không ghi mật khẩu, `confirm_password`, access token, refresh token hay mã đặt lại mật khẩu (dạng gốc) vào log. (D-AUTH-05)
 - `correct_index` và `explanation` không xuất hiện ở endpoint làm bài trước khi nộp. (T15)
 - Không hard-code bí mật. (CONVENTIONS §3)
 

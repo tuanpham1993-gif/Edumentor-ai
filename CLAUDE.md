@@ -17,7 +17,7 @@ Trạng thái hiện tại: **chưa có code** — các file trong `backend/` v�
 
 ## Kiến trúc
 
-Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu vào/ra. Router không viết truy vấn hay nghiệp vụ; service giữ quy tắc nghiệp vụ và transaction; repository chỉ truy vấn; thay đổi CSDL chỉ qua Alembic migration. Chi tiết: `STRUCTURE.md` §4 và `docs/backend-rules.md`. Không đổi kiến trúc này nếu không được yêu cầu.
+Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu vào/ra. Router không viết truy vấn hay nghiệp vụ; service giữ quy tắc nghiệp vụ và transaction; repository chỉ truy vấn; thay đổi CSDL chỉ qua Alembic migration. Chi tiết: `docs/structure.md` §4 và `docs/backend-rules.md`. Không đổi kiến trúc này nếu không được yêu cầu.
 
 ## Nguồn sự thật
 
@@ -26,8 +26,8 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quyết định đã chốt, mâu thuẫn, `[NEEDS DECISION]` | `docs/decisions.md` |
 | Thiết kế CSDL (chính thức) | `docs/database-design.md` |
 | Danh sách endpoint toàn hệ thống | `docs/api-endpoints.md` |
-| Cây thư mục, ánh xạ endpoint → file | `STRUCTURE.md` |
-| Quy ước API, code, Git, kiểm thử | `CONVENTIONS.md` |
+| Cây thư mục, ánh xạ endpoint → file | `docs/structure.md` |
+| Quy ước API, code, Git, kiểm thử | `docs/conventions.md` |
 | Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
 | Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
 | Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
@@ -37,10 +37,14 @@ Nguồn gốc nghiệp vụ mới nhất là `docs/EduMentor_Database_Design_Da_
 
 ## Phạm vi đang phụ trách
 
-Chỉ hai module có bộ tri thức đầy đủ và skill riêng:
+Chỉ hai module có bộ tri thức đầy đủ và skill riêng — cả hai **do Tuấn phụ trách chính thức** (D-OWN-01):
 
-1. **Xác thực & Hồ sơ người dùng** → skill `auth-profile`
-2. **Ôn tập & Đánh giá kiến thức** → skill `review-assessment`
+| Module | Owner | Đặc tả | Implementation | Skill |
+|---|---|---|---|---|
+| Xác thực & Hồ sơ người dùng | Tuấn | SPEC CONFIRMED (còn PENDING) | NOT IMPLEMENTED | `auth-profile` |
+| Ôn tập & Đánh giá kiến thức | Tuấn | SPEC CONFIRMED (còn BLOCKED/PENDING) | NOT IMPLEMENTED | `review-assessment` |
+
+Phân công các module khác và quy ước trạng thái: `docs/decisions.md` §2 "Phân công". Không dùng "DONE" cho phần chưa có code.
 
 Các module khác (Course Tracking, Learning Path, AI Consultant/Tutor, Recommendation, Admin) không thuộc phạm vi: không tự sửa file của chúng; nếu việc đang làm cần thay đổi ở đó, nêu ra cho người dùng.
 
@@ -69,4 +73,4 @@ alembic revision --autogenerate -m "mo ta"            # migration mới
 alembic upgrade head                                  # áp dụng migration
 ```
 
-Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`); nhánh `feature/<nhóm>-<mô-tả>`. Chi tiết: `CONVENTIONS.md` §5.
+Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`); nhánh `feature/<nhóm>-<mô-tả>`. Chi tiết: `docs/conventions.md` §5.
