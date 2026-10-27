@@ -1,0 +1,26 @@
+# Web
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic-settings>=2.2.0
+email-validator>=2.1.0
+python-multipart>=0.0.9
+
+# Database (PostgreSQL async qua psycopg 3)
+sqlalchemy[asyncio]>=2.0.30
+alembic>=1.13.1
+psycopg[binary]>=3.2.0
+
+# Auth
+bcrypt>=4.1.0
+pyjwt>=2.8.0
+
+# HTTP client (gọi LLM + test client)
+httpx>=0.27.0
+# Gửi email quên mật khẩu (async)
+aiosmtplib>=3.0.0
+
+# Test & dev
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+black>=24.0.0
+ruff>=0.4.0

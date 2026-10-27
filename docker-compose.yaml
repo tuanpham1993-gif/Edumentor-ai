@@ -1,0 +1,22 @@
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: edumentor_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: edumentor
+      POSTGRES_PASSWORD: edumentor123
+      POSTGRES_DB: edumentor_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - edumentor_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U edumentor -d edumentor_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  edumentor_pgdata:
