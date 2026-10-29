@@ -17,3 +17,7 @@ htmlcov/
 coverage.xml
 
 *.log
+.env
+.env.*
+!.env.example
+
