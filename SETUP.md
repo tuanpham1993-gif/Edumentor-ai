@@ -7,7 +7,7 @@
 | Công cụ | Phiên bản gợi ý |
 |---|---|
 | Python | 3.11+ |
-| Node.js | 18+ |
+| Node.js | 18.x, 20.x hoặc ≥ 22 — `^18.0.0 \|\| ^20.0.0 \|\| >=22.0.0` (theo `engines` trong `frontend/package.json`; không hỗ trợ 19, 21) |
 | PostgreSQL | 14+ (hoặc dùng Docker) |
 | Git | mới nhất |
 | Docker (tùy chọn) | để chạy PostgreSQL nhanh |
