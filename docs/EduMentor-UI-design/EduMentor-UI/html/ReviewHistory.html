@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="vi"><head>
+<meta charset="utf-8">
+<title>Lịch sử ôn tập</title>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap"><style>
+body{margin:0;background:#100e0c}
+a{color:#f5a524;text-decoration:none}a:hover{color:#ffc35c}
+</style></head>
+<body>
+
+
+<div style="min-height: 1000px; position: relative; overflow: hidden; background: #100e0c; font-family: 'Be Vietnam Pro', system-ui, sans-serif; color: #f3efe8">
+<header style="position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding: 16px 40px; border-bottom: 1px solid #221f1c; background: #121110">
+<a href="Profile.html" style="display: flex; align-items: center; gap: 10px; color: #f3efe8; font-weight: 600; font-size: 18px"><svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32"><path d="M16 3 29 10.5v11L16 29 3 21.5v-11z" fill="none" stroke="#f5a524" stroke-width="2.4"></path><path d="M8 14l8-4 8 4-8 4z" fill="#f5a524"></path><path d="M11 16v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4" fill="none" stroke="#f5a524" stroke-width="2"></path></svg>EduMentor AI</a>
+<nav aria-label="Điều hướng chính" style="flex: 1; display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 14px"><a href="Courses.html" style="color: #c9c2b7">Khóa học</a><a href="MyPaths.html" style="color: #c9c2b7">Lộ trình</a><a href="MyCourses.html" style="color: #c9c2b7">Khóa học của tôi</a><a href="ReviewHistory.html" aria-current="page" style="color: #f5a524; font-weight: 600">Ôn tập</a><a href="Tutor.html" style="color: #c9c2b7">AI Tutor</a></nav>
+<a href="Profile.html" style="display: flex; align-items: center; gap: 10px; color: #f3efe8; font-size: 14px; font-weight: 600"><span style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3a4150; font-size: 13px; font-weight: 700; border: 2px solid #f5a524">NA</span>Nguyễn Văn A</a>
+</header>
+<div aria-hidden="true" style="position: absolute; left: -150px; top: 200px; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, rgba(245,165,36,0.22), rgba(245,165,36,0) 65%)"></div>
+<svg aria-hidden="true" width="120" height="330" viewBox="0 0 120 330" style="position: absolute; left: 0; top: 70px"><line x1="60" y1="0" x2="60" y2="220" stroke="#2b2622" stroke-width="3"></line><path d="M32 220h56l20 50H12z" fill="#1b1a19" stroke="#3a342d"></path><ellipse cx="60" cy="270" rx="48" ry="7" fill="#ffb347"></ellipse><circle cx="60" cy="277" r="11" fill="#ffd27a"></circle><line x1="82" y1="270" x2="82" y2="322" stroke="#6b5a40"></line><circle cx="82" cy="326" r="4" fill="#f5a524"></circle></svg>
+<main style="position: relative; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 40px 24px 64px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 30px; font-weight: 700">Lịch sử ôn tập</h1>
+<p style="margin: 0; font-size: 14px; color: #a39d93">Xem lại các lần làm bài, điểm số và đáp án chi tiết.</p>
+</div>
+<section style="display: flex; flex-direction: column; gap: 20px; padding: 28px; background: #16171a; border: 1px solid #2c2b29; border-radius: 18px">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px">
+<label style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #d6d0c6">Khóa học
+<select style="height: 46px; padding: 0 12px; background: #1f2024; border: 1px solid #33322f; border-radius: 10px; color: #f3efe8; font: inherit; font-size: 14px"><option>Tất cả khóa học</option><option>Python cho phân tích dữ liệu</option><option>SQL cơ bản đến nâng cao</option></select>
+</label>
+<label style="flex: 0 1 200px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #d6d0c6">Kết quả
+<select style="height: 46px; padding: 0 12px; background: #1f2024; border: 1px solid #33322f; border-radius: 10px; color: #f3efe8; font: inherit; font-size: 14px"><option>Tất cả</option><option>Đạt</option><option>Chưa đạt</option></select>
+</label>
+</div>
+<div style="overflow-x: auto; border: 1px solid #2c2b29; border-radius: 14px">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="background: #1c1d20; color: #a39d93; font-size: 12px; text-align: left"><th style="padding: 14px 18px; font-weight: 600">Thời gian nộp</th><th style="padding: 14px 18px; font-weight: 600">Khóa học</th><th style="padding: 14px 18px; font-weight: 600">Điểm</th><th style="padding: 14px 18px; font-weight: 600">Câu đúng</th><th style="padding: 14px 18px; font-weight: 600">Kết quả</th><th style="padding: 14px 18px; font-weight: 600; text-align: right">Thao tác</th></tr></thead>
+<tbody>
+
+<tr style="border-top: 1px solid #2c2b29">
+<td style="padding: 14px 18px; color: #c9c2b7">25/10/2025 09:41</td>
+<td style="padding: 14px 18px; font-weight: 500">Python cho phân tích dữ liệu</td>
+<td style="padding: 14px 18px; font-weight: 700">85%</td>
+<td style="padding: 14px 18px; color: #c9c2b7">17/20</td>
+<td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: #2e2414; color: #f5c46d; font-size: 12px; font-weight: 600">Đạt</span></td>
+<td style="padding: 14px 18px"><div style="display: flex; justify-content: flex-end; gap: 8px"><a href="ReviewDetail.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #3a3835; color: #f3efe8; font-size: 13px">Xem chi tiết</a><a href="ReviewStart.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; background: #2e2414; color: #f5c46d; font-size: 13px; font-weight: 600">Làm lại</a></div></td>
+</tr>
+
+<tr style="border-top: 1px solid #2c2b29">
+<td style="padding: 14px 18px; color: #c9c2b7">20/10/2025 20:15</td>
+<td style="padding: 14px 18px; font-weight: 500">SQL cơ bản đến nâng cao</td>
+<td style="padding: 14px 18px; font-weight: 700">85%</td>
+<td style="padding: 14px 18px; color: #c9c2b7">17/20</td>
+<td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: #2e2414; color: #f5c46d; font-size: 12px; font-weight: 600">Đạt</span></td>
+<td style="padding: 14px 18px"><div style="display: flex; justify-content: flex-end; gap: 8px"><a href="ReviewDetail.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #3a3835; color: #f3efe8; font-size: 13px">Xem chi tiết</a><a href="ReviewStart.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; background: #2e2414; color: #f5c46d; font-size: 13px; font-weight: 600">Làm lại</a></div></td>
+</tr>
+
+<tr style="border-top: 1px solid #2c2b29">
+<td style="padding: 14px 18px; color: #c9c2b7">18/10/2025 21:05</td>
+<td style="padding: 14px 18px; font-weight: 500">Python cho phân tích dữ liệu</td>
+<td style="padding: 14px 18px; font-weight: 700">50%</td>
+<td style="padding: 14px 18px; color: #c9c2b7">10/20</td>
+<td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: #2a1a17; color: #f4a58e; font-size: 12px; font-weight: 600">Chưa đạt</span></td>
+<td style="padding: 14px 18px"><div style="display: flex; justify-content: flex-end; gap: 8px"><a href="ReviewDetail.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #3a3835; color: #f3efe8; font-size: 13px">Xem chi tiết</a><a href="ReviewStart.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; background: #2e2414; color: #f5c46d; font-size: 13px; font-weight: 600">Làm lại</a></div></td>
+</tr>
+
+<tr style="border-top: 1px solid #2c2b29">
+<td style="padding: 14px 18px; color: #c9c2b7">17/10/2025 19:30</td>
+<td style="padding: 14px 18px; font-weight: 500">SQL cơ bản đến nâng cao</td>
+<td style="padding: 14px 18px; font-weight: 700">55%</td>
+<td style="padding: 14px 18px; color: #c9c2b7">11/20</td>
+<td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: #2a1a17; color: #f4a58e; font-size: 12px; font-weight: 600">Chưa đạt</span></td>
+<td style="padding: 14px 18px"><div style="display: flex; justify-content: flex-end; gap: 8px"><a href="ReviewDetail.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #3a3835; color: #f3efe8; font-size: 13px">Xem chi tiết</a><a href="ReviewStart.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; background: #2e2414; color: #f5c46d; font-size: 13px; font-weight: 600">Làm lại</a></div></td>
+</tr>
+
+<tr style="border-top: 1px solid #2c2b29">
+<td style="padding: 14px 18px; color: #c9c2b7">15/10/2025 20:12</td>
+<td style="padding: 14px 18px; font-weight: 500">Python cho phân tích dữ liệu</td>
+<td style="padding: 14px 18px; font-weight: 700">40%</td>
+<td style="padding: 14px 18px; color: #c9c2b7">8/20</td>
+<td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: #2a1a17; color: #f4a58e; font-size: 12px; font-weight: 600">Chưa đạt</span></td>
+<td style="padding: 14px 18px"><div style="display: flex; justify-content: flex-end; gap: 8px"><a href="ReviewDetail.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #3a3835; color: #f3efe8; font-size: 13px">Xem chi tiết</a><a href="ReviewStart.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; background: #2e2414; color: #f5c46d; font-size: 13px; font-weight: 600">Làm lại</a></div></td>
+</tr>
+
+<tr style="border-top: 1px solid #2c2b29">
+<td style="padding: 14px 18px; color: #c9c2b7">12/10/2025 18:47</td>
+<td style="padding: 14px 18px; font-weight: 500">Thống kê mô tả</td>
+<td style="padding: 14px 18px; font-weight: 700">75%</td>
+<td style="padding: 14px 18px; color: #c9c2b7">15/20</td>
+<td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: #2e2414; color: #f5c46d; font-size: 12px; font-weight: 600">Đạt</span></td>
+<td style="padding: 14px 18px"><div style="display: flex; justify-content: flex-end; gap: 8px"><a href="ReviewDetail.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #3a3835; color: #f3efe8; font-size: 13px">Xem chi tiết</a><a href="ReviewStart.html" style="height: 36px; padding: 0 12px; display: flex; align-items: center; border-radius: 8px; background: #2e2414; color: #f5c46d; font-size: 13px; font-weight: 600">Làm lại</a></div></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; color: #a39d93">
+<span>Hiển thị 1–6 trong 14 lần làm bài</span>
+<nav aria-label="Phân trang" style="display: flex; gap: 6px">
+<button type="button" aria-label="Trang trước" style="width: 40px; height: 40px; border-radius: 10px; border: 1px solid #3a3835; background: transparent; color: #8f897f; font: inherit">‹</button>
+<button type="button" aria-current="page" style="width: 40px; height: 40px; border-radius: 10px; border: 0; background: #f5a524; color: #1a1206; font: inherit; font-weight: 700">1</button>
+<button type="button" style="width: 40px; height: 40px; border-radius: 10px; border: 1px solid #3a3835; background: transparent; color: #d6d0c6; font: inherit">2</button>
+<button type="button" style="width: 40px; height: 40px; border-radius: 10px; border: 1px solid #3a3835; background: transparent; color: #d6d0c6; font: inherit">3</button>
+<button type="button" aria-label="Trang sau" style="width: 40px; height: 40px; border-radius: 10px; border: 1px solid #3a3835; background: transparent; color: #d6d0c6; font: inherit">›</button>
+</nav>
+</div>
+</section>
+</main>
+</div>
+
+
+
+
+</body></html>

@@ -8,6 +8,8 @@ Mã quy tắc `RV-Rxx` dùng để tham chiếu từ `review-assessment.tests.md
 
 ## 1. Phạm vi
 
+**Owner: Tuấn** (D-OWN-01) · **Đặc tả: SPEC CONFIRMED** — trừ RV-R03, RV-R10, RV-R13 đang **BLOCKED** vì T16 chưa được nhóm tick (`docs/decisions.md` §3) và các điểm còn mở ở §10 · **Implementation: NOT IMPLEMENTED**
+
 Bài ôn tập tính **theo khóa học** (D01): 20 câu trắc nghiệm lấy từ các kỹ năng mà khóa dạy; làm đạt thì khóa học thành `completed` và kỹ năng của khóa được ghi nhận `known`.
 
 **Thuộc module:**
@@ -33,7 +35,7 @@ Bài ôn tập tính **theo khóa học** (D01): 20 câu trắc nghiệm lấy t
 
 ## 2. File liên quan
 
-Theo `STRUCTURE.md` (đã cập nhật):
+Theo `docs/structure.md` (đã cập nhật):
 
 | Lớp | File |
 |---|---|

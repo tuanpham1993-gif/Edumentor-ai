@@ -7,7 +7,7 @@
 | Công cụ | Phiên bản gợi ý |
 |---|---|
 | Python | 3.11+ |
-| Node.js | 18+ |
+| Node.js | 18.x, 20.x hoặc ≥ 22 — `^18.0.0 \|\| ^20.0.0 \|\| >=22.0.0` (theo `engines` trong `frontend/package.json`; không hỗ trợ 19, 21) |
 | PostgreSQL | 14+ (hoặc dùng Docker) |
 | Git | mới nhất |
 | Docker (tùy chọn) | để chạy PostgreSQL nhanh |
@@ -30,8 +30,19 @@ Các biến chính trong `.env`:
 ```env
 # Ứng dụng
 APP_ENV=development
-SECRET_KEY=doi-thanh-chuoi-bi-mat
-ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+# Xác thực (docs/decisions.md D-AUTH-01 … D-AUTH-03)
+SECRET_KEY=thay-bang-chuoi-ngau-nhien-xem-huong-dan-ben-duoi
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7        # đề xuất — CHƯA CHỐT (ND-40)
+RESET_TOKEN_EXPIRE_MINUTES=30      # đề xuất 15–30 phút (.docx 3.4)
+
+# Email — quên mật khẩu, email kết quả ôn tập (T28)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-smtp-user
+SMTP_PASSWORD=your-smtp-password
+FRONTEND_URL=http://localhost:5173
 
 # Cơ sở dữ liệu
 DATABASE_URL=postgresql://edumentor:edumentor@localhost:5432/edumentor
@@ -40,11 +51,18 @@ DATABASE_URL=postgresql://edumentor:edumentor@localhost:5432/edumentor
 LLM_API_KEY=your-api-key
 LLM_MODEL=ten-model
 
-# Frontend
+# Frontend (đặt trong frontend/.env — biến VITE_* bị lộ ra trình duyệt, không đặt bí mật ở đây)
 VITE_API_BASE_URL=http://localhost:8000/api
+VITE_USE_MOCK=false                # true = dùng dữ liệu mẫu src/mock/ khi chưa có backend (D-FE-07)
 ```
 
 > Không commit file `.env`. Chỉ commit `.env.example`.
+
+**Tạo `SECRET_KEY`:** khóa này dùng để ký JWT (HS256) — ai có khóa có thể giả mạo token của mọi người dùng. Tạo một chuỗi ngẫu nhiên đủ dài cho **mỗi** môi trường (máy cá nhân, server demo…), không dùng lại giá trị mẫu, không chia sẻ qua chat hay commit lên Git:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(64))"
+```
 
 ## 4. Cơ sở dữ liệu
 
@@ -89,10 +107,12 @@ Kiểm tra: mở `http://localhost:8000/docs` để xem tài liệu API tự sin
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev          # máy chủ phát triển
+npm run build        # build production vào frontend/dist
+npm run preview      # xem thử bản build
 ```
 
-Truy cập `http://localhost:5173`.
+Truy cập `http://localhost:5173`. Khi backend chưa chạy, có thể đặt `VITE_USE_MOCK=true` trong `frontend/.env` để xem giao diện với dữ liệu mẫu; dữ liệu mẫu không phải API thật (D-FE-07).
 
 ## 7. Chạy kiểm thử
 

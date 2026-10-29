@@ -1,0 +1,118 @@
+[
+ {
+  "name": "Main",
+  "title": "Đăng nhập · POST /api/auth/login"
+ },
+ {
+  "name": "Register",
+  "title": "Đăng ký · POST /api/auth/register"
+ },
+ {
+  "name": "ForgotPassword",
+  "title": "Quên mật khẩu · POST /api/auth/forgot-password"
+ },
+ {
+  "name": "ForgotSent",
+  "title": "Đã gửi yêu cầu (thông báo chung)"
+ },
+ {
+  "name": "ResetPassword",
+  "title": "Đặt lại mật khẩu · POST /api/auth/reset-password"
+ },
+ {
+  "name": "ResetExpired",
+  "title": "Đặt lại mật khẩu · lỗi 400"
+ },
+ {
+  "name": "Profile",
+  "title": "Hồ sơ · GET /api/me, /api/me/summary, /api/me/courses"
+ },
+ {
+  "name": "EditProfile",
+  "title": "Sửa hồ sơ · PATCH /api/me, POST /api/me/avatar"
+ },
+ {
+  "name": "ChangePassword",
+  "title": "Đổi mật khẩu · POST /api/me/change-password"
+ },
+ {
+  "name": "Skills",
+  "title": "Kỹ năng của tôi · GET/PATCH /api/me/skills"
+ },
+ {
+  "name": "Logout",
+  "title": "Xác nhận đăng xuất · POST /api/auth/logout"
+ },
+ {
+  "name": "ReviewStart",
+  "title": "Bắt đầu ôn tập · GET /api/courses/{id}/review"
+ },
+ {
+  "name": "ReviewQuiz",
+  "title": "Làm bài · POST /api/courses/{id}/review-attempts"
+ },
+ {
+  "name": "ReviewResult",
+  "title": "Kết quả · POST /api/review-attempts/{id}/submit"
+ },
+ {
+  "name": "ReviewHistory",
+  "title": "Lịch sử ôn tập · GET /api/me/review-history"
+ },
+ {
+  "name": "ReviewDetail",
+  "title": "Chi tiết lần làm · GET /api/me/review-history/{id}"
+ },
+ {
+  "name": "Courses",
+  "title": "Danh mục khóa học · GET /api/courses"
+ },
+ {
+  "name": "CourseDetail",
+  "title": "Chi tiết khóa học · GET /api/courses/{id}, /skills, /status"
+ },
+ {
+  "name": "JoinDialog",
+  "title": "Tham gia khóa học · POST /api/courses/{id}/join"
+ },
+ {
+  "name": "MyCourses",
+  "title": "Khóa học của tôi · /api/me/bookmarks, /api/me/courses"
+ },
+ {
+  "name": "Consultant",
+  "title": "AI tư vấn lộ trình · POST /api/chat/learning-path"
+ },
+ {
+  "name": "MyPaths",
+  "title": "Lộ trình của tôi · GET /api/me/learning-paths"
+ },
+ {
+  "name": "PathDetail",
+  "title": "Chi tiết lộ trình · nodes, edges, gợi ý khóa học"
+ },
+ {
+  "name": "PathEdit",
+  "title": "Thêm node / cạnh · POST …/nodes, …/edges"
+ },
+ {
+  "name": "Tutor",
+  "title": "AI Tutor · /api/chat/sessions*"
+ },
+ {
+  "name": "AdminCourses",
+  "title": "Quản trị khóa học · /api/admin/courses, course-skill-relations"
+ },
+ {
+  "name": "AdminSkills",
+  "title": "Quản trị kỹ năng · /api/admin/skills, skill-relations"
+ },
+ {
+  "name": "AdminBasePaths",
+  "title": "Mẫu lộ trình · /api/admin/base-learning-paths*"
+ },
+ {
+  "name": "AdminHistorical",
+  "title": "Dữ liệu lịch sử (tùy chọn) · /api/admin/historical-*"
+ }
+]

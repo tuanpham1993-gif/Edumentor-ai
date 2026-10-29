@@ -11,13 +11,13 @@ Trạng thái hiện tại: **chưa có code** — các file trong `backend/` v�
 ## Công nghệ
 
 - Backend: Python 3.11+, FastAPI, SQLAlchemy, Alembic, Pydantic, PostgreSQL 14+.
-- Frontend: React + Vite.
+- Frontend: React 18 + Vite, react-router-dom, Axios, CSS Modules; không thêm thư viện animation/UI/icon (D-FE-09).
 - Kiểm thử: `pytest`. Định dạng: `black`, `ruff`.
 - Cài đặt và lệnh thường dùng: `SETUP.md`.
 
 ## Kiến trúc
 
-Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu vào/ra. Router không viết truy vấn hay nghiệp vụ; service giữ quy tắc nghiệp vụ và transaction; repository chỉ truy vấn; thay đổi CSDL chỉ qua Alembic migration. Chi tiết: `STRUCTURE.md` §4 và `docs/backend-rules.md`. Không đổi kiến trúc này nếu không được yêu cầu.
+Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu vào/ra. Router không viết truy vấn hay nghiệp vụ; service giữ quy tắc nghiệp vụ và transaction; repository chỉ truy vấn; thay đổi CSDL chỉ qua Alembic migration. Chi tiết: `docs/structure.md` §4 và `docs/backend-rules.md`. Không đổi kiến trúc này nếu không được yêu cầu.
 
 ## Nguồn sự thật
 
@@ -26,23 +26,31 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quyết định đã chốt, mâu thuẫn, `[NEEDS DECISION]` | `docs/decisions.md` |
 | Thiết kế CSDL (chính thức) | `docs/database-design.md` |
 | Danh sách endpoint toàn hệ thống | `docs/api-endpoints.md` |
-| Cây thư mục, ánh xạ endpoint → file | `STRUCTURE.md` |
-| Quy ước API, code, Git, kiểm thử | `CONVENTIONS.md` |
+| Cây thư mục, ánh xạ endpoint → file | `docs/structure.md` |
+| Quy ước API, code, Git, kiểm thử | `docs/conventions.md` |
 | Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
 | Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
 | Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
-| Giao diện tham khảo | `docs/wireframes/` (không phải nguồn quy tắc API) |
+| Giao diện | Bản demo `EduMentor AI Demo.html` (D-FE-02; không phải nguồn quy tắc API hay nghiệp vụ). `docs/wireframes/`, `docs/EduMentor-UI-design/` không còn dùng |
+| Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
+| Báo cáo đối chiếu frontend với demo | `docs/ui-animation/` |
 
 Nguồn gốc nghiệp vụ mới nhất là `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (đã được chép vào các file `.md` trên). Thứ tự ưu tiên khi mâu thuẫn: `docs/decisions.md` §1.
 
 ## Phạm vi đang phụ trách
 
-Chỉ hai module có bộ tri thức đầy đủ và skill riêng:
+Chỉ hai module có bộ tri thức đầy đủ và skill riêng — cả hai **do Tuấn phụ trách chính thức** (D-OWN-01):
 
-1. **Xác thực & Hồ sơ người dùng** → skill `auth-profile`
-2. **Ôn tập & Đánh giá kiến thức** → skill `review-assessment`
+| Module | Owner | Đặc tả | Implementation | Skill |
+|---|---|---|---|---|
+| Xác thực & Hồ sơ người dùng | Tuấn | SPEC CONFIRMED (còn PENDING) | NOT IMPLEMENTED | `auth-profile` |
+| Ôn tập & Đánh giá kiến thức | Tuấn | SPEC CONFIRMED (còn BLOCKED/PENDING) | NOT IMPLEMENTED | `review-assessment` |
 
-Các module khác (Course Tracking, Learning Path, AI Consultant/Tutor, Recommendation, Admin) không thuộc phạm vi: không tự sửa file của chúng; nếu việc đang làm cần thay đổi ở đó, nêu ra cho người dùng.
+Phân công các module khác và quy ước trạng thái: `docs/decisions.md` §2 "Phân công". Không dùng "DONE" cho phần chưa có code.
+
+Các module khác (Course Tracking, Learning Path, AI Consultant/Tutor, Recommendation, Admin) không thuộc phạm vi **backend**: không tự sửa file backend của chúng; nếu việc đang làm cần thay đổi ở đó, nêu ra cho người dùng.
+
+**Ngoại lệ — frontend (D-FE-01):** việc dựng frontend theo bản demo được phê duyệt cho cả 14 tính năng (danh sách và người phụ trách: `README.md`). Chỉ trong `frontend/`; giữ mỗi nhóm tính năng ở thư mục/file riêng, không ghi đè phần việc thành viên khác đã có; tuân theo D-FE-01 … D-FE-11 và dừng ở các mục ND-49 … ND-55 còn mở.
 
 ## Quy tắc làm việc
 
@@ -69,4 +77,4 @@ alembic revision --autogenerate -m "mo ta"            # migration mới
 alembic upgrade head                                  # áp dụng migration
 ```
 
-Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`); nhánh `feature/<nhóm>-<mô-tả>`. Chi tiết: `CONVENTIONS.md` §5.
+Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`); nhánh `feature/<nhóm>-<mô-tả>`. Chi tiết: `docs/conventions.md` §5.
