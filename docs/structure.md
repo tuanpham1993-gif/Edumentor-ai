@@ -36,7 +36,8 @@ edumentor-ai/
 │   │   └── review-assessment.tests.md    # Kịch bản kiểm thử
 │   ├── EduMentor_Database_Design_Da_Sua.docx   # Nguồn gốc thiết kế CSDL đã sửa
 │   ├── EduMentor_Checklist_Da_Sua_API.xlsx     # Nguồn gốc checklist API, quyết định D01–D11
-│   └── wireframes/                 # Ảnh/PDF wireframe giao diện
+│   ├── ui-animation/               # Báo cáo đồng bộ giao diện theo bản demo (D-FE-02)
+│   └── EduMentor-UI-design/        # Prototype HTML cũ — không còn là nguồn giao diện (D-FE-02)
 │
 ├── backend/
 │   ├── pyproject.toml              # (hoặc requirements.txt)
@@ -156,92 +157,70 @@ edumentor-ai/
 │       ├── test_tutor.py
 │       └── test_admin.py
 │
-└── frontend/
-    ├── package.json
+└── frontend/                        # Theo bản demo (D-FE-03); quy ước: docs/conventions.md §4
+    ├── package.json                 # Dependency: D-FE-09
     ├── vite.config.js
-    ├── .env                         # VITE_API_BASE_URL
+    ├── index.html
+    ├── .env                         # VITE_API_BASE_URL, VITE_USE_MOCK (SETUP.md §3) — không commit giá trị thật
     └── src/
-        ├── main.jsx
-        ├── App.jsx
+        ├── main.jsx                         # Áp theme đã lưu trước khi render
+        ├── App.jsx                          # BrowserRouter + ToastProvider + CardOpeningProvider + ChatBubble
+        ├── index.css                        # Design token (màu Tối/Sáng, motion), class dùng chung, keyframes, reduced-motion
         ├── routes/
-        │   ├── index.jsx                    # Khai báo toàn bộ route
-        │   ├── ProtectedRoute.jsx           # Yêu cầu đăng nhập (endpoint người dùng)
-        │   └── AdminRoute.jsx               # Yêu cầu quyền quản trị (/api/admin/*)
+        │   ├── index.jsx                    # Khai báo toàn bộ route (mục 3)
+        │   ├── ProtectedRoute.jsx           # Yêu cầu đăng nhập — chỉ ẩn giao diện (D-FE-06)
+        │   └── AdminRoute.jsx               # Yêu cầu role admin — chỉ ẩn giao diện (D-FE-06)
         │
-        ├── api/                             # 1 file = 1 nhóm endpoint backend
-        │   ├── client.js                    # Base URL, gắn token, xử lý lỗi thống nhất
+        ├── api/                             # 1 file = 1 nhóm endpoint backend; component không gọi HTTP trực tiếp
+        │   ├── client.js                    # Axios: base URL, gắn token (D-FE-05), chuẩn hóa lỗi
         │   ├── auth.api.js                  # §2  /api/auth/*
-        │   ├── me.api.js                    # §2  /api/me*, /api/me/skills
+        │   ├── me.api.js                    # §2  /api/me, avatar, change-password, summary, skills
         │   ├── courses.api.js               # §3  /api/courses*
         │   ├── courseTracking.api.js        # §4  bookmarks, join, status, /api/me/courses*
+        │   ├── consultant.api.js            # §5  /api/chat/learning-path
         │   ├── learningPaths.api.js         # §5  /api/learning-paths*, /api/me/learning-paths
         │   ├── pathGraph.api.js             # §6,7 .../nodes*, .../edges*
         │   ├── nodeSuggestions.api.js       # §8  .../nodes/{skill_id}/courses
-        │   ├── consultant.api.js            # §5  /api/chat/learning-path
         │   ├── tutor.api.js                 # §9  /api/chat/sessions*
         │   ├── review.api.js                # §10 review, review-attempts, review-history
         │   └── admin.api.js                 # §11-13 /api/admin/*
+        │                                    # feedback.api.js, adminUserPaths.api.js, advisor.api.js: chỉ tạo khi
+        │                                    # có endpoint (ND-55); trước đó màn hình hiện "chưa khả dụng" (D-FE-08)
         │
         ├── pages/
-        │   ├── auth/
-        │   │   ├── LoginPage.jsx
-        │   │   ├── RegisterPage.jsx
-        │   │   ├── ForgotPasswordPage.jsx   # POST /api/auth/forgot-password
-        │   │   └── ResetPasswordPage.jsx    # POST /api/auth/reset-password
-        │   ├── profile/
-        │   │   └── ProfilePage.jsx          # Trang hồ sơ người dùng
-        │   ├── catalog/
-        │   │   ├── CatalogPage.jsx
-        │   │   └── CourseDetailPage.jsx
-        │   ├── learning-path/
-        │   │   ├── ConsultantChatPage.jsx   # Chat tạo lộ trình + xem đề xuất
-        │   │   ├── LearningPathListPage.jsx
-        │   │   └── LearningPathDetailPage.jsx   # Đồ thị node/cạnh + gợi ý khóa học
-        │   ├── tutor/
-        │   │   └── TutorPage.jsx
-        │   ├── review/
-        │   │   ├── ReviewAttemptPage.jsx
-        │   │   ├── ReviewResultPage.jsx
-        │   │   └── ReviewHistoryPage.jsx
-        │   └── admin/
-        │       ├── AdminCoursesPage.jsx
-        │       ├── AdminSkillsPage.jsx
-        │       ├── AdminRelationsPage.jsx       # course-skill + skill-relations
-        │       ├── AdminQuestionsPage.jsx       # /api/admin/questions*
-        │       ├── AdminBasePathsPage.jsx       # Mẫu lộ trình cơ sở
-        │       └── AdminHistoricalPage.jsx      # Tùy chọn
+        │   ├── auth/            LoginPage, RegisterPage, ForgotPasswordPage, ForgotSentPage, ResetPasswordPage, ResetExpiredPage
+        │   ├── profile/         ProfilePage, EditProfilePage, ChangePasswordPage, SkillsPage
+        │   ├── catalog/         CatalogPage, CourseDetailPage
+        │   ├── tracking/        MyCoursesPage
+        │   ├── path/            ConsultantPage, MyPathsPage, PathDetailPage
+        │   ├── tutor/           TutorPage
+        │   ├── review/          ReviewStartPage, ReviewAttemptPage, ReviewResultPage, ReviewHistoryPage, ReviewDetailPage
+        │   ├── feedback/        FeedbackPage (chưa có endpoint — ND-55)
+        │   └── admin/           AdminCoursesPage, AdminSkillsPage (+ SkillRelationMap), AdminBasePathsPage,
+        │                        AdminHistoricalPage, AdminFeedbackPage, AdminUserPathsPage (2 trang cuối: ND-55)
         │
         ├── components/
-        │   ├── layout/                      # Header, Sidebar, PageLayout
-        │   ├── common/                      # Button, Modal, Pagination, ErrorMessage
-        │   ├── profile/
-        │   │   ├── ProfileHeader.jsx            # GET /api/me
-        │   │   ├── ProfileEditForm.jsx          # PATCH /api/me (email chỉ đọc)
-        │   │   ├── ChangePasswordForm.jsx       # POST /api/me/change-password
-        │   │   ├── SkillList.jsx                # GET/PATCH /api/me/skills
-        │   │   ├── CurrentPathCard.jsx          # GET /api/me/learning-paths
-        │   │   ├── MyCoursesTabs.jsx            # GET /api/me/courses?status=
-        │   │   └── ReviewHistoryList.jsx        # GET /api/me/review-history
-        │   ├── course/
-        │   │   ├── CourseCard.jsx
-        │   │   ├── CourseFilters.jsx            # search, skill_id, level, sort_by
-        │   │   └── CourseActions.jsx            # bookmark / join / abandon
-        │   ├── learning-path/
-        │   │   ├── PathGraph.jsx                # Vẽ node + cạnh
-        │   │   ├── NodeDetailPanel.jsx          # Sửa node_role, display_order
-        │   │   ├── NodeCoursePanel.jsx          # Gợi ý khóa học khi chọn node
-        │   │   └── ProposedPathPreview.jsx      # Xem đề xuất trước khi lưu
-        │   ├── chat/
-        │   │   ├── ChatWindow.jsx
-        │   │   └── MessageBubble.jsx
-        │   └── review/
-        │       ├── QuestionCard.jsx
-        │       └── ScoreSummary.jsx
+        │   ├── layout/          Header, PageLayout, AuthLayout, SettingsLayout, AdminLayout, HangingLamp, PullLamp, Logo
+        │   ├── common/          Button, Modal, ConfirmDialog, Toast, Tabs, ErrorMessage, AnimatedNumber,
+        │   │                    PasswordInput, PasswordRules, ThemeToggle, Icons, Pagination
+        │   ├── course/          CourseCard, CourseCardFace, CourseCover, CourseFilters, CardOpening, JoinDialog
+        │   ├── path/            PathGraph, PathEditDialog
+        │   ├── profile/         LogoutDialog
+        │   └── chat/            ChatBubble (lối tắt + AI tư vấn khóa học — phần AI chờ ND-55)
         │
-        ├── hooks/                           # useAuth, usePagination, useCourseStatus
-        ├── store/                           # authStore (user, token)
-        └── utils/                           # Định dạng, hằng số trạng thái
+        ├── config/
+        │   └── links.js                     # Link GitHub, Zalo
+        ├── utils/
+        │   ├── constants.js                 # Hằng số trạng thái khớp enum backend
+        │   ├── formatters.js                # Định dạng số, ngày; prefersReducedMotion
+        │   └── theme.js                     # Lưu và đổi theme Sáng/Tối
+        │
+        └── mock/                            # Chỉ dùng khi VITE_USE_MOCK=true (D-FE-07)
 ```
+
+Mỗi page và component có file `*.module.css` đi kèm. Bảng chuyển màn `components/demo/` của bản demo **không** đưa vào frontend (D-FE-07).
+
+File rỗng theo cấu trúc cũ (`components/layout/Sidebar.jsx`, `components/learning-path/*`, `components/profile/*` cũ, `components/review/*`, `components/chat/ChatWindow.jsx`, `MessageBubble.jsx`, `components/course/CourseActions.jsx`, `pages/learning-path/*`, `pages/admin/AdminRelationsPage.jsx`, `store/`, `hooks/`) được **giữ nguyên, không dùng** cho tới khi ND-49 được quyết định. Trang quản trị câu hỏi (`/api/admin/questions*`) chưa có trong demo — ND-53.
 
 ---
 
@@ -270,19 +249,41 @@ edumentor-ai/
 
 ## 3. Ánh xạ trang Frontend → Endpoint Backend
 
-| Trang (route) | File | Endpoint backend sử dụng |
-|---|---|---|
-| `/login`, `/register`, quên/đặt lại mật khẩu | `pages/auth/*` | `POST /api/auth/login`, `/register`, `/logout`, `/forgot-password`, `/reset-password` |
-| `/profile` | `pages/profile/ProfilePage.jsx` | `GET/PATCH /api/me`, `POST /api/me/change-password`, `POST /api/me/avatar`, `GET /api/me/summary`, `GET/PATCH /api/me/skills`, `GET /api/me/learning-paths`, `GET /api/me/courses?status=`, `GET /api/me/review-history` |
-| `/courses` | `CatalogPage.jsx` | `GET /api/courses` (`search`, `skill_id`, `level`, `sort_by`), `POST /api/me/bookmarks` |
-| `/courses/:courseId` | `CourseDetailPage.jsx` | `GET /api/courses/{id}`, `GET /api/courses/{id}/skills`, `POST /api/courses/{id}/join`, `POST/DELETE /api/me/bookmarks`, `GET/PATCH /api/me/courses/{id}/status` |
-| `/learning-paths/new` | `ConsultantChatPage.jsx` | `POST /api/chat/learning-path`, `POST /api/learning-paths` (lưu khi người dùng xác nhận) |
-| `/learning-paths` | `LearningPathListPage.jsx` | `GET /api/me/learning-paths`, `DELETE /api/learning-paths/{id}` (abandon) |
-| `/learning-paths/:pathId` | `LearningPathDetailPage.jsx` | `GET/PATCH /api/learning-paths/{id}`, nodes `GET/POST/PATCH/DELETE`, edges `GET/POST/PATCH/DELETE`, `GET .../nodes/{skill_id}/courses` |
-| `/tutor` | `TutorPage.jsx` | `POST/GET /api/chat/sessions`, `GET/POST .../messages`, `DELETE /api/chat/sessions/{id}` |
-| `/review/:courseId` | `ReviewAttemptPage.jsx` | `GET /api/courses/{course_id}/review`, `POST /api/courses/{course_id}/review-attempts`, `GET /api/review-attempts/{id}`, `POST .../submit` |
-| `/review/history` | `ReviewHistoryPage.jsx`, `ReviewResultPage.jsx` | `GET /api/me/review-history`, `GET /api/me/review-history/{attempt_id}` |
-| `/admin/*` | `pages/admin/*` | `/api/admin/*` (§11–§13) |
+Route theo bản demo (D-FE-02, D-FE-04). Guard: **C** = công khai, **P** = `ProtectedRoute`, **A** = `AdminRoute` (D-FE-06). Endpoint chỉ lấy từ `docs/api-endpoints.md` (D-FE-10). `/courses` và `/courses/:courseId` để **P** theo demo (demo chỉ có giao diện đã đăng nhập); `docs/api-endpoints.md` §3 chưa ghi quyền của `GET /api/courses*`.
+
+| Route | Guard | Page | Endpoint backend sử dụng |
+|---|---|---|---|
+| `/` | C | chuyển hướng `/login` | — |
+| `/login` | C | `auth/LoginPage` | `POST /api/auth/login` |
+| `/register` | C | `auth/RegisterPage` | `POST /api/auth/register` |
+| `/forgot-password`, `/forgot-sent` | C | `auth/ForgotPasswordPage`, `ForgotSentPage` | `POST /api/auth/forgot-password` |
+| `/reset-password`, `/reset-expired` | C | `auth/ResetPasswordPage`, `ResetExpiredPage` | `POST /api/auth/reset-password` (dạng link chứa token: chưa có trong tài liệu) |
+| `/me` | P | `profile/ProfilePage` | `GET /api/me`, `GET /api/me/summary`, `GET /api/me/courses?status=`, `GET /api/me/skills`, `GET /api/me/review-history`, `POST /api/auth/logout` |
+| `/me/edit` | P | `profile/EditProfilePage` | `GET/PATCH /api/me`, `POST /api/me/avatar` |
+| `/me/password` | P | `profile/ChangePasswordPage` | `POST /api/me/change-password` |
+| `/me/skills` | P | `profile/SkillsPage` | `GET/PATCH /api/me/skills` (theo `skill_id` — D-FE-11) |
+| `/courses` | P | `catalog/CatalogPage` | `GET /api/courses` (`search`, `skill_id`, `level`, `sort_by`), `POST /api/me/bookmarks`, `DELETE /api/me/bookmarks/{course_id}` |
+| `/courses/:courseId` | P | `catalog/CourseDetailPage` | `GET /api/courses/{course_id}`, `GET /api/courses/{course_id}/skills`, `GET /api/me/courses/{course_id}/status`, `POST /api/courses/{course_id}/join`, `POST/DELETE /api/me/bookmarks…` |
+| `/me/courses` | P | `tracking/MyCoursesPage` | `GET /api/me/courses?status=`, `GET /api/me/bookmarks`, `PATCH /api/me/courses/{course_id}/status`, `DELETE /api/me/courses/{course_id}` |
+| `/consultant` | P | `path/ConsultantPage` | `POST /api/chat/learning-path`, `POST /api/learning-paths` (chỉ khi người dùng xác nhận) |
+| `/me/learning-paths` | P | `path/MyPathsPage` | `GET /api/me/learning-paths` |
+| `/learning-paths/:pathId` | P | `path/PathDetailPage` | `GET/PATCH/DELETE /api/learning-paths/{path_id}`, nodes `GET/POST/PATCH/DELETE`, edges `GET/POST/PATCH/DELETE`, `GET .../nodes/{skill_id}/courses` |
+| `/tutor` | P | `tutor/TutorPage` | `POST/GET /api/chat/sessions`, `GET /api/chat/sessions/{session_id}`, `GET/POST .../messages`, `DELETE /api/chat/sessions/{session_id}` |
+| `/courses/:courseId/review` | P | `review/ReviewStartPage` | `GET /api/courses/{course_id}/review`, `POST /api/courses/{course_id}/review-attempts` |
+| `/courses/:courseId/review/attempt` | P | `review/ReviewAttemptPage` | `POST /api/courses/{course_id}/review-attempts` (trả lại bài dở — D03), `GET /api/review-attempts/{attempt_id}`, `POST /api/review-attempts/{attempt_id}/submit`. Lưu đáp án bài dở: chưa có endpoint (ND-55) |
+| `/review-result/:attemptId` | P | `review/ReviewResultPage` | `GET /api/me/review-history/{attempt_id}` |
+| `/me/review-history`, `/me/review-history/:attemptId` | P | `review/ReviewHistoryPage`, `ReviewDetailPage` | `GET /api/me/review-history` (`page`, `page_size`, bộ lọc — T17), `GET /api/me/review-history/{attempt_id}` |
+| `/contact` | P | `feedback/FeedbackPage` | Chưa có endpoint (ND-55) — hiển thị "chưa khả dụng" |
+| `/admin` | A | chuyển hướng `/admin/courses` | — |
+| `/admin/courses` | A | `admin/AdminCoursesPage` | `/api/admin/courses*`, `/api/admin/course-skill-relations*` |
+| `/admin/skills` | A | `admin/AdminSkillsPage` (+ `SkillRelationMap`) | `/api/admin/skills*`, `/api/admin/skill-relations*` |
+| `/admin/base-paths` | A | `admin/AdminBasePathsPage` | `/api/admin/base-learning-paths*` (kèm nodes, edges) |
+| `/admin/historical` | A | `admin/AdminHistoricalPage` | `/api/admin/historical-learning-paths*`, `/api/admin/historical-learning-path-imports*` (tùy chọn) |
+| `/admin/feedback` | A | `admin/AdminFeedbackPage` | Chưa có endpoint (ND-55) |
+| `/admin/user-paths` | A | `admin/AdminUserPathsPage` | Chưa có endpoint (ND-55) |
+| `*` | — | chuyển hướng `/login` | — |
+
+Route chỉ để mở nhanh trạng thái trong demo (`/logout`, `/courses/:courseId/join`, `/learning-paths/:pathId/edit`, `/contact-guest`) chưa đưa vào bảng — ND-50. Bong bóng chat (`ChatBubble`) hiện trên mọi trang trừ `/admin/*`, `/tutor`, `/consultant` và trang làm bài; phần "AI tư vấn khóa học" chưa có endpoint (ND-55).
 
 ### Cách frontend và backend khớp với nhau
 
@@ -297,8 +298,8 @@ edumentor-ai/
 
 - Nút "Mở khóa học" gọi `join` rồi chuyển hướng tới URL ngoài trong phản hồi; **không** tự coi là hoàn thành.
 - Trạng thái `completed` chỉ hiển thị sau khi nộp bài ôn tập; sau khi nộp, frontend chỉ tải lại dữ liệu, **không** gửi request cập nhật kỹ năng riêng.
-- Lộ trình AI đề xuất chỉ hiển thị ở `ProposedPathPreview`; chỉ khi bấm xác nhận mới gọi `POST /api/learning-paths`.
-- Gợi ý khóa học chỉ tải khi người dùng chọn một node (`NodeCoursePanel`).
+- Lộ trình AI đề xuất chỉ hiển thị ở khung đề xuất của `ConsultantPage`; chỉ khi bấm xác nhận mới gọi `POST /api/learning-paths`.
+- Gợi ý khóa học chỉ tải khi người dùng chọn một node (panel bên phải của `PathDetailPage`).
 - Màn hình làm bài ôn tập không nhận đáp án đúng từ API cho tới khi nộp.
 - Danh sách có thể lớn dùng `Pagination` với `page`, `page_size`.
 

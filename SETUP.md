@@ -51,8 +51,9 @@ DATABASE_URL=postgresql://edumentor:edumentor@localhost:5432/edumentor
 LLM_API_KEY=your-api-key
 LLM_MODEL=ten-model
 
-# Frontend
+# Frontend (đặt trong frontend/.env — biến VITE_* bị lộ ra trình duyệt, không đặt bí mật ở đây)
 VITE_API_BASE_URL=http://localhost:8000/api
+VITE_USE_MOCK=false                # true = dùng dữ liệu mẫu src/mock/ khi chưa có backend (D-FE-07)
 ```
 
 > Không commit file `.env`. Chỉ commit `.env.example`.
@@ -106,10 +107,12 @@ Kiểm tra: mở `http://localhost:8000/docs` để xem tài liệu API tự sin
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev          # máy chủ phát triển
+npm run build        # build production vào frontend/dist
+npm run preview      # xem thử bản build
 ```
 
-Truy cập `http://localhost:5173`.
+Truy cập `http://localhost:5173`. Khi backend chưa chạy, có thể đặt `VITE_USE_MOCK=true` trong `frontend/.env` để xem giao diện với dữ liệu mẫu; dữ liệu mẫu không phải API thật (D-FE-07).
 
 ## 7. Chạy kiểm thử
 

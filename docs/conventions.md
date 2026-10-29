@@ -92,9 +92,43 @@ Endpoint trả danh sách nhận `page` và `page_size`, trả về `items`, `to
 
 ## 4. Quy ước mã nguồn (Frontend)
 
-- Component: `PascalCase.jsx`; hàm/biến: `camelCase`.
-- Mỗi nhóm endpoint có một file trong `src/api/`; component không gọi `fetch` trực tiếp.
-- Hiển thị thông báo lỗi dựa trên `error.message` từ cấu trúc lỗi thống nhất.
+- Component: `PascalCase.jsx`; hàm/biến: `camelCase`. Mỗi page/component có một file `PascalCase.module.css` đi kèm (CSS Modules).
+- Luồng gọi API: **Page → Component → `src/api/*.api.js` → `src/api/client.js` (Axios) → backend**. Component và page không gọi `fetch`/`axios` trực tiếp; chỉ `client.js` tạo instance Axios.
+- Chỉ dùng endpoint có trong `docs/api-endpoints.md`; tên trường theo API contract, không theo dữ liệu mẫu của demo (D-FE-10, D-FE-11).
+- Hiển thị thông báo lỗi dựa trên `error.message` từ cấu trúc lỗi thống nhất; `client.js` chuẩn hóa lỗi một chỗ.
+- Token xử lý theo D-FE-05; route guard theo D-FE-06 — guard chỉ ẩn giao diện, không thay thế kiểm tra quyền ở backend.
+- Dữ liệu mẫu nằm trong `src/mock/`, chỉ chạy khi `VITE_USE_MOCK=true` (D-FE-07).
+- Trạng thái khóa học, điểm, kết quả đạt/chưa đạt và kỹ năng chỉ lấy từ server; animation chỉ minh họa, không tự tính lại hay đổi trạng thái nghiệp vụ.
+- Màu, thời lượng và easing chỉ dùng biến CSS trong `src/index.css` (`--bg`, `--card`, `--accent`, `--d-*`, `--e-*`…); không ghi mã màu cứng, để chế độ Sáng/Tối hoạt động.
+- Không dùng thư viện animation/UI/icon (D-FE-09): chỉ CSS transition/keyframes, SVG và Web Animations API.
+- Luôn tôn trọng `prefers-reduced-motion` và công tắc `data-motion` (animation rút về gần 0).
+- Truy cập bàn phím: dùng `:focus-visible`; modal có focus trap, đóng bằng Escape và trả focus về phần tử đã mở nó; tabs điều khiển được bằng phím mũi tên.
+- Trang có tải dữ liệu phải xử lý đủ trạng thái đang tải, rỗng, lỗi và thành công. Tính năng chưa có endpoint hiển thị trạng thái "chưa khả dụng" (D-FE-08).
+
+### An toàn điều hướng (chống open redirect)
+
+`react-router-dom@6.30.6` còn advisory open redirect [GHSA-wrjc-x8rr-h8h6](https://github.com/advisories/GHSA-wrjc-x8rr-h8h6), chưa có bản vá trong 6.x. Lỗi chỉ xảy ra khi code đưa đường dẫn không tin cậy vào điều hướng, nên bắt buộc:
+
+- **Không** truyền trực tiếp vào `navigate()`, `<Link to>`, `<Navigate to>` hay `redirect()` bất kỳ đường dẫn nào lấy từ query string, URL, `location.state` do bên ngoài tạo, response API hoặc dữ liệu người dùng nhập.
+- Đường dẫn động chỉ được dùng sau khi qua **một hàm kiểm tra dùng chung**, theo **allowlist** các route khai báo trong `src/routes/index.jsx` (bảng route ở `docs/structure.md` §3). Không khớp allowlist → dùng đường dẫn mặc định cố định trong code.
+- Từ chối: URL tuyệt đối (`https://…`, `javascript:`, `data:`…), đường dẫn bắt đầu bằng `//` hoặc `/\` (ví dụ `//example.com`, `/\example.com`), chứa `\`, ký tự điều khiển, hoặc dạng mã hóa của các ký tự này (`%5C`, `%2F%2F`…).
+- **Bắt đầu bằng `/` không chứng minh đường dẫn an toàn.** Phải kiểm tra allowlist, và sau khi phân giải bằng `new URL(value, window.location.origin)` thì `origin` phải trùng origin của ứng dụng.
+- Luồng "quay lại trang trước sau khi đăng nhập" phải tuân theo quy tắc này; luồng đó **chưa được triển khai** cho tới khi ND-52 được chốt.
+
+Ví dụ minh họa (chưa có trong code; chỉ cho thấy thứ tự kiểm tra):
+
+```js
+// ALLOWED: danh sách mẫu route lấy từ src/routes/index.jsx
+function safeInternalPath(value, ALLOWED, fallback) {
+  if (typeof value !== 'string' || value === '') return fallback;
+  let decoded;
+  try { decoded = decodeURIComponent(value); } catch { return fallback; }
+  if (/[\\\u0000-\u001f]/.test(decoded) || !decoded.startsWith('/') || decoded.startsWith('//')) return fallback;
+  const url = new URL(decoded, window.location.origin);
+  if (url.origin !== window.location.origin) return fallback;
+  return ALLOWED.some((pattern) => pattern.test(url.pathname)) ? url.pathname + url.search : fallback;
+}
+```
 
 ---
 

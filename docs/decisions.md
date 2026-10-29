@@ -1,9 +1,10 @@
-# Quyết định & điểm chưa chốt — Xác thực/Hồ sơ và Ôn tập/Đánh giá
+# Quyết định & điểm chưa chốt — Xác thực/Hồ sơ, Ôn tập/Đánh giá và Frontend
 
-Đây là **nơi duy nhất** ghi quyết định nghiệp vụ và các điểm còn mở của 2 module:
+Đây là **nơi duy nhất** ghi quyết định nghiệp vụ và các điểm còn mở của:
 
 - Xác thực & Hồ sơ người dùng (`docs/modules/auth-profile.md`)
 - Ôn tập & Đánh giá kiến thức (`docs/modules/review-assessment.md`)
+- Frontend đồng bộ theo bản demo, 14 tính năng (mục 6)
 
 Các tài liệu khác chỉ tham chiếu mã (`D05`, `T13`, `ND-24`…), không chép lại nội dung. Khi một `ND-xx` được chốt: chuyển nó sang mục 2, sửa tài liệu bị ảnh hưởng, rồi mới code.
 
@@ -16,7 +17,7 @@ Thứ tự ưu tiên khi các nguồn khác nhau, cho 2 module trên:
 1. `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (bản đã sửa, D01–D11 đã chốt) — **nguồn nghiệp vụ mới nhất**. Đã được chép vào `docs/database-design.md` và `docs/api-endpoints.md`.
 2. `docs/structure.md` (trước đây là `STRUCTURE.md` ở root) — nguồn kiến trúc nền (phân lớp Router → Service → Repository → Model, cây thư mục).
 3. `docs/conventions.md` (trước đây là `CONVENTIONS.md` ở root), `SETUP.md`, `README.md`.
-4. Wireframe trong `docs/wireframes/` — chỉ mô tả giao diện; **không** tạo quy tắc API khi chưa có trong 1–3.
+4. Giao diện: bản demo `EduMentor AI Demo.html` (D-FE-02) — chỉ mô tả giao diện; **không** tạo quy tắc API hay nghiệp vụ khi chưa có trong 1–3. Wireframe trong `docs/wireframes/` và `docs/EduMentor-UI-design/` **không còn là nguồn giao diện**; các mục ND bên dưới có nhắc wireframe được giữ làm bối cảnh lịch sử.
 
 Không tự tạo quy tắc khi tài liệu chưa quy định → ghi `[NEEDS DECISION]` ở mục 4.
 
@@ -203,4 +204,36 @@ Theo sheet "File cần sửa" — chưa thực hiện vì không thuộc danh s�
 - File code rỗng đã có sẵn trong `backend/` theo tên cũ (`models/review_question.py`, `models/user_course.py`) — đổi tên/tạo mới khi bắt đầu implement, theo `docs/structure.md`.
 - `TASKS.md`, mẫu giao diện Profile (T10).
 - Excel `EduMentor_Checklist_Da_Sua_API.xlsx`: cột "Phụ trách" của §2 (sheet "Endpoint (bản mới)") còn ghi Hòa — cập nhật theo D-OWN-01.
-- `AGENTS.md` và `.agents/skills/*` (bản cho Codex) là bản sao cũ của skill Giai đoạn 2 — chưa có trạng thái T16, D-OWN-01; cần đồng bộ lại nếu còn dùng.
+- `AGENTS.md` và `.agents/skills/*` (bản cho Codex) là bản sao cũ của skill Giai đoạn 2 — chưa có trạng thái T16, D-OWN-01, D-FE-*; cần đồng bộ lại nếu còn dùng.
+
+---
+
+## 6. Frontend — đồng bộ theo bản demo (D-FE-01 … D-FE-11)
+
+Tuấn phê duyệt qua các chỉ thị "APPROVED — START FRONTEND SYNC" và "Phase C" (2026-10-28). Báo cáo phân tích làm căn cứ: `docs/ui-animation/FRONTEND-SYNC-AUDIT.md` (Phase A), `docs/ui-animation/PHASE-B0-DEMO-INTAKE.md`. Các quyết định này **chỉ áp dụng cho frontend**; không thay đổi API contract, CSDL hay phạm vi backend (D-OWN-01).
+
+| Mã | Nội dung đã xác nhận | Nguồn |
+|---|---|---|
+| D-FE-01 | **Phạm vi frontend = cả 14 tính năng** (danh sách và người phụ trách: `README.md`, mục "Tính năng chính"). Mỗi nhóm tính năng nằm ở thư mục/file riêng để không ghi đè phần việc của thành viên khác. Phạm vi backend của Claude vẫn theo D-OWN-01. | G1 |
+| D-FE-02 | **Nguồn giao diện** = bản demo `EduMentor AI Demo.html` (bản build Vite một file do Tuấn cung cấp, chưa đưa vào repo; mã nguồn React gốc **không có**). Frontend được **tái tạo từ bundle**; chấp nhận không khớp 1-1 với file nguồn gốc của demo. Wireframe và `docs/EduMentor-UI-design/` không dùng để ghi đè demo. | G0, G5 |
+| D-FE-03 | **Cấu trúc thư mục frontend** theo bản demo (`docs/structure.md` §1), **giữ** `routes/ProtectedRoute.jsx` và `routes/AdminRoute.jsx`. File rỗng theo cấu trúc cũ **không xóa** — xem ND-49. *(Suy ra từ chỉ thị Phase C quy tắc 5, 7 — cần Tuấn xác nhận lại nếu không đúng ý.)* | G2 |
+| D-FE-04 | Router production: **`BrowserRouter`**. Không dùng `MemoryRouter`/`VITE_ROUTER` của demo. | G3 (một phần) |
+| D-FE-05 | Access token lưu ở **`sessionStorage`** (theo định hướng D-AUTH-01), gửi qua `Authorization: Bearer`. **Chưa** triển khai luồng refresh token cho tới khi ND-41, ND-48 được chốt; tạm thời khi nhận 401 thì xóa token và chuyển về `/login` (nhánh "làm mới thất bại" của D-AUTH-02). | G4 |
+| D-FE-06 | `ProtectedRoute` (cần đăng nhập) và `AdminRoute` (cần `role = admin`) **chỉ ẩn giao diện**; backend vẫn là nơi kiểm tra quyền (`docs/backend-rules.md` §2). Vai trò lấy từ dữ liệu người dùng do backend trả về, không cho người dùng tự chọn. Hành vi khi user thường vào `/admin/*`: ND-52. | Phase C quy tắc 5 |
+| D-FE-07 | Dữ liệu mẫu (`src/mock/`) **chỉ** chạy khi `VITE_USE_MOCK=true`; mặc định `false`. Không đưa nội dung chỉ dành cho demo vào production (bảng chuyển màn `components/demo/`, giả lập lỗi mạng, tài khoản/mật khẩu mẫu hiển thị trên UI, ngày/vai trò ghi cứng, câu trả lời AI soạn sẵn). | Phase C (C5) |
+| D-FE-08 | Màn hình có giao diện trong demo nhưng **chưa có endpoint** (lưu bài dở, phản hồi học viên/admin, admin xem lộ trình người dùng, AI tư vấn khóa học — ND-35, ND-55) vẫn được dựng giao diện và hiển thị trạng thái **"chưa khả dụng"**; không tạo endpoint hay API giả. | G7, Phase C (C5) |
+| D-FE-09 | Dependency frontend (ghim phiên bản chính xác trong `frontend/package.json`): `react` 18.3.1, `react-dom` 18.3.1, `react-router-dom` 6.30.6, `axios` 1.21.0 (theo demo); dev: `vite` **6.4.5**, `@vitejs/plugin-react` 4.7.0. **Vite được nâng từ 5.4.21 lên 6.4.5 (2026-10-28)** để xử lý các advisory của dependency phát triển — vite (path traversal, `server.fs` bypass, launch-editor trên Windows), esbuild (0.21.5 → 0.25.12); các bản vá không có trong Vite 5.x. Sau khi nâng, `npm audit` không còn advisory nào của vite/esbuild. Dependency **chưa sạch hoàn toàn**: `react-router-dom`/`react-router` 6.30.6 còn 2 advisory mức **moderate** — GHSA-wrjc-x8rr-h8h6 (open redirect, áp dụng — chưa có bản vá trong 6.x; xử lý bằng quy tắc `docs/conventions.md` §4 "An toàn điều hướng") và GHSA-337j-9hxr-rhxg (chỉ ảnh hưởng SSR hydration ở Framework/Data Mode — không áp dụng cho Declarative Mode `BrowserRouter`, D-FE-04). Không thêm thư viện animation, UI, icon hay state — dùng CSS Modules, CSS transition/keyframes và Web Animations API như demo. | README "Công nghệ", Phase C (C1, C2), security review sau C1 |
+| D-FE-10 | API: **chỉ** dùng endpoint trong `docs/api-endpoints.md`; base URL lấy từ `VITE_API_BASE_URL` (mặc định `http://localhost:8000/api`, theo `/api` của `docs/conventions.md` §1). Tiền tố `/api/v1` của nhánh `origin/Hoa` chưa được áp dụng. | Phase C (C3) |
+| D-FE-11 | Khi tên/kiểu trường của demo khác API contract (ví dụ `PATCH /api/me/skills` theo tên kỹ năng thay vì `skill_id`, `platform`/`provider` thay vì `organization`, nhãn cấp độ tiếng Việt thay vì `beginner/intermediate/advanced`, ngưỡng đạt và điểm tính ở client) → frontend **theo API contract**, chỉ đổi nhãn hiển thị. Danh sách lệch: `docs/ui-animation/FRONTEND-SYNC-AUDIT.md` mục E. | Phase C quy tắc 3 |
+
+### Điểm chưa chốt của frontend — `[NEEDS DECISION]`
+
+| Mã | Câu hỏi | Bối cảnh / nguồn |
+|---|---|---|
+| ND-49 | File rỗng theo cấu trúc cũ không còn trong cấu trúc demo — giữ, đổi tên hay xóa? `components/layout/Sidebar.jsx`, `components/learning-path/*`, `components/profile/*` (6 file hiện có), `components/review/*`, `components/chat/ChatWindow.jsx`, `MessageBubble.jsx`, `components/course/CourseActions.jsx`, `pages/learning-path/*`, `pages/admin/AdminRelationsPage.jsx`, `store/`, `hooks/`. Tạm thời: giữ nguyên, không dùng. | D-FE-03 |
+| ND-50 | Các route chỉ để mở nhanh trạng thái trong demo — `/logout`, `/courses/:courseId/join`, `/learning-paths/:pathId/edit`, `/contact-guest` — có giữ trong production không? (Màn `/forgot-sent`, `/reset-expired` là bước của luồng quên mật khẩu, không thuộc câu hỏi này.) | Demo, G3 |
+| ND-51 | Câu chữ giao diện của demo **khẳng định quy tắc chưa chốt**: "câu bỏ trống tính là sai" (T16 BLOCKED), "kết quả được gửi qua email" (ND-25), "JPG/PNG, tối đa 2 MB" (ND-12), quy tắc "khác mật khẩu hiện tại" (không có trong D-AUTH-05), cách hiểu "ký tự đặc biệt" (ND-46). Tạm thời frontend **không hiển thị** các khẳng định này; hiển thị lại khi mục tương ứng được chốt. | D-FE-02, mục 3–4 |
+| ND-52 | User đã đăng nhập nhưng không phải admin vào `/admin/*`: chuyển về trang nào (trang học viên hay trang báo không đủ quyền)? Chưa đăng nhập vào trang cần xác thực: chuyển `/login` kèm đường dẫn quay lại — cần xác nhận. | D-FE-06 |
+| ND-53 | `pages/admin/AdminQuestionsPage.jsx` (`/api/admin/questions*`, T19–T21) có trong cấu trúc cũ nhưng demo **không có màn hình** này; owner đang CONFLICT (CONFLICT-SCOPE-01). Có làm giao diện quản trị câu hỏi không, ai làm? | `docs/structure.md`, mục 2 |
+| ND-54 | Demo hiển thị dữ liệu mà API/CSDL chưa có: tên lộ trình (`name` — `LearningPath` chỉ có `goal_text`), số lần dùng mẫu lộ trình (`used`), kỹ năng của câu hỏi khi làm bài (`skill`), bài đang dở trong `GET .../review` (`in_progress`), tin nhắn Tutor có `code`/`quiz` có cấu trúc, nguồn dữ liệu lịch sử. Bổ sung vào API hay bỏ trên giao diện? Tạm thời frontend bỏ các phần này (D-FE-11). | FRONTEND-SYNC-AUDIT E-01 … E-03, E-18, E-23, E-25 |
+| ND-55 | Endpoint còn thiếu cho giao diện đã có (D-FE-08): M1 lưu đáp án bài đang dở; M2 gửi phản hồi, xem liên hệ khóa học, admin xem/lọc phản hồi (bao gồm ND-35); M3 admin xem danh sách người dùng và lộ trình của họ; M4 chat AI tư vấn khóa học trong bong bóng chat. Nhóm cần định nghĩa trong `docs/api-endpoints.md`. | README "Tổng quan API" |
