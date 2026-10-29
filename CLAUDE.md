@@ -6,7 +6,7 @@ Chỉ thị cấp project cho Claude Code. File này **không** chứa quy tắc
 
 EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình học bằng AI, gợi ý khóa học MOOC bên ngoài theo kỹ năng, AI Tutor, và ghi nhận kỹ năng qua bài ôn tập. Tổng quan: `README.md`.
 
-Trạng thái hiện tại: **chưa có code** — các file trong `backend/` và `frontend/` chỉ là file rỗng giữ chỗ. Đừng suy luận nghiệp vụ từ code; đọc tài liệu.
+Trạng thái hiện tại: **backend chưa có code** — mọi file trong `backend/` là file rỗng giữ chỗ. **Frontend mới có phần nền C1** (cấu hình Vite, `src/main.jsx`, `src/App.jsx`, `src/index.css`, `src/utils/theme.js`); route, page, component và API client còn rỗng. Chi tiết: `docs/structure.md` §1.1. Đừng suy luận nghiệp vụ từ code; đọc tài liệu.
 
 ## Công nghệ
 
@@ -31,9 +31,9 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
 | Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
 | Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
-| Giao diện | Bản demo `EduMentor AI Demo.html` (D-FE-02; không phải nguồn quy tắc API hay nghiệp vụ). `docs/wireframes/`, `docs/EduMentor-UI-design/` không còn dùng |
+| Giao diện | `docs/ui-design/` (D-FE-12): prototype tĩnh 41 màn, không phải nguồn quy tắc API hay nghiệp vụ, có màn không có nghĩa là đã triển khai. `EduMentor AI Demo.html` (ngoài repo) chỉ để tra giá trị CSS/motion. `docs/wireframes/`, `docs/EduMentor-UI-design/` không còn dùng |
 | Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
-| Báo cáo đối chiếu frontend với demo | `docs/ui-animation/` |
+| Báo cáo đối chiếu frontend với demo (lịch sử, 28/10/2026 — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng) | `docs/ui-animation/` |
 
 Nguồn gốc nghiệp vụ mới nhất là `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (đã được chép vào các file `.md` trên). Thứ tự ưu tiên khi mâu thuẫn: `docs/decisions.md` §1.
 
@@ -50,7 +50,7 @@ Phân công các module khác và quy ước trạng thái: `docs/decisions.md` 
 
 Các module khác (Course Tracking, Learning Path, AI Consultant/Tutor, Recommendation, Admin) không thuộc phạm vi **backend**: không tự sửa file backend của chúng; nếu việc đang làm cần thay đổi ở đó, nêu ra cho người dùng.
 
-**Ngoại lệ — frontend (D-FE-01):** việc dựng frontend theo bản demo được phê duyệt cho cả 14 tính năng (danh sách và người phụ trách: `README.md`). Chỉ trong `frontend/`; giữ mỗi nhóm tính năng ở thư mục/file riêng, không ghi đè phần việc thành viên khác đã có; tuân theo D-FE-01 … D-FE-11 và dừng ở các mục ND-49 … ND-55 còn mở.
+**Ngoại lệ — frontend (D-FE-01):** việc dựng frontend theo bản demo được phê duyệt cho cả 14 tính năng (danh sách và người phụ trách: `README.md`). Chỉ trong `frontend/`; giữ mỗi nhóm tính năng ở thư mục/file riêng, không ghi đè phần việc thành viên khác đã có; tuân theo D-FE-01 … D-FE-12 và dừng ở các mục ND-49 … ND-56 còn mở.
 
 ## Quy tắc làm việc
 

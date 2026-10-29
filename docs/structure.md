@@ -40,7 +40,8 @@ edumentor-ai/
 │   │   ├── auth-profile.tests.md                    # ✅ Kịch bản kiểm thử
 │   │   ├── review-assessment.md                     # ✅ Đặc tả + API contract Ôn tập & Đánh giá
 │   │   └── review-assessment.tests.md               # ✅ Kịch bản kiểm thử
-│   ├── ui-animation/                                # ⊘ Báo cáo đối chiếu frontend với demo — CHƯA có trong Git (README.md, CLAUDE.md đang trỏ tới)
+│   ├── ui-animation/                                # ✅ Báo cáo lịch sử (28/10/2026), căn cứ của D-FE-01 … D-FE-11 — không phản ánh hiện trạng
+│   ├── ui-design/                                   # ✅ Nguồn giao diện chính thức (D-FE-12): 41 màn HTML tĩnh, ảnh png/, png-endpoints/, pages.json — prototype, không phải code
 │   ├── api-endpoints.md                             # ✅ Đặc tả endpoint (bảng nhóm đã thống nhất)
 │   ├── backend-rules.md                             # ✅ Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình)
 │   ├── conventions.md                               # ✅ Quy ước API, mã nguồn, Git, kiểm thử
@@ -379,7 +380,7 @@ Cột "Router" mô tả cấu trúc router phẳng mà tài liệu đề xuất 
 
 ## 3. Ánh xạ trang Frontend → Endpoint Backend
 
-Route theo bản demo (D-FE-02, D-FE-04). Guard: **C** = công khai, **P** = `ProtectedRoute`, **A** = `AdminRoute` (D-FE-06). Endpoint chỉ lấy từ `docs/api-endpoints.md` (D-FE-10). `/courses` và `/courses/:courseId` để **P** theo demo (demo chỉ có giao diện đã đăng nhập); `docs/api-endpoints.md` §3 chưa ghi quyền của `GET /api/courses*`.
+Route theo bộ giao diện `docs/ui-design/` (D-FE-12, D-FE-04). Guard: **C** = công khai, **P** = `ProtectedRoute`, **A** = `AdminRoute` (D-FE-06). Endpoint chỉ lấy từ `docs/api-endpoints.md` (D-FE-10). `/courses` và `/courses/:courseId` để **P** theo demo (demo chỉ có giao diện đã đăng nhập); `docs/api-endpoints.md` §3 chưa ghi quyền của `GET /api/courses*`.
 
 | Route | Guard | Page | Endpoint backend sử dụng |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Chỉ thị cấp project cho Codex. File này **không** chứa quy tắc nghi�
 
 EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình học bằng AI, gợi ý khóa học MOOC bên ngoài theo kỹ năng, AI Tutor, và ghi nhận kỹ năng qua bài ôn tập. Tổng quan: `README.md`.
 
-Trạng thái hiện tại: **chưa có code** — các file trong `backend/` và `frontend/` chỉ là file rỗng giữ chỗ. Đừng suy luận nghiệp vụ từ code; đọc tài liệu.
+Trạng thái hiện tại: **backend chưa có code** — mọi file trong `backend/` là file rỗng giữ chỗ. **Frontend mới có phần nền C1** (cấu hình Vite, `src/main.jsx`, `src/App.jsx`, `src/index.css`, `src/utils/theme.js`); route, page, component và API client còn rỗng. Chi tiết: `docs/structure.md` §1.1. Đừng suy luận nghiệp vụ từ code; đọc tài liệu.
 
 ## Công nghệ
 
@@ -31,7 +31,9 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
 | Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
 | Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
-| Giao diện tham khảo | `docs/wireframes/` (không phải nguồn quy tắc API) |
+| Giao diện | `docs/ui-design/` (D-FE-12): prototype tĩnh 41 màn, không phải nguồn quy tắc API hay nghiệp vụ, có màn không có nghĩa là đã triển khai. `EduMentor AI Demo.html` (ngoài repo) chỉ để tra giá trị CSS/motion. `docs/wireframes/`, `docs/EduMentor-UI-design/` không còn dùng |
+| Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
+| Báo cáo đối chiếu frontend với demo (lịch sử, 28/10/2026 — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng) | `docs/ui-animation/` |
 
 Nguồn gốc nghiệp vụ mới nhất là `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (đã được chép vào các file `.md` trên). Thứ tự ưu tiên khi mâu thuẫn: `docs/decisions.md` §1.
 

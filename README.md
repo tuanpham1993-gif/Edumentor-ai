@@ -2,7 +2,7 @@
 
 Nền tảng cố vấn học tập cá nhân hóa: tạo lộ trình học theo mục tiêu bằng AI, gợi ý khóa học MOOC bên ngoài theo từng kỹ năng, hỗ trợ giải đáp với AI Tutor và ghi nhận kỹ năng thông qua bài ôn tập.
 
-> **Giao diện tham chiếu:** bản demo React 33 màn `EduMentor AI Demo.html` (bản build một file; mã nguồn React gốc chưa có trong repo). Frontend được dựng lại theo bản demo này — xem `docs/decisions.md` D-FE-02.
+> **Giao diện tham chiếu:** bộ giao diện [`docs/ui-design/`](docs/ui-design/) — 41 màn/trạng thái, HTML tĩnh và ảnh chụp từ bản demo React (mở `docs/ui-design/index.html` để xem nhanh). Frontend được dựng theo bộ này — xem `docs/decisions.md` D-FE-12. Đây là **prototype**: màn có trong bộ chưa có nghĩa là đã được triển khai.
 > Các hình trong `docs/wireframes/` và prototype `docs/EduMentor-UI-design/` **không còn dùng** làm tham chiếu giao diện.
 
 ## Tính năng chính
@@ -117,7 +117,8 @@ Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi
 | [docs/api-endpoints.md](docs/api-endpoints.md) | Đặc tả endpoint |
 | [docs/database-design.md](docs/database-design.md) | Thiết kế cơ sở dữ liệu |
 | [docs/decisions.md](docs/decisions.md) | Quyết định đã chốt và các điểm còn cần quyết định |
-| [docs/ui-animation/](docs/ui-animation/) | Báo cáo đối chiếu frontend với bản demo |
+| [docs/ui-design/](docs/ui-design/) | Bộ giao diện chính thức: ảnh, HTML tĩnh, route và endpoint của từng màn (D-FE-12) |
+| [docs/ui-animation/](docs/ui-animation/) | Báo cáo lịch sử (28/10/2026) đối chiếu frontend với bản demo — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng |
 
 ## Phạm vi phiên bản thử nghiệm
 
