@@ -24,6 +24,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:8000",
         "http://localhost:5500",
         "http://127.0.0.1:5500",
+        "http://127.0.0.1:5171",
+        "http://localhost:5171",   
     ]
 
     model_config = SettingsConfigDict(
