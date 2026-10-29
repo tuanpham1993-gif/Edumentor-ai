@@ -22,6 +22,8 @@ Bộ ảnh giao diện chụp lại từ bản demo React của nhóm. Mã ngu�
 
 ## Thay đổi so với bản 29 màn
 
+Bản 29 màn cũ (`docs/EduMentor-UI-design/`) đã bị xóa khỏi repo ngày 2026-10-29; xem lại trong lịch sử Git.
+
 **Đã sửa**
 
 - **Main:** thêm bong bóng chat. Chỉ còn **1 dây kéo** điều khiển cả 3 đèn. Mở trang thì đèn **tắt sẵn**: form ẩn và bị khóa (ảnh `Main-LampOff`); kéo dây thì cả 3 đèn sáng và form hiện, kéo lần nữa thì tắt cả 3. File HTML của hai màn này có đoạn script nhỏ để bấm thử dây kéo.

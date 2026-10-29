@@ -3,7 +3,7 @@
 Nền tảng cố vấn học tập cá nhân hóa: tạo lộ trình học theo mục tiêu bằng AI, gợi ý khóa học MOOC bên ngoài theo từng kỹ năng, hỗ trợ giải đáp với AI Tutor và ghi nhận kỹ năng thông qua bài ôn tập.
 
 > **Giao diện tham chiếu:** bộ giao diện [`docs/ui-design/`](docs/ui-design/) — 41 màn/trạng thái, HTML tĩnh và ảnh chụp từ bản demo React (mở `docs/ui-design/index.html` để xem nhanh). Frontend được dựng theo bộ này — xem `docs/decisions.md` D-FE-12. Đây là **prototype**: màn có trong bộ chưa có nghĩa là đã được triển khai.
-> Các hình trong `docs/wireframes/` và prototype `docs/EduMentor-UI-design/` **không còn dùng** làm tham chiếu giao diện.
+> Thư mục `docs/wireframes/` và prototype 29 trang `docs/EduMentor-UI-design/` **đã bị xóa** (còn trong lịch sử Git); mọi màn của bản 29 trang đều có trong `docs/ui-design/`.
 
 ## Tính năng chính
 

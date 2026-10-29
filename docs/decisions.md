@@ -17,7 +17,7 @@ Thứ tự ưu tiên khi các nguồn khác nhau, cho 2 module trên:
 1. `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (bản đã sửa, D01–D11 đã chốt) — **nguồn nghiệp vụ mới nhất**. Đã được chép vào `docs/database-design.md` và `docs/api-endpoints.md`.
 2. `docs/structure.md` (trước đây là `STRUCTURE.md` ở root) — nguồn kiến trúc nền (phân lớp Router → Service → Repository → Model, cây thư mục).
 3. `docs/conventions.md` (trước đây là `CONVENTIONS.md` ở root), `SETUP.md`, `README.md`.
-4. Giao diện: `docs/ui-design/` (D-FE-12; bản demo `EduMentor AI Demo.html` chỉ để tra CSS/motion) — chỉ mô tả giao diện; **không** tạo quy tắc API hay nghiệp vụ khi chưa có trong 1–3. Wireframe trong `docs/wireframes/` và `docs/EduMentor-UI-design/` **không còn là nguồn giao diện**; các mục ND bên dưới có nhắc wireframe được giữ làm bối cảnh lịch sử.
+4. Giao diện: `docs/ui-design/` (D-FE-12; bản demo `EduMentor AI Demo.html` chỉ để tra CSS/motion) — chỉ mô tả giao diện; **không** tạo quy tắc API hay nghiệp vụ khi chưa có trong 1–3. Wireframe trong `docs/wireframes/` và `docs/EduMentor-UI-design/` **không còn là nguồn giao diện** (cả hai đã bị xóa khỏi repo, còn trong lịch sử Git); các mục ND bên dưới có nhắc wireframe được giữ làm bối cảnh lịch sử.
 
 Không tự tạo quy tắc khi tài liệu chưa quy định → ghi `[NEEDS DECISION]` ở mục 4.
 

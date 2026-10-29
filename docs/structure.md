@@ -34,7 +34,6 @@ edumentor-ai/
 │       └── review-assessment/
 │           └── SKILL.md                             # ✅ Bản sao cho Codex — cũ
 ├── docs/
-│   ├── EduMentor-UI-design/                         # ✅ Prototype HTML cũ (29 trang) — không còn là nguồn giao diện (D-FE-02)
 │   ├── modules/
 │   │   ├── auth-profile.md                          # ✅ Đặc tả + API contract Xác thực & Hồ sơ
 │   │   ├── auth-profile.tests.md                    # ✅ Kịch bản kiểm thử
@@ -308,7 +307,7 @@ edumentor-ai/
     └── vite.config.js                               # ✅ Plugin React, cổng 5173
 ```
 
-Mỗi page và component frontend dự kiến có file `*.module.css` đi kèm. Bảng chuyển màn `components/demo/` của bản demo **không** đưa vào frontend (D-FE-07). File rỗng theo cấu trúc cũ (đánh dấu "ND-49") được **giữ nguyên, không dùng** cho tới khi ND-49 được quyết định. Trang quản trị câu hỏi (`/api/admin/questions*`) chưa có trong demo — ND-53. Thư mục `docs/wireframes/` đã bị xóa ở commit `4d853cf`.
+Mỗi page và component frontend dự kiến có file `*.module.css` đi kèm. Bảng chuyển màn `components/demo/` của bản demo **không** đưa vào frontend (D-FE-07). File rỗng theo cấu trúc cũ (đánh dấu "ND-49") được **giữ nguyên, không dùng** cho tới khi ND-49 được quyết định. Trang quản trị câu hỏi (`/api/admin/questions*`) chưa có trong demo — ND-53. Thư mục `docs/wireframes/` đã bị xóa ở commit `4d853cf`; prototype 29 trang `docs/EduMentor-UI-design/` bị xóa ngày 2026-10-29, thay bằng `docs/ui-design/` (D-FE-12).
 
 ### 1.1. Hiện trạng triển khai (đã xác minh)
 
