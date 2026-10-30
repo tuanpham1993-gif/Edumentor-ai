@@ -1177,63 +1177,114 @@ Khi Admin thêm, sửa hoặc xóa một kỹ năng hay một mối quan hệ, h
 
 Mọi thao tác quản trị phải được kiểm tra quyền ở phía máy chủ. Người dùng thông thường không được phép thay đổi dữ liệu nền dùng chung hoặc dữ liệu cá nhân thuộc tài khoản khác.
 
-# 10. Đặc tả API Endpoint.
+# 10. Đặc tả API Endpoint
 
+Mục này được đồng bộ với sheet `DOI_CHIEU_ENDPOINT` trong file *EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx* (nguồn chuẩn). Cột **Mã** trong các bảng là mã endpoint (`EP-xxx`) trong sheet đó để tiện truy vết. Đường dẫn trong bảng là **path đề xuất cuối cùng** của sheet.
 
 ## 10.1. Quy ước API
 
-- Tất cả endpoint đều bắt đầu bằng `/api/`.
+- Tất cả endpoint đều bắt đầu bằng `/api/` (backend cấu hình `API_STR = '/api'`).
 - Sử dụng các HTTP method theo chuẩn RESTful: `GET`, `POST`, `PATCH` và `DELETE`.
-- `{id}` đại diện cho mã định danh của một tài nguyên.
-- Các endpoint dành riêng cho người dùng sẽ thao tác trên dữ liệu của người dùng đã xác thực.
+- `{..._id}` đại diện cho mã định danh của một tài nguyên (ví dụ `{course_id}`, `{path_id}`, `{skill_id}`).
+- Các endpoint dưới `/api/me` chỉ thao tác trên dữ liệu của người dùng đã xác thực.
 - Liên kết khóa học trỏ đến các nền tảng MOOC bên ngoài. EduMentor không lưu trữ nội dung khóa học và không trực tiếp quản lý việc đăng ký khóa học trên các nền tảng đó.
 - Xóa một lộ trình học tập có nghĩa là chuyển trạng thái sang `abandoned`, thay vì xóa vĩnh viễn lịch sử.
 - EduMentor chỉ theo dõi tiến trình học tập ở mức cơ bản, không theo dõi từng bài học, tiến độ xem video hoặc mức độ hoàn thành nội dung khóa học.
 
+**Ký hiệu cột "Quyền truy cập":**
+
+| Ký hiệu | Ý nghĩa |
+|---|---|
+| Công khai | Không cần đăng nhập, không kiểm tra quyền. |
+| Người dùng | Cần đăng nhập (`authenticated`); chỉ thao tác dữ liệu của chính người dùng (`owner-only`). |
+| Người dùng (đề xuất) | Tài liệu chuẩn chưa ghi quyền; sheet đề xuất `owner-only`, **cần nhóm xác nhận**. |
+| Admin | Cần đăng nhập và có vai trò quản trị viên. |
+| Chưa xác định | Tài liệu chuẩn chưa ghi quyền và chưa có đề xuất. |
+
+**Tình trạng triển khai:** theo sheet đối chiếu, tại thời điểm rà soát chỉ có các endpoint hạ tầng ở mục 10.2 đã được triển khai trong backend; toàn bộ endpoint nghiệp vụ còn lại **chưa triển khai**.
+
 ---
 
-## 10.2. Xác thực và hồ sơ người dùng
+## 10.2. Hạ tầng hệ thống (F00)
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| POST | `/api/auth/register` | Đăng ký tài khoản mới. |
-| POST | `/api/auth/login` | Xác thực người dùng và đăng nhập. |
-| POST | `/api/auth/logout` | Đăng xuất người dùng hiện tại. |
-| GET | `/api/me` | Lấy thông tin hồ sơ của người dùng đã xác thực. |
-| PATCH | `/api/me` | Cập nhật thông tin hồ sơ. |
-| GET | `/api/me/skills` | Lấy danh sách kỹ năng được ghi nhận trong hồ sơ người dùng. |
-| PATCH | `/api/me/skills` | Thêm, cập nhật hoặc xóa kỹ năng trong hồ sơ người dùng. |
-| GET | `/api/me/courses` | Lấy danh sách khóa học người dùng đang theo dõi, mặc định loại trừ các khóa học đã từ bỏ. |
-| GET | `/api/me/courses?status=ongoing` | Lấy danh sách khóa học người dùng đã tham gia và đang theo dõi. |
-| GET | `/api/me/courses?status=bookmarked` | Lấy danh sách khóa học đã lưu để học sau. |
-| GET | `/api/me/courses?status=completed` | Lấy danh sách khóa học được đánh dấu đã hoàn thành. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-001 | GET | `/api/health` | Kiểm tra trạng thái hệ thống và kết nối database (`SELECT 1`); trả `status`, `service`, `version`, `database`, `docs_url`; trả `503` nếu database lỗi. | Công khai |
+| EP-002 | GET | `/api/docs`, `/api/redoc`, `/api/openapi.json` | Tài liệu API tự sinh của FastAPI (Swagger / ReDoc / OpenAPI). | Công khai |
+
+**Ghi chú:**
+
+- EP-001 đã có trong backend nhưng chưa có trong `api-endpoints.md`; sheet đề xuất **bổ sung** vào tài liệu nếu nhóm đồng ý. Response hiện là dict, chưa có schema Pydantic.
+- EP-002: `SETUP.md` ghi `http://localhost:8000/docs` trong khi backend dùng `/api/docs`. Path cuối cùng **chờ nhóm quyết định** (sửa tài liệu hoặc sửa cấu hình).
+
+---
+
+## 10.3. Xác thực và hồ sơ người dùng (F01)
+
+Request/response chi tiết theo `docs/modules/auth-profile.md` §4.
+
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-004 | POST | `/api/auth/register` | Đăng ký tài khoản mới. `role` luôn là `student`, không nhận từ client. Mật khẩu theo chính sách D-AUTH-05. | Công khai |
+| EP-005 | POST | `/api/auth/login` | Xác thực; trả access token (JWT, hiệu lực 30 phút), refresh token và thông tin người dùng (gồm `role`). | Công khai |
+| EP-006 | POST | `/api/auth/refresh` | Đổi refresh token hợp lệ lấy access token mới; xoay vòng refresh token (token cũ bị vô hiệu). | Công khai (xác thực bằng refresh token) |
+| EP-007 | POST | `/api/auth/logout` | Đăng xuất: backend thu hồi refresh token tương ứng, client xóa token. Access token không bị thu hồi tức thì. | Người dùng |
+| EP-008 | POST | `/api/auth/forgot-password` | Yêu cầu đặt lại mật khẩu qua email; luôn trả cùng một thông báo. | Công khai |
+| EP-009 | POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng mã trong email (dùng một lần, có thời hạn). Mật khẩu theo D-AUTH-05. | Công khai |
+| EP-010 | GET | `/api/me` | Lấy hồ sơ của người dùng đã xác thực. | Người dùng |
+| EP-011 | PATCH | `/api/me` | Cập nhật hồ sơ: chỉ `full_name`, `avatar_url` (không cho sửa `email`, `role`). | Người dùng |
+| EP-012 | POST | `/api/me/avatar` | Tải ảnh đại diện lên (multipart; tùy chọn, giai đoạn 2). | Người dùng |
+| EP-013 | POST | `/api/me/change-password` | Đổi mật khẩu khi đã đăng nhập. Mật khẩu mới theo D-AUTH-05. | Người dùng |
+| EP-014 | GET | `/api/me/summary` | Số liệu tổng hợp cho trang Profile. | Người dùng |
+| EP-015 | GET | `/api/me/skills` | Lấy kỹ năng trong hồ sơ người dùng; lọc `?status=known` hoặc `?status=learning`. | Người dùng |
+| EP-016 | PATCH | `/api/me/skills` | Thêm / sửa / xóa kỹ năng (`add`, `update`, `remove`) trong một transaction. | Người dùng |
+
+**Ghi chú:**
+
+- EP-006: đã chốt có refresh token (D-AUTH-03) nhưng hợp đồng request/response vẫn là **bản nháp** (`auth-profile.md` §4.3a; ND-40…ND-43, ND-48) — chờ nhóm quyết định.
+- EP-007: việc logout có bắt buộc access token còn hạn hay không đang chờ ND-48.
+- EP-011: giao diện EditProfile (UI v2) hiện chỉ gửi `{ full_name }`; ô `avatar_url` đã bỏ khỏi giao diện (liên quan ND-12).
+- EP-012: giới hạn "JPG/PNG, tối đa 2 MB" trên giao diện chưa chốt (ND-12, ND-51).
 
 ### Quy tắc cập nhật kỹ năng người dùng
 
 Sau khi người dùng hoàn thành bài kiểm tra ôn tập gắn với một khóa học, hệ thống cập nhật hồ sơ người dùng bằng các kỹ năng liên quan đến khóa học đó.
 
-Frontend có thể sử dụng `PATCH /api/me/skills` để cập nhật hồ sơ kỹ năng thủ công. Tuy nhiên, trong quy trình ôn tập, backend nên tự động cập nhật hồ sơ thông qua logic nghiệp vụ, thay vì yêu cầu frontend gửi thêm một request riêng.
+Frontend có thể sử dụng `PATCH /api/me/skills` để cập nhật hồ sơ kỹ năng thủ công. Tuy nhiên, trong quy trình ôn tập, backend tự động cập nhật hồ sơ thông qua logic nghiệp vụ (trong cùng transaction nộp bài), thay vì yêu cầu frontend gửi thêm một request riêng.
 
 ---
 
-## 10.3. Danh mục khóa học
+## 10.4. Danh mục khóa học (F02)
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/courses` | Lấy danh mục khóa học. |
-| GET | `/api/courses/{course_id}` | Lấy thông tin chi tiết của một khóa học. |
-| GET | `/api/courses?search={keyword}` | Tìm kiếm khóa học theo từ khóa. |
-| GET | `/api/courses?skill_id={skill_id}` | Lọc khóa học theo kỹ năng. |
-| GET | `/api/courses?level={level}` | Lọc khóa học theo cấp độ. |
-| GET | `/api/courses?sort_by=rating` | Sắp xếp khóa học theo điểm đánh giá. |
-| GET | `/api/courses?sort_by=num_reviews` | Sắp xếp khóa học theo số lượng lượt đánh giá. |
-| GET | `/api/courses/{course_id}/skills` | Lấy danh sách kỹ năng liên quan đến một khóa học. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-017 | GET | `/api/courses` | Lấy danh mục khóa học. Hỗ trợ query: `?search={keyword}`, `?skill_id={skill_id}`, `?level={level}`, `?sort_by=rating`, `?sort_by=num_reviews`. | Chưa xác định |
+| EP-018 | GET | `/api/courses/{course_id}` | Lấy thông tin chi tiết của một khóa học. | Chưa xác định |
+| EP-019 | GET | `/api/courses/{course_id}/skills` | Lấy danh sách kỹ năng liên quan đến một khóa học. | Chưa xác định |
 
 Có thể kết hợp nhiều bộ lọc và tùy chọn sắp xếp bằng các query parameter.
 
+**Ghi chú:**
+
+- Quyền truy cập của nhóm `/api/courses` chưa được ghi trong tài liệu chuẩn, phụ thuộc quyết định guard cho trang `/courses` (`docs/structure.md` §3).
+- Request/response schema chưa được định nghĩa (tài liệu chuẩn mới chỉ có mô tả).
+- Giao diện Courses (UI v2) đã bỏ bộ lọc Kỹ năng, chỉ còn tìm kiếm, Cấp độ và Sắp xếp, trong khi tài liệu vẫn giữ `?skill_id` — xem UI2-03.
+
 ---
 
-## 10.4. Lưu khóa học và theo dõi trạng thái
+## 10.5. Lưu khóa học — Bookmark (F03)
+
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-020 | POST | `/api/me/bookmarks` | Lưu một khóa học để học sau bằng `course_id`. | Người dùng |
+| EP-021 | GET | `/api/me/bookmarks` | Lấy danh sách khóa học đã lưu. | Người dùng |
+| EP-022 | DELETE | `/api/me/bookmarks/{course_id}` | Xóa khóa học khỏi danh sách đã lưu. | Người dùng |
+
+**Ghi chú:** EP-021 trùng mục đích với `GET /api/me/courses?status=bookmarked` (EP-023). Nhóm **chờ quyết định** giữ một hay cả hai endpoint.
+
+---
+
+## 10.6. Theo dõi trạng thái khóa học (F04)
 
 EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 
@@ -1244,39 +1295,39 @@ EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 
 Đây là các trạng thái theo dõi của EduMentor, không phải trạng thái đăng ký hoặc hoàn thành được báo cáo từ nền tảng MOOC bên ngoài.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| POST | `/api/me/bookmarks` | Lưu một khóa học để học sau bằng `course_id`. |
-| GET | `/api/me/bookmarks` | Lấy danh sách khóa học đã lưu. |
-| DELETE | `/api/me/bookmarks/{course_id}` | Xóa khóa học khỏi danh sách đã lưu. |
-| POST | `/api/courses/{course_id}/join` | Ghi nhận khóa học ở trạng thái `ongoing` và trả về URL bên ngoài để chuyển hướng người dùng. |
-| GET | `/api/me/courses/{course_id}/status` | Lấy trạng thái theo dõi hiện tại của người dùng đối với khóa học. |
-| PATCH | `/api/me/courses/{course_id}/status` | Cập nhật trạng thái theo dõi khi cần chuyển sang một trạng thái được phép. |
-| DELETE | `/api/me/courses/{course_id}` | Ngừng theo dõi khóa học bằng cách chuyển trạng thái sang `abandoned`. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-023 | GET | `/api/me/courses` | Lấy danh sách khóa học đang theo dõi, mặc định loại trừ `abandoned`. Lọc theo `?status=ongoing`, `?status=bookmarked`, `?status=completed`, `?status=abandoned`. | Người dùng |
+| EP-024 | POST | `/api/courses/{course_id}/join` | Ghi nhận khóa học ở trạng thái `ongoing` và trả về URL bên ngoài để chuyển hướng người dùng. | Người dùng (đề xuất) |
+| EP-025 | GET | `/api/me/courses/{course_id}/status` | Lấy trạng thái theo dõi hiện tại của người dùng đối với khóa học. | Người dùng |
+| EP-026 | PATCH | `/api/me/courses/{course_id}/status` | Cập nhật trạng thái theo dõi khi cần chuyển sang một trạng thái được phép. | Người dùng |
+| EP-027 | DELETE | `/api/me/courses/{course_id}` | Ngừng theo dõi khóa học bằng cách chuyển trạng thái sang `abandoned`. | Người dùng |
+
+**Ghi chú:** `GET /api/me/courses` thuộc module theo dõi khóa học (`routers/me_courses.py`), không thuộc nhóm hồ sơ người dùng. Việc đề xuất khóa học liên quan đến node của lộ trình dùng chung endpoint ở mục 10.9.
 
 ### Quy tắc theo dõi khóa học
 
 1. Lưu khóa học sẽ tạo một bản ghi bookmark.
 2. Tham gia khóa học sẽ ghi nhận trạng thái `ongoing` và trả về URL khóa học bên ngoài. Thao tác này không đăng ký khóa học thay người dùng trên nền tảng bên ngoài.
 3. Xóa bookmark sẽ xóa bản ghi bookmark. Thao tác này không tự động chuyển khóa học sang `abandoned`, trừ khi đã có bản ghi theo dõi khóa học và người dùng chủ động từ bỏ khóa học.
-4. Các khóa học ở trạng thái `abandoned` bị loại khỏi danh sách mặc định, nhưng có thể được xem thông qua bộ lọc lịch sử nếu cần.
+4. Các khóa học ở trạng thái `abandoned` bị loại khỏi danh sách mặc định, nhưng có thể xem bằng bộ lọc `?status=abandoned`.
 5. Hoàn thành bài kiểm tra ôn tập sẽ đánh dấu khóa học là `completed` và kích hoạt cập nhật các kỹ năng liên quan trong hồ sơ người dùng.
 6. Không đánh dấu khóa học là hoàn thành chỉ vì người dùng đã mở URL bên ngoài.
 
 ---
 
-## 10.5. Tạo lộ trình học tập và AI Consultant
+## 10.7. Tạo lộ trình học tập và AI Consultant (F05)
 
 Lộ trình học tập được tạo thông qua cuộc hội thoại với AI Consultant. Mô hình diễn giải mục tiêu của người dùng, trong khi backend chịu trách nhiệm ánh xạ kỹ năng, mở rộng các quan hệ liên quan, tham khảo những lộ trình lịch sử tương tự và lưu lộ trình kết quả.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| POST | `/api/chat/learning-path` | Gửi mục tiêu để AI Consultant tạo lộ trình học tập đề xuất. |
-| GET | `/api/me/learning-paths` | Lấy các lộ trình học tập của người dùng đã xác thực. |
-| GET | `/api/learning-paths/{path_id}` | Lấy thông tin chi tiết của lộ trình, bao gồm trạng thái và các node. |
-| POST | `/api/learning-paths` | Lưu hoặc chấp nhận một lộ trình học tập được đề xuất. |
-| PATCH | `/api/learning-paths/{path_id}` | Cập nhật thông tin hoặc trạng thái lộ trình. |
-| DELETE | `/api/learning-paths/{path_id}` | Từ bỏ lộ trình bằng cách chuyển trạng thái sang `abandoned`. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-028 | POST | `/api/chat/learning-path` | Gửi mục tiêu để AI Consultant tạo lộ trình học tập đề xuất. | Người dùng (đề xuất) |
+| EP-029 | GET | `/api/me/learning-paths` | Lấy các lộ trình học tập của người dùng đã xác thực. | Người dùng |
+| EP-030 | GET | `/api/learning-paths/{path_id}` | Lấy thông tin chi tiết của lộ trình, bao gồm trạng thái và các node. | Người dùng (đề xuất) |
+| EP-031 | POST | `/api/learning-paths` | Lưu hoặc chấp nhận một lộ trình học tập được đề xuất. | Người dùng (đề xuất) |
+| EP-032 | PATCH | `/api/learning-paths/{path_id}` | Cập nhật thông tin hoặc trạng thái lộ trình. | Người dùng (đề xuất) |
+| EP-033 | DELETE | `/api/learning-paths/{path_id}` | Từ bỏ lộ trình bằng cách chuyển trạng thái sang `abandoned`. | Người dùng (đề xuất) |
 
 ### Trạng thái lộ trình học tập
 
@@ -1290,19 +1341,21 @@ Nếu người dùng chỉ thực hiện các thay đổi nhỏ, hệ thống n�
 
 ---
 
-## 10.6. Các node trong lộ trình học tập
+## 10.8. Node và cạnh trong lộ trình học tập (F06)
+
+### Node
 
 Mỗi node đại diện cho một kỹ năng thuộc một lộ trình học tập cụ thể.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/learning-paths/{path_id}/nodes` | Lấy tất cả node kỹ năng trong lộ trình. |
-| POST | `/api/learning-paths/{path_id}/nodes` | Thêm một node kỹ năng vào lộ trình. |
-| GET | `/api/learning-paths/{path_id}/nodes/{skill_id}` | Lấy thông tin chi tiết của một node. |
-| PATCH | `/api/learning-paths/{path_id}/nodes/{skill_id}` | Cập nhật thuộc tính node như `node_role`, `added_by` hoặc `display_order`. |
-| DELETE | `/api/learning-paths/{path_id}/nodes/{skill_id}` | Xóa node kỹ năng và các cạnh liên quan trong lộ trình. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-034 | GET | `/api/learning-paths/{path_id}/nodes` | Lấy tất cả node kỹ năng trong lộ trình. | Người dùng (đề xuất) |
+| EP-035 | POST | `/api/learning-paths/{path_id}/nodes` | Thêm một node kỹ năng vào lộ trình. | Người dùng (đề xuất) |
+| EP-036 | GET | `/api/learning-paths/{path_id}/nodes/{skill_id}` | Lấy thông tin chi tiết của một node. | Người dùng (đề xuất) |
+| EP-037 | PATCH | `/api/learning-paths/{path_id}/nodes/{skill_id}` | Cập nhật thuộc tính node như `node_role`, `added_by` hoặc `display_order`. | Người dùng (đề xuất) |
+| EP-038 | DELETE | `/api/learning-paths/{path_id}/nodes/{skill_id}` | Xóa node kỹ năng và các cạnh liên quan trong lộ trình. | Người dùng (đề xuất) |
 
-### Quy tắc node
+#### Quy tắc node
 
 - Khóa chính tổng hợp là `(path_id, skill_id)`.
 - Một kỹ năng chỉ được xuất hiện một lần trong cùng một lộ trình.
@@ -1314,20 +1367,18 @@ Mỗi node đại diện cho một kỹ năng thuộc một lộ trình học t�
 
 **Lưu ý:** Thiết kế bảng hiện tại cũng cần một trường như `is_required` nếu muốn phân biệt node bắt buộc với node tùy chọn khi xác định lộ trình đã hoàn thành hay chưa.
 
----
-
-## 10.7. Các cạnh trong lộ trình học tập
+### Cạnh
 
 Các cạnh đại diện cho mối liên kết giữa những node kỹ năng trong một lộ trình cụ thể.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/learning-paths/{path_id}/edges` | Lấy tất cả kết nối trong lộ trình. |
-| POST | `/api/learning-paths/{path_id}/edges` | Thêm kết nối giữa hai node hiện có. |
-| PATCH | `/api/learning-paths/{path_id}/edges/{from_skill_id}/{to_skill_id}` | Cập nhật loại quan hệ của một cạnh. |
-| DELETE | `/api/learning-paths/{path_id}/edges/{from_skill_id}/{to_skill_id}` | Xóa một kết nối. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-039 | GET | `/api/learning-paths/{path_id}/edges` | Lấy tất cả kết nối trong lộ trình. | Người dùng (đề xuất) |
+| EP-040 | POST | `/api/learning-paths/{path_id}/edges` | Thêm kết nối giữa hai node hiện có. | Người dùng (đề xuất) |
+| EP-041 | PATCH | `/api/learning-paths/{path_id}/edges/{from_skill_id}/{to_skill_id}` | Cập nhật loại quan hệ của một cạnh. | Người dùng (đề xuất) |
+| EP-042 | DELETE | `/api/learning-paths/{path_id}/edges/{from_skill_id}/{to_skill_id}` | Xóa một kết nối. | Người dùng (đề xuất) |
 
-### Quy tắc cạnh
+#### Quy tắc cạnh
 
 - Cả hai kỹ năng ở hai đầu cạnh phải tồn tại dưới dạng node trong cùng một lộ trình.
 - Khi quan hệ là `prerequisite`, kỹ năng nguồn được học trước kỹ năng đích.
@@ -1336,15 +1387,15 @@ Các cạnh đại diện cho mối liên kết giữa những node kỹ năng t
 
 ---
 
-## 10.8. Gợi ý khóa học theo kỹ năng trong lộ trình
+## 10.9. Gợi ý khóa học cho một kỹ năng trong lộ trình (F07)
 
 Hệ thống chỉ truy xuất gợi ý khi người dùng chọn một node kỹ năng, thay vì tự động gợi ý khóa học cho tất cả node ngay khi tạo lộ trình.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/learning-paths/{path_id}/nodes/{skill_id}/courses` | Lấy các khóa học được đề xuất cho kỹ năng đã chọn. |
-| GET | `/api/learning-paths/{path_id}/nodes/{skill_id}/courses?sort_by=rating` | Sắp xếp khóa học được đề xuất theo điểm đánh giá. |
-| GET | `/api/learning-paths/{path_id}/nodes/{skill_id}/courses?sort_by=num_reviews` | Sắp xếp khóa học được đề xuất theo số lượt đánh giá. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-043 | GET | `/api/learning-paths/{path_id}/nodes/{skill_id}/courses` | Lấy các khóa học được đề xuất cho kỹ năng đã chọn. Sắp xếp bằng `?sort_by=rating` hoặc `?sort_by=num_reviews`. | Người dùng (đề xuất) |
+
+**Ghi chú:** Endpoint này dùng chung cho F04 ("đề xuất khóa học liên quan đến node của lộ trình") và F07 — không tạo endpoint riêng.
 
 ### Quy trình gợi ý
 
@@ -1359,18 +1410,18 @@ API không nên xem điểm đánh giá cao là bằng chứng duy nhất cho th
 
 ---
 
-## 10.9. Chat với AI Tutor
+## 10.10. Trò chuyện với gia sư AI — AI Tutor (F08)
 
 AI Tutor duy trì ngữ cảnh hội thoại trong từng phiên và hỗ trợ giải thích kiến thức, gỡ lỗi và tạo bài tập củng cố.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| POST | `/api/chat/sessions` | Tạo một phiên hội thoại mới với gia sư AI. |
-| GET | `/api/chat/sessions` | Lấy danh sách phiên hội thoại của người dùng. |
-| GET | `/api/chat/sessions/{session_id}` | Lấy thông tin phiên và lịch sử hội thoại. |
-| POST | `/api/chat/sessions/{session_id}/messages` | Gửi tin nhắn và nhận phản hồi từ AI. |
-| GET | `/api/chat/sessions/{session_id}/messages` | Lấy danh sách tin nhắn trong một phiên. |
-| DELETE | `/api/chat/sessions/{session_id}` | Xóa hoặc lưu trữ phiên hội thoại theo chính sách lưu trữ dữ liệu. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-044 | POST | `/api/chat/sessions` | Tạo một phiên hội thoại mới với gia sư AI. | Người dùng (đề xuất) |
+| EP-045 | GET | `/api/chat/sessions` | Lấy danh sách phiên hội thoại của người dùng. | Người dùng (đề xuất) |
+| EP-046 | GET | `/api/chat/sessions/{session_id}` | Lấy thông tin phiên và lịch sử hội thoại. | Người dùng (đề xuất) |
+| EP-047 | POST | `/api/chat/sessions/{session_id}/messages` | Gửi tin nhắn và nhận phản hồi từ AI. | Người dùng (đề xuất) |
+| EP-048 | GET | `/api/chat/sessions/{session_id}/messages` | Lấy danh sách tin nhắn trong một phiên. | Người dùng (đề xuất) |
+| EP-049 | DELETE | `/api/chat/sessions/{session_id}` | Xóa hoặc lưu trữ phiên hội thoại theo chính sách lưu trữ dữ liệu. | Người dùng (đề xuất) |
 
 ### Hành vi của AI Tutor
 
@@ -1379,26 +1430,24 @@ AI Tutor duy trì ngữ cảnh hội thoại trong từng phiên và hỗ trợ 
 - Tạo bài tập củng cố, bao gồm ba câu hỏi trắc nghiệm dựa trên chủ đề vừa thảo luận khi phù hợp.
 - Liên kết mỗi phiên hội thoại với người dùng đã xác thực.
 
-Chức năng tạo lộ trình và chức năng gia sư có thể cùng sử dụng namespace `/api/chat/`, nhưng cần có endpoint và loại phiên riêng biệt.
+Chức năng tạo lộ trình và chức năng gia sư cùng sử dụng namespace `/api/chat/`, nhưng có endpoint và loại phiên riêng biệt. Chat tư vấn khóa học trong bong bóng chat (EP-003) là một chức năng khác, chưa có hợp đồng API (xem mục 10.17).
 
 ---
 
-## 10.10. Hệ thống ôn tập và đánh giá kiến thức
+## 10.11. Ôn tập và đánh giá kiến thức (F09)
 
-Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ liệu và ghi nhận các lần làm bài của người dùng. Mỗi bài kiểm tra ôn tập theo kỹ năng gồm 20 câu hỏi trắc nghiệm.
+Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ liệu và ghi nhận các lần làm bài của người dùng. Bài ôn tập được gắn với **khóa học**; mỗi lần ôn tập gồm 20 câu hỏi trắc nghiệm lấy theo các kỹ năng liên quan đến khóa học. Request/response chi tiết theo `docs/modules/review-assessment.md` §4.
 
-### API ôn tập theo kỹ năng
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-050 | GET | `/api/courses/{course_id}/review` | Kiểm tra khóa học có bài ôn tập khả dụng hay không (`available` và lý do nếu không). | Người dùng |
+| EP-051 | POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu một lần ôn tập: tạo lần làm bài và 20 câu hỏi (không kèm đáp án đúng). | Người dùng |
+| EP-052 | GET | `/api/review-attempts/{attempt_id}` | Lấy trạng thái và câu hỏi của lần ôn tập. Không phải chủ sở hữu → `404`. | Người dùng |
+| EP-053 | POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài, chấm điểm và cập nhật hồ sơ trong một transaction; trả kết quả ngay, gửi email kết quả chạy nền. Không phải chủ sở hữu → `404`. | Người dùng |
+| EP-054 | GET | `/api/me/review-history` | Lấy lịch sử ôn tập; lọc `?course_id=`, `?passed=true` hoặc `?passed=false`; có phân trang. | Người dùng |
+| EP-055 | GET | `/api/me/review-history/{attempt_id}` | Chi tiết một lần làm bài: từng câu, đáp án đã chọn, đáp án đúng và giải thích (chỉ hiển thị sau khi nộp). | Người dùng |
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/skills/{skill_id}/review` | Kiểm tra xem kỹ năng có bài ôn tập khả dụng hay không. |
-| POST | `/api/skills/{skill_id}/review-attempts` | Bắt đầu một lần ôn tập cho kỹ năng đã chọn. |
-| GET | `/api/review-attempts/{attempt_id}` | Lấy trạng thái và câu hỏi của lần ôn tập khi phù hợp. |
-| POST | `/api/review-attempts/{attempt_id}/submit` | Gửi câu trả lời, tính điểm và hoàn tất lần ôn tập. |
-| GET | `/api/me/review-history` | Lấy lịch sử ôn tập của người dùng. |
-| GET | `/api/me/review-history/{attempt_id}` | Lấy chi tiết một kết quả ôn tập. |
-| GET | `/api/me/skills` | Lấy các kỹ năng được ghi nhận trong hồ sơ người dùng và trạng thái của chúng. |
-| PATCH | `/api/me/skills` | Cập nhật thủ công các bản ghi kỹ năng của người dùng khi được phép. |
+Kỹ năng ghi nhận trong hồ sơ người dùng được đọc và cập nhật thủ công qua `GET /api/me/skills` và `PATCH /api/me/skills` (EP-015, EP-016 ở mục 10.3).
 
 ### Quy trình ôn tập
 
@@ -1407,59 +1456,83 @@ Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ 
 3. Chấm các câu trả lời đã gửi và tính kết quả.
 4. Lưu lần làm bài, điểm số và trạng thái hoàn thành.
 5. Đánh dấu khóa học là `completed` sau khi bài ôn tập được hoàn tất, theo chính sách hoàn thành đã thống nhất.
-6. Cập nhật các kỹ năng được ghi nhận của người dùng dựa trên mối quan hệ giữa khóa học và kỹ năng.
-7. Cung cấp kết quả thông qua lịch sử ôn tập.
+6. Cập nhật các kỹ năng được ghi nhận của người dùng dựa trên mối quan hệ giữa khóa học và kỹ năng (bước 3–6 thực hiện trong cùng một transaction).
+7. Trả kết quả cho người dùng, gửi email kết quả chạy nền và cung cấp kết quả thông qua lịch sử ôn tập.
 
 API ôn tập cần xác định liệu người dùng có được làm lại nhiều lần hay không và có yêu cầu điểm tối thiểu cho việc công nhận kỹ năng hay không.
 
+**Ghi chú:** Chức năng lưu đáp án bài đang làm dở ("Tạm rời, làm tiếp sau", EP-056) có trên giao diện nhưng chưa có hợp đồng API (xem mục 10.17).
+
 ---
 
-## 10.11. Quản trị — Danh mục khóa học và kỹ năng
+## 10.12. Quản trị — Khóa học, kỹ năng và liên kết khóa học–kỹ năng (F11)
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/admin/courses` | Lấy danh sách khóa học để quản trị. |
-| POST | `/api/admin/courses` | Thêm khóa học mới. |
-| GET | `/api/admin/courses/{course_id}` | Lấy chi tiết khóa học. |
-| PATCH | `/api/admin/courses/{course_id}` | Cập nhật thông tin khóa học. |
-| DELETE | `/api/admin/courses/{course_id}` | Xóa khóa học khỏi danh mục. |
-| GET | `/api/admin/skills` | Lấy danh sách kỹ năng. |
-| POST | `/api/admin/skills` | Thêm kỹ năng mới. |
-| PATCH | `/api/admin/skills/{skill_id}` | Cập nhật thông tin kỹ năng. |
-| DELETE | `/api/admin/skills/{skill_id}` | Xóa kỹ năng khi việc xóa không gây ảnh hưởng không mong muốn. |
-| GET | `/api/admin/course-skill-relations` | Lấy danh sách liên kết giữa khóa học và kỹ năng. |
-| POST | `/api/admin/course-skill-relations` | Liên kết một khóa học với một kỹ năng. |
-| DELETE | `/api/admin/course-skill-relations/{course_id}/{skill_id}` | Xóa liên kết giữa khóa học và kỹ năng. |
-| GET | `/api/admin/skill-relations` | Lấy danh sách quan hệ giữa các kỹ năng. |
-| POST | `/api/admin/skill-relations` | Tạo quan hệ `prerequisite`, `extension` hoặc `related` giữa các kỹ năng. |
-| PATCH | `/api/admin/skill-relations/{from_skill_id}/{to_skill_id}` | Cập nhật quan hệ giữa hai kỹ năng. |
-| DELETE | `/api/admin/skill-relations/{from_skill_id}/{to_skill_id}` | Xóa quan hệ giữa hai kỹ năng. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-058 | GET | `/api/admin/courses` | Lấy danh sách khóa học để quản trị. | Admin |
+| EP-059 | POST | `/api/admin/courses` | Thêm khóa học mới. | Admin |
+| EP-060 | GET | `/api/admin/courses/{course_id}` | Lấy chi tiết khóa học. | Admin |
+| EP-061 | PATCH | `/api/admin/courses/{course_id}` | Cập nhật thông tin khóa học. | Admin |
+| EP-062 | DELETE | `/api/admin/courses/{course_id}` | Xóa khóa học khỏi danh mục. | Admin |
+| EP-063 | GET | `/api/admin/skills` | Lấy danh sách kỹ năng. | Admin |
+| EP-064 | POST | `/api/admin/skills` | Thêm kỹ năng mới. | Admin |
+| EP-065 | PATCH | `/api/admin/skills/{skill_id}` | Cập nhật thông tin kỹ năng. | Admin |
+| EP-066 | DELETE | `/api/admin/skills/{skill_id}` | Xóa kỹ năng khi việc xóa không gây ảnh hưởng không mong muốn. | Admin |
+| EP-067 | GET | `/api/admin/course-skill-relations` | Lấy danh sách liên kết giữa khóa học và kỹ năng. | Admin |
+| EP-068 | POST | `/api/admin/course-skill-relations` | Liên kết một khóa học với một kỹ năng. | Admin |
+| EP-069 | DELETE | `/api/admin/course-skill-relations/{course_id}/{skill_id}` | Xóa liên kết giữa khóa học và kỹ năng. | Admin |
 
 Các endpoint quản trị chỉ được phép sử dụng bởi quản trị viên đã được cấp quyền.
 
 ---
 
-## 10.12. Quản trị admin — Lộ trình học tập cơ bản (Base Learning Paths)
+## 10.13. Quản trị — Quan hệ giữa các kỹ năng (F12)
+
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-070 | GET | `/api/admin/skill-relations` | Lấy danh sách quan hệ giữa các kỹ năng. | Admin |
+| EP-071 | POST | `/api/admin/skill-relations` | Tạo quan hệ `prerequisite`, `extension` hoặc `related` giữa các kỹ năng. | Admin |
+| EP-072 | PATCH | `/api/admin/skill-relations/{from_skill_id}/{to_skill_id}` | Cập nhật quan hệ giữa hai kỹ năng. | Admin |
+| EP-073 | DELETE | `/api/admin/skill-relations/{from_skill_id}/{to_skill_id}` | Xóa quan hệ giữa hai kỹ năng. | Admin |
+
+---
+
+## 10.14. Quản trị — Ngân hàng câu hỏi ôn tập (ngoài 14 tính năng)
+
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-076 | GET | `/api/admin/questions` | Danh sách câu hỏi ôn tập (lọc `?skill_id=`, phân trang), kèm số câu đang hoạt động theo kỹ năng. | Admin |
+| EP-077 | POST | `/api/admin/questions` | Thêm câu hỏi: `skill_id`, `content`, `options` (đúng 4 đáp án), `correct_index` (0–3), `explanation`. | Admin |
+| EP-078 | GET | `/api/admin/questions/{question_id}` | Chi tiết câu hỏi (có đáp án đúng). | Admin |
+| EP-079 | PATCH | `/api/admin/questions/{question_id}` | Sửa câu hỏi. | Admin |
+| EP-080 | DELETE | `/api/admin/questions/{question_id}` | Câu hỏi chưa từng dùng trong bài làm → xóa thật; đã dùng → đặt `is_active = false`. Response nêu rõ đã xóa hay vô hiệu hóa. | Admin |
+| EP-081 | POST | `/api/admin/questions/import` | (Tùy chọn) Nhập hàng loạt câu hỏi từ CSV/JSON, trả báo cáo theo từng dòng. | Admin |
+
+**Ghi chú:** Nhóm endpoint này (T19–T21) đã có trong tài liệu chuẩn nhưng **chưa có người phụ trách** (CONFLICT-SCOPE-01, ND-53) — chờ nhóm quyết định.
+
+---
+
+## 10.15. Quản trị — Lộ trình học tập cơ sở (Base Learning Paths, ngoài 14 tính năng)
 
 Base learning path là các mẫu lộ trình có thể tái sử dụng, mô tả những kỹ năng mục tiêu ban đầu và mối quan hệ giữa chúng cho các mục tiêu phổ biến. Chúng giúp AI Consultant tạo ra điểm xuất phát nhất quán trước khi mở rộng lộ trình bằng đồ thị kỹ năng chung và các lộ trình lịch sử tương tự.
 
-### API admin quản lý mẫu lộ trình
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-082 | GET | `/api/admin/base-learning-paths` | Lấy danh sách mẫu lộ trình học tập cơ sở. | Admin |
+| EP-083 | POST | `/api/admin/base-learning-paths` | Tạo mẫu lộ trình mới. | Admin |
+| EP-084 | GET | `/api/admin/base-learning-paths/{template_id}` | Lấy chi tiết mẫu, bao gồm kỹ năng mục tiêu và các kết nối. | Admin |
+| EP-085 | PATCH | `/api/admin/base-learning-paths/{template_id}` | Cập nhật thông tin hoặc cấu hình mẫu. | Admin |
+| EP-086 | DELETE | `/api/admin/base-learning-paths/{template_id}` | Vô hiệu hóa hoặc xóa mẫu theo quy tắc sử dụng và lưu trữ lịch sử. | Admin |
+| EP-087 | GET | `/api/admin/base-learning-paths/{template_id}/nodes` | Lấy các kỹ năng trong mẫu lộ trình. | Admin |
+| EP-088 | POST | `/api/admin/base-learning-paths/{template_id}/nodes` | Thêm kỹ năng vào mẫu. | Admin |
+| EP-089 | PATCH | `/api/admin/base-learning-paths/{template_id}/nodes/{skill_id}` | Cập nhật node trong mẫu. | Admin |
+| EP-090 | DELETE | `/api/admin/base-learning-paths/{template_id}/nodes/{skill_id}` | Xóa kỹ năng khỏi mẫu. | Admin |
+| EP-091 | GET | `/api/admin/base-learning-paths/{template_id}/edges` | Lấy các kết nối giữa kỹ năng trong mẫu. | Admin |
+| EP-092 | POST | `/api/admin/base-learning-paths/{template_id}/edges` | Thêm kết nối giữa các kỹ năng trong mẫu. | Admin |
+| EP-093 | PATCH | `/api/admin/base-learning-paths/{template_id}/edges/{from_skill_id}/{to_skill_id}` | Cập nhật kết nối trong mẫu (tùy chọn). | Admin |
+| EP-094 | DELETE | `/api/admin/base-learning-paths/{template_id}/edges/{from_skill_id}/{to_skill_id}` | Xóa kết nối trong mẫu (tùy chọn). | Admin |
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/admin/base-learning-paths` | Lấy danh sách mẫu lộ trình học tập cơ sở. |
-| POST | `/api/admin/base-learning-paths` | Tạo mẫu lộ trình mới. |
-| GET | `/api/admin/base-learning-paths/{template_id}` | Lấy chi tiết mẫu, bao gồm kỹ năng mục tiêu và các kết nối. |
-| PATCH | `/api/admin/base-learning-paths/{template_id}` | Cập nhật thông tin hoặc cấu hình mẫu. |
-| DELETE | `/api/admin/base-learning-paths/{template_id}` | Vô hiệu hóa hoặc xóa mẫu theo quy tắc sử dụng và lưu trữ lịch sử. |
-| GET | `/api/admin/base-learning-paths/{template_id}/nodes` | Lấy các kỹ năng trong mẫu lộ trình. |
-| POST | `/api/admin/base-learning-paths/{template_id}/nodes` | Thêm kỹ năng vào mẫu. |
-| PATCH | `/api/admin/base-learning-paths/{template_id}/nodes/{skill_id}` | Cập nhật node trong mẫu. |
-| DELETE | `/api/admin/base-learning-paths/{template_id}/nodes/{skill_id}` | Xóa kỹ năng khỏi mẫu. |
-| GET | `/api/admin/base-learning-paths/{template_id}/edges` | Lấy các kết nối giữa kỹ năng trong mẫu. |
-| POST | `/api/admin/base-learning-paths/{template_id}/edges` | Thêm kết nối giữa các kỹ năng trong mẫu. |
-| PATCH | `/api/admin/base-learning-paths/{template_id}/edges/{from_skill_id}/{to_skill_id}` | Cập nhật kết nối trong mẫu (tùy chọn). |
-| DELETE | `/api/admin/base-learning-paths/{template_id}/edges/{from_skill_id}/{to_skill_id}` | Xóa kết nối trong mẫu (tùy chọn). |
+**Ghi chú:** Nhóm endpoint này nằm ngoài 14 tính năng và chưa có người phụ trách; giao diện quản trị AdminBasePaths (UI v2) sử dụng EP-082 và EP-085.
 
 ### Quy trình tạo lộ trình từ mẫu cơ sở
 
@@ -1476,31 +1549,65 @@ Mẫu lộ trình cơ sở cung cấp điểm xuất phát có thể tái sử d
 
 ---
 
-## 10.13. Quản trị — Dữ liệu lộ trình học tập lịch sử (tùy chọn)
+## 10.16. Quản trị — Dữ liệu lộ trình học tập lịch sử (tùy chọn, ngoài 14 tính năng)
 
 Các endpoint này không bắt buộc đối với phiên bản thử nghiệm ban đầu, nhưng hữu ích nếu quản trị viên cần kiểm tra hoặc nhập dữ liệu lịch sử phục vụ Collaborative Filtering.
 
-| Method | Endpoint | Mô tả |
-|---|---|---|
-| GET | `/api/admin/historical-learning-paths` | Lấy danh sách bản ghi lộ trình lịch sử. |
-| GET | `/api/admin/historical-learning-paths/{record_id}` | Lấy chi tiết một bản ghi lịch sử. |
-| POST | `/api/admin/historical-learning-path-imports` | Nhập một nhóm bản ghi lịch sử đã được kiểm tra. |
-| GET | `/api/admin/historical-learning-path-imports/{import_id}` | Kiểm tra trạng thái và kết quả của một lần nhập dữ liệu. |
+| Mã | Method | Endpoint | Mô tả | Quyền truy cập |
+|---|---|---|---|---|
+| EP-095 | GET | `/api/admin/historical-learning-paths` | Lấy danh sách bản ghi lộ trình lịch sử. | Admin |
+| EP-096 | GET | `/api/admin/historical-learning-paths/{record_id}` | Lấy chi tiết một bản ghi lịch sử. | Admin |
+| EP-097 | POST | `/api/admin/historical-learning-path-imports` | Nhập một nhóm bản ghi lịch sử đã được kiểm tra. | Admin |
+| EP-098 | GET | `/api/admin/historical-learning-path-imports/{import_id}` | Kiểm tra trạng thái và kết quả của một lần nhập dữ liệu. | Admin |
 
 Quá trình nhập dữ liệu lịch sử cần kiểm tra các tham chiếu kỹ năng, quan hệ giữa các bản ghi, dữ liệu trùng lặp và sự phân biệt giữa dữ liệu tổng hợp với dữ liệu người dùng thực tế. Dữ liệu được nhập không được tự động ghi đè lên lộ trình đang sử dụng của người dùng.
 
+**Ghi chú:** CSDL hiện chưa có bảng lưu lộ trình lịch sử (DB-2); nhóm endpoint này chưa có người phụ trách — chờ nhóm quyết định.
+
 ---
 
-## 10.14. Quy tắc chung cho API
+## 10.17. Chức năng có giao diện nhưng chưa có hợp đồng API
 
-- **Xác thực:** Các endpoint dành cho người dùng yêu cầu xác thực; endpoint quản trị yêu cầu quyền quản trị viên.
+Các chức năng dưới đây đã xuất hiện trên giao diện demo (UI v2) nhưng **chưa có endpoint được định nghĩa** (theo `docs/decisions.md` ND-55). Đây không phải endpoint đã tồn tại; method, path, request/response và quyền truy cập đều chờ nhóm định nghĩa.
+
+| Mã | Nhóm | Chức năng cần API | Thông tin hiện có |
+|---|---|---|---|
+| EP-003 | F00 (M4) | Chat AI tư vấn khóa học trong bong bóng chat (khác `/api/chat/learning-path` và `/api/chat/sessions`). | UI ChatBubble-Advisor: request dạng `{ message, guest }`, response dạng `{ reply, courses, cta }`; khách được ưu tiên gợi ý khóa cơ bản, tài khoản đăng nhập được gợi ý dựa trên `GET /api/me/skills`. |
+| EP-056 | F09 (M1) | Lưu đáp án bài ôn tập đang làm dở ("Tạm rời, làm tiếp sau"). | UI ReviewQuiz vẫn giữ chức năng này. |
+| EP-057 | F10 (M2) | Gửi phản hồi về một khóa học hoặc về hệ thống. | UI Contact: tài khoản tự gắn từ phiên đăng nhập, không nhập họ tên/email; giới hạn nội dung 0/1000 ký tự chưa chốt; danh sách `feedback_type` trên UI mâu thuẫn D11 (xem UI2-02). Cần đăng nhập (ContactGuest khóa form). |
+| EP-099 | F10 (M2) | Lấy thông tin liên hệ của khóa học đang chọn. | UI Contact/ContactGuest: giảng viên (`Course.instructor`), email, số điện thoại (`CourseContact`); khách chưa đăng nhập vẫn xem được. Dataset chưa có email/số điện thoại nên dữ liệu thật có thể trống. |
+| EP-074 | F13 (M2) | Admin xem và lọc danh sách phản hồi (chỉ xem). | UI AdminFeedback: số liệu theo `target_type`; tab Tất cả/Khóa học/Hệ thống; tìm kiếm; lọc `feedback_type`; lọc thời gian (`date_from`, `date_to`); sắp xếp mới nhất trước; trả lời bằng `mailto:` (không qua API). Bảng Feedback không có cột trạng thái xử lý. |
+| EP-075 | F14 (M3) | Admin xem danh sách người dùng (chỉ đọc). | UI AdminUserPaths: tìm theo tên, email; mỗi dòng hiển thị số lộ trình và số lộ trình đang theo. |
+| EP-100 | F14 (M3) | Admin xem lộ trình của một người dùng (chỉ đọc). | UI AdminUserPaths: tab theo trạng thái lộ trình, mục tiêu, số kỹ năng đã biết, ngày cập nhật; đồ thị nodes/edges và trạng thái UserSkill. Tên lộ trình chưa có cột trong CSDL (ND-54). |
+
+---
+
+## 10.18. Quy tắc chung cho API
+
+- **Xác thực:** Các endpoint dành cho người dùng yêu cầu xác thực; endpoint quản trị yêu cầu quyền quản trị viên. Truy cập tài nguyên không thuộc sở hữu của người dùng trả về `404` (áp dụng tối thiểu cho các lần ôn tập).
 - **Kiểm tra dữ liệu:** Kiểm tra request body, ID, giá trị trạng thái được phép và các tham chiếu trước khi sửa dữ liệu.
-- **Tính nhất quán:** Sử dụng transaction cho các thao tác sửa nhiều bản ghi liên quan, chẳng hạn như xóa node cùng các cạnh của nó.
+- **Tính nhất quán:** Sử dụng transaction cho các thao tác sửa nhiều bản ghi liên quan, chẳng hạn như xóa node cùng các cạnh của nó, cập nhật kỹ năng hàng loạt qua `PATCH /api/me/skills`, hoặc nộp bài ôn tập.
 - **Lịch sử:** Ưu tiên thay đổi trạng thái thay vì xóa vĩnh viễn đối với lộ trình và bản ghi theo dõi khóa học khi lịch sử cần được giữ lại để phân tích.
 - **Xử lý lỗi:** Trả về cấu trúc lỗi nhất quán cho dữ liệu đầu vào không hợp lệ, truy cập trái phép, tài nguyên không tồn tại và chuyển trạng thái xung đột.
 - **Phân trang:** Các endpoint trả về danh sách nên hỗ trợ phân trang khi số lượng kết quả có thể lớn.
 - **Kiểm tra đầu ra AI:** Xác thực mục tiêu và kỹ năng do mô hình tạo ra bằng danh mục kỹ năng trước khi tạo lộ trình.
 - **Gợi ý:** Không đưa điểm ôn tập vào xếp hạng khóa học, trừ khi quy tắc nghiệp vụ này được thay đổi rõ ràng sau đó.
+
+---
+
+## 10.19. Các điểm còn chờ nhóm quyết định
+
+| Mã | Vấn đề | Hành động đề xuất trong sheet |
+|---|---|---|
+| EP-001 | `/api/health` có trong backend nhưng chưa có trong tài liệu chuẩn. | Bổ sung vào `api-endpoints.md` nếu nhóm đồng ý. |
+| EP-002 | Đường dẫn tài liệu API: `SETUP.md` ghi `/docs`, backend dùng `/api/docs`. | Sửa tài liệu hoặc cấu hình sau khi thống nhất. |
+| EP-006 | Hợp đồng `POST /api/auth/refresh` còn là bản nháp (ND-40…ND-43, ND-48). | Chốt request/response. |
+| EP-021 / EP-023 | `GET /api/me/bookmarks` trùng mục đích với `GET /api/me/courses?status=bookmarked`. | Chọn giữ một hay cả hai. |
+| EP-017 | Bộ lọc `?skill_id` còn trong tài liệu nhưng UI v2 đã bỏ (UI2-03). | Thống nhất giữa tài liệu và giao diện. |
+| EP-017…019, EP-024, EP-028, EP-030…049 | Quyền truy cập chưa được ghi trong tài liệu chuẩn. | Xác nhận quyền (đề xuất `owner-only` cho tài nguyên của người dùng). |
+| EP-076…081 | Quản trị câu hỏi ôn tập chưa có người phụ trách (CONFLICT-SCOPE-01, ND-53). | Phân công hoặc loại khỏi phạm vi. |
+| EP-095…098 | Dữ liệu lộ trình lịch sử: CSDL chưa có bảng (DB-2), chưa có người phụ trách. | Quyết định có làm trong phiên bản này không. |
+| EP-003, EP-056, EP-057, EP-074, EP-075, EP-099, EP-100 | Giao diện đã có nhưng chưa có hợp đồng API (ND-55). | Nhóm định nghĩa endpoint. |
 
 # 11. TIÊU CHÍ NGHIỆM THU (ACCEPTANCE CRITERIA)
 
@@ -1635,3 +1742,130 @@ Ma trận truy vết yêu cầu (RTM) giúp đảm bảo mỗi yêu cầu quan t
 ## 13.4. Kết quả mong đợi
 
 Ma trận truy vết giúp nhóm phát triển xác định rõ phạm vi triển khai và kiểm thử của EduMentor AI, hạn chế bỏ sót yêu cầu và hỗ trợ đánh giá mức độ hoàn thành của prototype trước khi bàn giao.
+# 14. ĐẶC TẢ TRIỂN KHAI DOCKER (DOCKER DEPLOYMENT SPECIFICATION)
+
+## 14.1. Mục đích và phạm vi
+
+Mục này đặc tả cách đóng gói và chạy EduMentor AI bằng Docker và Docker Compose, giúp mọi thành viên dựng môi trường chạy thử giống nhau (NFR-34) và tách tác vụ AI tốn tài nguyên khỏi backend nghiệp vụ (NFR-35). Hệ thống gồm bốn container:
+
+| Container (service) | Thành phần | Vai trò |
+|---|---|---|
+| `frontend` | React + Vite | Giao diện người học và quản trị. |
+| `backend` | FastAPI (Python) | API nghiệp vụ `/api/*`, xác thực, phân quyền, gợi ý khóa học, ôn tập. |
+| `db` | PostgreSQL | Lưu toàn bộ dữ liệu nghiệp vụ. |
+| `ai-model` | Dịch vụ suy luận mô hình AI | Chạy Qwen3-1.7B + adapter QLoRA (AI Consultant, AI Tutor) và mô hình embedding `all-MiniLM-L6-v2`. |
+
+Các giá trị cổng, tên database và driver dưới đây theo hiện trạng `docker-compose.yaml` trong nhánh backend; những giá trị còn mâu thuẫn được đánh dấu **(chờ chốt)** và cần nhóm thống nhất trước khi cập nhật `SETUP.md`.
+
+## 14.2. Đặc tả từng container
+
+### 14.2.1. Container `frontend` — React + Vite
+
+| Thuộc tính | Đặc tả |
+|---|---|
+| Image nền | `node:20-alpine` (giai đoạn build); `nginx:alpine` (giai đoạn chạy khi demo) |
+| Chế độ dev | Chạy `vite --host 0.0.0.0 --port 5173`, mount mã nguồn để hot reload |
+| Chế độ demo | Build tĩnh (`npm run build`), phục vụ thư mục `dist/` bằng Nginx ở cổng 80 |
+| Cổng | Dev: `5173:5173`; demo: `80:80` (hoặc `8080:80`) |
+| Biến môi trường | `VITE_API_BASE_URL=/api` |
+| Phụ thuộc | `backend` |
+| Kết nối ra | Chỉ chuyển tiếp request `/api` tới `backend:8000`; không kết nối `db` hay `ai-model` |
+
+### 14.2.2. Container `backend` — FastAPI
+
+| Thuộc tính | Đặc tả |
+|---|---|
+| Image nền | `python:3.12-slim` |
+| Lệnh khởi động | `alembic upgrade head` rồi `uvicorn app.main:app --host 0.0.0.0 --port 8000` (dev thêm `--reload`) |
+| Cổng | `8000:8000` (Swagger tại `/api/docs`) |
+| Biến môi trường | `DATABASE_URL=postgresql+psycopg://<user>:<password>@db:5432/<db_name>`, `SECRET_KEY`, `ALGORITHM=HS256`, `ACCESS_TOKEN_EXPIRE_MINUTES=30`, `FRONTEND_URL`, `AI_SERVICE_URL=http://ai-model:8001`, `AI_TIMEOUT_SECONDS=15`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `REVIEW_PASS_PERCENT` |
+| Phụ thuộc | `db` (đợi healthcheck đạt), `ai-model` (khởi động trước; backend vẫn chạy được khi AI chưa sẵn sàng) |
+| Healthcheck | `GET /api/health` trả `200`; `503` khi database lỗi |
+| Kết nối ra | `db:5432` (SQL), `ai-model:8001` (HTTP nội bộ), máy chủ SMTP bên ngoài |
+
+Tạo bảng chỉ bằng Alembic migration; container không gọi `create_all()` khi khởi động (quy tắc ALEMBIC).
+
+### 14.2.3. Container `db` — PostgreSQL
+
+| Thuộc tính | Đặc tả |
+|---|---|
+| Image nền | `postgres:16-alpine` |
+| Biến môi trường | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` |
+| Cổng | Trong mạng nội bộ: `5432`. Ánh xạ ra máy host chỉ dùng khi phát triển: hiện là `5433:5432`, tên DB `edumentor_db` **(chờ chốt DB-CONN)** |
+| Volume | `pgdata:/var/lib/postgresql/data` để dữ liệu không mất khi tạo lại container |
+| Healthcheck | `pg_isready -U $POSTGRES_USER -d $POSTGRES_DB` |
+| Kết nối vào | Chỉ từ `backend`; `frontend` và `ai-model` không truy cập database |
+
+### 14.2.4. Container `ai-model` — Dịch vụ mô hình AI
+
+| Thuộc tính | Đặc tả |
+|---|---|
+| Image nền | `python:3.12-slim` (CPU) hoặc image CUDA khi có GPU |
+| Nội dung | Mô hình nền Qwen3-1.7B, adapter QLoRA đã huấn luyện trên Google Colab, mô hình embedding `all-MiniLM-L6-v2` |
+| Lệnh khởi động | `uvicorn ai_service.main:app --host 0.0.0.0 --port 8001` |
+| Cổng | `8001`, **chỉ mở trong mạng nội bộ**, không ánh xạ ra máy host |
+| API nội bộ (đề xuất) | `POST /v1/extract-skills` (mục tiêu → `{goal_type, skills[]}`), `POST /v1/chat` (hội thoại AI Tutor), `POST /v1/embeddings` (văn bản → vector), `GET /health` |
+| Volume | `hf_cache:/root/.cache/huggingface` (bộ nhớ đệm mô hình), `./models/adapters:/models/adapters:ro` (adapter QLoRA, chỉ đọc) |
+| Biến môi trường | `BASE_MODEL=Qwen/Qwen3-1.7B`, `ADAPTER_PATH=/models/adapters/consultant`, `EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2`, `DEVICE=cpu` hoặc `cuda` |
+| Tài nguyên | Giới hạn RAM; cấp GPU qua `deploy.resources.reservations.devices` khi máy có GPU |
+| Phương án thay thế | Nếu phần cứng không đủ, backend đặt `LLM_PROVIDER=api` để gọi dịch vụ LLM bên ngoài qua LLM Gateway; container `ai-model` khi đó chỉ chạy embedding hoặc được tắt |
+
+API nội bộ của `ai-model` không thuộc danh sách endpoint công khai ở mục 10; frontend không gọi trực tiếp container này. Việc huấn luyện, fine-tune mô hình không chạy trong container mà thực hiện offline trên Google Colab.
+
+## 14.3. Mạng, cổng và volume
+
+| Mạng | Thành viên | Mục đích |
+|---|---|---|
+| `web` | `frontend`, `backend` | Chuyển tiếp request `/api` từ giao diện tới backend. |
+| `internal` | `backend`, `db`, `ai-model` | Kết nối nội bộ; `db` và `ai-model` không nhận kết nối từ `frontend`. |
+
+| Service | Cổng trong mạng | Cổng mở ra máy host | Ghi chú |
+|---|---|---|---|
+| `frontend` | 5173 (dev) / 80 (demo) | 5173 / 80 | Điểm truy cập của người dùng |
+| `backend` | 8000 | 8000 | Mở để dùng Swagger khi phát triển |
+| `db` | 5432 | 5433 (chỉ dev, chờ chốt) | Không mở khi demo |
+| `ai-model` | 8001 | Không mở | Chỉ backend gọi |
+
+| Volume | Gắn vào | Nội dung |
+|---|---|---|
+| `pgdata` | `db` | Dữ liệu PostgreSQL |
+| `hf_cache` | `ai-model` | Mô hình tải từ Hugging Face |
+| `./models/adapters` (bind mount, chỉ đọc) | `ai-model` | Adapter QLoRA |
+
+## 14.4. Thứ tự khởi động
+
+1. `db` khởi động và đạt healthcheck `pg_isready`.
+2. `ai-model` khởi động và nạp mô hình (có thể mất vài phút ở lần đầu do tải mô hình).
+3. `backend` chạy `alembic upgrade head` rồi khởi động Uvicorn; healthcheck `/api/health` đạt.
+4. `frontend` khởi động và chuyển tiếp `/api` tới `backend`.
+
+Nếu `ai-model` chưa sẵn sàng, các API không dùng AI vẫn hoạt động; API AI trả `503` để người dùng thử lại (NFR-11).
+
+## 14.5. Giao tiếp giữa các container
+
+```mermaid
+flowchart LR
+  U[Trình duyệt người dùng] -- "HTTP(S) :5173 / :80" --> FE[frontend<br/>React + Vite]
+  FE -- "/api/* → http://backend:8000<br/>Bearer JWT" --> BE[backend<br/>FastAPI]
+  BE -- "SQL · TCP db:5432" --> DB[(db<br/>PostgreSQL)]
+  BE -- "HTTP nội bộ ai-model:8001<br/>timeout 15s" --> AI[ai-model<br/>Qwen3-1.7B + QLoRA<br/>MiniLM embedding]
+  BE -. "SMTP" .-> MAIL[Máy chủ email]
+  U -. "Mở URL khóa học" .-> MOOC[Nền tảng MOOC]
+```
+
+| Từ | Đến | Giao thức / địa chỉ | Nội dung trao đổi |
+|---|---|---|---|
+| Trình duyệt | `frontend` | HTTP(S) `:5173` (dev) / `:80` (demo) | Tải giao diện SPA. |
+| Trình duyệt / `frontend` | `backend` | HTTP `/api/*` → `http://backend:8000` qua proxy của Vite (dev) hoặc Nginx (demo) | Request REST/JSON kèm `Authorization: Bearer <access_token>`. Dùng proxy hay mở CORS cho `:5173` **(chờ chốt CORS)**. |
+| `backend` | `db` | TCP `db:5432`, driver psycopg3 | Truy vấn và transaction SQLAlchemy; migration Alembic. |
+| `backend` | `ai-model` | HTTP nội bộ `http://ai-model:8001` | Gửi mục tiêu để trích xuất kỹ năng, gửi ngữ cảnh hội thoại cho AI Tutor, lấy vector embedding cho gợi ý khóa học. Chỉ gửi dữ liệu cần thiết, không gửi email hay họ tên người dùng (NFR-31). |
+| `ai-model` | `backend` | Phản hồi HTTP JSON | `{goal_type, skills[]}`, câu trả lời hội thoại, vector embedding. Backend kiểm tra đầu ra trước khi dùng (BR-07). |
+| `backend` | Máy chủ SMTP | SMTP | Email đặt lại mật khẩu, email kết quả ôn tập (chạy nền). |
+| Trình duyệt | Nền tảng MOOC | HTTPS | Mở trang khóa học bên ngoài; không đi qua container nào. |
+
+Quy tắc giao tiếp:
+
+- Các container gọi nhau bằng **tên service** (`backend`, `db`, `ai-model`), không dùng `localhost`.
+- `frontend` chỉ nói chuyện với `backend`; `ai-model` không truy cập `db`; chỉ `backend` giữ thông tin đăng nhập database.
+- Bí mật (`SECRET_KEY`, mật khẩu database, SMTP) nằm trong file `.env` không commit; chỉ commit `.env.example` (NFR-08).
+- Khi `ai-model` lỗi hoặc quá thời gian, backend trả lỗi có kiểm soát và không làm mất dữ liệu đã lưu (NFR-09, NFR-11).
