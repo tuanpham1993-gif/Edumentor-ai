@@ -21,7 +21,7 @@ Skill này là điểm vào cho module Xác thực & Hồ sơ: phạm vi, trạn
 
 | Trạng thái | Nghĩa | Claude được làm gì |
 |---|---|---|
-| **SPEC CONFIRMED** | Phạm vi/quy tắc đã được nhóm xác nhận ("Nhóm đồng ý" / "Đã chốt" trong `docs/EduMentor_Checklist_Da_Sua_API.xlsx`, hoặc endpoint "Giữ" từ đặc tả gốc) | Hỗ trợ implement theo `docs/` |
+| **SPEC CONFIRMED** | Phạm vi/quy tắc đã được nhóm xác nhận, ghi nhận trong `docs/decisions.md` §2–§3 (chép từ trạng thái "Nhóm đồng ý" / "Đã chốt" của `docs/EduMentor_Checklist_Da_Sua_API.xlsx`), hoặc endpoint "Giữ" từ đặc tả gốc | Hỗ trợ implement theo `docs/` |
 | **IMPLEMENTED** | Đã có code chạy | Hiện **chưa** có endpoint nào ở trạng thái này |
 | **PENDING** | Còn `ND-xx` chưa chốt | Không implement phần đó; làm phần còn lại và nói rõ chỗ chờ |
 | **BLOCKED** | Phần bắt buộc phụ thuộc vào quyết định chưa chốt | Dừng, hỏi Tuấn trước khi code phần đó |
@@ -50,6 +50,8 @@ Nguồn đầy đủ: `docs/decisions.md` §2 "Phân công". Cột "Phụ trách
 4. `docs/modules/auth-profile.tests.md` — kịch bản test.
 5. `docs/EduMentor_Checklist_Da_Sua_API.xlsx` — nguồn gốc trạng thái tick (đã chép vào `decisions.md`).
 
+**Thứ tự ưu tiên khi các nguồn khác nhau:** theo D-DOC-01 (`docs/decisions.md` §1). Danh sách trên là thứ tự **đọc**; skill này chỉ tóm tắt, không phải nguồn sự thật. BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`) là căn cứ nghiệp vụ và nghiệm thu, chỉ dùng để đối chiếu: không implement nội dung BA/SRS chưa có trong `docs/decisions.md` hoặc tài liệu module. Gặp khác biệt chưa được giải quyết (BA/SRS khác quyết định đã chốt hoặc khác tài liệu module) → dừng, ghi nhận thành `ND-xx` trong `docs/decisions.md` và hỏi Tuấn.
+
 ## 3. Phạm vi và trạng thái
 
 ### Authentication
@@ -69,11 +71,11 @@ Nguồn đầy đủ: `docs/decisions.md` §2 "Phân công". Cột "Phụ trách
 |---|---|---|---|---|
 | GET | `/api/me` | SPEC CONFIRMED | Giữ | — |
 | PATCH | `/api/me` | SPEC CONFIRMED | T04 ☑, T09 ☑, D06 | ND-12 (định dạng `avatar_url`), ND-18 |
-| POST | `/api/me/avatar` | SPEC CONFIRMED (tùy chọn) | T04 ☑, D07 = B | **AUD-06 PENDING**: D07 chọn upload nhưng T04 xếp vào "giai đoạn 2" — chưa rõ có làm trong v1; ND-12 (dung lượng, định dạng, nơi lưu). Hỏi Tuấn trước khi implement |
+| POST | `/api/me/avatar` | SPEC CONFIRMED (tùy chọn) | T04 ☑, D07 = B | **ND-62 PENDING**: D07 chọn upload nhưng T04 xếp vào "giai đoạn 2" — chưa rõ có làm trong v1; ND-12 (dung lượng, định dạng, nơi lưu). Hỏi Tuấn trước khi implement |
 | POST | `/api/me/change-password` | SPEC CONFIRMED | T03 ☑, D-AUTH-05 | ND-46, ND-47, ND-36 |
 | GET | `/api/me/summary` | SPEC CONFIRMED (một phần) | T05 ☑ | ND-13 (cách đếm — ghi chú nhóm "chưa chốt") |
 | GET | `/api/me/skills` | SPEC CONFIRMED | T07 ☑ | — |
-| PATCH | `/api/me/skills` | SPEC CONFIRMED | T06 ☑ | ND-09, ND-11, AUD-12 |
+| PATCH | `/api/me/skills` | SPEC CONFIRMED | T06 ☑ | ND-09, ND-11, ND-64 |
 
 Tất cả: **Implementation = NOT IMPLEMENTED**.
 
@@ -85,7 +87,7 @@ File thuộc module: `routers/auth.py`, `routers/me.py`, `schemas/auth.py`, `sch
 
 ## 4. Endpoint contract (chỉ phần đã xác nhận)
 
-Chi tiết: `docs/modules/auth-profile.md` §4. Lỗi lấy từ cột "Lỗi thường gặp" của sheet "Endpoint (bản mới)".
+Chi tiết: `docs/modules/auth-profile.md` §4. Lỗi theo `docs/modules/auth-profile.md` §4 (nguồn gốc: cột "Lỗi thường gặp" của sheet "Endpoint (bản mới)" trong checklist).
 
 | Endpoint | Xác thực | Request | Response đã xác nhận | Lỗi đã xác nhận |
 |---|---|---|---|---|
@@ -97,7 +99,7 @@ Chi tiết: `docs/modules/auth-profile.md` §4. Lỗi lấy từ cột "Lỗi th
 | `POST /auth/reset-password` | Công khai | `token`, `new_password` | 200 | 400 mã sai/hết hạn/đã dùng |
 | `GET /me` | Người dùng | — | `user_id`, `email`, `full_name`, `avatar_url`, `role`, `created_at` | 401 |
 | `PATCH /me` | Người dùng | `full_name`, `avatar_url` | 200 hồ sơ mới | 401; 422 |
-| `POST /me/avatar` | Người dùng | File ảnh | 200 `avatar_url` | 413; 415 — chờ AUD-06 |
+| `POST /me/avatar` | Người dùng | File ảnh | 200 `avatar_url` | 413; 415 — chờ ND-62 |
 | `POST /me/change-password` | Người dùng | `current_password`, `new_password` | 200 | 400 sai mật khẩu hiện tại |
 | `GET /me/summary` | Người dùng | — | `ongoing_courses`, `completed_courses`, `known_skills`, `ongoing_paths` | 401 |
 | `GET /me/skills` | Người dùng | `?status=known\|learning` | `{skill_id, skill, status, updated_at}[]` | 401 |
@@ -129,8 +131,6 @@ Lỗi validate khác ngoài bảng trên: theo quy ước dự án đã duyệt;
 
 Xác nhận ownership **không** có nghĩa các quyết định dưới đây đã chốt.
 
-| Mã | Trạng thái | Nội dung |
-|---|---|---|
 ND-01 … ND-05 đã được chốt phần chính thành D-AUTH-01 … D-AUTH-05. Các chi tiết còn mở:
 
 | Mã | Trạng thái | Nội dung |
@@ -147,10 +147,12 @@ ND-01 … ND-05 đã được chốt phần chính thành D-AUTH-01 … D-AUTH-0
 | ND-36 | PENDING | Thu hồi refresh token khi đổi/đặt lại mật khẩu |
 | ND-08, ND-19 | PENDING | Response của register / login |
 | ND-14, ND-15, ND-16 | PENDING | `error.code`; 400 hay 422; lớp commit transaction |
-| AUD-06, ND-12 | PENDING | Upload avatar trong v1; giới hạn file |
-| AUD-07 | PENDING | Kiểm tra định dạng email chưa có nguồn — không coi là rule đã chốt |
-| AUD-12 | PENDING | `status` có bắt buộc trong phần tử `add` không |
-| ND-06, 07, 09, 10, 11, 13, 17, 18, 36, 37, 38, 39 | PENDING | Xem `docs/decisions.md` §4.1, §4.3 |
+| ND-62, ND-12 | PENDING | Upload avatar trong v1, có giữ `avatar_url` qua `PATCH /api/me` không; giới hạn file |
+| Định dạng email (nhãn cũ AUD-07) | Có căn cứ | Email sai định dạng → 422: AP-T04 (`register`, §4.1), AP-T42 (`forgot-password`, §4.4). Tài liệu chưa định nghĩa tiêu chí cụ thể của "định dạng hợp lệ" — không tự đặt thêm tiêu chí |
+| ND-64 | PENDING | `add[].status` bắt buộc hay tùy chọn; giá trị mặc định |
+| ND-57 | PENDING | Học viên chọn kỹ năng từ đâu — chưa có API danh mục kỹ năng cho người dùng; chặn phần "Thêm kỹ năng" của màn Kỹ năng. Không tự thêm endpoint |
+| ND-10 | PENDING | Ô "Mục tiêu học tập" trong hồ sơ — đã bổ sung căn cứ BA FR-03 (§6.1), UC-02; `User` chưa có cột này, không tự thêm |
+| ND-06, 07, 09, 11, 13, 17, 18, 36, 37, 38, 39 | PENDING | Xem `docs/decisions.md` §4.1, §4.3 |
 
 ## 7. Không được làm
 
@@ -171,13 +173,13 @@ ND-01 … ND-05 đã được chốt phần chính thành D-AUTH-01 … D-AUTH-0
 
 ## 9. Kỳ vọng kiểm thử
 
-Kịch bản đã đặc tả và không phụ thuộc mục chưa chốt: AP-T01, T03, T05, T11, T12, T14, T20–T28, T32, T35–T37, T40–T47, T50, T51, T54–T57, T70, T71, T73–T78, T81, T90, T91, T101–T103, T105–T107, T112, T113. (Các ca refresh/logout cần bảng RefreshToken — chờ ND-43 trước khi viết.)
+Kịch bản đã đặc tả và không phụ thuộc mục chưa chốt: AP-T01, T03, T04, T05, T11, T12, T14, T20–T28, T32, T35–T37, T40–T47, T50, T51, T54–T57, T70, T71, T73–T78, T81, T90, T91, T101–T103, T105–T107, T112, T113. (Các ca refresh/logout cần bảng RefreshToken — chờ ND-43 trước khi viết.)
 
 Phụ thuộc ND: AP-T06 (ND-45), T30, T31 (ND-48), T33 (ND-42), T34 (ND-40), T38 (ND-16), T100, T104, T108, T109 (ND-46), T110, T111 (ND-47), AP-T07 và mã lỗi chính sách mật khẩu (ND-15).
 
-Kiểm được phần đã chốt, phần còn lại chờ: AP-T02, T52, T53 (role/email không đổi — mã phản hồi chờ ND-18); AP-T10 (có token + `role` — hình dạng chờ ND-19); AP-T04 (thiếu trường — phần "sai định dạng email" chờ AUD-07); AP-T48 (kỳ vọng rollback đã chốt — chỉ cơ chế commit chờ ND-16). AP-T13 chờ ND-15.
+Kiểm được phần đã chốt, phần còn lại chờ: AP-T02, T52, T53 (role/email không đổi — mã phản hồi chờ ND-18); AP-T10 (có token + `role` — hình dạng chờ ND-19); AP-T48 (kỳ vọng rollback đã chốt — chỉ cơ chế commit chờ ND-16). AP-T13 chờ ND-15.
 
 **TEST COVERAGE GAP** (chưa có kịch bản trong tài liệu — chưa tự thêm):
 
-- AP-R16: upload avatar thành công (khi AUD-06 được chốt).
+- AP-R16: upload avatar thành công (khi ND-62 được chốt).
 - `GET /api/me/summary` không có token → 401.

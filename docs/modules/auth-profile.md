@@ -89,7 +89,7 @@ Quy ước chung (xác thực, cấu trúc lỗi, 401/403/404): `docs/backend-ru
 |---|---|
 | Xác thực | Công khai |
 | Body | `email`, `password`, `full_name` |
-| Validation | `email` bắt buộc, ≤ 255 ký tự, phải là địa chỉ email (kiểm định dạng: AUD-07); `password` bắt buộc, theo chính sách AP-R19; `confirm_password` nếu endpoint nhận trường này (`[ND-47]`) phải khớp `password` (AP-R20); `full_name` ≤ 100 (bắt buộc hay không: `[ND-37]`) |
+| Validation | `email` bắt buộc, ≤ 255 ký tự, phải là địa chỉ email (sai định dạng → 422, kịch bản AP-T04); `password` bắt buộc, theo chính sách AP-R19; `confirm_password` nếu endpoint nhận trường này (`[ND-47]`) phải khớp `password` (AP-R20); `full_name` ≤ 100 (bắt buộc hay không: `[ND-37]`) |
 | Response | **201** + thông tin người dùng (trả token hay không: `[ND-08]`) |
 | Lỗi | **409** email đã tồn tại; **422** dữ liệu sai |
 | Quy tắc | AP-R01, AP-R02, AP-R06 |

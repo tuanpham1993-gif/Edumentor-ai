@@ -12,12 +12,20 @@ Các tài liệu khác chỉ tham chiếu mã (`D05`, `T13`, `ND-24`…), không
 
 ## 1. Nguồn sự thật
 
-Thứ tự ưu tiên khi các nguồn khác nhau, cho 2 module trên:
+**D-DOC-01** (Tuấn xác nhận, 2026-10-30) — thứ tự ưu tiên khi các nguồn khác nhau:
 
-1. `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (bản đã sửa, D01–D11 đã chốt) — **nguồn nghiệp vụ mới nhất**. Đã được chép vào `docs/database-design.md` và `docs/api-endpoints.md`.
-2. `docs/structure.md` (trước đây là `STRUCTURE.md` ở root) — nguồn kiến trúc nền (phân lớp Router → Service → Repository → Model, cây thư mục).
-3. `docs/conventions.md` (trước đây là `CONVENTIONS.md` ở root), `SETUP.md`, `README.md`.
-4. Giao diện: `docs/ui-design/` (D-FE-12; bản demo `EduMentor AI Demo.html` chỉ để tra CSS/motion) — chỉ mô tả giao diện; **không** tạo quy tắc API hay nghiệp vụ khi chưa có trong 1–3. Wireframe trong `docs/wireframes/` và `docs/EduMentor-UI-design/` **không còn là nguồn giao diện** (cả hai đã bị xóa khỏi repo, còn trong lịch sử Git); các mục ND bên dưới có nhắc wireframe được giữ làm bối cảnh lịch sử.
+1. `docs/decisions.md` (file này) — các quyết định nhóm đã thống nhất.
+2. BA: `docs/EdumentorAi_BA.md` — nguồn yêu cầu nghiệp vụ.
+3. SRS: `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` — yêu cầu gốc từ đề bài.
+4. Đặc tả triển khai chi tiết: `docs/modules/*.md`, `docs/api-endpoints.md`, `docs/database-design.md`; kèm `docs/structure.md` (kiến trúc nền, cây thư mục), `docs/conventions.md`, `SETUP.md`, `README.md`. Nguồn gốc của nhóm này là `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (bản đã sửa; D01–D11 của chúng đã chép vào mục 2 của file này).
+5. Kế hoạch công việc và phân công: `docs/EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx` (phạm vi, đối chiếu kỹ thuật) và `docs/EduMentor_Ke_Hoach_14_Tinh_Nang.xlsx` (đầu việc, ước lượng) — hiện chỉ có trên máy, chưa đưa vào Git.
+
+Quy tắc áp dụng D-DOC-01:
+
+- BA và SRS là căn cứ nghiệp vụ và nghiệm thu. Nội dung BA/SRS **không tự động ghi đè** quyết định đã chốt ở file này, cũng không tự động sửa tài liệu mục 4.
+- BA/SRS khác quyết định đã chốt hoặc khác tài liệu mục 4 → ghi thành `ND-xx` ở mục 4 (hoặc mục 6 nếu là frontend), dẫn đúng vị trí trong BA/SRS; nhóm chọn phương án rồi mới sửa tài liệu.
+
+Giao diện: `docs/ui-design/` (D-FE-12; bản demo `EduMentor AI Demo.html` chỉ để tra CSS/motion) — chỉ mô tả giao diện; **không** tạo quy tắc API hay nghiệp vụ khi chưa có trong mục 1–4 ở trên. Wireframe trong `docs/wireframes/` và `docs/EduMentor-UI-design/` **không còn là nguồn giao diện** (cả hai đã bị xóa khỏi repo, còn trong lịch sử Git); các mục ND bên dưới có nhắc wireframe được giữ làm bối cảnh lịch sử.
 
 Không tự tạo quy tắc khi tài liệu chưa quy định → ghi `[NEEDS DECISION]` ở mục 4.
 
@@ -146,7 +154,7 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 | ND-07 | Email có chuẩn hóa (chữ thường, bỏ khoảng trắng) trước khi lưu/so sánh không? | `.docx`: email UQ |
 | ND-08 | Register trả token (đăng nhập luôn) hay chỉ "201 + thông tin người dùng"? Wireframe 04 cho chọn kỹ năng ngay sau đăng ký — việc này cần đã xác thực. | Sheet Endpoint, wireframe 04 |
 | ND-09 | Wireframe 04 "Chọn tối đa 3 kỹ năng" — có phải giới hạn của API (`PATCH /api/me/skills`) không? | Wireframe 04 |
-| ND-10 | Wireframe Profile có ô "Mục tiêu học tập", nhưng `User` không có cột này và `PATCH /api/me` chỉ nhận `full_name`, `avatar_url`. Bỏ ô này hay lấy từ LearningPath.goal_text? | Wireframe Profile, `.docx` 3.1 |
+| ND-10 | Wireframe Profile có ô "Mục tiêu học tập", nhưng `User` không có cột này và `PATCH /api/me` chỉ nhận `full_name`, `avatar_url`. Bỏ ô này hay lấy từ LearningPath.goal_text? BA FR-03 (§6.1) và UC-02 (§5.2) yêu cầu hồ sơ có "thông tin liên quan đến mục tiêu nghề nghiệp và quá trình học tập" — nếu giữ, cần chọn: lấy từ `LearningPath.goal_text`, hay thêm cột vào `User` (thay đổi CSDL và `PATCH /api/me`). | Wireframe Profile, `.docx` 3.1, BA `docs/EdumentorAi_BA.md` §5.2 UC-02, §6.1 FR-03 |
 | ND-11 | `PATCH /api/me/skills`: `update` hoặc `remove` một kỹ năng mà user chưa có → lỗi gì hay bỏ qua? Cùng `skill_id` xuất hiện ở nhiều khóa (`add` và `remove`)? User có được tự hạ kỹ năng do ôn tập ghi nhận từ `known` xuống `learning`? | T06 chỉ quy định skill không tồn tại → 404 |
 | ND-12 | `POST /api/me/avatar`: dung lượng tối đa, định dạng cho phép, nơi lưu file, URL công khai? `avatar_url` nhập tay có kiểm tra định dạng URL không? | T04, `.docx` chỉ có mã 413/415 |
 | ND-13 | `GET /api/me/summary`: ghi chú của nhóm ở T05 "Đếm từ StudentCourse, UserSkill, LearningPath (nhóm chưa chốt)" — cách đếm chính thức? | T05 |
@@ -156,6 +164,9 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 | ND-37 | `full_name` có bắt buộc khi đăng ký không? CSDL cho phép NULL, nhưng sheet Endpoint liệt kê nó trong body register và wireframe 02 có ô "Họ và tên". | `.docx` 3.1, sheet Endpoint |
 | ND-38 | Wireframe Profile hiển thị nguồn của kỹ năng ("Từ bài ôn tập khóa học" / "Thêm thủ công"), nhưng `UserSkill` không có cột nguồn. Bỏ nhãn này trên giao diện hay bổ sung cột? | Wireframe Profile, `.docx` 3.2 |
 | ND-39 | `forgot-password`: gửi email đồng bộ hay chạy nền? Nếu gửi lỗi thì vẫn trả thông báo chung (để không lộ email) và chỉ ghi log? Mã đã tạo có giữ lại không? | T01 chỉ quy định thông báo luôn giống nhau |
+| ND-57 | Học viên chọn kỹ năng từ đâu? `PATCH /api/me/skills` nhận `skill_id`, màn Kỹ năng (`docs/ui-design/html/Skills.html`) có ô "Tìm trong danh mục kỹ năng", nhưng `docs/api-endpoints.md` chỉ có `GET /api/admin/skills` (quyền admin) và `GET /api/courses/{course_id}/skills` (theo một khóa). Phương án cần nhóm chọn: thêm endpoint đọc danh mục kỹ năng cho người dùng đã đăng nhập (đường dẫn, quyền, phân trang, người phụ trách); cho người dùng đọc endpoint admin; hay giao diện chỉ cho chọn kỹ năng lấy từ khóa học. Danh mục kỹ năng thuộc tính năng 11 (Khôi). | BA `docs/EdumentorAi_BA.md` §6.1 FR-04, §5.5 BR-02; `docs/ui-design/` Skills; `docs/api-endpoints.md` §2, §3, §11 |
+| ND-62 | Upload ảnh đại diện thuộc giai đoạn nào (bản đầu hay giai đoạn 2), và có tiếp tục hỗ trợ `avatar_url` qua `PATCH /api/me` không? D07 = B (tải file lên, `POST /api/me/avatar`), nhưng chính dòng D07 ghi "T04: giai đoạn 1 nhập URL qua `PATCH /api/me`, giai đoạn 2 upload". Màn EditProfile của `docs/ui-design/` (D-FE-12) bỏ ô đường dẫn ảnh, chỉ đổi ảnh bằng cách bấm vào avatar (`POST /api/me/avatar`) và "Lưu thay đổi" chỉ gửi `full_name`. Giới hạn file: ND-12. (Skill trước đây ghi nhãn AUD-06.) Trạng thái: PENDING. | D07, T04, ND-12, D-FE-12; `docs/modules/auth-profile.md` §4.7, §4.8; `docs/ui-design/` EditProfile |
+| ND-64 | `PATCH /api/me/skills`: `add[].status` bắt buộc hay tùy chọn? Nếu tùy chọn, giá trị mặc định là gì? `docs/modules/auth-profile.md` §4.12 và `docs/database-design.md` §3.2 chỉ quy định `status` ∈ `learning`, `known`; cột `UserSkill.status` có `DEFAULT 'known'` ở CSDL, nhưng tài liệu không nói request được bỏ trống trường này. (Skill trước đây ghi nhãn AUD-12.) Trạng thái: PENDING. | T06, ND-11; `docs/modules/auth-profile.md` §4.12; `docs/database-design.md` §3.2 |
 
 ### 4.2. Ôn tập & Đánh giá
 
@@ -175,6 +186,8 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 | ND-31 | T27 (`ReviewAttempt.submitted_at`) chưa được tick, nhưng `.docx` đã đưa cột vào và dùng nó cho email kết quả. Giữ cột này không? | T27 ☐, `.docx` 6.2 |
 | ND-33 | `POST /api/courses/{course_id}/review-attempts` khi đã có bài dở và trả lại bài đó: mã 200 hay 201? Response có `attempted_at`, tên khóa học…? | D03 |
 | ND-34 | `GET /api/me/review-history` có liệt kê cả bài đang dở (chưa có điểm) không? | `.docx` 6.2, T17 |
+| ND-58 | SRS và BA mô tả bài ôn tập khác quyết định đã chốt. SRS FR-07: "AI tự động sinh và dữ liệu câu hỏi trong database ra **10 câu** hỏi trắc nghiệm"; BA §10.10 ("API ôn tập theo kỹ năng", `/api/skills/{skill_id}/review*`), FR-24 và UC-09: ôn tập **theo kỹ năng**. Quyết định hiện hành: D01 (theo khóa học), D04 và RV-R01 (20 câu lấy từ CSDL). D01, D04, RV-R01 **giữ nguyên** cho tới khi nhóm quyết định khác. Cần chốt: (a) giữ D01/D04/RV-R01 và cập nhật BA/SRS cho khớp, hay đổi quyết định; (b) AI sinh câu hỏi có thuộc phạm vi không (nếu có: lúc nào, có lưu vào `Question` không, ai duyệt). | SRS `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` §3 FR-07; BA `docs/EdumentorAi_BA.md` §5.3 UC-09, §6.6 FR-24, §10.10; D01, D04, RV-R01 |
+| ND-66 | Link trong email kết quả ôn tập phải dùng route frontend nào? Đường dẫn `FRONTEND_URL/review/history/{attempt_id}` có ở RV-R18 (`docs/modules/review-assessment.md` §5), RV-T63 (`docs/modules/review-assessment.tests.md:80`) và `docs/database-design.md:372` (§6), nhưng không khớp route nào trong `docs/structure.md` §3. Hai route ứng viên, đều yêu cầu đăng nhập (P): `/review-result/:attemptId` (ReviewResultPage, `docs/structure.md:404`) và `/me/review-history/:attemptId` (ReviewDetailPage, `docs/structure.md:405`). `{attempt_id}` (email/API) và `:attemptId` (route frontend) cùng chỉ mã lần làm bài, chỉ khác cách đặt tên tham số. Người chưa đăng nhập mở link sẽ qua `/login`; có quay lại đúng trang không phụ thuộc ND-52. Chỉ hỏi đường dẫn — chưa chọn route; nội dung email (C2, T29 so với `.docx` 6.2), RV-R18 và RV-T63 giữ nguyên. Trạng thái: PENDING. | RV-R18, RV-T63, T29, ND-52; `docs/modules/review-assessment.md` §5; `docs/modules/review-assessment.tests.md`; `docs/database-design.md` §6; `docs/structure.md` §3; `docs/ui-design/` ReviewResult, ReviewDetail |
 
 ### 4.3. Kiến trúc dùng chung
 
@@ -190,7 +203,10 @@ Không được tự chọn phương án cho các mục dưới đây. Khi gặp
 | Mã | Nội dung |
 |---|---|
 | ND-32 | STRUCTURE có `models/bookmark.py`, nhưng `.docx` 3.3 nói StudentCourse dùng cho cả bookmark, "không cần bảng riêng". Thuộc module Course Tracking. |
-| ND-35 | Feedback & liên hệ (T22–T25) chưa được nhóm đồng ý; bảng Feedback/CourseContact có trong CSDL nhưng chưa có endpoint chính thức. |
+| ND-35 | Feedback & liên hệ (T22–T25) chưa được nhóm đồng ý; bảng Feedback/CourseContact có trong CSDL nhưng chưa có endpoint chính thức. BA `docs/EdumentorAi_BA.md` §4.1.2 thêm yêu cầu admin **trả lời** feedback và câu trả lời "có thể được gửi về mail"; `docs/ui-design/` AdminFeedback-Detail chỉ có liên kết `mailto:`. Cần chốt: admin trả lời trong hệ thống (cần lưu câu trả lời — CSDL chưa có cột/bảng) hay chỉ mở email ngoài hệ thống; có gửi email tự động không (`core/email.py`). Liên quan ND-55 (M2). |
+| ND-59 | AI Tutor (tính năng 08, Tâm) — SRS có ba yêu cầu chưa có trong tài liệu: (a) FR-05 "tải lại tối đa **6 tin nhắn gần nhất**" khi trả lời (tài liệu hiện hành chỉ ghi "duy trì ngữ cảnh hội thoại trong phiên", không có số lượng); (b) FR-08 cho học viên **chấm sao** độ hài lòng về câu trả lời AI (`ChatMessage` không có cột đánh giá, không có endpoint); (c) §2 "Session Memory Manager" lưu bộ nhớ hội thoại "trong RAM/Redis" (công nghệ dự án chỉ có PostgreSQL; `ChatMessage` đang lưu tin nhắn). Cần nhóm chốt từng ý. Nguồn: SRS `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` §2, §3 FR-05, FR-08; `docs/api-endpoints.md` §9; `docs/database-design.md` §5. |
+| ND-60 | Lộ trình (tính năng 05–07, Hòa) — SRS FR-03: "trả về lộ trình học từ **3 đến 5 môn học** kèm giải thích"; tài liệu hiện hành mô tả lộ trình là **đồ thị kỹ năng** (node, cạnh), không giới hạn số lượng. Cần chốt: "3–5" là số khóa học, số node kỹ năng, hay không áp dụng; phần "giải thích" có lưu và trả qua API không. Nguồn: SRS `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` §3 FR-03; `docs/api-endpoints.md` §5–§7; `docs/database-design.md` §4.4–§4.6. |
+| ND-61 | Khóa học (tính năng 02, Khôi) — SRS §2 "Tầng 1: Rule-based Filtering (Lọc khóa học theo Level, **Budget**, Tags)"; bảng `Course` không có cột giá và `GET /api/courses` chỉ lọc `search`, `skill_id`, `level`, `sort_by`. Cần chốt: bỏ tiêu chí Budget, hay bổ sung dữ liệu giá (dataset, cột, tham số lọc). ("ngân sách" ở BA §7.9 nói về tài nguyên dự án, không phải giá khóa học.) Nguồn: SRS `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` §2; `docs/database-design.md` §2.1; `docs/api-endpoints.md` §3. |
 
 ---
 

@@ -21,7 +21,7 @@ Skill này là điểm vào cho module Ôn tập: phạm vi, trạng thái từn
 
 | Trạng thái | Nghĩa | Claude được làm gì |
 |---|---|---|
-| **SPEC CONFIRMED** | Phạm vi/quy tắc đã được nhóm xác nhận ("Nhóm đồng ý" / "Đã chốt" trong `docs/EduMentor_Checklist_Da_Sua_API.xlsx`) và không có mâu thuẫn | Hỗ trợ implement theo `docs/` |
+| **SPEC CONFIRMED** | Phạm vi/quy tắc đã được nhóm xác nhận, ghi nhận trong `docs/decisions.md` §2–§3 (chép từ trạng thái "Nhóm đồng ý" / "Đã chốt" của `docs/EduMentor_Checklist_Da_Sua_API.xlsx`), và không có mâu thuẫn | Hỗ trợ implement theo `docs/` |
 | **IMPLEMENTED** | Đã có code chạy | Hiện **chưa** có endpoint nào ở trạng thái này |
 | **PENDING** | Chưa tick, hoặc có `ND-xx` chưa chốt | Không implement phần đó; làm phần còn lại và nói rõ chỗ chờ |
 | **BLOCKED** | Phần bắt buộc của luồng phụ thuộc vào hạng mục chưa tick | Dừng, hỏi Tuấn trước khi code phần đó |
@@ -44,11 +44,13 @@ Nguồn đầy đủ: `docs/decisions.md` §2 "Phân công".
 
 ## 1. Nguồn sự thật (đọc theo thứ tự)
 
-1. `docs/EduMentor_Checklist_Da_Sua_API.xlsx` — trạng thái tick (đã chép vào `docs/decisions.md` §2–§3).
-2. `docs/decisions.md` — D01–D11, trạng thái T-item, danh sách `ND-xx`.
-3. `docs/modules/review-assessment.md` — contract (§4), quy tắc `RV-Rxx` (§5), luồng (§6), transaction (§7). **Lưu ý:** RV-R03, RV-R10, RV-R13 trong file này đang dựa trên T16 chưa tick → xem §4 bên dưới, trạng thái ở skill này thắng.
-4. `docs/api-endpoints.md` §10, `docs/backend-rules.md`, `docs/database-design.md` §6 (và §3.2, §3.3).
-5. `docs/modules/review-assessment.tests.md` — kịch bản test.
+1. `docs/decisions.md` — D01–D11, trạng thái T-item, danh sách `ND-xx`.
+2. `docs/modules/review-assessment.md` — contract (§4), quy tắc `RV-Rxx` (§5), luồng (§6), transaction (§7). **Lưu ý:** RV-R03, RV-R10, RV-R13 trong file này đang dựa trên T16 chưa tick → trạng thái theo `docs/decisions.md` §3 (T16 ☐) thắng tài liệu module; §4 bên dưới chỉ tóm tắt.
+3. `docs/api-endpoints.md` §10, `docs/backend-rules.md`, `docs/database-design.md` §6 (và §3.2, §3.3).
+4. `docs/modules/review-assessment.tests.md` — kịch bản test.
+5. `docs/EduMentor_Checklist_Da_Sua_API.xlsx` — nguồn gốc trạng thái tick (đã chép vào `docs/decisions.md` §2–§3).
+
+**Thứ tự ưu tiên khi các nguồn khác nhau:** theo D-DOC-01 (`docs/decisions.md` §1). Danh sách trên là thứ tự **đọc**; skill này chỉ tóm tắt, không phải nguồn sự thật. BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`) là căn cứ nghiệp vụ và nghiệm thu, chỉ dùng để đối chiếu: không implement nội dung BA/SRS chưa có trong `docs/decisions.md` hoặc tài liệu module. Gặp khác biệt chưa được giải quyết (BA/SRS khác quyết định đã chốt hoặc khác tài liệu module) → dừng, ghi nhận thành `ND-xx` trong `docs/decisions.md` và hỏi Tuấn.
 
 `docs/conventions.md` §2 "Ôn tập" và `README.md` chỉ tóm tắt và trỏ về tài liệu module (AUD-03, AUD-04 đã sửa) — không dùng chúng làm nguồn quy tắc chi tiết.
 
@@ -59,7 +61,7 @@ Owner Tuấn (D-OWN-01; sheet "Endpoint (bản mới)" cũng ghi "Phụ trách =
 | Method | Endpoint | Đặc tả | Nguồn xác nhận | Phần còn PENDING / BLOCKED |
 |---|---|---|---|---|
 | GET | `/api/courses/{course_id}/review` | **SPEC CONFIRMED** | T11 ☑, D01, D04 | Khóa không có kỹ năng (ND-28) |
-| POST | `/api/courses/{course_id}/review-attempts` | **SPEC CONFIRMED (một phần)** | T11 ☑, T14 ☑, T15 ☑, D03, D04, D10 | Điều kiện 409 (**BLOCKED — T16**); cách chọn câu (**CONFLICT — ND-20**); "bài dở" định nghĩa theo `submitted_at` (ND-31); mã trả bài dở (ND-33); khóa không tồn tại 404 hay 409 (AUD-05) |
+| POST | `/api/courses/{course_id}/review-attempts` | **SPEC CONFIRMED (một phần)** | T11 ☑, T14 ☑, T15 ☑, D03, D04, D10 | Điều kiện 409 (**BLOCKED — T16**); cách chọn câu (**CONFLICT — ND-20**); "bài dở" định nghĩa theo `submitted_at` (ND-31); mã trả bài dở (ND-33). Khóa học không tồn tại → **404** (`review-assessment.md` §4.1, §4.2; RV-T20); 409 chỉ dành cho khóa tồn tại nhưng chưa có StudentCourse hợp lệ hoặc thiếu câu (RV-R03 — BLOCKED theo T16) |
 | GET | `/api/review-attempts/{attempt_id}` | **SPEC CONFIRMED** | T15 ☑ | Response sau khi nộp (ND-26) |
 | POST | `/api/review-attempts/{attempt_id}/submit` | **SPEC CONFIRMED (một phần)** | T13 ☑, T29 ☑, D02 | Nộp lần hai 409 và câu trống = sai (**BLOCKED — T16**); bước 5 LearningPath (ND-24); `submitted_at` (ND-31); email mọi lần hay chỉ khi đạt (ND-25); nội dung email (CONFLICT-EMAIL); câu hỏi lạ/trùng (ND-22); ôn lại có upsert UserSkill (ND-23) |
 | GET | `/api/me/review-history` | **SPEC CONFIRMED** | T17 ☑ | Có gồm bài dở không (ND-34); trường hiển thị wireframe (ND-27) |
@@ -124,14 +126,15 @@ Gặp các điểm này: dừng và hỏi Tuấn. (RV-R11 tính điểm trên 20
 
 | Mã | Nội dung |
 |---|---|
-| ND-20 / AUD-11 | **CONFLICT**: T14 (☑) ghi "lấy 60 câu ngẫu nhiên … ghi sẵn 20 câu"; `.docx` 6.3 ghi "chọn ngẫu nhiên 20 câu", chia đều theo kỹ năng. Phần dư và thiếu câu chưa quy định. Không tự chọn cách nào. |
-| ND-31 / AUD-02 | `submitted_at` (T27 ☐). Không coi là quyết định đã chốt; định nghĩa "bài dở" (RV-R04) và "thời gian nộp" trong email phụ thuộc mục này. |
+| ND-20 | **CONFLICT**: T14 (☑) ghi "lấy 60 câu ngẫu nhiên … ghi sẵn 20 câu"; `.docx` 6.3 ghi "chọn ngẫu nhiên 20 câu", chia đều theo kỹ năng. Phần dư và thiếu câu chưa quy định. Không tự chọn cách nào. |
+| ND-31 | `submitted_at` (T27 ☐). Không coi là quyết định đã chốt; định nghĩa "bài dở" (RV-R04) và "thời gian nộp" trong email phụ thuộc mục này. |
 | ND-24 | Bước 5 cập nhật LearningPath (T13, T18 ☐). Không implement. |
 | ND-25 | Email gửi mọi lần hay chỉ khi đạt. |
 | CONFLICT-EMAIL | Ghi chú T29 của nhóm: email "chỉ gửi link, khóa học nào, Đậu/Rớt + Điểm"; `.docx` 6.2 thêm "số câu đúng/20, thời gian nộp". |
-| AUD-05 | Khóa không tồn tại khi bắt đầu: 404 (quy ước chung) hay 409 (`.docx`: chưa có StudentCourse). |
-| ND-15 / AUD-08 | Mã lỗi validate 400 hay 422. |
+| ND-15 | Mã lỗi validate 400 hay 422. |
 | ND-14, ND-16, ND-17 | Danh mục `error.code`; lớp commit transaction; index. |
+| ND-58 | SRS FR-07 (10 câu do AI sinh) và BA §10.10, FR-24, UC-09 (ôn tập theo kỹ năng) khác D01, D04, RV-R01. **D01, D04, RV-R01 giữ nguyên** (theo khóa học, 20 câu lấy từ CSDL) cho tới khi nhóm có quyết định mới; không implement theo BA/SRS. |
+| ND-66 | **PENDING** — cần thống nhất route frontend dùng trong link email lịch sử ôn tập; hiện có hai route ứng viên trong `docs/structure.md` §3 (`/review-result/:attemptId`, `/me/review-history/:attemptId`). Không tự chọn; RV-R18, RV-T63 giữ nguyên. |
 | ND-21, ND-22, ND-23, ND-26, ND-27, ND-28, ND-29, ND-30, ND-33, ND-34 | Xem `docs/decisions.md` §4.2. |
 
 ## 5. Không được làm
@@ -154,7 +157,7 @@ Khuyến nghị kỹ thuật (không phải yêu cầu nghiệp vụ): ràng bu�
 
 ## 7. Kỳ vọng kiểm thử
 
-Kịch bản đã đặc tả và **không** phụ thuộc mục chưa chốt (từ `review-assessment.tests.md`): RV-T01–T05, T10–T12, T14, T18, T21, T30–T32, T40–T44 (T40: phần `submitted_at` chờ ND-31), T50 (phần status), T51–T52, T60–T63, T70–T76, T78, T80. RV-T20 chờ AUD-05; RV-T46 chờ ND-15.
+Kịch bản đã đặc tả và **không** phụ thuộc mục chưa chốt (từ `review-assessment.tests.md`): RV-T01–T05, T10–T12, T14, T18, T20, T21, T30–T32, T40–T44 (T40: phần `submitted_at` chờ ND-31), T50 (phần status), T51–T52, T60–T63 (T63: phần kiểm tra link trong email chờ ND-66; các phần khác — gọi `send_email` sau commit, không chứa đáp án — kiểm được nếu không phụ thuộc đường dẫn), T70–T76, T78, T80. RV-T46 chờ ND-15.
 
 Phụ thuộc T16 (BLOCKED): RV-T15–T17, T19, T45, T48. Phụ thuộc ND khác: xem cột "Chờ".
 
