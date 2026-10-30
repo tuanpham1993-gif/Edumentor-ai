@@ -14,8 +14,8 @@ class LearningPath(Base):
     goal_type = Column(String(20), nullable=False)
     status = Column(String(20), nullable=False)
 
-    nodes = relationship("LearningPathNode",back_populates="learning_path",)
-    edges = relationship("LearningPathEdge",back_populates="learning_path",)
+    nodes = relationship("LearningPathNode",back_populates="learning_path", lazy="joined")
+    edges = relationship("LearningPathEdge",back_populates="learning_path", lazy="joined")
 
     __table_args__ = (
         CheckConstraint("goal_type IN ('career', 'project')",name="ck_learning_path_goal_type",),
@@ -39,6 +39,7 @@ class LearningPathNode(Base):
     skill = relationship("Skills",back_populates="learning_path_nodes",)
 
     __table_args__ = (
+        #CheckConstraint("node_role IN ('prerequisite', 'related', 'extension')", name="ck_learning_path_node_node_role"),
         CheckConstraint("is_target IN (TRUE, FALSE)", name="ck_learning_path_node_is_target"),
         CheckConstraint("added_by IN ('system', 'user')",name="ck_learning_path_node_added_by"),
         CheckConstraint("is_required IN (TRUE, FALSE)",name="ck_learning_path_node_is_required"),
