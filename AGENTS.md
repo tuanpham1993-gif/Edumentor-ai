@@ -35,7 +35,7 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
 | Báo cáo đối chiếu frontend với demo (lịch sử, 28/10/2026 — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng) | `docs/ui-animation/` |
 
-Thứ tự ưu tiên khi các nguồn khác nhau: **D-DOC-01** (`docs/decisions.md` §1). BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`) là căn cứ nghiệp vụ và nghiệm thu, không tự ghi đè quyết định đã chốt; `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` là nguồn gốc của các file đặc tả `.md` trên (đã được chép vào đó).
+Thứ tự ưu tiên khi các nguồn khác nhau: **D-DOC-01** (`docs/decisions.md` §1): 1. Đề bài SRS v1.0 (`docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`) > 2. `docs/decisions.md` > 3. BA (`docs/EdumentorAi_BA.md`) > 4. SRS v2.0 (`docs/EduMentor_AI_SRS_v2.0.docx`) > 5. UI (`docs/ui-design/`) > 6. Code; các điểm đề bài khác quyết định đã chốt giữ quyết định hiện hành, chờ ND-77, ND-81. BA và SRS v2.0 là căn cứ nghiệp vụ và nghiệm thu, không tự ghi đè quyết định đã chốt; `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` là nguồn gốc của các file đặc tả `.md` trên (đã được chép vào đó).
 
 ## Phạm vi đang phụ trách
 
