@@ -48,11 +48,11 @@ edumentor-ai/
 │   ├── decisions.md                                 # ✅ Quyết định đã chốt, mâu thuẫn, [NEEDS DECISION]
 │   ├── EduMentor_Checklist_Da_Sua_API.xlsx          # ✅ Nguồn gốc checklist API, quyết định D01–D11
 │   ├── EduMentor_Database_Design_Da_Sua.docx        # ✅ Nguồn gốc thiết kế CSDL đã sửa
-│   ├── EdumentorAi_BA.md                            # ✅ BA — nguồn yêu cầu nghiệp vụ (D-DOC-01, bậc 2)
-│   ├── EduMentor_AI_SRS_v2.0.docx                 # ✅ SRS v2.0 (D-DOC-01, bậc 3)
-│   ├── AI_Learning_Assistant_Recommender SRS.docx.pdf # ✅ SRS v1.0 gốc từ đề bài, chỉ để truy vết
+│   ├── EdumentorAi_BA.md                            # ✅ BA — nguồn yêu cầu nghiệp vụ (D-DOC-01, bậc 3)
+│   ├── EduMentor_AI_SRS_v2.0.docx                 # ✅ SRS v2.0 (D-DOC-01, bậc 4); có bản .pdf cùng tên
+│   ├── AI_Learning_Assistant_Recommender SRS.docx.pdf # ✅ Đề bài SRS v1.0 (D-DOC-01, bậc 1; xem ND-81)
 │   ├── requirements-traceability.md               # ✅ Ma trận truy vết BA → SRS → UI
-│   ├── EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx      # ⊘ Kế hoạch: phạm vi, đối chiếu kỹ thuật 14 tính năng — chưa commit (D-DOC-01, bậc 5)
+│   ├── EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx      # ⊘ Kế hoạch: phạm vi, đối chiếu kỹ thuật 14 tính năng — chưa commit (tài liệu dẫn xuất, D-DOC-01)
 │   └── structure.md                                 # ✅ Tài liệu này: cây thư mục, ánh xạ endpoint → file
 ├── backend/
 │   ├── alembic/

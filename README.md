@@ -115,8 +115,8 @@ Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi
 | [docs/database-design.md](docs/database-design.md) | Thiết kế cơ sở dữ liệu |
 | [docs/decisions.md](docs/decisions.md) | Quyết định đã chốt và các điểm còn cần quyết định; thứ tự ưu tiên nguồn tài liệu (D-DOC-01) |
 | [docs/EdumentorAi_BA.md](docs/EdumentorAi_BA.md) | BA — nguồn yêu cầu nghiệp vụ, căn cứ nghiệm thu (D-DOC-01) |
-| [SRS v2.0](docs/EduMentor_AI_SRS_v2.0.docx) | Đặc tả yêu cầu, còn điểm chờ ở Chương 13 (D-DOC-01) |
-| [SRS v1.0](<docs/AI_Learning_Assistant_Recommender SRS.docx.pdf>) | Bản gốc từ đề bài, chỉ để truy vết |
+| [SRS v2.0](docs/EduMentor_AI_SRS_v2.0.docx) | Đặc tả yêu cầu, bậc 4 của D-DOC-01, còn điểm chờ ở Chương 13 |
+| [SRS v1.0](<docs/AI_Learning_Assistant_Recommender SRS.docx.pdf>) | Đề bài gốc, bậc 1 của D-DOC-01; điểm lệch chờ giảng viên xác nhận (ND-77, ND-81) |
 | [Ma trận truy vết](docs/requirements-traceability.md) | BA → SRS v2.0 → UI |
 | [docs/ui-design/](docs/ui-design/) | Bộ giao diện chính thức: ảnh, HTML tĩnh, route và endpoint của từng màn (D-FE-12) |
 | [docs/ui-animation/](docs/ui-animation/) | Báo cáo lịch sử (28/10/2026) đối chiếu frontend với bản demo — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng |

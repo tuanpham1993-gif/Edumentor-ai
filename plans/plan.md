@@ -19,11 +19,13 @@
 
 | Bậc | Tài liệu | Dùng trong kế hoạch |
 |---|---|---|
-| 1 | `docs/decisions.md` | Quyết định D-xx đã chốt; ND-xx **đang chờ** (không coi là đã duyệt) |
-| 2 | BA `docs/EdumentorAi_BA.md` | Yêu cầu nghiệp vụ (FR, NFR, BR, UC, AC) |
-| 3 | SRS v2.0 `docs/EduMentor_AI_SRS_v2.0.docx` (bản gốc v1.0: `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`; các task bên dưới được lập trước khi có v2.0) | Yêu cầu gốc của đề bài (trang 5–7 là sơ đồ ảnh, chưa đọc được) |
-| 4 | `docs/modules/*.md`, `docs/api-endpoints.md`, `docs/database-design.md`, `docs/structure.md`, `docs/conventions.md`, `docs/backend-rules.md`, `SETUP.md`, `README.md`; giao diện `docs/ui-design/` (D-FE-12) | Đặc tả triển khai |
-| 5 | Workbook `docs/EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx`; **file này** | Kế hoạch và theo dõi |
+| 1 | Đề bài SRS v1.0 `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` | Yêu cầu gốc của đề bài (trang 5–7 là sơ đồ ảnh, chưa đọc được); điểm lệch: ND-81 |
+| 2 | `docs/decisions.md` | Quyết định D-xx đã chốt; ND-xx **đang chờ** (không coi là đã duyệt) |
+| 3 | BA `docs/EdumentorAi_BA.md` | Yêu cầu nghiệp vụ (FR, NFR, BR, UC, AC) |
+| 4 | SRS v2.0 `docs/EduMentor_AI_SRS_v2.0.docx` (các task bên dưới được lập trước khi có v2.0) | Đặc tả yêu cầu |
+| 5 | UI `docs/ui-design/` (D-FE-12) | Giao diện, không tạo quy tắc |
+| 6 | Code | Hiện trạng triển khai |
+| Dẫn xuất | `docs/modules/*.md`, `docs/api-endpoints.md`, `docs/database-design.md`, `docs/structure.md`, `docs/conventions.md`, `docs/backend-rules.md`, `SETUP.md`, `README.md`; workbook `docs/EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx`; **file này** | Đặc tả triển khai, kế hoạch và theo dõi; không có thứ bậc |
 
 ### Quan hệ giữa các tài liệu
 
@@ -32,7 +34,7 @@
 | BA, SRS | Yêu cầu nghiệp vụ và yêu cầu gốc | Không tự ghi đè quyết định đã chốt |
 | `docs/decisions.md` | Nơi lưu quyết định chính thức | Kế hoạch chỉ tham chiếu |
 | Workbook chính thức | Theo dõi, đối chiếu ở **mức tính năng** (D-DOC-04) | Không ghi Task ID, tiến độ Task, effort, deadline hay dependency vào workbook |
-| `plans/plan.md` | Phase, Task, phân công, dependency, trạng thái, bằng chứng, kết quả review (D-DOC-05) | Thuộc bậc 5 |
+| `plans/plan.md` | Phase, Task, phân công, dependency, trạng thái, bằng chứng, kết quả review (D-DOC-05) | Tài liệu dẫn xuất, không có thứ bậc |
 
 ---
 

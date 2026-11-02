@@ -1,5 +1,7 @@
 # Ma trận truy vết yêu cầu (RTM)
 
+> **Cảnh báo (2026-11-02):** ma trận này được dựng từ bản SRS v2.0 do AI hiệu đính (`archive/2026-11-reset/sources-not-selected/`), không phải bản gốc hiện ở `docs/`. Mã yêu cầu không đổi, nhưng các câu trích và Q-23 có thể lệch. Sẽ dựng lại ở phase sau.
+
 **Cập nhật:** 2026-11-01. **Phương pháp:** tạo lại từ [BA](EdumentorAi_BA.md) §6, các bảng trong [SRS v2.0](EduMentor_AI_SRS_v2.0.docx), [`decisions.md`](decisions.md) và kiểm tra trực tiếp UI Demo ([`ui-design/SCREEN-INVENTORY.md`](ui-design/SCREEN-INVENTORY.md)); không lấy từ báo cáo audit cũ.
 
 File này chỉ để đối chiếu, không chứa quy tắc. "Phù hợp" nghĩa là có căn cứ và có giao diện tương ứng, không có nghĩa là đã có API hay đã kiểm thử: backend chưa có code. Nội dung PENDING vẫn chờ quyết định.
@@ -235,7 +237,7 @@ Phân loại yêu cầu SRS:
 
 **Có trên UI nhưng không phải yêu cầu:** dòng tài khoản demo, bảng chuyển màn, giả lập lỗi mạng, liên kết thử email (đều loại khỏi bản thật theo D-FE-07).
 
-**Có quyết định nhưng chưa có màn hay yêu cầu SRS:** quản trị câu hỏi `/api/admin/questions*` (T19–T21; ND-53, SRS Q-23).
+**Có quyết định nhưng chưa có màn hay yêu cầu SRS:** quản trị câu hỏi `/api/admin/questions*` (T19–T21; ND-53, Q-23 chỉ có ở bản hiệu đính).
 
 ## 5. BA NFR → SRS
 
@@ -270,4 +272,4 @@ Phân loại yêu cầu SRS:
 | Q-20 | Trường mục tiêu nghề nghiệp trong hồ sơ (BA FR-03) | ND-10 |
 | Q-21 | Chấm sao câu trả lời AI (SRS 1.0 FR-08) | ND-59, ND-77 |
 | Q-22 | Thời lượng, danh mục, tiên quyết giữa khóa học (SRS 1.0 FR-02); lọc Budget/Tags (SRS 1.0 §2) | ND-61, ND-77 |
-| Q-23 | Quản trị câu hỏi /api/admin/questions* (T19–T21 đã đồng ý) | ND-53 |
+| Q-23 (chỉ có ở bản hiệu đính) | Quản trị câu hỏi /api/admin/questions* (T19–T21 đã đồng ý) | ND-53 |

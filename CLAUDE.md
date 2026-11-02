@@ -23,10 +23,10 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 
 | Chủ đề | File |
 |---|---|
-| Quyết định đã chốt, mâu thuẫn, `[NEEDS DECISION]` | `docs/decisions.md` |
-| Yêu cầu nghiệp vụ, căn cứ nghiệm thu (BA — D-DOC-01 bậc 2) | `docs/EdumentorAi_BA.md` |
-| Đặc tả yêu cầu (SRS v2.0 — D-DOC-01 bậc 3; còn điểm chờ ở Chương 13) | `docs/EduMentor_AI_SRS_v2.0.docx` |
-| SRS gốc từ đề bài (v1.0, chỉ để truy vết) | `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` |
+| Quyết định đã chốt, mâu thuẫn, `[NEEDS DECISION]` (D-DOC-01 bậc 2) | `docs/decisions.md` |
+| Yêu cầu nghiệp vụ, căn cứ nghiệm thu (BA — D-DOC-01 bậc 3) | `docs/EdumentorAi_BA.md` |
+| Đặc tả yêu cầu (SRS v2.0 — D-DOC-01 bậc 4; còn điểm chờ ở Chương 13) | `docs/EduMentor_AI_SRS_v2.0.docx` |
+| Đề bài SRS v1.0 (D-DOC-01 bậc 1; điểm lệch giữ quyết định hiện hành, chờ ND-77, ND-81) | `docs/AI_Learning_Assistant_Recommender SRS.docx.pdf` |
 | Ma trận truy vết BA → SRS → UI (không phải quyết định) | `docs/requirements-traceability.md` |
 | Thiết kế CSDL (chính thức) | `docs/database-design.md` |
 | Danh sách endpoint toàn hệ thống | `docs/api-endpoints.md` |
@@ -39,7 +39,7 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
 | Báo cáo đối chiếu frontend với demo (lịch sử, 28/10/2026 — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng) | `docs/ui-animation/` |
 
-Thứ tự ưu tiên khi các nguồn khác nhau: **D-DOC-01** (`docs/decisions.md` §1). BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/EduMentor_AI_SRS_v2.0.docx`) là căn cứ nghiệp vụ và nghiệm thu, không tự ghi đè quyết định đã chốt; `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` là nguồn gốc của các file đặc tả `.md` trên (đã được chép vào đó).
+Thứ tự ưu tiên khi các nguồn khác nhau: **D-DOC-01** (`docs/decisions.md` §1). BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/EduMentor_AI_SRS_v2.0.docx`) là căn cứ nghiệp vụ và nghiệm thu, không tự ghi đè quyết định đã chốt; đề bài ở bậc 1 nhưng các điểm lệch chưa có hiệu lực trước khi có xác nhận (ND-81); `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` là nguồn gốc của các file đặc tả `.md` trên (đã được chép vào đó).
 
 ## Phạm vi đang phụ trách
 
