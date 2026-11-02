@@ -48,7 +48,7 @@ Theo `docs/structure.md` (đã cập nhật):
 | Repository | `backend/app/repositories/` (STRUCTURE chưa đặt tên file) |
 | Test | `backend/tests/test_review.py` |
 
-Frontend tương ứng (tham khảo): `api/review.api.js`, `pages/review/*` (route `/review/:courseId`), `components/review/*`, `components/profile/ReviewHistoryList.jsx`.
+Frontend tương ứng (tham khảo): `api/review.api.js`, `pages/review/*`; route theo `docs/structure.md` §3 (`/courses/:courseId/review*`, `/review-result/:attemptId`, `/me/review-history*`); giao diện theo `docs/ui-design/` (D-FE-12). `components/review/*` và `components/profile/ReviewHistoryList.jsx` thuộc cấu trúc cũ, chờ ND-49.
 
 ---
 

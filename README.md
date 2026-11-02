@@ -96,14 +96,11 @@ Cây thư mục chi tiết của backend và frontend, ánh xạ endpoint → fi
 ```bash
 git clone <repo-url> edumentor-ai && cd edumentor-ai
 cp .env.example .env
-docker compose up -d db
 
-cd backend && pip install -r requirements.txt
-alembic upgrade head && python scripts/seed_data.py
-uvicorn app.main:app --reload
-
-cd ../frontend && npm install && npm run dev
+cd frontend && npm install && npm run dev
 ```
+
+> Backend và cơ sở dữ liệu **chưa chạy được** trên nhánh này: backend chưa có code, `docker-compose.yml` đang rỗng, cổng và tên database chưa được nhóm chốt. Quy trình dự kiến và hiện trạng: [SETUP.md](SETUP.md) §3–§5.
 
 Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi chưa có backend) tại [SETUP.md](SETUP.md).
 
@@ -116,7 +113,11 @@ Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi
 | [docs/conventions.md](docs/conventions.md) | Quy ước API, mã nguồn, Git, kiểm thử |
 | [docs/api-endpoints.md](docs/api-endpoints.md) | Đặc tả endpoint |
 | [docs/database-design.md](docs/database-design.md) | Thiết kế cơ sở dữ liệu |
-| [docs/decisions.md](docs/decisions.md) | Quyết định đã chốt và các điểm còn cần quyết định |
+| [docs/decisions.md](docs/decisions.md) | Quyết định đã chốt và các điểm còn cần quyết định; thứ tự ưu tiên nguồn tài liệu (D-DOC-01) |
+| [docs/EdumentorAi_BA.md](docs/EdumentorAi_BA.md) | BA — nguồn yêu cầu nghiệp vụ, căn cứ nghiệm thu (D-DOC-01) |
+| [SRS v2.0](docs/EduMentor_AI_SRS_v2.0.docx) | Đặc tả yêu cầu, còn điểm chờ ở Chương 13 (D-DOC-01) |
+| [SRS v1.0](<docs/AI_Learning_Assistant_Recommender SRS.docx.pdf>) | Bản gốc từ đề bài, chỉ để truy vết |
+| [Ma trận truy vết](docs/requirements-traceability.md) | BA → SRS v2.0 → UI |
 | [docs/ui-design/](docs/ui-design/) | Bộ giao diện chính thức: ảnh, HTML tĩnh, route và endpoint của từng màn (D-FE-12) |
 | [docs/ui-animation/](docs/ui-animation/) | Báo cáo lịch sử (28/10/2026) đối chiếu frontend với bản demo — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng |
 

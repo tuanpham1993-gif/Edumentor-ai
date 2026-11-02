@@ -43,7 +43,7 @@ Theo `docs/structure.md` (đã cập nhật):
 | Script | `backend/scripts/create_admin.py` |
 | Test | `backend/tests/test_auth.py` |
 
-Frontend tương ứng (tham khảo): `api/auth.api.js`, `api/me.api.js`, `pages/auth/*`, `pages/profile/ProfilePage.jsx`, `components/profile/*`.
+Frontend tương ứng (tham khảo): `api/auth.api.js`, `api/me.api.js`; page và route theo `docs/structure.md` §3 (nhóm `/login` … `/me/skills`); giao diện theo `docs/ui-design/` (D-FE-12). Các file cũ trong `components/profile/` thuộc cấu trúc cũ, chờ ND-49.
 
 ---
 
@@ -258,7 +258,7 @@ Client gửi email, password, full_name
  → email đã tồn tại? → 409
  → băm mật khẩu Argon2id, tạo User role = student (AP-R01, AP-R06)
  → 201 + thông tin người dùng ([ND-08] token?)
- → (Frontend, wireframe 04) chọn kỹ năng hiện tại → PATCH /api/me/skills ([ND-08, ND-09])
+ → (Frontend: bước chọn kỹ năng sau đăng ký — trước đây ở wireframe 04, đã xóa; đối chiếu docs/ui-design/, D-FE-12) chọn kỹ năng hiện tại → PATCH /api/me/skills ([ND-08, ND-09])
 ```
 
 ### Đăng nhập / làm mới / đăng xuất

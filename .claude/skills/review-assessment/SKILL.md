@@ -50,7 +50,7 @@ Nguồn đầy đủ: `docs/decisions.md` §2 "Phân công".
 4. `docs/modules/review-assessment.tests.md` — kịch bản test.
 5. `docs/EduMentor_Checklist_Da_Sua_API.xlsx` — nguồn gốc trạng thái tick (đã chép vào `docs/decisions.md` §2–§3).
 
-**Thứ tự ưu tiên khi các nguồn khác nhau:** theo D-DOC-01 (`docs/decisions.md` §1). Danh sách trên là thứ tự **đọc**; skill này chỉ tóm tắt, không phải nguồn sự thật. BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`) là căn cứ nghiệp vụ và nghiệm thu, chỉ dùng để đối chiếu: không implement nội dung BA/SRS chưa có trong `docs/decisions.md` hoặc tài liệu module. Gặp khác biệt chưa được giải quyết (BA/SRS khác quyết định đã chốt hoặc khác tài liệu module) → dừng, ghi nhận thành `ND-xx` trong `docs/decisions.md` và hỏi Tuấn.
+**Thứ tự ưu tiên khi các nguồn khác nhau:** theo D-DOC-01 (`docs/decisions.md` §1). Danh sách trên là thứ tự **đọc**; skill này chỉ tóm tắt, không phải nguồn sự thật. BA (`docs/EdumentorAi_BA.md`) và SRS (`docs/EduMentor_AI_SRS_v2.0.docx`) là căn cứ nghiệp vụ và nghiệm thu, chỉ dùng để đối chiếu: không implement nội dung BA/SRS chưa có trong `docs/decisions.md` hoặc tài liệu module. Gặp khác biệt chưa được giải quyết (BA/SRS khác quyết định đã chốt hoặc khác tài liệu module) → dừng, ghi nhận thành `ND-xx` trong `docs/decisions.md` và hỏi Tuấn.
 
 `docs/conventions.md` §2 "Ôn tập" và `README.md` chỉ tóm tắt và trỏ về tài liệu module (AUD-03, AUD-04 đã sửa) — không dùng chúng làm nguồn quy tắc chi tiết.
 

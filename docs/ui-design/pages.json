@@ -35,7 +35,7 @@
   "route": "/register",
   "feature": "01 · Tuấn",
   "status": "sửa",
-  "change": "Thêm bong bóng chat; tắt đèn ẩn form như Đăng nhập",
+  "change": "Thêm bong bóng chat; đổi theo Đăng nhập: 1 dây kéo điều khiển cả 3 đèn, mở trang đèn tắt sẵn, form ẩn và bị khóa",
   "endpoints": [
    {
     "method": "POST",
@@ -796,7 +796,7 @@
   "route": "/admin/user-paths",
   "feature": "14 · Hòa",
   "status": "mới",
-  "change": "Màn mới: danh sách người dùng, lộ trình, tiến độ và đồ thị chỉ xem",
+  "change": "Màn mới: thẻ mục tiêu phổ biến, xem theo Người dùng hoặc Mục tiêu lộ trình, lọc trạng thái, mục đích lộ trình, tiến độ và đồ thị chỉ xem",
   "endpoints": [
    {
     "method": "MISMATCH",

@@ -8,7 +8,7 @@ Tài liệu này mô tả cấu trúc thư mục của dự án và cách mỗi 
 
 ## 1. Cây thư mục tổng quan
 
-Cây dưới đây được **kiểm kê từ working tree** của nhánh `docs/initial-project-documentation` (HEAD `d608ab8`, đối chiếu `git ls-files` ngày 29/10/2026). Trên nhánh này, cấu trúc `backend/` giống hệt `origin/develop`; PR #1 của Hòa (`origin/Hoa`) khác ở các điểm ghi tại §1.2.
+Cây dưới đây được **kiểm kê từ working tree** của nhánh `docs/initial-project-documentation` (HEAD `a49df4a`, đối chiếu `git ls-files` ngày 30/10/2026). Trên nhánh này, mã nguồn `backend/` giống hệt `origin/develop` (ngoài 13 file `.pyc` được Git theo dõi — §1.1); PR #1 của Hòa (`origin/Hoa`) khác ở các điểm ghi tại §1.2.
 
 **Ký hiệu:** `✅` có nội dung · `◻` file giữ chỗ, 0 byte · `○` dự kiến — **chưa có file** · `⊘` có trên máy nhưng không được Git theo dõi (bị bỏ qua hoặc chưa commit). Mỗi package Python có `__init__.py` rỗng (không liệt kê).
 
@@ -48,6 +48,11 @@ edumentor-ai/
 │   ├── decisions.md                                 # ✅ Quyết định đã chốt, mâu thuẫn, [NEEDS DECISION]
 │   ├── EduMentor_Checklist_Da_Sua_API.xlsx          # ✅ Nguồn gốc checklist API, quyết định D01–D11
 │   ├── EduMentor_Database_Design_Da_Sua.docx        # ✅ Nguồn gốc thiết kế CSDL đã sửa
+│   ├── EdumentorAi_BA.md                            # ✅ BA — nguồn yêu cầu nghiệp vụ (D-DOC-01, bậc 2)
+│   ├── EduMentor_AI_SRS_v2.0.docx                 # ✅ SRS v2.0 (D-DOC-01, bậc 3)
+│   ├── AI_Learning_Assistant_Recommender SRS.docx.pdf # ✅ SRS v1.0 gốc từ đề bài, chỉ để truy vết
+│   ├── requirements-traceability.md               # ✅ Ma trận truy vết BA → SRS → UI
+│   ├── EduMentor_AI_Ke_Hoach_14_Tinh_Nang.xlsx      # ⊘ Kế hoạch: phạm vi, đối chiếu kỹ thuật 14 tính năng — chưa commit (D-DOC-01, bậc 5)
 │   └── structure.md                                 # ✅ Tài liệu này: cây thư mục, ánh xạ endpoint → file
 ├── backend/
 │   ├── alembic/
@@ -317,6 +322,7 @@ Mỗi page và component frontend dự kiến có file `*.module.css` đi kèm. 
 | Frontend nền (C1) | `package.json`, `package-lock.json`, `vite.config.js`, `index.html`, `src/main.jsx`, `src/App.jsx`, `src/index.css`, `src/utils/theme.js` có nội dung; build chạy được | commit `a13cb8f` |
 | Frontend còn lại | 62 file trong `frontend/src/` rỗng; route, API client, page, component chưa triển khai | `git ls-files frontend` |
 | Docker Compose | `docker-compose.yml` rỗng | kích thước file |
+| File biên dịch Python | 13 file `.pyc` trong `backend/app/**/__pycache__/` được Git theo dõi (thêm ở commit `9372a94` trên `main`, vào nhánh này qua merge `b73755a`); không phải mã nguồn nên không liệt kê trong cây. `.gitignore` đã bỏ qua `__pycache__/` cho file mới | `git ls-files backend` |
 | Alembic | `backend/alembic.ini` rỗng, `alembic/versions/` chỉ có `.gitkeep` | — |
 
 ### 1.2. Khác biệt với PR #1 (`origin/Hoa`, commit `26a0f63`, PR `Hoa → develop` đang mở)

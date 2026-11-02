@@ -1,5 +1,8 @@
 # BUSINESS ANALYSIS DOCUMENT
 ## Dự án EduMentor AI
+
+> **Ghi chú đồng bộ (2026-11-01).** Các dòng bắt đầu bằng "Ghi chú đồng bộ" trong tài liệu này chỉ để tra cứu, không thay đổi yêu cầu. Khi BA khác quyết định đã chốt, `docs/decisions.md` được ưu tiên (D-DOC-01); lời văn BA chỉ sửa sau khi nhóm chọn phương án (ND-58, ND-76). Đối chiếu đầy đủ: `docs/requirements-traceability.md`.
+
 ---
 
 # 1. Bối cảnh và vấn đề thực tiễn
@@ -50,7 +53,7 @@ Người dùng là người học sử dụng EduMentor AI để xác định m�
 Người dùng có thể: 
 - Đăng ký đăng nhập tài khoản và quản lý hồ sơ cá nhân. 
 - Gửi mục tiêu nghề nghiệp hoặc mục tiêu dự án thông qua System Consultant. 
-- Tạo, xem và quản lý các lộ trình học tập của bản thân. -
+- Tạo, xem và quản lý các lộ trình học tập của bản thân.
 - Khám phá các kỹ năng trong lộ trình và xem các khóa học được đề xuất. 
 - Lưu khóa học để xem sau (bookmark) hoặc cập nhật trạng thái khóa học thành đang học (ongoing), đã hoàn thành (completed) hoặc đã từ bỏ (abandon). 
 - Tương tác với AI Tutor để đặt câu hỏi, hiểu các khái niệm và nhận hỗ trợ lập trình. 
@@ -67,6 +70,8 @@ Quản trị viên có thể:
 - Tạo và duy trì các mẫu lộ trình học tập cơ sở, bao gồm các nút kỹ năng và mối quan hệ giữa chúng. 
 - Kiểm tra và quản lý dữ liệu lịch sử về lộ trình học tập được sử dụng bởi hệ thống đề xuất.
 - Trả lời quản lý feedback của học viên (Câu trả lời từ feedback có thể được gửi về mail). 
+
+> Ghi chú đồng bộ: phạm vi phản hồi đang chờ ND-35, ND-55, ND-69; Admin xem lộ trình người dùng chưa có trong BA, chờ ND-79.
 
 Quyền quản trị phải được giới hạn cho các tài khoản được cấp phép. Người dùng thông thường không được phép chỉnh sửa dữ liệu dùng chung của hệ thống hoặc lộ trình riêng của người dùng khác.
 
@@ -276,6 +281,8 @@ EduMentor AI có hai tác nhân chính tương tác trực tiếp với hệ th�
 
 ### UC-09: Review a Skill
 
+> Ghi chú đồng bộ: D01 đã chốt ôn tập theo khóa học; lời văn UC-09, FR-24, §8.6, §10.10 chờ ND-58.
+
 **Actor:** User
 
 **Preconditions:**
@@ -315,6 +322,8 @@ Hệ thống cần kiểm tra dữ liệu trước khi lưu các thay đổi có
 
 ## 5.5. Quy tắc nghiệp vụ tổng quát (General Business Rules)
 
+> Ghi chú đồng bộ: mã BR-01 … BR-08 ở mục này trùng số với BR-01 … BR-08 ở §9 nhưng khác nghĩa. Khi trích dẫn, ghi kèm số mục. SRS v2.0 dùng mã của §9.
+
 - **BR-01 — Quyền sở hữu dữ liệu:** Người dùng chỉ được xem và quản lý dữ liệu cá nhân thuộc phạm vi quyền của mình.
 - **BR-02 — Tính hợp lệ của kỹ năng:** Các kỹ năng được lưu trong lộ trình phải được đối chiếu với danh mục kỹ năng của hệ thống.
 - **BR-03 — Tính linh hoạt của lộ trình:** Lộ trình có vai trò hướng dẫn; người dùng không bắt buộc phải tuân thủ một thứ tự học cố định.
@@ -339,6 +348,8 @@ Hệ thống phải cho phép người dùng đăng nhập bằng thông tin xá
 **FR-03 — Quản lý hồ sơ cá nhân**
 
 Hệ thống phải cho phép người dùng xem và cập nhật các thông tin cá nhân được hỗ trợ, bao gồm những thông tin liên quan đến mục tiêu nghề nghiệp và quá trình học tập.
+
+> Ghi chú đồng bộ: trường mục tiêu nghề nghiệp chờ ND-10.
 
 **FR-04 — Quản lý kỹ năng hiện có**
 
@@ -415,6 +426,8 @@ Hệ thống phải cho phép người dùng lưu các khóa học quan tâm đ�
 
 Hệ thống phải cho phép người dùng cập nhật trạng thái khóa học theo các trạng thái được hỗ trợ, chẳng hạn như đã lưu, đang học, đã hoàn thành hoặc đã từ bỏ.
 
+> Ghi chú đồng bộ: D02, T13 chỉ cho khóa học thành `completed` khi đạt bài ôn tập; sửa lời văn chờ ND-76.
+
 **FR-19 — Xem lịch sử học tập**
 
 Hệ thống phải cho phép người dùng xem các thông tin tiến độ học tập được ghi nhận trong tài khoản của mình.
@@ -446,6 +459,8 @@ Hệ thống phải cho phép người dùng chủ động yêu cầu bài đán
 **FR-25 — Hỗ trợ các dạng câu hỏi đánh giá**
 
 Hệ thống phải hỗ trợ các dạng câu hỏi phù hợp với phạm vi triển khai, chẳng hạn như câu hỏi trắc nghiệm và câu hỏi đánh giá kiến thức hoặc kỹ năng lập trình.
+
+> Ghi chú đồng bộ: phạm vi câu hỏi mở (FR-25, FR-26) và điểm trung bình (FR-29) chờ ND-73.
 
 **FR-26 — Đánh giá câu trả lời**
 
@@ -1194,6 +1209,8 @@ Mọi thao tác quản trị phải được kiểm tra quyền ở phía máy c
 
 ## 10.2. Xác thực và hồ sơ người dùng
 
+> Ghi chú đồng bộ: danh sách API hiện hành ở `docs/api-endpoints.md` §2, gồm thêm refresh (D-AUTH-03), quên, đặt lại, đổi mật khẩu (D09, T01–T03), avatar (T04), summary (T05). Sửa §10.2 chờ ND-76.
+
 | Method | Endpoint | Mô tả |
 |---|---|---|
 | POST | `/api/auth/register` | Đăng ký tài khoản mới. |
@@ -1389,6 +1406,8 @@ Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ 
 
 ### API ôn tập theo kỹ năng
 
+> Ghi chú đồng bộ: API hiện hành theo khóa học ở `docs/api-endpoints.md` §10 (D01). Số lần làm lại và điểm đạt đã chốt ở D02, D03. Sửa lời văn §10.10 chờ ND-58, ND-76.
+
 | Method | Endpoint | Mô tả |
 |---|---|---|
 | GET | `/api/skills/{skill_id}/review` | Kiểm tra xem kỹ năng có bài ôn tập khả dụng hay không. |
@@ -1515,7 +1534,7 @@ Tiêu chí nghiệm thu xác định điều kiện để đánh giá EduMentor 
 - Access Token và Refresh Token được xác thực đúng; token hết hạn hoặc không hợp lệ bị từ chối.
 - Refresh Token bị thu hồi không thể sử dụng để cấp token mới.
 - User chỉ truy cập dữ liệu cá nhân của mình; Admin mới được quản lý dữ liệu dùng chung.
-- Password cần dươc mã hóa trước khi lưu vào database.
+- Password cần được mã hóa trước khi lưu vào database.
 
 ## 11.3. Tạo và quản lý lộ trình học tập
 
@@ -1613,17 +1632,19 @@ Ma trận truy vết yêu cầu (RTM) giúp đảm bảo mỗi yêu cầu quan t
 
 | Mã yêu cầu | Yêu cầu | Phân hệ triển khai | Tiêu chí nghiệm thu |
 |---|---|---|---|
-| FR-01–FR-05 | Tài khoản, xác thực và quản lý token | Authentication | AC-01 |
-| FR-06–FR-08 | Hồ sơ người dùng và kỹ năng hiện tại | User Profile | AC-01, AC-02 |
-| FR-09–FR-12 | Phân tích mục tiêu và tạo lộ trình | AI Consultant, Path Generator | AC-02, AC-03 |
-| FR-13–FR-14 | Xem và quản lý lộ trình | Learning Path Management | AC-03 |
-| FR-15–FR-19 | Truy xuất khóa học và đề xuất xếp hạng | Course Recommendation | AC-04 |
-| FR-20–FR-22 | Theo dõi tiến độ học tập | Learning Progress | AC-05 |
-| FR-23–FR-26 | Hội thoại và hỗ trợ học tập bằng AI | AI Tutor | AC-06 |
-| FR-27–FR-32 | Tạo, chấm điểm và lưu lịch sử đánh giá | Skill Review | AC-07 |
-| FR-33–FR-38 | Quản lý dữ liệu dùng chung | Admin Management | AC-08 |
-| FR-39–FR-41 | Quản lý dữ liệu lịch sử và hỗ trợ AI/ML | Historical Data, ML Pipeline | AC-09, AC-10 |
-| FR-42–FR-43 | Kiểm soát truy cập, kiểm tra đầu vào và xử lý lỗi | Security, Validation, Error Handling | AC-01, AC-11 |
+| FR-01–FR-02, FR-44–FR-46 | Tài khoản, xác thực và quản lý token | Authentication | AC-01 |
+| FR-03–FR-04 | Hồ sơ người dùng và kỹ năng hiện tại | User Profile | AC-01, AC-02 |
+| FR-05–FR-09 | Phân tích mục tiêu và tạo lộ trình | AI Consultant, Path Generator | AC-02, AC-03 |
+| FR-10–FR-11 | Xem và quản lý lộ trình | Learning Path Management | AC-03 |
+| FR-12–FR-16 | Truy xuất khóa học và đề xuất xếp hạng | Course Recommendation | AC-04 |
+| FR-17–FR-19 | Theo dõi tiến độ học tập | Learning Progress | AC-05 |
+| FR-20–FR-23 | Hội thoại và hỗ trợ học tập bằng AI | AI Tutor | AC-06 |
+| FR-24–FR-29 | Tạo, chấm điểm và lưu lịch sử đánh giá | Skill Review | AC-07 |
+| FR-30–FR-35 | Quản lý dữ liệu dùng chung | Admin Management | AC-08 |
+| FR-36–FR-39 | Quản lý dữ liệu lịch sử và hỗ trợ AI/ML | Historical Data, ML Pipeline | AC-09, AC-10 |
+| FR-40–FR-43 | Kiểm soát truy cập, kiểm tra đầu vào và xử lý lỗi | Security, Validation, Error Handling | AC-01, AC-11 |
+
+> Ghi chú đồng bộ (2026-11-01): đã đánh lại dải mã theo đúng §6; tên phân hệ và tiêu chí nghiệm thu giữ nguyên. Truy vết chi tiết tới SRS và màn hình: `docs/requirements-traceability.md`.
 
 ## 13.3. Quy tắc sử dụng ma trận
 
