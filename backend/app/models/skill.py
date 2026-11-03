@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from app.core.database import Base
 from sqlalchemy.orm import relationship
 class Skills(Base):
@@ -6,6 +6,8 @@ class Skills(Base):
 
     skill_id = Column(Integer, primary_key=True, index=True)
     skill = Column(String(255), nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+
     courses_info = relationship("Courses", secondary="course_skill", back_populates="skills_info", lazy="joined")
 
     relations_from = relationship("SkillRelation",foreign_keys="SkillRelation.from_skill_id",back_populates="from_skill",)
