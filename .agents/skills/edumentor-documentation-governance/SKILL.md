@@ -53,9 +53,12 @@ Chỉ dùng trạng thái đã có; không tạo trạng thái mới, không dù
 | Mục T | ☑ (nhóm đã đồng ý), ☐ (chưa) — ☐ không được coi là đã chốt | `docs/decisions.md` §3 |
 | Quyết định | Có mã D-xx kèm người và ngày xác nhận; ND-xx là điểm chờ | `docs/decisions.md` |
 | Trạng thái Task | 6 giá trị | `plans/plan.md` PART 2 quy tắc 5 |
+| Mức sẵn sàng triển khai (chỉ ở phần đánh giá mức sẵn sàng của `plans/Fxx-*/plan.md`) | `READY_FOR_IMPLEMENTATION`, `READY_WITH_LIMITATIONS`, `NOT_READY_BLOCKED`, `NEEDS_OWNER_INPUT`, `BLOCKED_DATASET` | D-DOC-07 |
 | Đặc tả soạn chưa xác nhận | `DRAFT` | `docs/modules/README.md` |
 
 Nhãn ghi nhận (chỉ mô tả tình trạng, không phải xác nhận): `NEEDS_OWNER_CONFIRMATION`, `NEEDS_OWNER_INPUT`, `NOT_DEFINED_IN_SOURCE`, `SOURCE_CONFLICT`, `BLOCKED_DATASET`, `NEEDS_VERIFICATION`.
+
+Trạng thái Task, trạng thái quyết định/đặc tả và mức sẵn sàng triển khai là ba hệ tách riêng (D-DOC-07): mỗi cột chỉ dùng giá trị của một hệ; không dùng `PENDING`, `CONFLICT` hoặc `BLOCKED` đơn lẻ làm mức sẵn sàng; mức sẵn sàng không phải phê duyệt và không đổi trạng thái đặc tả hay Task.
 
 Khi viết "đã chốt" phải dẫn đúng bằng chứng gốc (mã D-xx, mục T ☑, hoặc dòng "… xác nhận <ngày>" trong `decisions.md`). Không gộp nhiều loại bằng chứng thành một trạng thái chung. Không tự nâng trạng thái (ví dụ `DRAFT` → `SPEC CONFIRMED`).
 

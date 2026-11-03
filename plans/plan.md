@@ -2,6 +2,8 @@
 
 > **Vai trò của tài liệu (D-DOC-05):** hướng dẫn thực hiện và theo dõi công việc chi tiết theo Phase và Task. Tài liệu này **không** là nguồn yêu cầu nghiệp vụ hay quyết định kiến trúc, **không** tạo, sửa hay phê duyệt D/ND. Mọi quyết định chỉ được tham chiếu tới `docs/decisions.md`. Thành viên hoặc AI Agent làm theo kế hoạch **không** được dựa vào file này để sửa BA, SRS hay `docs/decisions.md`.
 >
+> **Cấu trúc từ 2026-11-03 (D-DOC-05 (8)):** file này quản lý tổng thể dự án, Phase dùng chung P00–P03, P13, các Task dùng chung của P12 và phần ngoài 14 tính năng ở P11. Task của từng tính năng nằm trong `plans/Fxx-*/phase-NN-*.md` (NN là số Phase của khung chung); mỗi Task chỉ có **một** nơi quản lý. Mục lục thư mục tính năng: PART 1 bên dưới.
+>
 > Lập ngày 2026-10-30, trên nhánh `docs/initial-project-documentation` (HEAD `a49df4a`). Trạng thái ban đầu phản ánh hiện trạng repo tại thời điểm lập; chưa có dữ liệu tiến độ thực tế.
 
 ---
@@ -34,15 +36,39 @@
 | BA, SRS | Yêu cầu nghiệp vụ và yêu cầu gốc | Không tự ghi đè quyết định đã chốt |
 | `docs/decisions.md` | Nơi lưu quyết định chính thức | Kế hoạch chỉ tham chiếu |
 | Workbook chính thức | Theo dõi, đối chiếu ở **mức tính năng** (D-DOC-04) | Không ghi Task ID, tiến độ Task, effort, deadline hay dependency vào workbook |
-| `plans/plan.md` | Phase, Task, phân công, dependency, trạng thái, bằng chứng, kết quả review (D-DOC-05) | Tài liệu dẫn xuất, không có thứ bậc |
+| `plans/plan.md` | Tổng thể, Phase, Task dùng chung, phân công, dependency, trạng thái, bằng chứng, kết quả review (D-DOC-05) | Tài liệu dẫn xuất, không có thứ bậc |
+| `plans/Fxx-*/` | `plan.md`, `ba-decisions-and-safe-defaults.md`, `phase-NN-*.md` của từng tính năng; nơi quản lý duy nhất Task của tính năng (D-DOC-05 (8)) | Tài liệu dẫn xuất, không có thứ bậc |
+
+### Thư mục kế hoạch theo tính năng
+
+Người phụ trách theo D-OWN-02 (`docs/decisions.md` §2).
+
+| Mã | Tính năng | Người phụ trách | Thư mục |
+|---|---|---|---|
+| F01 | Xác thực và hồ sơ người dùng | Tuấn | [F01-authentication-profile/](F01-authentication-profile/plan.md) |
+| F02 | Danh mục khóa học | Khôi | [F02-course-catalog/](F02-course-catalog/plan.md) |
+| F03 | Đánh dấu (Bookmark) | Tâm | [F03-bookmark/](F03-bookmark/plan.md) |
+| F04 | Theo dõi tiến trình khóa học, đề xuất khóa học liên quan đến nút của tiến trình | Hòa | [F04-course-progress/](F04-course-progress/plan.md) |
+| F05 | Tư vấn viên AI và lộ trình học tập | Hòa | [F05-ai-consultant-learning-roadmap/](F05-ai-consultant-learning-roadmap/plan.md) |
+| F06 | Các nút (Node) và liên kết (Edge) trong lộ trình học tập | Hòa | [F06-roadmap-nodes-edges/](F06-roadmap-nodes-edges/plan.md) |
+| F07 | Gợi ý khóa học cho một kỹ năng cụ thể | Tâm | [F07-skill-course-recommendation/](F07-skill-course-recommendation/plan.md) |
+| F08 | Trò chuyện với gia sư AI | Tâm | [F08-ai-tutor-chat/](F08-ai-tutor-chat/plan.md) |
+| F09 | Ôn tập và đánh giá kiến thức | Tuấn | [F09-review-assessment/](F09-review-assessment/plan.md) |
+| F10 | Phản hồi (Feedback) | Khôi | [F10-feedback/](F10-feedback/plan.md) |
+| F11 | Quản trị — khóa học, kỹ năng và các mối liên hệ | Hòa | [F11-admin-courses-skills-relations/](F11-admin-courses-skills-relations/plan.md) |
+| F12 | Quản trị — các mối liên hệ giữa các kỹ năng | Tâm | [F12-admin-skill-relations/](F12-admin-skill-relations/plan.md) |
+| F13 | Quản trị — quản lý phản hồi | Hòa | [F13-admin-feedback/](F13-admin-feedback/plan.md) |
+| F14 | Quản trị — xem lộ trình học tập của người dùng | Hòa | [F14-admin-user-learning-roadmap/](F14-admin-user-learning-roadmap/plan.md) |
+
+Phần ngoài 14 tính năng (mẫu lộ trình, dữ liệu lịch sử, quản trị câu hỏi, bong bóng chat) và Task dùng chung: quản lý tại file này.
 
 ---
 
 ## PART 2 — PLANNING RULES
 
-1. **Cấp quản lý:** Phase (P00–P13) → Task. Không có cấp thấp hơn trong file này.
+1. **Cấp quản lý:** Phase (P00–P13) → Task. Không có cấp thấp hơn. Từ 2026-11-03, Task của một tính năng nằm trong `plans/Fxx-*/phase-NN-*.md` (NN = số Phase); Task dùng chung nằm ở file này. Mỗi Task ID chỉ có **một** dòng đầy đủ (có Status) trong toàn bộ `plans/`; nơi khác chỉ được ghi chỉ mục hoặc liên kết, không ghi trạng thái.
 2. **Task ID:** `Pxx-Txx` (ví dụ `P04-T05`), duy nhất trong toàn file, không tái sử dụng khi xóa Task; Task mới đánh số tiếp theo trong Phase.
-3. **Phân công:** chỉ ghi người khi có căn cứ trong tài liệu dự án (`README.md` "Nhóm thực hiện", `docs/decisions.md` §2) hoặc nhóm đã xác nhận. Không có căn cứ → `Chưa phân công`; Support chưa rõ → `Chưa xác định`. **Reviewer hiện chưa có căn cứ cho bất kỳ Phase nào → `Chưa phân công`.** Không tự chuyển việc giữa thành viên.
+3. **Phân công:** chỉ ghi người khi có căn cứ trong tài liệu dự án (`docs/decisions.md` §2 — D-OWN-01, D-OWN-02; `README.md` "Nhóm thực hiện") hoặc nhóm đã xác nhận. Không có căn cứ → `Chưa phân công`; Support chưa rõ → `Chưa xác định`. **Reviewer hiện chưa có căn cứ cho bất kỳ Phase nào → `Chưa phân công`.** Không tự chuyển việc giữa thành viên.
 4. **Dependency:** chỉ ghi khi Task thật sự cần kết quả của Task khác. Phân loại: **[KT]** kỹ thuật (cần code/hạ tầng), **[NV]** nghiệp vụ (cần quyết định D/ND), **[TL]** tài liệu (cần đặc tả). Không tạo dependency chỉ vì khác Phase. P00 **không** chặn toàn dự án.
 5. **Trạng thái** (chỉ dùng 6 giá trị):
 
@@ -74,12 +100,12 @@ Viết tắt dùng trong bảng: CPC = Chưa phân công; CXĐ = Chưa xác đ�
 | P02 | Shared Data Foundation | (F02, F11, F12, F05–F07) | Bảng Course, Skill, CourseSkillRelation, SkillRelation và dữ liệu mẫu | P01 | CPC | CPC | NOT_STARTED |
 | P03 | Frontend Foundation | Tất cả (giao diện) | Route, guard, API client, layout, component dùng chung | — (C1 đã có) | CPC | CPC | IN_PROGRESS |
 | P04 | Authentication & Profile | F01 | Tài khoản, xác thực, hồ sơ, kỹ năng cá nhân | P01, P02, P03 | Tuấn | CPC | NOT_STARTED |
-| P05 | Course Catalog & Admin Courses | F02, F11 | Danh mục, chi tiết khóa học, quản trị khóa học/kỹ năng | P02, P03, P04 (xác thực) | Khôi | CPC | NOT_STARTED |
+| P05 | Course Catalog & Admin Courses | F02, F11 | Danh mục, chi tiết khóa học, quản trị khóa học/kỹ năng | P02, P03, P04 (xác thực) | Khôi (F02), Hòa (F11) | CPC | NOT_STARTED |
 | P06 | Bookmark & Learning Progress | F03, F04 | Lưu khóa học, tham gia, trạng thái học | P04, P05 | Tâm (F03), Hòa (F04) | CPC | NOT_STARTED |
-| P07 | Roadmap, AI Consultant & Recommendations | F05, F06, F07, F12 | Tư vấn mục tiêu, lộ trình đồ thị, node/cạnh, gợi ý, quan hệ kỹ năng | P02, P04 | Hòa | CPC | NOT_STARTED |
+| P07 | Roadmap, AI Consultant & Recommendations | F05, F06, F07, F12 | Tư vấn mục tiêu, lộ trình đồ thị, node/cạnh, gợi ý, quan hệ kỹ năng | P02, P04 | Hòa (F05, F06), Tâm (F07, F12) | CPC | NOT_STARTED |
 | P08 | AI Tutor | F08 | Phiên hội thoại, tin nhắn | P04 | Tâm | CPC | NOT_STARTED |
 | P09 | Review & Assessment | F09 | Bài ôn tập theo khóa học, chấm điểm, lịch sử | P04, P05, P06 | Tuấn | CPC | NOT_STARTED |
-| P10 | Feedback | F10, F13 | Phản hồi học viên và quản trị phản hồi | P03 | **CPC** (xung đột C3) | CPC | NOT_STARTED |
+| P10 | Feedback | F10, F13 | Phản hồi học viên và quản trị phản hồi | P03 | Khôi (F10), Hòa (F13) | CPC | NOT_STARTED |
 | P11 | User Roadmap Admin & Related Functionality | F14 (+ phần ngoài 14 tính năng) | Quản trị lộ trình người dùng; mẫu lộ trình; dữ liệu lịch sử; quản trị câu hỏi; AI trong bong bóng chat | P03, P07 | Hòa (F14); phần còn lại CPC | CPC | NOT_STARTED |
 | P12 | AI/ML Work | (F05, F07, F08, F09) | Các thành phần AI/ML theo BA §8 | P07, P08 | CPC | CPC | NOT_STARTED |
 | P13 | Integration, Testing & Documentation | Tất cả | Tích hợp, kiểm thử, sửa lỗi, tài liệu, demo | Các Phase triển khai | CPC | CPC | NOT_STARTED |
@@ -132,7 +158,7 @@ Các nhánh song song chính: **(A)** P00 ∥ P01 ∥ P03; **(B)** sau P01–P02
 | P00-T04 | Chốt thư viện JWT và Argon2id | Thư viện và tham số | ND-44, ND-45 | CPC (module owner: Tuấn, D-OWN-01) | CXĐ | CPC | — | ND-44, ND-45 được chốt | NOT_STARTED | — | — |
 | P00-T05 | Chốt mã lỗi và quy ước validate | Danh mục `error.code`; 400 hay 422 | ND-14, ND-15 | CPC | CXĐ | CPC | — | ND-14, ND-15 được chốt | NOT_STARTED | — | — |
 | P00-T06 | Phân công phần chưa có người | Responsible và reviewer cho P00–P03, P11 (ngoài F14), P12, P13 và reviewer mọi Phase | `README.md`; workbook CK-42 | CPC | CXĐ | CPC | — | Danh sách phân công được nhóm xác nhận | NOT_STARTED | — | — |
-| P00-T07 | Giải quyết người phụ trách Feedback | README ghi Tâm; `decisions.md` §2 ghi "Chưa rõ (Khôi/Tâm)" | C3; `decisions.md` §2; `README.md` | CPC | CXĐ | CPC | — | `decisions.md` §2 cập nhật | NOT_STARTED | — | — |
+| P00-T07 | Giải quyết người phụ trách Feedback | Người phụ trách F10 (Khôi), F13 (Hòa) đã có ở D-OWN-02; `README.md`, `docs/modules/README.md` đã đồng bộ. Còn mở: dòng "Feedback & liên hệ (T22–T25)" ở `decisions.md` §2 vẫn ghi "Chưa rõ: Khôi/Tâm" (ND-35) — quan hệ với D-OWN-02 chờ Tuấn xác nhận | `decisions.md` §2 (D-OWN-02; dòng Feedback & liên hệ); ND-35; C3 (nhãn cũ, không phải ND) | CPC | CXĐ | CPC | — | `decisions.md` §2 cập nhật | NOT_STARTED | — | — |
 | P00-T08 | Chốt quy định kiểm thử frontend và responsive | Công cụ, mức kiểm thử, test report; breakpoint, phạm vi thiết bị | ND-67, ND-68; BA NFR-17, NFR-18 | CPC | CXĐ | CPC | — | ND-67, ND-68 được chốt | NOT_STARTED | — | — |
 | P00-T09 | Ghi nhận mâu thuẫn trong BA | Ma trận truy vết §13.2 (FR-01–05 token) lệch §6 (token ở FR-44–46, §6.9); BA §8.6 (RAG) chưa thống nhất với D01, RV-R01 — ND-58 chưa nhắc RAG; BA thiếu FR cho phản hồi (chỉ §4.1.2) và F14 | BA §6, §8.6, §13.2; ND-58 | CPC | CXĐ | CPC | — | Đề xuất ND hoặc bổ sung ND-58 do người có thẩm quyền ghi | NOT_STARTED | — | — |
 | P00-T10 | Theo dõi các ND chặn tính năng | Đưa ND-41/43/48, ND-56…62, 64, 66, 69, T16 ra thảo luận theo người phụ trách tính năng | `decisions.md` §3, §4, §6 | CPC | CXĐ | CPC | — | Bảng PART 6 được cập nhật khi có quyết định | NOT_STARTED | — | — |
@@ -218,225 +244,241 @@ Các nhánh song song chính: **(A)** P00 ∥ P01 ∥ P03; **(B)** sau P01–P02
 
 ### P04 – Authentication & Profile (F01)
 
-**1. Phase Information** — Phase ID: P04 · Objective: F01 đầy đủ backend và frontend theo đặc tả · Related Features: F01 · Responsible: Tuấn (`README.md`; D-OWN-01) · Support: CXĐ · Reviewer: CPC · Dependencies: P01, P02-T02, P03-T02/T03/T05 · Initial Status: NOT_STARTED
+> Task của tính năng [F01](F01-authentication-profile/phase-04-authentication-profile.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P04 · Objective: F01 đầy đủ backend và frontend theo đặc tả · Related Features: F01 · Responsible: Tuấn (D-OWN-01, D-OWN-02) · Support: CXĐ · Reviewer: CPC · Dependencies: P01, P02-T02, P03-T02/T03/T05 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: `/api/auth/*`, `/api/me*` (trừ courses, bookmarks, review-history, learning-paths), bảng User, UserSkill, PasswordResetToken, `core/security.py`, `core/dependencies.py`, `core/email.py`, `scripts/create_admin.py`, trang `/login` … `/me/skills`. Ngoài: RefreshToken (chờ ND-43); Course Tracking; Learning Path. Nguồn: `docs/modules/auth-profile.md`, `.tests.md`; `docs/api-endpoints.md` §2; `docs/database-design.md` §3.1, §3.2, §3.4; BA §6.1 (FR-01–04), §6.9 (FR-40–46); `ui-design` Main, Main-LampOff, Register, ForgotPassword, ForgotSent, ResetPassword, ResetExpired, Profile, Profile-Light, EditProfile, ChangePassword, Skills, Logout.
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P04-T01 | Đối chiếu đặc tả F01 với BA | So `auth-profile.md` với BA FR-01–04, FR-40–46, AC-01; ghi điểm lệch | BA §6.1, §6.9, §11.2 | Tuấn | CXĐ | CPC | — | Ghi chú đối chiếu | NOT_STARTED | — | — |
-| P04-T02 | `core/security.py` | Băm Argon2id; JWT HS256 (`sub`, `iat`, `exp`), 30 phút; chỉ chấp nhận HS256 | D-AUTH-01, 02, 04; AP-R21 | Tuấn | CXĐ | CPC | P01-T02, P00-T04 | `security.py` + test | BLOCKED | — | ND-44, ND-45 — băm Argon2id và JWT là phần cốt lõi. Phần làm được: hàm kiểm chính sách mật khẩu (D-AUTH-05, AP-R19) |
-| P04-T03 | `core/dependencies.py` | `get_current_user` (vai trò lấy từ DB), `require_admin` — dùng chung mọi module | AP-R18, AP-R21; `backend-rules.md` §2 | Tuấn | CXĐ | CPC | P04-T02, P04-T04 | `dependencies.py` + test 401/403 | BLOCKED | — | Theo P04-T02 |
-| P04-T04 | Model + migration User, UserSkill, PasswordResetToken | Đúng §3.1, §3.2, §3.4; không tạo RefreshToken | `database-design.md` §3; `auth-profile.md` §3 | Tuấn | CXĐ | CPC | P01-T05, P02-T02 | Model + migration | NOT_STARTED | — | Một phần: migration chờ Alembic (P01-T05). Class model viết được theo §3.1, §3.2, §3.4 |
-| P04-T05 | `POST /api/auth/register` | Luôn tạo `student`; trùng email 409; chính sách mật khẩu | AP-R01, 02, 06, 19; §4.1 | Tuấn | CXĐ | CPC | P04-T02, P04-T04 | Router, service, schema, repository | NOT_STARTED | — | Một phần: hàm băm chờ ND-45 (P04-T02); ND-07, 08, 18, 37, 46, 47. Schema, repository, kiểm trùng email (AP-R02) làm được |
-| P04-T06 | `POST /api/auth/login` (access token) | Xác thực, cấp access token; response gồm `role` | AP-R06, 07, 21; §4.2 | Tuấn | CXĐ | CPC | P04-T02, P04-T04 | Router, service | BLOCKED | — | Cốt lõi (xác minh mật khẩu, cấp JWT) chờ P04-T02 (ND-44, ND-45); hình dạng response ND-19; refresh token ND-41 |
-| P04-T07 | Refresh token và logout | `POST /api/auth/refresh`, `/logout`; bảng RefreshToken | D-AUTH-03; §4.3, §4.3a | Tuấn | CXĐ | CPC | P04-T06 | API + bảng | BLOCKED | — | ND-40, 41, 42, 43, 48 |
-| P04-T08 | Quên và đặt lại mật khẩu, `core/email.py` | Thông báo luôn giống nhau; mã băm, có hạn, dùng một lần | AP-R09, 10, 11; §4.4, §4.5; T28 | Tuấn | CXĐ | CPC | P04-T04 | API + `send_email` | NOT_STARTED | — | Một phần: chạy thật cần P04-T04; ND-39 (cách gửi), ND-36, ND-46, ND-47; định dạng link chứa mã chưa có (`structure.md` §3) |
-| P04-T09 | `GET/PATCH /api/me`, đổi mật khẩu | Chỉ nhận `full_name`, `avatar_url`; đổi mật khẩu cần mật khẩu hiện tại | AP-R03, 04, 12; §4.6, §4.7, §4.9 | Tuấn | CXĐ | CPC | P04-T03, P04-T04 | API | NOT_STARTED | — | Một phần: xác thực request chờ P04-T03; ND-12, ND-18, ND-36, ND-62. Schema, service, repository làm được |
-| P04-T10 | `POST /api/me/avatar` | Upload ảnh | D07; §4.8 | Tuấn | CXĐ | CPC | P04-T09 | API | BLOCKED | — | ND-62, ND-12 |
-| P04-T11 | `GET /api/me/summary` | Đếm khóa học, kỹ năng, lộ trình | AP-R17; §4.10 | Tuấn | CXĐ | CPC | P04-T03, P06-T04, P07-T04 | API | BLOCKED | — | ND-13; theo P06-T04, P07-T04 |
-| P04-T12 | `GET/PATCH /api/me/skills` | Một transaction; `skill_id` không tồn tại 404 + rollback; upsert `add` | AP-R13, 14; §4.11, §4.12 | Tuấn | CXĐ | CPC | P04-T03, P04-T04 | API | NOT_STARTED | — | Một phần: xác thực request chờ P04-T03; ND-09, 11, 64. Quy tắc chính AP-R14 đã chốt |
-| P04-T13 | `scripts/create_admin.py` | Tạo admin, không qua API | AP-R05 | Tuấn | CXĐ | CPC | P04-T02, P04-T04 | Script | BLOCKED | — | Theo P04-T02 |
-| P04-T14 | Test backend F01 | Các kịch bản không có cột "Chờ" trong `auth-profile.tests.md` | `auth-profile.tests.md`; skill `auth-profile` §9 | Tuấn | CXĐ | CPC | P01-T08, P04-T05, P04-T08, P04-T09, P04-T12 | `tests/test_auth.py`, kết quả `pytest` | NOT_STARTED | — | Một phần: chạy test cần P01-T08. Viết test cho kịch bản không có cột "Chờ" làm được. Test cho P04-T06, T07, T10, T11, T13 viết khi các task đó hết chặn |
-| P04-T15 | API client F01 | `auth.api.js`, `me.api.js` theo §2 | D-FE-10, D-FE-11 | Tuấn | CXĐ | CPC | P03-T03 | 2 file API | NOT_STARTED | — | — |
-| P04-T16 | Trang Đăng nhập, Đăng ký | Theo `ui-design` Main, Main-LampOff, Register; không hiện tài khoản demo | D-FE-07, D-FE-12 | Tuấn | CXĐ | CPC | P03-T04, P03-T05, P04-T15 | `LoginPage`, `RegisterPage` | NOT_STARTED | — | Một phần: ND-56 (đèn ở Đăng ký, khả năng tiếp cận), ND-47, ND-51 |
-| P04-T17 | Trang Quên/đặt lại mật khẩu | ForgotPassword, ForgotSent, ResetPassword, ResetExpired | `structure.md` §3; `ui-design` | Tuấn | CXĐ | CPC | P04-T15 | 4 page | NOT_STARTED | — | Một phần: định dạng link chứa mã chưa có |
-| P04-T18 | Trang Hồ sơ | Profile, Profile-Light; số liệu, kỹ năng, khóa học, ôn tập gần đây; công tắc Sáng/Tối | `structure.md` §3; `ui-design` | Tuấn | CXĐ | CPC | P04-T15 | `ProfilePage` | NOT_STARTED | — | Một phần: dữ liệu từ P04-T11, P06, P09; ND-10 |
-| P04-T19 | Trang Sửa hồ sơ, Đổi mật khẩu | EditProfile, ChangePassword | `ui-design`; AP-R03 | Tuấn | CXĐ | CPC | P04-T15 | 2 page | NOT_STARTED | — | Một phần: ND-62 (avatar), ND-12, ND-47, ND-51 |
-| P04-T20 | Trang Kỹ năng | Xem, sửa trạng thái, thêm, xóa kỹ năng | `ui-design` Skills; AP-R14 | Tuấn | CXĐ | CPC | P04-T15 | `SkillsPage` | NOT_STARTED | — | Một phần: ND-57 (danh mục kỹ năng cho học viên), ND-64 |
-| P04-T21 | Đăng xuất | LogoutDialog; gọi logout rồi xóa token | `ui-design` Logout | Tuấn | CXĐ | CPC | P04-T15 | `LogoutDialog` | NOT_STARTED | — | Một phần: ND-48, ND-50 |
-| P04-T22 | Test giao diện F01 | Kiểm thử các trang F01 | ND-67, ND-68 | Tuấn | CXĐ | CPC | P04-T16…T21 | Kết quả test | BLOCKED | — | ND-67, ND-68 |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — API §2 (trừ phần bị chặn); 3 bảng; 10+ trang F01; `test_auth.py`.
-**5. Review Checklist** — AP-R01…R23; không trả `hashed_password`; vai trò từ DB; không nhận `role`/`email` khi sửa; transaction `PATCH /me/skills`; không log mật khẩu/token; giao diện ẩn câu chữ khẳng định quy tắc chưa chốt (ND-51).
-**6. Blockers & Open Issues** — ND-07…13, 18, 19, 36…48, 56, 57, 62, 64; ND-14, 15, 16.
-**7. Completion Criteria** — Task không bị chặn DONE có evidence; Task BLOCKED ghi rõ mã chặn.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P04-T01 | Đối chiếu đặc tả F01 với BA | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T02 | `core/security.py` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T03 | `core/dependencies.py` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T04 | Model + migration User, UserSkill, PasswordResetToken | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T05 | `POST /api/auth/register` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T06 | `POST /api/auth/login` (access token) | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T07 | Refresh token và logout | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T08 | Quên và đặt lại mật khẩu, `core/email.py` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T09 | `GET/PATCH /api/me`, đổi mật khẩu | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T10 | `POST /api/me/avatar` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T11 | `GET /api/me/summary` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T12 | `GET/PATCH /api/me/skills` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T13 | `scripts/create_admin.py` | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T14 | Test backend F01 | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T15 | API client F01 | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T16 | Trang Đăng nhập, Đăng ký | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T17 | Trang Quên/đặt lại mật khẩu | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T18 | Trang Hồ sơ | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T19 | Trang Sửa hồ sơ, Đổi mật khẩu | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T20 | Trang Kỹ năng | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T21 | Đăng xuất | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+| P04-T22 | Test giao diện F01 | F01 | [F01-authentication-profile/phase-04-authentication-profile.md](F01-authentication-profile/phase-04-authentication-profile.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F01](F01-authentication-profile/phase-04-authentication-profile.md) mục 3.
 
 ### P05 – Course Catalog & Admin Courses (F02, F11)
 
-**1. Phase Information** — Phase ID: P05 · Objective: danh mục khóa học cho học viên và quản trị khóa học, kỹ năng, liên kết · Related Features: F02, F11 · Responsible: Khôi (`README.md`) · Support: CXĐ · Reviewer: CPC · Dependencies: P02, P03, P04-T03 · Initial Status: NOT_STARTED
+> Task của tính năng [F02](F02-course-catalog/phase-05-course-catalog-admin-courses.md), [F11](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P05 · Objective: danh mục khóa học cho học viên và quản trị khóa học, kỹ năng, liên kết · Related Features: F02, F11 · Responsible: theo từng tính năng — F02: Khôi, F11: Hòa (D-OWN-02) · Support: CXĐ · Reviewer: CPC · Dependencies: P02, P03, P04-T03 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: `/api/courses*`, `/api/admin/courses`, `/api/admin/skills`, `/api/admin/course-skill-relations`; trang Courses, Courses-Light, CourseDetail, JoinDialog (giao diện), AdminCourses, AdminSkills (phần danh mục). Ngoài: `join` backend (P06); quan hệ kỹ năng (P07); quản trị câu hỏi (P11). Nguồn: `docs/api-endpoints.md` §3, §11; `docs/database-design.md` §2; BA §6.3 (FR-12–16), §6.7 (FR-30, 32, 33); SRS FR-02.
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P05-T01 | Rà soát nguồn F02, F11 | Đối chiếu BA FR-12–16, FR-30, 32, 33, SRS FR-02 với `api-endpoints.md` §3, §11; ghi điểm chưa rõ | BA §6.3, §6.7; SRS §3 | Khôi | CXĐ | CPC | — | Ghi chú rà soát | NOT_STARTED | — | — |
-| P05-T02 | Chuẩn bị đặc tả module | Đặc tả F02, F11 chỉ từ nguồn đã có | Như trên | Khôi | CXĐ | CPC | P05-T01 | Đề xuất `docs/modules/…` | NOT_STARTED | — | — |
-| P05-T03 | Chuẩn bị test case | Kịch bản test; expected result chỉ lấy từ nguồn | `conventions.md` §6 | Khôi | CXĐ | CPC | P05-T02 | Đề xuất `*.tests.md` | NOT_STARTED | — | — |
-| P05-T04 | `GET /api/courses` | Tìm kiếm, lọc `skill_id`, `level`, `sort_by`, phân trang | §3; `conventions.md` §1 | Khôi | CXĐ | CPC | P02-T01, P02-T03 | API | NOT_STARTED | — | Một phần: migration và dữ liệu chờ P02; quyền truy cập `GET /api/courses` chưa ghi trong §3 (chưa có ND); ND-61 chỉ là tiêu chí lọc thêm. Bộ lọc `search`, `skill_id`, `level`, `sort_by` làm được |
-| P05-T05 | `GET /api/courses/{id}`, `/skills` | Chi tiết và kỹ năng của khóa | §3 | Khôi | CXĐ | CPC | P02-T01, P02-T03 | API | NOT_STARTED | — | Một phần: migration và dữ liệu chờ P02; quyền truy cập §3 chưa ghi (chưa có ND). Schema, service làm được |
-| P05-T06 | Quản trị khóa học | CRUD `/api/admin/courses` | §11 | Khôi | CXĐ | CPC | P04-T03, P02-T01 | API | NOT_STARTED | — | Một phần: kiểm quyền admin chờ P04-T03. Schema, service, repository làm được |
-| P05-T07 | Quản trị kỹ năng | `/api/admin/skills` | §11 | Khôi | CXĐ | CPC | P04-T03, P02-T02 | API | NOT_STARTED | — | Một phần: kiểm quyền admin chờ P04-T03. Schema, service, repository làm được |
-| P05-T08 | Quản trị liên kết khóa học–kỹ năng | `/api/admin/course-skill-relations` | §11 | Khôi | CXĐ | CPC | P05-T06, P05-T07 | API | NOT_STARTED | — | Một phần: kiểm quyền admin chờ P04-T03. Schema, service, repository làm được |
-| P05-T09 | Test phân quyền admin (bắt buộc) | Học viên gọi `/api/admin/*` → 403; chưa đăng nhập → 401 | `conventions.md` §6 | Khôi | CXĐ | CPC | P05-T06…T08, P01-T08 | Kết quả `pytest` | NOT_STARTED | — | Một phần: chạy test cần P01-T08. Viết test làm được |
-| P05-T10 | API client khóa học | `courses.api.js`; nhãn cấp độ chỉ đổi khi hiển thị | D-FE-11 | Khôi | CXĐ | CPC | P03-T03 | File API | NOT_STARTED | — | — |
-| P05-T11 | Trang Danh mục | CatalogPage, CourseCard, CourseCover, CardOpening | `ui-design` Courses, Courses-Light | Khôi | CXĐ | CPC | P05-T10, P03-T05 | Page + component | NOT_STARTED | — | Một phần: UI2-03 (bộ lọc kỹ năng) |
-| P05-T12 | Trang Chi tiết khóa học, hộp thoại Tham gia | CourseDetailPage, JoinDialog (gọi API join của P06) | `ui-design` CourseDetail, JoinDialog | Khôi | CXĐ | CPC | P05-T10 | Page + component | NOT_STARTED | — | Một phần: ND-50 (`/courses/:id/join`) |
-| P05-T13 | Trang Quản trị khóa học | AdminCoursesPage | `ui-design` AdminCourses | Khôi | CXĐ | CPC | P03-T04 | Page | NOT_STARTED | — | — |
-| P05-T14 | Trang Quản trị kỹ năng (danh mục) | AdminSkillsPage — phần danh mục | `ui-design` AdminSkills | Khôi | CXĐ | CPC | P03-T04 | Page | NOT_STARTED | — | — |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — API §3, §11 (khóa học, kỹ năng, liên kết); 6 màn; đặc tả và test case đề xuất.
-**5. Review Checklist** — Đúng `api-endpoints.md`; phân trang theo `conventions.md` §1; admin kiểm quyền ở backend; giao diện theo API contract.
-**6. Blockers & Open Issues** — Quyền `GET /api/courses*` chưa ghi; ND-61; UI2-03; thiếu đặc tả module.
-**7. Completion Criteria** — Task không bị chặn DONE; test phân quyền admin DONE.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P05-T01 | Rà soát nguồn F02, F11 | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T02 | Chuẩn bị đặc tả module | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T03 | Chuẩn bị test case | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T04 | `GET /api/courses` | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T05 | `GET /api/courses/{id}`, `/skills` | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T06 | Quản trị khóa học | F11 | [F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) |
+| P05-T07 | Quản trị kỹ năng | F11 | [F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) |
+| P05-T08 | Quản trị liên kết khóa học–kỹ năng | F11 | [F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) |
+| P05-T09 | Test phân quyền admin (bắt buộc) | F11 | [F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) |
+| P05-T10 | API client khóa học | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T11 | Trang Danh mục | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T12 | Trang Chi tiết khóa học, hộp thoại Tham gia | F02 | [F02-course-catalog/phase-05-course-catalog-admin-courses.md](F02-course-catalog/phase-05-course-catalog-admin-courses.md) |
+| P05-T13 | Trang Quản trị khóa học | F11 | [F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) |
+| P05-T14 | Trang Quản trị kỹ năng (danh mục) | F11 | [F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md](F11-admin-courses-skills-relations/phase-05-course-catalog-admin-courses.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F02](F02-course-catalog/phase-05-course-catalog-admin-courses.md) mục 3.
 
 ### P06 – Bookmark & Learning Progress (F03, F04)
 
-**1. Phase Information** — Phase ID: P06 · Objective: lưu khóa học và theo dõi 4 trạng thái học · Related Features: F03 (Tâm), F04 (Hòa) · Responsible: theo từng task — F03: Tâm, F04: Hòa (`README.md`); task gồm cả hai tính năng: CPC · Support: CXĐ · Reviewer: CPC · Dependencies: P04-T03, P05-T05 · Initial Status: NOT_STARTED
+> Task của tính năng [F03](F03-bookmark/phase-06-bookmark-learning-progress.md), [F04](F04-course-progress/phase-06-bookmark-learning-progress.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P06 · Objective: lưu khóa học và theo dõi 4 trạng thái học · Related Features: F03 (Tâm), F04 (Hòa) · Responsible: theo từng task — F03: Tâm, F04: Hòa (D-OWN-02); task gồm cả hai tính năng: CPC · Support: CXĐ · Reviewer: CPC · Dependencies: P04-T03, P05-T05 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: `/api/me/bookmarks*`, `/api/me/courses*`, `/api/courses/{id}/join`, bảng StudentCourse; trang MyCourses; nút Lưu. Ngoài: gợi ý theo node (P07). Nguồn: `docs/api-endpoints.md` §4; `docs/database-design.md` §3.3; D05; BA §6.4 (FR-17–19); `ui-design` MyCourses.
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P06-T01 | Rà soát nguồn F03, F04 | Đối chiếu BA FR-17–19 với §4 và §3.3 | BA §6.4 | CPC (F03: Tâm; F04: Hòa — task gồm cả hai) | CXĐ | CPC | — | Ghi chú rà soát | NOT_STARTED | — | — |
-| P06-T02 | Chuẩn bị đặc tả module | Course Tracking | Như trên | CPC (F03: Tâm; F04: Hòa — task gồm cả hai) | CXĐ | CPC | P06-T01 | Đề xuất `docs/modules/…` | NOT_STARTED | — | — |
-| P06-T03 | Chuẩn bị test case | Gồm test chuyển trạng thái (bắt buộc) | `conventions.md` §6 | CPC (F03: Tâm; F04: Hòa — task gồm cả hai) | CXĐ | CPC | P06-T02 | Đề xuất `*.tests.md` | NOT_STARTED | — | — |
-| P06-T04 | Model + migration StudentCourse | UNIQUE (`user_id`, `course_id`); 4 trạng thái | §3.3 | CPC (F03: Tâm; F04: Hòa — bảng dùng chung) | CXĐ | CPC | P01-T05, P02-T01, P04-T04 | Model + migration | NOT_STARTED | — | Một phần: migration chờ Alembic (P01-T05). Class model viết được theo §3.3 |
-| P06-T05 | API bookmark | Lưu, bỏ lưu (chỉ khi `bookmarked`), danh sách | §4; §3.3 | Tâm | CXĐ | CPC | P06-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P06-T04. Ghi chú: ND-32 (`decisions.md` §4.4) chỉ ghi nhận file `models/bookmark.py`, không chặn — thiết kế dùng StudentCourse |
-| P06-T06 | API tham gia khóa học | `bookmarked → ongoing`; thêm kỹ năng `learning` nếu chưa `known` | §4; D05 | Hòa | CXĐ | CPC | P06-T04, P04-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P06-T04. Logic D05 viết được |
-| P06-T07 | API trạng thái khóa học của tôi | `GET /api/me/courses`, đổi trạng thái, `abandoned`; `completed` chỉ qua ôn tập | §4; §3.3 | Hòa | CXĐ | CPC | P06-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P06-T04. Logic chuyển trạng thái §3.3 viết được |
-| P06-T08 | Test chuyển trạng thái (bắt buộc) | Hợp lệ/không hợp lệ; mở URL không thành `completed` | `conventions.md` §6 | Hòa | CXĐ | CPC | P06-T05…T07, P01-T08 | Kết quả `pytest` | NOT_STARTED | — | Một phần: chạy test cần P01-T08. Viết test làm được |
-| P06-T09 | API client theo dõi | `courseTracking.api.js` — chia theo hàm giữa F03, F04 | `structure.md` §1 | CPC (F03: Tâm; F04: Hòa — task gồm cả hai) | CXĐ | CPC | P03-T03 | File API | NOT_STARTED | — | — |
-| P06-T10 | Nút Lưu | Trên CourseCard, CourseDetail, danh sách gợi ý | `ui-design` Courses, CourseDetail | Tâm | CXĐ | CPC | P06-T09, P05-T11 | Component | NOT_STARTED | — | — |
-| P06-T11 | Trang Khóa học của tôi | MyCoursesPage: Đang học, Đã lưu, Hoàn thành, Đã bỏ | `ui-design` MyCourses | CPC (`ui-design/pages.json`: "03–04 · Tâm, Hòa") | CXĐ | CPC | P06-T09 | Page | NOT_STARTED | — | — |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — API §4; bảng StudentCourse; MyCourses; nút Lưu.
-**5. Review Checklist** — Đúng chuyển trạng thái §3.3; D05; không coi mở link là hoàn thành.
-**6. Blockers & Open Issues** — ND-32; người phụ trách StudentCourse.
-**7. Completion Criteria** — Test chuyển trạng thái DONE; Task không bị chặn DONE.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P06-T01 | Rà soát nguồn F03, F04 | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T02 | Chuẩn bị đặc tả module | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T03 | Chuẩn bị test case | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T04 | Model + migration StudentCourse | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T05 | API bookmark | F03 | [F03-bookmark/phase-06-bookmark-learning-progress.md](F03-bookmark/phase-06-bookmark-learning-progress.md) |
+| P06-T06 | API tham gia khóa học | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T07 | API trạng thái khóa học của tôi | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T08 | Test chuyển trạng thái (bắt buộc) | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T09 | API client theo dõi | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+| P06-T10 | Nút Lưu | F03 | [F03-bookmark/phase-06-bookmark-learning-progress.md](F03-bookmark/phase-06-bookmark-learning-progress.md) |
+| P06-T11 | Trang Khóa học của tôi | F04 | [F04-course-progress/phase-06-bookmark-learning-progress.md](F04-course-progress/phase-06-bookmark-learning-progress.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F04](F04-course-progress/phase-06-bookmark-learning-progress.md) mục 3.
 
 ### P07 – Roadmap, AI Consultant & Recommendations (F05, F06, F07, F12)
 
-**1. Phase Information** — Phase ID: P07 · Objective: tư vấn mục tiêu, lộ trình đồ thị, node/cạnh, gợi ý khóa học theo node, quan hệ kỹ năng · Related Features: F05, F06, F07, F12 · Responsible: Hòa (`README.md`) · Support: CXĐ · Reviewer: CPC · Dependencies: P02, P04-T03 · Initial Status: NOT_STARTED
+> Task của tính năng [F05](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md), [F06](F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md), [F07](F07-skill-course-recommendation/phase-07-roadmap-consultant-recommendations.md), [F12](F12-admin-skill-relations/phase-07-roadmap-consultant-recommendations.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P07 · Objective: tư vấn mục tiêu, lộ trình đồ thị, node/cạnh, gợi ý khóa học theo node, quan hệ kỹ năng · Related Features: F05, F06, F07, F12 · Responsible: theo từng tính năng — F05, F06: Hòa; F07, F12: Tâm (D-OWN-02) · Support: CXĐ · Reviewer: CPC · Dependencies: P02, P04-T03 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: `/api/chat/learning-path`, `/api/learning-paths*`, `/api/me/learning-paths`, node, edge, gợi ý §8, `/api/admin/skill-relations*`; bảng LearningPath, Node, Edge; trang Consultant, MyPaths, PathDetail, PathEdit, AdminSkills-Relations. Ngoài: thành phần mô hình AI (P12); mẫu lộ trình cơ sở (P11). Nguồn: `docs/api-endpoints.md` §5–§8, §11; `docs/database-design.md` §4.4–§4.6, §2.4; BA §6.2 (FR-05–11), §6.3 (FR-12–14), §6.7 (FR-31); SRS FR-03.
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P07-T01 | Rà soát nguồn F05–F07, F12 | Đối chiếu BA FR-05–14, FR-31, SRS FR-03 với §5–§8, §11 | BA §6.2, §6.3, §6.7 | Hòa | CXĐ | CPC | — | Ghi chú rà soát | NOT_STARTED | — | — |
-| P07-T02 | Chuẩn bị đặc tả module | Learning Path, gợi ý, quan hệ kỹ năng | Như trên | Hòa | CXĐ | CPC | P07-T01 | Đề xuất `docs/modules/…` | NOT_STARTED | — | Một phần: ND-60 |
-| P07-T03 | Chuẩn bị test case | Gồm test xóa node kèm cạnh (bắt buộc) | `conventions.md` §6 | Hòa | CXĐ | CPC | P07-T02 | Đề xuất `*.tests.md` | NOT_STARTED | — | — |
-| P07-T04 | Model + migration lộ trình | LearningPath, LearningPathNode, LearningPathEdge | §4.4–§4.6 | Hòa | CXĐ | CPC | P01-T05, P02-T02, P04-T04 | Model + migration | NOT_STARTED | — | Một phần: migration chờ Alembic (P01-T05). Class model viết được theo §4.4–§4.6 |
-| P07-T05 | API AI Consultant | `POST /api/chat/learning-path`; lộ trình đề xuất chỉ lưu khi người dùng xác nhận | §5; `structure.md` §3 | Hòa | CXĐ | CPC | P07-T04 | API | BLOCKED | — | Cần làm rõ: hình dạng đầu ra phụ thuộc phương án AI (P12-T02) và ND-60; ND-54; chạy thật cần P07-T04 |
-| P07-T06 | API lộ trình | CRUD `/api/learning-paths*`, `/api/me/learning-paths` | §5 | Hòa | CXĐ | CPC | P07-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P07-T04. Schema, service làm được |
-| P07-T07 | API node và cạnh | Thêm/sửa/xóa; xóa node kèm cạnh | §6, §7 | Hòa | CXĐ | CPC | P07-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P07-T04. Logic xóa node kèm cạnh viết được |
-| P07-T08 | API gợi ý khóa học theo node | `GET …/nodes/{skill_id}/courses` | §8 | Hòa | CXĐ | CPC | P07-T04, P02-T03 | API | NOT_STARTED | — | Một phần: chạy thật cần P07-T04; xếp hạng nâng cao ở P12-T05. `sort_by=rating` (§8) làm được |
-| P07-T09 | API quản trị quan hệ kỹ năng | `/api/admin/skill-relations*` | §11; §2.4 | Hòa | CXĐ | CPC | P02-T04, P04-T03 | API | NOT_STARTED | — | Một phần: chạy thật cần P02-T04, P04-T03. Schema, service làm được |
-| P07-T10 | Test backend (gồm xóa node kèm cạnh) | Theo test case P07-T03 | `conventions.md` §6 | Hòa | CXĐ | CPC | P07-T05…T09, P01-T08 | Kết quả `pytest` | NOT_STARTED | — | Một phần: chạy test cần P01-T08. Viết test làm được |
-| P07-T11 | API client | `consultant.api.js`, `learningPaths.api.js`, `pathGraph.api.js`, `nodeSuggestions.api.js` | `structure.md` §1 | Hòa | CXĐ | CPC | P03-T03 | 4 file API | NOT_STARTED | — | — |
-| P07-T12 | Trang AI tư vấn lộ trình | ConsultantPage | `ui-design` Consultant | Hòa | CXĐ | CPC | P07-T11 | Page | NOT_STARTED | — | — |
-| P07-T13 | Trang Lộ trình của tôi | MyPathsPage | `ui-design` MyPaths | Hòa | CXĐ | CPC | P07-T11 | Page | NOT_STARTED | — | Một phần: ND-54 (tên lộ trình) |
-| P07-T14 | Trang Chi tiết lộ trình và đồ thị | PathDetailPage, PathGraph, panel gợi ý | `ui-design` PathDetail | Hòa | CXĐ | CPC | P07-T11 | Page + component | NOT_STARTED | — | Một phần: ND-54 |
-| P07-T15 | Hộp thoại sửa lộ trình | PathEditDialog (thêm node, cạnh) | `ui-design` PathEdit | Hòa | CXĐ | CPC | P07-T14 | Component | NOT_STARTED | — | Một phần: ND-50 (`/edit`) |
-| P07-T16 | Sơ đồ quan hệ kỹ năng (quản trị) | SkillRelationMap trong AdminSkillsPage | `ui-design` AdminSkills-Relations | Hòa | CXĐ | CPC | P05-T14 | Component | NOT_STARTED | — | — |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — API §5–§8 và skill-relations; 3 bảng; 5 màn; đặc tả và test case đề xuất.
-**5. Review Checklist** — Lộ trình đề xuất chỉ lưu sau xác nhận; xóa node không để cạnh mồ côi; gợi ý chỉ tải khi chọn node (`structure.md` §3).
-**6. Blockers & Open Issues** — ND-24, ND-54, ND-60; phần AI ở P12.
-**7. Completion Criteria** — Test xóa node kèm cạnh DONE; Task không bị chặn DONE.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P07-T01 | Rà soát nguồn F05–F07, F12 | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T02 | Chuẩn bị đặc tả module | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T03 | Chuẩn bị test case | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T04 | Model + migration lộ trình | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T05 | API AI Consultant | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T06 | API lộ trình | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T07 | API node và cạnh | F06 | [F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md](F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T08 | API gợi ý khóa học theo node | F07 | [F07-skill-course-recommendation/phase-07-roadmap-consultant-recommendations.md](F07-skill-course-recommendation/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T09 | API quản trị quan hệ kỹ năng | F12 | [F12-admin-skill-relations/phase-07-roadmap-consultant-recommendations.md](F12-admin-skill-relations/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T10 | Test backend (gồm xóa node kèm cạnh) | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T11 | API client | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T12 | Trang AI tư vấn lộ trình | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T13 | Trang Lộ trình của tôi | F05 | [F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T14 | Trang Chi tiết lộ trình và đồ thị | F06 | [F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md](F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T15 | Hộp thoại sửa lộ trình | F06 | [F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md](F06-roadmap-nodes-edges/phase-07-roadmap-consultant-recommendations.md) |
+| P07-T16 | Sơ đồ quan hệ kỹ năng (quản trị) | F12 | [F12-admin-skill-relations/phase-07-roadmap-consultant-recommendations.md](F12-admin-skill-relations/phase-07-roadmap-consultant-recommendations.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F05](F05-ai-consultant-learning-roadmap/phase-07-roadmap-consultant-recommendations.md) mục 3.
 
 ### P08 – AI Tutor (F08)
 
-**1. Phase Information** — Phase ID: P08 · Objective: phiên hội thoại AI Tutor · Related Features: F08 · Responsible: Tâm (`README.md`) · Support: CXĐ · Reviewer: CPC · Dependencies: P04-T03 · Initial Status: NOT_STARTED
+> Task của tính năng [F08](F08-ai-tutor-chat/phase-08-ai-tutor.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P08 · Objective: phiên hội thoại AI Tutor · Related Features: F08 · Responsible: Tâm (D-OWN-02) · Support: CXĐ · Reviewer: CPC · Dependencies: P04-T03 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: `/api/chat/sessions*`; bảng ChatSession, ChatMessage; trang Tutor. Ngoài: thiết kế mô hình và prompt (P12-T06). Nguồn: `docs/api-endpoints.md` §9; `docs/database-design.md` §5; BA §6.5 (FR-20–23); SRS FR-04–06, FR-08.
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P08-T01 | Rà soát nguồn F08 | Đối chiếu BA FR-20–23, SRS FR-04–06, 08 với §9, §5 | BA §6.5; SRS §3 | Tâm | CXĐ | CPC | — | Ghi chú rà soát | NOT_STARTED | — | — |
-| P08-T02 | Chuẩn bị đặc tả module | AI Tutor | Như trên | Tâm | CXĐ | CPC | P08-T01 | Đề xuất `docs/modules/…` | NOT_STARTED | — | Một phần: ND-59 |
-| P08-T03 | Chuẩn bị test case | Chỉ chủ phiên xem được; xóa = archived | §9; `database-design.md` §5 | Tâm | CXĐ | CPC | P08-T02 | Đề xuất `*.tests.md` | NOT_STARTED | — | — |
-| P08-T04 | Model + migration ChatSession, ChatMessage | `session_id` UUID | §5.1, §5.2 | Tâm | CXĐ | CPC | P01-T05, P04-T04 | Model + migration | NOT_STARTED | — | Một phần: migration chờ Alembic (P01-T05). Class model viết được theo §5 |
-| P08-T05 | API phiên và tin nhắn | Tạo, liệt kê, xem, xóa (archived) phiên; gửi, liệt kê tin nhắn | §9 | Tâm | CXĐ | CPC | P08-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P08-T04; ND-59 (ngữ cảnh, chấm sao, bộ nhớ), ND-54. CRUD phiên (§9) làm được |
-| P08-T06 | Test backend F08 | Theo P08-T03 | `conventions.md` §6 | Tâm | CXĐ | CPC | P08-T05, P01-T08 | Kết quả `pytest` | NOT_STARTED | — | Một phần: chạy test cần P01-T08. Viết test làm được |
-| P08-T07 | API client Tutor | `tutor.api.js` | `structure.md` §1 | Tâm | CXĐ | CPC | P03-T03 | File API | NOT_STARTED | — | — |
-| P08-T08 | Trang AI Tutor | TutorPage | `ui-design` Tutor | Tâm | CXĐ | CPC | P08-T07 | Page | NOT_STARTED | — | Một phần: ND-54 (code/quiz có cấu trúc) |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — API §9; 2 bảng; trang Tutor.
-**5. Review Checklist** — Kiểm quyền chủ phiên; xử lý lỗi AI trả thông báo rõ; không gửi thông tin cá nhân không cần thiết cho dịch vụ AI (BA NFR-31).
-**6. Blockers & Open Issues** — ND-54, ND-59.
-**7. Completion Criteria** — Task không bị chặn DONE.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P08-T01 | Rà soát nguồn F08 | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T02 | Chuẩn bị đặc tả module | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T03 | Chuẩn bị test case | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T04 | Model + migration ChatSession, ChatMessage | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T05 | API phiên và tin nhắn | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T06 | Test backend F08 | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T07 | API client Tutor | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+| P08-T08 | Trang AI Tutor | F08 | [F08-ai-tutor-chat/phase-08-ai-tutor.md](F08-ai-tutor-chat/phase-08-ai-tutor.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F08](F08-ai-tutor-chat/phase-08-ai-tutor.md) mục 3.
 
 ### P09 – Review & Assessment (F09)
 
-**1. Phase Information** — Phase ID: P09 · Objective: bài ôn tập 20 câu theo khóa học, chấm điểm, ghi nhận kỹ năng · Related Features: F09 · Responsible: Tuấn (`README.md`; D-OWN-01) · Support: CXĐ · Reviewer: CPC · Dependencies: P04-T03, P05-T05, P06-T04 · Initial Status: NOT_STARTED
+> Task của tính năng [F09](F09-review-assessment/phase-09-review-assessment.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P09 · Objective: bài ôn tập 20 câu theo khóa học, chấm điểm, ghi nhận kỹ năng · Related Features: F09 · Responsible: Tuấn (D-OWN-01, D-OWN-02) · Support: CXĐ · Reviewer: CPC · Dependencies: P04-T03, P05-T05, P06-T04 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: `/api/courses/{id}/review*`, `/api/review-attempts*`, `/api/me/review-history*`; bảng Question, ReviewAttempt, ReviewAnswer; trang ReviewStart, ReviewQuiz, ReviewResult, ReviewHistory, ReviewDetail (+Explanation). Ngoài: `/api/admin/questions*` (P11, CONFLICT-SCOPE-01); RAG (P12-T07). Nguồn: `docs/modules/review-assessment.md`, `.tests.md`; `docs/api-endpoints.md` §10; `docs/database-design.md` §6; D01–D04, D10; BA §6.6 (FR-24–29).
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P09-T01 | Đối chiếu đặc tả F09 với BA/SRS | So `review-assessment.md` với BA FR-24–29, §8.6, SRS FR-07 | BA §6.6, §8.6; ND-58 | Tuấn | CXĐ | CPC | — | Ghi chú đối chiếu | NOT_STARTED | — | ND-58 (PENDING) |
-| P09-T02 | Model + migration ôn tập | Question, ReviewAttempt, ReviewAnswer | §6; RV-R01 | Tuấn | CXĐ | CPC | P01-T05, P02-T02, P06-T04 | Model + migration | NOT_STARTED | — | Một phần: migration chờ Alembic (P01-T05); cột `submitted_at` chờ ND-31. Class model viết được theo §6 |
-| P09-T03 | Nguồn dữ liệu câu hỏi | Xác định nguồn ngân hàng câu hỏi để có ≥ 20 câu cho khóa học (D04) — **chưa có trong tài liệu** | D04; RV-R02 | Tuấn | CXĐ | CPC | — | Nguồn dữ liệu được xác nhận | NOT_STARTED | — | Nguồn câu hỏi chưa xác định; `/api/admin/questions*` CONFLICT-SCOPE-01 |
-| P09-T04 | `GET /api/courses/{id}/review` | Kiểm tra khóa có bài ôn tập | §4.1; RV-R02 | Tuấn | CXĐ | CPC | P09-T02 | API | NOT_STARTED | — | Một phần: chạy thật cần P09-T02; T16 (☐), ND-28. RV-R02 đã chốt |
-| P09-T05 | `POST …/review-attempts` | Tạo hoặc trả lại bài dở; ghi sẵn 20 câu | §4.2; D03, D04; RV-R04, R06 | Tuấn | CXĐ | CPC | P09-T02 | API | NOT_STARTED | — | Một phần: chạy thật cần P09-T02; T16 (☐), ND-20 (phần dư khi chia câu), ND-29, ND-33. D03, D04 đã chốt |
-| P09-T06 | `GET /api/review-attempts/{id}` | Không trả đáp án trước khi nộp | §4.3; RV-R07 | Tuấn | CXĐ | CPC | P09-T05 | API | NOT_STARTED | — | Một phần: chạy thật cần P09-T05; ND-26. RV-R07 làm được |
-| P09-T07 | `POST …/submit` (một transaction) | Chấm điểm, `completed`, UserSkill `known` | §4.4; §7; D02, D10 | Tuấn | CXĐ | CPC | P09-T05, P04-T04 | API | NOT_STARTED | — | Một phần: chạy thật cần P09-T05; T16 (☐; RV-R10, R13), ND-22, ND-23, ND-24. Chấm điểm RV-R11, D02, transaction §7 làm được |
-| P09-T08 | Email kết quả | Gửi nền sau commit | RV-R18; T29 | Tuấn | CXĐ | CPC | P09-T07, P04-T08 | Email | NOT_STARTED | — | Một phần: ND-25 (gửi khi nào), ND-66 (route trong link); nội dung email chưa thống nhất giữa T29 và `.docx` 6.2 (chưa có ND). Gửi nền sau commit (RV-R18) làm được |
-| P09-T09 | Lịch sử ôn tập | `GET /api/me/review-history*` | §4.5, §4.6 | Tuấn | CXĐ | CPC | P09-T07 | API | NOT_STARTED | — | Một phần: chạy thật cần P09-T07; ND-26, ND-27, ND-34. Phân trang, lọc (T17) làm được |
-| P09-T10 | Test backend F09 | Kịch bản không có cột "Chờ" và không thuộc T16 | `review-assessment.tests.md`; skill `review-assessment` §7 | Tuấn | CXĐ | CPC | P09-T04…T09, P01-T08 | `tests/test_review.py`, kết quả `pytest` | NOT_STARTED | — | Một phần: chạy test cần P01-T08. Viết test cho kịch bản không có cột "Chờ" làm được |
-| P09-T11 | API client ôn tập | `review.api.js`; ngưỡng đạt lấy từ server | D-FE-11 | Tuấn | CXĐ | CPC | P03-T03 | File API | NOT_STARTED | — | — |
-| P09-T12 | Trang Bắt đầu ôn tập | ReviewStartPage | `ui-design` ReviewStart | Tuấn | CXĐ | CPC | P09-T11 | Page | NOT_STARTED | — | Một phần: ND-51, ND-54 |
-| P09-T13 | Trang Làm bài | ReviewAttemptPage | `ui-design` ReviewQuiz | Tuấn | CXĐ | CPC | P09-T11 | Page | NOT_STARTED | — | Một phần: ND-55 (M1 lưu bài dở), ND-54, ND-51 |
-| P09-T14 | Trang Kết quả | ReviewResultPage | `ui-design` ReviewResult | Tuấn | CXĐ | CPC | P09-T11 | Page | NOT_STARTED | — | — |
-| P09-T15 | Trang Lịch sử, Chi tiết lần làm | ReviewHistoryPage, ReviewDetailPage (ẩn/hiện giải thích) | `ui-design` ReviewHistory, ReviewDetail | Tuấn | CXĐ | CPC | P09-T11 | 2 page | NOT_STARTED | — | Một phần: ND-27 |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — API §10; 3 bảng; 6 màn; `test_review.py`.
-**5. Review Checklist** — RV-R01…R20 (trừ phần BLOCKED); không lộ `correct_index`/`explanation` trước khi nộp; transaction nộp bài; frontend không gửi cập nhật kỹ năng sau khi nộp (RV-R20).
-**6. Blockers & Open Issues** — T16; ND-20…34, 58, 66; nguồn câu hỏi; BA §8.6 (RAG).
-**7. Completion Criteria** — Task không bị chặn DONE; test chấm điểm (bắt buộc) DONE.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P09-T01 | Đối chiếu đặc tả F09 với BA/SRS | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T02 | Model + migration ôn tập | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T03 | Nguồn dữ liệu câu hỏi | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T04 | `GET /api/courses/{id}/review` | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T05 | `POST …/review-attempts` | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T06 | `GET /api/review-attempts/{id}` | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T07 | `POST …/submit` (một transaction) | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T08 | Email kết quả | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T09 | Lịch sử ôn tập | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T10 | Test backend F09 | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T11 | API client ôn tập | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T12 | Trang Bắt đầu ôn tập | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T13 | Trang Làm bài | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T14 | Trang Kết quả | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+| P09-T15 | Trang Lịch sử, Chi tiết lần làm | F09 | [F09-review-assessment/phase-09-review-assessment.md](F09-review-assessment/phase-09-review-assessment.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F09](F09-review-assessment/phase-09-review-assessment.md) mục 3.
 
 ### P10 – Feedback (F10, F13)
 
-**1. Phase Information** — Phase ID: P10 · Objective: giao diện phản hồi và quản trị phản hồi; backend khi có quyết định · Related Features: F10, F13 · Responsible: **CPC** (chờ giải quyết C3 — P00-T07) · Support: CXĐ · Reviewer: CPC · Dependencies: P03 (giao diện); ND-35, ND-55, ND-69 (backend) · Initial Status: NOT_STARTED
+> Task của tính năng [F10](F10-feedback/phase-10-feedback.md), [F13](F13-admin-feedback/phase-10-feedback.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P10 · Objective: giao diện phản hồi và quản trị phản hồi; backend khi có quyết định · Related Features: F10, F13 · Responsible: theo từng tính năng — F10: Khôi, F13: Hòa (D-OWN-02) · Support: CXĐ · Reviewer: CPC · Dependencies: P03 (giao diện); ND-35, ND-55, ND-69 (backend) · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: trang Contact, ContactGuest, AdminFeedback, AdminFeedback-Detail ở trạng thái "chưa khả dụng" (D-FE-08); rà soát nguồn. Ngoài: endpoint M2 cho tới khi có quyết định. Nguồn: `docs/database-design.md` §7; `docs/decisions.md` D11, ND-35, ND-55, ND-69; BA §4.1.2 (không có FR riêng); `ui-design`.
 
 **3. Detailed Tasks**
 
-| Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P10-T01 | Rà soát nguồn phản hồi | Tổng hợp D11, ND-35, ND-55, ND-69, BA §4.1.2, §7.1–§7.2 | Như Scope | CPC | CXĐ | CPC | — | Ghi chú rà soát | NOT_STARTED | — | Người phụ trách (C3) |
-| P10-T02 | Chuẩn bị đặc tả module | Chỉ phần đã chốt | Như trên | CPC | CXĐ | CPC | P10-T01 | Đề xuất `docs/modules/…` | NOT_STARTED | — | Một phần: ND-35, ND-55 (M2), ND-69. Đặc tả được phần đã chốt (D11; `database-design.md` §7.1–§7.2) |
-| P10-T03 | Trang Liên hệ và góp ý | FeedbackPage hiển thị "chưa khả dụng" cho phần chưa có endpoint | D-FE-08; `ui-design` Contact | CPC | CXĐ | CPC | P03-T04, P03-T05 | Page | NOT_STARTED | — | Một phần: ND-69 (ô loại phản hồi) |
-| P10-T04 | Trạng thái chưa đăng nhập | ContactGuest | `ui-design` ContactGuest | CPC | CXĐ | CPC | P10-T03 | Trạng thái giao diện | NOT_STARTED | — | Một phần: ND-50 chỉ hỏi về route `/contact-guest`; trạng thái chưa đăng nhập có thể làm trong `/contact` |
-| P10-T05 | Trang Quản trị phản hồi | AdminFeedbackPage, ngăn chi tiết; "chưa khả dụng" | D-FE-08; `ui-design` AdminFeedback | CPC | CXĐ | CPC | P03-T04 | Page | NOT_STARTED | — | Một phần: ND-69, UI2-06 |
-| P10-T06 | Backend phản hồi (M2) | Endpoint gửi, xem liên hệ khóa học, quản trị | ND-55 (M2) | CPC | CXĐ | CPC | P10-T02, P04-T03 | API | BLOCKED | — | ND-35, ND-55, ND-69 |
+Chỉ mục Task đã chuyển:
 
-**4. Deliverables** — Giao diện "chưa khả dụng"; backend sau khi có quyết định.
-**5. Review Checklist** — Không tạo endpoint hay API giả (D-FE-08); không khẳng định danh sách loại phản hồi khi ND-69 chưa chốt.
-**6. Blockers & Open Issues** — C3; D11/ND-69; ND-35; ND-55 (M2); BA thiếu FR.
-**7. Completion Criteria** — Giao diện "chưa khả dụng" DONE; phần backend theo quyết định.
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P10-T01 | Rà soát nguồn phản hồi | F10 | [F10-feedback/phase-10-feedback.md](F10-feedback/phase-10-feedback.md) |
+| P10-T02 | Chuẩn bị đặc tả module | F10 | [F10-feedback/phase-10-feedback.md](F10-feedback/phase-10-feedback.md) |
+| P10-T03 | Trang Liên hệ và góp ý | F10 | [F10-feedback/phase-10-feedback.md](F10-feedback/phase-10-feedback.md) |
+| P10-T04 | Trạng thái chưa đăng nhập | F10 | [F10-feedback/phase-10-feedback.md](F10-feedback/phase-10-feedback.md) |
+| P10-T05 | Trang Quản trị phản hồi | F13 | [F13-admin-feedback/phase-10-feedback.md](F13-admin-feedback/phase-10-feedback.md) |
+| P10-T06 | Backend phản hồi (M2) | F10 | [F10-feedback/phase-10-feedback.md](F10-feedback/phase-10-feedback.md) |
+
+**4–7. Deliverables, Review Checklist, Blockers, Completion Criteria** — chuyển sang [F10](F10-feedback/phase-10-feedback.md) mục 3.
 
 ### P11 – User Roadmap Admin & Related Functionality (F14)
 
-**1. Phase Information** — Phase ID: P11 · Objective: quản trị lộ trình người dùng (F14) và các chức năng quản trị ngoài 14 tính năng · Related Features: F14 · Responsible: Hòa (F14, `README.md`); các Task ngoài F14: CPC · Support: CXĐ · Reviewer: CPC · Dependencies: P03, P07-T04 · Initial Status: NOT_STARTED
+> Task của tính năng [F14](F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
+**1. Phase Information** — Phase ID: P11 · Objective: quản trị lộ trình người dùng (F14) và các chức năng quản trị ngoài 14 tính năng · Related Features: F14 · Responsible: Hòa (F14, D-OWN-02); các Task ngoài F14: CPC · Support: CXĐ · Reviewer: CPC · Dependencies: P03, P07-T04 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: AdminUserPaths; mẫu lộ trình cơ sở (§12); dữ liệu lộ trình lịch sử (§13, tùy chọn); quản trị câu hỏi; AI tư vấn trong bong bóng chat. Nguồn: `README.md` (F14, các màn quản trị khác); `docs/api-endpoints.md` §12, §13; `docs/database-design.md` §4.1–§4.3; ND-53, ND-55; BA §6.7 (FR-34, 35), §6.8 (FR-36–39). Ghi chú: BA không có FR riêng cho F14; `database-design.md` **không có bảng** cho dữ liệu lộ trình lịch sử của §13.
 
 **3. Detailed Tasks**
 
+Task quản lý tại file này (dùng chung hoặc ngoài 14 tính năng):
+
 | Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| P11-T01 | Rà soát nguồn F14 | F14 chỉ có trong README và `ui-design`; không có FR, không có endpoint | `README.md`; ND-55 (M3) | Hòa | CXĐ | CPC | — | Ghi chú rà soát | NOT_STARTED | — | — |
-| P11-T02 | Trang Lộ trình người dùng | AdminUserPathsPage "chưa khả dụng" (D-FE-08) | `ui-design` AdminUserPaths | Hòa | CXĐ | CPC | P03-T04, P07-T14 (PathGraph) | Page | NOT_STARTED | — | Một phần: ND-55 (M3) |
-| P11-T03 | Backend lộ trình người dùng (M3) | Endpoint xem danh sách người dùng và lộ trình | ND-55 (M3) | Hòa | CXĐ | CPC | P07-T04, P04-T03 | API | BLOCKED | — | ND-55 (M3) |
 | P11-T04 | Mẫu lộ trình cơ sở | Bảng §4.1–§4.3, API §12, AdminBasePathsPage | §12; §4.1–§4.3; BA FR-34 | CPC | CXĐ | CPC | P02-T02, P04-T03 | API + page | NOT_STARTED | — | Một phần: chạy thật cần P02-T02, P04-T03; ND-54 (trường `used`). API §12 và bảng §4.1–§4.3 đã có |
 | P11-T05 | Dữ liệu lộ trình lịch sử (tùy chọn) | API §13, AdminHistoricalPage | §13; BA FR-35–39, AC-09 | CPC | CXĐ | CPC | P04-T03 | API + page | BLOCKED | — | Chưa có bảng dữ liệu lịch sử trong `database-design.md` (chưa có ND); định dạng file nhập chưa chốt. (Phân công: Chưa phân công — xem cột Responsible) |
 | P11-T06 | Quản trị câu hỏi | `/api/admin/questions*` (T19–T21) | ND-53; CONFLICT-SCOPE-01 | CPC | CXĐ | CPC | P09-T02 | API + page | BLOCKED | — | ND-53; CONFLICT-SCOPE-01 |
 | P11-T07 | AI tư vấn khóa học trong bong bóng chat | Phần AI của ChatBubble | ND-55 (M4); `ui-design` ChatBubble-Advisor | CPC | CXĐ | CPC | P03-T07 | Component + API | BLOCKED | — | ND-55 (M4); UI2-04 |
+
+Chỉ mục Task đã chuyển:
+
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P11-T01 | Rà soát nguồn F14 | F14 | [F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md](F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md) |
+| P11-T02 | Trang Lộ trình người dùng | F14 | [F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md](F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md) |
+| P11-T03 | Backend lộ trình người dùng (M3) | F14 | [F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md](F14-admin-user-learning-roadmap/phase-11-user-roadmap-admin.md) |
 
 **4. Deliverables** — AdminUserPaths "chưa khả dụng"; các phần khác theo quyết định.
 **5. Review Checklist** — Không tạo endpoint hay bảng chưa có trong tài liệu; giao diện "chưa khả dụng" đúng D-FE-08.
@@ -445,23 +487,32 @@ Các nhánh song song chính: **(A)** P00 ∥ P01 ∥ P03; **(B)** sau P01–P02
 
 ### P12 – AI/ML Work
 
+> Task của tính năng [F05](F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md), [F07](F07-skill-course-recommendation/phase-12-ai-ml.md), [F08](F08-ai-tutor-chat/phase-12-ai-ml.md), [F09](F09-review-assessment/phase-12-ai-ml.md) được quản lý trong thư mục tính năng từ 2026-11-03 (D-DOC-05 (8)). Bảng dưới chỉ là chỉ mục, **không** có trạng thái.
+
 **1. Phase Information** — Phase ID: P12 · Objective: các thành phần AI/ML theo BA §8, chỉ ở phạm vi đã có căn cứ · Related Features: F05, F07 (Consultant, gợi ý), F08 (Tutor), F09 (RAG — chưa thống nhất) · Responsible: CPC · Support: CXĐ · Reviewer: CPC · Dependencies: P07-T05, P07-T08, P08-T05 · Initial Status: NOT_STARTED
 
 **2. Scope** — Trong: ánh xạ BA §8 vào F01–F14; kiểm tra đầu ra AI; xếp hạng gợi ý; đánh giá chất lượng (AC-10). Ngoài: chọn mô hình, công nghệ hay phương pháp chưa được phê duyệt (QLoRA, mô hình cụ thể ở BA §8.2 là **đề xuất của BA**, chưa có D-xx). Nguồn: BA §8.1–§8.8, §7.7, §9, §11.7 (AC-10); SRS §2; `docs/conventions.md` §2 "AI".
 
 **3. Detailed Tasks**
 
+Task quản lý tại file này (dùng chung hoặc ngoài 14 tính năng):
+
 | Task ID | Task Name | Description | Source Reference | Responsible | Support | Reviewer | Dependencies | Deliverable | Status | Evidence | Blocker |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | P12-T01 | Ánh xạ BA §8 vào F01–F14 | Bảng: thành phần §8 → tính năng/endpoint → phần chưa có chỗ trong tài liệu | BA §8; `api-endpoints.md` | CPC | CXĐ | CPC | — | Bảng ánh xạ | NOT_STARTED | — | — |
-| P12-T02 | Đề xuất phương án AI Consultant | Từ BA §8.2 (bao gồm QLoRA §8.2.2) — chỉ đề xuất, chờ nhóm phê duyệt | BA §8.2; SRS FR-03 | CPC | CXĐ | CPC | P12-T01 | Đề xuất gửi P00 | NOT_STARTED | — | Công nghệ chưa phê duyệt; ND-60 |
-| P12-T03 | Kiểm tra đầu ra AI | Kỹ năng AI trả về phải có trong danh mục; kiểm tra trước khi lưu | BA BR-07, FR-38, §8.2.4; `conventions.md` §2 | CPC | CXĐ | CPC | P07-T05 | Hàm kiểm tra + test | NOT_STARTED | — | Một phần: định dạng đầu ra cần P07-T05. Kiểm "kỹ năng phải có trong danh mục" (BR-07, FR-38, `conventions.md` §2) viết được |
-| P12-T04 | Skill Graph | Đối chiếu BA §8.3 với SkillRelation và lộ trình đồ thị | BA §8.3; `database-design.md` §2.4, §4 | CPC | CXĐ | CPC | P12-T01 | Ghi chú đối chiếu | NOT_STARTED | — | Chiều SkillRelation chưa xác nhận |
-| P12-T05 | Xếp hạng gợi ý khóa học | Theo BA §8.4 (lọc ứng viên, đặc trưng, tính điểm) cho `GET …/nodes/{skill_id}/courses` | BA §8.4, FR-14; `api-endpoints.md` §8 | CPC | CXĐ | CPC | P07-T08 | Thuật toán + test | NOT_STARTED | — | Một phần: chạy thật cần P07-T08; ND-61. Các đặc trưng ở BA §8.4 dùng để thiết kế được |
-| P12-T06 | Hành vi AI Tutor | Prompt, ngữ cảnh hội thoại theo BA §8.5, §9.5 | BA §8.5, §9.5; SRS FR-05 | CPC | CXĐ | CPC | P08-T05 | Cấu hình + test | NOT_STARTED | — | Một phần: ND-59. Quy tắc hành vi ở BA §8.5, §9.5 dùng được |
-| P12-T07 | Skill Review bằng RAG | BA §8.6 | BA §8.6; D01; RV-R01 | CPC | CXĐ | CPC | — | — | BLOCKED | — | Mâu thuẫn với D01, RV-R01; ND-58 chưa nhắc RAG (P00-T09) |
 | P12-T08 | Đánh giá chất lượng AI/ML | Tiêu chí và cách đo cho AC-10 | BA §8.7, §11.7 | CPC | CXĐ | CPC | P12-T03, P12-T05 | Báo cáo đánh giá | NOT_STARTED | — | Một phần: đo thật cần P12-T03, P12-T05. Soạn tiêu chí theo AC-10, BA §8.7 làm được |
 | P12-T09 | Dữ liệu cho hệ thống đề xuất | BA §6.8 (FR-36–39), AC-09 | BA §6.8 | CPC | CXĐ | CPC | P11-T05 | Ghi chú | BLOCKED | — | Chưa có bảng dữ liệu lịch sử |
+
+Chỉ mục Task đã chuyển:
+
+| Task ID | Task Name | Feature | Quản lý tại |
+|---|---|---|---|
+| P12-T02 | Đề xuất phương án AI Consultant | F05 | [F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md](F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md) |
+| P12-T03 | Kiểm tra đầu ra AI | F05 | [F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md](F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md) |
+| P12-T04 | Skill Graph | F05 | [F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md](F05-ai-consultant-learning-roadmap/phase-12-ai-ml.md) |
+| P12-T05 | Xếp hạng gợi ý khóa học | F07 | [F07-skill-course-recommendation/phase-12-ai-ml.md](F07-skill-course-recommendation/phase-12-ai-ml.md) |
+| P12-T06 | Hành vi AI Tutor | F08 | [F08-ai-tutor-chat/phase-12-ai-ml.md](F08-ai-tutor-chat/phase-12-ai-ml.md) |
+| P12-T07 | Skill Review bằng RAG | F09 | [F09-review-assessment/phase-12-ai-ml.md](F09-review-assessment/phase-12-ai-ml.md) |
 
 **4. Deliverables** — Bảng ánh xạ; đề xuất kỹ thuật cho nhóm; kiểm tra đầu ra AI; báo cáo đánh giá.
 **5. Review Checklist** — Không tự đưa công nghệ chưa duyệt vào code; đầu ra AI được kiểm tra trước khi lưu (BR-07); dữ liệu gửi dịch vụ AI tối thiểu (NFR-31).
@@ -515,26 +566,27 @@ Loại vấn đề: (1) ND đang PENDING · (2) D đã chốt nhưng còn ND c�
 | Điều kiện ôn tập, câu trống, nộp lần hai | (3) | P09 | T16 (`decisions.md` §3) | Một phần API ôn tập | Nhóm tick T16 | Chưa duyệt (☐) |
 | Endpoint còn thiếu M1–M4 | (1) | P09, P10, P11 | ND-55 (§6) | Giao diện "chưa khả dụng" | Nhóm định nghĩa endpoint | PENDING |
 | Feedback, `feedback_type` | (2) | P10 | D11 đã chốt ("không làm" danh sách loại); ND-35, ND-69 (§4.4) | Chặn backend phản hồi | Nhóm quyết định | ND-35, ND-69 PENDING |
-| Người phụ trách Feedback | (6) | P10 | `decisions.md` §2 ("Chưa rõ: Khôi/Tâm") so với `README.md` (Tâm). Nhãn "C3" không phải ND | P10 chưa có Responsible | P00-T07 | Chưa có ND — đang chờ |
+| Người phụ trách Feedback | (6) | P10 | Đã xử lý: D-OWN-02 (`decisions.md` §2) ghi F10 Khôi, F13 Hòa; `README.md`, `docs/modules/README.md` đã đồng bộ (commit `2133863`). Còn mở: dòng "Feedback & liên hệ (T22–T25)" ở §2 vẫn ghi "Chưa rõ: Khôi/Tâm" (ND-35); quan hệ của dòng này với D-OWN-02 chưa được xác nhận. Nhãn "C3" không phải ND | P10 đã có người phụ trách theo tính năng; dòng Feedback & liên hệ ở §2 chưa thống nhất với D-OWN-02 | P00-T07 | Chưa có ND — đang chờ Tuấn xác nhận |
 | Dữ liệu demo chưa có trong API | (1) | P07–P09, P11 | ND-54 (§6) | Ẩn các trường tương ứng | Nhóm quyết định | PENDING |
 | Câu chữ demo khẳng định quy tắc chưa chốt | (1) | P03, P04, P09 | ND-51 (§6) | Ẩn câu chữ tương ứng | Nhóm quyết định | PENDING |
 | SRS/BA khác D01, D04, RV-R01 | (1) | P09 | ND-58 (§4.2); D01, D04, RV-R01 giữ nguyên | Không làm theo SRS FR-07, BA §10.10 | Nhóm quyết định | PENDING |
 | Skill Review bằng RAG | (4) | P09, P12 | BA §8.6 — chưa ND nào nhắc RAG | P12-T07 không làm | Người có thẩm quyền xem xét (P00-T09) | Chưa có ND — đang chờ |
 | Cấu trúc file cũ, route demo, chuyển hướng quyền | (1) | P03 | ND-49, ND-50, ND-52 (§6) | Một phần route, file | Nhóm quyết định | PENDING |
 | Người phụ trách phần nền, AI/ML, tích hợp; reviewer | (4) | P00–P03, P11, P12, P13 | `README.md` không ghi; workbook CK-42 | Nhiều task Chưa phân công | P00-T06 | Chưa có ND — đang chờ |
-| Thiếu đặc tả module cho 12 tính năng | (5) | P05–P08, P10, P11 | `docs/modules/` chỉ có F01, F09 | Task rà soát và đặc tả đầu mỗi Phase | Người phụ trách tính năng | Thiếu tài liệu |
+| Đặc tả module của 12 tính năng mới ở DRAFT | (5) | P05–P08, P10, P11 | `docs/modules/README.md` (DRAFT từ 2026-11-03, chưa được người phụ trách xác nhận); tài liệu còn thiếu từng tính năng: `plans/Fxx-*/ba-decisions-and-safe-defaults.md` mục C | Task rà soát và đặc tả đầu mỗi Phase | Người phụ trách tính năng | Thiếu tài liệu |
 | Database dùng cho test | (4) | P01 | Không tài liệu nào quy định | Chặn P01-T08 | Nhóm quyết định | Chưa có ND — đang chờ |
 | Quyền truy cập `GET /api/courses*` | (4) | P05 | `api-endpoints.md` §3 chưa ghi; `structure.md` §3 | Một phần P05-T04, P05-T05 | Nhóm quyết định | Chưa có ND — đang chờ |
 | Nội dung email kết quả ôn tập | (6) | P09 | Ghi chú T29 so với `.docx` 6.2 và RV-R18 | Một phần P09-T08 | Nhóm quyết định | Chưa có ND — đang chờ |
 | Dataset không có trong repo | (4) | P02 | `database-design.md` §1 "Nguồn dữ liệu" | Một phần P02-T06 | P02-T05 | Chưa có ND — đang chờ |
 | Nguồn ngân hàng câu hỏi ôn tập | (4) | P09 | D04, RV-R02 (cần ≥ 20 câu) — nguồn chưa có | P09-T03 | Nhóm quyết định | Chưa có ND — đang chờ |
 | Bảng dữ liệu lộ trình lịch sử | (4) | P11, P12 | `api-endpoints.md` §13; `database-design.md` không có bảng | Chặn P11-T05, P12-T09 | Nhóm quyết định | Chưa có ND — đang chờ |
+| Thời điểm lưu lộ trình (F05) | (6) | P07 | BA UC-04 bước 7 và Postconditions ghi lưu khi tạo thành công; `api-endpoints.md` §5, `database-design.md` §4.4 và LP-R01 (`docs/modules/learning-path-consultant.md`) ghi chỉ lưu khi người dùng xác nhận. Chưa có ND (ND-74 không bao gồm điểm này). Chi tiết: [F05](F05-ai-consultant-learning-roadmap/plan.md) mục 4, mục 7 | Một phần P07-T05, P07-T06 (`SOURCE_CONFLICT` — không tự chọn nguồn) | Đề xuất (chưa có mã ND): chủ dự án xem xét lập ND mới | Chưa có ND — đang chờ |
 
 ---
 
 ## PART 7 — PROGRESS SUMMARY
 
-> Cập nhật thủ công khi trạng thái Task thay đổi. Số liệu dưới đây là trạng thái **ban đầu** (chuẩn hóa sau audit ngày 2026-10-30), chưa phải tiến độ thực tế.
+> Cập nhật thủ công khi trạng thái Task thay đổi. Từ 2026-11-03, đếm trên file này **và** các file `plans/Fxx-*/phase-NN-*.md`. Số liệu dưới đây là trạng thái **ban đầu** (chuẩn hóa sau audit ngày 2026-10-30), chưa phải tiến độ thực tế.
 
 | Chỉ số | Giá trị ban đầu |
 |---|---|
@@ -571,3 +623,8 @@ Loại vấn đề: (1) ND đang PENDING · (2) D đã chốt nhưng còn ND c�
 |---|---|---|---|
 | 2026-10-30 | Tạo kế hoạch: 14 Phase, Task ban đầu, trạng thái theo hiện trạng repo | D-DOC-05 | Claude Code (theo yêu cầu của Tuấn) |
 | 2026-10-30 | Chuẩn hóa sau audit: BLOCKED chỉ còn task có phần cốt lõi bị chặn; sửa lý do chặn sai loại, dependency mơ hồ, phân công P00-T04 và P06; PART 6 thêm cột "Loại vấn đề"; ghi kết quả build cho P03-T01; tính lại PART 7 | Audit `plans/plan.md` | Claude Code (theo yêu cầu của Tuấn) |
+| 2026-11-03 | Chuyển Task của 14 tính năng sang `plans/Fxx-*/phase-NN-*.md`, giữ nguyên Task ID, Status, Dependencies, Evidence, Blocker; Responsible của 14 Task đổi theo bảng phân công 2026-11-03 (giá trị cũ ghi trong ngoặc); thêm chỉ mục thư mục tính năng; sửa 2 dòng PART 6 | Tuấn yêu cầu tổ chức kế hoạch theo 14 tính năng; D-DOC-05 (8) | Claude Code (theo yêu cầu của Tuấn) |
+| 2026-11-03 | Phase 10: bỏ "(APPROVED)" ở tiêu đề mục B của 14 file `ba-decisions-and-safe-defaults.md`; ghi người phụ trách F07, F10–F13 theo D-OWN-02, tên workbook V2 chỉ giữ để truy vết; P05, P07, P10 ghi người phụ trách theo từng tính năng; cập nhật P00-T07 và PART 6 (phần còn mở: dòng Feedback ở `docs/decisions.md` §2, ND-35 — chưa giải quyết); đổi 15 ô mức sẵn sàng sang PENDING/CONFLICT/NEEDS_OWNER_INPUT (14 ô PENDING/CONFLICT sau đó được khôi phục ở Phase 13) | Audit Phase 9 (E1–E5) | Claude Code (theo yêu cầu của Tuấn) |
+| 2026-11-03 | Phase 13: áp dụng D-DOC-07 (ghi ở `docs/decisions.md`; skill governance cập nhật) — nhãn mức sẵn sàng chỉ dùng 5 giá trị; `BLOCKED` trong cột mức sẵn sàng đổi thành `NOT_READY_BLOCKED` (24 ô); khôi phục 14 ô PENDING/CONFLICT về `READY_WITH_LIMITATIONS`; 8 ô tiêu chí nghiệm thu chuyển `NEEDS_OWNER_INPUT` kèm câu hỏi; F05, F08, F14 Database chuyển `READY_WITH_LIMITATIONS` (ND-54); viết lại dòng "Ký hiệu"; nguồn người phụ trách chuẩn hóa về D-OWN-01, D-OWN-02 (Phase P04, P06, P08, P09, P11; cột Responsible "D-OWN-02; trước: X"). Chưa hoàn tất: các câu hỏi `NEEDS_OWNER_INPUT` chờ người phụ trách trả lời; `SOURCE_CONFLICT` F05 (BA UC-04 so với API) chờ đề xuất ND | D-DOC-07; báo cáo Phase 12 | Claude Code (theo yêu cầu của Tuấn) |
+| 2026-11-03 | Phase 14: bổ sung người trả lời (D-OWN-02) và câu hỏi cụ thể cho 28 ô `NEEDS_OWNER_INPUT` có từ trước và ô F01 "Quên, đặt lại mật khẩu" (frontend); F01 "Profile — ảnh đại diện" (frontend) đổi `NEEDS_OWNER_INPUT` → `NOT_READY_BLOCKED` (ND-62, ND-12); rà soát 24 ô `NOT_READY_BLOCKED` theo D-DOC-07 — F05 API đổi sang `READY_WITH_LIMITATIONS` (CRUD lộ trình làm được; `POST /api/chat/learning-path` chặn bởi ND-74, P12-T02), các ô còn lại giữ; ghi giải thích cho ô không áp dụng F01 "Tạo admin" (frontend); ghi Phase 10, Phase 13 vào change log. Chưa hoàn tất: các câu hỏi `NEEDS_OWNER_INPUT` chờ người phụ trách trả lời | D-DOC-07; báo cáo Phase 13 | Claude Code (theo yêu cầu của Tuấn) |
+| 2026-11-03 | Phase 15: F01 "Làm mới phiên" (frontend) giữ `NOT_READY_BLOCKED`, ghi chú dẫn ND-41, ND-48 theo D-FE-05; F14 và F10 "Yêu cầu nghiệp vụ" đổi `NEEDS_OWNER_INPUT` → `NOT_READY_BLOCKED` (F14: ND-79; F10: T22–T25 ☐, ND-35 — giữ câu hỏi riêng cho Khôi); F05 giữ `SOURCE_CONFLICT`, ghi rõ vị trí nguồn; kiểm tra lại phân bổ ô `NEEDS_OWNER_INPUT` (API 8, kiểm thử 12, tiêu chí nghiệm thu 5, yêu cầu nghiệp vụ 3). Không đổi trạng thái D/ND/T và Task. Chưa hoàn tất: `SOURCE_CONFLICT` F05 chờ chủ dự án xem xét đề xuất ND mới | Báo cáo Phase 14 | Claude Code (theo yêu cầu của Tuấn) |
