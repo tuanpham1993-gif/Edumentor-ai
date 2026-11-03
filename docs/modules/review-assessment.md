@@ -31,6 +31,29 @@ Bài ôn tập tính **theo khóa học** (D01): 20 câu trắc nghiệm lấy t
 - Cập nhật `LearningPath.status` (T18) — module Learning Path, `[ND-24]`.
 - Các endpoint cũ `/api/skills/{skill_id}/review*` — **đã bỏ** (T11). Không implement.
 
+**Người phụ trách:** Tuấn (D-OWN-01; workbook V2). Mục lục các tính năng: `docs/modules/README.md`.
+
+### Yêu cầu (căn cứ BA)
+
+Mã yêu cầu `RV-YCnn`. Khi BA khác `docs/decisions.md`, theo `decisions.md` (D-DOC-01).
+
+| Mã | Yêu cầu | Nguồn BA | Quyết định |
+|---|---|---|---|
+| RV-YC01 | Người dùng chủ động yêu cầu bài đánh giá; câu hỏi liên quan đến nội dung được đánh giá | FR-24; UC-09 | **BA khác:** BA tính bài theo kỹ năng; theo D01, T11 bài tính theo khóa học (ND-58) |
+| RV-YC02 | Hỗ trợ các dạng câu hỏi trong phạm vi triển khai | FR-25 | Chỉ trắc nghiệm (RV-R01); câu mở, câu lập trình: ND-73 |
+| RV-YC03 | Chấm câu trắc nghiệm theo đáp án đã lưu; câu mở theo tiêu chí | FR-26; BR-28; BR-29 | RV-R09 … RV-R11; câu mở: ND-73 |
+| RV-YC04 | Hiển thị điểm và phản hồi sau khi hoàn thành | FR-27; BR-30 | RV-R18; ND-25 |
+| RV-YC05 | Lưu kết quả và cho xem lại lịch sử | FR-28; UC-10 | T17. **BA khác:** BA liên kết kết quả với kỹ năng; theo D01 kết quả gắn với khóa học |
+| RV-YC06 | Tính điểm trung bình từ kết quả hợp lệ | FR-29; BR-31 | ND-73 |
+| RV-YC07 | Đánh giá là tự nguyện, không chặn việc học | BR-26 | — |
+| RV-YC08 | Câu hỏi phù hợp kỹ năng và đạt tiêu chí chất lượng | BR-27 | D04 |
+| RV-YC09 | Truy xuất câu hỏi bằng RAG | §8.6 | **BA khác:** theo D04, T14 lấy câu `is_active` từ CSDL (ND-58) |
+| RV-YC10 | AI sinh 10 câu hỏi | Không có trong BA; chỉ có ở đề bài SRS v1.0 FR-07 | ND-58, ND-81: giữ 20 câu lấy từ CSDL |
+
+### Màn hình UI
+
+`docs/ui-design/` (D-FE-12), chỉ mô tả giao diện: ReviewStart (`/courses/:courseId/review`), ReviewQuiz (`/courses/:courseId/review/attempt`; lưu bài dở chưa có endpoint — ND-55, M1), ReviewResult (`/review-result/:attemptId`), ReviewHistory (`/me/review-history`), ReviewDetail, ReviewDetail-Explanation (`/me/review-history/:attemptId`). Endpoint từng màn: `docs/ui-design/pages.json`. Câu chữ UI khẳng định quy tắc chưa chốt: ND-51.
+
 ---
 
 ## 2. File liên quan

@@ -35,6 +35,7 @@ Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu v
 | Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
 | Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
 | Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
+| Đặc tả các tính năng khác F02–F14 và phần ngoài 14 (DRAFT, chưa được người phụ trách xác nhận); mục lục và người phụ trách | `docs/modules/README.md` |
 | Giao diện | `docs/ui-design/` (D-FE-12): prototype tĩnh 41 màn, không phải nguồn quy tắc API hay nghiệp vụ, có màn không có nghĩa là đã triển khai. `EduMentor AI Demo.html` (ngoài repo) chỉ để tra giá trị CSS/motion. `docs/wireframes/`, `docs/EduMentor-UI-design/` đã bị xóa (còn trong lịch sử Git) |
 | Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
 | Báo cáo đối chiếu frontend với demo (lịch sử, 28/10/2026 — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng) | `docs/ui-animation/` |

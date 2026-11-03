@@ -2,6 +2,8 @@
 
 > **Cảnh báo (2026-11-02):** ma trận này được dựng từ bản SRS v2.0 do AI hiệu đính (`archive/2026-11-reset/sources-not-selected/`), không phải bản gốc hiện ở `docs/`. Mã yêu cầu không đổi, nhưng các câu trích và Q-23 có thể lệch. Sẽ dựng lại ở phase sau.
 
+Ánh xạ yêu cầu BA → tính năng → file đặc tả: bảng "Yêu cầu" trong từng file của `docs/modules/` (mục lục: [`modules/README.md`](modules/README.md)).
+
 **Cập nhật:** 2026-11-01. **Phương pháp:** tạo lại từ [BA](EdumentorAi_BA.md) §6, các bảng trong [SRS v2.0](EduMentor_AI_SRS_v2.0.docx), [`decisions.md`](decisions.md) và kiểm tra trực tiếp UI Demo ([`ui-design/SCREEN-INVENTORY.md`](ui-design/SCREEN-INVENTORY.md)); không lấy từ báo cáo audit cũ.
 
 File này chỉ để đối chiếu, không chứa quy tắc. "Phù hợp" nghĩa là có căn cứ và có giao diện tương ứng, không có nghĩa là đã có API hay đã kiểm thử: backend chưa có code. Nội dung PENDING vẫn chờ quyết định.

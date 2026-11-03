@@ -112,6 +112,7 @@ Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi
 | [docs/structure.md](docs/structure.md) | Cấu trúc thư mục, ánh xạ endpoint → file, route frontend |
 | [docs/conventions.md](docs/conventions.md) | Quy ước API, mã nguồn, Git, kiểm thử |
 | [docs/api-endpoints.md](docs/api-endpoints.md) | Đặc tả endpoint |
+| [docs/modules/](docs/modules/README.md) | Đặc tả theo tính năng F01–F14 và phần ngoài 14 tính năng; F01, F09 đã xác nhận, còn lại DRAFT |
 | [docs/database-design.md](docs/database-design.md) | Thiết kế cơ sở dữ liệu |
 | [docs/decisions.md](docs/decisions.md) | Quyết định đã chốt và các điểm còn cần quyết định; thứ tự ưu tiên nguồn tài liệu (D-DOC-01) |
 | [docs/EdumentorAi_BA.md](docs/EdumentorAi_BA.md) | BA — nguồn yêu cầu nghiệp vụ, căn cứ nghiệm thu (D-DOC-01) |

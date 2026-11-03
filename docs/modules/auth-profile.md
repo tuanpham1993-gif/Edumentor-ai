@@ -26,6 +26,29 @@ Mã quy tắc `AP-Rxx` dùng để tham chiếu từ `auth-profile.tests.md` và
 - `/api/me/learning-paths` — module Learning Path.
 - Tạo tài khoản admin — `scripts/create_admin.py`, không qua API.
 
+**Người phụ trách:** Tuấn (D-OWN-01; workbook V2). Mục lục các tính năng: `docs/modules/README.md`.
+
+### Yêu cầu (căn cứ BA)
+
+Mã yêu cầu `AP-YCnn`. Khi BA khác `docs/decisions.md`, theo `decisions.md` (D-DOC-01).
+
+| Mã | Yêu cầu | Nguồn BA | Quyết định |
+|---|---|---|---|
+| AP-YC01 | Đăng ký tài khoản; kiểm tra dữ liệu, chặn trùng thông tin định danh | FR-01; UC-01 | T09, D-AUTH-05; ND-37, ND-47 |
+| AP-YC02 | Đăng nhập, đăng xuất | FR-02; UC-01 | D-AUTH-01 … D-AUTH-03; ND-48, ND-78 |
+| AP-YC03 | Xem, cập nhật thông tin cá nhân | FR-03; UC-02 | **BA khác:** BA gồm thông tin mục tiêu nghề nghiệp; `User` không có cột này và `PATCH /api/me` chỉ nhận `full_name`, `avatar_url` (T04) — ND-10 |
+| AP-YC04 | Quản lý kỹ năng hiện có, đối chiếu danh mục kỹ năng | FR-04; UC-02 | T06, T07; ND-57, ND-64 |
+| AP-YC05 | Cấp và xác thực access token, kiểm tra quyền | FR-44 | D-AUTH-01, D-AUTH-02 |
+| AP-YC06 | Dùng refresh token để cấp access token mới; từ chối token hết hạn, không hợp lệ | FR-45 | D-AUTH-03; ND-40 … ND-43 |
+| AP-YC07 | Làm mới token, vô hiệu hóa refresh token khi đăng xuất, xoay vòng | FR-46 | D-AUTH-03; ND-42, ND-48 |
+| AP-YC08 | Quên, đặt lại, đổi mật khẩu | Không có FR riêng; BA §10.2 chưa liệt kê | D09, T01 … T03; ND-76 |
+| AP-YC09 | Ảnh đại diện, số liệu tổng hợp trang hồ sơ | BA §10.2 chưa liệt kê | D07, T04, T05; ND-12, ND-13, ND-62, ND-76 |
+| AP-YC10 | Bảo mật xác thực, lưu trữ và thời hạn token, chống tái sử dụng token | NFR-04, NFR-37 … NFR-39 | D-AUTH-02 … D-AUTH-04 |
+
+### Màn hình UI
+
+`docs/ui-design/` (D-FE-12), chỉ mô tả giao diện: Main, Main-LampOff (`/login`), Register (`/register`), ForgotPassword, ForgotSent, ResetPassword, ResetExpired, Profile, Profile-Light (`/me`), EditProfile (`/me/edit`), ChangePassword (`/me/password`), Skills (`/me/skills`), Logout (`/logout`, ND-50). Endpoint từng màn: `docs/ui-design/pages.json`. Câu chữ UI khẳng định quy tắc chưa chốt: ND-51; trang Đăng ký: ND-56.
+
 ---
 
 ## 2. File liên quan

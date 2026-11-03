@@ -35,6 +35,23 @@ edumentor-ai/
 │           └── SKILL.md                             # ✅ Bản sao cho Codex — cũ
 ├── docs/
 │   ├── modules/
+│   │   ├── README.md                                # ✅ Mục lục 14 tính năng và người phụ trách
+│   │   ├── course-catalog.md                        # ✅ F02 Danh mục khóa học (DRAFT)
+│   │   ├── course-bookmark.md                       # ✅ F03 Lưu khóa học (DRAFT)
+│   │   ├── course-tracking.md                       # ✅ F04 Theo dõi tiến trình (DRAFT)
+│   │   ├── learning-path-consultant.md              # ✅ F05 AI Consultant, lộ trình (DRAFT)
+│   │   ├── learning-path-graph.md                   # ✅ F06 Node và cạnh (DRAFT)
+│   │   ├── skill-course-recommendation.md           # ✅ F07 Gợi ý khóa học (DRAFT)
+│   │   ├── ai-tutor.md                              # ✅ F08 AI Tutor (DRAFT)
+│   │   ├── feedback.md                              # ✅ F10 Phản hồi (DRAFT)
+│   │   ├── admin-course-skill.md                    # ✅ F11 Quản trị khóa học, kỹ năng (DRAFT)
+│   │   ├── admin-skill-relation.md                  # ✅ F12 Quản trị quan hệ kỹ năng (DRAFT)
+│   │   ├── admin-feedback.md                        # ✅ F13 Quản trị phản hồi (DRAFT)
+│   │   ├── admin-user-paths.md                      # ✅ F14 Quản trị lộ trình người dùng (DRAFT)
+│   │   ├── admin-question-bank.md                   # ✅ Ngân hàng câu hỏi, ngoài 14 (DRAFT)
+│   │   ├── admin-base-paths.md                      # ✅ Mẫu lộ trình, ngoài 14 (DRAFT)
+│   │   ├── admin-historical-data.md                 # ✅ Dữ liệu lịch sử, ngoài 14 (DRAFT)
+│   │   ├── chat-advisor.md                          # ✅ Bong bóng chat, ngoài 14 (DRAFT)
 │   │   ├── auth-profile.md                          # ✅ Đặc tả + API contract Xác thực & Hồ sơ
 │   │   ├── auth-profile.tests.md                    # ✅ Kịch bản kiểm thử
 │   │   ├── review-assessment.md                     # ✅ Đặc tả + API contract Ôn tập & Đánh giá

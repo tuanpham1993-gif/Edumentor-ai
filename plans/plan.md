@@ -58,7 +58,7 @@
    Phase DONE khi mọi Task bắt buộc DONE và có kết quả review. Phase có Task BLOCKED vẫn có thể IN_PROGRESS nếu Task độc lập còn tiếp tục.
 6. **Bằng chứng (Evidence):** commit hash, đường dẫn PR, đường dẫn file, kết quả `pytest`/build, ảnh chụp màn hình, mục trong báo cáo lỗi. Không ghi DONE chỉ vì "đã có code" hoặc "đã có commit".
 7. **Blocker và vấn đề chưa quyết định:** ghi mã ND/T; ghi rõ phần nào **vẫn làm được**. Không tự chọn phương án cho ND đang chờ. Phát hiện thiếu hoặc mâu thuẫn tài liệu → báo người có thẩm quyền đề xuất ND trong `docs/decisions.md` (không sửa trong file này).
-8. **Đặc tả và test còn thiếu:** chỉ F01 và F09 có `docs/modules/*.md` và `*.tests.md`. Các Phase còn lại có Task "rà soát nguồn", "chuẩn bị đặc tả module", "chuẩn bị test case"; expected result chỉ lấy từ nguồn đã có, không tự đặt.
+8. **Đặc tả và test còn thiếu:** chỉ F01 và F09 có đặc tả đã xác nhận và `*.tests.md`. Các tính năng còn lại và phần ngoài 14 tính năng có đặc tả **DRAFT** (`docs/modules/README.md`, 2026-11-03), chưa được người phụ trách xác nhận, chưa có `*.tests.md`. Các Phase còn lại có Task "rà soát nguồn", "chuẩn bị đặc tả module", "chuẩn bị test case"; expected result chỉ lấy từ nguồn đã có, không tự đặt.
 9. **Kiểm thử frontend và responsive:** quy tắc cụ thể chờ **ND-67**, **ND-68** (PENDING). Không tự chọn công cụ, coverage hay breakpoint.
 
 Viết tắt dùng trong bảng: CPC = Chưa phân công; CXĐ = Chưa xác định.

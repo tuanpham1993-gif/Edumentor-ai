@@ -6,6 +6,8 @@
 - Ôn tập & Đánh giá kiến thức (`docs/modules/review-assessment.md`)
 - Frontend đồng bộ theo bản demo, 14 tính năng (mục 6)
 
+Điểm chưa chốt của các tính năng khác được ghi ở mục 4.4 và mục 6; đặc tả DRAFT của chúng ở `docs/modules/README.md`.
+
 Các tài liệu khác chỉ tham chiếu mã (`D05`, `T13`, `ND-24`…), không chép lại nội dung. Khi một `ND-xx` được chốt: chuyển nó sang mục 2, sửa tài liệu bị ảnh hưởng, rồi mới code.
 
 ---

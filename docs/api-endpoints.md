@@ -55,6 +55,8 @@
 
 ## 3. Danh mục khóa học
 
+> Đặc tả tính năng: `docs/modules/course-catalog.md` (F02).
+
 | Method | Endpoint | Mô tả |
 |---|---|---|
 | GET | `/api/courses` | Lấy danh mục khóa học. |
@@ -71,6 +73,8 @@ Có thể kết hợp nhiều bộ lọc và tùy chọn sắp xếp bằng các
 ---
 
 ## 4. Lưu khóa học và theo dõi trạng thái
+
+> Đặc tả tính năng: `docs/modules/course-bookmark.md` (F03), `docs/modules/course-tracking.md` (F04).
 
 EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 
@@ -104,6 +108,8 @@ EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 
 ## 5. Tạo lộ trình học tập và AI Consultant
 
+> Đặc tả tính năng: `docs/modules/learning-path-consultant.md` (F05).
+
 Lộ trình học tập được tạo thông qua cuộc hội thoại với AI Consultant. Mô hình diễn giải mục tiêu của người dùng, trong khi backend chịu trách nhiệm ánh xạ kỹ năng, mở rộng các quan hệ liên quan, tham khảo những lộ trình lịch sử tương tự và lưu lộ trình kết quả.
 
 | Method | Endpoint | Mô tả |
@@ -128,6 +134,8 @@ Nếu người dùng chỉ thực hiện các thay đổi nhỏ, hệ thống n�
 ---
 
 ## 6. Các node trong lộ trình học tập
+
+> Đặc tả tính năng §6, §7: `docs/modules/learning-path-graph.md` (F06).
 
 Mỗi node đại diện cho một kỹ năng thuộc một lộ trình học tập cụ thể.
 
@@ -175,6 +183,8 @@ Các cạnh đại diện cho mối liên kết giữa những node kỹ năng t
 
 ## 8. Gợi ý khóa học theo kỹ năng trong lộ trình
 
+> Đặc tả tính năng: `docs/modules/skill-course-recommendation.md` (F07).
+
 Hệ thống chỉ truy xuất gợi ý khi người dùng chọn một node kỹ năng, thay vì tự động gợi ý khóa học cho tất cả node ngay khi tạo lộ trình.
 
 | Method | Endpoint | Mô tả |
@@ -197,6 +207,8 @@ API không nên xem điểm đánh giá cao là bằng chứng duy nhất cho th
 ---
 
 ## 9. Chat với AI Tutor
+
+> Đặc tả tính năng: `docs/modules/ai-tutor.md` (F08).
 
 AI Tutor duy trì ngữ cảnh hội thoại trong từng phiên và hỗ trợ giải thích kiến thức, gỡ lỗi và tạo bài tập củng cố.
 
@@ -261,6 +273,8 @@ Chính sách: làm lại **không giới hạn** *(D03)*; điểm đạt **60%**
 
 ## 11. Quản trị — Danh mục khóa học và kỹ năng
 
+> Đặc tả tính năng: `docs/modules/admin-course-skill.md` (F11), `docs/modules/admin-skill-relation.md` (F12), `docs/modules/admin-question-bank.md` (câu hỏi, ngoài 14 tính năng).
+
 | Method | Endpoint | Mô tả |
 |---|---|---|
 | GET | `/api/admin/courses` | Lấy danh sách khóa học để quản trị. |
@@ -291,6 +305,8 @@ Các endpoint quản trị chỉ được phép sử dụng bởi quản trị v
 ---
 
 ## 12. Quản trị admin — Lộ trình học tập cơ bản (Base Learning Paths)
+
+> Đặc tả: `docs/modules/admin-base-paths.md`.
 
 Base learning path là các mẫu lộ trình có thể tái sử dụng, mô tả những kỹ năng mục tiêu ban đầu và mối quan hệ giữa chúng cho các mục tiêu phổ biến. Chúng giúp AI Consultant tạo ra điểm xuất phát nhất quán trước khi mở rộng lộ trình bằng đồ thị kỹ năng chung và các lộ trình lịch sử tương tự.
 
@@ -328,6 +344,8 @@ Mẫu lộ trình cơ sở cung cấp điểm xuất phát có thể tái sử d
 ---
 
 ## 13. Quản trị — Dữ liệu lộ trình học tập lịch sử (tùy chọn)
+
+> Đặc tả: `docs/modules/admin-historical-data.md`.
 
 Các endpoint này không bắt buộc đối với phiên bản thử nghiệm ban đầu, nhưng hữu ích nếu quản trị viên cần kiểm tra hoặc nhập dữ liệu lịch sử phục vụ Collaborative Filtering.
 
