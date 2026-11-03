@@ -56,6 +56,7 @@ Bốn bảng này được thiết kế đúng theo 4 file dataset: giữ nguyê
 |---|---|---|---|
 | `skill_id` | INT | PK | Mã số của kỹ năng (giữ nguyên mã trong dataset) |
 | `skill` | VARCHAR(255) | NN, UQ | Tên kỹ năng, ví dụ "web interactivity". Không được trùng tên |
+| `is_active` | BOOLEAN | NN, DEFAULT TRUE | Trạng thái kĩ năng đang sống hay chết|
 
 ### 2.3. `CourseSkillRelation` (từ course_skill_relation)
 
