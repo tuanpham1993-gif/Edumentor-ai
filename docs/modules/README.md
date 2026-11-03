@@ -2,7 +2,7 @@
 
 Mục lục các file đặc tả trong `docs/modules/`. Mỗi file dẫn xuất từ BA (`docs/EdumentorAi_BA.md`, bản Git HEAD) theo thứ tự ưu tiên D-DOC-01 (`docs/decisions.md` §1). Khi BA khác `docs/decisions.md`, đặc tả viết theo `decisions.md` và ghi "BA khác".
 
-Người phụ trách lấy theo workbook chính thức (`EduMentor_AI_Ke_Hoach_14_Tinh_Nang_UPDATED_V2.xlsx`, sổ nguồn ở `docs/decisions.md` §1). Chỗ các nguồn ghi khác nhau thì ghi **Chờ nhóm chốt**. Bảng này chỉ là mục lục; phân công chính thức của hai module có quyết định riêng ở `docs/decisions.md` §2 (D-OWN-01).
+Người phụ trách 14 tính năng lấy theo D-OWN-02 (`docs/decisions.md` §2); hai module của Tuấn còn có D-OWN-01. Workbook V2 (`EduMentor_AI_Ke_Hoach_14_Tinh_Nang_UPDATED_V2.xlsx`, sổ nguồn ở `docs/decisions.md` §1) ghi khác ở F07 (Hòa), F10 (Tâm), F11 (Khôi), F12 (Hòa), F13 (Tâm) — workbook không phải nguồn quyết định; các tên đó chỉ giữ để truy vết. Phần chưa có quyết định mà các nguồn ghi khác nhau thì ghi **Chờ nhóm chốt**. Bảng này chỉ là mục lục.
 
 Quy ước trạng thái: `docs/decisions.md` §2. **DRAFT** = bản soạn từ nguồn, chưa được người phụ trách xác nhận. Không dùng "DONE" cho phần chưa có code.
 
@@ -16,13 +16,13 @@ Quy ước trạng thái: `docs/decisions.md` §2. **DRAFT** = bản soạn từ
 | F04 | Theo dõi tiến trình khóa học | Hòa | [course-tracking.md](course-tracking.md) | DRAFT | Chưa có |
 | F05 | AI Consultant và lộ trình học tập | Hòa | [learning-path-consultant.md](learning-path-consultant.md) | DRAFT | Chưa có |
 | F06 | Node và cạnh trong lộ trình | Hòa | [learning-path-graph.md](learning-path-graph.md) | DRAFT | Chưa có |
-| F07 | Gợi ý khóa học theo kỹ năng | Hòa | [skill-course-recommendation.md](skill-course-recommendation.md) | DRAFT | Chưa có |
+| F07 | Gợi ý khóa học theo kỹ năng | Tâm | [skill-course-recommendation.md](skill-course-recommendation.md) | DRAFT | Chưa có |
 | F08 | AI Tutor | Tâm | [ai-tutor.md](ai-tutor.md) | DRAFT | Chưa có |
 | F09 | Ôn tập và đánh giá kiến thức | Tuấn | [review-assessment.md](review-assessment.md) | SPEC CONFIRMED (còn BLOCKED/PENDING) | [review-assessment.tests.md](review-assessment.tests.md) |
-| F10 | Phản hồi | Chờ nhóm chốt (workbook: Tâm) | [feedback.md](feedback.md) | DRAFT, chưa có căn cứ BA | Chưa có |
-| F11 | Quản trị khóa học, kỹ năng | Khôi; endpoint kỹ năng: Chờ nhóm chốt | [admin-course-skill.md](admin-course-skill.md) | DRAFT | Chưa có |
-| F12 | Quản trị quan hệ kỹ năng | Hòa | [admin-skill-relation.md](admin-skill-relation.md) | DRAFT | Chưa có |
-| F13 | Quản trị phản hồi | Chờ nhóm chốt (workbook: Tâm) | [admin-feedback.md](admin-feedback.md) | DRAFT, căn cứ BA rất ít | Chưa có |
+| F10 | Phản hồi | Khôi | [feedback.md](feedback.md) | DRAFT, chưa có căn cứ BA | Chưa có |
+| F11 | Quản trị khóa học, kỹ năng | Hòa | [admin-course-skill.md](admin-course-skill.md) | DRAFT | Chưa có |
+| F12 | Quản trị quan hệ kỹ năng | Tâm | [admin-skill-relation.md](admin-skill-relation.md) | DRAFT | Chưa có |
+| F13 | Quản trị phản hồi | Hòa | [admin-feedback.md](admin-feedback.md) | DRAFT, căn cứ BA rất ít | Chưa có |
 | F14 | Quản trị lộ trình người dùng | Hòa; một phần: Chờ nhóm chốt | [admin-user-paths.md](admin-user-paths.md) | DRAFT, chưa có căn cứ BA | Chưa có |
 
 ## Ngoài 14 tính năng

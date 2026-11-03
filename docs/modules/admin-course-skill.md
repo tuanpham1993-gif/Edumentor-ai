@@ -10,7 +10,7 @@ Mã yêu cầu `AD-YCnn`, mã quy tắc `AD-Rnn`.
 
 ## 1. Phạm vi
 
-**Người phụ trách:** Khôi (workbook V2). Bốn endpoint kỹ năng (EP-063 … EP-066) được ghi Khôi ở sheet đối chiếu endpoint, nhưng màn AdminSkills ghi Hòa: **Chờ nhóm chốt**. · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
+**Người phụ trách:** Hòa (D-OWN-02; workbook V2 ghi Khôi, kể cả bốn endpoint kỹ năng EP-063 … EP-066 — workbook không phải nguồn quyết định). · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
 
 **Mô tả:** Admin quản lý danh mục khóa học, danh mục kỹ năng và liên kết giữa khóa học với kỹ năng — dữ liệu nền dùng cho danh mục, gợi ý, lộ trình và ôn tập.
 

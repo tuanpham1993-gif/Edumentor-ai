@@ -10,7 +10,7 @@ Mã yêu cầu `FB-YCnn`, mã quy tắc `FB-Rnn`.
 
 ## 1. Phạm vi
 
-**Người phụ trách:** **Chờ nhóm chốt** — workbook V2 ghi Tâm; `docs/decisions.md` §2 ghi chưa rõ (Khôi hay Tâm, ND-35). · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
+**Người phụ trách:** Khôi (D-OWN-02; workbook V2 ghi Tâm — workbook không phải nguồn quyết định). Dòng Feedback & liên hệ ở `docs/decisions.md` §2 (ND-35) chưa được đối chiếu với D-OWN-02. · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
 
 **Mô tả:** Trang "Liên hệ & góp ý": người dùng đã đăng nhập gửi phản hồi về một khóa học hoặc về hệ thống, và xem thông tin liên hệ của khóa học.
 

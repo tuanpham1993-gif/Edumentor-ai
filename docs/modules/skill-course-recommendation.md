@@ -10,7 +10,7 @@ Mã yêu cầu `RC-YCnn`, mã quy tắc `RC-Rnn`.
 
 ## 1. Phạm vi
 
-**Người phụ trách:** Hòa (workbook V2) · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
+**Người phụ trách:** Tâm (D-OWN-02; workbook V2 ghi Hòa — workbook không phải nguồn quyết định) · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
 
 **Mô tả:** Khi người dùng chọn một node kỹ năng trên lộ trình, hệ thống hiển thị thông tin kỹ năng, truy xuất các khóa học liên quan, xếp hạng theo độ phù hợp và trả liên kết tới trang khóa học ngoài. Giải pháp gợi ý: BA §8.4.
 

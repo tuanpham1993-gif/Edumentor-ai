@@ -10,7 +10,7 @@ Mã yêu cầu `AF-YCnn`, mã quy tắc `AF-Rnn`.
 
 ## 1. Phạm vi
 
-**Người phụ trách:** **Chờ nhóm chốt** — workbook V2 ghi Tâm; `docs/decisions.md` §2 ghi người phụ trách phản hồi chưa rõ (ND-35). · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
+**Người phụ trách:** Hòa (D-OWN-02; workbook V2 ghi Tâm — workbook không phải nguồn quyết định). Dòng Feedback & liên hệ ở `docs/decisions.md` §2 (ND-35) chưa được đối chiếu với D-OWN-02. · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
 
 **Mô tả:** Admin xem phản hồi của học viên, lọc theo đối tượng, loại và thời gian, sắp xếp theo thời gian, xem chi tiết một phản hồi.
 

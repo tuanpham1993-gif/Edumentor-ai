@@ -10,7 +10,7 @@ Mã yêu cầu `SR-YCnn`, mã quy tắc `SR-Rnn`.
 
 ## 1. Phạm vi
 
-**Người phụ trách:** Hòa (workbook V2) · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
+**Người phụ trách:** Tâm (D-OWN-02; workbook V2 ghi Hòa — workbook không phải nguồn quyết định) · **Đặc tả:** DRAFT · **Implementation:** NOT IMPLEMENTED
 
 **Mô tả:** Admin quản lý quan hệ dùng chung giữa các kỹ năng (tiên quyết, mở rộng, liên quan). Đồ thị này được dùng để mở rộng lộ trình. Màn quản trị mở sơ đồ quan hệ khi bấm một kỹ năng.
 

@@ -13,13 +13,14 @@ Nền tảng cố vấn học tập cá nhân hóa: tạo lộ trình học theo
 | 02 | Danh mục khóa học | Tìm kiếm, lọc theo kỹ năng/cấp độ, sắp xếp theo đánh giá. Khóa học dẫn tới nền tảng MOOC bên ngoài. | Khôi |
 | 03 | Đánh dấu (bookmark) | Lưu khóa học để học sau. | Tâm |
 | 04 | Theo dõi tiến trình | Bốn trạng thái `bookmarked`, `ongoing`, `completed`, `abandoned`; đề xuất khóa học theo node của lộ trình. | Hòa |
-| 05–07 | AI Consultant, lộ trình, node/cạnh | Trò chuyện về mục tiêu để nhận lộ trình dạng đồ thị kỹ năng. Thêm/xóa node và cạnh, chọn node để xem khóa học gợi ý. | Hòa |
+| 05–06 | AI Consultant, lộ trình, node/cạnh | Trò chuyện về mục tiêu để nhận lộ trình dạng đồ thị kỹ năng. Thêm/xóa node và cạnh. | Hòa |
+| 07 | Gợi ý khóa học theo kỹ năng | Chọn node để xem khóa học gợi ý. | Tâm |
 | 08 | AI Tutor | Giải thích kiến thức, ví dụ mã, phân tích lỗi, tạo câu trắc nghiệm củng cố. | Tâm |
 | 09 | Ôn tập | Bài 20 câu trắc nghiệm **theo khóa học**, lấy từ các kỹ năng mà khóa học dạy; làm **đạt** (≥ 60%) sẽ đánh dấu khóa học `completed` và ghi nhận các kỹ năng đó. Xem lại đáp án, ẩn/hiện giải thích. | Tuấn |
-| 10 | Phản hồi | Trang "Liên hệ & góp ý": gửi phản hồi về một khóa học hoặc về hệ thống, xem liên hệ của khóa học. | Tâm |
-| 11 | Quản trị khóa học, kỹ năng | Khóa học, kỹ năng, liên kết khóa học ↔ kỹ năng. | Khôi |
-| 12 | Quản trị quan hệ kỹ năng | Sơ đồ quan hệ giữa các kỹ năng (mở bằng cách bấm một kỹ năng). | Hòa |
-| 13 | Quản trị phản hồi | Xem, lọc phản hồi theo loại, đối tượng và thời gian; sắp xếp theo thời gian. | Tâm |
+| 10 | Phản hồi | Trang "Liên hệ & góp ý": gửi phản hồi về một khóa học hoặc về hệ thống, xem liên hệ của khóa học. | Khôi |
+| 11 | Quản trị khóa học, kỹ năng | Khóa học, kỹ năng, liên kết khóa học ↔ kỹ năng. | Hòa |
+| 12 | Quản trị quan hệ kỹ năng | Sơ đồ quan hệ giữa các kỹ năng (mở bằng cách bấm một kỹ năng). | Tâm |
+| 13 | Quản trị phản hồi | Xem, lọc phản hồi theo loại, đối tượng và thời gian; sắp xếp theo thời gian. | Hòa |
 | 14 | Quản trị lộ trình người dùng | Xem (chỉ đọc) lộ trình và tiến độ kỹ năng của từng người dùng. | Hòa |
 
 Ngoài 14 tính năng, giao diện quản trị còn có Mẫu lộ trình cơ sở và Dữ liệu lịch sử (§12–§13 của `docs/api-endpoints.md`).
@@ -133,6 +134,6 @@ Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi
 | Thành viên | Phụ trách |
 |---|---|
 | Tuấn | 01 Tài khoản & hồ sơ, 09 Ôn tập |
-| Khôi | 02 Danh mục khóa học, 11 Quản trị khóa học và kỹ năng |
-| Tâm | 03 Lưu khóa học, 08 AI Tutor, 10 Phản hồi, 13 Quản trị phản hồi |
-| Hòa | 04 Theo dõi tiến trình, 05–07 Lộ trình và gợi ý, 12 Quản trị quan hệ kỹ năng, 14 Quản trị lộ trình người dùng |
+| Khôi | 02 Danh mục khóa học, 10 Phản hồi |
+| Tâm | 03 Lưu khóa học, 07 Gợi ý khóa học theo kỹ năng, 08 AI Tutor, 12 Quản trị quan hệ kỹ năng |
+| Hòa | 04 Theo dõi tiến trình, 05–06 Lộ trình, node và cạnh, 11 Quản trị khóa học và kỹ năng, 13 Quản trị phản hồi, 14 Quản trị lộ trình người dùng |
