@@ -18,15 +18,16 @@
 
 | Method | Endpoint | Mô tả | Quyền |
 |---|---|---|---|
-| POST | `/api/auth/register` | Đăng ký tài khoản mới. `role` luôn là `student`, không nhận từ client. *(T09)* | Công khai |
-| POST | `/api/auth/login` | Xác thực và trả access token kèm thông tin người dùng (gồm `role`). | Công khai |
-| POST | `/api/auth/logout` | Đăng xuất. JWT không lưu trạng thái: client xóa token, server trả 200. *(D08)* | Người dùng |
+| POST | `/api/auth/register` | Đăng ký tài khoản mới. `role` luôn là `student`, không nhận từ client. Mật khẩu theo chính sách D-AUTH-05. *(T09)* | Công khai |
+| POST | `/api/auth/login` | Xác thực; trả access token (JWT, 30 phút), refresh token và thông tin người dùng (gồm `role`). *(D-AUTH-01, 02, 03; hình dạng response: ND-19, ND-41)* | Công khai |
+| POST | `/api/auth/refresh` | Đổi refresh token hợp lệ lấy access token mới; xoay vòng refresh token (token cũ bị vô hiệu). *(D-AUTH-03; request/response chi tiết: ND-48)* | Công khai — xác thực bằng refresh token |
+| POST | `/api/auth/logout` | Đăng xuất: backend thu hồi refresh token tương ứng; client xóa token. Access token không bị thu hồi tức thì. *(D-AUTH-03 thay một phần D08; chi tiết: ND-48)* | Người dùng *(có bắt buộc access token còn hạn không: ND-48)* |
 | POST | `/api/auth/forgot-password` | Yêu cầu đặt lại mật khẩu qua email; luôn trả cùng một thông báo. *(T01)* | Công khai |
-| POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng mã trong email (dùng một lần, có hạn). *(T02)* | Công khai |
+| POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng mã trong email (dùng một lần, có hạn). Mật khẩu theo D-AUTH-05. *(T02)* | Công khai |
 | GET | `/api/me` | Lấy hồ sơ của người dùng đã xác thực. | Người dùng |
 | PATCH | `/api/me` | Cập nhật hồ sơ: chỉ `full_name`, `avatar_url` (không có `email`, `role`). *(T04, D06, T09)* | Người dùng |
 | POST | `/api/me/avatar` | Tải ảnh đại diện lên (tùy chọn, giai đoạn 2). *(T04, D07)* | Người dùng |
-| POST | `/api/me/change-password` | Đổi mật khẩu khi đã đăng nhập. *(T03)* | Người dùng |
+| POST | `/api/me/change-password` | Đổi mật khẩu khi đã đăng nhập. Mật khẩu mới theo D-AUTH-05. *(T03)* | Người dùng |
 | GET | `/api/me/summary` | Số liệu tổng hợp cho trang Profile. *(T05)* | Người dùng |
 | GET | `/api/me/skills` | Kỹ năng trong hồ sơ; lọc `?status=known\|learning`. *(T07)* | Người dùng |
 | PATCH | `/api/me/skills` | Thêm/sửa/xóa kỹ năng (`add`, `update`, `remove`) trong một transaction. *(T06)* | Người dùng |
@@ -38,6 +39,12 @@
 
 > `/api/me/courses*` thuộc module theo dõi khóa học (`routers/me_courses.py`, `course_tracking_service`), không thuộc module Xác thực & Hồ sơ.
 
+### Quy tắc xác thực (tóm tắt — chi tiết: `docs/modules/auth-profile.md`)
+
+- Endpoint "Người dùng" yêu cầu header `Authorization: Bearer <access_token>`; access token là JWT ký HS256, hết hạn sau 30 phút. *(D-AUTH-01, D-AUTH-02)*
+- Access token hết hạn → frontend gọi `POST /api/auth/refresh`; làm mới thất bại → yêu cầu đăng nhập lại. *(D-AUTH-02, D-AUTH-03)*
+- Chính sách mật khẩu (`register`, `reset-password`, `change-password`): 8 ký tự – 128 byte UTF-8, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt, không khoảng trắng. *(D-AUTH-05; tập ký tự đặc biệt: ND-46; `confirm_password`: ND-47)*
+
 ### Quy tắc cập nhật kỹ năng người dùng
 
 - Khi người dùng **làm đạt** bài ôn tập của một khóa học, backend tự thêm hoặc cập nhật `known` cho mọi kỹ năng của khóa đó (qua `CourseSkillRelation`), trong cùng transaction nộp bài. Frontend **không** gửi request cập nhật kỹ năng riêng. *(T13)*
@@ -47,6 +54,8 @@
 ---
 
 ## 3. Danh mục khóa học
+
+> Đặc tả tính năng: `docs/modules/course-catalog.md` (F02).
 
 | Method | Endpoint | Mô tả |
 |---|---|---|
@@ -64,6 +73,8 @@ Có thể kết hợp nhiều bộ lọc và tùy chọn sắp xếp bằng các
 ---
 
 ## 4. Lưu khóa học và theo dõi trạng thái
+
+> Đặc tả tính năng: `docs/modules/course-bookmark.md` (F03), `docs/modules/course-tracking.md` (F04).
 
 EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 
@@ -97,6 +108,8 @@ EduMentor sử dụng bốn trạng thái theo dõi khóa học:
 
 ## 5. Tạo lộ trình học tập và AI Consultant
 
+> Đặc tả tính năng: `docs/modules/learning-path-consultant.md` (F05).
+
 Lộ trình học tập được tạo thông qua cuộc hội thoại với AI Consultant. Mô hình diễn giải mục tiêu của người dùng, trong khi backend chịu trách nhiệm ánh xạ kỹ năng, mở rộng các quan hệ liên quan, tham khảo những lộ trình lịch sử tương tự và lưu lộ trình kết quả.
 
 | Method | Endpoint | Mô tả |
@@ -121,6 +134,8 @@ Nếu người dùng chỉ thực hiện các thay đổi nhỏ, hệ thống n�
 ---
 
 ## 6. Các node trong lộ trình học tập
+
+> Đặc tả tính năng §6, §7: `docs/modules/learning-path-graph.md` (F06).
 
 Mỗi node đại diện cho một kỹ năng thuộc một lộ trình học tập cụ thể.
 
@@ -168,6 +183,8 @@ Các cạnh đại diện cho mối liên kết giữa những node kỹ năng t
 
 ## 8. Gợi ý khóa học theo kỹ năng trong lộ trình
 
+> Đặc tả tính năng: `docs/modules/skill-course-recommendation.md` (F07).
+
 Hệ thống chỉ truy xuất gợi ý khi người dùng chọn một node kỹ năng, thay vì tự động gợi ý khóa học cho tất cả node ngay khi tạo lộ trình.
 
 | Method | Endpoint | Mô tả |
@@ -190,6 +207,8 @@ API không nên xem điểm đánh giá cao là bằng chứng duy nhất cho th
 ---
 
 ## 9. Chat với AI Tutor
+
+> Đặc tả tính năng: `docs/modules/ai-tutor.md` (F08).
 
 AI Tutor duy trì ngữ cảnh hội thoại trong từng phiên và hỗ trợ giải thích kiến thức, gỡ lỗi và tạo bài tập củng cố.
 
@@ -254,6 +273,8 @@ Chính sách: làm lại **không giới hạn** *(D03)*; điểm đạt **60%**
 
 ## 11. Quản trị — Danh mục khóa học và kỹ năng
 
+> Đặc tả tính năng: `docs/modules/admin-course-skill.md` (F11), `docs/modules/admin-skill-relation.md` (F12), `docs/modules/admin-question-bank.md` (câu hỏi, ngoài 14 tính năng).
+
 | Method | Endpoint | Mô tả |
 |---|---|---|
 | GET | `/api/admin/courses` | Lấy danh sách khóa học để quản trị. |
@@ -284,6 +305,8 @@ Các endpoint quản trị chỉ được phép sử dụng bởi quản trị v
 ---
 
 ## 12. Quản trị admin — Lộ trình học tập cơ bản (Base Learning Paths)
+
+> Đặc tả: `docs/modules/admin-base-paths.md`.
 
 Base learning path là các mẫu lộ trình có thể tái sử dụng, mô tả những kỹ năng mục tiêu ban đầu và mối quan hệ giữa chúng cho các mục tiêu phổ biến. Chúng giúp AI Consultant tạo ra điểm xuất phát nhất quán trước khi mở rộng lộ trình bằng đồ thị kỹ năng chung và các lộ trình lịch sử tương tự.
 
@@ -321,6 +344,8 @@ Mẫu lộ trình cơ sở cung cấp điểm xuất phát có thể tái sử d
 ---
 
 ## 13. Quản trị — Dữ liệu lộ trình học tập lịch sử (tùy chọn)
+
+> Đặc tả: `docs/modules/admin-historical-data.md`.
 
 Các endpoint này không bắt buộc đối với phiên bản thử nghiệm ban đầu, nhưng hữu ích nếu quản trị viên cần kiểm tra hoặc nhập dữ liệu lịch sử phục vụ Collaborative Filtering.
 

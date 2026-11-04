@@ -1,0 +1,74 @@
+# AGENTS.md — EduMentor AI
+
+Chỉ thị cấp project cho Codex. File này **không** chứa quy tắc nghiệp vụ; quy tắc nằm trong `docs/` (xem bản đồ bên dưới).
+
+## Project
+
+EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình học bằng AI, gợi ý khóa học MOOC bên ngoài theo kỹ năng, AI Tutor, và ghi nhận kỹ năng qua bài ôn tập. Tổng quan: `README.md`.
+
+Trạng thái hiện tại: **backend chưa có code** — mọi file trong `backend/` là file rỗng giữ chỗ. **Frontend mới có phần nền C1** (cấu hình Vite, `src/main.jsx`, `src/App.jsx`, `src/index.css`, `src/utils/theme.js`); route, page, component và API client còn rỗng. Chi tiết: `docs/structure.md` §1.1. Đừng suy luận nghiệp vụ từ code; đọc tài liệu.
+
+## Công nghệ
+
+- Backend: Python 3.11+, FastAPI, SQLAlchemy, Alembic, Pydantic, PostgreSQL 14+.
+- Frontend: React + Vite.
+- Kiểm thử: `pytest`. Định dạng: `black`, `ruff`.
+- Cài đặt và lệnh thường dùng: `SETUP.md`.
+
+## Kiến trúc
+
+Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu vào/ra. Router không viết truy vấn hay nghiệp vụ; service giữ quy tắc nghiệp vụ và transaction; repository chỉ truy vấn; thay đổi CSDL chỉ qua Alembic migration. Chi tiết: `docs/structure.md` §4 và `docs/backend-rules.md`. Không đổi kiến trúc này nếu không được yêu cầu.
+
+## Nguồn sự thật
+
+| Chủ đề | File |
+|---|---|
+| Quyết định đã chốt, mâu thuẫn, `[NEEDS DECISION]` | `docs/decisions.md` |
+| Thiết kế CSDL (chính thức) | `docs/database-design.md` |
+| Danh sách endpoint toàn hệ thống | `docs/api-endpoints.md` |
+| Cây thư mục, ánh xạ endpoint → file | `docs/structure.md` |
+| Quy ước API, code, Git, kiểm thử | `docs/conventions.md` |
+| Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
+| Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
+| Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
+| Giao diện | `docs/ui-design/` (D-FE-12): prototype tĩnh 41 màn, không phải nguồn quy tắc API hay nghiệp vụ, có màn không có nghĩa là đã triển khai. `EduMentor AI Demo.html` (ngoài repo) chỉ để tra giá trị CSS/motion. `docs/wireframes/`, `docs/EduMentor-UI-design/` đã bị xóa (còn trong lịch sử Git) |
+| Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
+| Báo cáo đối chiếu frontend với demo (lịch sử, 28/10/2026 — căn cứ của D-FE-01 … D-FE-11, không phải hiện trạng) | `docs/ui-animation/` |
+
+Thứ tự ưu tiên khi các nguồn khác nhau: **D-DOC-01** (`docs/decisions.md` §1): 1. Đề bài SRS v1.0 (`docs/AI_Learning_Assistant_Recommender SRS.docx.pdf`) > 2. `docs/decisions.md` > 3. BA (`docs/EdumentorAi_BA.md`) > 4. SRS v2.0 (`docs/EduMentor_AI_SRS_v2.0.docx`) > 5. UI (`docs/ui-design/`) > 6. Code; các điểm đề bài khác quyết định đã chốt giữ quyết định hiện hành, chờ ND-77, ND-81. BA và SRS v2.0 là căn cứ nghiệp vụ và nghiệm thu, không tự ghi đè quyết định đã chốt; `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` là nguồn gốc của các file đặc tả `.md` trên (đã được chép vào đó).
+
+## Phạm vi đang phụ trách
+
+Chỉ hai module có bộ tri thức đầy đủ và skill riêng:
+
+1. **Xác thực & Hồ sơ người dùng** → skill `auth-profile`
+2. **Ôn tập & Đánh giá kiến thức** → skill `review-assessment`
+
+Các module khác (Course Tracking, Learning Path, AI Consultant/Tutor, Recommendation, Admin) không thuộc phạm vi: không tự sửa file của chúng; nếu việc đang làm cần thay đổi ở đó, nêu ra cho người dùng.
+
+## Quy tắc làm việc
+
+- **Không tự suy diễn nghiệp vụ.** Khi tài liệu chưa quy định, hoặc mục đó đang là `[NEEDS DECISION]` trong `docs/decisions.md`: dừng và hỏi người dùng, hoặc chỉ làm phần không phụ thuộc rồi nói rõ chỗ còn chờ. Không chọn "phương án hợp lý" thay nhóm.
+- Không thêm endpoint, bảng, cột, ràng buộc, cơ chế bảo mật hay thư viện ngoài tài liệu.
+- Hạng mục chưa được nhóm tick (☐) trong `docs/decisions.md` §3 không được coi là đã chốt.
+- Phát hiện tài liệu thiếu hoặc mâu thuẫn → đề xuất bổ sung `ND-xx` vào `docs/decisions.md`; không vá bằng code.
+- Khi một quyết định được chốt: cập nhật `docs/decisions.md` trước, rồi mới sửa tài liệu module và code.
+- Mỗi quy tắc chỉ được ghi ở **một** file; file khác tham chiếu mã (`D05`, `T13`, `AP-R14`, `RV-R07`, `ND-24`) thay vì chép lại.
+- Không commit `.env`; không hard-code bí mật hay ngưỡng nghiệp vụ.
+
+## Cách dùng skill và tài liệu
+
+- Công việc thuộc một trong hai module trên → dùng skill tương ứng (`.Codex/skills/auth-profile`, `.Codex/skills/review-assessment`). Skill cho biết cần đọc phần nào của `docs/` và theo thứ tự nào; đọc đúng phần cần cho việc đang làm.
+- Hai skill project này được ưu tiên hơn các skill cấp user có phạm vi tương tự (`edumentor-auth-profile`, `edumentor-review`, `database-schema`) khi làm việc trong repo này.
+- Đụng tới CSDL → `docs/database-design.md`. Đụng tới lỗi, transaction, xác thực dùng chung → `docs/backend-rules.md`.
+
+## Lệnh
+
+```bash
+cd backend && pytest                                  # kiểm thử
+black . && ruff check .                               # định dạng
+alembic revision --autogenerate -m "mo ta"            # migration mới
+alembic upgrade head                                  # áp dụng migration
+```
+
+Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`); nhánh `feature/<nhóm>-<mô-tả>`. Chi tiết: `docs/conventions.md` §5.

@@ -1,0 +1,230 @@
+#### 1 [replace] after: Phiên bản
+- 2.0 — Tháng 11/2026 (bản 1.0: Tháng 09/2026)
++ 2.0, hiệu đính 01/11/2026 (bản 1.0: Tháng 09/2026)
+#### 2 [insert] after: Viết lại toàn bộ theo BA, đặc tả API và UI Demo (33 màn). Thêm actor và ma trận phân quyền, 17 phân hệ chức năng với mã 
++ 2.0 hiệu đính
++ 01/11/2026
++ Đối chiếu trực tiếp với docs/decisions.md và UI Demo. Sửa refresh token theo D-AUTH-03 (thay nội dung theo D08); chính sách mật khẩu theo D-AUTH-05; thứ tự ưu tiên theo D-DOC-01; relation_type của cạnh và xóa phiên chat theo database-design; tên màn theo docs/ui-design. Ghi rõ mã quyết định còn chờ tại từng yêu cầu. Thêm Q-23. Không đổi mã yêu cầu.
+#### 3 [insert] after: Nguồn yêu cầu nghiệp vụ chính: mục tiêu, phạm vi, use case, FR-01..FR-46, NFR-01..NFR-39, quy tắc nghiệp vụ, tiêu chí ng
++ [DEC]
++ docs/decisions.md
++ Quyết định đã chốt (D.., T.., D-AUTH-.., D-FE-..) và điểm chưa chốt (ND-..)
+#### 4 [replace] after: [API]
+- docs/api-endpoints.md (cập nhật 22/10/2026)
+- Hợp đồng API và các quyết định nhóm đã chốt (mã D.., T..)
++ docs/api-endpoints.md (bản hiện hành trong repo)
++ Hợp đồng API hiện hành
+#### 5 [replace] after: [UI]
+- UI Demo React (bản 33 màn, Version 13)
++ UI Demo (artifact 7xPJPGauwsXLG9keRNKcxe, phiên bản 1793285378-8eed: 33 route) và docs/ui-design (D-FE-12)
+#### 6 [replace] after: BA_SRS_UI_Audit_Report.md (01/11/2026)
+- Danh sách mâu thuẫn đã phát hiện; các điểm chưa chốt được ghi ở Chương 13
+- Thứ tự ưu tiên khi các nguồn khác nhau: quyết định đã chốt trong [API] → [BA] → [UI]. Điểm nào [UI] thể hiện nhưng [BA] chưa có, SRS ghi theo [UI] và đánh dấu (Bổ sung theo UI – chờ BA cập nhật). Điểm nào chưa có quyết định được liệt kê ở Chương 13 và không được coi là đã phê duyệt.
++ Báo cáo audit 01/11/2026, lập khi chưa đọc docs/decisions.md; một số kết luận đã được đính chính
++ Thứ tự ưu tiên theo D-DOC-01: [DEC] → [BA] → SRS này → [API], [DB]. [UI] chỉ mô tả giao diện, không tạo quy tắc nghiệp vụ (D-FE-12). Điểm nào [UI] thể hiện nhưng [BA] chưa có, SRS ghi theo [UI] và đánh dấu (Bổ sung theo UI – chờ BA cập nhật). Điểm nào chưa có quyết định được ghi mã ND, T hoặc Q tại yêu cầu và không được coi là đã phê duyệt.
+#### 7 [replace] after: Đăng ký tài khoản bằng họ tên, email, mật khẩu, xác nhận mật khẩu.
+- Họ tên không trống. Email đúng định dạng, chưa tồn tại (409). Mật khẩu ≥ 8 ký tự, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt (Bổ sung theo UI). Xác nhận trùng mật khẩu. role luôn student.
++ Email đúng định dạng, chưa tồn tại (409). Mật khẩu theo D-AUTH-05: tối thiểu 8 ký tự, tối đa 128 byte UTF-8, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt, không chứa khoảng trắng (tập ký tự: ND-46). role luôn student (T09). Họ tên bắt buộc: chờ ND-37. Ô xác nhận mật khẩu ở API: chờ ND-47.
+#### 8 [replace] after: Đăng nhập bằng email và mật khẩu; nhận access token và refresh token; chuyển trang theo vai trò.
+- Sai thông tin → 401, thông báo chung, không nói rõ sai email hay mật khẩu. Admin → /admin/courses; Học viên → trang học viên.
++ Sai thông tin → 401, thông báo chung, không nói rõ sai email hay mật khẩu. Hình dạng response: ND-19. Trang đích theo vai trò: chờ ND-78 (UI Demo luôn vào /me).
+#### 9 [replace] after: SRS-AUTH-03
+- Đăng xuất: xác nhận trong hộp thoại, client xóa cả access và refresh token.
+- Server trả 200, không lưu danh sách thu hồi (D08). Sau đăng xuất về trang đăng nhập, hiện "Bạn đã đăng xuất."
+- Profile (hộp thoại Đăng xuất)
++ Đăng xuất: xác nhận trong hộp thoại; backend thu hồi refresh token tương ứng, client xóa token.
++ Theo D-AUTH-03 (thay phần logout của D08). Access token không thu hồi tức thì, sống tối đa 30 phút (D-AUTH-02). Hợp đồng chi tiết: ND-48. Sau đăng xuất về trang đăng nhập, hiện "Bạn đã đăng xuất."
++ Logout
+#### 10 [replace] after: SRS-AUTH-04
+- Làm mới access token bằng refresh token khi access token hết hạn.
+- Refresh token là JWT type = refresh, không lưu DB. Sai, hết hạn hoặc sai loại → 401, frontend đưa về đăng nhập. Giới hạn chấp nhận: refresh token còn hạn vẫn dùng được sau đăng xuất.
++ Làm mới phiên bằng refresh token khi access token hết hạn; xoay vòng refresh token.
++ Theo D-AUTH-03: trạng thái lưu trong PostgreSQL, chỉ lưu bản băm; làm mới thành công thì cấp token mới và vô hiệu token cũ. Hết hạn, bị thu hồi, không hợp lệ hoặc đã xoay vòng → làm mới thất bại, frontend yêu cầu đăng nhập lại. Còn chờ: thời hạn ND-40, định dạng ND-41, tái sử dụng ND-42, bảng ND-43, hợp đồng ND-48.
+#### 11 [replace] after: ForgotPassword, ForgotSent
+- Bổ sung theo UI; API T01
++ D09, T01
+#### 12 [replace] after: ResetPassword, ResetExpired
+- Bổ sung theo UI; API T02
++ D09, T02
+#### 13 [replace] after: Đổi mật khẩu khi đã đăng nhập.
+- Nhập mật khẩu hiện tại (sai → 400), mật khẩu mới khác mật khẩu hiện tại, xác nhận trùng khớp.
++ Nhập mật khẩu hiện tại (sai → 400), mật khẩu mới theo D-AUTH-05. Quy tắc "khác mật khẩu hiện tại": chờ ND-51. Xác nhận: chờ ND-47.
+#### 14 [replace] after: ChangePassword
+- Bổ sung theo UI; API T03
++ T03
+#### 15 [replace] after: Đổi ảnh đại diện bằng cách bấm vào avatar.
+- JPG/PNG, tối đa 2 MB. Quá lớn → 413; sai định dạng → 415. Gửi ngay khi chọn file, không cần bấm Lưu.
++ Quá lớn → 413; sai định dạng → 415. Gửi ngay khi chọn file, không cần bấm Lưu. Dung lượng và định dạng (UI ghi JPG/PNG, 2 MB): chờ ND-12. Giai đoạn triển khai: chờ ND-62.
+#### 16 [replace] after: Quản lý kỹ năng của tôi: tìm trong danh mục, thêm với trạng thái Đã biết hoặc Đang học, đổi trạng thái, xóa, hoàn tác tr
+- Chỉ chọn kỹ năng có trong danh mục (404 nếu không có). Lưu theo một transaction; lỗi một phần hủy toàn bộ.
++ Chỉ chọn kỹ năng có trong danh mục (404 nếu không có). Lưu theo một transaction; lỗi một phần hủy toàn bộ. API đọc danh mục cho học viên: chờ ND-57. add[].status: chờ ND-64.
+#### 17 [replace] after: Danh sách khóa học từ nền tảng MOOC: tìm theo từ khóa, lọc theo kỹ năng và cấp độ, sắp xếp theo điểm đánh giá hoặc số lư
+- Có phân trang. Không có kết quả → "Không tìm thấy khóa học phù hợp."
++ Có phân trang. Không có kết quả → "Không tìm thấy khóa học phù hợp." UI Demo chưa có bộ lọc kỹ năng: chờ ND-72. Quyền xem: chờ ND-70.
+#### 18 [replace] after: Lưu / bỏ lưu khóa học để học sau.
+- Bỏ lưu chỉ xóa bookmark, không chuyển sang Đã bỏ.
++ Bỏ lưu chỉ xóa bookmark, không chuyển sang Đã bỏ. Hai cách lấy danh sách đã lưu: chờ ND-80.
+#### 19 [replace] after: Khóa học chỉ chuyển completed khi học viên làm ĐẠT bài ôn tập của khóa đó. Học viên không tự đánh dấu hoàn thành.
+- Theo API D01, D02 và UI. Xem Q-03 về FR-18 của BA.
++ Theo D01, D02, T13. Sửa lời văn FR-18 của BA: chờ ND-76.
+#### 20 [replace] after: AI trả lời và trả về bản nháp lộ trình dạng đồ thị kỹ năng (node, cạnh), hiện ở khung bên phải với nhãn "Bản nháp · chưa
+- Kỹ năng phải có trong danh mục; kỹ năng không hợp lệ bị loại trước khi trả về. Đồ thị phân biệt kỹ năng mục tiêu, tiên quyết, tùy chọn, mở rộng.
++ Kỹ năng phải có trong danh mục (BA BR-02). Cách xử lý kỹ năng không hợp lệ: chờ ND-74. Đồ thị phân biệt kỹ năng mục tiêu, tiên quyết, tùy chọn, mở rộng.
+#### 21 [replace] after: AI hỏi lại khi mục tiêu chưa rõ; báo giới hạn khi ngoài phạm vi.
+- Chưa có trên UI Demo; cần bổ sung trạng thái hiển thị (Q-06).
++ Chưa có trên UI Demo. Trạng thái và response: chờ ND-74 (Q-06).
+#### 22 [replace] after: Chỉnh lộ trình: thêm kỹ năng, thêm/xóa kết nối, xóa kỹ năng (xóa kèm cạnh), đổi tên, từ bỏ lộ trình.
+- Một kỹ năng xuất hiện một lần. Hai đầu cạnh phải là node của lộ trình. Xóa node không để cạnh mồ côi (transaction). Từ bỏ chỉ đổi trạng thái sang abandoned.
+- PathDetail (edit)
++ Một kỹ năng xuất hiện một lần. Hai đầu cạnh phải là node của lộ trình. Xóa node không để cạnh mồ côi (transaction). Từ bỏ chỉ đổi trạng thái sang abandoned. Tên lộ trình: bảng chưa có cột, chờ ND-54.
++ PathEdit
+#### 23 [replace] after: Danh sách phiên gần đây, tạo phiên mới, chọn phiên, xóa phiên (có xác nhận).
+- Phiên gắn với học viên đăng nhập; session_id là UUID. Rỗng → "Chưa có phiên nào…"
++ Phiên gắn với học viên đăng nhập; session_id là UUID. Xóa phiên chuyển trạng thái archived (database-design ChatSession). Rỗng → "Chưa có phiên nào…"
+#### 24 [replace] after: Bài tập củng cố trắc nghiệm theo chủ đề vừa trao đổi, có nút Kiểm tra đáp án.
+- Số câu theo BA: 3 câu (UI mẫu hiện 1 câu).
++ Số câu theo BA §10.9: 3 câu (UI mẫu hiện 1 câu). Dữ liệu quiz có cấu trúc: chờ ND-54.
+#### 25 [replace] after: Trang bắt đầu ôn tập: tên khóa, kỹ năng khóa dạy, 3 thông số (20 câu chia đều theo kỹ năng; đạt ≥ 60%; làm lại không giớ
+- Chỉ học viên có khóa ở trạng thái ongoing hoặc completed mới bắt đầu được; chưa tham gia → 409, hiện hướng dẫn và nút Tham gia khóa học. Khóa chưa đủ 20 câu hoạt động → 409 "Bài ôn tập chưa sẵn sàng".
++ Được ôn lại khóa completed (D10). Quy tắc 409 khi chưa tham gia hoặc thiếu câu lấy từ T16, đang BLOCKED, chưa được coi là đã chốt.
+#### 26 [replace] after: Mỗi khóa tối đa 1 bài đang dở; gọi bắt đầu lại trả bài dở đó. Không trả đáp án đúng trước khi nộp.
+- ReviewAttempt
++ ReviewQuiz
+#### 27 [replace] after: —
+- ReviewAttempt
++ ReviewQuiz
+#### 28 [replace] after: Tạm rời, làm tiếp sau: giữ đáp án đã chọn; trang bắt đầu hiện "Bạn có một bài đang làm dở · đã trả lời n/20 câu".
+- Lưu đáp án tạm phía server chưa có endpoint (M1, Q-11).
+- ReviewAttempt, ReviewStart
++ Lưu đáp án tạm phía server chưa có endpoint (M1, ND-55).
++ ReviewQuiz, ReviewStart
+#### 29 [replace] after: SRS-REV-05
+- Nộp bài: hộp thoại xác nhận; câu bỏ trống tính sai; chấm theo đáp án lưu sẵn.
+- Một transaction: ghi đáp án, điểm, passed = score_percent ≥ 60 (cấu hình REVIEW_PASS_PERCENT), nếu đạt cập nhật khóa completed và kỹ năng known. Nộp lần hai → 409.
+- ReviewAttempt
++ Nộp bài: hộp thoại xác nhận; chấm theo đáp án lưu sẵn. Câu bỏ trống tính sai: T16 BLOCKED.
++ Một transaction (T13): ghi đáp án, điểm, passed = score_percent ≥ REVIEW_PASS_PERCENT (D02: 60), nếu đạt cập nhật khóa completed và kỹ năng known. Nộp lần hai → 409: T16 BLOCKED.
++ ReviewQuiz
+#### 30 [replace] after: Kết quả: điểm %, số câu đúng / 20, Đạt / Chưa đạt; nếu đạt báo khóa đã chuyển Hoàn thành; nút Xem chi tiết đáp án, Làm l
+- Kết quả gửi email chạy nền (không kèm đáp án); gửi lỗi chỉ ghi log.
++ Email kết quả chạy nền (T29); gửi mọi lần hay chỉ khi đạt: chờ ND-25.
+#### 31 [replace] after: Điểm trung bình các lần làm hợp lệ.
+- Chưa có trên UI Demo (Q-14).
++ Chưa có trên UI Demo. Giữ hay bỏ: chờ ND-73.
+#### 32 [replace] after: Gửi phản hồi về một khóa học hoặc về hệ thống. Chọn khóa học trong 2 nhóm: Khóa học của tôi, Khóa học khác. Nhập nội dun
+- Tài khoản tự gắn từ phiên đăng nhập, không nhập họ tên/email. Nội dung không trống, tối đa 1000 ký tự (giới hạn chờ chốt). Khi phản hồi về khóa học thì bắt buộc chọn khóa; về hệ thống thì không có khóa.
++ Tài khoản tự gắn từ phiên đăng nhập, không nhập họ tên/email. Nội dung không trống, tối đa 1000 ký tự (giới hạn chờ chốt). Khi phản hồi về khóa học thì bắt buộc chọn khóa; về hệ thống thì không có khóa. UI có ô Loại phản hồi: chờ ND-69, D11. Toàn bộ mục này chờ ND-35, ND-55.
+#### 33 [replace] after: Danh mục kỹ năng chiếm toàn bộ chiều rộng, tìm kiếm, thêm kỹ năng, xóa kỹ năng.
+- Tên kỹ năng duy nhất. Xóa chỉ khi không gây ảnh hưởng không mong muốn.
++ Tên kỹ năng duy nhất. Xóa chỉ khi không gây ảnh hưởng không mong muốn; UI từ chối xóa kỹ năng đang dùng. Xóa mềm hay chặn xóa: chờ ND-71.
+#### 34 [replace] after: Nhập file dữ liệu lịch sử (kéo thả hoặc chọn file), theo dõi trạng thái lần nhập (Đang xử lý / Hoàn tất), tóm tắt số bản
+- Kiểm tra tham chiếu kỹ năng, trùng lặp, phân biệt dữ liệu tổng hợp và thực tế. Không ghi đè lộ trình của học viên. Định dạng file chờ chốt (Q-15).
++ Kiểm tra tham chiếu kỹ năng, trùng lặp, phân biệt dữ liệu tổng hợp và thực tế. Không ghi đè lộ trình của học viên. Định dạng file: chờ ND-75.
+#### 35 [replace] after: Ngăn chi tiết: người gửi (tên, email), khóa học, loại, thời gian, nội dung đầy đủ, liên hệ của khóa học; nút "Trả lời qu
+- Chỉ xem. Bảng Feedback không có cột trạng thái xử lý; trả lời không qua API.
++ Theo UI: chỉ xem, trả lời ngoài hệ thống. Phạm vi xử lý của Admin (BA: trả lời; SRS v1.0: Update feedback): chờ ND-35.
+#### 36 [replace] after: SRS-ADMU-02
+- Chế độ tìm theo Người dùng: danh sách người dùng, chọn để xem các lộ trình của họ, tiến độ, đồ thị chỉ xem.
++ Chế độ tìm theo Người dùng: danh sách người dùng, chọn để xem các lộ trình của họ, tiến độ, đồ thị chỉ xem. Giữ chức năng và quy tắc quyền: chờ ND-79.
+#### 37 [replace] after: API chưa định nghĩa (M3).
+- AdminUserPaths-GoalSearch
++ AdminUserPaths
+#### 38 [replace] after: /api/auth/login
+- Trả access_token, refresh_token, token_type + người dùng (gồm role); 401
++ Trả access token, refresh token + người dùng (gồm role); hình dạng chờ ND-19, ND-41; 401
+#### 39 [replace] after: /api/auth/refresh
+- Body refresh_token; trả access_token mới; 401
++ Xoay vòng refresh token (D-AUTH-03); request và mã lỗi chờ ND-48
+#### 40 [replace] after: /api/auth/logout
+- Trả 200; client xóa token
++ Thu hồi refresh token (D-AUTH-03); client xóa token; chi tiết chờ ND-48
+#### 41 [replace] after: Lưu bài ôn tập làm dở phía server
+- ReviewAttempt
++ ReviewQuiz
+#### 42 [replace] after: 8. MÔ HÌNH DỮ LIỆU
+- Cơ sở dữ liệu PostgreSQL gồm 21 bảng, 6 nhóm. Chi tiết kiểu dữ liệu và ràng buộc ở [DB].
++ Cơ sở dữ liệu PostgreSQL gồm 21 bảng, 6 nhóm, chưa tính bảng RefreshToken đang PROPOSED (ND-43, cần cho D-AUTH-03). Chi tiết kiểu dữ liệu và ràng buộc ở [DB].
+#### 43 [replace] after: LearningPathEdge
+- PK (path_id, from_skill_id, to_skill_id), relation_type (enum chờ chốt, Q-17)
++ PK (path_id, from_skill_id, to_skill_id), relation_type prerequisite/optional
+#### 44 [replace] after: ChatSession
+- session_id UUID, user_id, session_type, topic, status
++ session_id UUID, user_id, session_type tutor/learning_path, topic, status active/archived
+#### 45 [replace] after: question_id, skill_id, content, options JSONB, correct_index, explanation, is_active
+- ReviewAttempt
++ ReviewQuiz
+#### 46 [insert] after: NFR-34
++ —
++ Các NFR của BA chưa có mã SRS áp dụng nguyên văn từ BA §7
++ —
++ NFR-03, 19–22, 24, 28–30, 32, 33, 35, 36, 39
+#### 47 [replace] after: SRS-AC-03
+- Access token hết hạn được làm mới bằng refresh token; refresh token sai/hết hạn trả 401.
++ Access token hết hạn được làm mới bằng refresh token; refresh token sai, hết hạn, bị thu hồi hoặc đã xoay vòng thì làm mới thất bại (mã lỗi: ND-48).
+#### 48 [replace] after: SRS-AC-09
+- Chưa tham gia khóa → 409 khi bắt đầu ôn tập; khóa thiếu câu hỏi → 409.
++ (Chờ T16) Chưa tham gia khóa → 409 khi bắt đầu ôn tập; khóa thiếu câu hỏi → 409.
+#### 49 [replace] after: SRS-AC-12
+- Nộp lần hai → 409; xem lần làm của người khác → 404.
++ Xem lần làm của người khác → 404 (T15). (Chờ T16) Nộp lần hai → 409.
+#### 50 [replace] after: Main, Register, Profile
+- FR-46: không thu hồi refresh token (Q-04)
++ FR-46 khớp D-AUTH-03; chi tiết ND-40–43, ND-48
+#### 51 [replace] after: SRS-REV-01..08
+- ReviewStart, ReviewAttempt, ReviewResult, ReviewHistory, ReviewDetail
+- Theo khóa học (Q-01)
++ ReviewStart, ReviewQuiz, ReviewResult, ReviewHistory, ReviewDetail
++ Theo khóa học (D01; lời văn BA chờ ND-58)
+#### 52 [replace] after: Thu hồi refresh token khi đăng xuất (BA FR-46, NFR-38, AC-01)
+- Không thu hồi (D08), chấp nhận giới hạn
+- Sửa BA hoặc đổi thiết kế
++ Thu hồi và xoay vòng theo D-AUTH-03
++ Đã giải quyết bằng D-AUTH-03; còn ND-40–43, ND-48
+#### 53 [replace] after: Chưa xác định
+- Chốt quyền GET /api/courses* và guard /courses
++ Chờ ND-70
+#### 54 [replace] after: Yêu cầu có, UI chưa có
+- Bổ sung UI và response
++ Chờ ND-74
+#### 55 [replace] after: Admin chỉ xem, trả lời qua email ngoài
+- Chốt ND-69, UI2-02; viết FR vào BA
++ Chờ ND-35, ND-55, ND-69
+#### 56 [replace] after: Cấu hình được, chưa chốt mặc định
+- Chốt số tin
++ Chờ ND-59
+#### 57 [replace] after: Có, chỉ xem
+- Viết FR + quy tắc quyền vào BA, chốt API M3
++ Chờ ND-79, ND-55 (M3)
+#### 58 [replace] after: Có trên UI
+- Giữ hay bỏ; nếu giữ, chốt API M4
++ Chờ ND-55 (M4), workbook UI2-04
+#### 59 [replace] after: Có trên UI, chưa có API
+- Chốt API M1
++ Chờ ND-55 (M1)
+#### 60 [replace] after: Giữ cả hai
+- Chọn một (CK-05)
++ Chờ ND-80
+#### 61 [replace] after: Chỉ trắc nghiệm trong prototype
+- Xác nhận phạm vi
++ Chờ ND-73
+#### 62 [replace] after: Có yêu cầu, UI chưa có
+- Bổ sung UI hoặc bỏ
++ Chờ ND-73
+#### 63 [replace] after: Chưa có
+- Chốt định dạng
++ Chờ ND-75
+#### 64 [replace] after: Q-17
+- Enum relation_type cạnh lộ trình
+- UI dùng prerequisite / optional / extension
++ Enum relation_type cạnh lộ trình (đã có trong thiết kế CSDL)
++ prerequisite, optional theo database-design §4.6; form PathEdit dùng Tiên quyết, Tùy chọn
+#### 65 [replace] after: Q-18
+- Xóa phiên chat: xóa hẳn hay lưu trữ
+- UI xóa hẳn
++ Xóa phiên chat (đã có trong thiết kế CSDL)
++ DELETE chuyển archived theo database-design §5; UI ẩn phiên khỏi danh sách
+#### 66 [insert] after: Xác nhận bỏ
++ Q-23
++ Quản trị câu hỏi /api/admin/questions* (T19–T21 đã đồng ý)
++ Chưa có yêu cầu trong SRS; UI chưa có màn
++ Chờ ND-53, CONFLICT-SCOPE-01

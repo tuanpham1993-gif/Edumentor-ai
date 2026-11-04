@@ -12,7 +12,7 @@ Tên bảng viết theo kiểu đặc tả (ví dụ `LearningPathNode`); khi t�
 
 ## 1. Tổng quan
 
-Cơ sở dữ liệu gồm **21 bảng** chia thành 6 nhóm. Hai nguyên tắc thiết kế:
+Cơ sở dữ liệu gồm **21 bảng** chia thành 6 nhóm (theo `.docx`). Bảng thứ 22 — RefreshToken (§3.5) — được D-AUTH-03 yêu cầu và đang ở trạng thái **PROPOSED** chờ duyệt thiết kế (ND-43). Hai nguyên tắc thiết kế:
 
 1. Các bảng liên quan tới dataset giữ đúng tên bảng và tên cột của dataset (riêng `Course` có thêm 1 cột ảnh).
 2. Các bảng còn lại bám theo đặc tả API và SRS của nhóm (`LearningPathNode`, `LearningPathEdge`, `ReviewAttempt`…).
@@ -20,7 +20,7 @@ Cơ sở dữ liệu gồm **21 bảng** chia thành 6 nhóm. Hai nguyên tắc 
 | Nhóm | Bảng | Thiết kế theo | Vai trò chung |
 |---|---|---|---|
 | A. Theo dataset | Course, Skill, CourseSkillRelation, SkillRelation | 4 file dataset | Kho khóa học, kỹ năng, khóa học dạy kỹ năng nào, kỹ năng nào học trước kỹ năng nào |
-| B. Người dùng | User, UserSkill, StudentCourse, PasswordResetToken | Đặc tả API (mục 2, 4) | Tài khoản, kỹ năng đã có, theo dõi khóa học với 4 trạng thái, mã đặt lại mật khẩu qua email |
+| B. Người dùng | User, UserSkill, StudentCourse, PasswordResetToken (+ RefreshToken — **PROPOSED**, §3.5) | Đặc tả API (mục 2, 4); D-AUTH-03 | Tài khoản, kỹ năng đã có, theo dõi khóa học với 4 trạng thái, mã đặt lại mật khẩu qua email, phiên đăng nhập (refresh token) |
 | C. Lộ trình | BaseLearningPath, BaseLearningPathNode, BaseLearningPathEdge, LearningPath, LearningPathNode, LearningPathEdge | SRS và API mục 5, 6, 7, 12 | Mẫu lộ trình do admin quản lý và lộ trình cá nhân dạng đồ thị kỹ năng |
 | D. Chatbot | ChatSession, ChatMessage | API mục 9 | Phiên trò chuyện (gia sư AI, tư vấn lộ trình) và tin nhắn |
 | E. Ôn tập | Question, ReviewAttempt, ReviewAnswer | SRS (ReviewAttempt) và API mục 10 | Ngân hàng câu hỏi, các lần làm bài ôn tập và kết quả từng câu |
@@ -105,14 +105,14 @@ Lưu tài khoản và vai trò. Là gốc của mọi dữ liệu cá nhân. Ph�
 |---|---|---|---|
 | user_id | SERIAL | PK | Mã tài khoản |
 | email | VARCHAR(255) | NN, UQ | Email đăng nhập; mỗi email một tài khoản. **Không cho đổi email**: `PATCH /api/me` không nhận trường này *(D06, T10)* |
-| hashed_password | VARCHAR(255) | NN | Mật khẩu đã băm. Không lưu mật khẩu gốc, không trả trong response. Đổi bằng `POST /api/me/change-password` (sai mật khẩu hiện tại → 400) hoặc luồng `POST /api/auth/reset-password` *(T02, T03)* |
+| hashed_password | VARCHAR(255) | NN | Mật khẩu đã băm bằng **Argon2id** (D-AUTH-04; thư viện và tham số: ND-45). Không lưu mật khẩu gốc, không trả trong response. Đổi bằng `POST /api/me/change-password` (sai mật khẩu hiện tại → 400) hoặc luồng `POST /api/auth/reset-password` *(T02, T03)* |
 | full_name | VARCHAR(100) | | Tên hiển thị |
 | avatar_url | VARCHAR(500) | NULL | Ảnh đại diện. Đặt bằng `PATCH /api/me` (nhập đường dẫn) hoặc `POST /api/me/avatar` (tải file; quá lớn → 413, sai định dạng → 415) *(T04, D07)* |
 | role | VARCHAR(10) | NN, DEFAULT 'student', CHECK (student, admin) | `POST /api/auth/register` luôn tạo student (không nhận role từ client); admin chỉ tạo bằng `scripts/create_admin.py`; `PATCH /api/me` không cho sửa role *(T09)* |
 | created_at | TIMESTAMP | DEFAULT now() | Ngày tạo tài khoản |
 
 Quy tắc *(D08, T04, T05)*:
-- Đăng xuất (`POST /api/auth/logout`): JWT không lưu trạng thái, client xóa token, server trả 200. Không có bảng lưu token bị thu hồi.
+- Đăng xuất (`POST /api/auth/logout`): access token (JWT) không lưu trạng thái; backend **thu hồi refresh token tương ứng** trong RefreshToken (§3.5), client xóa token. *(D08 cũ "không có bảng lưu token" đã bị D-AUTH-03 thay thế một phần.)*
 - `PATCH /api/me` chỉ nhận `full_name` và `avatar_url`.
 - `GET /api/me/summary` trả `ongoing_courses`, `completed_courses` (đếm StudentCourse theo status), `known_skills` (UserSkill status = known), `ongoing_paths` (LearningPath status = ongoing). `[NEEDS DECISION ND-13]`
 
@@ -176,6 +176,36 @@ Luồng xử lý:
 3. Hợp lệ: cập nhật `User.hashed_password`, ghi `used_at`, vô hiệu các mã cũ chưa dùng của tài khoản.
 
 Cấu hình cần có: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `FRONTEND_URL`, `RESET_TOKEN_EXPIRE_MINUTES`. *(T28)*
+
+### 3.5. RefreshToken — **PROPOSED** (chờ duyệt: ND-43)
+
+Mục đích: lưu trạng thái refresh token để hỗ trợ hết hạn, thu hồi, rotation và đăng xuất (D-AUTH-03). Mỗi dòng là một refresh token đã cấp. **Chỉ lưu bản băm**, không lưu token gốc.
+
+Đánh giá tái sử dụng bảng có sẵn: PasswordResetToken (§3.4) có cấu trúc tương tự (băm, hết hạn, đã dùng) nhưng khác mục đích, vòng đời và quy tắc vô hiệu hóa; gộp chung sẽ làm lẫn hai luồng bảo mật → đề xuất bảng riêng.
+
+Cột **bắt buộc** — suy ra trực tiếp từ yêu cầu đã chốt trong D-AUTH-03:
+
+| Trường | Kiểu đề xuất | Ràng buộc đề xuất | Công dụng | Yêu cầu nguồn |
+|---|---|---|---|---|
+| refresh_token_id | BIGSERIAL | PK | Mã bản ghi | — |
+| user_id | INT | NN, FK → User (ON DELETE CASCADE) | Token của tài khoản nào | Thu hồi theo người dùng (logout) |
+| token_hash | VARCHAR(255) | NN, UQ | Bản băm của refresh token; tra cứu khi làm mới | "Ưu tiên lưu bản băm" |
+| expires_at | TIMESTAMP | NN | Hết hạn = lúc cấp + thời hạn refresh (ND-40) | "Hỗ trợ hết hạn" |
+| revoked_at | TIMESTAMP | NULL | Trống = còn hiệu lực; có giá trị = đã thu hồi (logout) hoặc đã bị xoay vòng | "Thu hồi, rotation, đăng xuất" |
+| created_at | TIMESTAMP | NN, DEFAULT now() | Lúc cấp | — |
+
+Cột **tùy chọn** — chỉ thêm nếu ND-42 / ND-43 chọn:
+
+| Trường | Kiểu đề xuất | Dùng khi |
+|---|---|---|
+| replaced_by_id | BIGINT NULL, FK → RefreshToken | Lưu liên kết rotation (token cũ → token mới) để truy vết/phát hiện tái sử dụng |
+| family_id | UUID NN | Thu hồi cả chuỗi token của một phiên khi phát hiện tái sử dụng (ND-42) |
+
+Quy tắc (theo D-AUTH-03):
+- Làm mới (`POST /api/auth/refresh`): băm token nhận được → tìm `token_hash` → từ chối nếu không thấy, `expires_at` đã qua hoặc `revoked_at` có giá trị → hợp lệ thì **trong một transaction**: ghi `revoked_at` cho token cũ, tạo dòng mới cho refresh token mới.
+- Đăng xuất: ghi `revoked_at` cho refresh token tương ứng (phạm vi một phiên hay mọi phiên: ND-48).
+- Token đã bị xoay vòng hoặc thu hồi không được dùng lại; chính sách khi phát hiện tái sử dụng: ND-42.
+- Thuật toán băm token, index, dọn dẹp bản ghi hết hạn: ND-43.
 
 ---
 
@@ -423,6 +453,7 @@ Dataset không có email/số điện thoại nên bảng để trống tới kh
 | 26 | User | Feedback | user_id | 1–N | CASCADE |
 | 27 | Course | Feedback | course_id | 1–N (0..1) | CASCADE |
 | 28 | Course | CourseContact | course_id | 1–1 (0..1) | CASCADE |
+| 29 *(PROPOSED)* | User | RefreshToken | user_id | 1–N | CASCADE |
 
 CASCADE = xóa cha thì xóa con; RESTRICT = còn con thì không cho xóa cha; SET NULL = xóa cha thì ô tham chiếu để trống. FK tới Skill dùng RESTRICT để không mất dữ liệu khi admin xóa kỹ năng. FK StudentCourse → Course là RESTRICT: không xóa được khóa học đang có học viên theo dõi.
 
@@ -445,5 +476,6 @@ CASCADE = xóa cha thì xóa con; RESTRICT = còn con thì không cho xóa cha; 
 - **Theo dõi khóa học:** lưu → StudentCourse `bookmarked`; tham gia → `ongoing`, ghi joined_at, trả URL; từ bỏ → `abandoned`.
 - **Gia sư AI:** mỗi phiên là một ChatSession (`session_type = 'tutor'`), tin nhắn ở ChatMessage.
 - **Ôn tập (theo khóa học):** `POST /api/courses/{course_id}/review-attempts` tạo ReviewAttempt gắn StudentCourse và 20 ReviewAnswer từ Question (`is_active = true`) của các kỹ năng khóa dạy; khi nộp, chấm trong một transaction, nếu đạt (≥ 60%) cập nhật UserSkill và StudentCourse, rồi gửi email kết quả chạy nền. *(T11, T13, T29)*
+- **Đăng nhập / làm mới / đăng xuất (D-AUTH-03, PROPOSED §3.5):** login cấp access token (30 phút) và refresh token (lưu bản băm vào RefreshToken); `POST /api/auth/refresh` xoay vòng refresh token trong một transaction; logout ghi `revoked_at`.
 - **Quên mật khẩu:** `POST /api/auth/forgot-password` tạo PasswordResetToken và gửi link; `POST /api/auth/reset-password` kiểm tra mã, cập nhật `User.hashed_password`, ghi used_at. *(T01, T02)*
 - **Gửi phản hồi:** lưu một dòng Feedback gắn User (và Course nếu về khóa học); khung liên hệ lấy từ Course.instructor và CourseContact.
