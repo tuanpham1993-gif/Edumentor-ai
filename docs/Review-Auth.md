@@ -49,6 +49,8 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
   - `hash_password`, `verify_password` (bcrypt — chú ý giới hạn 72 byte).
   - `create_access_token(user_id)`, `decode_access_token(token)` (pyjwt; `sub` là chuỗi; có `exp`).
   - `validate_password(password)` — một hàm dùng chung cho đăng ký, đặt lại, đổi mật khẩu (FR-48).
+  - [x] Phần 1 — mật khẩu (`hash_password`, `verify_password`, `validate_password`): xong 05/11 ✔ Claude đã review
+  - [ ] Phần 2 — JWT (`create_access_token`, `decode_access_token`)
   - ✅ Xong khi: thử trong Python shell băm → kiểm tra đúng/sai; tạo token → giải mã ra đúng `user_id`; token hết hạn bị từ chối.
 - [ ] **1.4 `core/dependencies.py`** — dự kiến 10/11 → 10/11 · thực tế __/__ → __/__
   - `get_current_user`: đọc `Authorization: Bearer`, giải mã, **lấy user từ DB** (vai trò lấy từ DB), user không tồn tại/bị khóa → 401.
@@ -146,7 +148,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 | # | Câu hỏi | Cần trước GĐ | Trả lời | Ngày chốt |
 |---|---|---|---|---|
-| Q1 | Quy tắc mật khẩu cụ thể (độ dài, chữ hoa/thường/số/ký tự đặc biệt)? | 1 | | |
+| Q1 | Quy tắc mật khẩu cụ thể (độ dài, chữ hoa/thường/số/ký tự đặc biệt)? | 1 | Theo màn demo ChangePassword/ResetPassword: ≥ 8 ký tự, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt; thêm ≤ 72 byte (giới hạn bcrypt). Còn mở: có cho dấu cách / chữ có dấu không? | 05/11 |
 | Q2 | Access token sống bao lâu? (`.env` đang để 30 phút) | 1 | | |
 | Q3 | Đăng ký có trường `confirm_password` không? | 2 | | |
 | Q4 | Login trả về những gì (token + user)? | 2 | | |
