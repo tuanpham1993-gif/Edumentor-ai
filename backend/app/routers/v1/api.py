@@ -6,7 +6,7 @@ nên hãy xếp theo đúng trình tự bài giảng để sinh viên dễ theo 
 """
 
 from fastapi import APIRouter
-from app.routers.v1.endpoints import health, me
+from app.routers.v1.endpoints import auth, health, me
 
 # TẠM NGẮT (tuan/future-auth): router của Hòa phụ thuộc model đang ngắt, bật lại khi gộp.
 # from app.routers.v1.endpoints import learning_path_node_service, learning_path_service, skill_service
@@ -15,6 +15,9 @@ api_router = APIRouter()
 
 # 1. Kiểm tra sức khỏe hệ thống
 api_router.include_router(health.router, tags=["System Health"], prefix="/health")
+
+# 2. Tài khoản & hồ sơ (Tuấn)
+api_router.include_router(auth.router, tags=["Auth"], prefix="/auth")
 api_router.include_router(me.router, tags=["Me"], prefix="/me")
 
 # api_router.include_router(learning_path_service.router, tags=["learning path endpoint"], prefix="/learning-paths")

@@ -13,7 +13,7 @@
 |---|---|---|---|---|---|
 | 0 | Chuẩn bị môi trường | 05/11 → 06/11 | 05/11 | 05/11 | [x] |
 | 1 | Model User + nền bảo mật (`core/`) | 07/11 → 10/11 | 05/11 | 05/11 | [x] |
-| 2 | Đăng ký, đăng nhập | 11/11 → 13/11 | __/__ | __/__ | [ ] |
+| 2 | Đăng ký, đăng nhập | 11/11 → 13/11 | 05/11 | __/__ | [ ] |
 | 3 | Hồ sơ `/me`, đổi mật khẩu | 14/11 → 17/11 | __/__ | __/__ | [ ] |
 | 4 | Kỹ năng `/me/skills` | 18/11 → 20/11 | __/__ | __/__ | [ ] |
 | 5 | Quên / đặt lại mật khẩu | 21/11 → 24/11 | __/__ | __/__ | [ ] |
@@ -59,17 +59,17 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 2 — Đăng ký, đăng nhập (11/11 → 13/11)
 
-- [ ] **2.1 `schemas/auth.py`, `schemas/user.py`** — dự kiến 11/11 → 11/11 · thực tế __/__ → __/__
+- [x] **2.1 `schemas/auth.py`, `schemas/user.py`** — dự kiến 11/11 → 11/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
   - `RegisterRequest`, `LoginRequest`, `TokenResponse`, `UserResponse`.
   - Response **không** có `hashed_password`.
-- [ ] **2.2 `repositories/user_repository.py`** — `get_by_email`, `get_by_id`, `create` — dự kiến 11/11 → 11/11 · thực tế __/__ → __/__
-- [ ] **2.3 `services/auth_service.py`**: `register`, `login` — dự kiến 12/11 → 12/11 · thực tế __/__ → __/__
+- [x] **2.2 `repositories/user_repository.py`** — `get_by_email`, `get_by_id`, `create` — dự kiến 11/11 → 11/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
+- [x] **2.3 `services/auth_service.py`**: `register`, `login` — dự kiến 12/11 → 12/11 · thực tế 05/11 → 05/11 ✔ Claude đã review (có bắt IntegrityError khi 2 người đăng ký cùng lúc)
   - Đăng ký luôn tạo `student`, không nhận `role` từ client; email trùng → lỗi.
-- [ ] **2.4 `endpoints/auth.py`** + gắn vào `api.py` (prefix `/auth`) — dự kiến 12/11 → 13/11 · thực tế __/__ → __/__
+- [x] **2.4 `endpoints/auth.py`** + gắn vào `api.py` (prefix `/auth`) — dự kiến 12/11 → 13/11 · thực tế 05/11 → 05/11 ✔ Claude đã review (đã sửa lỗi gắn `me` 2 lần)
   - `POST /api/auth/register` → 201; email trùng → 409.
   - `POST /api/auth/login` → access token + thông tin user; sai → 401.
 - [ ] **2.5 `tests/test_auth.py`** — đăng ký OK, email trùng, mật khẩu yếu, đăng nhập đúng/sai — dự kiến 13/11 · thực tế __/__
-- [ ] **2.6 Thử trên Swagger** `/api/docs`: đăng ký → đăng nhập → bấm **Authorize** — dự kiến 13/11 · thực tế __/__
+- [x] **2.6 Thử trên Swagger** `/api/docs`: đăng ký → đăng nhập → bấm **Authorize** — dự kiến 13/11 · thực tế 05/11 — S1–S8 qua (201/409/409/422/401/200/200/băm)
 - [ ] **2.7 Nhờ Claude review GĐ2** — dự kiến 13/11 · thực tế __/__
 
 ## Giai đoạn 3 — Hồ sơ và đổi mật khẩu (14/11 → 17/11)
@@ -150,8 +150,8 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 |---|---|---|---|---|
 | Q1 | Quy tắc mật khẩu cụ thể (độ dài, chữ hoa/thường/số/ký tự đặc biệt)? | 1 | Theo màn demo ChangePassword/ResetPassword: ≥ 8 ký tự, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt; thêm ≤ 72 byte (giới hạn bcrypt). Còn mở: có cho dấu cách / chữ có dấu không? | 05/11 |
 | Q2 | Access token sống bao lâu? (`.env` đang để 30 phút) | 1 | | |
-| Q3 | Đăng ký có trường `confirm_password` không? | 2 | | |
-| Q4 | Login trả về những gì (token + user)? | 2 | | |
+| Q3 | Đăng ký có trường `confirm_password` không? | 2 | Có — màn demo Register: Họ và tên, Email, Mật khẩu, Xác nhận mật khẩu. Chỉ dùng để so khớp, không lưu. | 05/11 |
+| Q4 | Login trả về những gì (token + user)? | 2 | `{access_token, token_type: "bearer", user: {user_id, full_name, email, role, avatar_url, created_at}}`; sai → 401 (demo Main: "Lỗi 401: …"). Refresh token bổ sung ở GĐ6. | 05/11 |
 | Q5 | Dùng model `Skills` nào khi gộp với nhóm? | 4 | | |
 | Q6 | Link đặt lại mật khẩu sống bao lâu? Gửi email bằng SMTP nào? | 5 | | |
 | Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | | |
