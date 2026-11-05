@@ -12,7 +12,7 @@
 | GĐ | Nội dung | Dự kiến | Thực tế bắt đầu | Thực tế xong | Xong |
 |---|---|---|---|---|---|
 | 0 | Chuẩn bị môi trường | 05/11 → 06/11 | 05/11 | 05/11 | [x] |
-| 1 | Model User + nền bảo mật (`core/`) | 07/11 → 10/11 | 05/11 | __/__ | [ ] |
+| 1 | Model User + nền bảo mật (`core/`) | 07/11 → 10/11 | 05/11 | 05/11 | [x] |
 | 2 | Đăng ký, đăng nhập | 11/11 → 13/11 | __/__ | __/__ | [ ] |
 | 3 | Hồ sơ `/me`, đổi mật khẩu | 14/11 → 17/11 | __/__ | __/__ | [ ] |
 | 4 | Kỹ năng `/me/skills` | 18/11 → 20/11 | __/__ | __/__ | [ ] |
@@ -52,10 +52,10 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
   - [x] Phần 1 — mật khẩu (`hash_password`, `verify_password`, `validate_password`): xong 05/11 ✔ Claude đã review
   - [x] Phần 2 — JWT (`create_access_token`, `decode_access_token`): xong 05/11 ✔ Claude đã review
   - ✅ Xong khi: thử trong Python shell băm → kiểm tra đúng/sai; tạo token → giải mã ra đúng `user_id`; token hết hạn bị từ chối.
-- [ ] **1.4 `core/dependencies.py`** — dự kiến 10/11 → 10/11 · thực tế __/__ → __/__
+- [x] **1.4 `core/dependencies.py`** — dự kiến 10/11 → 10/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
   - `get_current_user`: đọc `Authorization: Bearer`, giải mã, **lấy user từ DB** (vai trò lấy từ DB), user không tồn tại/bị khóa → 401.
   - `require_admin`: role khác `admin` → 403.
-- [ ] **1.5 Nhờ Claude review GĐ1** — dự kiến 10/11 · thực tế __/__
+- [x] **1.5 Nhờ Claude review GĐ1** — dự kiến 10/11 · thực tế 05/11 — GĐ1 đạt: T2–T6 qua hết
 
 ## Giai đoạn 2 — Đăng ký, đăng nhập (11/11 → 13/11)
 
@@ -74,7 +74,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 3 — Hồ sơ và đổi mật khẩu (14/11 → 17/11)
 
-- [ ] **3.1 `GET /api/me`** — trả họ tên, email, vai trò, ngày tham gia, ảnh đại diện (FR-03) — dự kiến 14/11 · thực tế __/__
+- [ ] **3.1 `GET /api/me`** — trả họ tên, email, vai trò, ngày tham gia, ảnh đại diện (FR-03) — dự kiến 14/11 · thực tế bắt đầu 05/11 (đã có `schemas/user.py` `UserMe` + `endpoints/me.py`, test tạm qua 200/401; chưa gắn vào `api.py`)
 - [ ] **3.2 `PATCH /api/me`** — chỉ sửa `full_name`; email và role **không** đổi được — dự kiến 14/11 → 15/11 · thực tế __/__ → __/__
 - [ ] **3.3 `POST /api/me/change-password`** — mật khẩu hiện tại, mới, xác nhận; sai mật khẩu hiện tại → lỗi; áp `validate_password` (FR-48) — dự kiến 16/11 → 16/11 · thực tế __/__ → __/__
 - [ ] **3.4 `services/user_service.py`, `endpoints/me.py`** (prefix `/me`) — dự kiến 14/11 → 16/11 · thực tế __/__ → __/__
