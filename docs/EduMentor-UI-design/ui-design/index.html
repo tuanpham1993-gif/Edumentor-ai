@@ -1,0 +1,370 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EduMentor AI – Giao diện web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;background:#100e0c;color:#f3efe8;font-family:"Be Vietnam Pro",system-ui,sans-serif;padding:40px 24px}
+h1{margin:0 0 6px}.lead{color:#a39d93;margin:0 0 20px;max-width:900px;line-height:1.6}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.filters button{font:inherit;font-size:13px;padding:6px 14px;border-radius:999px;border:1px solid #2c2b29;background:none;color:#cfc8bd;cursor:pointer}
+.filters button[aria-pressed=true]{background:#f5a524;border-color:#f5a524;color:#1a1208;font-weight:600}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.c{display:flex;flex-direction:column;gap:8px;padding:12px;background:#16171a;border:1px solid #2c2b29;border-radius:14px}
+.c:hover{border-color:#f5a524}
+.shot img{width:100%;height:190px;object-fit:cover;object-position:top;border-radius:8px;display:block}
+.meta{display:flex;gap:8px;align-items:center}.f{font-size:12px;color:#8f897f}
+.st{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:#2a2116;color:#ffc35c;border:1px solid #5a4320}
+.st.giu{background:#1c1c1c;color:#a39d93;border-color:#2c2b29}.st.moi{background:#13261d;color:#5fd59b;border-color:#24533a}
+h2{margin:0;font-size:16px}.r{font-size:12px;color:#a39d93}
+.c p{margin:0;font-size:13px;color:#cfc8bd;line-height:1.5}
+ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+li{display:flex;gap:8px;align-items:baseline;font-size:12px;min-width:0}
+li b{flex:none;min-width:58px;text-align:center;font-size:10.5px;padding:2px 6px;border-radius:5px;color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent);border:1px solid color-mix(in srgb,var(--c) 45%,transparent)}
+li code{color:#e6dfd4;overflow-wrap:anywhere}
+.links{display:flex;gap:14px;margin-top:auto;padding-top:6px;font-size:13px}
+a{color:#f5a524;text-decoration:none}a:hover{color:#ffc35c}
+</style></head><body>
+<h1>EduMentor AI – Giao diện web</h1>
+<p class="lead">41 ảnh, chụp lại từ bản demo React: 33 màn và các trạng thái quan trọng (tắt đèn ở Đăng nhập, hộp thoại sơ đồ kỹ năng, giải thích bài ôn tập, ngăn chi tiết phản hồi, bong bóng chat, giao diện Sáng).
+Mỗi thẻ ghi endpoint mà màn đó gọi; "CHƯA CÓ" là chỗ <code>api-endpoints.md</code> chưa định nghĩa (M1–M4). Ảnh trong <code>png-endpoints/</code> có in sẵn bảng endpoint ở cuối ảnh. Mở HTML cần mạng để tải font.</p>
+<div class="filters" role="group" aria-label="Lọc theo trạng thái">
+<button type="button" data-f="" aria-pressed="true">Tất cả (41)</button>
+<button type="button" data-f="sua" aria-pressed="false">Đã sửa (8)</button>
+<button type="button" data-f="moi" aria-pressed="false">Mới (12)</button>
+<button type="button" data-f="giu" aria-pressed="false">Giữ bố cục gốc (21)</button>
+</div>
+<div class="g">
+<article class="c" data-status="sua">
+<a href="png-endpoints/Main.png" class="shot"><img loading="lazy" src="png/Main.png" alt="Đăng nhập"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">01 · Tuấn</span></div>
+<h2>Đăng nhập</h2><code class="r">/login</code>
+<p>Thêm bong bóng chat; chỉ còn 1 dây kéo điều khiển cả 3 đèn; mở trang thì đèn tắt sẵn (xem Main-LampOff), kéo dây thì cả 3 đèn sáng và form hiện</p>
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/auth/login</code></li></ul>
+<div class="links"><a href="html/Main.html">HTML</a><a href="png/Main.png">PNG</a><a href="png-endpoints/Main.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/Main-LampOff.png" class="shot"><img loading="lazy" src="png/Main-LampOff.png" alt="Đăng nhập · mở trang, đèn tắt sẵn"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">01 · Tuấn</span></div>
+<h2>Đăng nhập · mở trang, đèn tắt sẵn</h2><code class="r">/login</code>
+<p>Trạng thái khi mở trang: cả 3 đèn tắt sẵn, form ẩn và bị khóa; kéo dây (chỉ 1 dây) thì cả 3 đèn sáng và form hiện; kéo lần nữa thì tắt cả 3</p>
+<ul><li><b style="--c:#6b665e">—</b><code>Không gọi API</code></li></ul>
+<div class="links"><a href="html/Main-LampOff.html">HTML</a><a href="png/Main-LampOff.png">PNG</a><a href="png-endpoints/Main-LampOff.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/Register.png" class="shot"><img loading="lazy" src="png/Register.png" alt="Đăng ký"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">01 · Tuấn</span></div>
+<h2>Đăng ký</h2><code class="r">/register</code>
+<p>Thêm bong bóng chat; đổi theo Đăng nhập: 1 dây kéo điều khiển cả 3 đèn, mở trang đèn tắt sẵn, form ẩn và bị khóa</p>
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/auth/register</code></li></ul>
+<div class="links"><a href="html/Register.html">HTML</a><a href="png/Register.png">PNG</a><a href="png-endpoints/Register.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ForgotPassword.png" class="shot"><img loading="lazy" src="png/ForgotPassword.png" alt="Quên mật khẩu"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Quên mật khẩu</h2><code class="r">/forgot-password</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/auth/forgot-password</code></li></ul>
+<div class="links"><a href="html/ForgotPassword.html">HTML</a><a href="png/ForgotPassword.png">PNG</a><a href="png-endpoints/ForgotPassword.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ForgotSent.png" class="shot"><img loading="lazy" src="png/ForgotSent.png" alt="Đã gửi yêu cầu"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Đã gửi yêu cầu</h2><code class="r">/forgot-sent</code>
+
+<ul><li><b style="--c:#6b665e">—</b><code>Không gọi API</code></li></ul>
+<div class="links"><a href="html/ForgotSent.html">HTML</a><a href="png/ForgotSent.png">PNG</a><a href="png-endpoints/ForgotSent.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ResetPassword.png" class="shot"><img loading="lazy" src="png/ResetPassword.png" alt="Đặt lại mật khẩu"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Đặt lại mật khẩu</h2><code class="r">/reset-password</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/auth/reset-password</code></li></ul>
+<div class="links"><a href="html/ResetPassword.html">HTML</a><a href="png/ResetPassword.png">PNG</a><a href="png-endpoints/ResetPassword.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ResetExpired.png" class="shot"><img loading="lazy" src="png/ResetExpired.png" alt="Liên kết hết hạn"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Liên kết hết hạn</h2><code class="r">/reset-expired</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/auth/reset-password</code></li></ul>
+<div class="links"><a href="html/ResetExpired.html">HTML</a><a href="png/ResetExpired.png">PNG</a><a href="png-endpoints/ResetExpired.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/Profile.png" class="shot"><img loading="lazy" src="png/Profile.png" alt="Hồ sơ"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">01 · Tuấn</span></div>
+<h2>Hồ sơ</h2><code class="r">/me</code>
+<p>Thêm công tắc giao diện Tối/Sáng</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/summary</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/courses?status=</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/skills</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/review-history</code></li></ul>
+<div class="links"><a href="html/Profile.html">HTML</a><a href="png/Profile.png">PNG</a><a href="png-endpoints/Profile.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/Profile-Light.png" class="shot"><img loading="lazy" src="png/Profile-Light.png" alt="Hồ sơ · giao diện Sáng"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">01 · Tuấn</span></div>
+<h2>Hồ sơ · giao diện Sáng</h2><code class="r">/me</code>
+<p>Chế độ Sáng tông kem ấm; lựa chọn lưu ở localStorage (em-theme)</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/summary</code></li><li><b style="--c:#6b665e">—</b><code>localStorage em-theme</code></li></ul>
+<div class="links"><a href="html/Profile-Light.html">HTML</a><a href="png/Profile-Light.png">PNG</a><a href="png-endpoints/Profile-Light.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/EditProfile.png" class="shot"><img loading="lazy" src="png/EditProfile.png" alt="Sửa hồ sơ"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">01 · Tuấn</span></div>
+<h2>Sửa hồ sơ</h2><code class="r">/me/edit</code>
+<p>Bỏ nút &quot;Tải ảnh lên&quot; và ô đường dẫn ảnh; bấm vào avatar (icon camera) để đổi ảnh</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/me</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/me/avatar</code></li></ul>
+<div class="links"><a href="html/EditProfile.html">HTML</a><a href="png/EditProfile.png">PNG</a><a href="png-endpoints/EditProfile.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ChangePassword.png" class="shot"><img loading="lazy" src="png/ChangePassword.png" alt="Đổi mật khẩu"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Đổi mật khẩu</h2><code class="r">/me/password</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/me/change-password</code></li></ul>
+<div class="links"><a href="html/ChangePassword.html">HTML</a><a href="png/ChangePassword.png">PNG</a><a href="png-endpoints/ChangePassword.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/Skills.png" class="shot"><img loading="lazy" src="png/Skills.png" alt="Kỹ năng của tôi"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Kỹ năng của tôi</h2><code class="r">/me/skills</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/skills</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/me/skills</code></li></ul>
+<div class="links"><a href="html/Skills.html">HTML</a><a href="png/Skills.png">PNG</a><a href="png-endpoints/Skills.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/Logout.png" class="shot"><img loading="lazy" src="png/Logout.png" alt="Xác nhận đăng xuất"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">01 · Tuấn</span></div>
+<h2>Xác nhận đăng xuất</h2><code class="r">/logout</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/auth/logout</code></li></ul>
+<div class="links"><a href="html/Logout.html">HTML</a><a href="png/Logout.png">PNG</a><a href="png-endpoints/Logout.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/Courses.png" class="shot"><img loading="lazy" src="png/Courses.png" alt="Danh mục khóa học"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">02 · Khôi</span></div>
+<h2>Danh mục khóa học</h2><code class="r">/courses</code>
+<p>Header thêm mục &quot;Liên hệ&quot;; thêm bong bóng chat</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/courses?search=&amp;level=&amp;sort_by=</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/me/bookmarks</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/me/bookmarks/{course_id}</code></li></ul>
+<div class="links"><a href="html/Courses.html">HTML</a><a href="png/Courses.png">PNG</a><a href="png-endpoints/Courses.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/Courses-Light.png" class="shot"><img loading="lazy" src="png/Courses-Light.png" alt="Danh mục khóa học · giao diện Sáng"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">02 · Khôi</span></div>
+<h2>Danh mục khóa học · giao diện Sáng</h2><code class="r">/courses</code>
+<p>Bìa khóa học dùng bảng màu pastel riêng cho chế độ Sáng</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/courses?search=&amp;level=&amp;sort_by=</code></li></ul>
+<div class="links"><a href="html/Courses-Light.html">HTML</a><a href="png/Courses-Light.png">PNG</a><a href="png-endpoints/Courses-Light.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/CourseDetail.png" class="shot"><img loading="lazy" src="png/CourseDetail.png" alt="Chi tiết khóa học"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">02 · Khôi</span></div>
+<h2>Chi tiết khóa học</h2><code class="r">/courses/1</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/courses/{id}</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/courses/{id}/skills</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/courses/{id}/status</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/me/bookmarks</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/me/bookmarks/{course_id}</code></li></ul>
+<div class="links"><a href="html/CourseDetail.html">HTML</a><a href="png/CourseDetail.png">PNG</a><a href="png-endpoints/CourseDetail.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/JoinDialog.png" class="shot"><img loading="lazy" src="png/JoinDialog.png" alt="Tham gia khóa học"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">02 · Khôi</span></div>
+<h2>Tham gia khóa học</h2><code class="r">/courses/5/join</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/courses/{id}/join</code></li></ul>
+<div class="links"><a href="html/JoinDialog.html">HTML</a><a href="png/JoinDialog.png">PNG</a><a href="png-endpoints/JoinDialog.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/MyCourses.png" class="shot"><img loading="lazy" src="png/MyCourses.png" alt="Khóa học của tôi"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">03–04 · Tâm, Hòa</span></div>
+<h2>Khóa học của tôi</h2><code class="r">/me/courses</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/courses?status=</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/bookmarks</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/me/bookmarks/{course_id}</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/me/courses/{id}/status</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/me/courses/{id}</code></li></ul>
+<div class="links"><a href="html/MyCourses.html">HTML</a><a href="png/MyCourses.png">PNG</a><a href="png-endpoints/MyCourses.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/Consultant.png" class="shot"><img loading="lazy" src="png/Consultant.png" alt="AI tư vấn lộ trình"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">05 · Hòa</span></div>
+<h2>AI tư vấn lộ trình</h2><code class="r">/consultant</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/chat/learning-path</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/learning-paths</code></li></ul>
+<div class="links"><a href="html/Consultant.html">HTML</a><a href="png/Consultant.png">PNG</a><a href="png-endpoints/Consultant.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/MyPaths.png" class="shot"><img loading="lazy" src="png/MyPaths.png" alt="Lộ trình của tôi"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">05 · Hòa</span></div>
+<h2>Lộ trình của tôi</h2><code class="r">/me/learning-paths</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/learning-paths</code></li></ul>
+<div class="links"><a href="html/MyPaths.html">HTML</a><a href="png/MyPaths.png">PNG</a><a href="png-endpoints/MyPaths.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/PathDetail.png" class="shot"><img loading="lazy" src="png/PathDetail.png" alt="Chi tiết lộ trình"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">06–07 · Hòa</span></div>
+<h2>Chi tiết lộ trình</h2><code class="r">/learning-paths/1</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/learning-paths/{id}</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/learning-paths/{id}</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/learning-paths/{id}</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/learning-paths/{id}/nodes/{skill_id}</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/learning-paths/{id}/edges/{from}/{to}</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/learning-paths/{id}/nodes/{skill_id}/courses?sort_by=</code></li></ul>
+<div class="links"><a href="html/PathDetail.html">HTML</a><a href="png/PathDetail.png">PNG</a><a href="png-endpoints/PathDetail.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/PathEdit.png" class="shot"><img loading="lazy" src="png/PathEdit.png" alt="Thêm node / cạnh"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">06 · Hòa</span></div>
+<h2>Thêm node / cạnh</h2><code class="r">/learning-paths/1/edit</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/learning-paths/{id}/nodes</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/learning-paths/{id}/edges</code></li></ul>
+<div class="links"><a href="html/PathEdit.html">HTML</a><a href="png/PathEdit.png">PNG</a><a href="png-endpoints/PathEdit.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/Tutor.png" class="shot"><img loading="lazy" src="png/Tutor.png" alt="AI Tutor"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">08 · Tâm</span></div>
+<h2>AI Tutor</h2><code class="r">/tutor</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/chat/sessions</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/chat/sessions</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/chat/sessions/{id}</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/chat/sessions/{id}</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/chat/sessions/{id}/messages</code></li></ul>
+<div class="links"><a href="html/Tutor.html">HTML</a><a href="png/Tutor.png">PNG</a><a href="png-endpoints/Tutor.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ReviewStart.png" class="shot"><img loading="lazy" src="png/ReviewStart.png" alt="Bắt đầu ôn tập"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">09 · Tuấn</span></div>
+<h2>Bắt đầu ôn tập</h2><code class="r">/courses/1/review</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/courses/{id}/review</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/review-history?course_id=</code></li></ul>
+<div class="links"><a href="html/ReviewStart.html">HTML</a><a href="png/ReviewStart.png">PNG</a><a href="png-endpoints/ReviewStart.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ReviewQuiz.png" class="shot"><img loading="lazy" src="png/ReviewQuiz.png" alt="Làm bài"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">09 · Tuấn</span></div>
+<h2>Làm bài</h2><code class="r">/courses/1/review/attempt</code>
+
+<ul><li><b style="--c:#2fb67c">POST</b><code>/api/courses/{id}/review-attempts</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/review-attempts/{id}/submit</code></li><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M1 · lưu bài làm dở</code></li></ul>
+<div class="links"><a href="html/ReviewQuiz.html">HTML</a><a href="png/ReviewQuiz.png">PNG</a><a href="png-endpoints/ReviewQuiz.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ReviewResult.png" class="shot"><img loading="lazy" src="png/ReviewResult.png" alt="Kết quả"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">09 · Tuấn</span></div>
+<h2>Kết quả</h2><code class="r">/review-result/101</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/review-history/{attempt_id}</code></li></ul>
+<div class="links"><a href="html/ReviewResult.html">HTML</a><a href="png/ReviewResult.png">PNG</a><a href="png-endpoints/ReviewResult.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/ReviewHistory.png" class="shot"><img loading="lazy" src="png/ReviewHistory.png" alt="Lịch sử ôn tập"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">09 · Tuấn</span></div>
+<h2>Lịch sử ôn tập</h2><code class="r">/me/review-history</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/review-history?course_id=&amp;passed=</code></li></ul>
+<div class="links"><a href="html/ReviewHistory.html">HTML</a><a href="png/ReviewHistory.png">PNG</a><a href="png-endpoints/ReviewHistory.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/ReviewDetail.png" class="shot"><img loading="lazy" src="png/ReviewDetail.png" alt="Chi tiết lần làm"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">09 · Tuấn</span></div>
+<h2>Chi tiết lần làm</h2><code class="r">/me/review-history/103</code>
+<p>Giải thích ẩn mặc định; nút &quot;Xem giải thích&quot; từng câu và &quot;Hiện tất cả giải thích&quot;</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/review-history/{attempt_id}</code></li></ul>
+<div class="links"><a href="html/ReviewDetail.html">HTML</a><a href="png/ReviewDetail.png">PNG</a><a href="png-endpoints/ReviewDetail.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/ReviewDetail-Explanation.png" class="shot"><img loading="lazy" src="png/ReviewDetail-Explanation.png" alt="Chi tiết lần làm · mở giải thích"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">09 · Tuấn</span></div>
+<h2>Chi tiết lần làm · mở giải thích</h2><code class="r">/me/review-history/103</code>
+<p>Trạng thái sau khi bấm &quot;Hiện tất cả giải thích&quot;</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/me/review-history/{attempt_id}</code></li></ul>
+<div class="links"><a href="html/ReviewDetail-Explanation.html">HTML</a><a href="png/ReviewDetail-Explanation.png">PNG</a><a href="png-endpoints/ReviewDetail-Explanation.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/Contact.png" class="shot"><img loading="lazy" src="png/Contact.png" alt="Liên hệ &amp; góp ý"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">10 · Tâm</span></div>
+<h2>Liên hệ &amp; góp ý</h2><code class="r">/contact</code>
+<p>Màn mới: phản hồi về khóa học hoặc hệ thống, thẻ liên hệ của khóa học</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/courses</code></li><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M2 · liên hệ khóa học</code></li><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M2 · gửi phản hồi</code></li></ul>
+<div class="links"><a href="html/Contact.html">HTML</a><a href="png/Contact.png">PNG</a><a href="png-endpoints/Contact.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/ContactGuest.png" class="shot"><img loading="lazy" src="png/ContactGuest.png" alt="Liên hệ &amp; góp ý · chưa đăng nhập"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">10 · Tâm</span></div>
+<h2>Liên hệ &amp; góp ý · chưa đăng nhập</h2><code class="r">/contact-guest</code>
+<p>Banner yêu cầu đăng nhập, form bị khóa</p>
+<ul><li><b style="--c:#6b665e">—</b><code>Không gọi API</code></li></ul>
+<div class="links"><a href="html/ContactGuest.html">HTML</a><a href="png/ContactGuest.png">PNG</a><a href="png-endpoints/ContactGuest.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/AdminCourses.png" class="shot"><img loading="lazy" src="png/AdminCourses.png" alt="Quản trị khóa học"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">11 · Khôi</span></div>
+<h2>Quản trị khóa học</h2><code class="r">/admin/courses</code>
+<p>Sidebar thêm Phản hồi và Lộ trình người dùng</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/admin/courses</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/admin/courses</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/admin/courses/{id}</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/admin/courses/{id}</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/admin/course-skill-relations</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/admin/course-skill-relations/{course_id}/{skill_id}</code></li></ul>
+<div class="links"><a href="html/AdminCourses.html">HTML</a><a href="png/AdminCourses.png">PNG</a><a href="png-endpoints/AdminCourses.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="sua">
+<a href="png-endpoints/AdminSkills.png" class="shot"><img loading="lazy" src="png/AdminSkills.png" alt="Kỹ năng và quan hệ"></a>
+<div class="meta"><span class="st sua">Đã sửa</span><span class="f">11–12 · Khôi, Hòa</span></div>
+<h2>Kỹ năng và quan hệ</h2><code class="r">/admin/skills</code>
+<p>Danh mục kỹ năng chiếm toàn bộ chiều rộng; bấm một kỹ năng để mở sơ đồ quan hệ</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/admin/skills</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/admin/skills</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/admin/skills/{id}</code></li></ul>
+<div class="links"><a href="html/AdminSkills.html">HTML</a><a href="png/AdminSkills.png">PNG</a><a href="png-endpoints/AdminSkills.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/AdminSkills-Relations.png" class="shot"><img loading="lazy" src="png/AdminSkills-Relations.png" alt="Kỹ năng · hộp thoại sơ đồ quan hệ"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">12 · Hòa</span></div>
+<h2>Kỹ năng · hộp thoại sơ đồ quan hệ</h2><code class="r">/admin/skills</code>
+<p>Hộp thoại lớn: cột &quot;Học trước&quot; và &quot;Mở ra&quot;, đổi loại / xóa quan hệ trên sơ đồ, form tạo quan hệ</p>
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/admin/skill-relations</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/admin/skill-relations</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/admin/skill-relations/{from}/{to}</code></li><li><b style="--c:#ef5a5a">DELETE</b><code>/api/admin/skill-relations/{from}/{to}</code></li></ul>
+<div class="links"><a href="html/AdminSkills-Relations.html">HTML</a><a href="png/AdminSkills-Relations.png">PNG</a><a href="png-endpoints/AdminSkills-Relations.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/AdminBasePaths.png" class="shot"><img loading="lazy" src="png/AdminBasePaths.png" alt="Mẫu lộ trình cơ sở"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">Quản trị</span></div>
+<h2>Mẫu lộ trình cơ sở</h2><code class="r">/admin/base-paths</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/admin/base-learning-paths</code></li><li><b style="--c:#f5a524">PATCH</b><code>/api/admin/base-learning-paths/{template_id}</code></li></ul>
+<div class="links"><a href="html/AdminBasePaths.html">HTML</a><a href="png/AdminBasePaths.png">PNG</a><a href="png-endpoints/AdminBasePaths.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="giu">
+<a href="png-endpoints/AdminHistorical.png" class="shot"><img loading="lazy" src="png/AdminHistorical.png" alt="Dữ liệu lịch sử"></a>
+<div class="meta"><span class="st giu">Giữ</span><span class="f">Quản trị</span></div>
+<h2>Dữ liệu lịch sử</h2><code class="r">/admin/historical</code>
+
+<ul><li><b style="--c:#3d8bfd">GET</b><code>/api/admin/historical-learning-paths</code></li><li><b style="--c:#2fb67c">POST</b><code>/api/admin/historical-learning-path-imports</code></li></ul>
+<div class="links"><a href="html/AdminHistorical.html">HTML</a><a href="png/AdminHistorical.png">PNG</a><a href="png-endpoints/AdminHistorical.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/AdminFeedback.png" class="shot"><img loading="lazy" src="png/AdminFeedback.png" alt="Quản trị phản hồi"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">13 · Tâm</span></div>
+<h2>Quản trị phản hồi</h2><code class="r">/admin/feedback</code>
+<p>Màn mới: số liệu, tab, tìm kiếm, lọc loại, lọc thời gian, sắp xếp theo thời gian</p>
+<ul><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M2 · danh sách phản hồi</code></li></ul>
+<div class="links"><a href="html/AdminFeedback.html">HTML</a><a href="png/AdminFeedback.png">PNG</a><a href="png-endpoints/AdminFeedback.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/AdminFeedback-Detail.png" class="shot"><img loading="lazy" src="png/AdminFeedback-Detail.png" alt="Quản trị phản hồi · lọc 30 ngày + ngăn chi tiết"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">13 · Tâm</span></div>
+<h2>Quản trị phản hồi · lọc 30 ngày + ngăn chi tiết</h2><code class="r">/admin/feedback</code>
+<p>Chọn &quot;30 ngày qua&quot; và bấm một dòng: ngăn chi tiết trượt ra, nút trả lời qua email</p>
+<ul><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M2 · danh sách phản hồi</code></li><li><b style="--c:#6b665e">—</b><code>mailto:</code></li></ul>
+<div class="links"><a href="html/AdminFeedback-Detail.html">HTML</a><a href="png/AdminFeedback-Detail.png">PNG</a><a href="png-endpoints/AdminFeedback-Detail.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/AdminUserPaths.png" class="shot"><img loading="lazy" src="png/AdminUserPaths.png" alt="Lộ trình người dùng"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">14 · Hòa</span></div>
+<h2>Lộ trình người dùng</h2><code class="r">/admin/user-paths</code>
+<p>Màn mới: thẻ mục tiêu phổ biến, xem theo Người dùng hoặc Mục tiêu lộ trình, lọc trạng thái, mục đích lộ trình, tiến độ và đồ thị chỉ xem</p>
+<ul><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M3 · danh sách người dùng</code></li><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M3 · lộ trình của người dùng</code></li></ul>
+<div class="links"><a href="html/AdminUserPaths.html">HTML</a><a href="png/AdminUserPaths.png">PNG</a><a href="png-endpoints/AdminUserPaths.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/ChatBubble-Menu.png" class="shot"><img loading="lazy" src="png/ChatBubble-Menu.png" alt="Bong bóng chat · 4 lối tắt"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">Tiện ích chung</span></div>
+<h2>Bong bóng chat · 4 lối tắt</h2><code class="r">/courses</code>
+<p>Bong bóng cố định góc phải dưới: GitHub, Zalo, Liên hệ, AI tư vấn khóa học</p>
+<ul><li><b style="--c:#6b665e">—</b><code>Link ngoài</code></li><li><b style="--c:#6b665e">—</b><code>/contact</code></li></ul>
+<div class="links"><a href="html/ChatBubble-Menu.html">HTML</a><a href="png/ChatBubble-Menu.png">PNG</a><a href="png-endpoints/ChatBubble-Menu.png">PNG + endpoint</a></div>
+</article>
+<article class="c" data-status="moi">
+<a href="png-endpoints/ChatBubble-Advisor.png" class="shot"><img loading="lazy" src="png/ChatBubble-Advisor.png" alt="Bong bóng chat · AI tư vấn khóa học"></a>
+<div class="meta"><span class="st moi">Mới</span><span class="f">Tiện ích chung</span></div>
+<h2>Bong bóng chat · AI tư vấn khóa học</h2><code class="r">/courses</code>
+<p>AI gợi ý khóa học kèm thẻ khóa; người mới ưu tiên khóa cơ bản, tài khoản dựa trên kỹ năng</p>
+<ul><li><b style="--c:#c05bd6">CHƯA CÓ</b><code>M4 · chat tư vấn khóa học</code></li><li><b style="--c:#3d8bfd">GET</b><code>/api/me/skills</code></li></ul>
+<div class="links"><a href="html/ChatBubble-Advisor.html">HTML</a><a href="png/ChatBubble-Advisor.png">PNG</a><a href="png-endpoints/ChatBubble-Advisor.png">PNG + endpoint</a></div>
+</article>
+</div>
+<script>
+document.querySelectorAll('.filters button').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('.filters button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.c').forEach((c) => { c.hidden = b.dataset.f && c.dataset.status !== b.dataset.f; });
+}));
+</script>
+</body></html>

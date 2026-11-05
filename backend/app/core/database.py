@@ -18,9 +18,11 @@ def create_tables() -> None:
 
 def init_db() -> None:
     """Gọi một lần lúc ứng dụng khởi động."""
-    from app.core.seed_data.seed_data_code import seed_data
     create_tables()
-    seed_data(SessionLocal())
+    # TẠM NGẮT (tuan/future-auth): seed của Hòa đọc ../datajson/*.json nằm ngoài repo.
+    # Bật lại khi gộp với nhóm:
+    # from app.core.seed_data.seed_data_code import seed_data
+    # seed_data(SessionLocal())
 
 def get_db():
     db = SessionLocal()

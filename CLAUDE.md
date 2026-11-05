@@ -1,80 +1,67 @@
 # CLAUDE.md — EduMentor AI
 
-Chỉ thị cấp project cho Claude Code. File này **không** chứa quy tắc nghiệp vụ; quy tắc nằm trong `docs/` (xem bản đồ bên dưới).
+Chỉ thị cho Claude Code trong repo này. Ngắn gọn có chủ đích; nghiệp vụ nằm trong tài liệu nguồn bên dưới.
 
 ## Project
 
-EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình học bằng AI, gợi ý khóa học MOOC bên ngoài theo kỹ năng, AI Tutor, và ghi nhận kỹ năng qua bài ôn tập. Tổng quan: `README.md`.
+EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình học bằng AI, gợi ý khóa học MOOC theo kỹ năng, AI Tutor, AI tư vấn khóa học, ôn tập ghi nhận kỹ năng. Ba vai trò: Khách, Học viên (`student`), Admin (`admin`).
 
-Trạng thái hiện tại: **chưa có code** — các file trong `backend/` và `frontend/` chỉ là file rỗng giữ chỗ. Đừng suy luận nghiệp vụ từ code; đọc tài liệu.
+## Cách làm việc với Tuấn (quan trọng)
 
-## Công nghệ
+- Tuấn **tự viết code** để học. Claude hướng dẫn, đưa khung/gợi ý, giải thích, review và chỉ lỗi — **không viết thay toàn bộ** tính năng trừ khi được yêu cầu rõ.
+- Tuấn phụ trách: **01 Tài khoản & hồ sơ** và **09 Ôn tập**. Không sửa code module của người khác (Khôi, Tâm, Hòa — xem `README.md`); nếu cần thay đổi ở đó thì nêu ra.
+- Tài liệu cũ do AI sinh (`docs/decisions.md`, `docs/structure.md`, `docs/modules/*`, mã `ND-xx`, `D-AUTH-xx`, `AP-Rxx`…) **đã bỏ**. Không tham chiếu chúng.
+- Khi tài liệu nguồn chưa nói rõ: hỏi Tuấn, không tự chọn nghiệp vụ.
 
-- Backend: Python 3.11+, FastAPI, SQLAlchemy, Alembic, Pydantic, PostgreSQL 14+.
-- Frontend: React 18 + Vite, react-router-dom, Axios, CSS Modules; không thêm thư viện animation/UI/icon (D-FE-09).
-- Kiểm thử: `pytest`. Định dạng: `black`, `ruff`.
-- Cài đặt và lệnh thường dùng: `SETUP.md`.
+## Tài liệu nguồn
 
-## Kiến trúc
-
-Router → Service → Repository → Model, Schema (Pydantic) cho dữ liệu vào/ra. Router không viết truy vấn hay nghiệp vụ; service giữ quy tắc nghiệp vụ và transaction; repository chỉ truy vấn; thay đổi CSDL chỉ qua Alembic migration. Chi tiết: `docs/structure.md` §4 và `docs/backend-rules.md`. Không đổi kiến trúc này nếu không được yêu cầu.
-
-## Nguồn sự thật
-
-| Chủ đề | File |
+| Nội dung | File |
 |---|---|
-| Quyết định đã chốt, mâu thuẫn, `[NEEDS DECISION]` | `docs/decisions.md` |
-| Thiết kế CSDL (chính thức) | `docs/database-design.md` |
-| Danh sách endpoint toàn hệ thống | `docs/api-endpoints.md` |
-| Cây thư mục, ánh xạ endpoint → file | `docs/structure.md` |
-| Quy ước API, code, Git, kiểm thử | `docs/conventions.md` |
-| Quy tắc backend dùng chung (lỗi, transaction, bảo mật, cấu hình) | `docs/backend-rules.md` |
-| Đặc tả + contract module Xác thực & Hồ sơ | `docs/modules/auth-profile.md` (+ `.tests.md`) |
-| Đặc tả + contract module Ôn tập & Đánh giá | `docs/modules/review-assessment.md` (+ `.tests.md`) |
-| Giao diện | Bản demo `EduMentor AI Demo.html` (D-FE-02; không phải nguồn quy tắc API hay nghiệp vụ). `docs/wireframes/`, `docs/EduMentor-UI-design/` không còn dùng |
-| Quyết định frontend, route, quy ước giao diện | `docs/decisions.md` §6, `docs/structure.md` §1 và §3, `docs/conventions.md` §4 |
-| Báo cáo đối chiếu frontend với demo | `docs/ui-animation/` |
+| Nghiệp vụ, vai trò, đặc tả API | `EdumentorAi_BA_v3.md` |
+| Yêu cầu chức năng / phi chức năng | `AI_Learning_Assistant_Recommender_SRS_v3.md` |
+| Danh sách endpoint | `api-endpoints.md` |
+| Thiết kế CSDL | `docs/database-design.md` (đang là khung, chưa chốt) |
+| Giao diện chuẩn (~40 màn, route, endpoint mỗi màn) | `docs/EduMentor-UI-design/ui-design/` |
+| Kế hoạch code tay | `docs/Auth-EduMentor AI.md` |
+| Kế hoạch + tiến độ 01 Tài khoản & Hồ sơ (Claude review) | `docs/Review-Auth.md` |
+| Kế hoạch + tiến độ 09 Ôn tập & Đánh giá (Claude review) | `docs/Review-Assessment.md` |
+| Quy ước API, lỗi, Git | `docs/conventions.md` |
+| Cài đặt backend | `SETUP_BACKEND.md` |
 
-Nguồn gốc nghiệp vụ mới nhất là `docs/EduMentor_Database_Design_Da_Sua.docx` và `docs/EduMentor_Checklist_Da_Sua_API.xlsx` (đã được chép vào các file `.md` trên). Thứ tự ưu tiên khi mâu thuẫn: `docs/decisions.md` §1.
+## Công nghệ (theo code thực tế)
 
-## Phạm vi đang phụ trách
+- Backend: Python 3.11+, FastAPI, SQLAlchemy 2 (**sync** `Session`), Pydantic v2 + pydantic-settings, PostgreSQL 16 qua Docker (`localhost:5433`, DB `edumentor_db`).
+- Bảng đang tạo bằng `Base.metadata.create_all` lúc khởi động; Alembic có khung (`alembic/env.py`) nhưng `alembic.ini` chưa cấu hình — nhóm chưa chốt chuyển sang migration.
+- Auth: `bcrypt` (băm mật khẩu), `pyjwt` (JWT) — đã có trong `backend/requirements.txt`.
+- Frontend: React + Vite, Axios.
+- Test: `pytest`. Format: `black`, `ruff`.
 
-Chỉ hai module có bộ tri thức đầy đủ và skill riêng — cả hai **do Tuấn phụ trách chính thức** (D-OWN-01):
+## Kiến trúc backend
 
-| Module | Owner | Đặc tả | Implementation | Skill |
-|---|---|---|---|---|
-| Xác thực & Hồ sơ người dùng | Tuấn | SPEC CONFIRMED (còn PENDING) | NOT IMPLEMENTED | `auth-profile` |
-| Ôn tập & Đánh giá kiến thức | Tuấn | SPEC CONFIRMED (còn BLOCKED/PENDING) | NOT IMPLEMENTED | `review-assessment` |
+`backend/app/`: Router → Service → Repository → Model, Schema Pydantic cho vào/ra. Mỗi module cùng một tên ở mọi lớp.
 
-Phân công các module khác và quy ước trạng thái: `docs/decisions.md` §2 "Phân công". Không dùng "DONE" cho phần chưa có code.
+- `routers/v1/endpoints/<module>.py` (admin: `endpoints/admin/`) — chỉ nhận request, gọi service, đổi lỗi thành `HTTPException`. Gắn router trong `routers/v1/api.py` (prefix `/api`).
+- `services/<module>_service.py` — nghiệp vụ, `commit`/`rollback`.
+- `repositories/<module>_repository.py` — chỉ truy vấn DB.
+- `models/` — SQLAlchemy, import trong `models/__init__.py` để `create_all` thấy.
+- `schemas/` — Pydantic; response không bao giờ chứa `hashed_password` hay token gốc.
+- `core/` — `config`, `database`, `security`, `dependencies` (`get_current_user`, `require_admin`), `errors`, `pagination`, `email`.
 
-Các module khác (Course Tracking, Learning Path, AI Consultant/Tutor, Recommendation, Admin) không thuộc phạm vi **backend**: không tự sửa file backend của chúng; nếu việc đang làm cần thay đổi ở đó, nêu ra cho người dùng.
+Nhiều file hiện là khung rỗng (docstring + TODO) — không có nghĩa tính năng đã xong.
 
-**Ngoại lệ — frontend (D-FE-01):** việc dựng frontend theo bản demo được phê duyệt cho cả 14 tính năng (danh sách và người phụ trách: `README.md`). Chỉ trong `frontend/`; giữ mỗi nhóm tính năng ở thư mục/file riêng, không ghi đè phần việc thành viên khác đã có; tuân theo D-FE-01 … D-FE-11 và dừng ở các mục ND-49 … ND-55 còn mở.
+## Ghi chú môi trường
 
-## Quy tắc làm việc
-
-- **Không tự suy diễn nghiệp vụ.** Khi tài liệu chưa quy định, hoặc mục đó đang là `[NEEDS DECISION]` trong `docs/decisions.md`: dừng và hỏi người dùng, hoặc chỉ làm phần không phụ thuộc rồi nói rõ chỗ còn chờ. Không chọn "phương án hợp lý" thay nhóm.
-- Không thêm endpoint, bảng, cột, ràng buộc, cơ chế bảo mật hay thư viện ngoài tài liệu.
-- Hạng mục chưa được nhóm tick (☐) trong `docs/decisions.md` §3 không được coi là đã chốt.
-- Phát hiện tài liệu thiếu hoặc mâu thuẫn → đề xuất bổ sung `ND-xx` vào `docs/decisions.md`; không vá bằng code.
-- Khi một quyết định được chốt: cập nhật `docs/decisions.md` trước, rồi mới sửa tài liệu module và code.
-- Mỗi quy tắc chỉ được ghi ở **một** file; file khác tham chiếu mã (`D05`, `T13`, `AP-R14`, `RV-R07`, `ND-24`) thay vì chép lại.
-- Không commit `.env`; không hard-code bí mật hay ngưỡng nghiệp vụ.
-
-## Cách dùng skill và tài liệu
-
-- Công việc thuộc một trong hai module trên → dùng skill tương ứng (`.claude/skills/auth-profile`, `.claude/skills/review-assessment`). Skill cho biết cần đọc phần nào của `docs/` và theo thứ tự nào; đọc đúng phần cần cho việc đang làm.
-- Hai skill project này được ưu tiên hơn các skill cấp user có phạm vi tương tự (`edumentor-auth-profile`, `edumentor-review`, `database-schema`) khi làm việc trong repo này.
-- Đụng tới CSDL → `docs/database-design.md`. Đụng tới lỗi, transaction, xác thực dùng chung → `docs/backend-rules.md`.
+- Seed dữ liệu của Hòa (`core/seed_data/`, đọc `../datajson/*.json` ngoài repo) **đang được ngắt** trên nhánh `tuan/future-auth`; router/model Learning Path & Skill của Hòa cũng chưa gắn. Sẽ gộp lại sau với nhóm.
+- Không commit `.env`; không hard-code bí mật.
 
 ## Lệnh
 
-```bash
-cd backend && pytest                                  # kiểm thử
-black . && ruff check .                               # định dạng
-alembic revision --autogenerate -m "mo ta"            # migration mới
-alembic upgrade head                                  # áp dụng migration
+```powershell
+docker compose up -d                                    # Postgres
+.\.venv\Scripts\Activate.ps1
+cd backend; uvicorn app.main:app --reload               # http://localhost:8000/api/docs
+pytest                                                  # trong backend/
+black . ; ruff check .
 ```
 
-Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`); nhánh `feature/<nhóm>-<mô-tả>`. Chi tiết: `docs/conventions.md` §5.
+Commit: `<loại>(<phạm vi>): <mô tả>` (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). Không commit/push khi Tuấn chưa yêu cầu.
