@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     SQL_ECHO: bool
 
-    #SECRET_KEY: str
+    SECRET_KEY: str
     #ENCRYPTION_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int

@@ -7,6 +7,6 @@
 # from app.models.learning_path import LearningPath, LearningPathNode, LearningPathEdge
 
 # Model của Tuấn: import ở đây để create_all tạo bảng, ví dụ:
-# from app.models.user import Users
+from app.models.user import Users
 
-__all__ = []
+__all__ = ["Users"]

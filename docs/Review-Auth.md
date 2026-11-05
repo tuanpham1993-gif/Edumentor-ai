@@ -11,8 +11,8 @@
 
 | GĐ | Nội dung | Dự kiến | Thực tế bắt đầu | Thực tế xong | Xong |
 |---|---|---|---|---|---|
-| 0 | Chuẩn bị môi trường | 05/11 → 06/11 | __/__ | __/__ | [ ] |
-| 1 | Model User + nền bảo mật (`core/`) | 07/11 → 10/11 | __/__ | __/__ | [ ] |
+| 0 | Chuẩn bị môi trường | 05/11 → 06/11 | 05/11 | 05/11 | [x] |
+| 1 | Model User + nền bảo mật (`core/`) | 07/11 → 10/11 | 05/11 | __/__ | [ ] |
 | 2 | Đăng ký, đăng nhập | 11/11 → 13/11 | __/__ | __/__ | [ ] |
 | 3 | Hồ sơ `/me`, đổi mật khẩu | 14/11 → 17/11 | __/__ | __/__ | [ ] |
 | 4 | Kỹ năng `/me/skills` | 18/11 → 20/11 | __/__ | __/__ | [ ] |
@@ -27,23 +27,24 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 0 — Chuẩn bị môi trường (05/11 → 06/11)
 
-- [ ] **0.1 Chạy được server rỗng** — dự kiến 05/11 → 05/11 · thực tế __/__ → __/__
+- [x] **0.1 Chạy được server rỗng** — dự kiến 05/11 → 05/11 · thực tế 05/11 → 05/11
   - Bật Docker Desktop → `docker compose up -d` → `uvicorn app.main:app --reload`.
   - ✅ Xong khi: `GET /api/health/health` trả `"database": "connected"`.
-- [ ] **0.2 Commit khung cấu trúc trên nhánh `tuan/future-auth`** — dự kiến 05/11 → 05/11 · thực tế __/__ → __/__
+- [x] **0.2 Commit khung cấu trúc trên nhánh `tuan/future-auth`** — dự kiến 05/11 → 05/11 · thực tế 05/11 → 05/11 (commit `580772c`, đã push)
   - Gồm: xóa tài liệu cũ, file khung mới, `CLAUDE.md` mới, ngắt seed của Hòa.
-- [ ] **0.3 Đọc BA** FR-01 → FR-04, FR-40 → FR-48, bảng API mục 10 (dòng ~1291–1303) — dự kiến 06/11 → 06/11 · thực tế __/__ → __/__
+- [x] **0.3 Đọc BA** FR-01 → FR-04, FR-40 → FR-48, bảng API mục 10 (dòng ~1291–1303) — dự kiến 06/11 → 06/11 · thực tế 05/11 → 05/11
   - Ghi câu hỏi chưa rõ vào mục **Câu hỏi cần chốt** cuối file.
-- [ ] **0.4 Xem màn demo**: Register, Login (Main), ForgotPassword, ForgotSent, ResetPassword, ResetExpired, Profile, EditProfile, ChangePassword, Skills, Logout — dự kiến 06/11 → 06/11 · thực tế __/__ → __/__
+- [x] **0.4 Xem màn demo**: Register, Login (Main), ForgotPassword, ForgotSent, ResetPassword, ResetExpired, Profile, EditProfile, ChangePassword, Skills, Logout — dự kiến 06/11 → 06/11 · thực tế 05/11 → 05/11
   - Ghi lại: form có những trường gì, thông báo lỗi nào → đó là request/response cần làm.
 
 ## Giai đoạn 1 — Model User + nền bảo mật (07/11 → 10/11)
 
-- [ ] **1.1 `models/user.py`** — dự kiến 07/11 → 07/11 · thực tế __/__ → __/__
+- [x] **1.1 `models/user.py`** — dự kiến 07/11 → 07/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
   - Cột: `user_id`, `email` (unique), `hashed_password`, `full_name`, `avatar_url` (nullable), `role` (`student`/`admin`, mặc định `student`), `is_active`, `created_at`.
+  - Thực tế: thêm `updated_at`; `full_name` tối đa 100 ký tự (schema GĐ2 phải khớp `max_length=100`); có `CheckConstraint ck_users_role`.
   - Import trong `models/__init__.py`.
   - ✅ Xong khi: pgAdmin thấy bảng `users`.
-- [ ] **1.2 `core/config.py`** thêm `SECRET_KEY` (đang bị comment), kiểm tra `ACCESS_TOKEN_EXPIRE_MINUTES`, `ALGORITHM` — dự kiến 08/11 → 08/11 · thực tế __/__ → __/__
+- [x] **1.2 `core/config.py`** thêm `SECRET_KEY` (đang bị comment), kiểm tra `ACCESS_TOKEN_EXPIRE_MINUTES`, `ALGORITHM` — dự kiến 08/11 → 08/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
 - [ ] **1.3 `core/security.py`** — dự kiến 08/11 → 09/11 · thực tế __/__ → __/__
   - `hash_password`, `verify_password` (bcrypt — chú ý giới hạn 72 byte).
   - `create_access_token(user_id)`, `decode_access_token(token)` (pyjwt; `sub` là chuỗi; có `exp`).
@@ -160,4 +161,5 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | Ngày | Đã làm | Vướng mắc |
 |---|---|---|
 | 05/11 | Cài môi trường, chuẩn hóa cấu trúc, viết lại `CLAUDE.md`, ngắt seed của Hòa, lập kế hoạch này | Docker Desktop tắt → server chưa chạy lại |
+| 05/11 | Xong GĐ0; viết model `Users` (1.1), bật `SECRET_KEY` (1.2); bảng `users` đã tạo trong DB | Lỡ viết model vào `skill.py` của Hòa → đã chuyển sang `user.py` và `git restore` lại `skill.py` |
 | | | |
