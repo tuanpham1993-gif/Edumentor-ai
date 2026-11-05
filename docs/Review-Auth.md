@@ -164,4 +164,5 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 |---|---|---|
 | 05/11 | Cài môi trường, chuẩn hóa cấu trúc, viết lại `CLAUDE.md`, ngắt seed của Hòa, lập kế hoạch này | Docker Desktop tắt → server chưa chạy lại |
 | 05/11 | Xong GĐ0; viết model `Users` (1.1), bật `SECRET_KEY` (1.2); bảng `users` đã tạo trong DB | Lỡ viết model vào `skill.py` của Hòa → đã chuyển sang `user.py` và `git restore` lại `skill.py` |
+| 05/11 | Xong GĐ1 (security, dependencies); GĐ2: register/login + `GET /me`; tự chạy trên Swagger: đăng ký → đăng nhập → Authorize → `/me` ra 200 | Đăng nhập 401 vì chưa đăng ký; đăng ký 422 vì `password` và `confirm_password` lệch dấu `!` — validator chặn đúng |
 | | | |
