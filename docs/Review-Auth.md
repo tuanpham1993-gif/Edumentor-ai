@@ -45,12 +45,12 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
   - Import trong `models/__init__.py`.
   - ✅ Xong khi: pgAdmin thấy bảng `users`.
 - [x] **1.2 `core/config.py`** thêm `SECRET_KEY` (đang bị comment), kiểm tra `ACCESS_TOKEN_EXPIRE_MINUTES`, `ALGORITHM` — dự kiến 08/11 → 08/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
-- [ ] **1.3 `core/security.py`** — dự kiến 08/11 → 09/11 · thực tế __/__ → __/__
+- [x] **1.3 `core/security.py`** — dự kiến 08/11 → 09/11 · thực tế 05/11 → 05/11 ✔ Claude đã review
   - `hash_password`, `verify_password` (bcrypt — chú ý giới hạn 72 byte).
   - `create_access_token(user_id)`, `decode_access_token(token)` (pyjwt; `sub` là chuỗi; có `exp`).
   - `validate_password(password)` — một hàm dùng chung cho đăng ký, đặt lại, đổi mật khẩu (FR-48).
   - [x] Phần 1 — mật khẩu (`hash_password`, `verify_password`, `validate_password`): xong 05/11 ✔ Claude đã review
-  - [ ] Phần 2 — JWT (`create_access_token`, `decode_access_token`)
+  - [x] Phần 2 — JWT (`create_access_token`, `decode_access_token`): xong 05/11 ✔ Claude đã review
   - ✅ Xong khi: thử trong Python shell băm → kiểm tra đúng/sai; tạo token → giải mã ra đúng `user_id`; token hết hạn bị từ chối.
 - [ ] **1.4 `core/dependencies.py`** — dự kiến 10/11 → 10/11 · thực tế __/__ → __/__
   - `get_current_user`: đọc `Authorization: Bearer`, giải mã, **lấy user từ DB** (vai trò lấy từ DB), user không tồn tại/bị khóa → 401.
