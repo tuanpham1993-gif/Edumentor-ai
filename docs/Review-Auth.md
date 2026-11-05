@@ -13,7 +13,7 @@
 |---|---|---|---|---|---|
 | 0 | Chuẩn bị môi trường | 05/11 → 06/11 | 05/11 | 05/11 | [x] |
 | 1 | Model User + nền bảo mật (`core/`) | 07/11 → 10/11 | 05/11 | 05/11 | [x] |
-| 2 | Đăng ký, đăng nhập | 11/11 → 13/11 | 05/11 | __/__ | [ ] |
+| 2 | Đăng ký, đăng nhập | 11/11 → 13/11 | 05/11 | 05/11 | [x] |
 | 3 | Hồ sơ `/me`, đổi mật khẩu | 14/11 → 17/11 | __/__ | __/__ | [ ] |
 | 4 | Kỹ năng `/me/skills` | 18/11 → 20/11 | __/__ | __/__ | [ ] |
 | 5 | Quên / đặt lại mật khẩu | 21/11 → 24/11 | __/__ | __/__ | [ ] |
@@ -68,9 +68,9 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 - [x] **2.4 `endpoints/auth.py`** + gắn vào `api.py` (prefix `/auth`) — dự kiến 12/11 → 13/11 · thực tế 05/11 → 05/11 ✔ Claude đã review (đã sửa lỗi gắn `me` 2 lần)
   - `POST /api/auth/register` → 201; email trùng → 409.
   - `POST /api/auth/login` → access token + thông tin user; sai → 401.
-- [ ] **2.5 `tests/test_auth.py`** — đăng ký OK, email trùng, mật khẩu yếu, đăng nhập đúng/sai — dự kiến 13/11 · thực tế __/__
+- [x] **2.5 `tests/test_auth.py`** — đăng ký OK, email trùng, mật khẩu yếu, đăng nhập đúng/sai — dự kiến 13/11 · thực tế 05/11 — 13 test PASSED (`pytest tests/test_auth.py -v`) ✔ Claude đã review
 - [x] **2.6 Thử trên Swagger** `/api/docs`: đăng ký → đăng nhập → bấm **Authorize** — dự kiến 13/11 · thực tế 05/11 — S1–S8 qua (201/409/409/422/401/200/200/băm)
-- [ ] **2.7 Nhờ Claude review GĐ2** — dự kiến 13/11 · thực tế __/__
+- [x] **2.7 Nhờ Claude review GĐ2** — dự kiến 13/11 · thực tế 05/11 — GĐ2 đạt
 
 ## Giai đoạn 3 — Hồ sơ và đổi mật khẩu (14/11 → 17/11)
 
@@ -128,13 +128,13 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 | Method | Endpoint | GĐ | Code | Test | Review |
 |---|---|---|---|---|---|
-| POST | `/api/auth/register` | 2 | [ ] | [ ] | [ ] |
-| POST | `/api/auth/login` | 2 | [ ] | [ ] | [ ] |
+| POST | `/api/auth/register` | 2 | [x] | [x] | [x] |
+| POST | `/api/auth/login` | 2 | [x] | [x] | [x] |
 | POST | `/api/auth/refresh` | 6 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/logout` | 6 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/forgot-password` | 5 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/reset-password` | 5 | [ ] | [ ] | [ ] |
-| GET | `/api/me` | 3 | [ ] | [ ] | [ ] |
+| GET | `/api/me` | 3 | [x] | [x] | [ ] |
 | PATCH | `/api/me` | 3 | [ ] | [ ] | [ ] |
 | POST | `/api/me/avatar` | 7 | [ ] | [ ] | [ ] |
 | POST | `/api/me/change-password` | 3 | [ ] | [ ] | [ ] |
