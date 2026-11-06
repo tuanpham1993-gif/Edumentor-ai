@@ -17,7 +17,16 @@ class Settings(BaseSettings):
     #ENCRYPTION_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
-    
+    RESET_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # Email — để trống hoặc "smtp.example.com" thì chỉ IN link ra terminal (chế độ dev)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    FRONTEND_URL: str = "http://localhost:5173"
+
 
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:8000",

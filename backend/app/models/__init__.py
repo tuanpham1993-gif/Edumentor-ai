@@ -8,5 +8,6 @@
 
 # Model của Tuấn: import ở đây để create_all tạo bảng, ví dụ:
 from app.models.user import Users
+from app.models.auth_token import PasswordResetToken
 
-__all__ = ["Users"]
+__all__ = ["Users","PasswordResetToken"]

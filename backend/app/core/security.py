@@ -11,6 +11,9 @@ from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
+import hashlib
+import secrets
+
 
 from app.core.config import settings
 
@@ -114,3 +117,16 @@ def decode_access_token(token: str) -> int | None:
     # KeyError: thiếu "sub" · ValueError: "sub" không phải số
     except (jwt.InvalidTokenError, KeyError, ValueError):
         return None
+
+# =====================================================================
+# PHẦN 3 — TOKEN NGẪU NHIÊN (reset mật khẩu, refresh token)
+# =====================================================================  
+
+def generate_token() -> str:
+    """Chuỗi ngẫu nhiên an toàn (~43 ký tự) — gửi cho người dùng, KHÔNG lưu bản gốc."""
+    return secrets.token_urlsafe(32)  # TODO 72
+
+
+def hash_token(token: str) -> str:
+    """Bản băm SHA-256 (hex) — lưu vào DB và dùng để tìm token."""
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()  # TODO 73

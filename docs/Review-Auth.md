@@ -17,7 +17,7 @@
 | 2 | Đăng ký, đăng nhập | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
 | 3 | Hồ sơ `/me`, đổi mật khẩu | 06/11 → 07/11 | 06/11 | 06/11 | [x] |
 | 4 | Kỹ năng `/me/skills` | 08/11 → 09/11 | __/__ | __/__ | [ ] |
-| 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | __/__ | __/__ | [ ] |
+| 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | 06/11 | 06/11 | [x] |
 | 6 | Refresh token, đăng xuất | 12/11 → 13/11 | __/__ | __/__ | [ ] |
 | 7 | Ảnh đại diện, thống kê `/me/summary` | 14/11 → 14/11 | __/__ | __/__ | [ ] |
 | 8 | Hoàn thiện, kiểm thử, gộp nhánh | 15/11 → 15/11 | __/__ | __/__ | [ ] |
@@ -94,11 +94,11 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 5 — Quên / đặt lại mật khẩu (10/11 → 11/11)
 
-- [ ] **5.1 Model `PasswordResetToken`** trong `models/auth_token.py` — lưu **bản băm** token, hạn dùng, đã dùng chưa — dự kiến 10/11 · thực tế __/__
-- [ ] **5.2 `core/email.py`** — gửi email (lúc dev có thể in link ra console) — dự kiến 10/11 · thực tế __/__
-- [ ] **5.3 `POST /api/auth/forgot-password`** — **luôn** trả cùng thông báo dù email có hay không (FR-47) — dự kiến 11/11 · thực tế __/__
-- [ ] **5.4 `POST /api/auth/reset-password`** — token đúng, còn hạn, chưa dùng; dùng xong vô hiệu; áp `validate_password` — dự kiến 11/11 · thực tế __/__ → __/__
-- [ ] **5.5 Test + nhờ Claude review GĐ5** — dự kiến 11/11 · thực tế __/__
+- [x] **5.1 Model `PasswordResetToken`** trong `models/auth_token.py` — lưu **bản băm** token, hạn dùng, đã dùng chưa — dự kiến 10/11 · thực tế 06/11 ✔ Claude đã review (+ `generate_token`, `hash_token` SHA-256 trong security.py; bảng có FK → users ON DELETE CASCADE)
+- [x] **5.2 `core/email.py`** — gửi email (lúc dev có thể in link ra console) — dự kiến 10/11 · thực tế 06/11 ✔ Claude đã review (dev: SMTP_HOST chứa example.com → in link ra terminal; biến .env khai báo trong config.py)
+- [x] **5.3 `POST /api/auth/forgot-password`** — **luôn** trả cùng thông báo dù email có hay không (FR-47) — dự kiến 11/11 · thực tế 06/11 ✔ Claude đã review (gửi email bằng BackgroundTasks — không dò được email qua thời gian phản hồi)
+- [x] **5.4 `POST /api/auth/reset-password`** — token đúng, còn hạn, chưa dùng; dùng xong vô hiệu; áp `validate_password` — dự kiến 11/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu hàm `invalidate_unused_reset_tokens` gây 500)
+- [x] **5.5 Test + nhờ Claude review GĐ5** — dự kiến 11/11 · thực tế 06/11 — `tests/test_password_reset.py` 10 test (Claude viết); tổng 36 passed; F1–F8 qua trên PostgreSQL thật
 
 ## Giai đoạn 6 — Refresh token, đăng xuất (12/11 → 13/11)
 
@@ -133,8 +133,8 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | POST | `/api/auth/login` | 2 | [x] | [x] | [x] |
 | POST | `/api/auth/refresh` | 6 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/logout` | 6 | [ ] | [ ] | [ ] |
-| POST | `/api/auth/forgot-password` | 5 | [ ] | [ ] | [ ] |
-| POST | `/api/auth/reset-password` | 5 | [ ] | [ ] | [ ] |
+| POST | `/api/auth/forgot-password` | 5 | [x] | [x] | [x] |
+| POST | `/api/auth/reset-password` | 5 | [x] | [x] | [x] |
 | GET | `/api/me` | 3 | [x] | [x] | [x] |
 | PATCH | `/api/me` | 3 | [x] | [x] | [x] |
 | POST | `/api/me/avatar` | 7 | [ ] | [ ] | [ ] |
@@ -154,11 +154,11 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | Q3 | Đăng ký có trường `confirm_password` không? | 2 | Có — màn demo Register: Họ và tên, Email, Mật khẩu, Xác nhận mật khẩu. Chỉ dùng để so khớp, không lưu. | 05/11 |
 | Q4 | Login trả về những gì (token + user)? | 2 | `{access_token, token_type: "bearer", user: {user_id, full_name, email, role, avatar_url, created_at}}`; sai → 401 (demo Main: "Lỗi 401: …"). Refresh token bổ sung ở GĐ6. | 05/11 |
 | Q5 | Dùng model `Skills` nào khi gộp với nhóm? | 4 | | |
-| Q6 | Link đặt lại mật khẩu sống bao lâu? Gửi email bằng SMTP nào? | 5 | | |
-| Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | | |
+| Q6 | Link đặt lại mật khẩu sống bao lâu? Gửi email bằng SMTP nào? | 5 | **Đề xuất (chờ nhóm xác nhận):** 30 phút (`RESET_TOKEN_EXPIRE_MINUTES`); dev in link ra terminal, khi có SMTP thật dùng `smtplib` (không thêm thư viện) | 06/11 |
+| Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | **Đề xuất (chờ nhóm xác nhận):** 7 ngày (`REFRESH_TOKEN_EXPIRE_DAYS`); có xoay vòng (mỗi refresh token dùng 1 lần); gửi trong JSON body | 06/11 |
 | Q8 | Ảnh đại diện: định dạng, dung lượng tối đa, lưu ở đâu? | 7 | | |
 | Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | | |
-| Q10 | Đổi mật khẩu xong có hủy các phiên đăng nhập khác không? (access token cũ vẫn sống tối đa 30 phút; refresh token ở GĐ6) | 6 | | |
+| Q10 | Đổi mật khẩu xong có hủy các phiên đăng nhập khác không? (access token cũ vẫn sống tối đa 30 phút; refresh token ở GĐ6) | 6 | **Đề xuất (chờ nhóm xác nhận):** có — đổi/đặt lại mật khẩu thì thu hồi mọi refresh token của user | 06/11 |
 
 ## Nhật ký
 
