@@ -1,3 +1,13 @@
+"""Test tự động: đăng ký, đăng nhập, GET /me (module 01 · Tuấn · GĐ2, 05/11/2026).
+
+Chạy:  python -m pytest tests/test_auth.py -v      (trong thư mục backend)
+
+Fixture `client` và `db_session` lấy từ tests/conftest.py: mỗi test có một DB SQLite
+mới tinh trong RAM → các test không ảnh hưởng nhau và không đụng PostgreSQL thật.
+Mỗi test bắt đầu với DB rỗng → test đăng nhập phải tự register() trước.
+Mẫu mỗi test: Chuẩn bị → Thực hiện → Kiểm tra (assert).
+"""
+
 from app.models.user import Users
  
 REGISTER_URL = "/api/auth/register"

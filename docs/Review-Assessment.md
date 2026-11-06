@@ -6,6 +6,12 @@
 > Cách dùng: làm xong việc nào thì tích `[x]` và điền **ngày thực tế**. Hết mỗi giai đoạn, nhắn "review GĐ x — Assessment" để Claude review.
 > Làm **sau** module Tài khoản (`docs/Review-Auth.md`) vì cần: `get_current_user`, `UserSkill` (GĐ4 Auth), `core/email.py` (GĐ5 Auth).
 
+> ⚠️ **06/11/2026 — Thầy bổ sung yêu cầu: AI sinh câu hỏi (system prompt + RAG), gồm trắc nghiệm và tự luận.**
+> Đề xuất chi tiết: **`docs/De-xuat-AI-On-tap.md`** (kèm Phụ lục A — tiêu chí chấm) — trạng thái **CHỜ THẦY XÁC NHẬN** (câu A1–A13, chép ở bảng "Câu hỏi cần chốt" bên dưới).
+> 📅 **Thảo luận sâu phần Ôn tập: 09/11/2026.**
+> Kế hoạch các giai đoạn bên dưới **vẫn là bản cũ (ngân hàng câu hỏi, chỉ trắc nghiệm)**; sẽ viết lại GĐ1–GĐ7 và lịch sau khi thầy trả lời A1–A9.
+> Ảnh hưởng dự kiến: thêm `type` / `source` / `rubric` cho câu hỏi, `text_answer` / `ai_score` / `ai_feedback` cho câu trả lời, bảng `KnowledgeChunk` (RAG), `ai/client.py` + mock, system prompt, validator, AI chấm tự luận. Cần cập nhật BA FR-24, FR-25, FR-26.
+
 ---
 
 ## Tổng quan tiến độ
@@ -135,9 +141,25 @@
 | Q8 | Gửi email thất bại thì kết quả bài vẫn lưu và báo thành công? | 5 | | |
 | Q9 | Đã `completed` rồi làm lại và trượt — khóa có quay về `ongoing` không? | 5 | | |
 | Q10 | Sửa/xóa câu hỏi đã nằm trong bài người dùng từng làm — lịch sử hiển thị thế nào? | 2, 6 | | |
+| **A1** | (AI) "Kỹ năng đã học" = kỹ năng **của khóa đang ôn** hay **mọi kỹ năng trong hồ sơ**? — đề xuất: theo khóa | 0 | ⏳ hỏi thầy | |
+| **A2** | (AI) Số câu, tỉ lệ trắc nghiệm / tự luận? — đề xuất: 20 câu = 16 TN + 4 TL | 0 | ⏳ hỏi thầy | |
+| **A3** | (AI) Tự luận AI chấm có tính vào điều kiện Đạt? — đề xuất: có (mỗi câu 1 điểm, TL = điểm AI/10) | 0 | ⏳ hỏi thầy | |
+| **A4** | (AI) LLM nào: API (Gemini/OpenAI/Claude…) hay Qwen3-1.7B cục bộ? Ai cấp API key? — đề xuất: API + mock | 1 | ⏳ hỏi thầy | |
+| **A5** | (AI) Câu AI sinh có cần Admin duyệt? — đề xuất: không, validator tự động | 2 | ⏳ hỏi thầy | |
+| **A6** | (AI) AI lỗi/chậm → dùng ngân hàng câu hỏi dự phòng? — đề xuất: có | 4 | ⏳ hỏi thầy | |
+| **A7** | (AI) Kho vector: pgvector hay bảng thường + cosine bằng Python? — đề xuất: bảng thường | 1 | ⏳ hỏi thầy | |
+| **A8** | (AI) Nguồn tri thức RAG: soạn tài liệu ngắn theo kỹ năng hay chỉ mô tả khóa học? — đề xuất: soạn tài liệu cho 1–2 khóa demo | 1 | ⏳ hỏi thầy | |
+| **A9** | (AI) Giữ hạn 25/11 (thu hẹp) hay lùi hạn 4–5 ngày? | 0 | ⏳ hỏi thầy | |
+| **A10** | (Chấm) Tự luận **chấm theo từng ý đáp án** — đúng ý nào được điểm ý đó (3–5 ý/câu, tổng 10; đạt / ½ / 0; AI trích bằng chứng)? — **Tuấn chọn cách này** (thay khung C1–C4) | 5 | ⏳ hỏi thầy | |
+| **A11** | (Chấm) Tổng điểm PA A (mỗi câu 1đ) / B (TN 60% + TL 40%) / C (TL chỉ nhận xét)? — đề xuất: A | 5 | ⏳ hỏi thầy | |
+| **A12** | (Chấm) Trừ điểm khi chọn sai trắc nghiệm? — đề xuất: không | 5 | ⏳ hỏi thầy | |
+| **A13** | (Chấm) Tỉ lệ TN Nhận biết / Thông hiểu / Vận dụng? — đề xuất: 40/40/20 | 4 | ⏳ hỏi thầy | |
 
 ## Nhật ký
 
 | Ngày | Đã làm | Vướng mắc |
 |---|---|---|
+| 06/11 | Thầy bổ sung yêu cầu AI sinh câu hỏi (system prompt + RAG, trắc nghiệm + tự luận); viết đề xuất `docs/De-xuat-AI-On-tap.md` | Chờ thầy trả lời A1–A9 trước khi viết lại kế hoạch |
+| 06/11 | Đề xuất tiêu chí chấm trắc nghiệm + tự luận (Phụ lục A trong đề xuất); thêm A10–A13 | **Hẹn thảo luận sâu phần Ôn tập ngày 09/11** |
+| 06/11 | Tuấn chốt hướng: **tự luận chấm theo từng ý đáp án** (đúng ý nào được điểm ý đó) — cập nhật Phụ lục A2 | Chờ thầy xác nhận (A10) |
 | | | |

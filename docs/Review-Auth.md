@@ -15,7 +15,7 @@
 | 0 | Chuẩn bị môi trường | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
 | 1 | Model User + nền bảo mật (`core/`) | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
 | 2 | Đăng ký, đăng nhập | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
-| 3 | Hồ sơ `/me`, đổi mật khẩu | 06/11 → 07/11 | 06/11 | __/__ | [ ] |
+| 3 | Hồ sơ `/me`, đổi mật khẩu | 06/11 → 07/11 | 06/11 | 06/11 | [x] |
 | 4 | Kỹ năng `/me/skills` | 08/11 → 09/11 | __/__ | __/__ | [ ] |
 | 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | __/__ | __/__ | [ ] |
 | 6 | Refresh token, đăng xuất | 12/11 → 13/11 | __/__ | __/__ | [ ] |
@@ -79,8 +79,8 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 - [x] **3.2 `PATCH /api/me`** — chỉ sửa `full_name`; email và role **không** đổi được — dự kiến 06/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu `UpdateMeRequest`, thiếu import) — P1–P4 qua
 - [x] **3.3 `POST /api/me/change-password`** — mật khẩu hiện tại, mới, xác nhận; sai mật khẩu hiện tại → lỗi; áp `validate_password` (FR-48) — dự kiến 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu hàm service, thiếu `MessageResponse`) — C1–C6 qua
 - [x] **3.4 `services/user_service.py`, `endpoints/me.py`** (prefix `/me`) — dự kiến 06/11 → 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: code router bị dán nhầm vào service)
-- [ ] **3.5 `tests/test_me.py`** — không token → 401; sửa họ tên; thử gửi `email`/`role` không có tác dụng; đổi mật khẩu đúng/sai — dự kiến 07/11 · thực tế __/__
-- [ ] **3.6 Nhờ Claude review GĐ3** — dự kiến 07/11 · thực tế __/__
+- [x] **3.5 `tests/test_me.py`** — không token → 401; sửa họ tên; thử gửi `email`/`role` không có tác dụng; đổi mật khẩu đúng/sai — dự kiến 07/11 · thực tế 06/11 — 13 test PASSED (Tuấn tự viết, thêm helper `login`); tổng `test_auth` + `test_me` = 26 passed ✔ Claude đã review
+- [x] **3.6 Nhờ Claude review GĐ3** — dự kiến 07/11 · thực tế 06/11 — GĐ3 đạt
 
 ## Giai đoạn 4 — Kỹ năng của tôi (08/11 → 09/11)
 
@@ -136,9 +136,9 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | POST | `/api/auth/forgot-password` | 5 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/reset-password` | 5 | [ ] | [ ] | [ ] |
 | GET | `/api/me` | 3 | [x] | [x] | [x] |
-| PATCH | `/api/me` | 3 | [x] | [ ] | [x] |
+| PATCH | `/api/me` | 3 | [x] | [x] | [x] |
 | POST | `/api/me/avatar` | 7 | [ ] | [ ] | [ ] |
-| POST | `/api/me/change-password` | 3 | [x] | [ ] | [x] |
+| POST | `/api/me/change-password` | 3 | [x] | [x] | [x] |
 | GET | `/api/me/summary` | 7 | [ ] | [ ] | [ ] |
 | GET | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
 | PATCH | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
