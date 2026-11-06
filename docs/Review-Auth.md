@@ -15,7 +15,7 @@
 | 0 | Chuẩn bị môi trường | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
 | 1 | Model User + nền bảo mật (`core/`) | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
 | 2 | Đăng ký, đăng nhập | 05/11 → 05/11 | 05/11 | 05/11 | [x] |
-| 3 | Hồ sơ `/me`, đổi mật khẩu | 06/11 → 07/11 | __/__ | __/__ | [ ] |
+| 3 | Hồ sơ `/me`, đổi mật khẩu | 06/11 → 07/11 | 06/11 | __/__ | [ ] |
 | 4 | Kỹ năng `/me/skills` | 08/11 → 09/11 | __/__ | __/__ | [ ] |
 | 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | __/__ | __/__ | [ ] |
 | 6 | Refresh token, đăng xuất | 12/11 → 13/11 | __/__ | __/__ | [ ] |
@@ -75,10 +75,10 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 3 — Hồ sơ và đổi mật khẩu (06/11 → 07/11)
 
-- [ ] **3.1 `GET /api/me`** — trả họ tên, email, vai trò, ngày tham gia, ảnh đại diện (FR-03) — dự kiến 06/11 · thực tế bắt đầu 05/11 (đã có `schemas/user.py` `UserMe` + `endpoints/me.py`, test tạm qua 200/401; chưa gắn vào `api.py`)
-- [ ] **3.2 `PATCH /api/me`** — chỉ sửa `full_name`; email và role **không** đổi được — dự kiến 06/11 · thực tế __/__ → __/__
-- [ ] **3.3 `POST /api/me/change-password`** — mật khẩu hiện tại, mới, xác nhận; sai mật khẩu hiện tại → lỗi; áp `validate_password` (FR-48) — dự kiến 07/11 · thực tế __/__ → __/__
-- [ ] **3.4 `services/user_service.py`, `endpoints/me.py`** (prefix `/me`) — dự kiến 06/11 → 07/11 · thực tế __/__ → __/__
+- [x] **3.1 `GET /api/me`** — trả họ tên, email, vai trò, ngày tham gia, ảnh đại diện (FR-03) — dự kiến 06/11 · thực tế 05/11 → 06/11 ✔ Claude đã review (đã gắn vào `api.py`, có test trong `test_auth.py`)
+- [x] **3.2 `PATCH /api/me`** — chỉ sửa `full_name`; email và role **không** đổi được — dự kiến 06/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu `UpdateMeRequest`, thiếu import) — P1–P4 qua
+- [x] **3.3 `POST /api/me/change-password`** — mật khẩu hiện tại, mới, xác nhận; sai mật khẩu hiện tại → lỗi; áp `validate_password` (FR-48) — dự kiến 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu hàm service, thiếu `MessageResponse`) — C1–C6 qua
+- [x] **3.4 `services/user_service.py`, `endpoints/me.py`** (prefix `/me`) — dự kiến 06/11 → 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: code router bị dán nhầm vào service)
 - [ ] **3.5 `tests/test_me.py`** — không token → 401; sửa họ tên; thử gửi `email`/`role` không có tác dụng; đổi mật khẩu đúng/sai — dự kiến 07/11 · thực tế __/__
 - [ ] **3.6 Nhờ Claude review GĐ3** — dự kiến 07/11 · thực tế __/__
 
@@ -135,10 +135,10 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | POST | `/api/auth/logout` | 6 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/forgot-password` | 5 | [ ] | [ ] | [ ] |
 | POST | `/api/auth/reset-password` | 5 | [ ] | [ ] | [ ] |
-| GET | `/api/me` | 3 | [x] | [x] | [ ] |
-| PATCH | `/api/me` | 3 | [ ] | [ ] | [ ] |
+| GET | `/api/me` | 3 | [x] | [x] | [x] |
+| PATCH | `/api/me` | 3 | [x] | [ ] | [x] |
 | POST | `/api/me/avatar` | 7 | [ ] | [ ] | [ ] |
-| POST | `/api/me/change-password` | 3 | [ ] | [ ] | [ ] |
+| POST | `/api/me/change-password` | 3 | [x] | [ ] | [x] |
 | GET | `/api/me/summary` | 7 | [ ] | [ ] | [ ] |
 | GET | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
 | PATCH | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
@@ -158,6 +158,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | | |
 | Q8 | Ảnh đại diện: định dạng, dung lượng tối đa, lưu ở đâu? | 7 | | |
 | Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | | |
+| Q10 | Đổi mật khẩu xong có hủy các phiên đăng nhập khác không? (access token cũ vẫn sống tối đa 30 phút; refresh token ở GĐ6) | 6 | | |
 
 ## Nhật ký
 
