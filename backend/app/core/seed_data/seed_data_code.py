@@ -43,7 +43,7 @@ def seed_data(dbSession) -> None:
         #skills
         if db.execute(select(func.count(Skills.skill_id))).scalar_one() == 0:
             loaded_data = []
-            data_file = Path(__file__).resolve().parents[5]/"datajson/skill_table.json"
+            data_file = Path(__file__).resolve().parents[4]/"datajson/skill_table.json"
             with open(data_file, "r", encoding='utf-8') as file:
                 skills_list = json.load(file)
                 for each in skills_list:
@@ -57,7 +57,7 @@ def seed_data(dbSession) -> None:
         #courses
         if db.execute(select(func.count(Courses.course_id))).scalar_one() == 0:
             loaded_data = []
-            data_file = data_file = Path(__file__).resolve().parents[5]/"datajson/course_table.json"
+            data_file = data_file = Path(__file__).resolve().parents[4]/"datajson/course_table.json"
             with open(data_file, "r", encoding='utf-8') as file:
                 courses_list = json.load(file)
                 loaded_data = []
@@ -79,7 +79,7 @@ def seed_data(dbSession) -> None:
         #course_skill
         if db.execute(select(func.count()).select_from(CourseSkill)).scalar_one() == 0:
             loaded_data = []
-            data_file = data_file = Path(__file__).resolve().parents[5]/"datajson/course_skill_relation.json"
+            data_file = data_file = Path(__file__).resolve().parents[4]/"datajson/course_skill_relation.json"
             with open(data_file, "r", encoding='utf-8') as file:
                 course_skill_list = json.load(file)
                 loaded_data = []
@@ -92,7 +92,7 @@ def seed_data(dbSession) -> None:
 
         #skill_relation
         if db.execute(select(func.count()).select_from(SkillRelation)).scalar_one() == 0:
-            data_file = Path(__file__).resolve().parents[5]/"datajson/skill_relation.json"
+            data_file = Path(__file__).resolve().parents[4]/"datajson/skill_relation.json"
             with open(data_file, "r", encoding="utf-8") as file:
                 relations_list = json.load(file)
 
@@ -106,59 +106,68 @@ def seed_data(dbSession) -> None:
         if (db.execute(select(func.count()).select_from(LearningPath)).scalar_one() == 0 and 
             db.execute(select(func.count()).select_from(LearningPathNode)).scalar_one() == 0 and
             db.execute(select(func.count()).select_from(LearningPathEdge)).scalar_one() == 0) :
-            data_file = Path(__file__).resolve().parents[5]/"datajson/studentsRecord_0001_0300.json"
-            with open(data_file, "r", encoding="utf-8") as file:
-                historical_records = json.load(file)
-            skills = db.execute(select(Skills.skill_id, Skills.skill)).all()
-            skill_ids = {skill.skill: skill.skill_id for skill in skills}
 
-            paths = [
-                LearningPath(
-                    student_id=int(record["student_id"]),
-                    original_query=record["goal_session"]["original_query"],
-                    goal_type=record["goal_session"]["goal_type"],
-                    status=record["learning_path"]["status"],
-                )
-                for record in historical_records]
-
-            if(paths):
-                db.add_all(paths)
-                db.flush()
-                print(f"Loaded {len(paths)} learning paths")
-
-            nodes = [
-                LearningPathNode(
-                    path_id=path.record_id,
-                    skill_id=skill_ids[node["skill_name"]],
-                    node_role=node["node_role"],
-                    is_target=node["is_target"],
-                    added_by=node["added_by"],
-                    is_required=node["is_required"],
-                    display_order=node["display_order"],
-                )
-                for record, path in zip(historical_records, paths)
-                for node in record["nodes"]
+            data_file_list = [
+                Path(__file__).resolve().parents[4]/"datajson/studentsRecord_0001_0300.json",
+                Path(__file__).resolve().parents[4]/"datajson/studentsRecord_0301_0600.json",
+                Path(__file__).resolve().parents[4]/"datajson/studentsRecord_0601_0900_and_1401_1500.json",
+                Path(__file__).resolve().parents[4]/"datajson/studentsRecord_0901_1200.json"
             ]
 
-            if (nodes):
-                db.add_all(nodes)
-                print(f"Loaded {len(nodes)} learning path nodes")
+            for data_file in data_file_list:
+            #data_file = Path(__file__).resolve().parents[4]/"datajson/studentsRecord_0001_0300.json"
+                with open(data_file, "r", encoding="utf-8") as file:
+                    historical_records = json.load(file)
+                skills = db.execute(select(Skills.skill_id, Skills.skill)).all()
+                skill_ids = {skill.skill: skill.skill_id for skill in skills}
 
-            edges = [
-                LearningPathEdge(
-                    path_id=path.record_id,
-                    from_skill_id=skill_ids[edge["from_skill_name"]],
-                    to_skill_id=skill_ids[edge["to_skill_name"]],
-                    relation_type=edge["relation_type"],
-                )
-                for record, path in zip(historical_records, paths)
-                for edge in record["edges"]
-            ]
+                paths = [
+                    LearningPath(
+                        student_id=int(record["student_id"]),
+                        original_query=record["goal_session"]["original_query"],
+                        goal_type=record["goal_session"]["goal_type"],
+                        status=record["learning_path"]["status"],
+                    )
+                    for record in historical_records]
 
-            if(edges):
-                db.add_all(edges)
-                print(f"Loaded {len(edges)} learning path edges")
-            db.commit()
+                if(paths):
+                    db.add_all(paths)
+                    db.flush()
+                    print(f"Loaded {len(paths)} learning paths")
+
+                nodes = [
+                    LearningPathNode(
+                        path_id=path.record_id,
+                        skill_id=skill_ids[node["skill_name"]],
+                        node_role=node["node_role"],
+                        is_target=node["is_target"],
+                        added_by=node["added_by"],
+                        is_required=node["is_required"],
+                        display_order=node["display_order"],
+                    )
+                    for record, path in zip(historical_records, paths)
+                    for node in record["nodes"]
+                ]
+
+                if (nodes):
+                    db.add_all(nodes)
+                    print(f"Loaded {len(nodes)} learning path nodes")
+
+                edges = [
+                    LearningPathEdge(
+                        path_id=path.record_id,
+                        from_skill_id=skill_ids[edge["from_skill_name"]],
+                        to_skill_id=skill_ids[edge["to_skill_name"]],
+                        relation_type=edge["relation_type"],
+                    )
+                    for record, path in zip(historical_records, paths)
+                    for edge in record["edges"]
+                ]
+
+                if(edges):
+                    db.add_all(edges)
+                    print(f"Loaded {len(edges)} learning path edges")
+                db.commit()
             return
     except Exception:
         db.rollback()

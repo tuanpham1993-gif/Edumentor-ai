@@ -18,7 +18,7 @@ class LearningPath(Base):
     edges = relationship("LearningPathEdge",back_populates="learning_path",)
 
     __table_args__ = (
-        CheckConstraint("goal_type IN ('career', 'project')",name="ck_learning_path_goal_type",),
+        CheckConstraint("goal_type IN ('career', 'project', 'template')",name="ck_learning_path_goal_type",),
         CheckConstraint("status IN ('completed', 'ongoing', 'abandoned')",name="ck_learning_path_status",),
 )
 

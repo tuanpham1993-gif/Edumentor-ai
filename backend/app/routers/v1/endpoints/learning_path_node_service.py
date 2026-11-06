@@ -18,7 +18,7 @@ def get_learning_path_node_detail(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Learning path node not found.")
     return node
 
-@router.get("/{path_id}/nodes/{skill_id}/recommendation", summary="Recommend course based on user learning path and skill")
+@router.get("/{path_id}/nodes/{skill_id}/recommendation", summary="Recommend course based on user learning path and skill still in update phase")
 def get_learning_path_node_recommendation(
     skill_id:int
 ):
