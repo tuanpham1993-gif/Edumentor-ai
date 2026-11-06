@@ -54,3 +54,30 @@ Bản 29 màn cũ (`docs/EduMentor-UI-design/`) đã bị xóa khỏi repo ngày
 - **M4:** chat AI tư vấn khóa học.
 
 Theo dõi tại `docs/decisions.md` ND-55 (phản hồi: thêm ND-35).
+
+## Bản demo live (gọi API thật) — CHỈ ĐỂ TRÌNH BÀY
+
+> ⚠️ **Đây là bản demo, không phải frontend thật.** Frontend thật là React trong `frontend/`. Các trang gốc (`Main-LampOff.html`, `Register.html`, `Profile.html`) **giữ nguyên**.
+
+Thêm ngày 06/11/2026 (Tuấn) để trình bày module 01 với backend thật:
+
+| File | Bản sao của | Làm gì |
+|---|---|---|
+| `html/Main-Live.html` | `Main-LampOff.html` | Kéo dây đèn → đăng nhập bằng `POST /api/auth/login`; sai → "Lỗi 401: …" và rung form; đúng → lưu token (sessionStorage) và mở Hồ sơ |
+| `html/Register-Live.html` | `Register.html` | Đăng ký bằng `POST /api/auth/register`; hiện lỗi 409 / 422 trên form; thành công → chuyển sang đăng nhập |
+| `html/Profile-Live.html` | `Profile.html` | Gọi `GET /api/me` → điền họ tên, email, vai trò, ngày tham gia thật. Thống kê, khóa học, kỹ năng vẫn là **dữ liệu mẫu**. "Đăng xuất" chỉ xóa token phía trình duyệt (chưa có `POST /api/auth/logout`) |
+| `html/live-demo.js` | — | Script dùng chung cho 3 trang trên; có nhãn "BẢN DEMO" ở góc trái dưới |
+
+**Cách chạy:**
+
+```powershell
+# Terminal 1 — backend (cổng 8000)
+cd backend
+..\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+
+# Terminal 2 — trang UI (cổng 5500)
+cd docs\EduMentor-UI-design\ui-design
+..\..\..\.venv\Scripts\python.exe -m http.server 5500
+```
+
+Mở `http://localhost:5500/html/Main-Live.html`. Phải dùng cổng **5500**: backend chỉ cho phép origin `localhost:5500` / `127.0.0.1:5500` (`core/config.py` · `ALLOWED_ORIGINS`). Mở file trực tiếp (`file://`) sẽ không gọi được API.
