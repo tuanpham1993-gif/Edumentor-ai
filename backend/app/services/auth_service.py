@@ -80,6 +80,7 @@ def login(db: Session, *, email: str, password: str) -> tuple[str, str, Users] |
     db.commit()
     return access_token, refresh_token, user
 
+
 class InvalidResetTokenError(Exception):
     """Link đặt lại mật khẩu sai, đã dùng hoặc hết hạn."""
 
@@ -92,6 +93,7 @@ def _as_utc(value: datetime) -> datetime:
     """SQLite (khi test) trả datetime không múi giờ → gắn UTC để so sánh được."""
     return value if value.tzinfo is not None else value.replace(tzinfo=timezone.utc)
 
+
 def _issue_refresh_token(db: Session, user_id: int) -> str:
     """Tạo refresh token mới, lưu bản băm (CHƯA commit). Trả token GỐC cho client."""
     token = generate_token()
@@ -102,6 +104,7 @@ def _issue_refresh_token(db: Session, user_id: int) -> str:
         expires_at=_utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
     )
     return token
+
 
 def forgot_password(db: Session, *, email: str) -> str | None:
     """Tạo link đặt lại (FR-47). Trả token GỐC để gửi email; email không tồn tại → None.
@@ -134,7 +137,11 @@ def reset_password(db: Session, *, token: str, new_password: str) -> None:
     record = token_repository.get_reset_token_by_hash(db, hash_token(token))
     now = _utcnow()
 
-    if record is None or record.used_at is not None or _as_utc(record.expires_at) <= now:
+    if (
+        record is None
+        or record.used_at is not None
+        or _as_utc(record.expires_at) <= now
+    ):
         raise InvalidResetTokenError()
 
     user = user_repository.get_by_id(db, record.user_id)
@@ -144,7 +151,9 @@ def reset_password(db: Session, *, token: str, new_password: str) -> None:
 
     user.hashed_password = hash_password(new_password)
     record.used_at = now
-    token_repository.invalidate_unused_reset_tokens(db, user.user_id, now)  # vô hiệu link khác
+    token_repository.invalidate_unused_reset_tokens(
+        db, user.user_id, now
+    )  # vô hiệu link khác
     token_repository.revoke_all_refresh_tokens(db, user.user_id, now)
 
     db.commit()
@@ -152,6 +161,7 @@ def reset_password(db: Session, *, token: str, new_password: str) -> None:
 
 class InvalidRefreshTokenError(Exception):
     """Refresh token sai, hết hạn hoặc đã bị thu hồi."""
+
 
 def refresh(db: Session, *, refresh_token: str) -> tuple[str, str]:
     """Đổi refresh token hợp lệ lấy cặp token mới (xoay vòng). Trả (access, refresh).

@@ -41,7 +41,9 @@ def change_password(
 
     user.hashed_password = hash_password(new_password)  # vẫn chỉ lưu bản băm
     # Q10: đổi mật khẩu → đăng xuất mọi nơi (kể cả phiên hiện tại khi access hết hạn)
-    token_repository.revoke_all_refresh_tokens(db, user.user_id, datetime.now(timezone.utc))
+    token_repository.revoke_all_refresh_tokens(
+        db, user.user_id, datetime.now(timezone.utc)
+    )
     db.commit()
 
 
@@ -51,7 +53,7 @@ def update_avatar(db: Session, user: Users, *, data: bytes) -> Users:
     Lỗi kiểm tra → files.FileTooLargeError / files.UnsupportedImageError (router đổi thành 413 / 415).
     """
     old_url = user.avatar_url
-    new_url = files.save_avatar(user.user_id, data)   # lưu file TRƯỚC
+    new_url = files.save_avatar(user.user_id, data)  # lưu file TRƯỚC
     try:
         user.avatar_url = new_url
         db.commit()

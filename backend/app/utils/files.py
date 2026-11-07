@@ -32,7 +32,7 @@ class UnsupportedImageError(Exception):
 
 def avatar_dir() -> Path:
     path = Path(settings.UPLOAD_DIR) / AVATAR_SUBDIR
-    path.mkdir(parents=True, exist_ok=True)   # tạo thư mục nếu chưa có
+    path.mkdir(parents=True, exist_ok=True)  # tạo thư mục nếu chưa có
     return path
 
 
@@ -62,5 +62,5 @@ def delete_avatar(avatar_url: str | None) -> None:
     prefix = f"{URL_PREFIX}/{AVATAR_SUBDIR}/"
     if not avatar_url or not avatar_url.startswith(prefix):
         return
-    name = Path(avatar_url).name          # chỉ lấy tên file, bỏ mọi thư mục → an toàn
+    name = Path(avatar_url).name  # chỉ lấy tên file, bỏ mọi thư mục → an toàn
     (avatar_dir() / name).unlink(missing_ok=True)

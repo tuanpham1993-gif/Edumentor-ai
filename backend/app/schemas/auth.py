@@ -75,6 +75,7 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     user: UserMe  # nhận thẳng object Users nhờ from_attributes=True trong UserMe
 
+
 class ForgotPasswordRequest(BaseModel):
     """Body của POST /api/auth/forgot-password (GĐ5)."""
 
@@ -104,6 +105,7 @@ class ResetPasswordRequest(BaseModel):
         if self.new_password != self.confirm_new_password:
             raise ValueError("Mật khẩu xác nhận không khớp.")
         return self
+
 
 class RefreshRequest(BaseModel):
     """Body của POST /api/auth/refresh và /api/auth/logout (GĐ6)."""

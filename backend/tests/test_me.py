@@ -28,7 +28,9 @@ VALID_USER = {
 def auth_headers(client):
     """Đăng ký + đăng nhập VALID_USER, trả về header có token."""
     client.post(REGISTER_URL, json=VALID_USER)
-    response = client.post(LOGIN_URL, json={"email": VALID_USER["email"], "password": PASSWORD})
+    response = client.post(
+        LOGIN_URL, json={"email": VALID_USER["email"], "password": PASSWORD}
+    )
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
@@ -48,13 +50,18 @@ def change_password(client, headers, current, new, confirm=None):
 
 def login(client, password):
     """Đăng nhập VALID_USER với mật khẩu cho trước."""
-    return client.post(LOGIN_URL, json={"email": VALID_USER["email"], "password": password})
+    return client.post(
+        LOGIN_URL, json={"email": VALID_USER["email"], "password": password}
+    )
 
 
 # ─────────────── PATCH /api/me ───────────────
 
+
 def test_update_full_name_success(client, auth_headers):
-    response = client.patch(ME_URL, json={"full_name": "  Tuấn Tài  "}, headers=auth_headers)
+    response = client.patch(
+        ME_URL, json={"full_name": "  Tuấn Tài  "}, headers=auth_headers
+    )
 
     assert response.status_code == 200
     assert response.json()["full_name"] == "Tuấn Tài"
@@ -101,6 +108,7 @@ def test_update_without_token_returns_401(client):
 
 
 # ─────────────── POST /api/me/change-password ───────────────
+
 
 def test_change_password_success(client, auth_headers):
     response = change_password(client, auth_headers, current=PASSWORD, new="Moi@5678")

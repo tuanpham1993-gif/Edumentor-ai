@@ -35,9 +35,12 @@ def invalidate_unused_reset_tokens(db: Session, user_id: int, now: datetime) -> 
     """
     db.execute(
         update(PasswordResetToken)
-        .where(PasswordResetToken.user_id == user_id, PasswordResetToken.used_at.is_(None))
+        .where(
+            PasswordResetToken.user_id == user_id, PasswordResetToken.used_at.is_(None)
+        )
         .values(used_at=now)
     )
+
 
 def create_refresh_token(
     db: Session, *, user_id: int, token_hash: str, expires_at: datetime

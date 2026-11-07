@@ -36,7 +36,12 @@ def sent_emails(monkeypatch):
 def registered(client):
     client.post(
         REGISTER_URL,
-        json={"full_name": "Tuấn", "email": EMAIL, "password": PASSWORD, "confirm_password": PASSWORD},
+        json={
+            "full_name": "Tuấn",
+            "email": EMAIL,
+            "password": PASSWORD,
+            "confirm_password": PASSWORD,
+        },
     )
 
 
@@ -47,7 +52,11 @@ def forgot(client, email=EMAIL):
 def reset(client, token, new=NEW_PASSWORD, confirm=None):
     return client.post(
         RESET_URL,
-        json={"token": token, "new_password": new, "confirm_new_password": confirm or new},
+        json={
+            "token": token,
+            "new_password": new,
+            "confirm_new_password": confirm or new,
+        },
     )
 
 
@@ -116,7 +125,10 @@ def test_reset_invalid_token_returns_400(client, registered):
     response = reset(client, "abc")
 
     assert response.status_code == 400
-    assert response.json()["detail"] == "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn."
+    assert (
+        response.json()["detail"]
+        == "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn."
+    )
 
 
 def test_old_link_invalid_after_new_request(client, registered, sent_emails):
@@ -144,4 +156,6 @@ def test_reset_weak_password_returns_422(client, registered, sent_emails):
     token = sent_emails[0][1]
 
     assert reset(client, token, new="abc12345").status_code == 422
-    assert reset(client, token, new=NEW_PASSWORD, confirm="Khac@9999").status_code == 422
+    assert (
+        reset(client, token, new=NEW_PASSWORD, confirm="Khac@9999").status_code == 422
+    )

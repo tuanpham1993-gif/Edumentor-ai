@@ -32,7 +32,9 @@ MIN_PASSWORD_LENGTH = 8
 
 def hash_password(plain_password: str) -> str:
     """Băm mật khẩu để lưu vào DB."""
-    password_bytes = plain_password.encode("utf-8")  # bcrypt làm việc với bytes, không phải str
+    password_bytes = plain_password.encode(
+        "utf-8"
+    )  # bcrypt làm việc với bytes, không phải str
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password_bytes, salt)
     return hashed.decode("utf-8")  # bytes → str để lưu vào cột String
@@ -118,9 +120,11 @@ def decode_access_token(token: str) -> int | None:
     except (jwt.InvalidTokenError, KeyError, ValueError):
         return None
 
+
 # =====================================================================
 # PHẦN 3 — TOKEN NGẪU NHIÊN (reset mật khẩu, refresh token)
 # =====================================================================
+
 
 def generate_token() -> str:
     """Chuỗi ngẫu nhiên an toàn (~43 ký tự) — gửi cho người dùng, KHÔNG lưu bản gốc."""

@@ -20,7 +20,7 @@
 | 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | 06/11 | 06/11 | [x] |
 | 6 | Refresh token, đăng xuất | 12/11 → 13/11 | 07/11 | 07/11 | [x] |
 | 7 | Ảnh đại diện, thống kê `/me/summary` | 14/11 → 14/11 | 07/11 | __/__ | [ ] |
-| 8 | Hoàn thiện, kiểm thử, gộp nhánh | 15/11 → 15/11 | __/__ | __/__ | [ ] |
+| 8 | Hoàn thiện, kiểm thử, gộp nhánh | 15/11 → 15/11 | 07/11 | __/__ | [ ] |
 
 Thứ tự được chọn để mỗi giai đoạn chạy và test được ngay; phần phụ thuộc module người khác (kỹ năng, thống kê) đặt sau.
 
@@ -119,9 +119,9 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 8 — Hoàn thiện (15/11)
 
-- [ ] **8.1 `scripts/create_admin.py`** — tạo tài khoản admin (không tạo qua API) — dự kiến 15/11 · thực tế __/__
-- [ ] **8.2 Chạy toàn bộ** `pytest`, `black .`, `ruff check .` — dự kiến 15/11 · thực tế __/__
-- [ ] **8.3 Rà bảo mật**: không trả `hashed_password`/token gốc, không log mật khẩu, `.env` không bị commit (NFR-04, NFR-08) — dự kiến 15/11 · thực tế __/__
+- [x] **8.1 `scripts/create_admin.py`** — tạo tài khoản admin (không tạo qua API) — dự kiến 15/11 · thực tế 07/11 ✔ Claude đã review — gọi lại auth_service.register + đổi role; mật khẩu nhập bằng getpass; 8 test (Claude viết, có test main() S1–S4); S5 admin đăng nhập trên PostgreSQL OK. Claude sửa: main() thiếu in kết quả + return 0
+- [x] **8.2 Chạy toàn bộ** `pytest`, `black .`, `ruff check .` — dự kiến 15/11 · thực tế 07/11 — black (16 file định dạng, lần 2 unchanged) + ruff chỉ trên file của Tuấn; 70 passed. Còn UP017 (timezone.utc), E501 comment dài: chấp nhận
+- [x] **8.3 Rà bảo mật**: không trả `hashed_password`/token gốc, không log mật khẩu, `.env` không bị commit (NFR-04, NFR-08) — dự kiến 15/11 · thực tế 07/11 — B1–B6 (xem Nhật ký 07/11)
 - [ ] **8.4 Bật lại phần của Hòa, gộp với nhóm**, tạo Pull Request — dự kiến 15/11 · thực tế __/__
 
 ---
@@ -168,4 +168,5 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | 05/11 | Cài môi trường, chuẩn hóa cấu trúc, viết lại `CLAUDE.md`, ngắt seed của Hòa, lập kế hoạch này | Docker Desktop tắt → server chưa chạy lại |
 | 05/11 | Xong GĐ0; viết model `Users` (1.1), bật `SECRET_KEY` (1.2); bảng `users` đã tạo trong DB | Lỡ viết model vào `skill.py` của Hòa → đã chuyển sang `user.py` và `git restore` lại `skill.py` |
 | 05/11 | Xong GĐ1 (security, dependencies); GĐ2: register/login + `GET /me`; tự chạy trên Swagger: đăng ký → đăng nhập → Authorize → `/me` ra 200 | Đăng nhập 401 vì chưa đăng ký; đăng ký 422 vì `password` và `confirm_password` lệch dấu `!` — validator chặn đúng |
+| 07/11 | GĐ6 refresh/logout; GĐ7.1 avatar; merge nhánh Hòa (datajson); GĐ8.1–8.3 | **Rà bảo mật:** B1 ✅ không response nào có hashed_password/token_hash · B2 ⚠️ `.env` từng bị commit (9372a94, 30/10, đã xóa ở d40509d) — chỉ chứa giá trị dev/mẫu, SECRET_KEY hiện tại KHÔNG bị lộ · B3 ✅ SECRET_KEY 86 ký tự · B4 ⚠️ email.py in link chứa token khi chưa cấu hình SMTP (chỉ chấp nhận khi dev) · B5 ✅ JWT khóa HS256 · B6 ⚠️ `SQL_ECHO=True` in cả GIÁ TRỊ tham số (email, bản băm) ra log → đặt SQL_ECHO=False khi không debug, hoặc báo Hòa thêm `hide_parameters=True` trong database.py. **Hạn chế đã biết:** chưa giới hạn số lần đăng nhập sai (brute force); access token sống tới 30 phút sau đổi mật khẩu; refresh token qua JSON body |
 | | | |

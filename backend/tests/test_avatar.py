@@ -31,14 +31,23 @@ def auth_headers(client):
     """Đăng ký + đăng nhập, trả về header có access token."""
     client.post(
         "/api/auth/register",
-        json={"full_name": "Tuấn", "email": EMAIL, "password": PASSWORD, "confirm_password": PASSWORD},
+        json={
+            "full_name": "Tuấn",
+            "email": EMAIL,
+            "password": PASSWORD,
+            "confirm_password": PASSWORD,
+        },
     )
-    token = client.post("/api/auth/login", json={"email": EMAIL, "password": PASSWORD}).json()["access_token"]
+    token = client.post(
+        "/api/auth/login", json={"email": EMAIL, "password": PASSWORD}
+    ).json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
 
 def upload(client, headers, data, filename="a.png", content_type="image/png"):
-    return client.post(AVATAR_URL, files={"file": (filename, data, content_type)}, headers=headers)
+    return client.post(
+        AVATAR_URL, files={"file": (filename, data, content_type)}, headers=headers
+    )
 
 
 def saved_files(upload_dir):
@@ -57,11 +66,15 @@ def test_upload_png_success(client, auth_headers, upload_dir):
     assert avatar_url.startswith("/uploads/avatars/")
     assert avatar_url.endswith(".png")
     files = saved_files(upload_dir)
-    assert len(files) == 1 and files[0].read_bytes() == PNG  # file có thật, đúng nội dung
+    assert (
+        len(files) == 1 and files[0].read_bytes() == PNG
+    )  # file có thật, đúng nội dung
 
 
 def test_upload_jpeg_success(client, auth_headers):
-    response = upload(client, auth_headers, JPEG, filename="a.jpg", content_type="image/jpeg")
+    response = upload(
+        client, auth_headers, JPEG, filename="a.jpg", content_type="image/jpeg"
+    )
 
     assert response.status_code == 200
     assert response.json()["avatar_url"].endswith(".jpg")
@@ -75,7 +88,9 @@ def test_avatar_saved_in_profile(client, auth_headers):
 
 def test_new_avatar_deletes_old_file(client, auth_headers, upload_dir):
     upload(client, auth_headers, PNG)
-    new_url = upload(client, auth_headers, JPEG, filename="b.jpg", content_type="image/jpeg").json()["avatar_url"]
+    new_url = upload(
+        client, auth_headers, JPEG, filename="b.jpg", content_type="image/jpeg"
+    ).json()["avatar_url"]
 
     files = saved_files(upload_dir)
     assert len(files) == 1  # ảnh cũ đã bị xóa
@@ -111,7 +126,10 @@ def test_too_large_returns_413(client, auth_headers, upload_dir):
     response = upload(client, auth_headers, data)
 
     assert response.status_code == 413
-    assert response.json()["detail"] == f"Ảnh vượt quá {settings.AVATAR_MAX_BYTES // (1024 * 1024)} MB."
+    assert (
+        response.json()["detail"]
+        == f"Ảnh vượt quá {settings.AVATAR_MAX_BYTES // (1024 * 1024)} MB."
+    )
     assert saved_files(upload_dir) == []
 
 

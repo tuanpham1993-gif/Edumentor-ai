@@ -63,15 +63,20 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
             detail="Email hoặc mật khẩu không đúng.",
         )
     access_token, refresh_token, user = result
-    return TokenResponse(access_token=access_token, refresh_token=refresh_token, user=user)
-
+    return TokenResponse(
+        access_token=access_token, refresh_token=refresh_token, user=user
+    )
 
 
 # Luôn cùng một câu dù email có hay không → không lộ email nào đã đăng ký (FR-47).
-FORGOT_PASSWORD_MESSAGE = "Nếu email đã được đăng ký, chúng tôi đã gửi liên kết đặt lại mật khẩu."
+FORGOT_PASSWORD_MESSAGE = (
+    "Nếu email đã được đăng ký, chúng tôi đã gửi liên kết đặt lại mật khẩu."
+)
 
 
-@router.post("/forgot-password", response_model=MessageResponse, summary="Quên mật khẩu")
+@router.post(
+    "/forgot-password", response_model=MessageResponse, summary="Quên mật khẩu"
+)
 def forgot_password(
     request: ForgotPasswordRequest,
     background_tasks: BackgroundTasks,
@@ -85,7 +90,9 @@ def forgot_password(
     return MessageResponse(message=FORGOT_PASSWORD_MESSAGE)
 
 
-@router.post("/reset-password", response_model=MessageResponse, summary="Đặt lại mật khẩu")
+@router.post(
+    "/reset-password", response_model=MessageResponse, summary="Đặt lại mật khẩu"
+)
 def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
     try:
         auth_service.reset_password(
@@ -98,10 +105,13 @@ def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db))
         ) from None
     return MessageResponse(message="Đặt lại mật khẩu thành công.")
 
+
 @router.post("/refresh", response_model=RefreshResponse, summary="Làm mới access token")
 def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
     try:
-        access, new_refresh = auth_service.refresh(db, refresh_token=request.refresh_token)
+        access, new_refresh = auth_service.refresh(
+            db, refresh_token=request.refresh_token
+        )
     except auth_service.InvalidRefreshTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

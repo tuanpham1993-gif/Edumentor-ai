@@ -30,7 +30,12 @@ def tokens(client):
     """Đăng ký + đăng nhập, trả về (access_token, refresh_token)."""
     client.post(
         REGISTER_URL,
-        json={"full_name": "Tuấn", "email": EMAIL, "password": PASSWORD, "confirm_password": PASSWORD},
+        json={
+            "full_name": "Tuấn",
+            "email": EMAIL,
+            "password": PASSWORD,
+            "confirm_password": PASSWORD,
+        },
     )
     body = login(client).json()
     return body["access_token"], body["refresh_token"]
@@ -165,7 +170,9 @@ def test_logout_success_then_refresh_fails(client, tokens):
 
 
 def test_logout_invalid_token_still_200(client):
-    assert logout(client, "abc").status_code == 200  # không báo lỗi, frontend cứ xóa token
+    assert (
+        logout(client, "abc").status_code == 200
+    )  # không báo lỗi, frontend cứ xóa token
 
 
 def test_logout_twice_still_200(client, tokens):
@@ -192,7 +199,11 @@ def test_change_password_revokes_refresh_tokens(client, tokens):
     access_token, refresh_token = tokens
     client.post(
         CHANGE_PW_URL,
-        json={"current_password": PASSWORD, "new_password": NEW_PASSWORD, "confirm_new_password": NEW_PASSWORD},
+        json={
+            "current_password": PASSWORD,
+            "new_password": NEW_PASSWORD,
+            "confirm_new_password": NEW_PASSWORD,
+        },
         headers=bearer(access_token),
     )
 
@@ -210,7 +221,11 @@ def test_reset_password_revokes_refresh_tokens(client, tokens, monkeypatch):
     client.post("/api/auth/forgot-password", json={"email": EMAIL})
     client.post(
         "/api/auth/reset-password",
-        json={"token": sent[0], "new_password": NEW_PASSWORD, "confirm_new_password": NEW_PASSWORD},
+        json={
+            "token": sent[0],
+            "new_password": NEW_PASSWORD,
+            "confirm_new_password": NEW_PASSWORD,
+        },
     )
 
     assert refresh(client, refresh_token).status_code == 401

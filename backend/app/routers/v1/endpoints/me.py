@@ -80,7 +80,9 @@ def upload_avatar(
     try:
         return user_service.update_avatar(db, current_user, data=data)
     except files.FileTooLargeError:
-        max_mb = settings.AVATAR_MAX_BYTES // (1024 * 1024)  # lấy từ cấu hình, không ghi cứng
+        max_mb = settings.AVATAR_MAX_BYTES // (
+            1024 * 1024
+        )  # lấy từ cấu hình, không ghi cứng
         raise HTTPException(
             status_code=status.HTTP_413_CONTENT_TOO_LARGE,
             detail=f"Ảnh vượt quá {max_mb} MB.",
