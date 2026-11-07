@@ -1,0 +1,26 @@
+/* Trang Hồ sơ — chép từ demo app.css (_header_7j34e, _stats_7j34e). */
+.header { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 24px; padding: 24px; }
+.avatar {
+  width: 84px; height: 84px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  overflow: hidden; background: var(--avatar-bg); border: 3px solid var(--accent);
+  font-size: 26px; font-weight: 700; box-shadow: 0 0 #f5a52466;
+  animation: halo 1.4s var(--e-std) 0.3s 1;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.who { flex: 1 1 220px; display: flex; flex-direction: column; gap: 6px; }
+.who strong { font-size: 20px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.stat {
+  padding: 20px; display: flex; flex-direction: column; gap: 8px;
+  transition: transform var(--d-base) var(--e-std), border-color var(--d-base);
+}
+.stat:hover { transform: translateY(-2px); border-color: var(--accent-soft-border); }
+.stat b { font-size: 34px; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat > span { color: var(--text-soft); font-size: 13px; }
+
+@keyframes halo {
+  0% { box-shadow: 0 0 #f5a52473; }
+  50% { box-shadow: 0 0 0 10px #f5a52400; }
+}

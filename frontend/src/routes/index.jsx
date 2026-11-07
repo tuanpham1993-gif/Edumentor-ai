@@ -16,6 +16,8 @@ import RegisterPage from '../pages/auth/RegisterPage.jsx';
 import ResetExpiredPage from '../pages/auth/ResetExpiredPage.jsx';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
+import ChangePasswordPage from '../pages/profile/ChangePasswordPage.jsx';
+import EditProfilePage from '../pages/profile/EditProfilePage.jsx';
 import ProfilePage from '../pages/profile/ProfilePage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
@@ -44,7 +46,9 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<PageLayout />}>
           <Route path="/me" element={<ProfilePage />} />
-          {/* FĐ5: /me/edit, /me/password · FĐ6: /me/skills */}
+          <Route path="/me/edit" element={<EditProfilePage />} />
+          <Route path="/me/password" element={<ChangePasswordPage />} />
+          {/* FĐ6: /me/skills */}
         </Route>
       </Route>
 

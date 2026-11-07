@@ -8,6 +8,7 @@
 //   confirm    : (tuỳ chọn) có truyền → thêm dòng "Hai mật khẩu trùng khớp"
 //   showErrors : true sau khi bấm gửi → dòng đang xám chuyển đỏ
 //   hint       : dòng gợi ý phía trên danh sách
+//   notSameAs  : (tuỳ chọn, FĐ5 đổi mật khẩu) có truyền → thêm dòng "Khác mật khẩu hiện tại"
 import { PASSWORD_RULES } from '../../utils/validators.js';
 import styles from './PasswordRules.module.css';
 import StatusIcon from './StatusIcon.jsx';
@@ -25,12 +26,20 @@ export default function PasswordRules({
   confirm,
   showErrors = false,
   hint = 'Mật khẩu gồm chữ hoa, chữ thường, số và ký tự đặc biệt.',
+  notSameAs,
 }) {
   const typed = password.length > 0;
   const rules = PASSWORD_RULES.map((rule) => ({
     text: rule.text,
     state: ruleState(rule.test(password), typed, showErrors),
   }));
+
+  if (notSameAs !== undefined) {
+    rules.push({
+      text: 'Khác mật khẩu hiện tại',
+      state: ruleState(typed && password !== notSameAs, typed, showErrors),
+    });
+  }
 
   if (confirm !== undefined) {
     rules.push({

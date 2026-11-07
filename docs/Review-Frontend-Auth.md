@@ -94,12 +94,12 @@
 
 ## FĐ5 — Hồ sơ (12/11)
 
-- [ ] **5.1 `ProfilePage.jsx`** — họ tên, email, vai trò, ngày tham gia, avatar (chữ cái đầu khi chưa có ảnh); phần thống kê / kỹ năng hiện "Đang cập nhật" đến FĐ6 — dự kiến 12/11 · thực tế __/__
-- [ ] **5.2 Công tắc Tối / Sáng** (FR-49) — dùng `utils/theme.js`, lưu trên trình duyệt — dự kiến 12/11 · thực tế __/__
-- [ ] **5.3 `EditProfilePage.jsx`** — sửa họ tên (`PATCH /me`); email, vai trò, ngày tham gia chỉ đọc; **bấm avatar để đổi ảnh**: kiểm tra trước PNG/JPEG ≤ 5 MB, hiện lỗi 413 / 415 từ server; thông báo "Đã lưu" — dự kiến 12/11 · thực tế __/__
-- [ ] **5.4 `ChangePasswordPage.jsx`** — 3 ô + quy tắc; sai mật khẩu hiện tại → lỗi 400 trên form (không đăng xuất); thành công → backend đã thu hồi refresh token (Q10) → thông báo và **đăng xuất, về `/login`** — dự kiến 12/11 · thực tế __/__
-- [ ] **5.5 `LogoutDialog.jsx`** — xác nhận → `POST /auth/logout` → xóa token → `/login` — dự kiến 12/11 · thực tế __/__
-- [ ] **5.6 Thử + nhờ Claude review FĐ5** — dự kiến 12/11 · thực tế __/__
+- [x] **5.1 `ProfilePage.jsx`** — họ tên, email, vai trò, ngày tham gia, avatar (chữ cái đầu khi chưa có ảnh); phần thống kê / kỹ năng hiện "Đang cập nhật" đến FĐ6 — dự kiến 12/11 · thực tế 07/11 — Claude viết (theo yêu cầu): theo màn demo Profile; 4 ô thống kê tạm hiện "—" (chờ `/me/summary`); khối Khóa học / Kỹ năng / Ôn tập gần đây để module khác & FĐ6
+- [x] **5.2 Công tắc Tối / Sáng** (FR-49) — dùng `utils/theme.js`, lưu trên trình duyệt — dự kiến 12/11 · thực tế 07/11 — Claude viết: `components/profile/ThemeToggle.jsx` (radio, phím ← →, theme lan từ điểm bấm); có ở trang Hồ sơ và menu Cài đặt
+- [x] **5.3 `EditProfilePage.jsx`** — sửa họ tên (`PATCH /me`); email, vai trò, ngày tham gia chỉ đọc; **bấm avatar để đổi ảnh**: kiểm tra trước PNG/JPEG ≤ 5 MB, hiện lỗi 413 / 415 từ server; thông báo "Đã lưu" — dự kiến 12/11 · thực tế 07/11 — Claude viết; khung chung `SettingsLayout.jsx` (← Hồ sơ, menu trái, khung phải); chọn ảnh là tải lên ngay; lưu xong cập nhật Header
+- [x] **5.4 `ChangePasswordPage.jsx`** — 3 ô + quy tắc; sai mật khẩu hiện tại → lỗi 400 trên form (không đăng xuất); thành công → backend đã thu hồi refresh token (Q10) → thông báo và **đăng xuất, về `/login`** — dự kiến 12/11 · thực tế 07/11 — Claude viết; thêm quy tắc "Khác mật khẩu hiện tại" (prop `notSameAs` của `PasswordRules`) — **chỉ kiểm ở trình duyệt, backend chưa chặn** (cần hỏi: có thêm kiểm tra ở `user_service.change_password` không?)
+- [x] **5.5 `LogoutDialog.jsx`** — xác nhận → `POST /auth/logout` → xóa token → `/login` — dự kiến 12/11 · thực tế 07/11 — Claude viết: hộp thoại xác nhận (Esc / bấm nền / Hủy để đóng; con trỏ đặt sẵn ở Hủy)
+- [ ] **5.6 Thử + nhờ Claude review FĐ5** — dự kiến 12/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay (K9–K12)
 
 ## FĐ6 — Kỹ năng, thống kê (13/11 — sau backend GĐ4, 7.2)
 
@@ -127,7 +127,7 @@
 | K6 | Tải lại trang (F5) khi đang đăng nhập | Vẫn đăng nhập | 2 | [ ] |
 | K7 | Để access token hết hạn (hoặc sửa tạm `ACCESS_TOKEN_EXPIRE_MINUTES=1`) rồi thao tác | Tự refresh, không bị đá ra | 1 | [ ] |
 | K8 | Quên mật khẩu → mở link trong terminal backend → đặt lại → dùng lại link | Lần 2 sang ResetExpired | 4 | [ ] |
-| K9 | Sửa họ tên, đổi ảnh PNG/JPEG; thử file .txt và ảnh > 5 MB | Lưu được; báo lỗi 415 / 413 | 5 | [ ] |
+| K9 | Sửa họ tên, đổi ảnh PNG/JPEG; thử file .txt và ảnh > 5 MB; thử file .txt đổi đuôi thành .png | Lưu được; báo lỗi trên trình duyệt; file giả .png → server báo 415 | 5 | [ ] |
 | K10 | Đổi mật khẩu sai / đúng | Sai: lỗi trên form; đúng: về `/login` | 5 | [ ] |
 | K11 | Đăng xuất, bấm Back của trình duyệt | Không vào lại được `/me` | 5 | [ ] |
 | K12 | Đổi Tối / Sáng, tải lại trang | Giữ lựa chọn | 5 | [ ] |

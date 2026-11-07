@@ -1,0 +1,22 @@
+/* Hộp thoại xác nhận đăng xuất — chép từ demo app.css (_backdrop_lf2wt / _dialog_lf2wt). */
+.backdrop {
+  position: fixed; inset: 0; z-index: 900; display: grid; place-items: center; padding: 24px 16px;
+  background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: fadeIn var(--d-base) var(--e-in) both; overflow-y: auto;
+}
+.dialog {
+  width: 100%; max-width: 400px; padding: 30px; display: flex; flex-direction: column; gap: 16px;
+  text-align: center; background: var(--card); border: 1px solid var(--card-border); border-radius: 18px;
+  box-shadow: 0 30px 60px rgba(var(--shadow-rgb), calc(0.55 * var(--shadow-k)));
+  animation: dlgIn var(--d-base) var(--e-in) both;
+}
+.dialog h2 { margin: 0; font-size: 22px; }
+.dialog p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--text-muted); }
+.icon {
+  width: 52px; height: 52px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center;
+  background: var(--danger-bg); color: var(--danger-icon); border: 1px solid var(--danger-border);
+}
+.actions { display: flex; gap: 10px; margin-top: 4px; }
+.actions button { flex: 1; }
+@keyframes fadeIn { 0% { opacity: 0; } }
+@keyframes dlgIn { 0% { opacity: 0; transform: scale(0.96) translateY(6px); } }

@@ -1,0 +1,45 @@
+/* Trang Sửa hồ sơ + Đổi mật khẩu — chép từ demo app.css (_avatarRow_1sl4i, _pwGrid_1sl4i…). */
+.avatarRow { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+.avatar {
+  width: 84px; height: 84px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  overflow: hidden; background: var(--avatar-bg); border: 3px solid var(--accent);
+  font-size: 26px; font-weight: 700; animation: swap var(--d-slow) var(--e-spring) both;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.avatarBtn {
+  position: relative; flex: none; padding: 0; border: 0; border-radius: 50%; background: none;
+  color: inherit; font: inherit; cursor: pointer; transition: transform var(--d-fast) var(--e-std);
+}
+.avatarBtn:hover { transform: scale(1.03); }
+.avatarBtn:active { transform: scale(0.97); }
+.avatarBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.avatarBtn:disabled { cursor: progress; }
+.avatarHover {
+  position: absolute; inset: 3px; border-radius: 50%; display: grid; place-content: center;
+  justify-items: center; gap: 2px; z-index: 1; background: #0a0908c7; color: #fff;
+  font-size: 11.5px; font-weight: 600; opacity: 0; transition: opacity var(--d-base) var(--e-std);
+}
+.avatarBtn:hover .avatarHover,
+.avatarBtn:focus-visible .avatarHover,
+.busy .avatarHover { opacity: 1; }
+.cam {
+  position: absolute; right: -2px; bottom: -2px; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--accent); color: var(--on-accent); z-index: 2;
+  border: 3px solid var(--card); transition: transform var(--d-base) var(--e-spring);
+}
+.avatarBtn:hover .cam { transform: scale(1.12) rotate(-8deg); }
+.camSpin {
+  width: 13px; height: 13px; border-radius: 50%; border: 2px solid currentColor;
+  border-right-color: transparent; animation: spin 0.7s linear infinite;
+}
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+
+.pwGrid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 24px; align-items: start; }
+.rules { padding: 16px; }
+@media (max-width: 820px) { .pwGrid { grid-template-columns: 1fr; } }
+
+@keyframes swap { 0% { transform: scale(0.85); opacity: 0.4; } }
+@keyframes spin { to { transform: rotate(360deg); } }
