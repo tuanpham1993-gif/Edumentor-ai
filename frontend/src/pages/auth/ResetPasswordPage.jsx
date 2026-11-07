@@ -1,7 +1,7 @@
 // Đặt lại mật khẩu (module 01 · Tuấn · FĐ4, 07/11/2026) — theo màn demo ResetPassword.
 // Mở từ link trong email: /reset-password?token=...  (khi dev, link in ở terminal backend)
 //   - Không có token trong URL → trang "Liên kết không còn hiệu lực".
-//   - Quy tắc mật khẩu tích xanh ngay khi gõ (PasswordRules).
+//   - Quy tắc mật khẩu 3 trạng thái (xám / xanh / đỏ) cập nhật khi gõ (PasswordRules).
 //   - 400 (token sai / hết hạn / đã dùng) → trang "Liên kết không còn hiệu lực".
 //   - Thành công → backend đã thu hồi mọi phiên (Q10) → xóa đăng nhập trên máy này → /login.
 import { useState } from 'react';
@@ -14,7 +14,7 @@ import PasswordField from '../../components/auth/PasswordField.jsx';
 import PasswordRules from '../../components/auth/PasswordRules.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 import { parseApiError } from '../../utils/errors.js';
-import { validatePassword } from '../../utils/validators.js';
+import { passwordExtraError, validatePassword } from '../../utils/validators.js';
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -25,6 +25,7 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false); // bấm gửi → quy tắc trống chuyển đỏ
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -33,13 +34,11 @@ export default function ResetPasswordPage() {
   async function handleSubmit(event) {
     event.preventDefault();
     setFormError('');
-    const nextErrors = {};
-    const passwordError = validatePassword(password);
-    if (passwordError) nextErrors.password = passwordError;
-    if (!confirm) nextErrors.confirm = 'Vui lòng nhập lại mật khẩu mới.';
-    else if (confirm !== password) nextErrors.confirm = 'Mật khẩu xác nhận không khớp.';
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+    setSubmitted(true);
+    // 5 quy tắc + "trùng khớp" đã hiện trong danh sách (PasswordRules) → chỉ báo riêng lỗi > 72 byte
+    const extra = passwordExtraError(password);
+    setErrors(extra ? { password: extra } : {});
+    if (extra || validatePassword(password) !== null || !confirm || confirm !== password) return;
 
     setSubmitting(true);
     try {
@@ -104,7 +103,7 @@ export default function ResetPasswordPage() {
           error={errors.confirm}
         />
 
-        <PasswordRules password={password} confirm={confirm} />
+        <PasswordRules password={password} confirm={confirm} showErrors={submitted} />
 
         <button
           type="submit"

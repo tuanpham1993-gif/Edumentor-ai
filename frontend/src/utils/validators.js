@@ -2,13 +2,21 @@
 // Quy tắc mật khẩu GIỐNG HỆT backend `core/security.py` → validate_password (FR-48).
 // Backend vẫn kiểm tra lại: đây chỉ giúp người dùng, không thay được kiểm tra ở server.
 
+// 5 quy tắc hiển thị thành danh sách tích xanh / đỏ (PasswordRules).
 export const PASSWORD_RULES = [
   { test: (pw) => pw.length >= 8, text: 'Tối thiểu 8 ký tự' },
-  { test: (pw) => /[A-Z]/.test(pw), text: 'Có ít nhất 1 chữ hoa' },
-  { test: (pw) => /[a-z]/.test(pw), text: 'Có ít nhất 1 chữ thường' },
-  { test: (pw) => /[0-9]/.test(pw), text: 'Có ít nhất 1 chữ số' },
-  { test: (pw) => /[^A-Za-z0-9]/.test(pw), text: 'Có ít nhất 1 ký tự đặc biệt' },
+  { test: (pw) => /[A-Z]/.test(pw), text: 'Có chữ hoa (A–Z)' },
+  { test: (pw) => /[a-z]/.test(pw), text: 'Có chữ thường (a–z)' },
+  { test: (pw) => /[0-9]/.test(pw), text: 'Có chữ số (0–9)' },
+  { test: (pw) => /[^A-Za-z0-9]/.test(pw), text: 'Có ký tự đặc biệt (!@#$…)' },
 ];
+
+/** Lỗi KHÔNG nằm trong 5 quy tắc trên (quá 72 byte) — hiện riêng dưới ô. */
+export function passwordExtraError(password) {
+  return new TextEncoder().encode(password).length > MAX_PASSWORD_BYTES
+    ? `Mật khẩu quá dài (tối đa ${MAX_PASSWORD_BYTES} byte).`
+    : null;
+}
 
 const MAX_PASSWORD_BYTES = 72; // giới hạn bcrypt
 

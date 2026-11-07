@@ -1,29 +1,55 @@
-// "Mật khẩu phải đáp ứng:" — mỗi quy tắc tích xanh NGAY KHI GÕ đạt (FĐ4, màn demo ResetPassword).
-// Dùng ở Đặt lại mật khẩu và Đổi mật khẩu (FĐ5). Cùng quy tắc với backend (utils/validators.js).
-import { CheckCircleIcon, EmptyCircleIcon } from './icons.jsx';
+// Danh sách quy tắc mật khẩu, 3 trạng thái (FĐ4; nâng cấp 07/11):
+//   ○ xám  — chưa gõ gì (không "mắng" người dùng khi vừa mở trang)
+//   ✓ xanh — quy tắc đã đạt (nảy nhẹ khi vừa đạt)
+//   ✗ đỏ   — đã gõ mà chưa đạt, hoặc đã bấm gửi (showErrors) khi còn trống
+// Quy tắc lấy từ utils/validators.js → luôn khớp backend.
+//
+//   password   : mật khẩu đang gõ
+//   confirm    : (tuỳ chọn) có truyền → thêm dòng "Hai mật khẩu trùng khớp"
+//   showErrors : true sau khi bấm gửi → dòng đang xám chuyển đỏ
+//   hint       : dòng gợi ý phía trên danh sách
+import { PASSWORD_RULES } from '../../utils/validators.js';
 import styles from './PasswordRules.module.css';
+import StatusIcon from './StatusIcon.jsx';
 
-export default function PasswordRules({ password, confirm }) {
-  const rules = [
-    { text: 'Tối thiểu 8 ký tự', ok: password.length >= 8 },
-    {
-      text: 'Có chữ hoa, chữ thường và chữ số',
-      ok: /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password),
-    },
-    { text: 'Có ký tự đặc biệt', ok: /[^A-Za-z0-9]/.test(password) },
-    { text: 'Hai mật khẩu trùng khớp', ok: password.length > 0 && password === confirm },
-  ];
+const STATE_LABEL = { ok: 'đạt', error: 'chưa đạt', neutral: 'chưa kiểm tra' };
+
+function ruleState(passed, touched, showErrors) {
+  if (passed) return 'ok';
+  if (touched || showErrors) return 'error';
+  return 'neutral';
+}
+
+export default function PasswordRules({
+  password,
+  confirm,
+  showErrors = false,
+  hint = 'Mật khẩu gồm chữ hoa, chữ thường, số và ký tự đặc biệt.',
+}) {
+  const typed = password.length > 0;
+  const rules = PASSWORD_RULES.map((rule) => ({
+    text: rule.text,
+    state: ruleState(rule.test(password), typed, showErrors),
+  }));
+
+  if (confirm !== undefined) {
+    rules.push({
+      text: 'Hai mật khẩu trùng khớp',
+      state: ruleState(typed && password === confirm, confirm.length > 0, showErrors),
+    });
+  }
 
   return (
     <div className={styles.box}>
-      <span>Mật khẩu phải đáp ứng:</span>
-      <ul>
+      <span className={styles.hint}>{hint}</span>
+      <ul aria-live="polite">
         {rules.map((rule) => (
-          <li key={rule.text} className={rule.ok ? styles.ok : ''}>
+          <li key={rule.text} className={styles[rule.state] ?? ''}>
             <span className={styles.mark}>
-              {rule.ok ? <CheckCircleIcon size={16} /> : <EmptyCircleIcon />}
+              <StatusIcon state={rule.state} />
             </span>
             {rule.text}
+            <span className="sr-only"> — {STATE_LABEL[rule.state]}</span>
           </li>
         ))}
       </ul>

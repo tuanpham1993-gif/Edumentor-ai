@@ -24,3 +24,6 @@ coverage.xml
 
 # GĐ7 (Tuấn): ảnh người dùng upload — không commit
 backend/uploads/
+
+# Tài liệu cá nhân của Tuấn — chỉ để trên máy, KHÔNG push
+docs/review Quy trình tính năng Auth.md

@@ -1,6 +1,7 @@
 // Trang đăng ký (module 01 · Tuấn · FĐ3, 07/11/2026) — theo màn demo Register.
 //   - 4 ô: Họ và tên, Email, Mật khẩu, Xác nhận mật khẩu (Q3).
-//   - Kiểm tra ngay trên trình duyệt theo CÙNG quy tắc với backend; lỗi hiện dưới từng ô.
+//   - Ô Mật khẩu: dòng gợi ý + 5 quy tắc 3 trạng thái (xám → xanh / đỏ) cập nhật khi gõ.
+//   - Ô Xác nhận: "✓ Mật khẩu xác nhận khớp" (xanh) / "✗ … không khớp" (đỏ) khi gõ.
 //   - Lỗi từ server: 409 (email đã có) → ô Email; 422 → đúng ô theo fieldErrors.
 //   - Thành công → /login, điền sẵn email + thông báo "Đăng ký thành công".
 import { useState } from 'react';
@@ -10,26 +11,17 @@ import * as authApi from '../../api/auth.api.js';
 import AuthLayout from '../../components/auth/AuthLayout.jsx';
 import { ArrowIcon, MailIcon, UserIcon } from '../../components/auth/icons.jsx';
 import PasswordField from '../../components/auth/PasswordField.jsx';
-import TextField from '../../components/auth/TextField.jsx';
+import PasswordRules from '../../components/auth/PasswordRules.jsx';
+import TextField, { FieldStatus } from '../../components/auth/TextField.jsx';
 import { parseApiError } from '../../utils/errors.js';
-import { validateEmail, validateFullName, validatePassword } from '../../utils/validators.js';
+import {
+  passwordExtraError,
+  validateEmail,
+  validateFullName,
+  validatePassword,
+} from '../../utils/validators.js';
 
 const EMPTY = { fullName: '', email: '', password: '', confirmPassword: '' };
-
-function validate(values) {
-  const errors = {};
-  const fullName = validateFullName(values.fullName);
-  if (fullName) errors.fullName = fullName;
-  const email = validateEmail(values.email);
-  if (email) errors.email = email;
-  const password = validatePassword(values.password);
-  if (password) errors.password = password;
-  if (!values.confirmPassword) errors.confirmPassword = 'Vui lòng nhập lại mật khẩu.';
-  else if (values.confirmPassword !== values.password) {
-    errors.confirmPassword = 'Mật khẩu xác nhận không khớp.';
-  }
-  return errors;
-}
 
 // Tên trường backend → tên ô trên form
 const SERVER_FIELD = {
@@ -43,10 +35,15 @@ const SERVER_FIELD = {
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [values, setValues] = useState(EMPTY);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({}); // lỗi Họ tên / Email / lỗi từ server
+  const [submitted, setSubmitted] = useState(false); // đã bấm Đăng ký → quy tắc trống chuyển đỏ
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [shake, setShake] = useState(false);
+
+  const { password, confirmPassword } = values;
+  const passwordOk = validatePassword(password) === null;
+  const confirmMatches = confirmPassword.length > 0 && confirmPassword === password;
 
   // Một hàm onChange cho mọi ô: đọc tên ô từ thuộc tính name
   function handleChange(event) {
@@ -55,12 +52,33 @@ export default function RegisterPage() {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined })); // gõ lại → ẩn lỗi ô đó
   }
 
+  // Dòng trạng thái dưới ô Xác nhận
+  let confirmStatus = null;
+  if (confirmPassword.length > 0) {
+    confirmStatus = confirmMatches ? (
+      <FieldStatus tone="ok">Mật khẩu xác nhận khớp</FieldStatus>
+    ) : (
+      <FieldStatus tone="error">Mật khẩu xác nhận không khớp</FieldStatus>
+    );
+  } else if (submitted) {
+    confirmStatus = <FieldStatus tone="error">Vui lòng nhập lại mật khẩu.</FieldStatus>;
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
+    setSubmitted(true);
     setFormError('');
-    const nextErrors = validate(values);
+
+    const nextErrors = {};
+    const fullNameError = validateFullName(values.fullName);
+    if (fullNameError) nextErrors.fullName = fullNameError;
+    const emailError = validateEmail(values.email);
+    if (emailError) nextErrors.email = emailError;
+    const extra = passwordExtraError(password); // > 72 byte: không có trong 5 quy tắc
+    if (extra) nextErrors.password = extra;
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) {
+
+    if (Object.keys(nextErrors).length > 0 || !passwordOk || !confirmMatches) {
       setShake(true);
       return;
     }
@@ -132,9 +150,12 @@ export default function RegisterPage() {
           label="Mật khẩu"
           placeholder="Nhập mật khẩu"
           autoComplete="new-password"
-          value={values.password}
+          value={password}
           onChange={handleChange}
           error={errors.password}
+          invalid={submitted && !passwordOk}
+          valid={passwordOk}
+          below={<PasswordRules password={password} showErrors={submitted} />}
         />
         <PasswordField
           id="reg-confirm"
@@ -142,9 +163,12 @@ export default function RegisterPage() {
           label="Xác nhận mật khẩu"
           placeholder="Nhập lại mật khẩu"
           autoComplete="new-password"
-          value={values.confirmPassword}
+          value={confirmPassword}
           onChange={handleChange}
           error={errors.confirmPassword}
+          invalid={(confirmPassword.length > 0 && !confirmMatches) || (submitted && !confirmMatches)}
+          valid={confirmMatches}
+          below={!errors.confirmPassword && confirmStatus}
         />
 
         <button
