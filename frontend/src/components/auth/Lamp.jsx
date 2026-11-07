@@ -4,16 +4,19 @@
 //   glowTop  : vị trí quầng sáng
 //   delay    : lệch nhịp đung đưa
 //   onPull   : có truyền → hiện dây kéo; bấm dây → gọi onPull()
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import styles from './Lamp.module.css';
 
 export default function Lamp({ on, right, cord, glowTop, delay = 0, onPull }) {
   const [pulling, setPulling] = useState(false); // dây đang bị kéo xuống (160 ms)
   const [flick, setFlick] = useState(false); // nhấp nháy khi vừa bật
+  const wasOn = useRef(on); // trạng thái lần vẽ trước
 
   useEffect(() => {
-    if (!on) return undefined;
+    const justTurnedOn = on && !wasOn.current; // chỉ nhấp nháy khi TẮT → BẬT,
+    wasOn.current = on; //                      không nhấp nháy khi vào trang mà đèn đã sáng sẵn
+    if (!justTurnedOn) return undefined;
     setFlick(true);
     const timer = setTimeout(() => setFlick(false), 420);
     return () => clearTimeout(timer);

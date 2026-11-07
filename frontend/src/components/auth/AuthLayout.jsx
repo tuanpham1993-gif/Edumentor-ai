@@ -3,6 +3,9 @@
 // Mở trang: 3 đèn TẮT, form ẩn và bị khóa. Kéo dây ở đèn đầu tiên → cả 3 đèn sáng, form hiện.
 // Kéo lần nữa → tắt. Thẻ `children` là nội dung bên trong thẻ form (do từng trang truyền vào).
 //
+// Trạng thái đèn được NHỚ trong sessionStorage (theo tab): kéo 1 lần ở Đăng nhập thì sang
+// Đăng ký / Quên mật khẩu đèn vẫn sáng. Tab mới hoặc mở lại trình duyệt → đèn tắt như demo.
+//
 //   cardClassName : thêm class cho thẻ (vd "shake" khi đăng nhập sai)
 //   onCardAnimationEnd : gỡ class "shake" khi rung xong để lần sai sau rung lại được
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +15,24 @@ import styles from './AuthLayout.module.css';
 import { BrandLogo, CheckCircleIcon } from './icons.jsx';
 import Lamp from './Lamp.jsx';
 
+const LAMP_KEY = 'em-lamp-on';
+
+function readLampOn() {
+  try {
+    return sessionStorage.getItem(LAMP_KEY) === '1';
+  } catch {
+    return false; // trình duyệt chặn storage → mặc định đèn tắt
+  }
+}
+
+function saveLampOn(on) {
+  try {
+    sessionStorage.setItem(LAMP_KEY, on ? '1' : '0');
+  } catch {
+    // Bị chặn: chỉ không nhớ được giữa các trang, không ảnh hưởng gì khác.
+  }
+}
+
 const FEATURES = [
   'Lộ trình học do AI đề xuất theo mục tiêu',
   'Gợi ý khóa học theo từng kỹ năng',
@@ -19,8 +40,8 @@ const FEATURES = [
 ];
 
 export default function AuthLayout({ children, cardClassName = '', onCardAnimationEnd }) {
-  const [lampOn, setLampOn] = useState(false);
-  const [flashKey, setFlashKey] = useState(0); // đổi key → vẽ lại lớp "lóe sáng" mỗi lần bật
+  const [lampOn, setLampOn] = useState(readLampOn); // đọc trạng thái đã nhớ (chỉ lần đầu vẽ)
+  const [flashKey, setFlashKey] = useState(0); // > 0 và đổi → lóe sáng; 0 = không lóe (vào trang khi đèn đã sáng)
   const cardRef = useRef(null);
 
   // Đèn tắt: thẻ form không bấm / Tab được (inert). React 18 chưa hỗ trợ prop `inert` → đặt bằng ref.
@@ -35,6 +56,7 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
     const next = !lampOn;
     if (next) setFlashKey((key) => key + 1); // vừa bật → lóe sáng
     setLampOn(next);
+    saveLampOn(next);
   }
 
   return (
@@ -87,7 +109,9 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
               if (event.target === event.currentTarget) onCardAnimationEnd?.(event);
             }}
           >
-            {lampOn && <div key={flashKey} className={styles.flash} aria-hidden="true" />}
+            {lampOn && flashKey > 0 && (
+              <div key={flashKey} className={styles.flash} aria-hidden="true" />
+            )}
             {children}
           </div>
           <p className={`${styles.darkHint} ${lampOn ? '' : styles.darkHintOn}`} aria-hidden={lampOn}>
