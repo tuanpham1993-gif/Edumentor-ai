@@ -12,9 +12,9 @@
 
 | FĐ | Nội dung | Dự kiến | Thực tế bắt đầu | Thực tế xong | Xong |
 |---|---|---|---|---|---|
-| 0 | Chuẩn bị: cài đặt, chạy Vite, kết nối backend | 08/11 → 08/11 | __/__ | __/__ | [ ] |
-| 1 | Nền gọi API: `client.js` (gắn token, tự refresh khi 401) | 08/11 → 08/11 | __/__ | __/__ | [ ] |
-| 2 | Trạng thái đăng nhập + route bảo vệ + layout | 09/11 → 09/11 | __/__ | __/__ | [ ] |
+| 0 | Chuẩn bị: cài đặt, chạy Vite, kết nối backend | 08/11 → 08/11 | 07/11 | 07/11 | [x] |
+| 1 | Nền gọi API: `client.js` (gắn token, tự refresh khi 401) | 08/11 → 08/11 | 07/11 | 07/11 | [x] |
+| 2 | Trạng thái đăng nhập + route bảo vệ + layout | 09/11 → 09/11 | 07/11 | __/__ | [ ] |
 | 3 | Đăng nhập, đăng ký (dây kéo đèn) | 10/11 → 10/11 | __/__ | __/__ | [ ] |
 | 4 | Quên / đặt lại mật khẩu | 11/11 → 11/11 | __/__ | __/__ | [ ] |
 | 5 | Hồ sơ, sửa hồ sơ + ảnh đại diện, đổi mật khẩu, đăng xuất, Tối/Sáng | 12/11 → 12/11 | __/__ | __/__ | [ ] |
@@ -48,33 +48,34 @@
 
 ## FĐ0 — Chuẩn bị (08/11)
 
-- [ ] **0.1 Cài thư viện, chạy Vite** — dự kiến 08/11 · thực tế __/__
+- [x] **0.1 Cài thư viện, chạy Vite** — dự kiến 08/11 · thực tế 07/11 ✔ Claude đã review
   - `cd frontend` → `npm install` → `npm run dev` → mở `http://localhost:5173` thấy trang giữ chỗ "EduMentor AI".
-- [ ] **0.2 Kết nối backend** — dự kiến 08/11 · thực tế __/__
+- [x] **0.2 Kết nối backend** — dự kiến 08/11 · thực tế 07/11 ✔ Claude đã review — proxy `/api` + `/uploads` → :8000; health qua 5173 trả connected (FQ2: dùng proxy)
   - Cấu hình **proxy** trong `vite.config.js`: `/api` và `/uploads` → `http://localhost:8000` (trình duyệt coi như cùng nguồn → không vướng CORS; ảnh đại diện `/uploads/...` hiển thị được).
   - ✅ Xong khi: `fetch("/api/health/health")` trong Console trình duyệt trả `database: connected`.
 - [ ] **0.3 Đọc nhanh `index.css` và `utils/theme.js`** — biết class nào dùng cho nút, thẻ, ô nhập, thông báo lỗi — dự kiến 08/11 · thực tế __/__
+- [x] **0.4 Bài tập React đầu tiên: `components/common/BackendStatus.jsx`** (useState + useEffect, gọi `/api/health/health` qua proxy) — thực tế 07/11 ✔ Claude đã review. Claude sửa: các `if/return` nằm ngoài hàm (lỗi "return outside of function"), sai đường dẫn `/api/health` (404), class `.ok`/`.error` không có trong index.css → `.alert-ok`/`.alert`, chưa gắn vào `App.jsx`. `npm run build` OK.
 
 ## FĐ1 — Nền gọi API (08/11)
 
-- [ ] **1.1 `api/client.js`** — axios instance `baseURL: "/api"` — dự kiến 08/11 · thực tế __/__
+- [x] **1.1 `api/client.js`** — axios instance `baseURL: "/api"` — dự kiến 08/11 · thực tế 07/11 — Claude viết (theo yêu cầu) + `api/tokenStorage.js` (FQ1 gói một chỗ)
   - Interceptor **request**: gắn `Authorization: Bearer <access_token>`.
   - Interceptor **response**: gặp **401** → gọi `POST /auth/refresh` **một lần** → lưu cặp token mới → gửi lại request cũ. Refresh thất bại → xóa token, chuyển `/login`.
   - Nhiều request cùng 401 một lúc → chỉ refresh **một lần**, các request khác chờ (tránh tự kích hoạt "phát hiện dùng lại" của backend → bị đăng xuất mọi nơi).
-- [ ] **1.2 `utils/errors.js`** — đổi lỗi FastAPI thành câu tiếng Việt: `detail` dạng chuỗi (401/409/400…) hoặc danh sách (422, bỏ tiền tố "Value error, ") — dự kiến 08/11 · thực tế __/__
-- [ ] **1.3 `api/auth.api.js`, `api/me.api.js`** — mỗi API backend một hàm — dự kiến 08/11 · thực tế __/__
-- [ ] **1.4 Nhờ Claude review FĐ1** — dự kiến 08/11 · thực tế __/__
+- [x] **1.2 `utils/errors.js`** — đổi lỗi FastAPI thành câu tiếng Việt: `detail` dạng chuỗi (401/409/400…) hoặc danh sách (422, bỏ tiền tố "Value error, ") — dự kiến 08/11 · thực tế 07/11 — Claude viết: `parseApiError` → { status, message, fieldErrors }
+- [x] **1.3 `api/auth.api.js`, `api/me.api.js`** — mỗi API backend một hàm — dự kiến 08/11 · thực tế 07/11 — Claude viết
+- [x] **1.4 Nhờ Claude review FĐ1** — dự kiến 08/11 · thực tế 07/11 — 16/16 kịch bản chạy thật với backend (Node): tự gắn Bearer, 401 → refresh → gửi lại, 5 request song song chỉ refresh 1 lần (không kích hoạt thu hồi mọi phiên), logout → hết phiên, lỗi 409/422/415/mất mạng
 
 ## FĐ2 — Trạng thái đăng nhập, route, layout (09/11)
 
-- [ ] **2.1 `store/authStore.jsx`** — React Context: `user`, `login()`, `logout()`, `refreshUser()`; khi mở app có token → `GET /me` để biết ai đang đăng nhập — dự kiến 09/11 · thực tế __/__
-- [ ] **2.2 `hooks/useAuth.js`** — lấy nhanh dữ liệu từ Context — dự kiến 09/11 · thực tế __/__
-- [ ] **2.3 `routes/index.jsx` + `PublicRoute` / `ProtectedRoute` / `AdminRoute`** — dự kiến 09/11 · thực tế __/__
+- [x] **2.1 `store/authStore.js`** — React Context: `user`, `login()`, `logout()`, `refreshUser()`; khi mở app có token → `GET /me` để biết ai đang đăng nhập — dự kiến 09/11 · thực tế 07/11 — Claude viết (theo yêu cầu); file .js nên dùng createElement; nối `setOnSessionExpired` của client.js → về /login
+- [x] **2.2 `hooks/useAuth.js`** — lấy nhanh dữ liệu từ Context — dự kiến 09/11 · thực tế 07/11 — Claude viết
+- [x] **2.3 `routes/index.jsx` + `PublicRoute` / `ProtectedRoute` / `AdminRoute`** — dự kiến 09/11 · thực tế 07/11 — Claude viết (+ `FullPageLoading`, `NotFoundPage`, trang quản trị giữ chỗ)
   - Chưa đăng nhập vào `/me` → về `/login`; đã đăng nhập vào `/login` → về `/me`; student vào `/admin/*` → chặn.
   - Bản demo **không** kiểm tra đăng nhập — bản thật phải có (và backend vẫn là lớp chặn chính — NFR-05).
-- [ ] **2.4 `components/layout/Header.jsx`, `PageLayout.jsx`** — tên + avatar người dùng, liên kết hồ sơ — dự kiến 09/11 · thực tế __/__
-- [ ] **2.5 `App.jsx`** — bọc `AuthProvider` + router — dự kiến 09/11 · thực tế __/__
-- [ ] **2.6 Nhờ Claude review FĐ2** — dự kiến 09/11 · thực tế __/__
+- [x] **2.4 `components/layout/Header.jsx`, `PageLayout.jsx`** — tên + avatar người dùng, liên kết hồ sơ — dự kiến 09/11 · thực tế 07/11 — Claude viết (+ `Header.module.css`, `utils/formatters.js`: initials, formatDate, roleLabel)
+- [x] **2.5 `App.jsx`** — bọc `AuthProvider` + router — dự kiến 09/11 · thực tế 07/11 — Claude viết. LoginPage / ProfilePage là BẢN TẠM để kiểm tra luồng (FĐ3, FĐ5 làm lại)
+- [ ] **2.6 Nhờ Claude review FĐ2** — dự kiến 09/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay K1, K4, K6, K11 trên trình duyệt
 
 ## FĐ3 — Đăng nhập, đăng ký (10/11)
 
