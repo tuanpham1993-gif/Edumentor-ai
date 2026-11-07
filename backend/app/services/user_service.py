@@ -5,10 +5,13 @@ Chỉ cần sửa thuộc tính rồi commit — SQLAlchemy tự theo dõi objec
 tự sinh câu UPDATE users SET ... WHERE user_id = ...
 """
 
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password, verify_password
 from app.models.user import Users
+from app.repositories import token_repository
 
 
 class WrongCurrentPasswordError(Exception):
@@ -29,11 +32,13 @@ def change_password(
     """Đổi mật khẩu (FR-48). Sai mật khẩu hiện tại → WrongCurrentPasswordError.
 
     Lưu ý: access token cũ vẫn dùng được tới khi hết hạn (JWT không thu hồi được);
-    có hủy các phiên khác khi đổi mật khẩu không là câu hỏi Q10 (GĐ6 refresh token).
+    đổi mật khẩu thì thu hồi mọi refresh token của user (Q10, GĐ6).
     """
     # Phải nhập đúng mật khẩu hiện tại — chặn người khác dùng máy đang đăng nhập để đổi.
     if not verify_password(current_password, user.hashed_password):
         raise WrongCurrentPasswordError  # nhập sai → không đổi gì cả
 
     user.hashed_password = hash_password(new_password)  # vẫn chỉ lưu bản băm
+    # Q10: đổi mật khẩu → đăng xuất mọi nơi (kể cả phiên hiện tại khi access hết hạn)
+    token_repository.revoke_all_refresh_tokens(db, user.user_id, datetime.now(timezone.utc))
     db.commit()

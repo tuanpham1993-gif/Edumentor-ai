@@ -2,6 +2,7 @@
 
 - GĐ2 (05/11/2026): đăng ký, đăng nhập.
 - GĐ5 (06/11/2026): quên mật khẩu, đặt lại mật khẩu.
+- GĐ6 (07/11/2026): làm mới access token (refresh), đăng xuất.
 
 Lớp ROUTER = "lễ tân": nhận request (đã qua schema), gọi service, dịch kết quả/lỗi
 sang mã HTTP. Không viết truy vấn hay quy tắc nghiệp vụ ở đây.
@@ -16,6 +17,8 @@ from app.core.email import send_password_reset_email
 from app.schemas.auth import (
     ForgotPasswordRequest,
     LoginRequest,
+    RefreshRequest,
+    RefreshResponse,
     RegisterRequest,
     ResetPasswordRequest,
     TokenResponse,
@@ -59,8 +62,9 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email hoặc mật khẩu không đúng.",
         )
-    token, user = result
-    return TokenResponse(access_token=token, user=user)
+    access_token, refresh_token, user = result
+    return TokenResponse(access_token=access_token, refresh_token=refresh_token, user=user)
+
 
 
 # Luôn cùng một câu dù email có hay không → không lộ email nào đã đăng ký (FR-47).
@@ -94,3 +98,21 @@ def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db))
         ) from None
     return MessageResponse(message="Đặt lại mật khẩu thành công.")
 
+@router.post("/refresh", response_model=RefreshResponse, summary="Làm mới access token")
+def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
+    try:
+        access, new_refresh = auth_service.refresh(db, refresh_token=request.refresh_token)
+    except auth_service.InvalidRefreshTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+        ) from None
+    return RefreshResponse(access_token=access, refresh_token=new_refresh)
+
+
+@router.post("/logout", response_model=MessageResponse, summary="Đăng xuất")
+def logout(request: RefreshRequest, db: Session = Depends(get_db)):
+    # Không bắt buộc access token: người dùng hay đăng xuất khi access đã hết hạn.
+    # Luôn 200: token sai / đã thu hồi thì phiên vốn đã không còn.
+    auth_service.logout(db, refresh_token=request.refresh_token)
+    return MessageResponse(message="Đã đăng xuất.")

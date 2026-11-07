@@ -1,4 +1,4 @@
-"""Schema tài khoản (module 01 · Tuấn): đăng ký, đăng nhập (GĐ2, 05/11); quên / đặt lại mật khẩu (GĐ5, 06/11).
+"""Schema tài khoản (module 01 · Tuấn): đăng ký, đăng nhập (GĐ2, 05/11); quên / đặt lại mật khẩu (GĐ5, 06/11); refresh, đăng xuất (GĐ6, 07/11).
 
 Lớp SCHEMA = "người gác cổng": khai báo dữ liệu vào phải trông như thế nào.
 Sai → FastAPI tự trả 422 kèm lý do, code phía sau KHÔNG chạy.
@@ -71,6 +71,7 @@ class TokenResponse(BaseModel):
     """Response đăng nhập: token + thông tin user (có `role` để frontend biết student/admin)."""
 
     access_token: str
+    refresh_token: str
     token_type: str = "bearer"
     user: UserMe  # nhận thẳng object Users nhờ from_attributes=True trong UserMe
 
@@ -103,3 +104,14 @@ class ResetPasswordRequest(BaseModel):
         if self.new_password != self.confirm_new_password:
             raise ValueError("Mật khẩu xác nhận không khớp.")
         return self
+
+class RefreshRequest(BaseModel):
+    """Body của POST /api/auth/refresh và /api/auth/logout (GĐ6)."""
+
+    refresh_token: str = Field(min_length=1)
+
+
+class RefreshResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"

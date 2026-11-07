@@ -2,18 +2,18 @@
 
 - Phần 1 — Mật khẩu: hash_password, verify_password, validate_password.
 - Phần 2 — JWT access token: create_access_token, decode_access_token.
+- Phần 3 — Token ngẫu nhiên (GĐ5–GĐ6): generate_token, hash_token.
 
 Không phụ thuộc HTTP hay DB → dùng được ở mọi nơi (service, script, test).
 """
 
+import hashlib
 import re
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
-import hashlib
-import secrets
-
 
 from app.core.config import settings
 
@@ -120,13 +120,13 @@ def decode_access_token(token: str) -> int | None:
 
 # =====================================================================
 # PHẦN 3 — TOKEN NGẪU NHIÊN (reset mật khẩu, refresh token)
-# =====================================================================  
+# =====================================================================
 
 def generate_token() -> str:
     """Chuỗi ngẫu nhiên an toàn (~43 ký tự) — gửi cho người dùng, KHÔNG lưu bản gốc."""
-    return secrets.token_urlsafe(32)  # TODO 72
+    return secrets.token_urlsafe(32)
 
 
 def hash_token(token: str) -> str:
     """Bản băm SHA-256 (hex) — lưu vào DB và dùng để tìm token."""
-    return hashlib.sha256(token.encode("utf-8")).hexdigest()  # TODO 73
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()

@@ -18,7 +18,7 @@
 | 3 | Hồ sơ `/me`, đổi mật khẩu | 06/11 → 07/11 | 06/11 | 06/11 | [x] |
 | 4 | Kỹ năng `/me/skills` | 08/11 → 09/11 | __/__ | __/__ | [ ] |
 | 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | 06/11 | 06/11 | [x] |
-| 6 | Refresh token, đăng xuất | 12/11 → 13/11 | __/__ | __/__ | [ ] |
+| 6 | Refresh token, đăng xuất | 12/11 → 13/11 | 07/11 | 07/11 | [x] |
 | 7 | Ảnh đại diện, thống kê `/me/summary` | 14/11 → 14/11 | __/__ | __/__ | [ ] |
 | 8 | Hoàn thiện, kiểm thử, gộp nhánh | 15/11 → 15/11 | __/__ | __/__ | [ ] |
 
@@ -102,12 +102,12 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 6 — Refresh token, đăng xuất (12/11 → 13/11)
 
-- [ ] **6.1 Model `RefreshToken`** trong `models/auth_token.py` — bản băm token, `user_id`, hạn, `revoked` — dự kiến 12/11 · thực tế __/__
-- [ ] **6.2 `repositories/token_repository.py`** — dự kiến 12/11 · thực tế __/__
-- [ ] **6.3 Login trả thêm refresh token** — dự kiến 12/11 · thực tế __/__
-- [ ] **6.4 `POST /api/auth/refresh`** — token hợp lệ → cấp access token mới (+ xoay vòng nếu nhóm chọn); hết hạn/thu hồi → 401 (FR-45, FR-46) — dự kiến 13/11 · thực tế __/__
-- [ ] **6.5 `POST /api/auth/logout`** — thu hồi refresh token — dự kiến 13/11 · thực tế __/__
-- [ ] **6.6 Test + nhờ Claude review GĐ6** — dự kiến 13/11 · thực tế __/__
+- [x] **6.1 Model `RefreshToken`** trong `models/auth_token.py` — bản băm token, `user_id`, hạn, `revoked` — dự kiến 12/11 · thực tế 07/11 ✔ Claude đã review
+- [x] **6.2 `repositories/token_repository.py`** — dự kiến 12/11 · thực tế 07/11 ✔ Claude đã review (+ `revoke_all_refresh_tokens`)
+- [x] **6.3 Login trả thêm refresh token** — dự kiến 12/11 · thực tế 07/11 ✔ Claude đã review (login giờ commit vì ghi refresh token vào DB)
+- [x] **6.4 `POST /api/auth/refresh`** — token hợp lệ → cấp access token mới (+ xoay vòng nếu nhóm chọn); hết hạn/thu hồi → 401 (FR-45, FR-46) — dự kiến 13/11 · thực tế 07/11 ✔ Claude đã review — xoay vòng + phát hiện dùng lại → thu hồi mọi phiên (FR-46). Claude sửa: thiếu import model, thiếu class lỗi, router thiếu import schema
+- [x] **6.5 `POST /api/auth/logout`** — thu hồi refresh token — dự kiến 13/11 · thực tế 07/11 ✔ Claude đã review — luôn 200, không bắt buộc access token
+- [x] **6.6 Test + nhờ Claude review GĐ6** — dự kiến 13/11 · thực tế 07/11 — `tests/test_refresh.py` 17 test (Tuấn viết 16, Claude thêm 1); tổng 53 passed; R1–R9 qua trên PostgreSQL thật; đổi/đặt lại mật khẩu thu hồi refresh token (Q10)
 
 ## Giai đoạn 7 — Ảnh đại diện, thống kê (14/11)
 
@@ -131,8 +131,8 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 |---|---|---|---|---|---|
 | POST | `/api/auth/register` | 2 | [x] | [x] | [x] |
 | POST | `/api/auth/login` | 2 | [x] | [x] | [x] |
-| POST | `/api/auth/refresh` | 6 | [ ] | [ ] | [ ] |
-| POST | `/api/auth/logout` | 6 | [ ] | [ ] | [ ] |
+| POST | `/api/auth/refresh` | 6 | [x] | [x] | [x] |
+| POST | `/api/auth/logout` | 6 | [x] | [x] | [x] |
 | POST | `/api/auth/forgot-password` | 5 | [x] | [x] | [x] |
 | POST | `/api/auth/reset-password` | 5 | [x] | [x] | [x] |
 | GET | `/api/me` | 3 | [x] | [x] | [x] |

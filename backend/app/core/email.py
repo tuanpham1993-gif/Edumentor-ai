@@ -39,7 +39,6 @@ def send_email(to: str, subject: str, body: str) -> None:
 def send_password_reset_email(to: str, token: str) -> None:
     link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
     minutes = settings.RESET_TOKEN_EXPIRE_MINUTES
-    # TODO 79
     body = (
         "Xin chào,\n\n"
         "Bạn vừa yêu cầu đặt lại mật khẩu cho tài khoản EduMentor AI.\n"
