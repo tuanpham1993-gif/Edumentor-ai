@@ -15,7 +15,6 @@ class SkillRelation(Base):
     relation_type = Column(String(20),nullable=False,)
 
     from_skill = relationship("Skills",foreign_keys=[from_skill_id],back_populates="relations_from")
-
     to_skill = relationship("Skills",foreign_keys=[to_skill_id],back_populates="relations_to")
 
     __table_args__ = (

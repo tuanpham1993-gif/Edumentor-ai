@@ -23,14 +23,12 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"               # tính từ thư mục backend/
     AVATAR_MAX_BYTES: int = 5 * 1024 * 1024   # 5 MB (Q8, chốt 07/11)
 
-
     # Email — để trống hoặc "smtp.example.com" thì chỉ IN link ra terminal (chế độ dev)
     SMTP_HOST: str = ""
     SMTP_PORT: int = 587
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
     FRONTEND_URL: str = "http://localhost:5173"
-
 
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:8000",

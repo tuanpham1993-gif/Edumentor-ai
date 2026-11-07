@@ -11,13 +11,11 @@ from app.services import learning_path_node_service as node_service
 
 router = APIRouter()
 
-
 @router.post("", response_model=LearningPathResponse, status_code=status.HTTP_201_CREATED, summary="Create a brand new learning path")
 def create_learning_path(
     request: LearningPathCreate,
     student_id: int = Query(..., description="Temporary student ID until authentication is implemented"),
-    db: Session = Depends(get_db)
-    ):
+    db: Session = Depends(get_db)):
     try:
         return path_service.create_learning_path(
             db=db, student_id=student_id,
