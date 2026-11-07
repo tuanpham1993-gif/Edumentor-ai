@@ -86,7 +86,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 > ⚠️ Phụ thuộc bảng `skills` (module của Hòa/Khôi, đang ngắt). Trước khi làm: thống nhất với nhóm dùng model `Skills` nào.
 
-- [ ] **4.0 Chốt với nhóm về bảng `skills`** — dự kiến 08/11 · thực tế __/__
+- [x] **4.0 Chốt với nhóm về bảng `skills`** — dự kiến 08/11 · thực tế 07/11 — dùng model `Skills` của Hòa; seed từ `datajson/` (5.893 kỹ năng, 4.509 khóa học)
 - [ ] **4.1 `models/user_skill.py`** — `user_id`, `skill_id`, `status` (`known`/`learning`), `updated_at`; một user–skill chỉ một dòng — dự kiến 08/11 · thực tế __/__
 - [ ] **4.2 `GET /api/me/skills`** (lọc `?status=`) — dự kiến 08/11 · thực tế __/__
 - [ ] **4.3 `PATCH /api/me/skills`** — thêm / đổi trạng thái / xóa, **lưu tất cả một lần** (FR-04); skill không có trong danh mục → lỗi và không lưu gì — dự kiến 09/11 · thực tế __/__ → __/__
@@ -122,7 +122,11 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 - [x] **8.1 `scripts/create_admin.py`** — tạo tài khoản admin (không tạo qua API) — dự kiến 15/11 · thực tế 07/11 ✔ Claude đã review — gọi lại auth_service.register + đổi role; mật khẩu nhập bằng getpass; 8 test (Claude viết, có test main() S1–S4); S5 admin đăng nhập trên PostgreSQL OK. Claude sửa: main() thiếu in kết quả + return 0
 - [x] **8.2 Chạy toàn bộ** `pytest`, `black .`, `ruff check .` — dự kiến 15/11 · thực tế 07/11 — black (16 file định dạng, lần 2 unchanged) + ruff chỉ trên file của Tuấn; 70 passed. Còn UP017 (timezone.utc), E501 comment dài: chấp nhận
 - [x] **8.3 Rà bảo mật**: không trả `hashed_password`/token gốc, không log mật khẩu, `.env` không bị commit (NFR-04, NFR-08) — dự kiến 15/11 · thực tế 07/11 — B1–B6 (xem Nhật ký 07/11)
-- [ ] **8.4 Bật lại phần của Hòa, gộp với nhóm**, tạo Pull Request — dự kiến 15/11 · thực tế __/__
+**8.4 Bật lại phần của Hòa, gộp với nhóm**, tạo Pull Request — dự kiến 15/11 · thực tế __/__
+  - [x] 07/11: merge `origin/Hoa` (878a984); bật seed + model + router learning-paths/nodes/skills. Seed PostgreSQL ~9 giây: 5.893 skills · 4.509 courses · 1.300 learning_paths. 70 test của Tuấn + 2 test của Hòa passed.
+  - [ ] Router `recommendation_service` còn tắt — cần `pip install` sentence-transformers (+ PyTorch ~1–2 GB).
+  - [ ] Bảng `learning_paths` trong DB tạo từ model cũ (CHECK goal_type chưa có `template`) — dữ liệu hiện tại không dùng `template` nên chưa lỗi; khi Hòa dùng `template` cần xóa bảng để tạo lại.
+  - [ ] Tạo Pull Request gộp với nhóm.
 
 ---
 

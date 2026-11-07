@@ -25,6 +25,7 @@ EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình
 | Kế hoạch code tay | `docs/Auth-EduMentor AI.md` |
 | Kế hoạch + tiến độ 01 Tài khoản & Hồ sơ (Claude review) | `docs/Review-Auth.md` |
 | Kế hoạch + tiến độ 09 Ôn tập & Đánh giá (Claude review) | `docs/Review-Assessment.md` |
+| Kế hoạch + tiến độ frontend React module 01 (Claude review) | `docs/Review-Frontend-Auth.md` |
 | Quy ước API, lỗi, Git | `docs/conventions.md` |
 | Cài đặt backend | `SETUP_BACKEND.md` |
 
