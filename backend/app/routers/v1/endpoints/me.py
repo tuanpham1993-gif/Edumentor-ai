@@ -8,11 +8,13 @@ Gắn vào app trong routers/v1/api.py với prefix "/me".
     GET   /api/me                  — xem hồ sơ
     PATCH /api/me                  — sửa họ tên (PATCH = sửa một phần)
     POST  /api/me/change-password  — đổi mật khẩu (POST = một hành động có kiểm tra)
+    POST  /api/me/avatar           — đổi ảnh đại diện, multipart/form-data (GĐ7, 07/11)
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.user import Users
@@ -23,6 +25,7 @@ from app.schemas.user import (
     UserMe,
 )
 from app.services import user_service
+from app.utils import files
 
 router = APIRouter()
 
@@ -64,3 +67,26 @@ def change_password(
             detail="Mật khẩu hiện tại không đúng.",
         ) from None
     return MessageResponse(message="Đổi mật khẩu thành công.")
+
+
+@router.post("/avatar", response_model=UserMe, summary="Đổi ảnh đại diện")
+def upload_avatar(
+    file: UploadFile = File(...),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    # Đọc tối đa MAX + 1 byte: đủ để biết "quá lớn" mà không phải đọc hết file khổng lồ vào RAM
+    data = file.file.read(settings.AVATAR_MAX_BYTES + 1)
+    try:
+        return user_service.update_avatar(db, current_user, data=data)
+    except files.FileTooLargeError:
+        max_mb = settings.AVATAR_MAX_BYTES // (1024 * 1024)  # lấy từ cấu hình, không ghi cứng
+        raise HTTPException(
+            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+            detail=f"Ảnh vượt quá {max_mb} MB.",
+        ) from None
+    except files.UnsupportedImageError:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Chỉ chấp nhận ảnh PNG hoặc JPEG.",
+        ) from None

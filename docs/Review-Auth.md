@@ -19,7 +19,7 @@
 | 4 | Kỹ năng `/me/skills` | 08/11 → 09/11 | __/__ | __/__ | [ ] |
 | 5 | Quên / đặt lại mật khẩu | 10/11 → 11/11 | 06/11 | 06/11 | [x] |
 | 6 | Refresh token, đăng xuất | 12/11 → 13/11 | 07/11 | 07/11 | [x] |
-| 7 | Ảnh đại diện, thống kê `/me/summary` | 14/11 → 14/11 | __/__ | __/__ | [ ] |
+| 7 | Ảnh đại diện, thống kê `/me/summary` | 14/11 → 14/11 | 07/11 | __/__ | [ ] |
 | 8 | Hoàn thiện, kiểm thử, gộp nhánh | 15/11 → 15/11 | __/__ | __/__ | [ ] |
 
 Thứ tự được chọn để mỗi giai đoạn chạy và test được ngay; phần phụ thuộc module người khác (kỹ năng, thống kê) đặt sau.
@@ -111,7 +111,8 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ## Giai đoạn 7 — Ảnh đại diện, thống kê (14/11)
 
-- [ ] **7.1 `POST /api/me/avatar`** + `utils/files.py` — kiểm tra loại file, dung lượng; lưu file, cập nhật `avatar_url` — dự kiến 14/11 · thực tế __/__ → __/__
+- [x] **7.1 `POST /api/me/avatar`** + `utils/files.py` — kiểm tra loại file, dung lượng; lưu file, cập nhật `avatar_url` — dự kiến 14/11 · thực tế 07/11 → 07/11 ✔ Claude đã review — 9 test (Claude viết); tổng 62 passed; A1–A7 qua trên app thật (mở được ảnh qua /uploads). Claude sửa: giới hạn 2→5 MB theo Q8, thông báo 413 ghi cứng, import lặp, thiếu .gitignore
+  - Quyết định Q8 (07/11): PNG + JPEG · tối đa 5 MB (413) · sai định dạng 415 · lưu `backend/uploads/avatars/` · sau này chuyển lên đám mây.
 - [ ] **7.2 `GET /api/me/summary`** — khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo — dự kiến 14/11 · thực tế __/__
   - ⚠️ Cần bảng của module khác (khóa học của tôi, lộ trình). Nếu chưa có: trả `known_skills` thật, các số còn lại chờ gộp.
 - [ ] **7.3 Test + nhờ Claude review GĐ7** — dự kiến 14/11 · thực tế __/__
@@ -137,7 +138,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | POST | `/api/auth/reset-password` | 5 | [x] | [x] | [x] |
 | GET | `/api/me` | 3 | [x] | [x] | [x] |
 | PATCH | `/api/me` | 3 | [x] | [x] | [x] |
-| POST | `/api/me/avatar` | 7 | [ ] | [ ] | [ ] |
+| POST | `/api/me/avatar` | 7 | [x] | [x] | [x] |
 | POST | `/api/me/change-password` | 3 | [x] | [x] | [x] |
 | GET | `/api/me/summary` | 7 | [ ] | [ ] | [ ] |
 | GET | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
@@ -156,7 +157,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | Q5 | Dùng model `Skills` nào khi gộp với nhóm? | 4 | | |
 | Q6 | Link đặt lại mật khẩu sống bao lâu? Gửi email bằng SMTP nào? | 5 | **Đề xuất (chờ nhóm xác nhận):** 30 phút (`RESET_TOKEN_EXPIRE_MINUTES`); dev in link ra terminal, khi có SMTP thật dùng `smtplib` (không thêm thư viện) | 06/11 |
 | Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | **Đề xuất (chờ nhóm xác nhận):** 7 ngày (`REFRESH_TOKEN_EXPIRE_DAYS`); có xoay vòng (mỗi refresh token dùng 1 lần); gửi trong JSON body | 06/11 |
-| Q8 | Ảnh đại diện: định dạng, dung lượng tối đa, lưu ở đâu? | 7 | | |
+| Q8 | Ảnh đại diện: định dạng, dung lượng tối đa, lưu ở đâu? | 7 | **Tuấn chốt:** định dạng **PNG + JPEG** (khớp `accept` màn demo; kiểm tra chữ ký byte đầu file, không tin content_type; không nhận SVG/GIF/HEIC); tối đa **5 MB** (`AVATAR_MAX_BYTES`); lưu **thư mục server** `backend/uploads/avatars/` (không commit; Docker cần volume) — **mở rộng sau lên dịch vụ đám mây** (Cloudinary/S3…): chỉ viết lại `utils/files.py`, cột `avatar_url` chứa được URL đầy đủ. Thu nhỏ ảnh phía frontend: chưa chốt | 07/11 |
 | Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | | |
 | Q10 | Đổi mật khẩu xong có hủy các phiên đăng nhập khác không? (access token cũ vẫn sống tối đa 30 phút; refresh token ở GĐ6) | 6 | **Đề xuất (chờ nhóm xác nhận):** có — đổi/đặt lại mật khẩu thì thu hồi mọi refresh token của user | 06/11 |
 

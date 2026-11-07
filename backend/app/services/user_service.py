@@ -1,4 +1,4 @@
-"""Nghiệp vụ hồ sơ người dùng (module 01 · Tuấn · GĐ3, 06/11/2026).
+"""Nghiệp vụ hồ sơ người dùng (module 01 · Tuấn · GĐ3 06/11; ảnh đại diện GĐ7 07/11).
 
 Không cần repository ở đây: `user` đã được lấy từ DB trong get_current_user.
 Chỉ cần sửa thuộc tính rồi commit — SQLAlchemy tự theo dõi object bị sửa và
@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.security import hash_password, verify_password
 from app.models.user import Users
 from app.repositories import token_repository
+from app.utils import files
 
 
 class WrongCurrentPasswordError(Exception):
@@ -42,3 +43,22 @@ def change_password(
     # Q10: đổi mật khẩu → đăng xuất mọi nơi (kể cả phiên hiện tại khi access hết hạn)
     token_repository.revoke_all_refresh_tokens(db, user.user_id, datetime.now(timezone.utc))
     db.commit()
+
+
+def update_avatar(db: Session, user: Users, *, data: bytes) -> Users:
+    """Lưu ảnh mới, cập nhật avatar_url, xóa ảnh cũ (FR-03).
+
+    Lỗi kiểm tra → files.FileTooLargeError / files.UnsupportedImageError (router đổi thành 413 / 415).
+    """
+    old_url = user.avatar_url
+    new_url = files.save_avatar(user.user_id, data)   # lưu file TRƯỚC
+    try:
+        user.avatar_url = new_url
+        db.commit()
+    except Exception:
+        db.rollback()
+        files.delete_avatar(new_url)  # DB lỗi → dọn file vừa lưu, không để rác
+        raise
+    files.delete_avatar(old_url)  # xóa ảnh cũ SAU KHI lưu DB thành công
+    db.refresh(user)
+    return user

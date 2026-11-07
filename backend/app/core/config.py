@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     RESET_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
+    UPLOAD_DIR: str = "uploads"               # tính từ thư mục backend/
+    AVATAR_MAX_BYTES: int = 5 * 1024 * 1024   # 5 MB (Q8, chốt 07/11)
+
+
     # Email — để trống hoặc "smtp.example.com" thì chỉ IN link ra terminal (chế độ dev)
     SMTP_HOST: str = ""
     SMTP_PORT: int = 587
