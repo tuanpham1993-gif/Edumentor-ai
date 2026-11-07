@@ -15,7 +15,7 @@
 | 0 | Chuẩn bị: cài đặt, chạy Vite, kết nối backend | 08/11 → 08/11 | 07/11 | 07/11 | [x] |
 | 1 | Nền gọi API: `client.js` (gắn token, tự refresh khi 401) | 08/11 → 08/11 | 07/11 | 07/11 | [x] |
 | 2 | Trạng thái đăng nhập + route bảo vệ + layout | 09/11 → 09/11 | 07/11 | __/__ | [ ] |
-| 3 | Đăng nhập, đăng ký (dây kéo đèn) | 10/11 → 10/11 | __/__ | __/__ | [ ] |
+| 3 | Đăng nhập, đăng ký (dây kéo đèn) | 10/11 → 10/11 | 07/11 | __/__ | [ ] |
 | 4 | Quên / đặt lại mật khẩu | 11/11 → 11/11 | __/__ | __/__ | [ ] |
 | 5 | Hồ sơ, sửa hồ sơ + ảnh đại diện, đổi mật khẩu, đăng xuất, Tối/Sáng | 12/11 → 12/11 | __/__ | __/__ | [ ] |
 | 6 | Kỹ năng của tôi, thống kê hồ sơ (sau backend GĐ4, 7.2) | 13/11 → 13/11 | __/__ | __/__ | [ ] |
@@ -79,10 +79,10 @@
 
 ## FĐ3 — Đăng nhập, đăng ký (10/11)
 
-- [ ] **3.1 `components/auth/LampPull.jsx`** — dây kéo đèn: mở trang đèn tắt, form ẩn và khóa; kéo → sáng — dự kiến 10/11 · thực tế __/__
-- [ ] **3.2 `LoginPage.jsx`** — email, mật khẩu, hiện/ẩn mật khẩu; sai → "Lỗi 401: …" + rung form (`.shake`); đúng → `/me` (admin → trang quản trị khi có); liên kết Quên mật khẩu, Đăng ký — dự kiến 10/11 · thực tế __/__
-- [ ] **3.3 `RegisterPage.jsx`** — 4 ô; kiểm tra ngay trên form theo **cùng quy tắc mật khẩu với backend** (≥ 8 ký tự, hoa, thường, số, ký tự đặc biệt, ≤ 72 byte); hiện lỗi 409 / 422 từ server; thành công → `/login` điền sẵn email — dự kiến 10/11 · thực tế __/__
-- [ ] **3.4 Thử theo bảng kiểm thử FĐ3 + nhờ Claude review** — dự kiến 10/11 · thực tế __/__
+- [x] **3.1 `components/auth/AuthLayout.jsx` + `Lamp.jsx`** — dây kéo đèn: mở trang đèn tắt, form ẩn và khóa; kéo → sáng — dự kiến 10/11 · thực tế 07/11 — Claude viết (theo yêu cầu): CSS chép từ màn demo vào CSS Module; form bị khóa (inert) khi đèn tắt; điện thoại ẩn 2 đèn phụ
+- [x] **3.2 `LoginPage.jsx`** — email, mật khẩu, hiện/ẩn mật khẩu; sai → "Lỗi 401: …" + rung form (`.shake`); đúng → `/me` (admin → trang quản trị khi có); liên kết Quên mật khẩu, Đăng ký — dự kiến 10/11 · thực tế 07/11 — Claude viết; + `TextField`, `PasswordField` (hiện/ẩn), `icons.jsx`; thông báo sau đăng ký / hết phiên; bỏ dòng "tài khoản demo"
+- [x] **3.3 `RegisterPage.jsx`** — 4 ô; kiểm tra ngay trên form theo **cùng quy tắc mật khẩu với backend** (≥ 8 ký tự, hoa, thường, số, ký tự đặc biệt, ≤ 72 byte); hiện lỗi 409 / 422 từ server; thành công → `/login` điền sẵn email — dự kiến 10/11 · thực tế 07/11 — Claude viết; `utils/validators.js` khớp backend 13/13 mật khẩu thử; 409 → ô Email, 422 → đúng ô
+- [ ] **3.4 Thử theo bảng kiểm thử FĐ3 + nhờ Claude review** — dự kiến 10/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay trên trình duyệt (K2, K3, K5)
 
 ## FĐ4 — Quên / đặt lại mật khẩu (11/11)
 
@@ -140,7 +140,7 @@
 |---|---|---|---|---|---|
 | FQ1 | Lưu token ở đâu trên trình duyệt? | 1 | `localStorage` (giữ đăng nhập khi đóng tab — đúng ý "refresh token 7 ngày"); rủi ro XSS chấp nhận ở đồ án (đã ghi ở Q7 backend) | | |
 | FQ2 | Gọi backend bằng **proxy Vite** hay thêm `localhost:5173` vào `ALLOWED_ORIGINS` (CORS)? | 0 | **Proxy** — không sửa backend, ảnh `/uploads` cũng chạy | | |
-| FQ3 | CSS: chỉ dùng class chung `index.css`, hay thêm **CSS Modules** (`*.module.css`) cho từng trang? | 3 | `index.css` + CSS Module riêng cho phần đặc thù (dây kéo đèn, avatar) | | |
+| FQ3 | CSS: chỉ dùng class chung `index.css`, hay thêm **CSS Modules** (`*.module.css`) cho từng trang? | 3 | `index.css` + CSS Module riêng cho phần đặc thù (dây kéo đèn, avatar) | Áp dụng ở FĐ2–FĐ3 (Header, AuthLayout, Lamp, PasswordField) | 07/11 |
 | FQ4 | Phần nền dùng chung (`client.js`, `authStore`, route, layout) — Tuấn làm, nhóm dùng theo? | 1 | Có — báo nhóm trước khi bắt đầu để không làm trùng | | |
 | FQ5 | Đăng nhập bằng admin → chuyển trang nào? (trang quản trị là của Khôi / Tâm / Hòa) | 3 | Tạm về `/me` đến khi có trang quản trị | | |
 | FQ6 | Có viết test tự động cho frontend (Vitest) không? | 7 | Không ở đồ án — kiểm thử thủ công theo bảng K1–K12 | | |
