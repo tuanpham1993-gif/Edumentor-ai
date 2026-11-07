@@ -16,7 +16,7 @@
 | 1 | Nền gọi API: `client.js` (gắn token, tự refresh khi 401) | 08/11 → 08/11 | 07/11 | 07/11 | [x] |
 | 2 | Trạng thái đăng nhập + route bảo vệ + layout | 09/11 → 09/11 | 07/11 | __/__ | [ ] |
 | 3 | Đăng nhập, đăng ký (dây kéo đèn) | 10/11 → 10/11 | 07/11 | __/__ | [ ] |
-| 4 | Quên / đặt lại mật khẩu | 11/11 → 11/11 | __/__ | __/__ | [ ] |
+| 4 | Quên / đặt lại mật khẩu | 11/11 → 11/11 | 07/11 | __/__ | [ ] |
 | 5 | Hồ sơ, sửa hồ sơ + ảnh đại diện, đổi mật khẩu, đăng xuất, Tối/Sáng | 12/11 → 12/11 | __/__ | __/__ | [ ] |
 | 6 | Kỹ năng của tôi, thống kê hồ sơ (sau backend GĐ4, 7.2) | 13/11 → 13/11 | __/__ | __/__ | [ ] |
 | 7 | Hoàn thiện, kiểm thử thủ công, build | 13/11 → 13/11 | __/__ | __/__ | [ ] |
@@ -86,11 +86,11 @@
 
 ## FĐ4 — Quên / đặt lại mật khẩu (11/11)
 
-- [ ] **4.1 `ForgotPasswordPage.jsx` → `ForgotSentPage.jsx`** — luôn chuyển sang "đã gửi" (khớp backend luôn trả cùng thông báo) — dự kiến 11/11 · thực tế __/__
-- [ ] **4.2 `ResetPasswordPage.jsx`** — lấy `token` từ URL (`useSearchParams`); hiện danh sách quy tắc mật khẩu; 400 → `/reset-expired`; thành công → `/login` + thông báo — dự kiến 11/11 · thực tế __/__
+- [x] **4.1 `ForgotPasswordPage.jsx` → `ForgotSentPage.jsx`** — luôn chuyển sang "đã gửi" (khớp backend luôn trả cùng thông báo) — dự kiến 11/11 · thực tế 07/11 — Claude viết (theo yêu cầu); `CenterLayout` (thanh trên + 2 đèn trang trí + thẻ giữa, theo demo); ForgotSent: gửi lại có đếm ngược 30 giây; bỏ link "mở thử (demo)"
+- [x] **4.2 `ResetPasswordPage.jsx`** — lấy `token` từ URL (`useSearchParams`); hiện danh sách quy tắc mật khẩu; 400 → `/reset-expired`; thành công → `/login` + thông báo — dự kiến 11/11 · thực tế 07/11 — Claude viết; `PasswordRules` tích xanh khi gõ; thành công → logout phiên cũ trên máy (Q10) → /login kèm thông báo
   - Link trong email (terminal backend khi dev) dạng `http://localhost:5173/reset-password?token=...`.
-- [ ] **4.3 `ResetExpiredPage.jsx`** — nút gửi yêu cầu mới, quay lại đăng nhập — dự kiến 11/11 · thực tế __/__
-- [ ] **4.4 Thử + nhờ Claude review FĐ4** — dự kiến 11/11 · thực tế __/__
+- [x] **4.3 `ResetExpiredPage.jsx`** — nút gửi yêu cầu mới, quay lại đăng nhập — dự kiến 11/11 · thực tế 07/11 — Claude viết
+**4.4 Thử + nhờ Claude review FĐ4** — dự kiến 11/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay (K8)
 
 ## FĐ5 — Hồ sơ (12/11)
 

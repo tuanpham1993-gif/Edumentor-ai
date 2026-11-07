@@ -64,9 +64,42 @@ export function ArrowIcon() {
   );
 }
 
-export function CheckCircleIcon() {
+export function BackArrowIcon() {
   return (
-    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24">
+    <svg {...base} width={16} height={16}>
+      <path d="M19 12H5M11 6l-6 6 6 6" />
+    </svg>
+  );
+}
+
+export function SendIcon({ size = 26 }) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M22 2 11 13M22 2l-7 20-4-9-9-4z" />
+    </svg>
+  );
+}
+
+export function ClockIcon({ size = 26 }) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <circle cx="12" cy="13" r="8" />
+      <path d="M12 9v4l2 2M9 2h6" />
+    </svg>
+  );
+}
+
+export function EmptyCircleIcon() {
+  return (
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#5a5650" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+export function CheckCircleIcon({ size = 18 }) {
+  return (
+    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="10" fill="#f5a524" />
       <path
         d="m7.5 12.5 3 3 6-6.5"
