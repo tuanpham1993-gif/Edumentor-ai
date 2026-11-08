@@ -2,6 +2,7 @@
 //   - Danh mục (chip, có số lượng) · tìm trong danh mục · sắp xếp Phổ biến / A–Z · phân trang 24 / trang.
 //   - Mỗi kỹ năng: số khóa học dạy nó; đã có trong hồ sơ → nhãn "Đã có"; chưa có → chọn Đã biết / Đang học.
 //   - Chọn nhiều kỹ năng (giữ khi đổi trang / danh mục) → "Thêm vào hồ sơ" = MỘT request PATCH /me/skills (add).
+//   - Dải "Gợi ý cho bạn" (học tiếp / liên quan / phổ biến) ở màn đầu — Tuấn chọn 08/11.
 //   - Danh mục / trang / chữ tìm nằm trên URL (?category=ai&page=2) → nút Back của trình duyệt hoạt động.
 // Danh mục do backend phân loại theo từ khóa (app/utils/skill_categories.py) — là ước lượng.
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -11,6 +12,7 @@ import * as meApi from '../../../api/me.api.js';
 import { parseApiError } from '../../../utils/errors.js';
 import Pagination from '../../common/components/Pagination.jsx';
 import SettingsLayout from '../components/SettingsLayout.jsx';
+import SkillSuggestions from '../components/SkillSuggestions.jsx';
 import styles from '../styles/SkillBrowsePage.module.css';
 
 const SIZE = 24;
@@ -146,6 +148,11 @@ export default function SkillBrowsePage() {
             </Link>
           )}
         </div>
+      )}
+
+      {/* Gợi ý cho bạn — chỉ ở màn đầu (Tất cả, trang 1, chưa tìm) để không đẩy kết quả lọc xuống */}
+      {!category && !q && page === 1 && (
+        <SkillSuggestions picked={picked} onToggle={toggle} refreshKey={reloadKey} />
       )}
 
       {/* Danh mục */}

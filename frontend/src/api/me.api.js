@@ -48,6 +48,13 @@ export async function updateMySkills({ add = [], update = [], remove = [] }) {
   return response.data;
 }
 
+// GET /me/skills/suggestions — dải "Gợi ý cho bạn" trên trang Khám phá kỹ năng (08/11):
+// kỹ năng CHƯA có trong hồ sơ → [{ skill_id, skill, reason: 'next'|'related'|'popular', via?, course_count? }]
+export async function getSkillSuggestions(limit = 8) {
+  const response = await client.get('/me/skills/suggestions', { params: { limit } });
+  return response.data;
+}
+
 // Trang "Khám phá kỹ năng" (FĐ6, 08/11 — gợi ý của thầy): danh mục + duyệt có phân trang
 // → [{ key, label, count }]
 export async function getSkillCategories() {
