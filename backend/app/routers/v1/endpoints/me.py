@@ -9,9 +9,11 @@ Gắn vào app trong routers/v1/api.py với prefix "/me".
     PATCH /api/me                  — sửa họ tên (PATCH = sửa một phần)
     POST  /api/me/change-password  — đổi mật khẩu (POST = một hành động có kiểm tra)
     POST  /api/me/avatar           — đổi ảnh đại diện, multipart/form-data (GĐ7, 07/11)
+    GET   /api/me/skills           — kỹ năng trong hồ sơ, lọc ?status=known|learning (GĐ4, 08/11)
+    PATCH /api/me/skills           — thêm / đổi / gỡ nhiều kỹ năng trong MỘT lần lưu (GĐ4, 08/11)
 """
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -24,7 +26,8 @@ from app.schemas.user import (
     UpdateMeRequest,
     UserMe,
 )
-from app.services import user_service
+from app.schemas.user_skill import SkillStatus, UpdateSkillsRequest, UserSkillOut
+from app.services import user_service, user_skill_service
 from app.utils import files
 
 router = APIRouter()
@@ -96,4 +99,49 @@ def upload_avatar(
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             detail="Chỉ chấp nhận ảnh PNG hoặc JPEG.",
+        ) from None
+
+
+@router.get(
+    "/skills",
+    response_model=list[UserSkillOut],
+    summary="Kỹ năng trong hồ sơ (lọc ?status=known|learning)",
+)
+def read_my_skills(
+    # URL vẫn là ?status=… (alias), nhưng trong code đặt tên status_filter để KHÔNG che
+    # module `status` của FastAPI (dùng cho mã lỗi ở các API khác trong file này).
+    # None = lấy tất cả. Giá trị khác known/learning → FastAPI tự trả 422.
+    status_filter: SkillStatus | None = Query(None, alias="status"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return user_skill_service.list_skills(db, current_user, status=status_filter)
+
+
+@router.patch(
+    "/skills",
+    response_model=list[UserSkillOut],
+    summary="Thêm / đổi trạng thái / gỡ kỹ năng — lưu tất cả một lần",
+)
+def update_my_skills(
+    request: UpdateSkillsRequest,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        return user_skill_service.update_skills(db, current_user, request)
+    except user_skill_service.SkillNotInCatalogError as err:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"Kỹ năng không có trong danh mục: {err.skill_ids}. Không có thay đổi nào được lưu.",
+        ) from None
+    except user_skill_service.SkillAlreadyInProfileError as err:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Kỹ năng đã có trong hồ sơ: {err.skill_ids}. Không có thay đổi nào được lưu.",
+        ) from None
+    except user_skill_service.SkillNotInProfileError as err:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Kỹ năng không có trong hồ sơ: {err.skill_ids}. Không có thay đổi nào được lưu.",
         ) from None
