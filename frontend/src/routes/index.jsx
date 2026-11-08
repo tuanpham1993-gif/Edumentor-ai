@@ -8,21 +8,21 @@
 // Nhóm khác thêm route của mình vào đúng nhóm bảo vệ (vd /courses, /tutor vào ProtectedRoute).
 import { Route, Routes } from 'react-router-dom';
 
-import ComingSoon from '../components/common/ComingSoon.jsx';
-import PageLayout from '../components/layout/PageLayout.jsx';
-import { MAIN_NAV } from '../components/layout/nav.js';
-import SettingsLayout from '../components/profile/SettingsLayout.jsx';
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage.jsx';
-import ForgotSentPage from '../pages/auth/ForgotSentPage.jsx';
-import LoginPage from '../pages/auth/LoginPage.jsx';
-import RegisterPage from '../pages/auth/RegisterPage.jsx';
-import ResetExpiredPage from '../pages/auth/ResetExpiredPage.jsx';
-import ResetPasswordPage from '../pages/auth/ResetPasswordPage.jsx';
-import HomePage from '../pages/home/HomePage.jsx';
-import NotFoundPage from '../pages/NotFoundPage.jsx';
-import ChangePasswordPage from '../pages/profile/ChangePasswordPage.jsx';
-import EditProfilePage from '../pages/profile/EditProfilePage.jsx';
-import ProfilePage from '../pages/profile/ProfilePage.jsx';
+import ComingSoon from '../features/common/components/ComingSoon.jsx';
+import PageLayout from '../features/layout/components/PageLayout.jsx';
+import { MAIN_NAV } from '../features/layout/nav.js';
+import SettingsLayout from '../features/profile/components/SettingsLayout.jsx';
+import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage.jsx';
+import ForgotSentPage from '../features/auth/pages/ForgotSentPage.jsx';
+import LoginPage from '../features/auth/pages/LoginPage.jsx';
+import RegisterPage from '../features/auth/pages/RegisterPage.jsx';
+import ResetExpiredPage from '../features/auth/pages/ResetExpiredPage.jsx';
+import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage.jsx';
+import HomePage from '../features/home/pages/HomePage.jsx';
+import NotFoundPage from '../features/common/pages/NotFoundPage.jsx';
+import ChangePasswordPage from '../features/profile/pages/ChangePasswordPage.jsx';
+import EditProfilePage from '../features/profile/pages/EditProfilePage.jsx';
+import ProfilePage from '../features/profile/pages/ProfilePage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';

@@ -1,0 +1,70 @@
+/* Keyframes + class chuyển động DÙNG CHUNG (.page-in, .enter, .stagger, .shake…). (tách từ index.css, 08/11/2026) */
+
+/* ---------- Keyframes dùng chung ---------- */
+@keyframes enter-up {
+  0% { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes page-in {
+  0% { opacity: 0; transform: translateY(8px); }
+}
+@keyframes fade-in {
+  0% { opacity: 0; }
+}
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+@keyframes rise {
+  0% { opacity: 0; transform: translateY(8px); }
+}
+@keyframes pop {
+  40% { transform: scale(1.14); }
+}
+@keyframes shake {
+  20% { transform: translate(-5px); }
+  40% { transform: translate(5px); }
+  60% { transform: translate(-3px); }
+  80% { transform: translate(2px); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  to { background-position: -150% 0; }
+}
+@keyframes flash {
+  0% { background: #f5a52438; }
+  to { background: transparent; }
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ---------- Class chuyển động dùng chung ---------- */
+.page-in {
+  animation: page-in var(--d-slow) var(--e-in) both;
+}
+.enter > * {
+  animation: enter-up 0.52s var(--ease-out) both;
+}
+.enter > *:nth-child(2) { animation-delay: 70ms; }
+.enter > *:nth-child(3) { animation-delay: 0.14s; }
+.enter > *:nth-child(4) { animation-delay: 0.21s; }
+.enter > *:nth-child(5) { animation-delay: 0.28s; }
+.enter > *:nth-child(n + 6) { animation-delay: 0.35s; }
+.stagger > * {
+  animation: rise var(--d-slow) var(--e-in) both;
+}
+.stagger > *:nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.stagger > *:nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.stagger > *:nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.stagger > *:nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.stagger > *:nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+.stagger > *:nth-child(7) { animation-delay: calc(var(--stagger) * 6); }
+.stagger > *:nth-child(n + 8) { animation-delay: calc(var(--stagger) * 7); }
+.shake {
+  animation: shake 0.36s var(--e-std) 1;
+}
+.flash {
+  animation: flash 1s var(--e-std) 1;
+}

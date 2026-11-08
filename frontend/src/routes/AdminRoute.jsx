@@ -2,9 +2,9 @@
 // Backend vẫn chặn bằng require_admin (403) — đây chỉ là lớp giao diện.
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import FullPageLoading from '../components/common/FullPageLoading.jsx';
+import FullPageLoading from '../features/common/components/FullPageLoading.jsx';
 import { useAuth } from '../hooks/useAuth.js';
-import ServerErrorPage from '../pages/ServerErrorPage.jsx';
+import ServerErrorPage from '../features/common/pages/ServerErrorPage.jsx';
 
 export default function AdminRoute() {
   const { status, user, retry } = useAuth();

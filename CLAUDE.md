@@ -28,13 +28,14 @@ EduMentor AI — nền tảng cố vấn học tập cá nhân hóa: lộ trình
 | Kế hoạch + tiến độ frontend React module 01 (Claude review) | `docs/Review-Frontend-Auth.md` |
 | Quy ước API, lỗi, Git | `docs/conventions.md` |
 | Cài đặt backend | `SETUP_BACKEND.md` |
+| Cấu trúc frontend & CSS, thư mục 14 tính năng | `SetUp-CSS.md` |
 
 ## Công nghệ (theo code thực tế)
 
 - Backend: Python 3.11+, FastAPI, SQLAlchemy 2 (**sync** `Session`), Pydantic v2 + pydantic-settings, PostgreSQL 16 qua Docker (`localhost:5433`, DB `edumentor_db`).
 - Bảng đang tạo bằng `Base.metadata.create_all` lúc khởi động; Alembic có khung (`alembic/env.py`) nhưng `alembic.ini` chưa cấu hình — nhóm chưa chốt chuyển sang migration.
 - Auth: `bcrypt` (băm mật khẩu), `pyjwt` (JWT) — đã có trong `backend/requirements.txt`.
-- Frontend: React + Vite, Axios.
+- Frontend: React + Vite, Axios. CSS Module theo tính năng: `frontend/src/features/<tính năng>/{pages,components,styles}`; CSS dùng chung ở `frontend/src/styles/` (xem `SetUp-CSS.md`).
 - Test: `pytest`. Format: `black`, `ruff`.
 
 ## Kiến trúc backend

@@ -9,7 +9,7 @@
 // 4. Refresh bị TỪ CHỐI (hết 7 ngày, đã đăng xuất, đổi mật khẩu… → 4xx) → xóa token → báo "hết phiên".
 //    Refresh không tới được máy chủ (mất mạng / 5xx) → GIỮ token, chỉ báo lỗi (FĐ7 08/11).
 //
-// Các nhóm khác dùng lại file này: import client from '../api/client.js'.
+// Các nhóm khác dùng lại file này: import client from './client.js'.
 import axios from 'axios';
 
 import { clearTokens, getAccessToken, getRefreshToken, setTokens } from './tokenStorage.js';

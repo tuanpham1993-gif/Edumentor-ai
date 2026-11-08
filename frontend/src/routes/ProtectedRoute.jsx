@@ -2,9 +2,9 @@
 // Đây chỉ là lớp tiện cho người dùng — backend vẫn kiểm tra token ở mọi API (NFR-05).
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import FullPageLoading from '../components/common/FullPageLoading.jsx';
+import FullPageLoading from '../features/common/components/FullPageLoading.jsx';
 import { useAuth } from '../hooks/useAuth.js';
-import ServerErrorPage from '../pages/ServerErrorPage.jsx';
+import ServerErrorPage from '../features/common/pages/ServerErrorPage.jsx';
 
 export default function ProtectedRoute() {
   const { status, retry } = useAuth();

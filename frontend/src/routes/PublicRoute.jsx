@@ -1,9 +1,9 @@
 // Trang dành cho KHÁCH (đăng nhập, đăng ký…): đã đăng nhập thì chuyển về hồ sơ. (FĐ2)
 import { Navigate, Outlet } from 'react-router-dom';
 
-import FullPageLoading from '../components/common/FullPageLoading.jsx';
+import FullPageLoading from '../features/common/components/FullPageLoading.jsx';
 import { useAuth } from '../hooks/useAuth.js';
-import ServerErrorPage from '../pages/ServerErrorPage.jsx';
+import ServerErrorPage from '../features/common/pages/ServerErrorPage.jsx';
 
 export default function PublicRoute() {
   const { status, retry } = useAuth();

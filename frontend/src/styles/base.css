@@ -1,0 +1,61 @@
+/* Nền tảng: reset, body, font, link, focus, .sr-only. (tách từ index.css, 08/11/2026) */
+
+/* ---------- Nền ---------- */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%; /* iOS: không tự phóng chữ khi xoay ngang */
+  text-size-adjust: 100%;
+}
+img {
+  max-width: 100%; /* ảnh không bao giờ tràn khung */
+  height: auto;
+}
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  /* Không tải được Google Fonts (mất mạng) → font hệ thống có đủ dấu tiếng Việt */
+  font-family: 'Be Vietnam Pro', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-hover);
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

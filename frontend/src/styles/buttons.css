@@ -1,0 +1,116 @@
+/* Nút: .btn, .btn-primary, .btn-danger, .btn-sm, trạng thái loading. (tách từ index.css, 08/11/2026) */
+
+/* ---------- Nút ---------- */
+.btn {
+  position: relative;
+  height: 42px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--outline);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--d-fast) var(--e-std),
+    border-color var(--d-fast) var(--e-std),
+    color var(--d-fast),
+    transform var(--d-instant) var(--e-std);
+}
+.btn:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--on-accent);
+}
+.btn-soft {
+  background: var(--accent-soft-bg);
+  border-color: var(--accent-soft-border);
+  color: var(--accent-soft-fg);
+}
+.btn-soft:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.btn-danger {
+  color: var(--danger-fg);
+  border-color: var(--danger-border);
+}
+.btn-danger:hover {
+  color: var(--danger-fg);
+  border-color: var(--danger-icon);
+}
+.btn-lg { height: 50px; font-size: 15px; }
+.btn-sm { height: 34px; padding: 0 12px; font-size: 13px; }
+.btn-block { width: 100%; }
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn .spinner {
+  display: none;
+}
+.btn.loading {
+  color: transparent !important;
+}
+.btn.loading .spinner {
+  display: block;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--on-accent);
+  border-right-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+.btn:not(.btn-primary).loading .spinner {
+  border-color: var(--text);
+  border-right-color: transparent;
+}
+.btn svg {
+  transition: transform var(--d-base) var(--e-std);
+}
+.btn:hover svg.arrow {
+  transform: translate(3px);
+}
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    color var(--d-fast),
+    border-color var(--d-fast),
+    background var(--d-fast);
+}
+.icon-btn:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+.icon-btn.danger:hover {
+  color: var(--danger-fg);
+  border-color: var(--danger-border);
+}
