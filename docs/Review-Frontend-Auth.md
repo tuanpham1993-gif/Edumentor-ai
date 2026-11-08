@@ -101,10 +101,11 @@
 - [x] **5.5 `LogoutDialog.jsx`** — xác nhận → `POST /auth/logout` → xóa token → `/login` — dự kiến 12/11 · thực tế 07/11 — Claude viết: hộp thoại xác nhận (Esc / bấm nền / Hủy để đóng; con trỏ đặt sẵn ở Hủy)
 - [ ] **5.6 Thử + nhờ Claude review FĐ5** — dự kiến 12/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay (K9–K12)
 
-## FĐ6 — Kỹ năng, thống kê (13/11 — sau backend GĐ4, 7.2)
+## FĐ6 — Kỹ năng, thống kê (13/11 — sau backend GĐ4, 7.2) — làm sớm 08/11 (GĐ4 xong 08/11)
 
-- [ ] **6.1 `SkillsPage.jsx`** — tìm kỹ năng trong danh mục, thêm, đổi Đã biết / Đang học, xóa, hoàn tác, **lưu tất cả một lần**, hiện "N thay đổi chưa lưu" — dự kiến 13/11 · thực tế __/__
-- [ ] **6.2 Thống kê trên `ProfilePage`** — `GET /me/summary` — dự kiến 13/11 · thực tế __/__
+- [x] **6.1 `SkillsPage.jsx`** — tìm kỹ năng trong danh mục, thêm, đổi Đã biết / Đang học, xóa, hoàn tác, **lưu tất cả một lần**, hiện "N thay đổi chưa lưu" — dự kiến 13/11 · thực tế 08/11 — Claude viết (theo yêu cầu): `features/profile/pages/SkillsPage.jsx` + `components/SkillSearch.jsx` (tìm qua `GET /api/skills` của Hòa, chờ 250 ms, ẩn kỹ năng đã có, ↑↓ Enter Esc) + `skillDraft.js` (bản nháp: thêm / đổi / gỡ / khôi phục → body PATCH) + `common/components/Tabs.jsx` (dùng chung, nền trượt). Lỗi 404/409 → nút "Tải lại"; báo lỗi bằng TÊN kỹ năng; đóng tab khi chưa lưu → trình duyệt hỏi lại; điện thoại ẩn cột Cập nhật. **08/11 thêm danh sách sổ xuống** (Tuấn yêu cầu — người dùng không nhớ hết tên kỹ năng): bấm ô / nút ▾ → "Gợi ý cho bạn" 3 nhóm Học tiếp / Liên quan / Phổ biến từ API mới `GET /api/me/skills/suggestions` (backend module 01, chỉ ĐỌC `skill_relation`, `course_skill` của Hòa; 4 test); gõ → kết quả tìm + "Xem thêm kết quả"; gợi ý tự cập nhật sau khi Lưu. Demo trình duyệt thật 11 bước (thêm 3, lưu, đổi + gỡ, tab, hoàn tác, gợi ý ẩn kỹ năng đã có, dữ liệu cũ → 404 không lưu gì → Tải lại, lưu lại, Hồ sơ cập nhật) — không lỗi console
+- [x] **6.1b Trang "Khám phá kỹ năng" theo danh mục** (`/me/skills/browse`, gợi ý của thầy 08/11 — thử nghiệm, giữ ô sổ xuống cũ để quay lại nếu không ổn) — thực tế 08/11 — Claude viết (theo yêu cầu): bảng `skills` không có danh mục → backend tự phân loại theo từ khóa tên (`app/utils/skill_categories.py`, 14 danh mục + Khác, ~69% vào danh mục cụ thể, có cache); API `GET /api/me/skills/catalog/categories`, `GET /api/me/skills/catalog` (lọc danh mục, tìm, sắp Phổ biến / A–Z, phân trang, đánh dấu "Đã có"); 5 test. Frontend: chip danh mục + số lượng, lưới thẻ, chọn Đã biết / Đang học nhiều kỹ năng qua nhiều trang → "Thêm vào hồ sơ" một lần; danh mục / trang / chữ tìm trên URL (nút Back đúng); `common/components/Pagination.jsx` dùng chung; điện thoại: chip 1 hàng vuốt ngang, tự cuộn tới chip đang chọn. Demo trình duyệt thật: thêm 3 kỹ năng qua 3 màn → DB đúng, không lỗi console
+- [ ] **6.2 Thống kê trên `ProfilePage`** — `GET /me/summary` — dự kiến 13/11 · thực tế __/__ — 08/11 làm trước phần có thể: ô "Kỹ năng đã biết" + khối "Kỹ năng của tôi" (`SkillsSummary.jsx`) dùng `GET /me/skills`; 3 ô còn lại chờ backend 7.2
 
 ## FĐ7 — Hoàn thiện (13/11)
 
@@ -139,7 +140,7 @@
 | K10 | Đổi mật khẩu sai / đúng | Sai: lỗi trên form; đúng: về `/login` | 5 | [ ] |
 | K11 | Đăng xuất, bấm Back của trình duyệt | Không vào lại được `/me` | 5 | [ ] |
 | K12 | Đổi Tối / Sáng, tải lại trang | Giữ lựa chọn | 5 | [ ] |
-| K13 | Vào Cài đặt → "Kỹ năng của tôi" | Trang "Tạm thời chưa khả dụng", nút ← Về hồ sơ, Thử lại | 7 | [ ] |
+| K13 | Cài đặt → "Kỹ năng của tôi": thêm 2 kỹ năng, đổi 1, gỡ 1, bấm Hoàn tác; làm lại rồi Lưu tất cả; F5 | Thanh "N thay đổi chưa lưu" đúng số; Hoàn tác về như cũ; lưu xong F5 vẫn còn; Hồ sơ hiện đúng kỹ năng + số "Kỹ năng đã biết" | 6 | [ ] |
 | K14 | Đang đăng nhập → tắt backend (Ctrl+C) → F5 → bật lại backend → bấm "Thử lại" | Trang 503, KHÔNG bị đăng xuất; Thử lại → vào lại `/me` | 7 | [ ] |
 | K15 | Gõ URL lạ, vd `/abc` | Trang 404 "Không tìm thấy trang" | 7 | [ ] |
 

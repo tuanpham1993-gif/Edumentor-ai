@@ -2,15 +2,17 @@
 //   - Thẻ đầu: ảnh / chữ viết tắt, họ tên, email, vai trò, ngày tham gia.
 //   - Nút: Chỉnh sửa hồ sơ (/me/edit), Đổi mật khẩu (/me/password), Đăng xuất (hộp thoại xác nhận).
 //   - Công tắc giao diện Tối / Sáng (FR-49).
-//   - 4 ô thống kê: chờ GET /me/summary (backend 7.2) → tạm hiện "—".
-//   - 3 khối dưới (08/11): Khóa học của tôi (module khóa học), Kỹ năng của tôi (GĐ4 → FĐ6),
-//     Ôn tập gần đây (module 09). Chưa có API → <PendingBlock> "Đang cập nhật";
-//     có API thì thay bằng component dữ liệu thật, giữ nguyên tiêu đề / link.
-import { useCallback, useState } from 'react';
+//   - 4 ô thống kê: "Kỹ năng đã biết" lấy từ GET /me/skills (FĐ6, 08/11); 3 ô còn lại chờ
+//     GET /me/summary (backend 7.2) → tạm hiện "—".
+//   - 3 khối dưới: Kỹ năng của tôi = dữ liệu thật (SkillsSummary, FĐ6); Khóa học của tôi
+//     (module khóa học) và Ôn tập gần đây (module 09) chưa có API → <PendingBlock> "Đang cập nhật".
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import LogoutDialog from '../components/LogoutDialog.jsx';
+import * as meApi from '../../../api/me.api.js';
 import PendingBlock from '../components/PendingBlock.jsx';
+import SkillsSummary from '../components/SkillsSummary.jsx';
 import ThemeToggle from '../components/ThemeToggle.jsx';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { formatDate, initials, roleLabel } from '../../../utils/formatters.js';
@@ -28,6 +30,24 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const [logoutOpen, setLogoutOpen] = useState(false);
   const closeLogout = useCallback(() => setLogoutOpen(false), []);
+  const [skills, setSkills] = useState(null); // null = đang tải
+  const [skillsError, setSkillsError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    meApi
+      .getMySkills()
+      .then((data) => !cancelled && setSkills(data))
+      .catch(() => !cancelled && setSkillsError(true));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Giá trị từng ô thống kê; undefined → "—" (chưa có API)
+  const statValue = {
+    known_skills: skills ? skills.filter((s) => s.status === 'known').length : undefined,
+  };
 
   return (
     <div className={`stack ${styles.enter}`} style={{ gap: 24 }}>
@@ -67,7 +87,11 @@ export default function ProfilePage() {
       <section className={styles.stats} aria-label="Thống kê học tập">
         {STATS.map((stat) => (
           <div key={stat.key} className={`card ${styles.stat}`}>
-            <b title="Đang cập nhật">—</b>
+            {statValue[stat.key] === undefined ? (
+              <b title="Đang cập nhật">—</b>
+            ) : (
+              <b>{statValue[stat.key]}</b>
+            )}
             <span>{stat.label}</span>
           </div>
         ))}
@@ -81,9 +105,7 @@ export default function ProfilePage() {
         </PendingBlock>
 
         <div className="stack" style={{ gap: 20 }}>
-          <PendingBlock title="Kỹ năng của tôi" link={{ to: '/me/skills', text: 'Quản lý' }}>
-            Các kỹ năng Đã biết / Đang học của bạn sẽ hiện ở đây.
-          </PendingBlock>
+          <SkillsSummary skills={skills} error={skillsError} />
           <PendingBlock title="Ôn tập gần đây">
             Kết quả các bài ôn tập gần nhất sẽ hiện ở đây.
           </PendingBlock>

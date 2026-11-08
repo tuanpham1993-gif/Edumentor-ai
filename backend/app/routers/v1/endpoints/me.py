@@ -11,7 +11,12 @@ Gắn vào app trong routers/v1/api.py với prefix "/me".
     POST  /api/me/avatar           — đổi ảnh đại diện, multipart/form-data (GĐ7, 07/11)
     GET   /api/me/skills           — kỹ năng trong hồ sơ, lọc ?status=known|learning (GĐ4, 08/11)
     PATCH /api/me/skills           — thêm / đổi / gỡ nhiều kỹ năng trong MỘT lần lưu (GĐ4, 08/11)
+    GET   /api/me/skills/suggestions — gợi ý kỹ năng cho ô "Thêm kỹ năng" (FĐ6, 08/11)
+    GET   /api/me/skills/catalog/categories — danh mục kỹ năng + số lượng (FĐ6, 08/11)
+    GET   /api/me/skills/catalog   — duyệt kỹ năng theo danh mục, phân trang (FĐ6, 08/11)
 """
+
+from typing import Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
@@ -26,9 +31,16 @@ from app.schemas.user import (
     UpdateMeRequest,
     UserMe,
 )
-from app.schemas.user_skill import SkillStatus, UpdateSkillsRequest, UserSkillOut
+from app.schemas.user_skill import (
+    SkillCatalogPage,
+    SkillCategoryOut,
+    SkillStatus,
+    SkillSuggestionOut,
+    UpdateSkillsRequest,
+    UserSkillOut,
+)
 from app.services import user_service, user_skill_service
-from app.utils import files
+from app.utils import files, skill_categories
 
 router = APIRouter()
 
@@ -145,3 +157,52 @@ def update_my_skills(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Kỹ năng không có trong hồ sơ: {err.skill_ids}. Không có thay đổi nào được lưu.",
         ) from None
+
+
+@router.get(
+    "/skills/suggestions",
+    response_model=list[SkillSuggestionOut],
+    summary="Gợi ý kỹ năng chưa có trong hồ sơ (học tiếp / liên quan / phổ biến)",
+)
+def suggest_my_skills(
+    limit: int = Query(12, ge=1, le=30),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return user_skill_service.suggest_skills(db, current_user, limit=limit)
+
+
+@router.get(
+    "/skills/catalog/categories",
+    response_model=list[SkillCategoryOut],
+    summary="Danh mục kỹ năng + số kỹ năng mỗi mục (trang Khám phá kỹ năng)",
+)
+def read_skill_categories(
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return user_skill_service.skill_categories_with_counts(db)
+
+
+@router.get(
+    "/skills/catalog",
+    response_model=SkillCatalogPage,
+    summary="Duyệt kỹ năng theo danh mục, tìm, sắp xếp, phân trang",
+)
+def browse_skill_catalog(
+    category: str | None = Query(None, description="key danh mục; bỏ trống = tất cả"),
+    q: str | None = Query(None, max_length=100, description="tìm trong tên kỹ năng"),
+    sort: Literal["popular", "name"] = "popular",
+    page: int = Query(1, ge=1),
+    size: int = Query(24, ge=1, le=60),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if category is not None and category not in skill_categories.KEYS:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=f"Danh mục không hợp lệ: {category}.",
+        )
+    return user_skill_service.browse_catalog(
+        db, current_user, category=category, q=q, sort=sort, page=page, size=size
+    )

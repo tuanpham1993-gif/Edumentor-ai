@@ -11,7 +11,6 @@ import { Route, Routes } from 'react-router-dom';
 import ComingSoon from '../features/common/components/ComingSoon.jsx';
 import PageLayout from '../features/layout/components/PageLayout.jsx';
 import { MAIN_NAV } from '../features/layout/nav.js';
-import SettingsLayout from '../features/profile/components/SettingsLayout.jsx';
 import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage.jsx';
 import ForgotSentPage from '../features/auth/pages/ForgotSentPage.jsx';
 import LoginPage from '../features/auth/pages/LoginPage.jsx';
@@ -23,6 +22,8 @@ import NotFoundPage from '../features/common/pages/NotFoundPage.jsx';
 import ChangePasswordPage from '../features/profile/pages/ChangePasswordPage.jsx';
 import EditProfilePage from '../features/profile/pages/EditProfilePage.jsx';
 import ProfilePage from '../features/profile/pages/ProfilePage.jsx';
+import SkillBrowsePage from '../features/profile/pages/SkillBrowsePage.jsx';
+import SkillsPage from '../features/profile/pages/SkillsPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
@@ -63,15 +64,8 @@ export default function AppRoutes() {
               element={<ComingSoon feature={item.text} backTo="/me" />}
             />
           ))}
-          {/* FĐ6 thay bằng SkillsPage khi backend GĐ4 (/me/skills) xong */}
-          <Route
-            path="/me/skills"
-            element={
-              <SettingsLayout>
-                <ComingSoon feature="Kỹ năng của tôi" />
-              </SettingsLayout>
-            }
-          />
+          <Route path="/me/skills" element={<SkillsPage />} />
+          <Route path="/me/skills/browse" element={<SkillBrowsePage />} />
         </Route>
       </Route>
 

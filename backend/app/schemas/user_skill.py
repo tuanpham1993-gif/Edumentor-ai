@@ -3,6 +3,7 @@
 - SkillStatus  : chỉ 'known' (đã biết) hoặc 'learning' (đang học) — khớp CHECK của bảng user_skills.
 - UserSkillOut : một kỹ năng trả về cho frontend (kèm TÊN kỹ năng lấy từ bảng skills của Hòa).
 - SkillChange / UpdateSkillsRequest : body PATCH /api/me/skills (4.3) — 3 nhóm add / update / remove (S1).
+- SkillSuggestionOut : gợi ý kỹ năng cho ô "Thêm kỹ năng" (GET /api/me/skills/suggestions, FĐ6).
 """
 
 from datetime import datetime
@@ -66,3 +67,42 @@ class UpdateSkillsRequest(BaseModel):
                 f"Kỹ năng xuất hiện nhiều lần trong cùng một lần lưu: {repeated}."
             )
         return self
+
+
+class SkillSuggestionOut(BaseModel):
+    """Một kỹ năng gợi ý. reason:
+    'next'    — học tiếp sau một kỹ năng bạn đã có (quan hệ prerequisite / extension)
+    'related' — liên quan tới một kỹ năng bạn đã có (quan hệ related)
+    'popular' — xuất hiện trong nhiều khóa học (course_count)
+    """
+
+    skill_id: int
+    skill: str
+    reason: Literal["next", "related", "popular"]
+    via: str | None = None  # tên kỹ năng của bạn dẫn tới gợi ý này (next / related)
+    course_count: int | None = None  # số khóa học dạy kỹ năng này (popular)
+
+
+class SkillCategoryOut(BaseModel):
+    key: str  # vd "programming"
+    label: str  # vd "Lập trình & Phần mềm"
+    count: int  # số kỹ năng đang bật trong danh mục
+
+
+class CatalogSkillOut(BaseModel):
+    skill_id: int
+    skill: str
+    category: str
+    course_count: int  # số khóa học dạy kỹ năng này
+    my_status: SkillStatus | None = (
+        None  # đã có trong hồ sơ → trạng thái; chưa có → None
+    )
+
+
+class SkillCatalogPage(BaseModel):
+    """Một trang của trang "Khám phá kỹ năng"."""
+
+    total: int  # tổng số kỹ năng khớp bộ lọc
+    page: int
+    size: int
+    items: list[CatalogSkillOut]

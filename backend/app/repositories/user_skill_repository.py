@@ -4,10 +4,12 @@ Chỉ truy vấn — KHÔNG commit (service quyết định khi nào lưu hẳn)
 Bảng `skills` là của Hòa: chỉ ĐỌC tên kỹ năng (join), không sửa.
 """
 
-from sqlalchemy import select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
+from app.models.course_skill import CourseSkill
 from app.models.skill import Skills
+from app.models.skill_relation import SkillRelation
 from app.models.user_skill import UserSkill
 
 
@@ -62,3 +64,61 @@ def add(db: Session, *, user_id: int, skill_id: int, status: str, source: str) -
 
 def delete(db: Session, row: UserSkill) -> None:
     db.delete(row)
+
+
+# ─────────────── Gợi ý kỹ năng (FĐ6) — CHỈ ĐỌC bảng skill_relation, course_skill của Hòa ───────────────
+
+
+def relations_of(db: Session, skill_ids: list[int]):
+    """Quan hệ có một đầu là kỹ năng của người dùng → (from_id, to_id, relation_type)."""
+    if not skill_ids:
+        return []
+    query = select(
+        SkillRelation.from_skill_id,
+        SkillRelation.to_skill_id,
+        SkillRelation.relation_type,
+    ).where(
+        or_(
+            SkillRelation.from_skill_id.in_(skill_ids),
+            SkillRelation.to_skill_id.in_(skill_ids),
+        )
+    )
+    return db.execute(query).all()
+
+
+def active_skill_names(db: Session, skill_ids) -> dict[int, str]:
+    """{skill_id: tên} của các kỹ năng đang bật trong danh sách."""
+    if not skill_ids:
+        return {}
+    query = select(Skills.skill_id, Skills.skill).where(
+        Skills.skill_id.in_(list(skill_ids)), Skills.is_active.is_(True)
+    )
+    return dict(db.execute(query).all())
+
+
+def popular_skills(db: Session, exclude_ids: list[int], limit: int):
+    """Kỹ năng có trong nhiều khóa học nhất → (skill_id, tên, số khóa)."""
+    course_count = func.count(CourseSkill.course_id).label("course_count")
+    query = (
+        select(Skills.skill_id, Skills.skill, course_count)
+        .join(CourseSkill, CourseSkill.skill_id == Skills.skill_id)
+        .where(Skills.is_active.is_(True))
+        .group_by(Skills.skill_id, Skills.skill)
+        .order_by(course_count.desc(), Skills.skill)
+        .limit(limit)
+    )
+    if exclude_ids:
+        query = query.where(Skills.skill_id.notin_(exclude_ids))
+    return db.execute(query).all()
+
+
+def active_skills_with_course_count(db: Session):
+    """Mọi kỹ năng đang bật + số khóa học dạy nó → (skill_id, tên, số khóa). ~6.000 dòng, đủ nhanh."""
+    course_count = func.count(CourseSkill.course_id).label("course_count")
+    query = (
+        select(Skills.skill_id, Skills.skill, course_count)
+        .outerjoin(CourseSkill, CourseSkill.skill_id == Skills.skill_id)
+        .where(Skills.is_active.is_(True))
+        .group_by(Skills.skill_id, Skills.skill)
+    )
+    return db.execute(query).all()
