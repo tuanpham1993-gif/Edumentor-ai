@@ -19,6 +19,10 @@ class WrongCurrentPasswordError(Exception):
     """Mật khẩu hiện tại nhập vào không đúng."""
 
 
+class SamePasswordError(Exception):
+    """Mật khẩu mới trùng mật khẩu hiện tại (08/11)."""
+
+
 def update_profile(db: Session, user: Users, *, full_name: str) -> Users:
     """Sửa họ tên (FR-03). Email và vai trò không đổi được."""
     user.full_name = full_name
@@ -30,7 +34,8 @@ def update_profile(db: Session, user: Users, *, full_name: str) -> Users:
 def change_password(
     db: Session, user: Users, *, current_password: str, new_password: str
 ) -> None:
-    """Đổi mật khẩu (FR-48). Sai mật khẩu hiện tại → WrongCurrentPasswordError.
+    """Đổi mật khẩu (FR-48). Sai mật khẩu hiện tại → WrongCurrentPasswordError;
+    mật khẩu mới trùng mật khẩu cũ → SamePasswordError.
 
     Lưu ý: access token cũ vẫn dùng được tới khi hết hạn (JWT không thu hồi được);
     đổi mật khẩu thì thu hồi mọi refresh token của user (Q10, GĐ6).
@@ -38,6 +43,11 @@ def change_password(
     # Phải nhập đúng mật khẩu hiện tại — chặn người khác dùng máy đang đăng nhập để đổi.
     if not verify_password(current_password, user.hashed_password):
         raise WrongCurrentPasswordError  # nhập sai → không đổi gì cả
+
+    # Mật khẩu mới trùng mật khẩu đang dùng → không đổi (08/11).
+    # Đặt SAU bước kiểm mật khẩu hiện tại: người chưa biết mật khẩu không dò được qua lỗi này.
+    if verify_password(new_password, user.hashed_password):
+        raise SamePasswordError
 
     user.hashed_password = hash_password(new_password)  # vẫn chỉ lưu bản băm
     # Q10: đổi mật khẩu → đăng xuất mọi nơi (kể cả phiên hiện tại khi access hết hạn)

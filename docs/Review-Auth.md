@@ -77,7 +77,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 - [x] **3.1 `GET /api/me`** — trả họ tên, email, vai trò, ngày tham gia, ảnh đại diện (FR-03) — dự kiến 06/11 · thực tế 05/11 → 06/11 ✔ Claude đã review (đã gắn vào `api.py`, có test trong `test_auth.py`)
 - [x] **3.2 `PATCH /api/me`** — chỉ sửa `full_name`; email và role **không** đổi được — dự kiến 06/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu `UpdateMeRequest`, thiếu import) — P1–P4 qua
-- [x] **3.3 `POST /api/me/change-password`** — mật khẩu hiện tại, mới, xác nhận; sai mật khẩu hiện tại → lỗi; áp `validate_password` (FR-48) — dự kiến 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu hàm service, thiếu `MessageResponse`) — C1–C6 qua
+- [x] **3.3 `POST /api/me/change-password`** — mật khẩu hiện tại, mới, xác nhận; sai mật khẩu hiện tại → lỗi; áp `validate_password` (FR-48) — dự kiến 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: thiếu hàm service, thiếu `MessageResponse`) — C1–C6 qua; 08/11 thêm: mật khẩu mới trùng mật khẩu cũ → 400 "Mật khẩu này đã được sử dụng." (Claude viết theo yêu cầu, +2 test)
 - [x] **3.4 `services/user_service.py`, `endpoints/me.py`** (prefix `/me`) — dự kiến 06/11 → 07/11 · thực tế 06/11 → 06/11 ✔ Claude đã review (Claude sửa: code router bị dán nhầm vào service)
 - [x] **3.5 `tests/test_me.py`** — không token → 401; sửa họ tên; thử gửi `email`/`role` không có tác dụng; đổi mật khẩu đúng/sai — dự kiến 07/11 · thực tế 06/11 — 13 test PASSED (Tuấn tự viết, thêm helper `login`); tổng `test_auth` + `test_me` = 26 passed ✔ Claude đã review
 - [x] **3.6 Nhờ Claude review GĐ3** — dự kiến 07/11 · thực tế 06/11 — GĐ3 đạt

@@ -66,6 +66,11 @@ def change_password(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Mật khẩu hiện tại không đúng.",
         ) from None
+    except user_service.SamePasswordError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Mật khẩu này đã được sử dụng.",
+        ) from None
     return MessageResponse(message="Đổi mật khẩu thành công.")
 
 

@@ -137,6 +137,18 @@ def test_change_password_wrong_current_keeps_old_password(client, auth_headers):
     assert login(client, PASSWORD).status_code == 200
 
 
+def test_change_password_same_as_current_returns_400(client, auth_headers):
+    response = change_password(client, auth_headers, current=PASSWORD, new=PASSWORD)
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Mật khẩu này đã được sử dụng."
+
+
+def test_change_password_same_as_current_keeps_sessions(client, auth_headers):
+    # Bị từ chối → không đổi gì, phiên không bị thu hồi: vẫn đăng nhập được bằng mật khẩu cũ
+    change_password(client, auth_headers, current=PASSWORD, new=PASSWORD)
+    assert login(client, PASSWORD).status_code == 200
+
+
 def test_change_password_weak_new_returns_422(client, auth_headers):
     response = change_password(client, auth_headers, current=PASSWORD, new="abc12345")
 

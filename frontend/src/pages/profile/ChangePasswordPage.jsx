@@ -3,7 +3,8 @@
 //     + "Khác mật khẩu hiện tại" + "Hai mật khẩu trùng khớp".
 //   - 400 (mật khẩu hiện tại sai) → báo dưới ô "Mật khẩu hiện tại", xóa ô đó, đặt con trỏ.
 //   - Thành công → backend thu hồi MỌI phiên (Q10) → đăng xuất máy này → /login kèm thông báo.
-//   Ghi chú: "Khác mật khẩu hiện tại" hiện CHỈ kiểm ở trình duyệt (backend chưa chặn).
+//   - Mật khẩu mới trùng mật khẩu cũ: trình duyệt chặn trước; backend cũng chặn (400
+//     "Mật khẩu này đã được sử dụng.", 08/11) → hiện dưới ô "Mật khẩu mới".
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +18,7 @@ import { passwordExtraError, validatePassword } from '../../utils/validators.js'
 import styles from './Settings.module.css';
 
 const EMPTY = { current: '', password: '', confirm: '' };
+const SAME_PASSWORD = 'Mật khẩu này đã được sử dụng.'; // khớp detail 400 của backend
 
 export default function ChangePasswordPage() {
   const { logout } = useAuth();
@@ -69,7 +71,11 @@ export default function ChangePasswordPage() {
       });
     } catch (err) {
       const { status, message, fieldErrors } = parseApiError(err);
-      if (status === 400) {
+      const detail = err?.response?.data?.detail;
+      if (status === 400 && detail === SAME_PASSWORD) {
+        // Phòng hờ: thường trình duyệt đã chặn trước (quy tắc "Khác mật khẩu hiện tại")
+        setErrors({ password: SAME_PASSWORD });
+      } else if (status === 400) {
         setErrors({ current: 'Mật khẩu hiện tại không đúng.' });
         setValues((prev) => ({ ...prev, current: '' }));
         setTimeout(() => currentRef.current?.focus(), 0);
