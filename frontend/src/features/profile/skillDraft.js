@@ -1,6 +1,6 @@
 // "Bản nháp" của trang Kỹ năng (FĐ6, 08/11/2026) — hàm thuần, không có giao diện.
 //
-// Người dùng thêm / đổi / gỡ nhiều kỹ năng, nhưng CHƯA gửi gì lên server; chỉ khi bấm
+// Người dùng đổi / gỡ nhiều kỹ năng (thêm mới: ở trang Khám phá kỹ năng), nhưng CHƯA gửi gì lên server; chỉ khi bấm
 // "Lưu tất cả" mới gửi MỘT request PATCH (FR-04). Mỗi dòng trong bản nháp:
 //   { skill_id, skill, status, source, updated_at,
 //     original: 'known' | 'learning' | null,   ← trạng thái đang lưu trên server (null = mới thêm)
@@ -33,18 +33,6 @@ export function buildChanges(rows) {
 
 export function countChanges(rows) {
   return rows.filter((row) => changeOf(row) !== null).length;
-}
-
-/** Thêm một kỹ năng vào bản nháp. Đã có (đang bị gỡ) → khôi phục với trạng thái mới. */
-export function addSkill(rows, skill, status) {
-  const existing = rows.find((row) => row.skill_id === skill.skill_id);
-  if (existing) {
-    return rows.map((row) =>
-      row.skill_id === skill.skill_id ? { ...row, removed: false, status } : row,
-    );
-  }
-  const added = { skill_id: skill.skill_id, skill: skill.skill, status, source: 'manual', updated_at: null, original: null, removed: false };
-  return [...rows, added].sort((a, b) => a.skill.localeCompare(b.skill, 'vi'));
 }
 
 export function setStatus(rows, skillId, status) {

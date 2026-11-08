@@ -1,5 +1,6 @@
 // Kỹ năng của tôi (module 01 · Tuấn · FĐ6, 08/11/2026) — màn demo S-10 Skills, route /me/skills.
-//   - Tìm & thêm kỹ năng từ danh mục, đổi Đã biết / Đang học, gỡ, khôi phục, hoàn tác tất cả.
+//   - Đổi Đã biết / Đang học, gỡ, khôi phục, hoàn tác tất cả. Thêm kỹ năng: nút sang trang
+//     "Khám phá kỹ năng" (/me/skills/browse) — 08/11 Tuấn bỏ ô tìm có danh sách sổ xuống.
 //   - Mọi thay đổi nằm trong "bản nháp" (skillDraft.js); bấm "Lưu tất cả" → MỘT request
 //     PATCH /api/me/skills. Có lỗi → backend không lưu gì → bản nháp giữ nguyên để sửa.
 //   - Rời trang / đóng tab khi còn thay đổi chưa lưu → trình duyệt hỏi lại.
@@ -12,9 +13,7 @@ import Tabs from '../../common/components/Tabs.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDate } from '../../../utils/formatters.js';
 import SettingsLayout from '../components/SettingsLayout.jsx';
-import SkillSearch from '../components/SkillSearch.jsx';
 import {
-  addSkill,
   buildChanges,
   changeOf,
   countChanges,
@@ -30,7 +29,7 @@ const SOURCE_NOTE = {
   course: 'Từ khóa học đã tham gia',
 };
 const EMPTY_TEXT = {
-  all: 'Chưa có kỹ năng nào. Tìm và thêm kỹ năng ở ô phía trên.',
+  all: 'Chưa có kỹ năng nào. Bấm "Khám phá & thêm kỹ năng" để bắt đầu.',
   known: 'Chưa có kỹ năng nào ở trạng thái Đã biết.',
   learning: 'Chưa có kỹ năng nào ở trạng thái Đang học.',
 };
@@ -100,7 +99,6 @@ export default function SkillsPage() {
   };
   // Tab "Tất cả" còn hiện dòng đang bị gỡ (gạch ngang) để khôi phục được
   const shown = tab === 'all' ? rows : visible.filter((r) => r.status === tab);
-  const excludeIds = new Set(visible.map((r) => r.skill_id));
 
   function edit(next) {
     setRows(next);
@@ -158,18 +156,17 @@ export default function SkillsPage() {
         </div>
       ) : (
         <>
-          <SkillSearch
-            excludeIds={excludeIds}
-            refreshKey={saved.map((s) => s.skill_id).join(',')}
-            disabled={loadState !== 'ready' || saving}
-            onAdd={(skill, status) => edit(addSkill(rows, skill, status))}
-          />
-
-          <p className="small muted" style={{ margin: '-8px 0 0' }}>
-            Không nhớ tên kỹ năng?{' '}
+          {/* Thêm kỹ năng: sang trang Khám phá (duyệt theo danh mục) — Tuấn chọn giữ cách này, 08/11 */}
+          <div className={`inner ${styles.addBox}`}>
+            <div>
+              <strong>Thêm kỹ năng vào hồ sơ</strong>
+              <span className="small muted">
+                Duyệt theo danh mục (AI, Web, Dữ liệu…), chọn nhiều kỹ năng một lúc.
+              </span>
+            </div>
             <Link
               to="/me/skills/browse"
-              style={{ fontWeight: 600 }}
+              className="btn btn-primary"
               onClick={(event) => {
                 // Còn thay đổi chưa lưu → hỏi trước khi rời trang (bản nháp sẽ mất)
                 if (pending > 0 && !window.confirm('Bạn còn thay đổi chưa lưu. Rời trang và bỏ các thay đổi này?')) {
@@ -177,9 +174,9 @@ export default function SkillsPage() {
                 }
               }}
             >
-              Duyệt kỹ năng theo danh mục →
+              Khám phá & thêm kỹ năng →
             </Link>
-          </p>
+          </div>
 
           <Tabs
             label="Lọc kỹ năng"
