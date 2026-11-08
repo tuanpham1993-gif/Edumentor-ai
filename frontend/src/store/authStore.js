@@ -6,8 +6,10 @@
 //   status : 'loading'  → đang kiểm tra (mở app có token → đang gọi GET /me)
 //            'authenticated' → đã đăng nhập (user có dữ liệu)
 //            'guest'    → khách
+//            'error'    → có token nhưng KHÔNG tới được máy chủ (tắt / mất mạng / 5xx) — FĐ7 08/11
+//                         giữ nguyên token, route hiện trang 503 + nút Thử lại (retry)
 //   user   : { user_id, full_name, email, role, avatar_url, created_at } | null
-//   login(email, password), logout(), refreshUser(), setUser(user)
+//   login(email, password), logout(), refreshUser(), setUser(user), retry()
 //
 // File .js (không phải .jsx) nên dùng createElement thay cho cú pháp <Provider>.
 import { createContext, createElement, useCallback, useEffect, useMemo, useState } from 'react';
@@ -26,26 +28,33 @@ export function AuthProvider({ children }) {
   const [status, setStatus] = useState(() => (getAccessToken() ? 'loading' : 'guest'));
 
   // Mở app (hoặc F5) mà còn token → hỏi backend "tôi là ai". client.js tự refresh nếu access hết hạn.
-  useEffect(() => {
-    if (!getAccessToken()) return;
-    let cancelled = false; // tránh cập nhật state sau khi component đã gỡ
-    meApi
-      .getMe()
-      .then((me) => {
-        if (cancelled) return;
-        setUser(me);
-        setStatus('authenticated');
-      })
-      .catch(() => {
-        if (cancelled) return;
-        clearTokens();
-        setUser(null);
-        setStatus('guest');
-      });
-    return () => {
-      cancelled = true;
-    };
+  //   - 401 / 403 (phiên không còn hợp lệ) → xóa token, về khách.
+  //   - Không tới được máy chủ / 5xx → GIỮ token, status 'error' (trang 503). Trước 08/11 chỗ này
+  //     xóa token luôn → backend tắt một lúc là người dùng bị đăng xuất oan.
+  const checkSession = useCallback(async () => {
+    if (!getAccessToken()) {
+      setStatus('guest');
+      return;
+    }
+    try {
+      const me = await meApi.getMe();
+      setUser(me);
+      setStatus('authenticated');
+    } catch (err) {
+      const code = err?.response?.status ?? 0;
+      if (code === 0 || code >= 500) {
+        setStatus('error');
+        return;
+      }
+      clearTokens();
+      setUser(null);
+      setStatus('guest');
+    }
   }, []);
+
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
 
   // client.js báo "hết phiên" (refresh thất bại) → về khách + chuyển /login kèm lý do.
   useEffect(() => {
@@ -84,8 +93,8 @@ export function AuthProvider({ children }) {
 
   // useMemo: chỉ tạo object mới khi dữ liệu đổi → tránh vẽ lại thừa mọi component dùng useAuth().
   const value = useMemo(
-    () => ({ user, status, login, logout, refreshUser, setUser }),
-    [user, status, login, logout, refreshUser],
+    () => ({ user, status, login, logout, refreshUser, setUser, retry: checkSession }),
+    [user, status, login, logout, refreshUser, checkSession],
   );
 
   return createElement(AuthContext.Provider, { value }, children);

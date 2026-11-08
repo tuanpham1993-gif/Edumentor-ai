@@ -3,11 +3,14 @@
 //   - Nút: Chỉnh sửa hồ sơ (/me/edit), Đổi mật khẩu (/me/password), Đăng xuất (hộp thoại xác nhận).
 //   - Công tắc giao diện Tối / Sáng (FR-49).
 //   - 4 ô thống kê: chờ GET /me/summary (backend 7.2) → tạm hiện "—".
-//   - Khóa học của tôi / Kỹ năng / Ôn tập gần đây: thuộc module khác & FĐ6, thêm sau.
+//   - 3 khối dưới (08/11): Khóa học của tôi (module khóa học), Kỹ năng của tôi (GĐ4 → FĐ6),
+//     Ôn tập gần đây (module 09). Chưa có API → <PendingBlock> "Đang cập nhật";
+//     có API thì thay bằng component dữ liệu thật, giữ nguyên tiêu đề / link.
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import LogoutDialog from '../../components/profile/LogoutDialog.jsx';
+import PendingBlock from '../../components/profile/PendingBlock.jsx';
 import ThemeToggle from '../../components/profile/ThemeToggle.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 import { formatDate, initials, roleLabel } from '../../utils/formatters.js';
@@ -27,7 +30,7 @@ export default function ProfilePage() {
   const closeLogout = useCallback(() => setLogoutOpen(false), []);
 
   return (
-    <div className="stack" style={{ gap: 24 }}>
+    <div className={`stack ${styles.enter}`} style={{ gap: 24 }}>
       <div className="page-head">
         <div>
           <h1>Hồ sơ người dùng</h1>
@@ -69,6 +72,23 @@ export default function ProfilePage() {
           </div>
         ))}
       </section>
+
+      {/* Bố cục theo demo: trái rộng = khóa học, phải hẹp = kỹ năng + ôn tập */}
+      <div className={styles.grid}>
+        <PendingBlock title="Khóa học của tôi">
+          Danh sách khóa học Đang học / Đã lưu / Đã hoàn thành sẽ hiện ở đây khi module khóa học
+          hoàn tất.
+        </PendingBlock>
+
+        <div className="stack" style={{ gap: 20 }}>
+          <PendingBlock title="Kỹ năng của tôi" link={{ to: '/me/skills', text: 'Quản lý' }}>
+            Các kỹ năng Đã biết / Đang học của bạn sẽ hiện ở đây.
+          </PendingBlock>
+          <PendingBlock title="Ôn tập gần đây">
+            Kết quả các bài ôn tập gần nhất sẽ hiện ở đây.
+          </PendingBlock>
+        </div>
+      </div>
 
       <LogoutDialog open={logoutOpen} onClose={closeLogout} />
     </div>

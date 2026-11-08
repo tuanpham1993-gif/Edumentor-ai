@@ -1,23 +1,46 @@
 /* Bố cục trang tài khoản: bên trái giới thiệu + đèn, bên phải form — chép từ màn demo (FĐ3). */
 .split {
-  min-height: 100vh;
+  min-height: calc(100vh - 65px); /* trừ header khách */
   display: flex;
   flex-wrap: wrap;
+  /* Màn rộng: nội dung nằm trong khung 1200px giữa màn → thẳng hàng với logo header & trang chủ.
+     Nền + quầng sáng vẫn trải hết bề ngang. */
+  padding-inline: max(0px, calc((100% - 1200px) / 2));
   background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Nền khớp trang chủ (08/11): MỘT nền liền + quầng sáng vàng lớn phía trên (giống hero trang chủ).
+   Tắt đèn → quầng sáng tắt theo. */
+.split::before {
+  content: '';
+  position: absolute;
+  left: 18%;
+  top: -260px;
+  width: 760px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(245, 165, 36, 0.2), transparent);
+  pointer-events: none;
+  transition: opacity 0.8s var(--ease-out);
+}
+.splitOff::before {
+  opacity: 0;
 }
 
 .hero {
   flex: 1 1 560px;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* quầng sáng đèn tràn sang cột form → không còn đường ranh dọc (.split cắt mép ngoài) */
   min-height: 560px;
-  padding: 48px 64px;
+  /* Trên chừa ~290px cho 3 đèn treo + ô 3D → khối chữ không bị đè (màn thấp thì trang cuộn) */
+  padding: 290px 40px 48px; /* lề trái 40px = lề header → logo và tiêu đề thẳng hàng */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end; /* logo đã lên header khách → khối chữ nằm đáy */
   gap: 40px;
-  background: var(--bg-deep);
-  border-right: 1px solid var(--line);
+  background: transparent; /* dùng nền chung của .split, không còn 2 tông + đường kẻ dọc */
   transition: background var(--d-slow);
 }
 
@@ -94,11 +117,13 @@
 }
 
 .formSide {
+  position: relative; /* chứa cảnh nền AuthScene "ambient" */
+  overflow: hidden;
   flex: 1 1 520px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
+  justify-content: flex-end; /* thẻ bám lề phải khung 1200px, thẳng hàng nút Đăng nhập trên header */
+  padding: 48px 40px 48px 24px;
   transition: background var(--d-slow);
 }
 
@@ -139,6 +164,51 @@
 
 .card > * {
   animation: rise var(--d-slow) var(--e-in) both;
+}
+
+/* Viền sáng chạy quanh thẻ (FĐ7 08/11, theo demo 3D). Dùng ::before → không thêm phần tử con,
+   không ảnh hưởng thứ tự nth-child ở trên. Trình duyệt chưa hỗ trợ @property → viền sáng đứng yên. */
+@property --glow-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    rgba(255, 195, 92, 0.95) 40deg,
+    transparent 95deg,
+    transparent 180deg,
+    rgba(245, 165, 36, 0.6) 225deg,
+    transparent 275deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: glowSpin 6s linear infinite;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 60px -10px rgba(245, 165, 36, 0.35);
+  animation: cardBreathe 5s ease-in-out infinite;
+}
+@keyframes glowSpin {
+  to { --glow-angle: 360deg; }
+}
+@keyframes cardBreathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 .card > *:nth-child(2) {
@@ -250,11 +320,19 @@
   }
 }
 
+/* Hai cột xuống dòng (form nằm dưới) → thẻ form về giữa */
+@media (max-width: 1100px) {
+  .formSide {
+    justify-content: center;
+    padding: 48px 24px;
+  }
+}
+
 /* Điện thoại: phần giới thiệu thu gọn, ẩn 2 đèn phụ */
 @media (max-width: 720px) {
   .hero {
     min-height: 420px;
-    padding: 32px 20px;
+    padding: 200px 16px 32px; /* chừa chỗ cho đèn + 2 ô 3D phía trên tiêu đề */
     flex-basis: 100%;
     gap: 190px;
   }

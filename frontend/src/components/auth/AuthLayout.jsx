@@ -1,7 +1,7 @@
 // Khung trang Đăng nhập / Đăng ký (FĐ3, theo màn demo Main-LampOff / Register).
 //
 // Mở trang: 3 đèn TẮT, form ẩn và bị khóa. Kéo dây ở đèn đầu tiên → cả 3 đèn sáng, form hiện.
-// Kéo lần nữa → tắt. Thẻ `children` là nội dung bên trong thẻ form (do từng trang truyền vào).
+// Kéo lần nữa → tắt. Cảnh 3D ánh sáng (AuthScene, FĐ7 08/11) sáng / tối theo đèn. Thẻ `children` là nội dung bên trong thẻ form (do từng trang truyền vào).
 //
 // Trạng thái đèn được NHỚ trong sessionStorage (theo tab): kéo 1 lần ở Đăng nhập thì sang
 // Đăng ký / Quên mật khẩu đèn vẫn sáng. Tab mới hoặc mở lại trình duyệt → đèn tắt như demo.
@@ -9,10 +9,11 @@
 //   cardClassName : thêm class cho thẻ (vd "shake" khi đăng nhập sai)
 //   onCardAnimationEnd : gỡ class "shake" khi rung xong để lần sai sau rung lại được
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import styles from './AuthLayout.module.css';
-import { BrandLogo, CheckCircleIcon } from './icons.jsx';
+import PublicHeader from '../layout/PublicHeader.jsx';
+import { CheckCircleIcon } from './icons.jsx';
+import AuthScene from './AuthScene.jsx';
 import Lamp from './Lamp.jsx';
 
 const LAMP_KEY = 'em-lamp-on';
@@ -60,18 +61,18 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
   }
 
   return (
-    <div className={styles.split}>
+    <>
+      {/* Header khách (logo + Trang chủ / Khóa học / Tính năng / Về chúng tôi) — 08/11 */}
+      <PublicHeader />
+      <div className={`${styles.split} ${lampOn ? '' : styles.splitOff}`}>
       <aside className={`${styles.hero} ${lampOn ? '' : styles.dark}`}>
+        {/* Cảnh 3D ánh sáng (FĐ7): sáng khi bật đèn, tối mờ khi tắt */}
+        <AuthScene variant="hero" on={lampOn} />
         <Lamp on={lampOn} right={300} cord={120} glowTop={-30} delay={0} onPull={toggleLamp} />
         <div className={styles.hideOnPhone}>
           <Lamp on={lampOn} right={150} cord={220} glowTop={70} delay={-1.8} />
           <Lamp on={lampOn} right={30} cord={70} glowTop={-80} delay={-3.1} />
         </div>
-
-        <Link className={styles.brand} to="/login">
-          <BrandLogo />
-          EduMentor AI
-        </Link>
 
         <div className={styles.copy}>
           <h2>
@@ -99,6 +100,7 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
       </aside>
 
       <main className={`${styles.formSide} ${lampOn ? '' : styles.formDark}`}>
+        <AuthScene variant="ambient" on={lampOn} />
         <div className={styles.stage}>
           <div
             ref={cardRef}
@@ -122,5 +124,6 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
         </div>
       </main>
     </div>
+    </>
   );
 }

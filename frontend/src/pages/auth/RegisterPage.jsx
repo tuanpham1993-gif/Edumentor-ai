@@ -4,8 +4,9 @@
 //   - Ô Xác nhận: "✓ Mật khẩu xác nhận khớp" (xanh) / "✗ … không khớp" (đỏ) khi gõ.
 //   - Lỗi từ server: 409 (email đã có) → ô Email; 422 → đúng ô theo fieldErrors.
 //   - Thành công → /login, điền sẵn email + thông báo "Đăng ký thành công".
+//   - Đến từ trang chủ (state.fullName / state.email) → điền sẵn 2 ô đó.
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import * as authApi from '../../api/auth.api.js';
 import AuthLayout from '../../components/auth/AuthLayout.jsx';
@@ -34,7 +35,13 @@ const SERVER_FIELD = {
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const [values, setValues] = useState(EMPTY);
+  const location = useLocation();
+  // Từ thẻ "bắt đầu nhanh" ở trang chủ → điền sẵn họ tên + email (08/11)
+  const [values, setValues] = useState(() => ({
+    ...EMPTY,
+    fullName: location.state?.fullName ?? '',
+    email: location.state?.email ?? '',
+  }));
   const [errors, setErrors] = useState({}); // lỗi Họ tên / Email / lỗi từ server
   const [submitted, setSubmitted] = useState(false); // đã bấm Đăng ký → quy tắc trống chuyển đỏ
   const [formError, setFormError] = useState('');

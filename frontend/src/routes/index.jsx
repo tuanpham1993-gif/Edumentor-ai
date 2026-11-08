@@ -1,20 +1,24 @@
 // Khai báo toàn bộ route của app (module 01 · Tuấn · FĐ2, 07/11/2026).
 //
 // Cách đọc: <Route element={<Lớp bảo vệ />}> bọc các route con.
-//   PublicRoute    — chỉ cho khách (đã đăng nhập → về /me)
+//   PublicRoute    — chỉ cho khách (đã đăng nhập → về /me); "/" = trang chủ khách (08/11)
 //   ProtectedRoute — phải đăng nhập (khách → /login)
 //   AdminRoute     — phải là admin
 //   PageLayout     — thêm Header cho các trang bên trong
 // Nhóm khác thêm route của mình vào đúng nhóm bảo vệ (vd /courses, /tutor vào ProtectedRoute).
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
+import ComingSoon from '../components/common/ComingSoon.jsx';
 import PageLayout from '../components/layout/PageLayout.jsx';
+import { MAIN_NAV } from '../components/layout/nav.js';
+import SettingsLayout from '../components/profile/SettingsLayout.jsx';
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage.jsx';
 import ForgotSentPage from '../pages/auth/ForgotSentPage.jsx';
 import LoginPage from '../pages/auth/LoginPage.jsx';
 import RegisterPage from '../pages/auth/RegisterPage.jsx';
 import ResetExpiredPage from '../pages/auth/ResetExpiredPage.jsx';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage.jsx';
+import HomePage from '../pages/home/HomePage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import ChangePasswordPage from '../pages/profile/ChangePasswordPage.jsx';
 import EditProfilePage from '../pages/profile/EditProfilePage.jsx';
@@ -32,6 +36,7 @@ export default function AppRoutes() {
     <Routes>
       {/* Khách */}
       <Route element={<PublicRoute />}>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -48,7 +53,25 @@ export default function AppRoutes() {
           <Route path="/me" element={<ProfilePage />} />
           <Route path="/me/edit" element={<EditProfilePage />} />
           <Route path="/me/password" element={<ChangePasswordPage />} />
-          {/* FĐ6: /me/skills */}
+          {/* Trang của nhóm khác / module 09 chưa làm → "Tạm thời chưa khả dụng" (08/11).
+              Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
+              (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}
+          {MAIN_NAV.map((item) => (
+            <Route
+              key={item.to}
+              path={item.to}
+              element={<ComingSoon feature={item.text} backTo="/me" />}
+            />
+          ))}
+          {/* FĐ6 thay bằng SkillsPage khi backend GĐ4 (/me/skills) xong */}
+          <Route
+            path="/me/skills"
+            element={
+              <SettingsLayout>
+                <ComingSoon feature="Kỹ năng của tôi" />
+              </SettingsLayout>
+            }
+          />
         </Route>
       </Route>
 
@@ -59,7 +82,6 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
-      <Route path="/" element={<Navigate to="/me" replace />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

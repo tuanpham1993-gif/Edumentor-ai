@@ -108,8 +108,15 @@
 
 ## FĐ7 — Hoàn thiện (13/11)
 
+- [x] **7.0a Trang "Tạm thời chưa khả dụng" cho `/me/skills`** (+ mục "Kỹ năng của tôi" trong menu Cài đặt) — thực tế 08/11 — Claude viết (theo yêu cầu): `components/common/ComingSoon.jsx` (icon, "Tính năng Kỹ năng của tôi đang được phát triển, sẽ sớm có", nút ← Về hồ sơ + Thử lại, dòng nhỏ "Mã: 501 · Chưa hỗ trợ"); chốt với Tuấn: KHÔNG dùng 500/503 cho tính năng chưa làm; FĐ6 thay bằng SkillsPage
+- [x] **7.0b Trang 503 "Máy chủ tạm thời không phục vụ"** — thực tế 08/11 — Claude viết: `pages/ServerErrorPage.jsx` + `StatusPanel.jsx` dùng chung (404 cũng dùng); **sửa lỗi**: trước đây backend tắt → `GET /me` lỗi → bị xóa token (đăng xuất oan). Nay: 401/403 → về khách; mất mạng / 5xx → giữ token, hiện 503 + Thử lại (`authStore.retry`). `client.js`: refresh lỗi mạng / 5xx không còn đăng xuất. Đã thử: backend tắt → proxy Vite trả 500 rỗng → vào nhánh 503
+- [x] **7.0c Cảnh 3D ánh sáng chuyển động** (Đăng nhập / Đăng ký / Quên mật khẩu, theo ảnh demo Tuấn gửi) — thực tế 08/11 — Claude viết (theo yêu cầu): `components/auth/AuthScene.jsx` CSS + SVG thuần (không GIF, không thư viện): 3 ô kính nổi 3D (mũ, sách, play) nghiêng + vệt sáng lướt, sóng ánh sáng chạy, hạt bụi sáng bay, bàn sách + chậu cây đung đưa; viền thẻ form sáng chạy vòng. Giữ dây kéo đèn: tắt đèn → cảnh tối mờ. Màn thấp / điện thoại tự bớt ô để không đè chữ. Chờ Tuấn xem chuyển động thật trên trình duyệt
+- [x] **7.0d 3 khối "Đang cập nhật" trên Hồ sơ** — thực tế 08/11 — Claude viết (theo yêu cầu): `components/profile/PendingBlock.jsx`; Khóa học của tôi (chờ module khóa học), Kỹ năng của tôi + link Quản lý (chờ GĐ4 → FĐ6), Ôn tập gần đây (chờ module 09); bố cục theo demo (trái rộng / phải 320px, màn hẹp 1 cột). Có API → thay PendingBlock bằng dữ liệu thật
+- [x] **7.0e Header + Footer** — thực tế 08/11 — Claude viết (theo yêu cầu), Tuấn sẽ chỉnh theo ý: Header theo demo (logo, menu Khóa học / Lộ trình / Khóa học của tôi / Ôn tập / AI Tutor / Liên hệ, gạch chân vàng mục đang mở, admin thêm Quản trị, avatar + tên; điện thoại menu vuốt ngang). Footer (demo chưa có → bản đề xuất): giới thiệu + 3 cột liên kết + bản quyền + Lên đầu trang. Menu khai báo 1 chỗ `components/layout/nav.js`; trang nhóm khác chưa làm → route tạm "Tạm thời chưa khả dụng"
+- [x] **7.0f Trang chủ cho khách `/`** (theo mockup Tuấn gửi) — thực tế 08/11 — Claude viết (theo yêu cầu): `pages/home/` — header khách (neo #, mục đang xem tô vàng), hero + thẻ bắt đầu nhanh (Đăng ký / Đăng nhập: nhận họ tên + email rồi chuyển sang trang đầy đủ, điền sẵn), 3 bước, 6 tính năng, lộ trình mẫu, Khóa học nổi bật, Tin nổi bật, kêu gọi đăng ký, Footer dùng chung (`guest`). Khối hiện dần khi cuộn. **Khóa học / Tin nổi bật là DỮ LIỆU MẪU** (`homeContent.js`) — chờ API khóa học. Đã đăng nhập vào `/` → `/me`; logo trang Đăng nhập / Đăng ký / Quên mật khẩu dẫn về `/`. Header khách dùng chung `components/layout/PublicHeader.jsx` cho cả trang chủ, Đăng nhập, Đăng ký, Quên mật khẩu (trang khác bấm mục → về `/#id`)
+- [x] **7.0g Đồng bộ nền + chuyển động** — thực tế 08/11 — Claude viết (theo yêu cầu): Đăng nhập / Đăng ký dùng nền liền + quầng sáng như trang chủ, khung 1200px thẳng hàng header (màn rộng), sửa màu ô khi trình duyệt tự điền (autofill); trang đã đăng nhập: `PageBackdrop` (quầng sáng thở, vầng sáng trôi, hạt bụi), header khung 1200px + vệt sáng chạy + vòng sáng avatar, Hồ sơ: khối trượt lên lần lượt, viền sáng chạy quanh thẻ hồ sơ, ô thống kê nhấp nháy chờ dữ liệu, khối "Đang cập nhật" icon lơ lửng + vệt sáng lướt
 - [ ] **7.1 Kiểm thử thủ công theo bảng dưới**, so với ảnh demo — dự kiến 13/11 · thực tế __/__
-- [ ] **7.2 Giao diện hẹp (điện thoại)**, chế độ Sáng, trạng thái đang tải / lỗi mạng — dự kiến 13/11 · thực tế __/__
+- [x] **7.2 Giao diện hẹp (điện thoại)**, chế độ Sáng, trạng thái đang tải / lỗi mạng — dự kiến 13/11 · thực tế 08/11 — Claude kiểm bằng Chrome headless ở 375 / 768 / 1280 px (8 trang): **không trang nào tràn ngang**; sửa: menu Cài đặt trên điện thoại bị che mục (cuộn ngang ẩn) → xuống dòng; Đổi mật khẩu trên điện thoại: quy tắc nằm dưới nút Lưu → đưa lên ngay dưới ô nhập; thống kê Hồ sơ 1 → 2 cột; Header thêm `-webkit-backdrop-filter` (Safari < 18); font dự phòng có dấu tiếng Việt khi không tải được Google Fonts; reset `img max-width`, `text-size-adjust`. Còn chờ: Tuấn thử trên điện thoại thật + Firefox / Safari (nếu có)
 - [ ] **7.3 `npm run build`** không lỗi — dự kiến 13/11 · thực tế __/__
 - [ ] **7.4 Commit, báo nhóm phần nền dùng chung** (`client.js`, `authStore`, route, layout) — dự kiến 13/11 · thực tế __/__
 
@@ -131,6 +138,9 @@
 | K10 | Đổi mật khẩu sai / đúng | Sai: lỗi trên form; đúng: về `/login` | 5 | [ ] |
 | K11 | Đăng xuất, bấm Back của trình duyệt | Không vào lại được `/me` | 5 | [ ] |
 | K12 | Đổi Tối / Sáng, tải lại trang | Giữ lựa chọn | 5 | [ ] |
+| K13 | Vào Cài đặt → "Kỹ năng của tôi" | Trang "Tạm thời chưa khả dụng", nút ← Về hồ sơ, Thử lại | 7 | [ ] |
+| K14 | Đang đăng nhập → tắt backend (Ctrl+C) → F5 → bật lại backend → bấm "Thử lại" | Trang 503, KHÔNG bị đăng xuất; Thử lại → vào lại `/me` | 7 | [ ] |
+| K15 | Gõ URL lạ, vd `/abc` | Trang 404 "Không tìm thấy trang" | 7 | [ ] |
 
 ---
 

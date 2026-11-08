@@ -6,7 +6,8 @@
 // 3. Nhiều request cùng 401 một lúc → chỉ refresh MỘT lần, các request khác chờ chung kết quả.
 //    (Backend xoay vòng refresh token: gửi cùng một token 2 lần → bị coi là đánh cắp
 //     → thu hồi MỌI phiên. Refresh 2 lần song song sẽ tự đăng xuất người dùng.)
-// 4. Refresh thất bại (hết 7 ngày, đã đăng xuất, đổi mật khẩu…) → xóa token → báo "hết phiên".
+// 4. Refresh bị TỪ CHỐI (hết 7 ngày, đã đăng xuất, đổi mật khẩu… → 4xx) → xóa token → báo "hết phiên".
+//    Refresh không tới được máy chủ (mất mạng / 5xx) → GIỮ token, chỉ báo lỗi (FĐ7 08/11).
 //
 // Các nhóm khác dùng lại file này: import client from '../api/client.js'.
 import axios from 'axios';
@@ -85,7 +86,9 @@ client.interceptors.response.use(
       const newAccessToken = await refreshTokens();
       config.headers.Authorization = `Bearer ${newAccessToken}`;
       return client(config); // gửi lại request cũ với token mới
-    } catch {
+    } catch (refreshError) {
+      const code = refreshError?.response?.status ?? 0;
+      if (code === 0 || code >= 500) return Promise.reject(refreshError); // máy chủ lỗi ≠ hết phiên
       clearTokens();
       onSessionExpired();
       return Promise.reject(error);

@@ -1,12 +1,22 @@
-// Trang 404 — URL không khớp route nào. (FĐ2)
+// Trang 404 — URL không khớp route nào. (FĐ2; FĐ7 08/11: dùng StatusPanel)
 import { Link } from 'react-router-dom';
+
+import StatusPanel from '../components/common/StatusPanel.jsx';
 
 export default function NotFoundPage() {
   return (
-    <main className="container page-in">
-      <h1>Không tìm thấy trang</h1>
-      <p className="muted">Trang bạn tìm không tồn tại hoặc chưa được làm.</p>
-      <Link to="/">← Về trang chính</Link>
-    </main>
+    <StatusPanel
+      fullPage
+      icon="search"
+      title="Không tìm thấy trang"
+      code="Mã: 404 · Not Found"
+      actions={
+        <Link to="/" className="btn btn-primary">
+          ← Về trang chính
+        </Link>
+      }
+    >
+      Trang bạn tìm không tồn tại hoặc đã được chuyển đi.
+    </StatusPanel>
   );
 }

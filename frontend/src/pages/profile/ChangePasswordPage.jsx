@@ -105,7 +105,13 @@ export default function ChangePasswordPage() {
       )}
 
       <div className={styles.pwGrid}>
-        <form className="stack" style={{ gap: 16 }} noValidate onSubmit={handleSubmit}>
+        <form
+          id="change-pw-form"
+          className="stack"
+          style={{ gap: 16 }}
+          noValidate
+          onSubmit={handleSubmit}
+        >
           <PasswordField
             id="current-pw"
             name="current"
@@ -138,25 +144,6 @@ export default function ChangePasswordPage() {
             onChange={handleChange}
             error={errors.confirm}
           />
-
-          <div className={styles.buttons}>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => navigate('/me')}
-              disabled={submitting}
-            >
-              Hủy
-            </button>
-            <button
-              type="submit"
-              className={`btn btn-primary ${submitting ? 'loading' : ''}`}
-              disabled={submitting}
-            >
-              Lưu thay đổi
-              <span className="spinner" aria-hidden="true" />
-            </button>
-          </div>
         </form>
 
         <div className={`card ${styles.rules}`}>
@@ -167,6 +154,26 @@ export default function ChangePasswordPage() {
             showErrors={submitted}
           />
         </div>
+      </div>
+
+      <div className={`${styles.buttons} ${styles.pwButtons}`}>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => navigate('/me')}
+          disabled={submitting}
+        >
+          Hủy
+        </button>
+        <button
+          type="submit"
+          form="change-pw-form"
+          className={`btn btn-primary ${submitting ? 'loading' : ''}`}
+          disabled={submitting}
+        >
+          Lưu thay đổi
+          <span className="spinner" aria-hidden="true" />
+        </button>
       </div>
     </SettingsLayout>
   );

@@ -4,12 +4,14 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import FullPageLoading from '../components/common/FullPageLoading.jsx';
 import { useAuth } from '../hooks/useAuth.js';
+import ServerErrorPage from '../pages/ServerErrorPage.jsx';
 
 export default function AdminRoute() {
-  const { status, user } = useAuth();
+  const { status, user, retry } = useAuth();
   const location = useLocation();
 
   if (status === 'loading') return <FullPageLoading />;
+  if (status === 'error') return <ServerErrorPage onRetry={retry} />; // máy chủ không phục vụ (503)
   if (status !== 'authenticated') {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }

@@ -172,11 +172,20 @@ html,
 body {
   margin: 0;
 }
+html {
+  -webkit-text-size-adjust: 100%; /* iOS: không tự phóng chữ khi xoay ngang */
+  text-size-adjust: 100%;
+}
+img {
+  max-width: 100%; /* ảnh không bao giờ tràn khung */
+  height: auto;
+}
 body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  /* Không tải được Google Fonts (mất mạng) → font hệ thống có đủ dấu tiếng Việt */
+  font-family: 'Be Vietnam Pro', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
@@ -471,6 +480,16 @@ h3 {
   outline: none;
   color: var(--text);
   font-size: 14px;
+}
+/* Trình duyệt tự điền (autofill) tô nền xanh xám → phủ lại đúng màu ô nhập của theme (08/11) */
+.input input:-webkit-autofill,
+.input input:-webkit-autofill:hover,
+.input input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--input) inset;
+  box-shadow: 0 0 0 1000px var(--input) inset;
+  transition: background-color 9999s ease-out 0s;
 }
 .input input[readonly] {
   color: var(--text-muted);

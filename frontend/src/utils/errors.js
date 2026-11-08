@@ -36,6 +36,15 @@ export function parseApiError(error) {
     return { status, message: `Lỗi ${status}: ${first}`, fieldErrors };
   }
 
+  // 5xx không kèm câu tiếng Việt (vd proxy Vite trả 500 rỗng khi backend tắt) → câu dễ hiểu
+  if (status >= 500 && typeof detail !== 'string') {
+    return {
+      status,
+      message: `Lỗi ${status}: Máy chủ tạm thời không phục vụ. Vui lòng thử lại sau.`,
+      fieldErrors: {},
+    };
+  }
+
   const text = typeof detail === 'string' ? detail : 'Có lỗi xảy ra. Vui lòng thử lại.';
   return { status, message: `Lỗi ${status}: ${text}`, fieldErrors: {} };
 }

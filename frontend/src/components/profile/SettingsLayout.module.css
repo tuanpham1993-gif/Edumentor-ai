@@ -24,12 +24,12 @@
 .title { margin: 6px 0 20px; font-size: 30px; line-height: 1.2; }
 
 @media (max-width: 720px) {
-  .menu { flex-basis: 100%; flex-direction: row; overflow-x: auto; }
+  /* Xuống dòng (không cuộn ngang): mục "Kỹ năng", "Đăng xuất", công tắc giao diện luôn nhìn thấy */
+  .menu { flex-basis: 100%; flex-direction: row; flex-wrap: wrap; }
   .item { white-space: nowrap; width: auto; }
   .panel { padding: 20px; }
   .theme {
-    flex-direction: row; align-items: center; margin: 0 0 0 8px; padding: 0 0 0 12px;
-    border-top: 0; border-left: 1px solid var(--line); flex: none;
+    flex-direction: row; align-items: center; flex-basis: 100%; margin: 4px 0 0; padding: 8px 4px 0;
   }
   .theme > span { display: none; }
 }

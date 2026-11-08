@@ -1,93 +1,152 @@
-/* Header học viên (FĐ2). CSS Module: tên class chỉ có hiệu lực trong Header.jsx (FQ3). */
+/* Header học viên — chép từ màn demo (_header_12adu), FĐ7 08/11. */
 .header {
   position: sticky;
   top: 0;
-  z-index: 10;
-  background: var(--header-glass);
-  backdrop-filter: blur(10px);
+  z-index: 50;
   border-bottom: 1px solid var(--line);
+  background: var(--header-glass);
+  -webkit-backdrop-filter: blur(8px); /* Safari < 18 */
+  backdrop-filter: blur(8px);
+  overflow-x: clip; /* vệt sáng chạy ra ngoài không tạo thanh cuộn ngang */
 }
-
+/* Vệt sáng vàng chạy dọc mép dưới header */
+.header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 30%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+  animation: sweep 7s ease-in-out infinite;
+}
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(340%); }
+}
 .inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 12px 24px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 12px 32px;
+  padding: 14px 40px;
 }
 
 .brand {
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.brand span {
-  color: var(--accent);
-}
-
-.nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 18px;
 }
+.brand:hover { color: var(--text); }
+.brand b { color: var(--accent); font-weight: 600; }
 
-.link {
-  padding: 8px 12px;
-  border-radius: var(--r-md);
-  color: var(--text-soft);
-  text-decoration: none;
+.nav {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
   font-size: 14px;
 }
 
-.link:hover {
-  background: var(--hover);
-  color: var(--text);
+.link {
+  position: relative;
+  color: var(--text-soft);
+  padding: 4px 0;
+  transition: color var(--d-fast);
 }
+.link:hover { color: var(--text); }
+/* Gạch chân vàng: mở rộng từ giữa khi mục đang mở */
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform var(--d-slow) var(--e-std);
+}
+.link:hover::after { transform: scaleX(0.4); }
+.active { color: var(--accent); font-weight: 600; }
+.active:hover { color: var(--accent); }
+.active::after,
+.active:hover::after { transform: scaleX(1); }
 
 .user {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 4px 10px 4px 4px;
-  border-radius: 999px;
   color: var(--text);
-  text-decoration: none;
   font-size: 14px;
+  font-weight: 600;
 }
-
-.user:hover,
-.active {
-  background: var(--hover);
-}
+.user:hover { color: var(--text); }
+.userActive,
+.userActive:hover { color: var(--accent); }
 
 .avatar {
-  width: 32px;
-  height: 32px;
+  position: relative;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--avatar-bg);
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  flex-shrink: 0;
+  background: var(--avatar-bg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid var(--accent);
+  transition: transform var(--d-base) var(--e-spring);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.user:hover .avatar { transform: scale(1.06); }
+
+/* Laptop nhỏ: thu khoảng cách để menu không xuống dòng */
+@media (max-width: 1100px) {
+  .inner { padding: 14px 24px; gap: 12px 20px; }
+  .nav { gap: 6px 16px; }
+  .name { display: none; }
 }
 
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* Điện thoại / tablet: menu xuống hàng riêng, vuốt ngang; mép phải mờ dần báo còn mục */
+@media (max-width: 860px) {
+  .inner { padding: 12px 16px; gap: 10px 18px; justify-content: space-between; }
+  .nav {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 18px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .link { white-space: nowrap; }
 }
 
-@media (max-width: 600px) {
-  .inner {
-    padding: 10px 16px;
-  }
-  .name {
-    display: none; /* điện thoại: chỉ hiện avatar */
-  }
+/* Vòng sáng quanh avatar xoay chậm */
+.user .avatar::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: rgba(255, 196, 92, 0.8);
+  border-right-color: rgba(255, 196, 92, 0.25);
+  animation: ring 4s linear infinite;
 }
+.avatar { overflow: visible; }
+.avatar img { border-radius: 50%; }
+@keyframes ring { to { transform: rotate(360deg); } }

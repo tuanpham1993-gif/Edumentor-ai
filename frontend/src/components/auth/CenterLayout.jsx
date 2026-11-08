@@ -1,11 +1,13 @@
 // Khung trang căn giữa cho Quên mật khẩu / Đã gửi / Đặt lại / Hết hiệu lực (FĐ4, theo màn demo).
-// Thanh trên (logo + "Đăng nhập"), 2 đèn trang trí luôn sáng, thẻ ở giữa.
+// Header khách dùng chung (PublicHeader), 2 đèn trang trí luôn sáng, thẻ ở giữa.
 // Thẻ dùng lại style `.card` của AuthLayout để giống hệt trang Đăng nhập.
 import { Link } from 'react-router-dom';
 
 import authStyles from './AuthLayout.module.css';
 import styles from './CenterLayout.module.css';
-import { BackArrowIcon, BrandLogo } from './icons.jsx';
+import AuthScene from './AuthScene.jsx';
+import PublicHeader from '../layout/PublicHeader.jsx';
+import { BackArrowIcon } from './icons.jsx';
 
 function DecorLamp({ side, delay, glowTop }) {
   return (
@@ -26,15 +28,9 @@ function DecorLamp({ side, delay, glowTop }) {
 export default function CenterLayout({ children }) {
   return (
     <div className={styles.page}>
-      <header className={styles.top}>
-        <Link className={authStyles.brand} to="/login">
-          <BrandLogo />
-          EduMentor AI
-        </Link>
-        <Link className="btn btn-sm" to="/login">
-          Đăng nhập
-        </Link>
-      </header>
+      <AuthScene variant="ambient" />
+      {/* Header khách dùng chung (08/11) — thay thanh trên riêng của trang này */}
+      <PublicHeader />
 
       <DecorLamp side={{ left: '12%' }} delay={0} glowTop={70} />
       <DecorLamp side={{ right: '12%' }} delay={-2} glowTop={150} />
