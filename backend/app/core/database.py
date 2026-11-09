@@ -5,22 +5,29 @@ from app.core.config import settings
 
 engine = create_engine(
     settings.DATABASE_URL,
-    echo=settings.SQL_ECHO,   # True -> in ra màn hình câu lệnh SQL mà ORM sinh ra
+    echo=settings.SQL_ECHO,
     pool_pre_ping=True,
 )
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+)
+
 Base = declarative_base()
+
 
 def create_tables() -> None:
     import app.models
+
     Base.metadata.create_all(bind=engine)
 
+
 def init_db() -> None:
-    """Gọi một lần lúc ứng dụng khởi động."""
-    from app.core.seed_data.seed_data_code import seed_data
+    """Khởi tạo các bảng khi ứng dụng khởi động."""
     create_tables()
-    seed_data(SessionLocal())
+
 
 def get_db():
     db = SessionLocal()
