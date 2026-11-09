@@ -4,6 +4,10 @@
     start_attempt   POST  /courses/{id}/review-attempts    — có lượt dở → trả lại; không → sinh đề mới
     get_attempt     GET   /review-attempts/{id}            — đề + câu trả lời đã lưu (không lộ đáp án)
     save_answers    PATCH /review-attempts/{id}/answers    — lưu khi Tạm rời (FR-29)
+    submit_attempt  POST  /review-attempts/{id}/submit     — chấm + (đạt lần đầu) Hoàn thành khóa + kỹ năng
+    history_list    GET   /me/review-history               — các lượt đã nộp
+    history_detail  GET   /me/review-history/{id}          — từng câu, đáp án đúng, điểm từng ý + bằng chứng
+    attempt_trace   GET   /admin/review-attempts/{id}/trace — vết RAG + prompt (admin)
 
 Sinh đề (A1, A4–A6 — chốt 09/11), cho TỪNG kỹ năng theo khung exam_builder.plan_exam:
     RAG lấy đoạn tri thức → dựng prompt thật → AI (mock: bốc câu gắn với đoạn RAG)
@@ -14,6 +18,7 @@ CHỈ service này commit (một lần cho mỗi thao tác).
 
 import logging
 import random
+from datetime import UTC, datetime
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -29,7 +34,13 @@ from app.models.review_question import ReviewQuestion
 from app.models.user import Users
 from app.repositories import review_repository as repo
 from app.schemas.review import SaveAnswersRequest
-from app.services import course_gateway, exam_builder, rag_service
+from app.services import (
+    course_gateway,
+    exam_builder,
+    rag_service,
+    review_grader,
+    user_skill_service,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -382,3 +393,165 @@ def save_answers(db: Session, user: Users, attempt_id: int, request: SaveAnswers
             answer.text_answer = text or None
     db.commit()
     return attempt_view(db, attempt_id)
+
+
+# ─────────────── Nộp bài, chấm điểm (GĐ3) ───────────────
+
+
+def submit_attempt(db: Session, user: Users, attempt_id: int, *, ai: ReviewAI | None = None) -> dict:
+    """Chấm và lưu kết quả trong MỘT lần commit (B1, FR-43):
+        điểm từng câu + tổng → (đạt LẦN ĐẦU, đang học) khóa Hoàn thành + mọi kỹ năng của khóa "Đã biết".
+    Lỗi giữa chừng → rollback toàn bộ, bài vẫn ở trạng thái đang làm (nộp lại được).
+    Email kết quả do router gửi SAU khi hàm này trả về (đã commit xong).
+    """
+    attempt = _owned_attempt(db, user, attempt_id)
+    if attempt.status != "in_progress":
+        raise AttemptLockedError
+
+    ai = ai or get_review_ai()
+    try:
+        total, grading = review_grader.grade_answers(attempt.answers, ai)
+        attempt.score = round(total, 2)
+        # So trên tổng chưa làm tròn 2 chữ số (Q7); round 6 chỉ để bỏ sai số cộng số thực (1.4000000000000001)
+        attempt.passed = round(total, 6) >= settings.REVIEW_PASS_SCORE
+        attempt.status = "graded"
+        attempt.submitted_at = datetime.now(UTC)
+
+        enrollment = course_gateway.get_enrollment_status(db, user.user_id, attempt.course_id)
+        first_pass = (
+            attempt.passed
+            and enrollment == course_gateway.IN_PROGRESS
+            and not repo.has_first_pass(db, user.user_id, attempt.course_id)
+        )
+        attempt.is_first_pass = first_pass
+        if first_pass:  # B1 + 6b: kể cả kỹ năng người dùng đã tự gỡ
+            course_gateway.mark_course_completed(db, user.user_id, attempt.course_id)
+            skill_ids = [s for s, _ in repo.course_skills(db, attempt.course_id)]
+            user_skill_service.mark_known(db, user.user_id, skill_ids, source="review")
+        # JSON: gán dict MỚI để SQLAlchemy biết cột đã đổi
+        attempt.trace = {**(attempt.trace or {}), "grading": grading}
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    return result_view(db, attempt_id)
+
+
+def result_view(db: Session, attempt_id: int) -> dict:
+    """Kết quả chi tiết của lượt ĐÃ NỘP — lúc này mới có đáp án đúng, barem, giải thích (FR-28)."""
+    db.expire_all()
+    attempt = repo.get_attempt(db, attempt_id)
+    names = repo.skill_names(db, [a.question.skill_id for a in attempt.answers])
+    questions = []
+    mcq_score = essay_score = 0.0
+    for a in attempt.answers:
+        q = a.question
+        points = float(a.points) if a.points is not None else 0.0
+        item = {
+            "position": a.position,
+            "type": q.type,
+            "level": q.level,
+            "skill_id": q.skill_id,
+            "skill": names.get(q.skill_id, ""),
+            "content": q.content,
+            "max_points": float(a.max_points),
+            "points": points,
+            "explanation": q.explanation,
+            "options": None,
+            "selected_index": None,
+            "correct_index": None,
+            "is_correct": None,
+            "text_answer": None,
+            "rubric": None,
+        }
+        if q.type == "mcq":
+            mcq_score += points
+            item.update(
+                options=[q.options[i] for i in a.option_order],
+                selected_index=a.selected_index,
+                correct_index=review_grader.displayed_correct_index(a),
+                is_correct=review_grader.is_mcq_correct(a),
+            )
+        else:
+            essay_score += points
+            results = a.rubric_result or [{} for _ in q.rubric]
+            item.update(
+                text_answer=a.text_answer,
+                rubric=[
+                    {
+                        "text": r["text"],
+                        "max_points": float(r["max_points"]),
+                        "result": res.get("result", "none"),
+                        "points": float(res.get("points", 0.0)),
+                        "evidence": res.get("evidence"),
+                    }
+                    for r, res in zip(q.rubric, results, strict=True)
+                ],
+            )
+        questions.append(item)
+    return {
+        "attempt_id": attempt.attempt_id,
+        "course_id": attempt.course_id,
+        "course_title": repo.get_course_title(db, attempt.course_id) or "",
+        "status": attempt.status,
+        "score": float(attempt.score) if attempt.score is not None else None,
+        "passed": attempt.passed,
+        "pass_score": settings.REVIEW_PASS_SCORE,
+        "mcq_score": round(mcq_score, 2),
+        "essay_score": round(essay_score, 2),
+        "completed_course": attempt.is_first_pass,
+        "started_at": attempt.started_at,
+        "submitted_at": attempt.submitted_at,
+        "questions": questions,
+    }
+
+
+# ─────────────── Lịch sử (GĐ3) ───────────────
+
+
+def history_list(
+    db: Session,
+    user: Users,
+    *,
+    course_id: int | None = None,
+    passed: bool | None = None,
+    page: int = 1,
+    size: int = 10,
+) -> dict:
+    rows, total = repo.list_history(
+        db, user.user_id, course_id=course_id, passed=passed, offset=(page - 1) * size, limit=size
+    )
+    return {
+        "items": [
+            {**_summary(a), "course_id": a.course_id, "course_title": title, "completed_course": a.is_first_pass}
+            for a, title in rows
+        ],
+        "total": total,
+        "page": page,
+        "size": size,
+    }
+
+
+def history_detail(db: Session, user: Users, attempt_id: int) -> dict:
+    """Chỉ lượt ĐÃ NỘP của CHÍNH người dùng; lượt đang làm → 404 (không lộ đáp án khi chưa nộp)."""
+    attempt = _owned_attempt(db, user, attempt_id)
+    if attempt.status == "in_progress":
+        raise AttemptNotFoundError
+    return result_view(db, attempt_id)
+
+
+def attempt_trace(db: Session, attempt_id: int) -> dict:
+    """Vết RAG + prompt + chấm của một lượt (API debug admin — A4)."""
+    attempt = repo.get_attempt(db, attempt_id)
+    if attempt is None:
+        raise AttemptNotFoundError
+    return {
+        "attempt_id": attempt.attempt_id,
+        "user_id": attempt.user_id,
+        "course_id": attempt.course_id,
+        "status": attempt.status,
+        "score": float(attempt.score) if attempt.score is not None else None,
+        "started_at": attempt.started_at,
+        "submitted_at": attempt.submitted_at,
+        "trace": attempt.trace or {},
+    }

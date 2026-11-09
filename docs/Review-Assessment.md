@@ -160,34 +160,37 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 ## GĐ3 — Chấm điểm, Hoàn thành, test (12/11)
 
-- [ ] **3.1 Chấm trắc nghiệm** (`review_grader.py`) — theo thứ tự đáp án đã xáo, 0,5đ/câu, bỏ trống = 0 — dự kiến 12/11 · thực tế __/__ 🤖
-- [ ] **3.2 Chấm tự luận bằng từ khóa** (`mock_ai.grade_essay`) — đạt / một phần / 0, bỏ dấu, lưu câu bằng chứng; chỉ liệt kê từ khóa / quá ngắn → tối đa một phần — dự kiến 12/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: test ví dụ list/tuple ra **7/10** (Y1 3 · Y2 3 · Y3 1 · Y4 0).
-- [ ] **3.3 `POST /api/review-attempts/{attempt_id}/submit`** — quy đổi TL về 1đ / 2đ, tổng thang 10, **đạt ≥ `REVIEW_PASS_SCORE`**; nộp lần 2 → từ chối; quá `REVIEW_GRADING_TIMEOUT` → `grading` (T1) — dự kiến 12/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: test ví dụ tổng: TN 10/12 = 5; TL dễ 8/10 → 0,8; dễ 5/10 → 0,5; nâng cao 7/10 → 1,4 ⇒ **7,7 → Đạt**.
-- [ ] **3.4 Đạt lần đầu — cùng một transaction** (B1, 6b) — dự kiến 12/11 · thực tế __/__ 🤖
-  - Lưu kết quả → `mark_course_completed` (hàm của Hòa, **hoặc hàm giả** có TODO nối sau) → `user_skill_service.mark_known(..., source="review")` → **commit một lần**. Lỗi giữa chừng → rollback toàn bộ (FR-43).
-  - Đã Hoàn thành rồi (B2) → chỉ lưu kết quả.
-- [ ] **3.5 Email kết quả** (`core/email.py`) — gửi **sau** commit; email lỗi không làm hỏng kết quả (ghi log) — dự kiến 12/11 · thực tế __/__ 🤖
-- [ ] **3.6 `GET /api/me/review-history`** (lọc `course_id`, `passed`, phân trang) + **`GET /api/me/review-history/{attempt_id}`** (từng câu, đáp án đã chọn, đáp án đúng, điểm từng ý + bằng chứng, giải thích — chỉ lượt **đã nộp** của **chính mình**) — dự kiến 12/11 · thực tế __/__ 🤖
-- [ ] **3.7 `GET /api/admin/review-attempts/{attempt_id}/trace`** (`require_admin`) — đoạn tri thức + prompt của lượt (A4) — dự kiến 12/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: student gọi → 403; admin (`admin_headers`) → 200.
-- [ ] **3.8 Test đủ kịch bản** — dự kiến 12/11 · thực tế __/__ 🤖
-  - Đúng ngưỡng 6,0 / dưới ngưỡng 5,9; bỏ trống; nộp lại; ôn lại sau Hoàn thành (B2); kỹ năng đã tự gỡ được thêm lại khi đạt lần đầu (6b); lỗi giữa transaction → không lưu gì; không dấu vẫn khớp từ khóa.
-- [ ] **3.9 Chạy toàn bộ `pytest` + `ruff check .`** (black chỉ file của mình) — dự kiến 12/11 · thực tế __/__ 🤖
+- [x] **3.1 Chấm trắc nghiệm** (`services/review_grader.py`) — đổi vị trí trên màn hình về lựa chọn gốc qua `option_order`; 0,5đ/câu; bỏ trống / sai = 0 — thực tế 09/11 🤖
+- [x] **3.2 Chấm tự luận bằng từ khóa** (`ai/review/keyword_grader.py`, `MockAI.grade_essay`) — thực tế 09/11 🤖
+  - Từ khóa chữ khớp **nguyên từ** ("for" ≠ "format"); tách câu không cắt "6.5", "a.append"; bài < 6 từ hoặc câu khớp < 3 từ → tối đa một phần.
+  - AI lỗi / trả điểm sai quy tắc (`validator.grading_errors`) → chấm bằng từ khóa, ghi vào `trace.grading.keyword_fallback`.
+  - Sửa barem `312-PY-TL-02` ý Y4: bỏ từ khóa phụ "ví dụ", "dùng" (bài làm mẫu bị cộng nhầm thành 8/10) → đúng **7/10** như ví dụ gửi thầy.
+  - ✅ Test: ví dụ list/tuple ra 7/10 (có dấu và không dấu); đáp án mẫu của **cả 10 câu tự luận** trong ngân hàng đều đạt 10/10.
+- [x] **3.3 `POST /api/review-attempts/{attempt_id}/submit`** — tổng thang 10, đạt khi ≥ `REVIEW_PASS_SCORE` (so trên tổng chưa làm tròn); nộp lần 2 → 409 — thực tế 09/11 🤖
+  - Chưa làm: chờ quá `REVIEW_GRADING_TIMEOUT` → trạng thái `grading` (T1). Mock chấm tức thì nên chưa cần; làm cùng `RealAI` ở GĐ5.
+- [x] **3.4 Đạt lần đầu — một transaction** — `mark_course_completed` (cổng, hàm giả) + `mark_known(source="review")` mọi kỹ năng của khóa (kể cả kỹ năng đã tự gỡ — 6b) → commit một lần; lỗi giữa chừng → rollback, bài vẫn đang làm, nộp lại được — thực tế 09/11 🤖
+  - Chỉ khi trạng thái khóa là **đang học**; đã Hoàn thành (B2) / đã bỏ / chưa đăng ký → chỉ lưu kết quả.
+- [x] **3.5 Email kết quả** — `core/email.send_review_result_email`, router gửi bằng `BackgroundTasks` **sau** khi trả kết quả (đã commit) — thực tế 09/11 🤖
+- [x] **3.6 `GET /api/me/review-history`** (lọc `course_id`, `passed`, `page`, `size`) + **`GET /api/me/review-history/{attempt_id}`** (lượt đang làm → 404, chưa lộ đáp án) — thực tế 09/11 🤖
+- [x] **3.7 `GET /api/admin/review-attempts/{attempt_id}/trace`** — student 403, admin 200 — thực tế 09/11 🤖
+- [x] **3.8 Test đủ kịch bản** — `test_keyword_grader.py` (13), `test_review_submit.py` (19): 10/10 + Hoàn thành + kỹ năng, bỏ trống = 0, ngưỡng 6,0 / 5,5, ví dụ 7/10 → 1,4đ, đạt lần 2 chỉ lưu lịch sử, kỹ năng đã gỡ quay lại, lỗi giữa transaction, AI chấm lỗi → từ khóa, lịch sử + phân trang, quyền — thực tế 09/11 🤖
+- [x] **3.9 Toàn bộ `pytest` + `ruff`** — **436 passed**; ruff sạch các file module 09 (B008 `Depends` giữ như module 01) — thực tế 09/11 🤖
+  - Chạy thử PostgreSQL thật (tài khoản test): 9,4/10 Đạt (câu list/tuple 1,4đ), khóa Hoàn thành, 5 kỹ năng "Đã biết"; đã khôi phục hồ sơ + xóa lượt thử.
 - [ ] **3.10 Nhờ Claude review GĐ3** (giai đoạn quan trọng nhất) — dự kiến 12/11 · thực tế __/__
 
 ## GĐ4 — Frontend 09 + demo đầu–cuối (13/11)
 
 > Bản gọn, đủ chức năng; hiệu ứng để GĐ5. Thư mục `features/review/` (pages, components, styles — theo `SetUp-CSS.md`), tái dùng `features/common`.
 
-- [ ] **4.1 `api/review.api.js` + route** các trang (bảng "Màn hình và API") — dự kiến 13/11 · thực tế __/__ 🤖
-- [ ] **4.2 `ReviewStartPage`** — cấu trúc đề, ngưỡng đạt, nút "Bắt đầu" / "Làm tiếp", lý do chưa thể ôn ("Chưa có đề ôn tập"…) — dự kiến 13/11 · thực tế __/__ 🤖
-- [ ] **4.3 `ReviewQuizPage`** — 12 TN + 3 ô tự luận, lưu tạm, Tạm rời, Nộp bài (hỏi xác nhận) — dự kiến 13/11 · thực tế __/__ 🤖
-- [ ] **4.4 `ReviewResultPage`** — điểm, đạt / chưa đạt, từng câu, điểm từng ý + bằng chứng; trạng thái "đang chấm" — dự kiến 13/11 · thực tế __/__ 🤖
-- [ ] **4.5 `ReviewHistoryPage`** — dự kiến 13/11 · thực tế __/__ 🤖
-- [ ] **4.6 Demo đầu–cuối** — đăng ký khóa 312 → ôn tập → đạt → khóa Hoàn thành, hồ sơ có 5 kỹ năng "Đã biết" — dự kiến 13/11 · thực tế __/__ 👤 + 🤖
-  - ✅ Xong khi: chạy trọn không lỗi → **commit + push**.
+- [x] **4.1 `api/review.api.js` + 4 route** (`routes/index.jsx`, đặt trên các route "Tạm thời chưa khả dụng") — thực tế 09/11 🤖
+  - `nav.js`: thêm trường `match` + hàm `activeNavItem` → trang `/courses/:id/review`, `/review/...` tô sáng mục **Ôn tập** (trước đó tô nhầm "Khóa học"). Header dùng hàm này.
+- [x] **4.2 `ReviewStartPage`** — cấu trúc đề, kỹ năng, 3 ô số liệu, lượt dở → "Tiếp tục bài đang làm", các lần trước, lý do chưa thể ôn — thực tế 09/11 🤖
+- [x] **4.3 `ReviewQuizPage`** — bảng số câu (đã trả lời / chưa / đang xem, chấm xanh = tự luận); **tự lưu** (TN lưu ngay, TL sau 1 giây ngừng gõ, đổi câu / Tạm rời / Nộp → lưu nốt; lỗi → "Lưu lại"); đóng tab khi chưa lưu → trình duyệt hỏi; hộp xác nhận nộp (báo số câu bỏ trống) — thực tế 09/11 🤖
+- [x] **4.4 `ReviewResultPage`** (gộp màn ReviewResult + ReviewDetail) — vòng điểm thang 10, Đạt / Chưa đạt, điểm TN / TL, báo Hoàn thành + kỹ năng; chi tiết từng câu: Bạn chọn / Đáp án đúng, bảng chấm từng ý + bằng chứng, lọc "Câu sai", ẩn / hiện tất cả giải thích — thực tế 09/11 🤖
+- [x] **4.5 `ReviewHistoryPage`** — lọc khóa + kết quả (giữ trên URL), phân trang 10 dòng, Xem chi tiết / Làm lại; chưa có lượt nào → nút vào khóa demo 312 (`DEMO_COURSES` — bỏ khi "Khóa học của tôi" của Tâm có nút Ôn tập) — thực tế 09/11 🤖
+- [x] **4.6 Demo đầu–cuối** (Chrome thật, tài khoản test) — thực tế 09/11 🤖
+  - Header "Ôn tập" → Lịch sử (trống) → khóa 312 → Bắt đầu → trả lời 7 câu → Tạm rời → "Tiếp tục" (7 câu còn nguyên) → làm nốt + gõ 3 tự luận (DB lưu đủ 15) → Nộp → **9/10 Đạt**, khóa Hoàn thành, 5 kỹ năng "Đã biết" → Lịch sử có lượt mới. Khổ 375px: không tràn ngang. **Không có lỗi console.** `npm run build` OK. Đã dọn dữ liệu demo.
+  - Sửa sau demo: chữ đậm trong dòng ghi chú bị tách khoảng (li dạng flex) → bọc chữ trong `<span>`.
 
 ## GĐ5 — Mở rộng (14/11 → 18/11)
 

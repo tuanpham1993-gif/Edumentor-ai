@@ -21,6 +21,26 @@ export function formatDate(iso) {
   });
 }
 
+/** "2026-11-09T13:41:00Z" → "09/11/2026 20:41" (giờ Việt Nam) — ôn tập (09, GĐ4). */
+export function formatDateTime(iso) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Ho_Chi_Minh',
+    })
+      .formatToParts(date)
+      .map((p) => [p.type, p.value]),
+  );
+  return `${parts.day}/${parts.month}/${parts.year} ${parts.hour}:${parts.minute}`;
+}
+
 /** "student" → "Học viên", "admin" → "Quản trị viên". */
 export function roleLabel(role) {
   return role === 'admin' ? 'Quản trị viên' : 'Học viên';

@@ -2,15 +2,13 @@
 //   Logo · menu chính (gạch chân vàng ở mục đang mở) · (admin) Quản trị · avatar + tên → /me
 //   Điện thoại: menu xuống hàng riêng, vuốt ngang; chỉ hiện avatar.
 // Mục menu khai báo ở nav.js (dùng chung với Footer).
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../../hooks/useAuth.js';
 import { initials } from '../../../utils/formatters.js';
 import { BrandLogo } from '../../common/components/icons.jsx';
 import styles from '../styles/Header.module.css';
-import { ADMIN_NAV, MAIN_NAV } from '../nav.js';
-
-const linkClass = ({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`;
+import { ADMIN_NAV, MAIN_NAV, activeNavItem } from '../nav.js';
 
 // Avatar sáng khi đang ở Hồ sơ / Cài đặt tài khoản (không sáng ở /me/courses, /me/learning-paths…)
 const PROFILE_PATHS = ['/me', '/me/edit', '/me/password', '/me/skills'];
@@ -20,6 +18,7 @@ export default function Header() {
   const { pathname } = useLocation();
   const onProfile = PROFILE_PATHS.includes(pathname);
   const items = user?.role === 'admin' ? [...MAIN_NAV, ADMIN_NAV] : MAIN_NAV;
+  const active = activeNavItem(items, pathname); // mục đang mở (xét cả `match` trong nav.js)
 
   return (
     <header className={styles.header}>
@@ -34,9 +33,14 @@ export default function Header() {
 
       <nav className={styles.nav} aria-label="Điều hướng chính">
         {items.map((item) => (
-          <NavLink key={item.to} to={item.to} className={linkClass}>
+          <Link
+            key={item.to}
+            to={item.to}
+            className={`${styles.link} ${item === active ? styles.active : ''}`}
+            aria-current={item === active ? 'page' : undefined}
+          >
             {item.text}
-          </NavLink>
+          </Link>
         ))}
       </nav>
 

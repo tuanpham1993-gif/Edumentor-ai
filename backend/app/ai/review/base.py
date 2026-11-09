@@ -52,3 +52,12 @@ class ReviewAI(ABC):
     @abstractmethod
     def generate_questions(self, request: GenerationRequest, rng: random.Random) -> list[dict]:
         """Trả về đúng số câu theo request.need (validator kiểm lại). Lỗi AI → AIUnavailableError."""
+
+    @abstractmethod
+    def grade_essay(self, question: dict, answer: str | None) -> list[dict]:
+        """Chấm MỘT câu tự luận theo barem question["rubric"] (H1 — chấm từng câu riêng).
+
+        Trả một kết quả cho MỖI ý, đúng thứ tự barem:
+            {"result": "full" | "partial" | "none", "points": số điểm của ý, "evidence": câu trích | None}
+        (validator.grading_errors kiểm lại). Lỗi AI → AIUnavailableError.
+        """

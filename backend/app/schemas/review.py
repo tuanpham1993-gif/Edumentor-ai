@@ -103,3 +103,72 @@ class SaveAnswersRequest(BaseModel):
         if len(set(positions)) != len(positions):
             raise ValueError("Mỗi câu (position) chỉ được gửi một lần")
         return answers
+
+
+# ─────────────── Kết quả, lịch sử (GĐ3) ───────────────
+
+
+class RubricResultOut(BaseModel):
+    text: str
+    max_points: float
+    result: Literal["full", "partial", "none"]
+    points: float
+    evidence: str | None  # câu trích từ bài làm làm bằng chứng
+
+
+class ResultQuestionOut(BaseModel):
+    position: int
+    type: QuestionType
+    level: QuestionLevel
+    skill_id: int
+    skill: str
+    content: str
+    max_points: float
+    points: float
+    explanation: str | None  # giải thích (TN) / đáp án mẫu (TL)
+    options: list[str] | None
+    selected_index: int | None
+    correct_index: int | None  # vị trí đáp án đúng TRÊN MÀN HÌNH
+    is_correct: bool | None
+    text_answer: str | None
+    rubric: list[RubricResultOut] | None
+
+
+class AttemptResultOut(BaseModel):
+    attempt_id: int
+    course_id: int
+    course_title: str
+    status: AttemptStatus
+    score: float | None
+    passed: bool | None
+    pass_score: float
+    mcq_score: float
+    essay_score: float
+    completed_course: bool  # lượt này làm khóa Hoàn thành + kỹ năng "Đã biết" (đạt lần đầu — B1)
+    started_at: datetime
+    submitted_at: datetime | None
+    questions: list[ResultQuestionOut]
+
+
+class HistoryItemOut(AttemptSummaryOut):
+    course_id: int
+    course_title: str
+    completed_course: bool
+
+
+class HistoryPage(BaseModel):
+    items: list[HistoryItemOut]
+    total: int
+    page: int
+    size: int
+
+
+class AttemptTraceOut(BaseModel):
+    attempt_id: int
+    user_id: int
+    course_id: int
+    status: AttemptStatus
+    score: float | None
+    started_at: datetime
+    submitted_at: datetime | None
+    trace: dict

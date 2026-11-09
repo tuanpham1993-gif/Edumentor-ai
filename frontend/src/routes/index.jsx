@@ -24,6 +24,10 @@ import EditProfilePage from '../features/profile/pages/EditProfilePage.jsx';
 import ProfilePage from '../features/profile/pages/ProfilePage.jsx';
 import SkillBrowsePage from '../features/profile/pages/SkillBrowsePage.jsx';
 import SkillsPage from '../features/profile/pages/SkillsPage.jsx';
+import ReviewHistoryPage from '../features/review/pages/ReviewHistoryPage.jsx';
+import ReviewQuizPage from '../features/review/pages/ReviewQuizPage.jsx';
+import ReviewResultPage from '../features/review/pages/ReviewResultPage.jsx';
+import ReviewStartPage from '../features/review/pages/ReviewStartPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
@@ -54,6 +58,11 @@ export default function AppRoutes() {
           <Route path="/me" element={<ProfilePage />} />
           <Route path="/me/edit" element={<EditProfilePage />} />
           <Route path="/me/password" element={<ChangePasswordPage />} />
+          {/* Ôn tập — module 09 (Tuấn, GĐ4 09/11) */}
+          <Route path="/me/review-history" element={<ReviewHistoryPage />} />
+          <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
+          <Route path="/review/:attemptId" element={<ReviewQuizPage />} />
+          <Route path="/review/:attemptId/result" element={<ReviewResultPage />} />
           {/* Trang của nhóm khác / module 09 chưa làm → "Tạm thời chưa khả dụng" (08/11).
               Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
               (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}

@@ -8,6 +8,7 @@ import random
 
 import pytest
 
+from app.ai.review import MockAI
 from app.ai.review.base import AIUnavailableError, ReviewAI
 from app.models import (
     Courses,
@@ -177,7 +178,14 @@ def test_new_attempt_avoids_previous_questions(client, bank_312, student_headers
 # ─────────────── Sinh đề: sinh lại + ngân hàng dự phòng (A6) ───────────────
 
 
-class BrokenAI(ReviewAI):
+class FakeAI(ReviewAI):
+    """AI giả trong test: chấm tự luận giống mock (từ khóa); lớp con chỉ đổi cách sinh đề."""
+
+    def grade_essay(self, question, answer):
+        return MockAI().grade_essay(question, answer)
+
+
+class BrokenAI(FakeAI):
     name = "broken"
 
     def __init__(self):
@@ -188,7 +196,7 @@ class BrokenAI(ReviewAI):
         return [{"type": "mcq", "content": "thiếu lựa chọn"}]
 
 
-class DownAI(ReviewAI):
+class DownAI(FakeAI):
     name = "down"
 
     def generate_questions(self, request, rng):
@@ -212,7 +220,7 @@ def test_fallback_bank_when_ai_fails(client, bank_312, student_headers, db_sessi
         assert all("hết lượt gọi" in s["errors"][0] for s in trace["skills"])
 
 
-class NewQuestionAI(ReviewAI):
+class NewQuestionAI(FakeAI):
     """Giả lập AI thật (giai đoạn 2): trả câu MỚI chưa có trong ngân hàng."""
 
     name = "new"

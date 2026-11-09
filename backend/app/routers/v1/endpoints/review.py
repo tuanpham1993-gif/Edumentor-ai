@@ -7,15 +7,27 @@ Lượt làm bài của người khác → 404 như lượt không tồn tại (
     POST  /api/courses/{course_id}/review-attempts   — bắt đầu (có lượt dở → trả lại lượt đó)
     GET   /api/review-attempts/{attempt_id}          — đề + câu trả lời đã lưu (KHÔNG có đáp án)
     PATCH /api/review-attempts/{attempt_id}/answers  — lưu câu trả lời (Tạm rời / làm tiếp)
+    POST  /api/review-attempts/{attempt_id}/submit   — nộp bài: chấm + (đạt lần đầu) Hoàn thành khóa (GĐ3)
+    GET   /api/me/review-history                     — lịch sử các lượt đã nộp, lọc + phân trang (GĐ3)
+    GET   /api/me/review-history/{attempt_id}        — chi tiết lượt đã nộp: đáp án đúng, điểm từng ý (GĐ3)
+    GET   /api/admin/review-attempts/{attempt_id}/trace — vết RAG + prompt (chỉ admin — A4) (GĐ3)
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_admin
+from app.core.email import send_review_result_email
 from app.models.user import Users
-from app.schemas.review import AttemptOut, ReviewInfoOut, SaveAnswersRequest
+from app.schemas.review import (
+    AttemptOut,
+    AttemptResultOut,
+    AttemptTraceOut,
+    HistoryPage,
+    ReviewInfoOut,
+    SaveAnswersRequest,
+)
 from app.services import review_service
 
 router = APIRouter()
@@ -101,3 +113,84 @@ def save_review_answers(
         ) from None
     except review_service.InvalidAnswerError as err:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(err)) from None
+
+
+@router.post(
+    "/review-attempts/{attempt_id}/submit",
+    response_model=AttemptResultOut,
+    summary="Nộp bài — chấm điểm; đạt lần đầu thì khóa Hoàn thành + kỹ năng \"Đã biết\"",
+)
+def submit_review(
+    attempt_id: int,
+    background_tasks: BackgroundTasks,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        result = review_service.submit_attempt(db, current_user, attempt_id)
+    except review_service.AttemptNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
+    except review_service.AttemptLockedError:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Bài này đã được nộp.") from None
+    # Email gửi SAU khi trả kết quả (kết quả đã lưu xong) — lỗi gửi không ảnh hưởng bài làm.
+    background_tasks.add_task(
+        send_review_result_email,
+        current_user.email,
+        current_user.full_name,
+        result["course_title"],
+        result["score"],
+        result["passed"],
+        result["completed_course"],
+        attempt_id,
+    )
+    return result
+
+
+@router.get(
+    "/me/review-history",
+    response_model=HistoryPage,
+    summary="Lịch sử ôn tập (lượt đã nộp) — lọc ?course_id=&passed=, phân trang",
+)
+def read_review_history(
+    course_id: int | None = Query(None),
+    passed: bool | None = Query(None),
+    page: int = Query(1, ge=1),
+    size: int = Query(10, ge=1, le=50),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return review_service.history_list(
+        db, current_user, course_id=course_id, passed=passed, page=page, size=size
+    )
+
+
+@router.get(
+    "/me/review-history/{attempt_id}",
+    response_model=AttemptResultOut,
+    summary="Chi tiết lượt đã nộp: đáp án đúng, giải thích, điểm từng ý + bằng chứng",
+)
+def read_review_detail(
+    attempt_id: int,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        return review_service.history_detail(db, current_user, attempt_id)
+    except review_service.AttemptNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
+
+
+@router.get(
+    "/admin/review-attempts/{attempt_id}/trace",
+    response_model=AttemptTraceOut,
+    summary="[Admin] Vết RAG + prompt + chấm của một lượt ôn tập",
+)
+def read_review_trace(
+    attempt_id: int,
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    try:
+        return review_service.attempt_trace(db, attempt_id)
+    except review_service.AttemptNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None

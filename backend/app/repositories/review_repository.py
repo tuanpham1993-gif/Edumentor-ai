@@ -127,3 +127,44 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     if not ids:
         return {}
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
+
+
+def has_first_pass(db: Session, user_id: int, course_id: int) -> bool:
+    """Người dùng đã có lượt ĐẠT ĐẦU TIÊN của khóa chưa (B1 chỉ áp dụng một lần)."""
+    return (
+        db.scalar(
+            select(ReviewAttempt.attempt_id).where(
+                ReviewAttempt.user_id == user_id,
+                ReviewAttempt.course_id == course_id,
+                ReviewAttempt.is_first_pass.is_(True),
+            )
+        )
+        is not None
+    )
+
+
+def list_history(
+    db: Session,
+    user_id: int,
+    *,
+    course_id: int | None = None,
+    passed: bool | None = None,
+    offset: int = 0,
+    limit: int = 10,
+) -> tuple[list[tuple[ReviewAttempt, str]], int]:
+    """Các lượt ĐÃ NỘP của người dùng (mới nhất trước) kèm tên khóa + tổng số dòng khớp bộ lọc."""
+    conditions = [ReviewAttempt.user_id == user_id, ReviewAttempt.status != "in_progress"]
+    if course_id is not None:
+        conditions.append(ReviewAttempt.course_id == course_id)
+    if passed is not None:
+        conditions.append(ReviewAttempt.passed.is_(passed))
+    total = db.scalar(select(func.count()).select_from(ReviewAttempt).where(*conditions))
+    rows = db.execute(
+        select(ReviewAttempt, Courses.title)
+        .join(Courses, Courses.course_id == ReviewAttempt.course_id)
+        .where(*conditions)
+        .order_by(ReviewAttempt.submitted_at.desc(), ReviewAttempt.attempt_id.desc())
+        .offset(offset)
+        .limit(limit)
+    ).all()
+    return [(attempt, title) for attempt, title in rows], total

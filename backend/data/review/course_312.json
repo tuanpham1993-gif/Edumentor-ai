@@ -382,7 +382,7 @@
         {"text": "List thay đổi được (thêm, sửa, xóa phần tử)", "max_points": 3, "main_keywords": ["sửa", "thay đổi", "thêm", "xóa", "mutable", "append"], "sub_keywords": ["list"]},
         {"text": "Tuple không thay đổi được sau khi tạo", "max_points": 3, "main_keywords": ["không", "immutable", "bất biến"], "sub_keywords": ["tuple"]},
         {"text": "Cú pháp: list dùng [ ], tuple dùng ( )", "max_points": 2, "main_keywords": ["ngoặc tròn", "()", "( )"], "sub_keywords": ["ngoặc vuông", "[]", "[ ]"]},
-        {"text": "Ví dụ hợp lý khi dùng tuple (tọa độ, ngày tháng, khóa của dict…)", "max_points": 2, "main_keywords": ["tọa độ", "ngày tháng", "cố định", "hằng", "khóa", "key"], "sub_keywords": ["ví dụ", "dùng"]}
+        {"text": "Ví dụ hợp lý khi dùng tuple (tọa độ, ngày tháng, khóa của dict…)", "max_points": 2, "main_keywords": ["tọa độ", "ngày tháng", "cố định", "hằng", "khóa", "key"], "sub_keywords": []}
       ],
       "explanation": "Đáp án mẫu: List thay đổi được (append, sửa, xóa), tuple không thay đổi được sau khi tạo. List viết trong ngoặc vuông [1, 2], tuple trong ngoặc tròn (1, 2). Dùng tuple cho dữ liệu cố định như tọa độ (x, y) hoặc làm khóa của dict."
     },

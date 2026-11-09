@@ -109,3 +109,25 @@ def generated_errors(questions, need: dict[str, int]) -> list[str]:
     if len(set(ids)) != len(ids) or len(set(contents)) != len(contents):
         errors.append("Có câu hỏi bị trùng")
     return errors
+
+
+GRADE_RESULTS = {"full": 1.0, "partial": 0.5, "none": 0.0}  # phần điểm của ý (A10: đạt / ½ / 0)
+
+
+def grading_errors(results, rubric: list[dict]) -> list[str]:
+    """Kiểm kết quả chấm MỘT câu tự luận: đủ một kết quả cho mỗi ý, điểm khớp quy tắc đạt / ½ / 0."""
+    if not isinstance(results, list) or len(results) != len(rubric):
+        return [f"Kết quả chấm phải có đúng {len(rubric)} ý"]
+    errors = []
+    for i, (result, item) in enumerate(zip(results, rubric, strict=True), start=1):
+        if not isinstance(result, dict) or result.get("result") not in GRADE_RESULTS:
+            errors.append(f"Ý {i}: result phải là full / partial / none")
+            continue
+        expected = GRADE_RESULTS[result["result"]] * float(item["max_points"])
+        points = result.get("points")
+        if not isinstance(points, (int, float)) or abs(points - expected) > 1e-9:
+            errors.append(f"Ý {i}: điểm phải = {expected}")
+        evidence = result.get("evidence")
+        if evidence is not None and not isinstance(evidence, str):
+            errors.append(f"Ý {i}: evidence phải là chuỗi hoặc null")
+    return errors
