@@ -30,6 +30,18 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     FRONTEND_URL: str = "http://localhost:5173"
 
+    # Ôn tập — module 09 (Tuấn, chốt 09/11). Đổi trong .env, KHÔNG ghi cứng trong code.
+    AI_MODE: str = "mock"                 # "mock" (giai đoạn 1, 0 đồng) | "real" (giai đoạn 2, cần LLM_API_KEY)
+    REVIEW_PASS_SCORE: float = 6.0        # Đạt khi điểm (thang 10) ≥ giá trị này
+    REVIEW_GRADING_TIMEOUT: int = 20      # giây chờ chấm khi nộp; quá → trạng thái "grading" (T1)
+    REVIEW_BANK_TARGET_PER_SKILL: int = 20  # AI ngừng sinh thêm khi kỹ năng đủ số câu này (ngân hàng bước 3)
+    # Mô hình embedding cho RAG — ĐA NGÔN NGỮ (tài liệu tri thức viết tiếng Việt). Đổi mô hình → chạy lại
+    # scripts/build_embeddings.py --all (vector cũ và mới không so được với nhau).
+    REVIEW_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    # Khóa LLM dùng chung với chatbot (Tâm). Để trống: server vẫn chạy, AI_MODE=real sẽ báo thiếu khóa.
+    LLM_API_KEY: str = ""
+    LLM_MODEL: str = ""
+
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:8000",
         "http://127.0.0.1:8000",

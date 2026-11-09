@@ -1,0 +1,29 @@
+"""Lớp AI của module 09 Ôn tập (Tuấn) — tách riêng khỏi ai/client.py, ai/validators.py (chatbot của Tâm).
+
+    base.py       khuôn chung ReviewAI + GenerationRequest
+    mock_ai.py    AI giả (AI_MODE=mock): bốc câu ngân hàng gắn với đoạn RAG vừa tìm được
+    validator.py  kiểm tra câu hỏi (dùng chung cho ngân hàng soạn tay và câu AI sinh)
+    get_review_ai() chọn AI theo settings.AI_MODE
+"""
+
+from app.ai.review.base import AIUnavailableError, ReviewAI
+from app.ai.review.mock_ai import MockAI
+from app.core.config import settings
+
+
+def get_review_ai() -> ReviewAI:
+    """AI_MODE=mock → MockAI. AI_MODE=real → AI thật (giai đoạn 2, chưa có) → báo không dùng được,
+    review_service tự rơi về ngân hàng dự phòng (A6)."""
+    if settings.AI_MODE == "mock":
+        return MockAI()
+    return _UnavailableAI(f"AI_MODE='{settings.AI_MODE}' chưa được hỗ trợ (giai đoạn 2)")
+
+
+class _UnavailableAI(ReviewAI):
+    name = "unavailable"
+
+    def __init__(self, reason: str):
+        self.reason = reason
+
+    def generate_questions(self, request, rng):
+        raise AIUnavailableError(self.reason)

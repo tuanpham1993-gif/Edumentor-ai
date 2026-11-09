@@ -10,6 +10,11 @@ from app.models.auth_token import PasswordResetToken, RefreshToken
 from app.models.user import Users
 from app.models.user_skill import UserSkill
 
+# Model của Tuấn: ôn tập (module 09)
+from app.models.knowledge_chunk import KnowledgeChunk
+from app.models.review_question import ReviewQuestion
+from app.models.review_attempt import ReviewAttempt, ReviewAnswer
+
 __all__ = [
     "Courses",
     "Skills",
@@ -22,4 +27,8 @@ __all__ = [
     "PasswordResetToken",
     "RefreshToken",
     "UserSkill",
+    "KnowledgeChunk",
+    "ReviewQuestion",
+    "ReviewAttempt",
+    "ReviewAnswer",
 ]

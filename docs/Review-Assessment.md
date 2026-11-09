@@ -75,6 +75,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | `services/review_service.py` | Service | **Luồng chính** + **commit duy nhất**: bắt đầu → tạo đề → lưu bài → nộp → chấm → Hoàn thành + "Đã biết" → email | 2, 3 |
 | `services/exam_builder.py` | Service | Ráp đề theo khung 6 NB + 6 TH + 2 dễ + 1 nâng cao (A1) | 2 |
 | `services/review_grader.py` | Service | Chấm TN; chấm TL theo ý; quy đổi thang 10 | 3 |
+| `services/course_gateway.py` | Service | Cổng sang module Khóa học của Hòa (`get_enrollment_status`, `mark_course_completed`) — **hàm giả** tới khi Hòa có hàm thật | 2, 3 |
 | `services/rag_service.py` | Service | Từ kỹ năng → các đoạn tri thức gần nhất (cosine) | 2 |
 | `ai/review/base.py` | AI | Khuôn chung: `generate_questions()`, `grade_essay()` | 2 |
 | `ai/review/mock_ai.py` | AI | AI giả: bốc câu gắn với đoạn RAG; chấm từ khóa | 2, 3 |
@@ -105,7 +106,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 - [x] **0.1 Viết lại tài liệu này** theo quyết định 09/11 — dự kiến 09/11 · thực tế 09/11 🤖
 - [x] **0.2 Commit `docs/Review-Assessment.md`** — dự kiến 09/11 · thực tế 09/11 🤖 (`7abdb47`)
-- [ ] **0.3 Gửi Hòa** `BA-nhom/Gui-Hoa-On-tap-09-va-Khoa-hoc.md` — dự kiến 09/11 · thực tế __/__ 👤
+- [x] **0.3 Gửi Hòa** `BA-nhom/Gui-Hoa-On-tap-09-va-Khoa-hoc.md` — dự kiến 09/11 · thực tế 09/11 👤 — **đã gửi, chờ Hòa xác nhận**
   - Nhận lại: tên bảng / cột / giá trị trạng thái đăng ký khóa; hạn có `mark_course_completed`, `get_enrollment_status`.
 - [x] **0.4 Chọn khóa demo** — **312** (37 làm khóa thứ 2) — thực tế 09/11
 - [x] **0.5 Đối chiếu khóa 312 trong DB thật** — dự kiến 09/11 · thực tế 09/11 👤 bật Docker · 🤖 kiểm tra
@@ -116,39 +117,44 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 ## GĐ1 — Bảng dữ liệu + ngân hàng câu hỏi (10/11)
 
-- [ ] **1.1 Model `KnowledgeChunk`** — `chunk_id`, `skill_id` (FK), nội dung, `embedding` (mảng số thực, cột JSON), `created_at` — dự kiến 10/11 · thực tế __/__ 🤖
-- [ ] **1.2 Model `ReviewQuestion`** — `question_id`, `skill_id`, `chunk_id`, `type` (`mcq` / `essay`), `level` (`recognize` / `understand` cho TN; `easy` / `advanced` cho TL), nội dung, `options` (4 lựa chọn, JSON) + `correct_index` 0–3 (TN), `rubric` (TL: danh sách ý `{text, max_points, main_keywords, sub_keywords}`), giải thích, `source` (`bank` / `ai`), `is_active`, `created_at` — dự kiến 10/11 · thực tế __/__ 🤖
+- [x] **1.1 Model `KnowledgeChunk`** — `chunk_id`, `skill_id` (FK), nội dung, `embedding` (mảng số thực, cột JSON), `created_at` — dự kiến 10/11 · thực tế 09/11 🤖
+- [x] **1.2 Model `ReviewQuestion`** — `question_id`, `skill_id`, `chunk_id`, `type` (`mcq` / `essay`), `level` (`recognize` / `understand` cho TN; `easy` / `advanced` cho TL), nội dung, `options` (4 lựa chọn, JSON) + `correct_index` 0–3 (TN), `rubric` (TL: danh sách ý `{text, max_points, main_keywords, sub_keywords}`), giải thích, `source` (`bank` / `ai`), `is_active`, `created_at` — dự kiến 10/11 · thực tế 09/11 🤖
   - CHECK: `type` và `level` khớp nhau; TN có `correct_index`; TL có `rubric`.
-- [ ] **1.3 Model `ReviewAttempt`** — `attempt_id`, `user_id`, `course_id`, `status` (`in_progress` / `grading` / `graded`), `score` (0–10), `passed`, `is_first_pass`, `trace` (đoạn tri thức + prompt), `started_at`, `submitted_at` — dự kiến 10/11 · thực tế __/__ 🤖
+- [x] **1.3 Model `ReviewAttempt`** — `attempt_id`, `user_id`, `course_id`, `status` (`in_progress` / `grading` / `graded`), `score` (0–10), `passed`, `is_first_pass`, `trace` (đoạn tri thức + prompt), `started_at`, `submitted_at` — dự kiến 10/11 · thực tế 09/11 🤖
   - Ràng buộc: mỗi `user_id` + `course_id` có **tối đa 1** lượt `in_progress` (unique index có điều kiện).
-- [ ] **1.4 Model `ReviewAnswer`** — `attempt_id`, `question_id`, thứ tự câu (1–15), thứ tự đáp án đã xáo, `selected_index` (TN), `text_answer` (TL), `points`, `rubric_result` (mỗi ý: đạt / một phần / 0 + câu bằng chứng) — dự kiến 10/11 · thực tế __/__ 🤖
-- [ ] **1.5 Đăng ký model** trong `models/__init__.py` (khối "Model của Tuấn") → khởi động lại server — dự kiến 10/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: thấy 4 bảng mới trong pgAdmin.
-- [ ] **1.6 Cấu hình** `core/config.py` + `.env.example`: `AI_MODE=mock`, `REVIEW_PASS_SCORE=6`, `REVIEW_GRADING_TIMEOUT=20`, `AI_API_KEY=` (để trống), **có giá trị mặc định**, không ghi cứng trong code — dự kiến 10/11 · thực tế __/__ 🤖
-- [ ] **1.7 Soạn nháp ngân hàng bước 1 khóa 312** → xuất ra `BA-nhom` (Word để đọc + JSON để nạp) — dự kiến 10/11 · thực tế __/__ 🤖
-  - Tài liệu tri thức: 3–4 đoạn/kỹ năng (~15 đoạn).
-  - 40 câu: 5 kỹ năng × 6 TN (3 NB + 3 TH) = 30 TN; 10 TL = 6 dễ + 4 nâng cao, có barem + từ khóa chính/phụ.
-- [ ] **1.8 Duyệt 40 câu** — sửa đáp án, barem, từ khóa — dự kiến 10/11 · thực tế __/__ 👤
-- [ ] **1.9 `scripts/seed_review.py`** nạp `data/review/course_312.json` (bản đã duyệt) — dự kiến 10/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: DB có 40 câu + ~15 đoạn; chạy lại lần 2 không bị trùng.
+- [x] **1.4 Model `ReviewAnswer`** — `attempt_id`, `question_id`, thứ tự câu (1–15), thứ tự đáp án đã xáo, `selected_index` (TN), `text_answer` (TL), `points`, `rubric_result` (mỗi ý: đạt / một phần / 0 + câu bằng chứng) — dự kiến 10/11 · thực tế 09/11 🤖
+- [x] **1.5 Đăng ký model** trong `models/__init__.py` (khối "Model của Tuấn") → khởi động lại server — dự kiến 10/11 · thực tế 09/11 🤖
+  - ✅ 4 bảng đã tạo trong PostgreSQL (`create_tables()`), có unique index có điều kiện `uq_review_attempts_one_in_progress`. Test ràng buộc `tests/test_review_models.py` 22/22; toàn bộ **136 passed**.
+  - Sửa trong lúc test: cột JSON phải dùng `JSON(none_as_null=True)` — mặc định SQLAlchemy lưu `None` thành chuỗi JSON `'null'` làm CHECK "IS NOT NULL" bị lọt.
+  - Thêm so với kế hoạch: cột `code` (mã duy nhất, cho seed chạy lại không trùng) ở `knowledge_chunks`, `review_questions`; `ReviewAnswer.max_points`, `updated_at`; câu hỏi đã nằm trong bài làm không xóa được (`RESTRICT`).
+- [x] **1.6 Cấu hình** `core/config.py` + `.env.example`: `AI_MODE=mock`, `REVIEW_PASS_SCORE=6`, `REVIEW_GRADING_TIMEOUT=20`, `REVIEW_BANK_TARGET_PER_SKILL=20`; **dùng lại `LLM_API_KEY` / `LLM_MODEL`** (tên chung với chatbot của Tâm, mặc định rỗng → server vẫn chạy khi chưa có khóa) thay cho `AI_API_KEY` — dự kiến 10/11 · thực tế 09/11 🤖
+- [x] **1.7 Ngân hàng bước 1 khóa 312** — `backend/data/review/course_312.json` — dự kiến 10/11 · thực tế 09/11 🤖
+  - Tuấn chốt: **không xuất bản nháp ra BA-nhom**, viết thẳng vào repo; cần sửa câu nào thì báo.
+  - 15 đoạn tri thức (3/kỹ năng) + 40 câu: 30 TN (mỗi kỹ năng 3 NB + 3 TH) + 10 TL (6 dễ + 4 nâng cao, barem + từ khóa chính/phụ). Đáp án đúng trải đều 4 vị trí.
+  - Câu nâng cao `312-PY-TL-02` chính là ví dụ list/tuple ở mục 5 tài liệu họp (barem 3 + 3 + 2 + 2).
+- [ ] **1.8 Duyệt 40 câu** — Tuấn đọc `course_312.json`, báo câu cần sửa → sửa file rồi chạy lại seed — thực tế __/__ 👤
+- [x] **1.9 `scripts/seed_review.py`** — dự kiến 10/11 · thực tế 09/11 🤖
+  - Kiểm tra trước, ghi sau: sai ở đâu in **tất cả** lỗi, không ghi gì; kỹ năng phải thuộc khóa (`course_skill`, chỉ đọc). Chạy lại: cập nhật theo `code`, không trùng; đổi nội dung đoạn → xóa embedding cũ; câu đã tắt giữ nguyên tắt.
+  - ✅ DB thật: lần 1 `+15 đoạn / +40 câu`, lần 2 `cập nhật 15 / 40`. Test `tests/test_seed_review.py` 23/23; toàn bộ **159 passed**.
 - [ ] **1.10 Nhờ Claude review GĐ1** — dự kiến 10/11 · thực tế __/__
 
 ## GĐ2 — Sinh đề và làm bài (11/11)
 
-- [ ] **2.1 `scripts/build_embeddings.py`** — chạy trên máy (sentence-transformers), ghi vector vào `knowledge_chunks` — dự kiến 11/11 · thực tế __/__ 🤖 viết · 👤 chạy
-  - ✅ Xong khi: mọi đoạn có `embedding`; backend **không** cần cài sentence-transformers.
-- [ ] **2.2 `services/rag_service.py`** — theo kỹ năng → các đoạn có cosine cao nhất — dự kiến 11/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: test hỏi "Iteration" ra đoạn về vòng lặp.
-- [ ] **2.3 `ai/review/base.py` + `mock_ai.py` + `ai/prompts/review.py`** — dựng system prompt + ngữ cảnh thật; mock trả câu gắn với đoạn đã truy xuất; chọn bằng `AI_MODE` — dự kiến 11/11 · thực tế __/__ 🤖
-- [ ] **2.4 `ai/review/validator.py`** — đúng JSON, 4 lựa chọn, 1 đáp án, không trùng câu, barem đúng số ý → lỗi thì sinh lại ≤ 2 lần → vẫn lỗi thì ngân hàng dự phòng — dự kiến 11/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: test cho mock cố tình trả JSON lỗi → rơi về dự phòng.
-- [ ] **2.5 `services/exam_builder.py`** — khung 6 NB + 6 TH + 2 dễ + 1 nâng cao; mỗi kỹ năng ≥ 1 TN; TL ưu tiên 3 kỹ năng; tránh câu lượt trước; xáo câu và đáp án — **viết test trước khi gắn API** — dự kiến 11/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: test chạy 100 lần, đề nào cũng đúng khung.
-- [ ] **2.6 `GET /api/courses/{course_id}/review`** — kỹ năng của khóa, cấu trúc đề, ngưỡng đạt, lượt dở, các lượt trước, **lý do chưa thể ôn**: chưa đăng ký / đã bỏ khóa / "Chưa có đề ôn tập" — dự kiến 11/11 · thực tế __/__ 🤖
-- [ ] **2.7 `POST /api/courses/{course_id}/review-attempts`** — có lượt dở thì **trả lại lượt đó**, không thì sinh đề mới + lưu vết — dự kiến 11/11 · thực tế __/__ 🤖
-- [ ] **2.8 `GET /api/review-attempts/{attempt_id}`** — câu hỏi + câu trả lời đã lưu, **không lộ đáp án, barem, giải thích** — dự kiến 11/11 · thực tế __/__ 🤖
-- [ ] **2.9 `PATCH /api/review-attempts/{attempt_id}/answers`** — lưu khi Tạm rời (FR-29); lượt đã nộp thì không cho sửa — dự kiến 11/11 · thực tế __/__ 🤖
-- [ ] **2.10 Quyền sở hữu** — người khác mở `attempt_id` → **404** (BR-01, NFR-06) — dự kiến 11/11 · thực tế __/__ 🤖
+- [ ] **2.1 `scripts/build_embeddings.py`** — 🤖 đã viết 09/11 · 👤 **Tuấn chạy**: `python -m scripts.build_embeddings` (lần đầu tải mô hình ~470 MB) — thực tế __/__
+  - Mô hình **đa ngôn ngữ** `paraphrase-multilingual-MiniLM-L12-v2` (`REVIEW_EMBEDDING_MODEL`) — mô hình `all-MiniLM-L6-v2` của Hòa chỉ hiểu tiếng Anh, tài liệu tri thức viết tiếng Việt.
+  - ✅ Xong khi: 15 đoạn có `embedding`; lượt ôn mới có `score` trong trace.
+- [x] **2.2 `services/rag_service.py`** — lọc theo kỹ năng → xếp cosine; vector câu truy vấn tính lúc chạy bằng mô hình **đã tải sẵn** (`local_files_only`); chưa có vector / mô hình → vẫn trả đoạn theo thứ tự tạo (không chặn ôn tập) — thực tế 09/11 🤖
+  - Ghi chú: `sentence-transformers` đã có trong `requirements.txt` (nhóm dùng cho gợi ý lộ trình) nên backend nạp được mô hình cho câu truy vấn; đoạn tri thức vẫn tính sẵn offline.
+- [x] **2.3 `ai/review/base.py` + `mock_ai.py` + `__init__.get_review_ai()` + `ai/prompts/review.py`** — thực tế 09/11 🤖
+- [x] **2.4 `ai/review/validator.py`** — **dùng chung** cho ngân hàng soạn tay (`seed_review.py` đổi sang dùng file này) và câu AI sinh; sinh lại ≤ 2 lần → ngân hàng dự phòng; câu AI mới (giai đoạn 2) tự lưu `source='ai'` — thực tế 09/11 🤖
+- [x] **2.5 `services/exam_builder.py`** — khung + **ưu tiên câu chưa dùng ở lượt trước** (`fresh`) — test chạy 100 lần mỗi kịch bản — thực tế 09/11 🤖
+- [x] **2.6 `GET /api/courses/{course_id}/review`** — lý do chưa thể ôn: `not_enrolled` / `abandoned` / `no_question_bank` — thực tế 09/11 🤖
+  - Trạng thái đăng ký đi qua `services/course_gateway.py` — **hàm giả** (coi như đang học) cho tới khi Hòa có hàm thật; chỉ sửa file này khi nối.
+- [x] **2.7 `POST /api/courses/{course_id}/review-attempts`** — có lượt dở → `resumed=true`; bấm 2 lần cùng lúc → unique index chặn, trả lại lượt kia; chưa / bỏ khóa → 403; chưa có ngân hàng → 409 — thực tế 09/11 🤖
+- [x] **2.8 `GET /api/review-attempts/{attempt_id}`** — không có `correct_index`, `rubric`, `explanation`, `question_id`, `option_order` — thực tế 09/11 🤖
+- [x] **2.9 `PATCH /api/review-attempts/{attempt_id}/answers`** — gửi một phần; TN `selected_index` (null = bỏ chọn), TL `text_answer`; sai câu nào → 422, **không lưu câu nào**; đã nộp → 409 — thực tế 09/11 🤖
+- [x] **2.10 Quyền sở hữu** — người khác (kể cả admin) → 404 — thực tế 09/11 🤖
+  - ✅ Test: `test_exam_builder.py` (208), `test_review_ai.py` (11), `test_review_api.py` (26, chạy 5 lần liền đều đạt); toàn bộ **404 passed**. Chạy thử trên PostgreSQL thật bằng tài khoản test: đề 15 câu đúng khung, không lộ đáp án, lưu + làm tiếp đúng; đã xóa lượt thử.
 - [ ] **2.11 Thử tay trên Swagger** đủ luồng bắt đầu → lấy đề → lưu → làm tiếp — dự kiến 11/11 · thực tế __/__ 👤
 - [ ] **2.12 Nhờ Claude review GĐ2** — dự kiến 11/11 · thực tế __/__
 
@@ -239,7 +245,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | Q10 | Câu hỏi bị sửa / tắt sau khi đã nằm trong bài cũ | 3 | Tắt bằng `is_active=false`, không xóa; lịch sử đọc theo câu gốc | | |
 | Q11 | Khóa demo chính? | 0 | 312 | 312 chính, 37 thứ 2 | 09/11 |
 | Q12 | Tên bảng / cột / giá trị trạng thái đăng ký khóa (Hòa) | 3 | — | Chờ Hòa | |
-| Q13 | Bảng tạo bằng `create_all()` hay migration Alembic? | 1 | `create_all()` như các bảng hiện có (repo chưa có migration nào) | | |
+| Q13 | Bảng tạo bằng `create_all()` hay migration Alembic? | 1 | `create_all()` như các bảng hiện có (repo chưa có migration nào) | `create_all()` | 09/11 |
 
 ## Nhật ký
 
