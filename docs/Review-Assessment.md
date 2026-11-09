@@ -104,15 +104,15 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 ## GĐ0 — Chuẩn bị (09/11)
 
 - [x] **0.1 Viết lại tài liệu này** theo quyết định 09/11 — dự kiến 09/11 · thực tế 09/11 🤖
-- [ ] **0.2 Commit `docs/Review-Assessment.md`** — dự kiến 09/11 · thực tế __/__ 🤖
+- [x] **0.2 Commit `docs/Review-Assessment.md`** — dự kiến 09/11 · thực tế 09/11 🤖 (`7abdb47`)
 - [ ] **0.3 Gửi Hòa** `BA-nhom/Gui-Hoa-On-tap-09-va-Khoa-hoc.md` — dự kiến 09/11 · thực tế __/__ 👤
   - Nhận lại: tên bảng / cột / giá trị trạng thái đăng ký khóa; hạn có `mark_course_completed`, `get_enrollment_status`.
 - [x] **0.4 Chọn khóa demo** — **312** (37 làm khóa thứ 2) — thực tế 09/11
-- [ ] **0.5 Đối chiếu khóa 312 trong DB thật** — dự kiến 09/11 · thực tế __/__ 👤 bật Docker · 🤖 kiểm tra
-  - ✅ Xong khi: `course_id` = 312 đúng tên khóa, có đủ 5 kỹ năng, ghi lại 5 `skill_id`.
-- [ ] **0.6 Duyệt cấu trúc file** (bảng "Cấu trúc file" ở trên) — dự kiến 09/11 · thực tế __/__ 👤
-- [ ] **0.7 Fixture `admin_headers`** trong `tests/conftest.py` (chỉ **thêm**, không sửa fixture cũ) — dự kiến 09/11 · thực tế __/__ 🤖
-  - ✅ Xong khi: `pytest` chạy hết, không test nào đỏ.
+- [x] **0.5 Đối chiếu khóa 312 trong DB thật** — dự kiến 09/11 · thực tế 09/11 👤 bật Docker · 🤖 kiểm tra
+  - ✅ Khớp: `course_id` 312 = "Python Basics: Selection and Iteration" (beginner); 5 kỹ năng đều `is_active`: **167** Python Programming · **170** Computer Science · **400** Iteration · **769** variable (computer science) · **770** Conditionals (Computer Science). DB có 5.893 kỹ năng, 4.509 khóa (khớp `datajson/`).
+- [x] **0.6 Duyệt cấu trúc file** (bảng "Cấu trúc file" ở trên) — dự kiến 09/11 · thực tế 09/11 👤 Tuấn chốt
+- [x] **0.7 Fixture `admin_headers`** trong `tests/conftest.py` (chỉ **thêm**, không sửa fixture cũ) — dự kiến 09/11 · thực tế 09/11 🤖
+  - ✅ Đã có `admin_headers` (tạo bằng `scripts.create_admin`) + `student_headers` (đăng ký qua API, để test 403); đăng nhập thật qua `/api/auth/login`. Test `tests/test_auth_fixtures.py` 3/3; toàn bộ **114 passed**.
 
 ## GĐ1 — Bảng dữ liệu + ngân hàng câu hỏi (10/11)
 
