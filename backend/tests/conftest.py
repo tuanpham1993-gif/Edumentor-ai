@@ -1,4 +1,13 @@
-#shared test configuration and fixtures.import pytest
+# shared test configuration and fixtures.
+import sys
+from pathlib import Path
+
+# Thêm thư mục backend vào sys.path để pytest luôn tìm thấy module 'app'
+BACKEND_DIR = Path(__file__).resolve().parent.parent
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
+
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool

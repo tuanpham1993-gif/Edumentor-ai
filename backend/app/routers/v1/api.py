@@ -7,6 +7,7 @@ nên hãy xếp theo đúng trình tự bài giảng để sinh viên dễ theo 
 
 from fastapi import APIRouter
 from app.routers.v1.endpoints import health, learning_path_node_service, learning_path_service, skill_service, recommendation_service
+from app.routers.admin import admin_router
 
 api_router = APIRouter()
 
@@ -16,3 +17,6 @@ api_router.include_router(learning_path_service.router, tags=["learning path end
 api_router.include_router(learning_path_node_service.router, tags=["learning path node endpoint"], prefix="/learning-paths-nodes")
 api_router.include_router(skill_service.router, tags=["skill endpoint"], prefix="/skills")
 api_router.include_router(recommendation_service.router, tags=["learning path generation"], prefix="/learning-paths-generation")
+
+# Quản trị (Admin)
+api_router.include_router(admin_router, prefix="/admin")

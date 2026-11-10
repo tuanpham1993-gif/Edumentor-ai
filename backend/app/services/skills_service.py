@@ -1,164 +1,172 @@
-from sqlalchemy import func, select, delete, or_
+from typing import Optional, Literal
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from typing import Literal
-from app.models import Skills, SkillRelation, CourseSkill
+from app.repositories.skill_repository import SkillRepository
+from app.schemas.skill import (
+    SkillCreate,
+    SkillUpdate,
+    SkillRequestResponse,
+    SkillWithCoursesResponse,
+)
+from app.schemas.skill_relation import SkillRelationCreate, SkillRelationResponse, SkillRelationUpdate
+from app.schemas.common import PaginatedResponse
+from app.models.skill import Skills
+from app.models.skill_relation import SkillRelation
 
-def create_skill(db: Session, skill_name: str) -> Skills:
-    try:
-        new_skill = Skills(skill=skill_name.strip())
-        db.add(new_skill)
-        db.commit()
-        db.refresh(new_skill)
-        return new_skill
-    
-    except Exception:
-        db.rollback()
-        raise
 
-def update_skill(db: Session,skill_id: int,skill_name: str,) -> Skills:
-    try:
-        skill = db.get(Skills, skill_id)
-        if skill is None:raise ValueError("Skill not found.")
-        skill.skill = skill_name.strip()
-        db.commit()
-        db.refresh(skill)
-        return skill
-    except Exception:
-        db.rollback()
-        raise
+class SkillsService:
+    def __init__(self, db: Session):
+        self.db = db
+        self.skill_repo = SkillRepository(db)
 
-def delete_skill(db: Session, skill_id: int) -> Skills:
-    try:
-        skill = db.get(Skills, skill_id)
-
-        if skill is None: raise ValueError("Skill not found.")
-
-        if not skill.is_active: raise ValueError("Skill is already inactive.")
-
-        # Deactivate the skill instead of physically deleting it.
-        skill.is_active = False
-
-        # Remove its relationships with other skills.
-        #db.execute(delete(SkillRelation).where(or_(SkillRelation.from_skill_id == skill_id,SkillRelation.to_skill_id == skill_id,)))
-
-        db.commit()
-        db.refresh(skill)
-        return skill
-
-    except Exception:
-        db.rollback()
-        raise
-
-def get_skill(db: Session, skill_id: int) -> Skills | None:
-    return db.get(Skills, skill_id)
-
-def get_skill_with_courses(db: Session, skill_id: int,) -> tuple[Skills, int] | None:
-    skill = db.scalars(select(Skills).where(Skills.skill_id == skill_id)).unique().one_or_none()
-    if skill is None:
-        return None
-
-    total_courses = db.scalar(
-        select(func.count())
-        .select_from(CourseSkill)
-        .where(CourseSkill.skill_id == skill_id)
-    )
-
-    return skill, total_courses or 0
-
-def list_skills(
-    db: Session, skip: int = 0,
-    limit: int = 10, keyword: str | None = None,) -> tuple[int, list[Skills]]:
-
-    query = select(Skills).where(Skills.is_active.is_(True))
-    if keyword and keyword.strip(): query = query.where(Skills.skill.ilike(f"%{keyword.strip()}%"))
-
-    count_query = select(func.count()).select_from(query.order_by(None).subquery())
-
-    total = db.scalar(count_query)
-
-    items = db.scalars(
-        query.order_by(Skills.skill_id)
-        .offset(skip)
-        .limit(limit)
-    ).unique().all()
-
-    return total, list(items)
-
-#skill_relation
-
-RelationType = Literal["prerequisite", "related", "extension"]
-def create_skill_relation(
-    db: Session, from_skill_id: int, to_skill_id: int, relation_type: RelationType,
-) -> SkillRelation:
-
-    try:
-        # 1. Prevent a skill from relating to itself.
-        if from_skill_id == to_skill_id:
-            raise ValueError("A skill cannot relate to itself.")
-
-        # 2. Check whether both skills exist.
-        skill_ids = db.scalars(
-            select(Skills.skill_id).where(
-                Skills.skill_id.in_([from_skill_id, to_skill_id]),
-                Skills.is_active.is_(True),
-            )
-        ).all()
-
-        if len(skill_ids) != 2: raise ValueError("One or both skills were not found.")
-
-        # 3. Check whether the relationship already exists.
-        existing_relation = db.get(SkillRelation,(from_skill_id, to_skill_id),)
-        if existing_relation is not None: raise ValueError("This skill relationship already exists.")
-
-        # 4. Create the relationship.
-        new_relation = SkillRelation(
-            from_skill_id=from_skill_id,
-            to_skill_id=to_skill_id,
-            relation_type=relation_type,
+    def list_skills_admin(
+        self,
+        page: int = 1,
+        page_size: int = 20,
+        search: Optional[str] = None,
+        is_active: Optional[bool] = None,
+    ) -> PaginatedResponse[SkillRequestResponse]:
+        total, items = self.skill_repo.list_skills(
+            page=page, page_size=page_size, search=search, is_active=is_active
+        )
+        return PaginatedResponse(
+            items=[SkillRequestResponse.model_validate(s) for s in items],
+            total=total,
+            page=page,
+            page_size=page_size,
         )
 
-        db.add(new_relation)
-        db.commit()
-        db.refresh(new_relation)
-        return new_relation
+    def get_skill(self, skill_id: int) -> SkillRequestResponse:
+        skill = self.skill_repo.get_by_id(skill_id)
+        if not skill:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Không tìm thấy kỹ năng với id {skill_id}",
+            )
+        return SkillRequestResponse.model_validate(skill)
 
-    except Exception:
-        db.rollback()
-        raise
+    def create_skill(self, data: SkillCreate) -> SkillRequestResponse:
+        existing = self.skill_repo.get_by_name(data.skill)
+        if existing:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Kỹ năng '{data.skill}' đã tồn tại trong hệ thống.",
+            )
+        skill = self.skill_repo.create(data.skill)
+        return SkillRequestResponse.model_validate(skill)
 
-def get_skill_relations(db: Session, skill_id: int,) -> list[SkillRelation]:
+    def update_skill(self, skill_id: int, data: SkillUpdate) -> SkillRequestResponse:
+        skill = self.skill_repo.get_by_id(skill_id)
+        if not skill:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Không tìm thấy kỹ năng với id {skill_id}",
+            )
 
-    skill = db.get(Skills, skill_id)
+        update_dict = data.model_dump(exclude_unset=True)
 
-    if skill is None:
+        if "skill" in update_dict and update_dict["skill"] is not None:
+            existing = self.skill_repo.get_by_name(update_dict["skill"])
+            if existing and existing.skill_id != skill_id:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=f"Tên kỹ năng '{update_dict['skill']}' đã được sử dụng.",
+                )
+
+        updated_skill = self.skill_repo.update(skill, update_dict)
+        return SkillRequestResponse.model_validate(updated_skill)
+
+    def delete_skill(self, skill_id: int) -> dict:
+        skill = self.skill_repo.get_by_id(skill_id)
+        if not skill:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Không tìm thấy kỹ năng với id {skill_id}",
+            )
+
+        usages = self.skill_repo.count_usages(skill_id)
+
+        # Nếu kỹ năng đã được gắn vào khóa học, lộ trình hoặc quan hệ kỹ năng
+        if usages["total_usages"] > 0:
+            # Vô hiệu hóa (soft delete) thay vì xóa vật lý gây lỗi Foreign Key
+            self.skill_repo.soft_delete(skill)
+            return {
+                "message": f"Kỹ năng '{skill.skill}' đang được sử dụng ({usages['course_skills']} khóa học, "
+                           f"{usages['skill_relations']} quan hệ, {usages['learning_path_nodes']} lộ trình). "
+                           "Đã vô hiệu hóa kỹ năng (is_active = False) thay vì xóa vật lý.",
+                "action": "deactivated",
+                "skill_id": skill_id,
+            }
+
+        # Nếu không vướng ràng buộc nào, xóa thật
+        self.skill_repo.delete_physical(skill)
+        return {
+            "message": f"Đã xóa hoàn toàn kỹ năng '{skill.skill}' khỏi danh mục.",
+            "action": "deleted",
+            "skill_id": skill_id,
+        }
+
+
+# Giữ lại các hàm cũ cho các endpoint ngoài nếu có module khác import
+def list_skills(db: Session, skip: int = 0, limit: int = 6, keyword: Optional[str] = None):
+    repo = SkillRepository(db)
+    page = (skip // limit) + 1 if limit > 0 else 1
+    total, items = repo.list_skills(page=page, page_size=limit, search=keyword, is_active=True)
+    return total, items
+
+def get_skill(db: Session, skill_id: int):
+    return SkillRepository(db).get_by_id(skill_id)
+
+def get_skill_with_courses(db: Session, skill_id: int):
+    skill = SkillRepository(db).get_by_id(skill_id)
+    if not skill:
+        return None
+    total_courses = len(skill.courses_info)
+    return skill, total_courses
+
+def create_skill(db: Session, skill_name: str) -> Skills:
+    return SkillRepository(db).create(skill_name)
+
+def update_skill(db: Session, skill_id: int, skill_name: str) -> Skills:
+    skill = SkillRepository(db).get_by_id(skill_id)
+    if not skill:
         raise ValueError("Skill not found.")
+    return SkillRepository(db).update(skill, {"skill": skill_name})
 
-    relations = db.scalars(select(SkillRelation).where((SkillRelation.from_skill_id == skill_id) | (SkillRelation.to_skill_id == skill_id))).all()
-    return list(relations)
+def delete_skill(db: Session, skill_id: int) -> Skills:
+    skill = SkillRepository(db).get_by_id(skill_id)
+    if not skill:
+        raise ValueError("Skill not found.")
+    return SkillRepository(db).soft_delete(skill)
+
+# Skill relation helpers
+RelationType = Literal["prerequisite", "related", "extension"]
+
+def create_skill_relation(db: Session, from_skill_id: int, to_skill_id: int, relation_type: RelationType) -> SkillRelation:
+    if from_skill_id == to_skill_id:
+        raise ValueError("A skill cannot relate to itself.")
+    new_rel = SkillRelation(from_skill_id=from_skill_id, to_skill_id=to_skill_id, relation_type=relation_type)
+    db.add(new_rel)
+    db.commit()
+    db.refresh(new_rel)
+    return new_rel
+
+def get_skill_relations(db: Session, skill_id: int) -> list[SkillRelation]:
+    from sqlalchemy import select
+    return list(db.scalars(select(SkillRelation).where((SkillRelation.from_skill_id == skill_id) | (SkillRelation.to_skill_id == skill_id))).all())
 
 def update_skill_relation(db: Session, from_skill_id: int, to_skill_id: int, relation_type: RelationType) -> SkillRelation:
-    try:
-        relation = db.get(SkillRelation, (from_skill_id, to_skill_id))
-        if relation is None: raise ValueError("Skill relationship not found.")
-        relation.relation_type = relation_type
-
-        db.commit()
-        db.refresh(relation)
-        return relation
-    except Exception:
-        db.rollback()
-        raise
+    rel = db.get(SkillRelation, (from_skill_id, to_skill_id))
+    if not rel:
+        raise ValueError("Skill relationship not found.")
+    rel.relation_type = relation_type
+    db.commit()
+    db.refresh(rel)
+    return rel
 
 def delete_skill_relation(db: Session, from_skill_id: int, to_skill_id: int) -> None:
-    try:
-        relation = db.get(SkillRelation,(from_skill_id, to_skill_id),)
-
-        if relation is None:
-            raise ValueError("Skill relationship not found.")
-
-        db.delete(relation)
-        db.commit()
-
-    except Exception:
-        db.rollback()
-        raise
+    rel = db.get(SkillRelation, (from_skill_id, to_skill_id))
+    if not rel:
+        raise ValueError("Skill relationship not found.")
+    db.delete(rel)
+    db.commit()
