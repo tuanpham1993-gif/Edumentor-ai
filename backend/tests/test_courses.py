@@ -170,3 +170,15 @@ def test_get_course_skills_not_found(client, sample_data):
     assert response.status_code == 404
     assert response.json()["detail"] == "Course not found."
 
+def test_get_courses_validation_errors(client):
+    """Kiểm tra các lỗi tham số không hợp lệ (422)"""
+    # 1. page < 1
+    assert client.get("/api/courses?page=0").status_code == 422
+    # 2. page_size > 50
+    assert client.get("/api/courses?page_size=100").status_code == 422
+    # 3. level sai giá trị
+    assert client.get("/api/courses?level=expert").status_code == 422
+    # 4. sort_by sai giá trị
+    assert client.get("/api/courses?sort_by=views").status_code == 422
+    # 5. course_id không phải số nguyên
+    assert client.get("/api/courses/abc").status_code == 422
