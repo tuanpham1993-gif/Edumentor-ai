@@ -12,7 +12,7 @@ from app.models import ReviewAnswer, ReviewAttempt, UserSkill
 from app.services import course_gateway, review_service
 from tests.test_review_api import SKILL_IDS, bank_312, start, user_of  # noqa: F401 — bank_312 là fixture
 
-LIST_TUPLE_ANSWER = "List thì sửa được còn tuple thì không. List dùng ngoặc vuông."
+LIST_TUPLE_ANSWER = "List thì sửa được còn tuple thì không sửa được. List dùng ngoặc vuông. Tuple thì dùng ngoặc tròn."
 
 
 def submit_url(attempt_id):
@@ -118,7 +118,7 @@ def test_meeting_example_essay_scores_7_of_10(client, bank_312, student_headers,
     q = result["questions"][position - 1]
     assert q["points"] == 1.4 and q["max_points"] == 2
     assert [r["result"] for r in q["rubric"]] == ["full", "full", "partial", "none"]
-    assert q["rubric"][0]["evidence"] == "List thì sửa được còn tuple thì không."
+    assert q["rubric"][0]["evidence"] == "List thì sửa được còn tuple thì không sửa được."
     assert q["text_answer"] == LIST_TUPLE_ANSWER and q["explanation"].startswith("Đáp án mẫu")
 
 

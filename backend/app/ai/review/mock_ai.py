@@ -52,4 +52,4 @@ class MockAI(ReviewAI):
         )
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:
-        return keyword_grader.grade_essay(question["rubric"], answer)
+        return keyword_grader.grade_essay(question["rubric"], answer, question.get("content"))

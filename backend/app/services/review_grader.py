@@ -48,7 +48,7 @@ def grade_essay(ai: ReviewAI, answer: ReviewAnswer) -> tuple[list[dict], str | N
     except AIUnavailableError as err:
         error = f"AI không dùng được: {err}"
     logger.warning("Ôn tập: chấm tự luận câu %s bằng từ khóa (%s)", answer.position, error)
-    return keyword_grader.grade_essay(rubric, answer.text_answer), error
+    return keyword_grader.grade_essay(rubric, answer.text_answer, answer.question.content), error
 
 
 def grade_answers(answers: list[ReviewAnswer], ai: ReviewAI) -> tuple[float, dict]:

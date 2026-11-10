@@ -299,17 +299,19 @@ Quy tắc khi AI viết barem:
 | Y4 | Ví dụ hợp lý khi dùng tuple (tọa độ, ngày tháng, dữ liệu cố định) | 2 |
 | | **Tổng** | **10** |
 
-**Bài làm của Lan:** "List thì sửa được còn tuple thì không. List dùng ngoặc vuông."
+**Bài làm của Lan:** "List thì sửa được còn tuple thì không sửa được. List dùng ngoặc vuông. Tuple thì dùng ngoặc tròn."
+
+> Cập nhật 10/11 (V1, checklist sửa ngân hàng 312): bài mẫu cũ "…còn tuple thì không. List dùng ngoặc vuông." không còn ra 7/10 sau khi siết từ khóa ("không" quá chung — L2a) và luật "chỉ nhắc chủ thể = 0" (L13a).
 
 | Ý | Kết quả | Bằng chứng | Điểm |
 |---|---|---|---|
-| Y1 | Đạt | "List thì sửa được" | 3 |
-| Y2 | Đạt | "tuple thì không" | 3 |
-| Y3 | Đạt một phần (chỉ nêu list) | "List dùng ngoặc vuông" | 1 |
+| Y1 | Đạt | "List thì sửa được còn tuple thì không sửa được." | 3 |
+| Y2 | Đạt | "List thì sửa được còn tuple thì không sửa được." | 3 |
+| Y3 | Đạt một phần (nêu ngoặc tròn của tuple nhưng không đối chiếu với list trong cùng câu) | "Tuple thì dùng ngoặc tròn." | 1 |
 | Y4 | Không đạt | — | 0 |
 | | | **Điểm câu** | **7 / 10** |
 
-Nhận xét trả về: *"Đúng: list thay đổi được, tuple bất biến. Thiếu: cú pháp của tuple `( )` và ví dụ khi nên dùng tuple."*
+Nhận xét trả về: *"Đúng: list thay đổi được, tuple bất biến. Thiếu: đối chiếu cú pháp list `[ ]` với tuple `( )` và ví dụ khi nên dùng tuple."*
 
 #### A2.4. Trường hợp đặc biệt
 
@@ -343,12 +345,12 @@ Kết quả AI chấm trả về cho mỗi câu:
 ```json
 {"score": 7,
  "key_points": [
-   {"id": "Y1", "status": "dat",       "awarded": 3, "evidence": "List thì sửa được"},
-   {"id": "Y2", "status": "dat",       "awarded": 3, "evidence": "tuple thì không"},
-   {"id": "Y3", "status": "mot_phan",  "awarded": 1, "evidence": "List dùng ngoặc vuông"},
+   {"id": "Y1", "status": "dat",       "awarded": 3, "evidence": "List thì sửa được còn tuple thì không sửa được."},
+   {"id": "Y2", "status": "dat",       "awarded": 3, "evidence": "List thì sửa được còn tuple thì không sửa được."},
+   {"id": "Y3", "status": "mot_phan",  "awarded": 1, "evidence": "Tuple thì dùng ngoặc tròn."},
    {"id": "Y4", "status": "khong_dat", "awarded": 0, "evidence": null}
  ],
- "feedback": "Đúng: list thay đổi được, tuple bất biến. Thiếu: cú pháp tuple ( ) và ví dụ dùng tuple.",
+ "feedback": "Đúng: list thay đổi được, tuple bất biến. Thiếu: đối chiếu cú pháp list [ ] với tuple ( ) và ví dụ dùng tuple.",
  "flag": null}
 ```
 

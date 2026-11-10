@@ -80,7 +80,7 @@
       "code": "312-VAR-K03",
       "skill": "VAR",
       "title": "Kiểu động (dynamic typing)",
-      "content": "Python là ngôn ngữ kiểu động: không cần khai báo kiểu khi tạo biến, Python tự xác định kiểu theo giá trị được gán lúc chạy chương trình. Cùng một biến có thể được gán giá trị khác kiểu, vd x = 10 (int) rồi x = 'mười' (str). Hàm type(x) cho biết kiểu hiện tại của biến. Giá trị đặc biệt None nghĩa là biến chưa có giá trị nào."
+      "content": "Python là ngôn ngữ kiểu động: không cần khai báo kiểu khi tạo biến, Python tự xác định kiểu theo giá trị được gán lúc chạy chương trình. Cùng một biến có thể được gán giá trị khác kiểu, vd x = 10 (int) rồi x = 'mười' (str). Hàm type(x) cho biết kiểu hiện tại của biến. None là giá trị đặc biệt biểu thị 'không có giá trị' (vd x = None). Khác với biến chưa được gán: dùng biến chưa gán sẽ báo NameError."
     },
     {
       "code": "312-COND-K01",
@@ -105,42 +105,42 @@
     {
       "code": "312-PY-TN-01", "skill": "PY", "chunk": "312-PY-K01", "type": "mcq", "level": "recognize",
       "content": "Python dùng cách nào để xác định một khối lệnh (ví dụ thân của câu lệnh if)?",
-      "options": ["Dấu ngoặc nhọn { }", "Thụt lề (indentation)", "Từ khóa begin / end", "Dấu chấm phẩy ;"],
-      "correct_index": 1,
+      "options": ["Thụt lề (indentation)", "Dấu ngoặc nhọn { }", "Từ khóa begin / end", "Dấu chấm phẩy ;"],
+      "correct_index": 0,
       "explanation": "Python dùng thụt lề để tạo khối lệnh; các dòng cùng mức thụt lề thuộc cùng một khối."
     },
     {
       "code": "312-PY-TN-02", "skill": "PY", "chunk": "312-PY-K03", "type": "mcq", "level": "recognize",
       "content": "Kiểu dữ liệu nào sau đây KHÔNG thay đổi được sau khi tạo?",
-      "options": ["list", "dict", "tuple", "set"],
-      "correct_index": 2,
+      "options": ["list", "dict", "set", "tuple"],
+      "correct_index": 3,
       "explanation": "tuple là kiểu immutable; list, dict, set đều thay đổi được."
     },
     {
       "code": "312-PY-TN-03", "skill": "PY", "chunk": "312-PY-K01", "type": "mcq", "level": "recognize",
       "content": "Hàm input() trả về giá trị thuộc kiểu dữ liệu nào?",
-      "options": ["int", "str", "float", "bool"],
-      "correct_index": 1,
+      "options": ["str", "int", "float", "bool"],
+      "correct_index": 0,
       "explanation": "input() luôn trả về chuỗi (str); muốn dùng như số phải ép kiểu bằng int() hoặc float()."
     },
     {
       "code": "312-PY-TN-04", "skill": "PY", "chunk": "312-PY-K02", "type": "mcq", "level": "understand",
       "content": "Kết quả của biểu thức 7 // 2 là gì?",
-      "options": ["3.5", "3", "4", "1"],
-      "correct_index": 1,
+      "options": ["3", "3.5", "4", "1"],
+      "correct_index": 0,
       "explanation": "// là phép chia lấy phần nguyên: 7 // 2 = 3 (7 / 2 mới cho 3.5)."
     },
     {
       "code": "312-PY-TN-05", "skill": "PY", "chunk": "312-PY-K03", "type": "mcq", "level": "understand",
       "content": "Cho a = [1, 2, 3] rồi chạy a.append(4). Giá trị của len(a) là bao nhiêu?",
-      "options": ["3", "4", "5", "Báo lỗi vì list không thêm được"],
-      "correct_index": 1,
+      "options": ["4", "3", "5", "Báo lỗi vì list không thêm được"],
+      "correct_index": 0,
       "explanation": "append() thêm một phần tử vào cuối list → a = [1, 2, 3, 4], len(a) = 4."
     },
     {
       "code": "312-PY-TN-06", "skill": "PY", "chunk": "312-PY-K02", "type": "mcq", "level": "understand",
       "content": "Chạy x = input(), người dùng gõ 5, sau đó chạy print(x + 1). Điều gì xảy ra?",
-      "options": ["In ra 6", "In ra 51", "Báo lỗi TypeError vì cộng chuỗi với số", "In ra 5"],
+      "options": ["In ra 6", "In ra 51", "Báo lỗi TypeError", "In ra 5"],
       "correct_index": 2,
       "explanation": "x là chuỗi '5'; cộng chuỗi với số nguyên gây TypeError. Cần viết int(x) + 1."
     },
@@ -148,8 +148,8 @@
     {
       "code": "312-CS-TN-01", "skill": "CS", "chunk": "312-CS-K01", "type": "mcq", "level": "recognize",
       "content": "Thuật toán là gì?",
-      "options": ["Một ngôn ngữ lập trình", "Một dãy hữu hạn các bước rõ ràng để giải một bài toán", "Một bộ phận phần cứng của máy tính", "Một loại biến đặc biệt"],
-      "correct_index": 1,
+      "options": ["Một ngôn ngữ lập trình", "Một loại biến đặc biệt", "Một bộ phận phần cứng của máy tính", "Một dãy hữu hạn các bước rõ ràng để giải một bài toán"],
+      "correct_index": 3,
       "explanation": "Thuật toán là dãy hữu hạn các bước rõ ràng, theo trình tự, để giải bài toán."
     },
     {
@@ -305,9 +305,9 @@
     {
       "code": "312-COND-TN-05", "skill": "COND", "chunk": "312-COND-K03", "type": "mcq", "level": "understand",
       "content": "Đoạn xếp loại sau cho kết quả gì khi diem = 9?\nif diem >= 5:\n    loai = 'Trung bình'\nelif diem >= 8:\n    loai = 'Giỏi'",
-      "options": ["Giỏi", "Cả Trung bình và Giỏi", "Trung bình, vì nhánh diem >= 5 đúng trước nên nhánh elif không được xét", "Báo lỗi"],
+      "options": ["Giỏi", "Cả Trung bình và Giỏi", "Trung bình", "Báo lỗi"],
       "correct_index": 2,
-      "explanation": "Thứ tự nhánh sai: điều kiện rộng (>= 5) đặt trước đã chặn nhánh Giỏi. Phải xét từ cao xuống thấp."
+      "explanation": "Trung bình: nhánh diem >= 5 đúng trước nên nhánh elif không được xét. Thứ tự nhánh sai — điều kiện rộng đặt trước đã chặn nhánh Giỏi; phải xét từ cao xuống thấp."
     },
     {
       "code": "312-COND-TN-06", "skill": "COND", "chunk": "312-COND-K03", "type": "mcq", "level": "understand",
@@ -321,7 +321,7 @@
       "code": "312-VAR-TL-01", "skill": "VAR", "chunk": "312-VAR-K01", "type": "essay", "level": "easy",
       "content": "Biến là gì? Cho một ví dụ gán giá trị cho biến trong Python.",
       "rubric": [
-        {"text": "Biến là tên gắn với một giá trị / dữ liệu được lưu trong bộ nhớ", "max_points": 5, "main_keywords": ["giá trị", "dữ liệu", "lưu", "bộ nhớ"], "sub_keywords": ["biến", "tên"]},
+        {"text": "Biến là tên gắn với một giá trị / dữ liệu được lưu trong bộ nhớ", "max_points": 5, "main_keywords": ["dữ liệu", "lưu", "bộ nhớ"], "sub_keywords": ["biến", "tên"]},
         {"text": "Có ví dụ gán bằng dấu = (vd x = 5)", "max_points": 5, "main_keywords": ["="], "sub_keywords": []}
       ],
       "explanation": "Đáp án mẫu: Biến là một cái tên gắn với giá trị được lưu trong bộ nhớ để dùng lại. Ví dụ: tuoi = 20."
@@ -356,13 +356,13 @@
     },
     {
       "code": "312-PY-TL-01", "skill": "PY", "chunk": "312-PY-K02", "type": "essay", "level": "easy",
-      "content": "Kể tên 3 kiểu dữ liệu cơ bản trong Python và cho một ví dụ giá trị của mỗi kiểu.",
+      "content": "Kể tên kiểu dữ liệu dùng cho số nguyên, số thực và chuỗi trong Python.",
       "rubric": [
         {"text": "Kiểu số nguyên int (vd 5)", "max_points": 3, "main_keywords": ["int", "số nguyên"], "sub_keywords": []},
         {"text": "Kiểu số thực float (vd 3.14)", "max_points": 3, "main_keywords": ["float", "số thực"], "sub_keywords": []},
         {"text": "Kiểu chuỗi str (vd 'xin chào')", "max_points": 4, "main_keywords": ["str", "chuỗi", "string"], "sub_keywords": []}
       ],
-      "explanation": "Đáp án mẫu: int — số nguyên, vd 5; float — số thực, vd 3.14; str — chuỗi, vd 'xin chào'. (bool True/False cũng được chấp nhận thêm.)"
+      "explanation": "Đáp án mẫu: int — số nguyên, vd 5; float — số thực, vd 3.14; str — chuỗi, vd 'xin chào'."
     },
     {
       "code": "312-CS-TL-01", "skill": "CS", "chunk": "312-CS-K01", "type": "essay", "level": "easy",
@@ -380,7 +380,7 @@
       "content": "Phân biệt list và tuple trong Python, cho ví dụ khi nào nên dùng tuple.",
       "rubric": [
         {"text": "List thay đổi được (thêm, sửa, xóa phần tử)", "max_points": 3, "main_keywords": ["sửa", "thay đổi", "thêm", "xóa", "mutable", "append"], "sub_keywords": ["list"]},
-        {"text": "Tuple không thay đổi được sau khi tạo", "max_points": 3, "main_keywords": ["không", "immutable", "bất biến"], "sub_keywords": ["tuple"]},
+        {"text": "Tuple không thay đổi được sau khi tạo", "max_points": 3, "main_keywords": ["không thay đổi", "không sửa", "không đổi", "immutable", "bất biến"], "sub_keywords": ["tuple"]},
         {"text": "Cú pháp: list dùng [ ], tuple dùng ( )", "max_points": 2, "main_keywords": ["ngoặc tròn", "()", "( )"], "sub_keywords": ["ngoặc vuông", "[]", "[ ]"]},
         {"text": "Ví dụ hợp lý khi dùng tuple (tọa độ, ngày tháng, khóa của dict…)", "max_points": 2, "main_keywords": ["tọa độ", "ngày tháng", "cố định", "hằng", "khóa", "key"], "sub_keywords": []}
       ],
@@ -393,7 +393,7 @@
         {"text": "Nhập n và đổi sang số nguyên bằng int(input())", "max_points": 2, "main_keywords": ["int(", "ép kiểu", "đổi sang số", "chuyển sang số"], "sub_keywords": ["input", "nhập"]},
         {"text": "Khởi tạo biến tổng bằng 0 trước vòng lặp", "max_points": 2, "main_keywords": ["= 0", "bằng 0", "khởi tạo"], "sub_keywords": ["tong", "tổng", "sum"]},
         {"text": "Vòng lặp chạy từ 1 đến n, vd range(1, n + 1)", "max_points": 3, "main_keywords": ["n + 1", "n+1", "1 đến n", "1 tới n"], "sub_keywords": ["for", "range", "while"]},
-        {"text": "Cộng dồn từng số vào biến tổng (tong += i)", "max_points": 3, "main_keywords": ["+=", "cộng dồn", "cộng thêm", "cộng vào"], "sub_keywords": ["tong", "tổng", "sum"]}
+        {"text": "Cộng dồn từng số vào biến tổng (tong += i)", "max_points": 3, "main_keywords": ["+=", "tong + i", "= tong +", "cộng dồn", "cộng thêm", "cộng vào"], "sub_keywords": ["tong", "tổng", "sum"]}
       ],
       "explanation": "Đáp án mẫu: n = int(input()) đổi dữ liệu nhập sang số; tong = 0 khởi tạo biến tổng; for i in range(1, n + 1) chạy i từ 1 đến n; tong += i cộng dồn; cuối cùng print(tong)."
     },
