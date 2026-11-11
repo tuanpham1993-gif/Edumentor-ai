@@ -1,7 +1,7 @@
 /* Một câu trong trang Kết quả — màn demo ReviewDetail(-Explanation) (module 09 · Tuấn · GĐ4). */
 .card { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
 .head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.content { margin: 0; font-size: 16.5px; line-height: 1.5; white-space: pre-wrap; }
+.content { margin: 0; font-size: calc(16.5px * var(--reading-scale, 1)); line-height: 1.5; white-space: pre-wrap; }
 
 .options {
   display: grid;
@@ -19,7 +19,7 @@
   border-radius: var(--r-md);
   border: 1px solid var(--card-border);
   background: var(--card-inner);
-  font-size: 14px;
+  font-size: calc(14px * var(--reading-scale, 1));
 }
 .letter { flex: none; font-weight: 700; color: var(--text-muted); }
 .text { flex: 1; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -38,7 +38,7 @@
   border-radius: 0 var(--r-md) var(--r-md) 0;
   background: var(--card-inner);
   white-space: pre-wrap;
-  font-size: 14.5px;
+  font-size: calc(14.5px * var(--reading-scale, 1));
   line-height: 1.6;
 }
 .rubric td { vertical-align: top; font-size: 13.5px; }

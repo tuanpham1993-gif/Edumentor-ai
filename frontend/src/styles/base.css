@@ -1,5 +1,12 @@
 /* Nền tảng: reset, body, font, link, focus, .sr-only. (tách từ index.css, 08/11/2026) */
 
+/* ---------- Cỡ chữ nội dung (trang Giao diện, 11/11) ----------
+   Chỉ phóng / thu NỘI DUNG bài học và câu hỏi ôn tập (đề, phương án, bài làm, đáp án) — giao diện giữ nguyên.
+   Dùng: font-size: calc(15px * var(--reading-scale, 1)). Lưu ở localStorage 'em-font' (utils/theme.js). */
+:root { --reading-scale: 1; }
+:root[data-font='sm'] { --reading-scale: 0.9; }
+:root[data-font='lg'] { --reading-scale: 1.18; }
+
 /* ---------- Nền ---------- */
 * {
   box-sizing: border-box;

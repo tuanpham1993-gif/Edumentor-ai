@@ -19,7 +19,9 @@ import ResetExpiredPage from '../features/auth/pages/ResetExpiredPage.jsx';
 import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage.jsx';
 import HomePage from '../features/home/pages/HomePage.jsx';
 import NotFoundPage from '../features/common/pages/NotFoundPage.jsx';
+import AppearancePage from '../features/profile/pages/AppearancePage.jsx';
 import ChangePasswordPage from '../features/profile/pages/ChangePasswordPage.jsx';
+import EmailNotificationsPage from '../features/profile/pages/EmailNotificationsPage.jsx';
 import EditProfilePage from '../features/profile/pages/EditProfilePage.jsx';
 import ProfilePage from '../features/profile/pages/ProfilePage.jsx';
 import SkillBrowsePage from '../features/profile/pages/SkillBrowsePage.jsx';
@@ -58,6 +60,9 @@ export default function AppRoutes() {
           <Route path="/me" element={<ProfilePage />} />
           <Route path="/me/edit" element={<EditProfilePage />} />
           <Route path="/me/password" element={<ChangePasswordPage />} />
+          {/* Cài đặt: Giao diện + Thông báo qua email (11/11) */}
+          <Route path="/me/appearance" element={<AppearancePage />} />
+          <Route path="/me/email-notifications" element={<EmailNotificationsPage />} />
           {/* Ôn tập — module 09 (Tuấn, GĐ4 09/11) */}
           <Route path="/me/review-history" element={<ReviewHistoryPage />} />
           <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
