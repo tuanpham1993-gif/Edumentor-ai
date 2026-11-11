@@ -27,3 +27,5 @@ def health_check(db: Session = Depends(get_db)):
         "database": "connected",
         "docs_url": f"{settings.API_STR}/docs",
     }
+
+

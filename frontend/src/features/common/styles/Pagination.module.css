@@ -1,0 +1,23 @@
+/* Phân trang dùng chung (FĐ6, 08/11/2026). */
+.pager { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
+.num,
+.step {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--d-fast), color var(--d-fast), background var(--d-fast);
+}
+.num:hover,
+.step:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.step:disabled { opacity: 0.45; cursor: default; }
+.current,
+.current:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.gap { padding: 0 2px; color: var(--text-dim); }

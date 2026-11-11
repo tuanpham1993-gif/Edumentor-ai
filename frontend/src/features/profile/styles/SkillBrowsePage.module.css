@@ -1,0 +1,111 @@
+/* Trang Khám phá kỹ năng theo danh mục (FĐ6, 08/11/2026). */
+
+/* Chip danh mục */
+.cats { display: flex; flex-wrap: wrap; gap: 8px; }
+.cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--surface-sunk);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--d-fast), color var(--d-fast), background var(--d-fast);
+}
+.cat span { font-size: 11.5px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.cat:hover { border-color: var(--accent-soft-border); color: var(--text); }
+.catActive,
+.catActive:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.catActive span { color: var(--on-accent); opacity: 0.75; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+
+/* Lưới thẻ kỹ năng */
+.grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  animation: rise var(--d-slow) var(--e-in) both;
+  transition: border-color var(--d-base), box-shadow var(--d-base), transform var(--d-base) var(--e-std);
+}
+.item:hover { border-color: var(--accent-soft-border); transform: translateY(-2px); }
+.itemPicked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 10px 26px -14px rgba(245, 165, 36, 0.6); }
+.itemMine { opacity: 0.75; }
+.itemHead { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.itemHead strong { font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
+
+.choices { display: flex; gap: 6px; }
+.choice {
+  flex: 1;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: none;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--d-fast), color var(--d-fast), background var(--d-fast);
+}
+.choice:hover { border-color: var(--accent); color: var(--accent); }
+.choiceOn,
+.choiceOn:hover { background: var(--accent-soft-bg); border-color: var(--accent); color: var(--accent); }
+
+.empty { margin: 0; padding: 28px; text-align: center; color: var(--text-muted); }
+
+/* Thanh "Đã chọn N kỹ năng" — dính đáy */
+.bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-soft-border);
+  color: var(--accent-soft-fg);
+  font-size: 13px;
+  box-shadow: 0 16px 34px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k)));
+  animation: barIn var(--d-slow) var(--e-spring) both;
+}
+
+/* Điện thoại: 15 chip danh mục chiếm nửa màn hình → gom thành 1 hàng vuốt ngang, mép phải mờ dần */
+@media (max-width: 720px) {
+  .cats {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  .cats::-webkit-scrollbar { display: none; }
+  .cat { flex: none; }
+}
+
+@keyframes rise { 0% { opacity: 0; transform: translateY(6px); } }
+@keyframes barIn { 0% { opacity: 0; transform: translateY(16px); } }

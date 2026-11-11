@@ -1,0 +1,40 @@
+/* Nút quay lại dạng icon tròn (FĐ6, 08/11/2026). Rê chuột: mũi tên nhích trái + hiện nhãn nhỏ bên cạnh. */
+.back {
+  position: relative;
+  align-self: flex-start;
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text-soft);
+  transition: border-color var(--d-fast), color var(--d-fast), box-shadow var(--d-base);
+}
+.back svg { transition: transform var(--d-base) var(--e-spring); }
+.back:hover,
+.back:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-tint);
+}
+.back:hover svg,
+.back:focus-visible svg { transform: translateX(-3px); }
+
+/* Nhãn nhỏ hiện bên phải khi rê chuột / Tab tới */
+.tip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  pointer-events: none;
+  transition: opacity var(--d-base), transform var(--d-base) var(--e-std);
+}
+.back:hover .tip,
+.back:focus-visible .tip { opacity: 1; transform: translate(0, -50%); }

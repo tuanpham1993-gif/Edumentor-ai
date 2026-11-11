@@ -1,0 +1,245 @@
+/* Bố cục trang tài khoản: bên trái giới thiệu + đèn, bên phải form — chép từ màn demo (FĐ3). */
+.split {
+  min-height: calc(100vh - 65px); /* trừ header khách */
+  display: flex;
+  flex-wrap: wrap;
+  /* Màn rộng: nội dung nằm trong khung 1200px giữa màn → thẳng hàng với logo header & trang chủ.
+     Nền + quầng sáng vẫn trải hết bề ngang. */
+  padding-inline: max(0px, calc((100% - 1200px) / 2));
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Nền khớp trang chủ (08/11): MỘT nền liền + quầng sáng vàng lớn phía trên (giống hero trang chủ).
+   Tắt đèn → quầng sáng tắt theo. */
+.split::before {
+  content: '';
+  position: absolute;
+  left: 18%;
+  top: -260px;
+  width: 760px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(245, 165, 36, 0.2), transparent);
+  pointer-events: none;
+  transition: opacity 0.8s var(--ease-out);
+}
+.splitOff::before {
+  opacity: 0;
+}
+
+.hero {
+  flex: 1 1 560px;
+  position: relative;
+  overflow: visible; /* quầng sáng đèn tràn sang cột form → không còn đường ranh dọc (.split cắt mép ngoài) */
+  min-height: 560px;
+  /* Trên chừa ~290px cho 3 đèn treo + ô 3D → khối chữ không bị đè (màn thấp thì trang cuộn) */
+  padding: 290px 40px 48px; /* lề trái 40px = lề header → logo và tiêu đề thẳng hàng */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* logo đã lên header khách → khối chữ nằm đáy */
+  gap: 40px;
+  background: transparent; /* dùng nền chung của .split, không còn 2 tông + đường kẻ dọc */
+  transition: background var(--d-slow);
+}
+
+.dark {
+  background: var(--hero-dark);
+}
+
+.brand {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.brand:hover {
+  color: var(--text);
+}
+
+.copy {
+  position: relative;
+  z-index: 2;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: enterUp 0.62s var(--ease-out) both;
+}
+
+.copy h2 {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.copy h2 span {
+  color: var(--accent);
+}
+
+.copy p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.features span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Bọc 2 đèn phụ mà KHÔNG chiếm chỗ trong bố cục (đèn là position:absolute) */
+.hideOnPhone {
+  display: contents;
+}
+
+.lampState,
+.copyright {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.formSide {
+  position: relative; /* chứa cảnh nền AuthScene "ambient" */
+  overflow: hidden;
+  flex: 1 1 520px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* thẻ bám lề phải khung 1200px, thẳng hàng nút Đăng nhập trên header */
+  padding: 48px 40px 48px 24px;
+  transition: background var(--d-slow);
+}
+
+.formDark {
+  background: var(--hero-dark);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  display: grid;
+}
+
+.stage > * {
+  grid-area: 1 / 1;
+}
+
+.cardOff {
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+  filter: blur(6px) brightness(0.3);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.52s var(--ease-out),
+    transform 0.6s var(--ease-out),
+    filter 0.6s var(--ease-out),
+    visibility 0s linear 0.6s;
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(120% 70% at 50% 0%, var(--lamp-glow), transparent 70%);
+  animation: lampWake 0.9s var(--ease-out) both;
+}
+
+.darkHint {
+  align-self: center;
+  justify-self: center;
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.3s var(--ease-out),
+    transform 0.3s var(--ease-out);
+}
+
+.darkHintOn {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.38s;
+}
+
+@keyframes lampWake {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.35;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes enterUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* Hai cột xuống dòng (form nằm dưới) → thẻ form về giữa */
+@media (max-width: 1100px) {
+  .formSide {
+    justify-content: center;
+    padding: 48px 24px;
+  }
+}
+
+/* Điện thoại: phần giới thiệu thu gọn, ẩn 2 đèn phụ */
+@media (max-width: 720px) {
+  .hero {
+    min-height: 420px;
+    padding: 200px 16px 32px; /* chừa chỗ cho đèn + 2 ô 3D phía trên tiêu đề */
+    flex-basis: 100%;
+    gap: 190px;
+  }
+  .hideOnPhone {
+    display: none;
+  }
+  .copy h2 {
+    font-size: 32px;
+  }
+  .darkHint {
+    align-self: start;
+    padding-top: 56px;
+  }
+}

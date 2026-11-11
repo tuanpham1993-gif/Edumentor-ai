@@ -1,0 +1,113 @@
+/* Bắt đầu ôn tập — màn demo ReviewStart (module 09 · Tuấn · GĐ4, 09/11/2026). */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 32px;
+}
+.title {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.2;
+}
+.main > p { margin: 0; }
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+}
+.stat strong { font-size: 28px; line-height: 1; color: var(--accent); }
+.stat span { font-size: 13px; color: var(--text-soft); }
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+.notes li { display: flex; align-items: flex-start; gap: 10px; }
+.notes svg { flex: none; margin-top: 1px; color: var(--accent); }
+
+.resume {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--accent-soft-border);
+  background: var(--accent-tint);
+  color: var(--accent-soft-fg);
+  font-size: 14px;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+
+.side { display: flex; flex-direction: column; gap: 20px; }
+.panel { display: flex; flex-direction: column; gap: 12px; padding: 22px; }
+.panel h2 { margin: 0; font-size: 18px; }
+.panelHead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+
+.attempts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.attempt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 6px;
+  border-bottom: 1px solid var(--line);
+  color: var(--accent-soft-fg);
+  font-size: 13.5px;
+  text-decoration: none;
+  border-radius: var(--r-sm);
+  transition: background var(--d-fast);
+}
+.attempts li:last-child .attempt { border-bottom: 0; }
+.attempt:hover { background: var(--hover); }
+
+.blocked {
+  padding: 14px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+}
+.blocked p { margin: 6px 0 0; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .main { padding: 22px 18px; }
+  .stats { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,25 @@
+/* Công tắc giao diện Tối / Sáng (FR-49) — chép từ demo app.css (_wrap_1qxnp). */
+.wrap { display: inline-flex; align-items: center; gap: 12px; }
+.label { font-size: 13px; color: var(--text-muted); }
+.track {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 4px;
+  border-radius: 999px; background: var(--surface-sunk); border: 1px solid var(--card-border);
+}
+.knob {
+  position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+  border-radius: 999px; background: var(--accent); box-shadow: 0 4px 12px #f5a5244d;
+  transition: transform var(--d-slow) var(--e-spring);
+}
+.isLight .knob { transform: translate(100%); }
+.opt {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: none;
+  color: var(--text-muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: color var(--d-base);
+}
+.opt:hover { color: var(--text); }
+.opt[aria-checked="true"] { color: var(--on-accent); }
+.opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt svg { transition: transform var(--d-slow) var(--e-spring); }
+.opt[aria-checked="true"] svg { transform: rotate(-20deg) scale(1.1); }
+.compact, .compact .track { width: 100%; }

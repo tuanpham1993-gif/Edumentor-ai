@@ -1,0 +1,114 @@
+/* Thẻ form của khu Tài khoản — dùng chung cho Đăng nhập / Đăng ký (AuthLayout) và
+   Quên / Đặt lại mật khẩu (CenterLayout). Tách khỏi AuthLayout.module.css 08/11/2026
+   để CenterLayout không phải "mượn" CSS của layout khác. */
+.card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  box-shadow: 0 30px 60px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k)));
+  position: relative;
+  z-index: 2;
+  transition:
+    opacity 0.42s var(--ease-out),
+    transform 0.52s var(--ease-out),
+    filter 0.52s var(--ease-out),
+    visibility 0s linear 0s;
+}
+
+.card > * {
+  animation: rise var(--d-slow) var(--e-in) both;
+}
+
+/* Viền sáng chạy quanh thẻ (FĐ7 08/11, theo demo 3D). Dùng ::before → không thêm phần tử con,
+   không ảnh hưởng thứ tự nth-child ở trên. Trình duyệt chưa hỗ trợ @property → viền sáng đứng yên. */
+@property --glow-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    rgba(255, 195, 92, 0.95) 40deg,
+    transparent 95deg,
+    transparent 180deg,
+    rgba(245, 165, 36, 0.6) 225deg,
+    transparent 275deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: glowSpin 6s linear infinite;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 60px -10px rgba(245, 165, 36, 0.35);
+  animation: cardBreathe 5s ease-in-out infinite;
+}
+@keyframes glowSpin {
+  to { --glow-angle: 360deg; }
+}
+@keyframes cardBreathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.card > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.card > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.card > *:nth-child(4) {
+  animation-delay: 0.12s;
+}
+
+.card > *:nth-child(n + 5) {
+  animation-delay: 0.16s;
+}
+
+.card h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.card :global(.sub) {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Điện thoại */
+@media (max-width: 720px) {
+  .card {
+    padding: 26px;
+  }
+}

@@ -1,0 +1,33 @@
+/* Khối "Kỹ năng của tôi" trên Hồ sơ — theo demo (_block_7j34e, _skills_7j34e), FĐ6 08/11/2026. */
+.block {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: border-color var(--d-base), box-shadow var(--d-base), transform var(--d-base) var(--e-std);
+}
+.block:hover {
+  border-color: var(--accent-soft-border);
+  box-shadow: 0 12px 34px -16px rgba(245, 165, 36, 0.45);
+  transform: translateY(-2px);
+}
+.block h2 { margin: 0; font-size: 18px; }
+.list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  animation: rise var(--d-slow) var(--e-in) both;
+}
+.list li:last-child { border-bottom: 0; }
+.list li:nth-child(2) { animation-delay: 40ms; }
+.list li:nth-child(3) { animation-delay: 80ms; }
+.list li:nth-child(4) { animation-delay: 120ms; }
+.list li:nth-child(n + 5) { animation-delay: 160ms; }
+.empty { margin: 0; font-size: 13.5px; color: var(--text-muted); }
+
+@keyframes rise { 0% { opacity: 0; transform: translateY(6px); } }

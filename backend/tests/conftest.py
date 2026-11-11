@@ -109,3 +109,45 @@ def sample_learning_path(db_session):
         "python_skill_id": python_skill.skill_id,
         "fastapi_skill_id": fastapi_skill.skill_id,
     }
+
+
+# ─────────────── Token đăng nhập dùng chung (module 01 · Tuấn · 09/11/2026) ───────────────
+# Dùng cho mọi test cần gọi API có require_admin / get_current_user:
+#     def test_xxx(client, admin_headers):
+#         client.post("/api/skills", json={...}, headers=admin_headers)
+# Đăng nhập thật qua POST /api/auth/login (không tự ký JWT) → test đúng như người dùng thật.
+
+ADMIN_EMAIL = "admin.test@edumentor.vn"
+STUDENT_EMAIL = "student.test@edumentor.vn"
+TEST_PASSWORD = "Test@1234"
+
+
+def _login_headers(client, email, password=TEST_PASSWORD):
+    response = client.post("/api/auth/login", json={"email": email, "password": password})
+    assert response.status_code == 200, response.text
+    return {"Authorization": f"Bearer {response.json()['access_token']}"}
+
+
+@pytest.fixture()
+def admin_headers(client, db_session):
+    """Header Bearer của một tài khoản admin (tạo bằng scripts.create_admin)."""
+    from scripts.create_admin import create_admin
+
+    create_admin(db_session, email=ADMIN_EMAIL, full_name="Admin Test", password=TEST_PASSWORD)
+    return _login_headers(client, ADMIN_EMAIL)
+
+
+@pytest.fixture()
+def student_headers(client):
+    """Header Bearer của một học viên thường (đăng ký qua API) — dùng để kiểm tra bị chặn 403."""
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "full_name": "Student Test",
+            "email": STUDENT_EMAIL,
+            "password": TEST_PASSWORD,
+            "confirm_password": TEST_PASSWORD,
+        },
+    )
+    assert response.status_code == 201, response.text
+    return _login_headers(client, STUDENT_EMAIL)
