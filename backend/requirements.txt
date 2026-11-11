@@ -25,8 +25,10 @@ pytest-asyncio>=0.23.0
 black>=24.0.0
 ruff>=0.4.0
 
-#AI use
+# AI use
 numpy
 scipy
 scikit-learn
 sentence-transformers
+torch
+qdrant-client

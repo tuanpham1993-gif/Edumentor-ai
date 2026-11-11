@@ -18,5 +18,72 @@ services:
       timeout: 3s
       retries: 10
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: edumentor_ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+
+  llama-base:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: edumentor_llm_base
+    ports:
+      - "8080:8080"
+    volumes:
+      - D:\python_project\pj2\Edumentor-ai\backend\app\ai\models:/models:ro
+    command:
+      - "-m"
+      - "/models/qwen3-1.7b-q4_k_m.gguf"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "--ctx-size"
+      - "2048"
+      - "--threads"
+      - "4"
+      - "--jinja"
+    restart: unless-stopped
+
+  llama-adapter:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: edumentor_llm_adapter
+    ports:
+      - "8081:8080"
+    volumes:
+      - D:\python_project\pj2\Edumentor-ai\backend\app\ai\models:/models:ro
+    command:
+      - "-m"
+      - "/models/qwen3-1.7b-q4_k_m.gguf"
+      - "--lora"
+      - "/models/edumentor-qwen3-skill-extraction-f16.gguf"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "--ctx-size"
+      - "2048"
+      - "--threads"
+      - "4"
+      - "--jinja"
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: edumentor_qdrant
+    restart: unless-stopped
+
+    ports:
+      - "6335:6333"
+      - "6336:6334"
+
+    volumes:
+      - edumentor_qdrant_data:/qdrant/storage
+
 volumes:
   edumentor_pgdata:
+  ollama_data:
+  edumentor_qdrant_data:
