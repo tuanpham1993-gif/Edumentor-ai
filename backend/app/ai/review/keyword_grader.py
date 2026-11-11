@@ -25,6 +25,9 @@ Chống lách:
     → tối đa "partial".
 Bằng chứng (evidence) = câu gốc trong bài làm đã khớp.
 Hạn chế (ghi rõ khi bảo vệ): chỉ dò từ khóa, không hiểu nghĩa — giai đoạn 2 AI thật chấm theo ngữ nghĩa.
+  Ví dụ đã biết (chốt 11/11 — chấp nhận, KHÔNG thêm luật chặn): viết mỗi ý thành một câu cực ngắn kèm chữ đệm,
+  vd "cả hai and là. ít nhất một or là. đảo not là." vẫn được 10/10 (mật độ từ khóa < ANSWER_LIST_DENSITY nhờ chữ
+  đệm). Chặn thêm chỉ thành cuộc đua lách – chặn; AI thật (bước 5.1) chấm theo nghĩa sẽ xử lý.
 """
 
 import re

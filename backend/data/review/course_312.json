@@ -1,7 +1,7 @@
 {
   "course_id": 312,
   "course_title": "Python Basics: Selection and Iteration",
-  "note": "Ngân hàng bước 1 (chốt 09/11): 5 kỹ năng × 6 TN (3 recognize + 3 understand) = 30 TN; 10 TL = 6 easy + 4 advanced. Mỗi kỹ năng 3 đoạn tri thức. Nạp bằng: python -m scripts.seed_review",
+  "note": "Ngân hàng bước 2 (11/11): 5 kỹ năng × 20 câu = 100 câu — mỗi kỹ năng 14 TN (7 recognize + 7 understand) + 6 TL; cả khóa 30 TL = 18 easy + 12 advanced. Bước 1 (09/11) là 40 câu đầu. Mỗi kỹ năng 3 đoạn tri thức. Nạp bằng: python -m scripts.seed_review",
   "skills": {
     "PY": 167,
     "CS": 170,
@@ -419,6 +419,494 @@
         {"text": "Kiểu động: không cần khai báo kiểu, kiểu theo giá trị gán lúc chạy", "max_points": 3, "main_keywords": ["không cần khai báo", "tự xác định", "theo giá trị", "lúc chạy", "đổi kiểu"], "sub_keywords": ["kiểu"]}
       ],
       "explanation": "Đáp án mẫu: Tên biến bắt đầu bằng chữ cái hoặc _, không bắt đầu bằng số, không có khoảng trắng hay ký tự đặc biệt, không trùng từ khóa. Hợp lệ: tong_diem; không hợp lệ: 2so. Kiểu động: không cần khai báo kiểu, Python tự xác định kiểu theo giá trị gán lúc chạy."
+    },
+
+    {
+      "code": "312-PY-TN-07", "skill": "PY", "chunk": "312-PY-K01", "type": "mcq", "level": "recognize",
+      "content": "Trong Python, dòng chú thích bắt đầu bằng ký hiệu nào?",
+      "options": ["//", "#", "/*", "--"],
+      "correct_index": 1,
+      "explanation": "Chú thích trong Python bắt đầu bằng #; Python bỏ qua dòng đó khi chạy."
+    },
+    {
+      "code": "312-PY-TN-08", "skill": "PY", "chunk": "312-PY-K02", "type": "mcq", "level": "recognize",
+      "content": "Phép toán nào cho phần dư của phép chia trong Python?",
+      "options": ["//", "**", "%", "/"],
+      "correct_index": 2,
+      "explanation": "% là chia lấy dư (7 % 2 = 1); // chia lấy phần nguyên, ** lũy thừa, / chia thường."
+    },
+    {
+      "code": "312-PY-TN-09", "skill": "PY", "chunk": "312-PY-K02", "type": "mcq", "level": "recognize",
+      "content": "Giá trị True thuộc kiểu dữ liệu nào?",
+      "options": ["str", "int", "float", "bool"],
+      "correct_index": 3,
+      "explanation": "True và False là hai giá trị của kiểu bool."
+    },
+    {
+      "code": "312-PY-TN-10", "skill": "PY", "chunk": "312-PY-K03", "type": "mcq", "level": "recognize",
+      "content": "Cho list a. Cách nào lấy phần tử ĐẦU TIÊN của a?",
+      "options": ["a[0]", "a[1]", "a(0)", "a.first"],
+      "correct_index": 0,
+      "explanation": "List đánh chỉ số từ 0 nên phần tử đầu tiên là a[0]."
+    },
+    {
+      "code": "312-PY-TN-11", "skill": "PY", "chunk": "312-PY-K02", "type": "mcq", "level": "understand",
+      "content": "Kết quả của biểu thức 2 ** 3 là gì?",
+      "options": ["6", "8", "9", "5"],
+      "correct_index": 1,
+      "explanation": "** là lũy thừa: 2 ** 3 = 2 × 2 × 2 = 8."
+    },
+    {
+      "code": "312-PY-TN-12", "skill": "PY", "chunk": "312-PY-K02", "type": "mcq", "level": "understand",
+      "content": "Biểu thức 7 / 2 cho kết quả nào?",
+      "options": ["3", "3.0", "4", "3.5"],
+      "correct_index": 3,
+      "explanation": "/ là phép chia thường, luôn cho số thực: 7 / 2 = 3.5."
+    },
+    {
+      "code": "312-PY-TN-13", "skill": "PY", "chunk": "312-PY-K03", "type": "mcq", "level": "understand",
+      "content": "Cho t = (1, 2, 3) rồi chạy t[0] = 9. Điều gì xảy ra?",
+      "options": ["Báo lỗi TypeError", "t thành (9, 2, 3)", "t thành (1, 2, 9)", "t thành [9, 2, 3]"],
+      "correct_index": 0,
+      "explanation": "Tuple không thay đổi được sau khi tạo; gán t[0] = 9 gây TypeError."
+    },
+    {
+      "code": "312-PY-TN-14", "skill": "PY", "chunk": "312-PY-K01", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nten = 'An'\nprint('Xin chào', ten)",
+      "options": ["Xin chàoAn", "Xin chào ten", "Xin chào An", "'Xin chào', ten"],
+      "correct_index": 2,
+      "explanation": "print() in các giá trị cách nhau bởi dấu cách và in GIÁ TRỊ của biến ten: Xin chào An."
+    },
+    {
+      "code": "312-CS-TN-07", "skill": "CS", "chunk": "312-CS-K02", "type": "mcq", "level": "recognize",
+      "content": "Trong lưu đồ, hình bình hành dùng để biểu diễn bước nào?",
+      "options": ["Bắt đầu / kết thúc", "Nhập / xuất dữ liệu", "Điều kiện rẽ nhánh", "Bước xử lý"],
+      "correct_index": 1,
+      "explanation": "Hình bình hành là nhập / xuất; elip là bắt đầu / kết thúc, thoi là điều kiện, chữ nhật là xử lý."
+    },
+    {
+      "code": "312-CS-TN-08", "skill": "CS", "chunk": "312-CS-K03", "type": "mcq", "level": "recognize",
+      "content": "Viết thiếu dấu hai chấm sau if gây ra loại lỗi nào?",
+      "options": ["Lỗi cú pháp (SyntaxError)", "Lỗi logic", "Lỗi chia cho 0", "Không gây lỗi gì"],
+      "correct_index": 0,
+      "explanation": "Thiếu dấu hai chấm là viết sai quy tắc của ngôn ngữ → lỗi cú pháp, chương trình không chạy."
+    },
+    {
+      "code": "312-CS-TN-09", "skill": "CS", "chunk": "312-CS-K01", "type": "mcq", "level": "recognize",
+      "content": "Chương trình máy tính là gì?",
+      "options": ["Thuật toán viết bằng ngôn ngữ lập trình", "Một hình trong lưu đồ", "Dữ liệu người dùng nhập vào", "Một loại lỗi khi chạy"],
+      "correct_index": 0,
+      "explanation": "Chương trình là thuật toán được viết bằng một ngôn ngữ lập trình để máy tính thực hiện."
+    },
+    {
+      "code": "312-CS-TN-10", "skill": "CS", "chunk": "312-CS-K02", "type": "mcq", "level": "recognize",
+      "content": "Cấu trúc điều khiển nào dùng để làm lại một việc nhiều lần?",
+      "options": ["Tuần tự", "Rẽ nhánh", "Lặp", "Nhập / xuất"],
+      "correct_index": 2,
+      "explanation": "Cấu trúc lặp làm lại một việc nhiều lần."
+    },
+    {
+      "code": "312-CS-TN-11", "skill": "CS", "chunk": "312-CS-K03", "type": "mcq", "level": "understand",
+      "content": "Chạy print(diem) khi biến diem chưa từng được gán giá trị. Lỗi nào xảy ra?",
+      "options": ["SyntaxError", "ZeroDivisionError", "NameError", "Không lỗi, in ra 0"],
+      "correct_index": 2,
+      "explanation": "Dùng biến chưa gán là lỗi khi chạy, Python báo NameError."
+    },
+    {
+      "code": "312-CS-TN-12", "skill": "CS", "chunk": "312-CS-K02", "type": "mcq", "level": "understand",
+      "content": "Thuật toán: nhập điểm; nếu điểm từ 5 trở lên thì in 'Đạt', ngược lại in 'Chưa đạt'. Cấu trúc chính được dùng là gì?",
+      "options": ["Lặp", "Rẽ nhánh", "Chỉ có tuần tự", "Không có cấu trúc nào"],
+      "correct_index": 1,
+      "explanation": "Chọn một trong hai việc tùy theo điều kiện là cấu trúc rẽ nhánh."
+    },
+    {
+      "code": "312-CS-TN-13", "skill": "CS", "chunk": "312-CS-K01", "type": "mcq", "level": "understand",
+      "content": "Một dãy bước có bước 'cộng 1 vào x, lặp lại mãi mãi' nên không bao giờ dừng. Nó vi phạm tính chất nào của thuật toán?",
+      "options": ["Tính xác định", "Có đầu vào", "Có đầu ra", "Tính hữu hạn"],
+      "correct_index": 3,
+      "explanation": "Thuật toán phải kết thúc sau hữu hạn bước (tính hữu hạn); lặp mãi mãi là vi phạm."
+    },
+    {
+      "code": "312-CS-TN-14", "skill": "CS", "chunk": "312-CS-K03", "type": "mcq", "level": "understand",
+      "content": "Cách nào thường dùng để tìm chỗ sai của một lỗi logic?",
+      "options": ["Xóa hết rồi viết lại", "Đổi sang ngôn ngữ khác", "Tắt máy rồi chạy lại", "In giá trị biến ra để kiểm tra"],
+      "correct_index": 3,
+      "explanation": "Gỡ lỗi bằng cách in giá trị biến hoặc chạy từng bước để thấy chỗ kết quả bắt đầu sai."
+    },
+    {
+      "code": "312-ITER-TN-07", "skill": "ITER", "chunk": "312-ITER-K01", "type": "mcq", "level": "recognize",
+      "content": "range(1, 4) sinh ra những số nào?",
+      "options": ["1, 2, 3", "1, 2, 3, 4", "0, 1, 2, 3", "4, 3, 2, 1"],
+      "correct_index": 0,
+      "explanation": "range(a, b) sinh từ a đến b - 1: 1, 2, 3."
+    },
+    {
+      "code": "312-ITER-TN-08", "skill": "ITER", "chunk": "312-ITER-K03", "type": "mcq", "level": "recognize",
+      "content": "Lệnh continue trong vòng lặp có tác dụng gì?",
+      "options": ["Thoát hẳn khỏi vòng lặp", "Bỏ qua phần còn lại, sang lần lặp kế tiếp", "Dừng cả chương trình", "Chạy lại lần lặp hiện tại"],
+      "correct_index": 1,
+      "explanation": "continue bỏ qua phần còn lại của lần lặp hiện tại và chuyển sang lần lặp kế tiếp."
+    },
+    {
+      "code": "312-ITER-TN-09", "skill": "ITER", "chunk": "312-ITER-K02", "type": "mcq", "level": "recognize",
+      "content": "Vòng lặp nào phù hợp khi CHƯA biết trước số lần lặp?",
+      "options": ["for", "if", "else", "while"],
+      "correct_index": 3,
+      "explanation": "while lặp theo điều kiện nên dùng khi chưa biết trước số lần lặp."
+    },
+    {
+      "code": "312-ITER-TN-10", "skill": "ITER", "chunk": "312-ITER-K03", "type": "mcq", "level": "recognize",
+      "content": "Biến tích lũy (vd tong) nên được khởi tạo ở đâu?",
+      "options": ["Trong thân vòng lặp", "Sau vòng lặp", "Trước vòng lặp", "Không cần khởi tạo"],
+      "correct_index": 2,
+      "explanation": "Khởi tạo trước vòng lặp (tong = 0); đặt trong thân thì mỗi lần lặp bị đặt lại về 0."
+    },
+    {
+      "code": "312-ITER-TN-11", "skill": "ITER", "chunk": "312-ITER-K03", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nfor i in range(5):\n    if i == 3:\n        break\n    print(i)",
+      "options": ["0 1 2", "0 1 2 3", "0 1 2 4", "3"],
+      "correct_index": 0,
+      "explanation": "Khi i = 3 thì break thoát vòng lặp trước khi in, nên chỉ in 0 1 2."
+    },
+    {
+      "code": "312-ITER-TN-12", "skill": "ITER", "chunk": "312-ITER-K03", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nfor i in range(5):\n    if i == 2:\n        continue\n    print(i)",
+      "options": ["0 1", "0 1 2 3 4", "2", "0 1 3 4"],
+      "correct_index": 3,
+      "explanation": "Khi i = 2 thì continue bỏ qua lệnh in rồi lặp tiếp: 0 1 3 4."
+    },
+    {
+      "code": "312-ITER-TN-13", "skill": "ITER", "chunk": "312-ITER-K02", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra bao nhiêu dòng?\ni = 1\nwhile i <= 5:\n    print(i)\n    i += 2",
+      "options": ["5", "2", "3", "Lặp vô hạn"],
+      "correct_index": 2,
+      "explanation": "i lần lượt là 1, 3, 5 rồi thành 7 thì dừng → in 3 dòng."
+    },
+    {
+      "code": "312-ITER-TN-14", "skill": "ITER", "chunk": "312-ITER-K01", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nfor c in 'abc':\n    print(c)",
+      "options": ["abc trên một dòng", "a, b, c mỗi chữ một dòng", "Báo lỗi vì chuỗi không lặp được", "0, 1, 2 mỗi số một dòng"],
+      "correct_index": 1,
+      "explanation": "for duyệt lần lượt từng ký tự của chuỗi; mỗi lần print() in một dòng."
+    },
+    {
+      "code": "312-VAR-TN-07", "skill": "VAR", "chunk": "312-VAR-K02", "type": "mcq", "level": "recognize",
+      "content": "Tên biến nào sau đây KHÔNG hợp lệ?",
+      "options": ["_dem", "x1", "tong_diem", "tong-diem"],
+      "correct_index": 3,
+      "explanation": "tong-diem chứa dấu - (ký tự đặc biệt) nên không hợp lệ."
+    },
+    {
+      "code": "312-VAR-TN-08", "skill": "VAR", "chunk": "312-VAR-K02", "type": "mcq", "level": "recognize",
+      "content": "Trong Python, Tong và tong là gì?",
+      "options": ["Hai tên của cùng một biến", "Hai biến khác nhau", "Hai tên không hợp lệ", "Hai từ khóa của Python"],
+      "correct_index": 1,
+      "explanation": "Tên biến phân biệt chữ hoa, chữ thường nên Tong và tong là hai biến khác nhau."
+    },
+    {
+      "code": "312-VAR-TN-09", "skill": "VAR", "chunk": "312-VAR-K03", "type": "mcq", "level": "recognize",
+      "content": "Giá trị đặc biệt nào biểu thị 'không có giá trị'?",
+      "options": ["0", "''", "None", "False"],
+      "correct_index": 2,
+      "explanation": "None biểu thị không có giá trị; 0, '' và False vẫn là giá trị."
+    },
+    {
+      "code": "312-VAR-TN-10", "skill": "VAR", "chunk": "312-VAR-K01", "type": "mcq", "level": "recognize",
+      "content": "Câu lệnh x += 3 tương đương với câu nào?",
+      "options": ["x = 3", "x = x * 3", "x == x + 3", "x = x + 3"],
+      "correct_index": 3,
+      "explanation": "x += 3 là cách viết gọn của x = x + 3."
+    },
+    {
+      "code": "312-VAR-TN-11", "skill": "VAR", "chunk": "312-VAR-K01", "type": "mcq", "level": "understand",
+      "content": "Sau khi chạy đoạn lệnh sau, b bằng bao nhiêu?\na = 3\nb = a\na = 10",
+      "options": ["10", "3", "13", "Báo lỗi"],
+      "correct_index": 1,
+      "explanation": "b = a gán giá trị 3 cho b; gán lại a sau đó không làm b thay đổi."
+    },
+    {
+      "code": "312-VAR-TN-12", "skill": "VAR", "chunk": "312-VAR-K03", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nx = 3.5\nprint(type(x))",
+      "options": ["<class 'int'>", "<class 'str'>", "<class 'float'>", "<class 'bool'>"],
+      "correct_index": 2,
+      "explanation": "3.5 là số thực nên type(x) là float."
+    },
+    {
+      "code": "312-VAR-TN-13", "skill": "VAR", "chunk": "312-VAR-K03", "type": "mcq", "level": "understand",
+      "content": "Lần 1: chạy print(diem) khi chưa từng gán diem. Lần 2: chạy diem = None rồi print(diem). Kết quả lần lượt là gì?",
+      "options": ["NameError, rồi in None", "Cả hai lần in None", "Cả hai lần báo NameError", "In 0, rồi in None"],
+      "correct_index": 0,
+      "explanation": "Biến chưa gán thì báo NameError; biến đã gán None thì vẫn tồn tại và in ra None."
+    },
+    {
+      "code": "312-VAR-TN-14", "skill": "VAR", "chunk": "312-VAR-K01", "type": "mcq", "level": "understand",
+      "content": "Sau khi chạy đoạn lệnh sau, x và y lần lượt bằng?\nx, y = 1, 2\nx = x + y\ny = x - y",
+      "options": ["3 và 1", "1 và 2", "3 và 2", "2 và 1"],
+      "correct_index": 0,
+      "explanation": "x = 1 + 2 = 3, rồi y = 3 - 2 = 1."
+    },
+    {
+      "code": "312-COND-TN-07", "skill": "COND", "chunk": "312-COND-K02", "type": "mcq", "level": "recognize",
+      "content": "Toán tử nào nghĩa là 'khác' (không bằng)?",
+      "options": ["<>", "!=", "=!", "not="],
+      "correct_index": 1,
+      "explanation": "!= là so sánh khác; == là so sánh bằng."
+    },
+    {
+      "code": "312-COND-TN-08", "skill": "COND", "chunk": "312-COND-K01", "type": "mcq", "level": "recognize",
+      "content": "Sau điều kiện của if phải có ký hiệu gì?",
+      "options": ["Dấu hai chấm :", "Dấu chấm phẩy ;", "Dấu ngoặc nhọn {", "Không cần ký hiệu nào"],
+      "correct_index": 0,
+      "explanation": "Sau điều kiện phải có dấu hai chấm, rồi khối lệnh thụt lề ở dòng dưới."
+    },
+    {
+      "code": "312-COND-TN-09", "skill": "COND", "chunk": "312-COND-K02", "type": "mcq", "level": "recognize",
+      "content": "Biểu thức not True cho kết quả gì?",
+      "options": ["True", "None", "False", "Báo lỗi"],
+      "correct_index": 2,
+      "explanation": "not đảo ngược giá trị: not True là False."
+    },
+    {
+      "code": "312-COND-TN-10", "skill": "COND", "chunk": "312-COND-K03", "type": "mcq", "level": "recognize",
+      "content": "Giá trị nào sau đây được coi là True trong điều kiện if?",
+      "options": ["0", "''", "None", "'a'"],
+      "correct_index": 3,
+      "explanation": "0, chuỗi rỗng '' và None là falsy; chuỗi 'a' khác rỗng nên là True."
+    },
+    {
+      "code": "312-COND-TN-11", "skill": "COND", "chunk": "312-COND-K02", "type": "mcq", "level": "understand",
+      "content": "Biểu thức (5 > 3) or (2 > 4) cho kết quả gì?",
+      "options": ["True", "False", "None", "Báo lỗi"],
+      "correct_index": 0,
+      "explanation": "5 > 3 đúng; or chỉ cần một vế đúng nên kết quả True."
+    },
+    {
+      "code": "312-COND-TN-12", "skill": "COND", "chunk": "312-COND-K01", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nx = 4\nif x > 5:\n    print('A')\nelif x > 2:\n    print('B')\nelse:\n    print('C')",
+      "options": ["A", "B", "C", "B và C"],
+      "correct_index": 1,
+      "explanation": "x > 5 sai, x > 2 đúng → in B; else không chạy nữa."
+    },
+    {
+      "code": "312-COND-TN-13", "skill": "COND", "chunk": "312-COND-K03", "type": "mcq", "level": "understand",
+      "content": "Đoạn lệnh sau in ra gì?\nds = []\nif ds:\n    print('Có')\nelse:\n    print('Rỗng')",
+      "options": ["Có", "Báo lỗi", "Rỗng", "Không in gì"],
+      "correct_index": 2,
+      "explanation": "List rỗng [] là falsy nên điều kiện sai → chạy else, in Rỗng."
+    },
+    {
+      "code": "312-COND-TN-14", "skill": "COND", "chunk": "312-COND-K02", "type": "mcq", "level": "understand",
+      "content": "So sánh 'Python' == 'python' cho kết quả gì?",
+      "options": ["True", "Báo lỗi", "None", "False"],
+      "correct_index": 3,
+      "explanation": "So sánh chuỗi phân biệt chữ hoa và chữ thường nên kết quả False."
+    },
+
+    {
+      "code": "312-PY-TL-03", "skill": "PY", "chunk": "312-PY-K01", "type": "essay", "level": "easy",
+      "content": "Nêu tác dụng của hàm print() và hàm input() trong Python.",
+      "rubric": [
+        {"text": "print() in dữ liệu ra màn hình", "max_points": 4, "main_keywords": ["in ra", "in dữ liệu", "hiển thị", "màn hình"], "sub_keywords": ["print"]},
+        {"text": "input() nhận dữ liệu người dùng gõ từ bàn phím", "max_points": 3, "main_keywords": ["nhận", "bàn phím"], "sub_keywords": ["input"]},
+        {"text": "input() luôn trả về chuỗi (str)", "max_points": 3, "main_keywords": ["chuỗi", "str"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Hàm print() in dữ liệu ra màn hình. Hàm input() nhận dữ liệu người dùng gõ từ bàn phím. Giá trị input() trả về luôn là chuỗi str."
+    },
+    {
+      "code": "312-PY-TL-04", "skill": "PY", "chunk": "312-PY-K02", "type": "essay", "level": "easy",
+      "content": "Giải thích sự khác nhau giữa phép chia / và phép chia // trong Python, cho ví dụ.",
+      "rubric": [
+        {"text": "/ là chia thường, kết quả luôn là số thực (float)", "max_points": 4, "main_keywords": ["số thực", "float"], "sub_keywords": []},
+        {"text": "// là chia lấy phần nguyên", "max_points": 4, "main_keywords": ["phần nguyên", "làm tròn xuống"], "sub_keywords": []},
+        {"text": "Có ví dụ đúng (vd 7 / 2 = 3.5, 7 // 2 = 3)", "max_points": 2, "main_keywords": ["7 / 2", "7 // 2", "= 3.5", "= 3"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Phép chia / cho kết quả là số thực float, ví dụ 7 / 2 = 3.5. Phép chia // chỉ lấy phần nguyên của thương, ví dụ 7 // 2 = 3."
+    },
+    {
+      "code": "312-PY-TL-05", "skill": "PY", "chunk": "312-PY-K03", "type": "essay", "level": "easy",
+      "content": "Nêu cách thêm một phần tử vào cuối list và cách lấy số phần tử của list trong Python.",
+      "rubric": [
+        {"text": "Dùng append() để thêm phần tử vào cuối list", "max_points": 5, "main_keywords": ["append"], "sub_keywords": []},
+        {"text": "Dùng len() để lấy số phần tử", "max_points": 5, "main_keywords": ["len"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Dùng phương thức append() để thêm phần tử vào cuối list, ví dụ a.append(4). Dùng hàm len() để lấy số phần tử, ví dụ len(a)."
+    },
+    {
+      "code": "312-PY-TL-06", "skill": "PY", "chunk": "312-PY-K02", "type": "essay", "level": "advanced",
+      "content": "Người dùng nhập hai số nguyên từ bàn phím. Viết (hoặc mô tả) chương trình in ra tổng của hai số và giải thích vì sao phải ép kiểu.",
+      "rubric": [
+        {"text": "Nhận dữ liệu bằng input()", "max_points": 2, "main_keywords": ["input"], "sub_keywords": []},
+        {"text": "Ép kiểu sang số bằng int() (hoặc float())", "max_points": 3, "main_keywords": ["int(", "float(", "ép kiểu", "chuyển sang số", "đổi sang số"], "sub_keywords": []},
+        {"text": "In tổng bằng print()", "max_points": 2, "main_keywords": ["print"], "sub_keywords": []},
+        {"text": "Giải thích: input() trả về chuỗi, cộng hai chuỗi chỉ nối chuỗi (vd '5' + '3' = '53')", "max_points": 3, "main_keywords": ["chuỗi", "str", "nối"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: a = int(input()) và b = int(input()) nhận hai số rồi ép kiểu sang số nguyên. Sau đó print(a + b) in ra tổng. Phải ép kiểu vì input() luôn trả về chuỗi, nếu không ép thì '5' + '3' sẽ nối thành '53'."
+    },
+    {
+      "code": "312-CS-TL-02", "skill": "CS", "chunk": "312-CS-K02", "type": "essay", "level": "easy",
+      "content": "Kể tên ba cấu trúc điều khiển cơ bản dùng để xây dựng thuật toán và giải thích ngắn từng cấu trúc.",
+      "rubric": [
+        {"text": "Tuần tự: các bước làm lần lượt", "max_points": 3, "main_keywords": ["lần lượt", "theo thứ tự", "nối tiếp"], "sub_keywords": ["tuần tự"]},
+        {"text": "Rẽ nhánh (lựa chọn): làm việc này hoặc việc kia tùy điều kiện", "max_points": 4, "main_keywords": ["điều kiện", "tùy"], "sub_keywords": ["rẽ nhánh", "lựa chọn"]},
+        {"text": "Lặp: làm lại một việc nhiều lần", "max_points": 3, "main_keywords": ["nhiều lần", "làm lại", "lặp lại"], "sub_keywords": ["lặp"]}
+      ],
+      "explanation": "Đáp án mẫu: Tuần tự là các bước được làm lần lượt từ trên xuống. Rẽ nhánh là chọn làm việc này hay việc kia tùy theo điều kiện. Lặp là làm lại một việc nhiều lần."
+    },
+    {
+      "code": "312-CS-TL-03", "skill": "CS", "chunk": "312-CS-K03", "type": "essay", "level": "easy",
+      "content": "Lỗi cú pháp khác lỗi logic như thế nào? Cho mỗi loại một ví dụ.",
+      "rubric": [
+        {"text": "Lỗi cú pháp: viết sai quy tắc của ngôn ngữ, chương trình không chạy được", "max_points": 4, "main_keywords": ["sai quy tắc", "không chạy", "syntaxerror"], "sub_keywords": ["cú pháp"]},
+        {"text": "Lỗi logic: chương trình vẫn chạy, không báo lỗi nhưng kết quả sai", "max_points": 4, "main_keywords": ["kết quả sai", "sai kết quả", "vẫn chạy", "không báo lỗi"], "sub_keywords": ["logic"]},
+        {"text": "Có ví dụ hợp lý (thiếu dấu hai chấm; viết nhầm điều kiện…)", "max_points": 2, "main_keywords": ["dấu hai chấm", "thiếu dấu", "nhầm điều kiện", "sai điều kiện", "viết nhầm", "nhầm dấu"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Lỗi cú pháp là viết sai quy tắc của ngôn ngữ nên chương trình không chạy được, ví dụ thiếu dấu hai chấm sau if. Lỗi logic là chương trình vẫn chạy, không báo lỗi nhưng kết quả sai, ví dụ viết nhầm điều kiện."
+    },
+    {
+      "code": "312-CS-TL-04", "skill": "CS", "chunk": "312-CS-K01", "type": "essay", "level": "advanced",
+      "content": "Viết thuật toán (các bước) tìm số lớn hơn trong hai số a và b. Chỉ rõ đầu vào, đầu ra và cấu trúc điều khiển được dùng.",
+      "rubric": [
+        {"text": "Đầu vào: nhập hai số a, b", "max_points": 2, "main_keywords": ["đầu vào", "input", "nhập"], "sub_keywords": []},
+        {"text": "So sánh a với b (vd nếu a > b thì lấy a, ngược lại lấy b)", "max_points": 3, "main_keywords": ["a > b", "b > a", "a < b", "so sánh"], "sub_keywords": []},
+        {"text": "Đầu ra: in ra số lớn hơn", "max_points": 2, "main_keywords": ["đầu ra", "output", "in ra"], "sub_keywords": []},
+        {"text": "Cấu trúc rẽ nhánh (if / else)", "max_points": 3, "main_keywords": ["rẽ nhánh", "lựa chọn"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Bước 1: nhập hai số a và b, đây là đầu vào. Bước 2: so sánh a với b, nếu a > b thì max = a, ngược lại max = b. Bước 3: in ra max, đây là đầu ra. Thuật toán dùng cấu trúc rẽ nhánh vì phải chọn theo điều kiện."
+    },
+    {
+      "code": "312-CS-TL-05", "skill": "CS", "chunk": "312-CS-K03", "type": "essay", "level": "advanced",
+      "content": "Chương trình sau dùng để tính trung bình cộng của hai số nhưng in ra kết quả sai:\na = 4\nb = 6\ntb = a + b / 2\nprint(tb)\nĐây là loại lỗi gì, vì sao sai, sửa lại thế nào và nêu một cách gỡ lỗi.",
+      "rubric": [
+        {"text": "Đây là lỗi logic", "max_points": 2, "main_keywords": ["logic"], "sub_keywords": []},
+        {"text": "Vì sao sai: phép chia được thực hiện trước phép cộng (in ra 7.0)", "max_points": 3, "main_keywords": ["ưu tiên", "chia trước", "thứ tự", "7.0"], "sub_keywords": []},
+        {"text": "Sửa: thêm ngoặc tb = (a + b) / 2", "max_points": 3, "main_keywords": ["(a + b) / 2", "ngoặc"], "sub_keywords": []},
+        {"text": "Cách gỡ lỗi: in giá trị biến ra hoặc chạy từng bước", "max_points": 2, "main_keywords": ["in giá trị", "từng bước"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Đây là lỗi logic vì chương trình vẫn chạy nhưng in ra 7.0 thay vì 5. Nguyên nhân là phép chia được ưu tiên thực hiện trước phép cộng nên chỉ b bị chia cho 2. Cần sửa thành tb = (a + b) / 2 để cộng trước rồi mới chia. Để gỡ lỗi có thể in giá trị từng biến ra màn hình hoặc chạy từng bước."
+    },
+    {
+      "code": "312-CS-TL-06", "skill": "CS", "chunk": "312-CS-K02", "type": "essay", "level": "advanced",
+      "content": "Mô tả bằng lời (hoặc lưu đồ) thuật toán kiểm tra số nguyên n là chẵn hay lẻ. Chỉ rõ hình nào trong lưu đồ dùng cho bước nhập, bước kiểm tra điều kiện và bước bắt đầu / kết thúc.",
+      "rubric": [
+        {"text": "Nhập n dùng hình bình hành", "max_points": 2, "main_keywords": ["bình hành"], "sub_keywords": []},
+        {"text": "Điều kiện chẵn: n % 2 == 0 (chia hết cho 2)", "max_points": 2, "main_keywords": ["% 2", "chia hết cho 2"], "sub_keywords": []},
+        {"text": "Điều kiện đặt trong hình thoi", "max_points": 2, "main_keywords": ["thoi"], "sub_keywords": []},
+        {"text": "Hai nhánh: đúng thì in chẵn, sai thì in lẻ", "max_points": 2, "main_keywords": ["lẻ"], "sub_keywords": ["chẵn"]},
+        {"text": "Bắt đầu / kết thúc dùng hình elip", "max_points": 2, "main_keywords": ["elip", "oval"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Bắt đầu bằng hình elip. Nhập số n trong hình bình hành. Kiểm tra điều kiện n % 2 == 0 trong hình thoi. Nếu đúng thì in ra số chẵn, nếu sai thì in ra số lẻ. Cuối cùng kết thúc bằng hình elip."
+    },
+    {
+      "code": "312-ITER-TL-04", "skill": "ITER", "chunk": "312-ITER-K01", "type": "essay", "level": "easy",
+      "content": "Giải thích ý nghĩa ba tham số trong range(a, b, step) và cho biết range(1, 10, 4) sinh ra những số nào.",
+      "rubric": [
+        {"text": "a là số bắt đầu, step là bước nhảy (mỗi lần tăng thêm step)", "max_points": 3, "main_keywords": ["bước nhảy", "mỗi lần tăng", "tăng thêm"], "sub_keywords": ["step"]},
+        {"text": "Dãy dừng trước b (không gồm b)", "max_points": 3, "main_keywords": ["dừng trước", "không gồm", "không lấy"], "sub_keywords": []},
+        {"text": "range(1, 10, 4) cho 1, 5, 9", "max_points": 4, "main_keywords": ["1, 5, 9", "1 5 9"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Tham số a là số bắt đầu, còn step là bước nhảy, mỗi lần tăng thêm step đơn vị. Dãy dừng trước b nên không gồm b. Vì vậy range(1, 10, 4) sinh ra 1, 5, 9."
+    },
+    {
+      "code": "312-ITER-TL-05", "skill": "ITER", "chunk": "312-ITER-K02", "type": "essay", "level": "advanced",
+      "content": "Viết (hoặc mô tả) chương trình yêu cầu người dùng nhập mật khẩu cho đến khi nhập đúng 'abc123' thì in 'Đăng nhập thành công'. Giải thích vì sao dùng while thay vì for.",
+      "rubric": [
+        {"text": "while với điều kiện mật khẩu còn sai (mk != 'abc123')", "max_points": 3, "main_keywords": ["!=", "còn sai", "chưa đúng", "khác"], "sub_keywords": ["while"]},
+        {"text": "Nhập lại mật khẩu bằng input() trong thân vòng lặp", "max_points": 3, "main_keywords": ["nhập lại", "input"], "sub_keywords": []},
+        {"text": "In thông báo bằng print() khi đã đúng (sau vòng lặp)", "max_points": 2, "main_keywords": ["print"], "sub_keywords": []},
+        {"text": "Giải thích: chưa biết trước người dùng nhập bao nhiêu lần", "max_points": 2, "main_keywords": ["chưa biết", "không biết"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Đầu tiên mk = input() để nhập mật khẩu lần đầu. Dùng while mk != 'abc123' để lặp khi mật khẩu còn sai. Trong thân vòng lặp gọi mk = input() để nhập lại. Khi thoát vòng lặp thì print('Đăng nhập thành công'). Dùng while vì chưa biết trước người dùng sẽ nhập bao nhiêu lần."
+    },
+    {
+      "code": "312-ITER-TL-06", "skill": "ITER", "chunk": "312-ITER-K03", "type": "essay", "level": "advanced",
+      "content": "Viết (hoặc mô tả) chương trình đếm có bao nhiêu số chẵn trong list ds = [3, 8, 5, 10, 6]. Giải thích vai trò của biến đếm.",
+      "rubric": [
+        {"text": "Khởi tạo biến đếm bằng 0 trước vòng lặp", "max_points": 2, "main_keywords": ["= 0", "bằng 0", "khởi tạo"], "sub_keywords": ["dem", "đếm", "count"]},
+        {"text": "Duyệt từng phần tử bằng for", "max_points": 3, "main_keywords": ["in ds", "từng phần tử", "duyệt"], "sub_keywords": ["for"]},
+        {"text": "Điều kiện số chẵn: x % 2 == 0", "max_points": 3, "main_keywords": ["% 2", "chia hết cho 2"], "sub_keywords": ["if", "chẵn"]},
+        {"text": "Tăng biến đếm thêm 1 (dem += 1) khi gặp số chẵn; kết quả 3", "max_points": 2, "main_keywords": ["+= 1", "tăng thêm 1", "tăng 1"], "sub_keywords": ["dem", "đếm", "count"]}
+      ],
+      "explanation": "Đáp án mẫu: Khởi tạo dem = 0 trước vòng lặp để đếm từ đầu. Dùng for x in ds để duyệt từng phần tử. Với mỗi phần tử, if x % 2 == 0 thì đó là số chẵn. Khi gặp số chẵn thì dem += 1 để tăng biến đếm. Kết quả dem bằng 3 vì có 8, 10 và 6."
+    },
+    {
+      "code": "312-VAR-TL-03", "skill": "VAR", "chunk": "312-VAR-K01", "type": "essay", "level": "easy",
+      "content": "Phép gán trong Python là gì? Câu lệnh x = x + 1 làm gì?",
+      "rubric": [
+        {"text": "Phép gán dùng dấu = để lưu giá trị vào biến (không phải so sánh)", "max_points": 5, "main_keywords": ["lưu", "đặt giá trị", "gán giá trị"], "sub_keywords": ["="]},
+        {"text": "x = x + 1 tăng giá trị của x thêm 1", "max_points": 5, "main_keywords": ["tăng", "cộng thêm 1", "thêm 1"], "sub_keywords": ["x"]}
+      ],
+      "explanation": "Đáp án mẫu: Phép gán dùng dấu = để lưu một giá trị vào biến, dấu = không phải phép so sánh. Câu lệnh x = x + 1 lấy giá trị cũ của x cộng 1 rồi gán lại, tức là tăng x thêm 1."
+    },
+    {
+      "code": "312-VAR-TL-04", "skill": "VAR", "chunk": "312-VAR-K02", "type": "essay", "level": "easy",
+      "content": "Vì sao tên biến 2so và tong so không hợp lệ trong Python? Sửa lại cho đúng.",
+      "rubric": [
+        {"text": "2so sai vì bắt đầu bằng chữ số", "max_points": 4, "main_keywords": ["bắt đầu bằng số", "bắt đầu bằng chữ số", "đầu là số"], "sub_keywords": ["2so"]},
+        {"text": "tong so sai vì có khoảng trắng", "max_points": 3, "main_keywords": ["khoảng trắng", "dấu cách", "khoảng cách"], "sub_keywords": ["tong so"]},
+        {"text": "Có tên sửa hợp lệ (vd so2, tong_so)", "max_points": 3, "main_keywords": ["tong_so", "so2", "so_2", "_2so", "tongso"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Tên 2so sai vì bắt đầu bằng chữ số. Tên tong so sai vì có khoảng trắng ở giữa. Có thể sửa thành so2 và tong_so."
+    },
+    {
+      "code": "312-VAR-TL-05", "skill": "VAR", "chunk": "312-VAR-K03", "type": "essay", "level": "easy",
+      "content": "None là gì trong Python? Nó khác gì với một biến chưa được gán giá trị?",
+      "rubric": [
+        {"text": "None là giá trị đặc biệt biểu thị không có giá trị", "max_points": 5, "main_keywords": ["không có giá trị", "rỗng", "trống"], "sub_keywords": ["none"]},
+        {"text": "Dùng biến chưa gán sẽ báo lỗi NameError", "max_points": 5, "main_keywords": ["nameerror", "báo lỗi"], "sub_keywords": ["chưa gán", "chưa được gán", "chưa tồn tại"]}
+      ],
+      "explanation": "Đáp án mẫu: None là giá trị đặc biệt biểu thị không có giá trị, ví dụ x = None. Còn biến chưa được gán thì khi dùng sẽ báo lỗi NameError."
+    },
+    {
+      "code": "312-VAR-TL-06", "skill": "VAR", "chunk": "312-VAR-K01", "type": "essay", "level": "advanced",
+      "content": "Cho a = 3 và b = 7. Trình bày hai cách hoán đổi giá trị của a và b (một cách dùng biến tạm, một cách viết gọn của Python) và cho biết a, b sau khi hoán đổi.",
+      "rubric": [
+        {"text": "Cách 1: lưu a vào biến tạm (tam = a)", "max_points": 3, "main_keywords": ["tam = a", "tmp = a", "temp = a", "biến tạm"], "sub_keywords": []},
+        {"text": "Gán a = b rồi b = tam", "max_points": 3, "main_keywords": ["b = tam", "b = tmp", "b = temp"], "sub_keywords": ["a = b"]},
+        {"text": "Cách 2 viết gọn: a, b = b, a", "max_points": 2, "main_keywords": ["a, b = b, a"], "sub_keywords": []},
+        {"text": "Kết quả: a = 7, b = 3", "max_points": 2, "main_keywords": ["a = 7", "a bằng 7"], "sub_keywords": ["b = 3", "b bằng 3"]}
+      ],
+      "explanation": "Đáp án mẫu: Cách 1 dùng biến tạm: tam = a, rồi a = b, rồi b = tam. Cách 2 viết gọn trong Python là a, b = b, a. Sau khi hoán đổi thì a = 7 và b = 3."
+    },
+    {
+      "code": "312-COND-TL-03", "skill": "COND", "chunk": "312-COND-K02", "type": "essay", "level": "easy",
+      "content": "Nêu ý nghĩa của ba toán tử logic and, or, not.",
+      "rubric": [
+        {"text": "and đúng khi cả hai vế đều đúng", "max_points": 4, "main_keywords": ["cả hai"], "sub_keywords": ["and"]},
+        {"text": "or đúng khi ít nhất một vế đúng", "max_points": 3, "main_keywords": ["ít nhất một", "một trong hai"], "sub_keywords": ["or"]},
+        {"text": "not đảo ngược giá trị", "max_points": 3, "main_keywords": ["đảo", "ngược"], "sub_keywords": ["not"]}
+      ],
+      "explanation": "Đáp án mẫu: Toán tử and cho kết quả đúng khi cả hai vế đều đúng. Toán tử or cho kết quả đúng khi ít nhất một vế đúng. Toán tử not đảo ngược giá trị, True thành False."
+    },
+    {
+      "code": "312-COND-TL-04", "skill": "COND", "chunk": "312-COND-K03", "type": "essay", "level": "easy",
+      "content": "Giá trị falsy là gì? Kể ra ba giá trị falsy trong Python.",
+      "rubric": [
+        {"text": "Falsy là giá trị được coi là False trong điều kiện", "max_points": 4, "main_keywords": ["coi là false", "được coi là sai", "như false"], "sub_keywords": []},
+        {"text": "Ví dụ: số 0 hoặc None", "max_points": 3, "main_keywords": ["0", "none"], "sub_keywords": []},
+        {"text": "Ví dụ: chuỗi rỗng '' hoặc list rỗng []", "max_points": 3, "main_keywords": ["chuỗi rỗng", "list rỗng"], "sub_keywords": []}
+      ],
+      "explanation": "Đáp án mẫu: Giá trị falsy là giá trị được coi là False khi đặt trong điều kiện if. Ví dụ số 0 và None đều là falsy. Chuỗi rỗng '' và list rỗng [] cũng là falsy."
+    },
+    {
+      "code": "312-COND-TL-05", "skill": "COND", "chunk": "312-COND-K01", "type": "essay", "level": "easy",
+      "content": "Viết đoạn lệnh kiểm tra số n: nếu n chia hết cho 2 thì in 'Chẵn', ngược lại in 'Lẻ'.",
+      "rubric": [
+        {"text": "Điều kiện if n % 2 == 0", "max_points": 4, "main_keywords": ["% 2 == 0"], "sub_keywords": []},
+        {"text": "In 'Chẵn' khi điều kiện đúng", "max_points": 3, "main_keywords": ["chẵn"], "sub_keywords": ["print"]},
+        {"text": "else in 'Lẻ'", "max_points": 3, "main_keywords": ["lẻ"], "sub_keywords": ["else"]}
+      ],
+      "explanation": "Đáp án mẫu: Dùng if n % 2 == 0: print('Chẵn') vì số chia hết cho 2 là số chẵn. Ngược lại dùng else: print('Lẻ')."
+    },
+    {
+      "code": "312-COND-TL-06", "skill": "COND", "chunk": "312-COND-K02", "type": "essay", "level": "advanced",
+      "content": "Một người được giảm giá vé nếu dưới 12 tuổi hoặc từ 60 tuổi trở lên. Viết điều kiện if tương ứng, giải thích vì sao dùng or mà không dùng and, và cho biết với tuoi = 30 thì kết quả thế nào.",
+      "rubric": [
+        {"text": "Điều kiện tuoi < 12", "max_points": 2, "main_keywords": ["< 12"], "sub_keywords": []},
+        {"text": "Điều kiện tuoi >= 60", "max_points": 2, "main_keywords": [">= 60"], "sub_keywords": []},
+        {"text": "Dùng or vì chỉ cần một trong hai điều kiện đúng (and đòi cả hai, không ai thỏa cùng lúc)", "max_points": 3, "main_keywords": ["một trong hai", "chỉ cần một", "ít nhất một"], "sub_keywords": ["or"]},
+        {"text": "tuoi = 30: cả hai điều kiện sai → không được giảm giá", "max_points": 3, "main_keywords": ["không được giảm", "không giảm"], "sub_keywords": ["30"]}
+      ],
+      "explanation": "Đáp án mẫu: Điều kiện là if tuoi < 12 or tuoi >= 60: giam_gia = True. Dùng or vì chỉ cần một trong hai điều kiện đúng là được giảm giá, còn and đòi cả hai cùng đúng mà không ai vừa dưới 12 vừa từ 60 tuổi. Với tuoi = 30 cả hai điều kiện đều sai nên không được giảm giá."
     }
   ]
 }

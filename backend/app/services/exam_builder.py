@@ -5,6 +5,7 @@ Hàm thuần (không DB) → test kỹ được:
     order_exam(...)   xếp thứ tự câu trên đề + xáo thứ tự 4 lựa chọn
 
 Khung 15 câu: 6 TN Nhận biết + 6 TN Thông hiểu + 2 TL dễ + 1 TL nâng cao.
+  - Mọi kỹ năng của khóa phải có câu TN trong ngân hàng, thiếu → "Chưa có đề ôn tập" (sửa 11/11).
   - Mỗi kỹ năng ≥ 1 câu TN (khóa > 12 kỹ năng → chọn 12, ưu tiên kỹ năng lượt trước CHƯA hỏi).
   - TN chia đều giữa các kỹ năng; 3 câu TL ưu tiên 3 kỹ năng khác nhau.
   - Ngẫu nhiên trong từng lựa chọn (rng truyền vào → test lặp lại được).
@@ -41,6 +42,13 @@ def plan_exam(
     """
     cap = defaultdict(int, available)
     unused = defaultdict(int, available if fresh is None else fresh)
+
+    # 0) A1: MỌI kỹ năng của khóa phải có câu trắc nghiệm trong ngân hàng. Thiếu một kỹ năng → chưa có đề
+    #    (nếu không, khóa nhiều kỹ năng ra đề toàn câu của 1–2 kỹ năng, đạt là Hoàn thành + "Đã biết" cả
+    #    những kỹ năng chưa hề hỏi — phát hiện 11/11 khi ngân hàng 312 lên 100 câu: 197 khóa bị ảnh hưởng).
+    missing = [s for s in skill_ids if not any(cap[(s, lv)] > 0 for lv in MCQ_LEVELS)]
+    if missing:
+        raise NotEnoughQuestionsError(f"Kỹ năng chưa có câu trắc nghiệm: {missing}")
     plan: Plan = defaultdict(lambda: defaultdict(int))
 
     def take(skill_id: int, level: str) -> None:

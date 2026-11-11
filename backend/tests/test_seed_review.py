@@ -48,12 +48,14 @@ def test_bank_structure_matches_decision():
     mcq = [q for q in questions if q["type"] == "mcq"]
     essay = [q for q in questions if q["type"] == "essay"]
 
-    assert len(questions) == 40 and len(mcq) == 30 and len(essay) == 10
-    assert Counter(q["level"] for q in essay) == {"easy": 6, "advanced": 4}
-    # Mỗi kỹ năng: 6 TN = 3 Nhận biết + 3 Thông hiểu; 3 đoạn tri thức
+    # Ngân hàng bước 2 (11/11): 20 câu / kỹ năng → 100 câu = 70 TN + 30 TL (TL dễ : nâng cao = 6 : 4)
+    assert len(questions) == 100 and len(mcq) == 70 and len(essay) == 30
+    assert Counter(q["level"] for q in essay) == {"easy": 18, "advanced": 12}
+    # Mỗi kỹ năng: 14 TN = 7 Nhận biết + 7 Thông hiểu; 6 TL; 3 đoạn tri thức
     for code in BANK["skills"]:
         levels = Counter(q["level"] for q in mcq if q["skill"] == code)
-        assert levels == {"recognize": 3, "understand": 3}, code
+        assert levels == {"recognize": 7, "understand": 7}, code
+        assert sum(q["skill"] == code for q in essay) == 6, code
         assert sum(c["skill"] == code for c in BANK["chunks"]) == 3, code
 
 
@@ -61,7 +63,7 @@ def test_answers_are_spread_across_positions():
     """Đáp án đúng không dồn vào một vị trí (người làm không đoán mò theo vị trí được)."""
     positions = Counter(q["correct_index"] for q in BANK["questions"] if q["type"] == "mcq")
     assert len(positions) == 4
-    assert max(positions.values()) <= 15
+    assert max(positions.values()) <= 0.3 * sum(positions.values())  # không vị trí nào quá 30%
 
 
 # ─────────────── validate_bank bắt lỗi ───────────────
@@ -119,7 +121,7 @@ def test_seed_inserts_everything(db_session, course_312, bank):
 
     counts = script.seed_bank(db_session, bank)
 
-    assert counts == {"chunks_added": 15, "chunks_updated": 0, "questions_added": 40, "questions_updated": 0}
+    assert counts == {"chunks_added": 15, "chunks_updated": 0, "questions_added": len(bank["questions"]), "questions_updated": 0}
     q = db_session.query(ReviewQuestion).filter_by(code="312-PY-TL-02").one()
     assert q.skill_id == 167 and q.source == "bank" and len(q.rubric) == 4
     assert q.chunk_id == db_session.query(KnowledgeChunk).filter_by(code="312-PY-K03").one().chunk_id
@@ -131,8 +133,8 @@ def test_seed_twice_updates_without_duplicates(db_session, course_312, bank):
 
     counts = script.seed_bank(db_session, bank)
 
-    assert counts["questions_added"] == 0 and counts["questions_updated"] == 40
-    assert db_session.query(ReviewQuestion).count() == 40
+    assert counts["questions_added"] == 0 and counts["questions_updated"] == len(bank["questions"])
+    assert db_session.query(ReviewQuestion).count() == len(bank["questions"])
     assert db_session.query(KnowledgeChunk).count() == 15
     assert db_session.query(ReviewQuestion).filter_by(code="312-PY-TN-01").one().explanation == "Giải thích mới"
 
@@ -182,8 +184,8 @@ def test_main_success(db_session, course_312, monkeypatch, capsys):
     code = run_main(monkeypatch, db_session)
 
     assert code == 0
-    assert "câu hỏi +40" in capsys.readouterr().out
-    assert db_session.query(ReviewQuestion).count() == 40
+    assert f"câu hỏi +{len(BANK['questions'])}" in capsys.readouterr().out
+    assert db_session.query(ReviewQuestion).count() == len(BANK["questions"])
 
 
 def test_main_invalid_file_writes_nothing(db_session, course_312, monkeypatch, capsys, tmp_path, bank):

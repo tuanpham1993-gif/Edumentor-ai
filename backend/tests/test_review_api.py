@@ -36,10 +36,13 @@ def bank_312(db_session):
     db_session.add(Courses(course_id=999, title="Khóa chưa có ngân hàng"))
     for skill_id in SKILL_IDS:
         db_session.add(Skills(skill_id=skill_id, skill=f"Kỹ năng {skill_id}", is_active=True))
+    db_session.add(Skills(skill_id=99001, skill="Kỹ năng chưa có câu hỏi", is_active=True))
     db_session.flush()
     for skill_id in SKILL_IDS:
         db_session.add(CourseSkill(course_id=312, skill_id=skill_id))
+    # Khóa 999: 1 kỹ năng CÓ câu hỏi (dùng chung với 312) + 1 kỹ năng CHƯA có → vẫn "chưa có đề" (A1, sửa 11/11)
     db_session.add(CourseSkill(course_id=999, skill_id=SKILL_IDS[0]))
+    db_session.add(CourseSkill(course_id=999, skill_id=99001))
     seed_review.seed_bank(db_session, BANK)
     db_session.commit()
 

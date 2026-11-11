@@ -51,6 +51,8 @@ Chống lách (tự động, người soạn không cần làm gì — nhưng c�
 - **Cả bài** có > 85% số từ là từ khóa (không tính câu chép đề) → mọi ý tối đa "Một phần" (bắt kiểu chia chuỗi từ khóa thành nhiều câu ngắn).
 - Bài < 6 từ (không tính câu chép đề), hoặc câu khớp < 3 từ → tối đa "Một phần".
 
+**Hạn chế đã biết (chốt 11/11, chấp nhận ở bản mock):** viết mỗi ý thành một câu cực ngắn kèm chữ đệm (vd *"cả hai and là. ít nhất một or là."*) vẫn có thể được trọn điểm — bộ chấm chỉ dò từ khóa, không hiểu nghĩa. Không thêm luật chặn; AI thật (bước 5.1) chấm theo nghĩa. Người soạn không cần làm gì thêm.
+
 ## Checklist khi soạn một câu
 
 **Trắc nghiệm**

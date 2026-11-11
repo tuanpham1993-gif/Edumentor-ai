@@ -227,10 +227,19 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 - [ ] **5.1 `ai/review/real_ai.py`** (giai đoạn 2): API key miễn phí trong `.env`, `AI_MODE=real`, thử trên khóa 312; lỗi / hết lượt → dự phòng — thực tế __/__
   - Ngân hàng bước 3: kỹ năng thiếu câu → AI sinh → validator → lưu `source="ai"`; đủ 20 câu/kỹ năng thì ngừng sinh.
-- [ ] **5.2 Ngân hàng bước 2**: khóa 312 đủ 100 câu (70 TN + 30 TL); khóa 37 (sau khi gỡ "Web") — thực tế __/__
+- [ ] **5.2 Ngân hàng bước 2**: khóa 312 đủ 100 câu (70 TN + 30 TL); khóa 37 (sau khi gỡ "Web") — thực tế 11/11 (khóa 312) 🤖 · khóa 37 còn chờ gỡ "Web"
+  - ✅ Khóa 312: **40 → 100 câu** (+40 TN, +20 TL). Mỗi kỹ năng 20 câu = 14 TN (7 NB + 7 TH) + 6 TL; cả khóa 30 TL = 18 dễ + 12 nâng cao. Đáp án đúng TN rải đều (A18 · B17 · C18 · D17). Gắn với 15 đoạn tri thức sẵn có (không cần chạy lại embedding). Đã seed DB: `+60 / cập nhật 40`. 👤 **Tuấn duyệt nội dung 60 câu mới** (mã `…-TN-07..14`, `…-TL-03..06`, `CS-TL-02..06`).
+  - Kiểm tự động: validator 0 lỗi; **đáp án mẫu của cả 30 TL đạt 10/10**; 20 TL mới: chép đề = 0, liệt kê từ khóa trong 1 câu = 5/10.
+  - 🐞 **Sửa lỗi A1 (`exam_builder.plan_exam`)**: kỹ năng của khóa KHÔNG có câu TN trước đây bị **bỏ qua** → khóa nhiều kỹ năng ra đề toàn câu của 1–2 kỹ năng, đạt thì Hoàn thành + "Đã biết" cả kỹ năng chưa hỏi. Đo trên DB thật: ngân hàng 40 câu đã có 4 khóa ngoài 312 bị (62, 940, 2115, 3417); lên 100 câu sẽ thành **197 khóa**. Sửa: mọi kỹ năng của khóa phải có câu TN, thiếu → "Chưa có đề ôn tập". Sau sửa: ôn được đúng 4 khóa mà MỌI kỹ năng đều có câu (312, 1560, 3020, 3088). Test mới `test_skill_without_mcq_blocks_the_whole_course`; toàn bộ **485 passed**; R1–R15 chạy lại trên server 19/19.
+  - ✅ **Đã chốt 11/11 — phương án (a): ghi là hạn chế của bản mock, KHÔNG thêm luật chặn; AI thật (5.1) chấm theo nghĩa.** Chi tiết giới hạn bộ chấm mock: viết mỗi ý thành một câu cực ngắn kèm chữ đệm (vd "cả hai and là. ít nhất một or là. đảo not là.") vẫn được 10/10 — xảy ra ở cả câu CŨ (COND-TL-01, CS-TL-01, COND-TL-02…) lẫn câu mới, vì mật độ từ khóa < 85% nhờ chữ đệm. Hướng: (a) ghi là hạn chế của mock, AI thật (5.1) chấm theo nghĩa; (b) thêm luật: câu được "Đạt" phải có ≥ N từ KHÔNG phải từ khóa (cuộc đua lách – chặn, khó dứt điểm).
 - [ ] **5.3 Cập nhật BA/SRS** FR-24/25/26 theo quyết định 09/11 — thực tế __/__
 - [ ] **5.4 Làm đẹp giao diện 09** (theo phong cách module 01) — thực tế __/__
 - [ ] **5.5 Nghiên cứu lại kho vector** (A7 — có thể chuyển pgvector) — thực tế __/__
+- [ ] **5.6 (CHỜ BÀN — sau khi xong các việc khác) Lối vào ôn tập từ đồ thị lộ trình** — Tuấn đề xuất 11/11, ảnh `BA-nhom/PathDetail-on-tap-de-xuat-Tuan.png` (sửa từ màn `PathDetail` của Hòa)
+  - Ý tưởng: icon ôn tập trên từng ô kỹ năng → popover "Ôn tập <kỹ năng>: N khóa học có bài ôn tập" (mỗi khóa: điểm lần trước, thời gian, nút Ôn tập) + thẻ "Ôn tập <kỹ năng>" ở khung phải + chú thích "Ôn tập" / "Đến hạn ôn" (chấm cam).
+  - Claude góp ý (cần chỉnh khi bàn): (1) không ghi cứng "7/10" — ngưỡng đã chốt 6/10, lấy `pass_score` từ API; (2) đạt = **cả khóa** Hoàn thành + mọi kỹ năng của khóa "Đã biết", không riêng 1 kỹ năng; (3) khóa **chưa tham gia** không cho ôn (B1, R1) → hiện mờ + "Tham gia học"; (4) chỉ hiện icon khi kỹ năng có ≥ 1 khóa ôn được (hiện mới khóa 312 có ngân hàng); (5) "Đến hạn ôn" là **khái niệm mới** — tính từ `review_attempts.submitted_at`, không cần bảng mới, cần chốt số ngày (đề xuất 30); (6) điện thoại: popover → khung trượt từ dưới; vùng bấm icon ≥ 28px.
+  - Kỹ thuật (Tuấn): API gộp `GET /api/me/review-options?skill_ids=…` (1 lần cho cả lộ trình) + component `ReviewPopover` trong `features/review/`; Hòa chỉ đặt icon + gọi component. Phụ thuộc: `student_courses` của Khôi; lộ trình của Hòa phải dùng `users.user_id` (hiện `student_id`).
+  - Cần chốt khi bàn: quy tắc "Đến hạn ôn" (số ngày) · có làm trong GĐ5 không.
 
 ## GĐ6 — Tích hợp và hoàn thiện (19/11 → 25/11)
 

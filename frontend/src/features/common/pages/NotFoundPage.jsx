@@ -9,7 +9,8 @@ export default function NotFoundPage() {
       fullPage
       icon="search"
       title="Không tìm thấy trang"
-      code="Mã: 404 · Not Found"
+      code="404 · Not Found"
+      codeLarge
       actions={
         <Link to="/" className="btn btn-primary">
           ← Về trang chính
