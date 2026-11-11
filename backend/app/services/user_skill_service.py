@@ -211,7 +211,7 @@ def browse_catalog(
 
 
 # ─────────────── Hàm cho module KHÁC gọi (08/11) — tự ghi kỹ năng theo khóa học / ôn tập ───────────────
-# KHÔNG commit: chạy trong transaction của module gọi (vd API "Tham gia khóa học" của Hòa) → module đó
+# KHÔNG commit: chạy trong transaction của module gọi (vd API "Tham gia khóa học" của Khôi) → module đó
 # commit một lần cho cả việc đổi trạng thái khóa học lẫn kỹ năng (lỗi thì rollback cả hai).
 #
 # Quyết định (Tuấn, 08/11):

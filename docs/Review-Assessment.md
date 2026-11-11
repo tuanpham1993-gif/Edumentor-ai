@@ -54,7 +54,7 @@
 | B1 | Khóa **chỉ "Hoàn thành" khi đạt ôn tập**; không có chức năng tự đánh dấu hoàn thành (trả lời S8: không). Lần đạt **đầu tiên**: khóa Hoàn thành + **mọi** kỹ năng của khóa thành "Đã biết" (`source="review"`), **kể cả kỹ năng người dùng đã tự gỡ** (6b) — **cùng một lần commit**. |
 | B2 | Ôn lại khóa đã Hoàn thành: **chỉ lưu lịch sử**; không đổi trạng thái khóa, không cập nhật kỹ năng. |
 | — | Chưa đạt: làm lại **không giới hạn**, mỗi lượt một đề mới. Mỗi người dùng + khóa có **tối đa 1 lượt đang làm**. |
-| 6a | Đổi trạng thái khóa qua **hàm Hòa cung cấp**: `mark_course_completed(db, user_id, course_id)` (chỉ flush) + `get_enrollment_status(db, user_id, course_id)`. Đã gửi: `BA-nhom/Gui-Hoa-On-tap-09-va-Khoa-hoc.md`. Hòa chưa kịp → dùng hàm giả để test. |
+| 6a | Đổi trạng thái khóa qua **hàm Khôi cung cấp** (đính chính 11/11: phần đăng ký khóa là của **Khôi**, không phải Hòa): `mark_course_completed(db, user_id, course_id)` (chỉ flush) + `get_enrollment_status(db, user_id, course_id)`, đặt trong `course_tracking_service.py` của Khôi. Đã gửi: `BA-nhom/Gui-Khoi-On-tap-09-va-Khoa-hoc.md`. Chưa có → dùng hàm giả để test. |
 
 ### Thời gian (A9)
 Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở rộng **14 → 18/11**. Tích hợp với nhóm + tập demo: **19 → 25/11**.
@@ -75,7 +75,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | `services/review_service.py` | Service | **Luồng chính** + **commit duy nhất**: bắt đầu → tạo đề → lưu bài → nộp → chấm → Hoàn thành + "Đã biết" → email | 2, 3 |
 | `services/exam_builder.py` | Service | Ráp đề theo khung 6 NB + 6 TH + 2 dễ + 1 nâng cao (A1) | 2 |
 | `services/review_grader.py` | Service | Chấm TN; chấm TL theo ý; quy đổi thang 10 | 3 |
-| `services/course_gateway.py` | Service | Cổng sang module Khóa học của Hòa (`get_enrollment_status`, `mark_course_completed`) — **hàm giả** tới khi Hòa có hàm thật | 2, 3 |
+| `services/course_gateway.py` | Service | Cổng sang module Khóa học của **Khôi** (`get_enrollment_status`, `mark_course_completed`) — **hàm giả** tới khi Khôi có hàm thật | 2, 3 |
 | `services/rag_service.py` | Service | Từ kỹ năng → các đoạn tri thức gần nhất (cosine) | 2 |
 | `ai/review/base.py` | AI | Khuôn chung: `generate_questions()`, `grade_essay()` | 2 |
 | `ai/review/mock_ai.py` | AI | AI giả: bốc câu gắn với đoạn RAG; chấm từ khóa | 2, 3 |
@@ -106,7 +106,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 - [x] **0.1 Viết lại tài liệu này** theo quyết định 09/11 — dự kiến 09/11 · thực tế 09/11 🤖
 - [x] **0.2 Commit `docs/Review-Assessment.md`** — dự kiến 09/11 · thực tế 09/11 🤖 (`7abdb47`)
-- [x] **0.3 Gửi Hòa** `BA-nhom/Gui-Hoa-On-tap-09-va-Khoa-hoc.md` — dự kiến 09/11 · thực tế 09/11 👤 — **đã gửi, chờ Hòa xác nhận**
+- [x] **0.3 Gửi Khôi** `BA-nhom/Gui-Khoi-On-tap-09-va-Khoa-hoc.md` (đính chính 11/11: trước ghi nhầm Hòa) — dự kiến 09/11 · thực tế 09/11 👤 — **Khôi đã trả lời 11/11** (xem Q12)
   - Nhận lại: tên bảng / cột / giá trị trạng thái đăng ký khóa; hạn có `mark_course_completed`, `get_enrollment_status`.
 - [x] **0.4 Chọn khóa demo** — **312** (37 làm khóa thứ 2) — thực tế 09/11
 - [x] **0.5 Đối chiếu khóa 312 trong DB thật** — dự kiến 09/11 · thực tế 09/11 👤 bật Docker · 🤖 kiểm tra
@@ -164,7 +164,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
   - Kiểm tra trước, ghi sau: sai ở đâu in **tất cả** lỗi, không ghi gì; kỹ năng phải thuộc khóa (`course_skill`, chỉ đọc). Chạy lại: cập nhật theo `code`, không trùng; đổi nội dung đoạn → xóa embedding cũ; câu đã tắt giữ nguyên tắt.
   - ✅ DB thật: lần 1 `+15 đoạn / +40 câu`, lần 2 `cập nhật 15 / 40`. Test `tests/test_seed_review.py` 23/23; toàn bộ **159 passed**.
 - [x] **1.10 Nhờ Claude review GĐ1** — dự kiến 10/11 · thực tế 11/11 🤖
-  - ⚠️ Phát hiện: sửa ngân hàng 10/11 (L6 đổi chỗ phương án + `correct_index` ngay trong câu cũ) làm lịch sử 3 lượt thử cũ của tài khoản #20 (lượt 3, 7, 10) hiện đúng/sai **lệch** với điểm đã lưu. Bài học: đúng quy tắc README — đổi đáp án = **tắt câu cũ + thêm mã mới**, không sửa đè. Xử lý: xóa các lượt thử cũ (chờ Tuấn đồng ý).
+  - ⚠️ Phát hiện: sửa ngân hàng 10/11 (L6 đổi chỗ phương án + `correct_index` ngay trong câu cũ) làm lịch sử 3 lượt thử cũ của tài khoản #20 (lượt 3, 7, 10) hiện đúng/sai **lệch** với điểm đã lưu. Bài học: đúng quy tắc README — đổi đáp án = **tắt câu cũ + thêm mã mới**, không sửa đè. Xử lý: **đã xóa** 7 lượt thử của tài khoản #20 (11/11, Tuấn đồng ý).
 
 ## GĐ2 — Sinh đề và làm bài (11/11)
 
@@ -177,7 +177,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - [x] **2.4 `ai/review/validator.py`** — **dùng chung** cho ngân hàng soạn tay (`seed_review.py` đổi sang dùng file này) và câu AI sinh; sinh lại ≤ 2 lần → ngân hàng dự phòng; câu AI mới (giai đoạn 2) tự lưu `source='ai'` — thực tế 09/11 🤖
 - [x] **2.5 `services/exam_builder.py`** — khung + **ưu tiên câu chưa dùng ở lượt trước** (`fresh`) — test chạy 100 lần mỗi kịch bản — thực tế 09/11 🤖
 - [x] **2.6 `GET /api/courses/{course_id}/review`** — lý do chưa thể ôn: `not_enrolled` / `abandoned` / `no_question_bank` — thực tế 09/11 🤖
-  - Trạng thái đăng ký đi qua `services/course_gateway.py` — **hàm giả** (coi như đang học) cho tới khi Hòa có hàm thật; chỉ sửa file này khi nối.
+  - Trạng thái đăng ký đi qua `services/course_gateway.py` — **hàm giả** (coi như đang học) cho tới khi Khôi có hàm thật; chỉ sửa file này khi nối. 11/11: hằng trạng thái đổi theo bảng `student_courses` của Khôi (`ongoing` / `completed` / `abandoned` / `bookmarked` — `bookmarked` = chưa tham gia, không cho ôn; thêm test).
 - [x] **2.7 `POST /api/courses/{course_id}/review-attempts`** — có lượt dở → `resumed=true`; bấm 2 lần cùng lúc → unique index chặn, trả lại lượt kia; chưa / bỏ khóa → 403; chưa có ngân hàng → 409 — thực tế 09/11 🤖
 - [x] **2.8 `GET /api/review-attempts/{attempt_id}`** — không có `correct_index`, `rubric`, `explanation`, `question_id`, `option_order` — thực tế 09/11 🤖
 - [x] **2.9 `PATCH /api/review-attempts/{attempt_id}/answers`** — gửi một phần; TN `selected_index` (null = bỏ chọn), TL `text_answer`; sai câu nào → 422, **không lưu câu nào**; đã nộp → 409 — thực tế 09/11 🤖
@@ -234,8 +234,9 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 ## GĐ6 — Tích hợp và hoàn thiện (19/11 → 25/11)
 
-- [ ] **6.1 Nối hàm thật của Hòa** (thay hàm giả), test luồng đầy đủ với module khóa học — thực tế __/__
-- [ ] **6.2 Kiểm thử thủ công** theo bảng dưới — thực tế __/__ (10/11: chạy API 19/19 đạt; còn R1 chờ Hòa, phần giao diện R4/R5/R15 + email R7 👤)
+- [ ] **6.1 Nối hàm thật của Khôi** (`course_tracking_service`, Khôi hẹn trước 12/11 — kiểm 11/11: chưa push, `user_course.py` + `course_tracking_service.py` trên nhánh Khôi còn rỗng) (thay hàm giả), test luồng đầy đủ với module khóa học — thực tế __/__
+  - Cần chốt với Khôi trước khi nối (gửi 11/11, `BA-nhom/Gui-Khoi-…` Phần 2–3): (1) cột người dùng của `student_courses` = `users.user_id`; (2) 2 hàm **chỉ flush**; (3) không cho bỏ khóa `completed` + phía Tuấn đổi điều kiện Hoàn thành thành "đạt + đang `ongoing`" (bỏ kiểm lần đạt đầu, tránh kẹt khi bỏ → đăng ký lại); (4) `bookmarked` = chưa tham gia. Test chung T1–T9.
+- [ ] **6.2 Kiểm thử thủ công** theo bảng dưới — thực tế __/__ (10/11: chạy API 19/19 đạt; còn R1 chờ Khôi, phần giao diện R4/R5/R15 + email R7 👤)
 - [ ] **6.3 Rà bảo mật**: không lộ đáp án / barem trước khi nộp; không xem được bài người khác; API debug chặn student; API key không nằm trong repo — thực tế __/__
 - [ ] **6.4 Tập demo + tạo Pull Request** — thực tế __/__
 
@@ -245,7 +246,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 | # | Thao tác | Mong đợi | GĐ | Đạt |
 |---|---|---|---|---|
-| R1 | Vào trang ôn tập khóa **chưa đăng ký** | Báo chưa thể ôn, không có nút Bắt đầu | 2, 4 | ⚠️ chờ Hòa — stub coi mọi người đã đăng ký; hiện chỉ test tự động kiểm |
+| R1 | Vào trang ôn tập khóa **chưa đăng ký** | Báo chưa thể ôn, không có nút Bắt đầu | 2, 4 | ⚠️ chờ Khôi — stub coi mọi người đã đăng ký; hiện chỉ test tự động kiểm |
 | R2 | Vào trang ôn tập khóa **không có ngân hàng** | "Chưa có đề ôn tập" | 2, 4 | ✅ 10/11 — khóa 37: `no_question_bank` |
 | R3 | Bắt đầu ôn khóa 312 | Đề 15 câu: 12 TN + 3 TL, đủ 5 kỹ năng | 2, 4 | ✅ 10/11 — 12 TN + 3 TL (2 dễ, 1 nâng cao), 5 kỹ năng |
 | R4 | Làm 5 câu → Tạm rời → vào lại | "Làm tiếp", 5 câu vẫn còn | 2, 4 | ✅ 10/11 (API) — `resumed`, còn 5/5 |
@@ -278,7 +279,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | Q9 | Đã Hoàn thành, ôn lại và trượt → khóa quay về đang học? | 3 | Không | Không (B2) | 09/11 |
 | Q10 | Câu hỏi bị sửa / tắt sau khi đã nằm trong bài cũ | 3 | Tắt bằng `is_active=false`, không xóa; lịch sử đọc theo câu gốc | | |
 | Q11 | Khóa demo chính? | 0 | 312 | 312 chính, 37 thứ 2 | 09/11 |
-| Q12 | Tên bảng / cột / giá trị trạng thái đăng ký khóa (Hòa) | 3 | — | Chờ Hòa | |
+| Q12 | Tên bảng / cột / giá trị trạng thái đăng ký khóa (**Khôi**) | 3 | — | Bảng `student_courses`, cột `status`: `bookmarked` · `ongoing` · `completed` · `abandoned`. 2 hàm trong `course_tracking_service.py`, kịp trước 12/11; `join_course` / `abandon_course` gọi `add_learning_from_course` / `remove_learning_from_course` (đang làm) | 11/11 |
 | Q13 | Bảng tạo bằng `create_all()` hay migration Alembic? | 1 | `create_all()` như các bảng hiện có (repo chưa có migration nào) | `create_all()` | 09/11 |
 
 ## Nhật ký
@@ -287,6 +288,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 |---|---|---|
 | 06/11 | Thầy bổ sung yêu cầu AI sinh câu hỏi (system prompt + RAG, trắc nghiệm + tự luận); viết đề xuất `docs/De-xuat-AI-On-tap.md` | Chờ thầy trả lời A1–A9 |
 | 06/11 | Đề xuất tiêu chí chấm (Phụ lục A); thêm A10–A13; Tuấn chọn chấm tự luận theo từng ý | Hẹn thảo luận 09/11 |
-| 09/11 | Họp thầy: chốt A1–A13, H1, T1, B1, B2. Thảo luận tiếp với Claude: thang 10 (TN 6 + TL 2 dễ × 1 + 1 nâng cao × 2), khung đề + random, mock đi đủ pipeline → API thật sau, chấm từ khóa (a), lịch 09–13/11, 6a (hàm của Hòa), 6b (đạt lần đầu thêm lại kỹ năng đã gỡ), làm lại không giới hạn. Gửi Hòa đặc tả phối hợp | Chờ Hòa trả lời |
+| 09/11 | Họp thầy: chốt A1–A13, H1, T1, B1, B2. Thảo luận tiếp với Claude: thang 10 (TN 6 + TL 2 dễ × 1 + 1 nâng cao × 2), khung đề + random, mock đi đủ pipeline → API thật sau, chấm từ khóa (a), lịch 09–13/11, 6a (hàm của Khôi — đính chính 11/11), 6b (đạt lần đầu thêm lại kỹ năng đã gỡ), làm lại không giới hạn. Gửi đặc tả phối hợp (ghi nhầm Hòa — đúng là Khôi) | Khôi đã trả lời 11/11 |
+| 11/11 | Review GĐ1–3: sửa lỗi nộp 2 lần cùng lúc (khóa dòng). Xóa 7 lượt thử cũ của tài khoản #20 (lịch sử lệch do sửa đè đáp án ngày 10/11). **Đính chính: phần đăng ký / hoàn thành khóa là của Khôi** (trước ghi nhầm Hòa); Khôi trả lời Q12, cổng `course_gateway` đổi hằng trạng thái theo `student_courses` | Chờ Khôi push `course_tracking_service` |
 | 09/11 | Chốt khóa demo 312 (37 làm khóa thứ 2). Chốt ngân hàng 3 bước, mục tiêu 20 câu/kỹ năng. Viết lại kế hoạch theo khung `Review-Frontend-Auth.md`: cấu trúc file, màn hình/API, GĐ0–GĐ6, bảng kiểm thử R1–R15. Phát hiện: repo dùng `create_all()` (không migration); `ai/client.py`, `ai/validators.py` là của chatbot Tâm → module 09 dùng `ai/review/` | Tâm chưa merge chatbot — không đụng nhánh Tâm |
 | | | |

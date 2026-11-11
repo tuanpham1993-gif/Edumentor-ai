@@ -76,7 +76,11 @@ def test_info_course_without_bank(client, bank_312, student_headers):
     assert body["blocked"] == {"code": "no_question_bank", "message": "Chưa có đề ôn tập cho khóa học này."}
 
 
-@pytest.mark.parametrize(("status", "code"), [(None, "not_enrolled"), ("abandoned", "abandoned")])
+@pytest.mark.parametrize(
+    ("status", "code"),
+    # 'bookmarked' (bảng student_courses của Khôi): mới lưu khóa, chưa đăng ký → như chưa tham gia
+    [(None, "not_enrolled"), ("bookmarked", "not_enrolled"), ("abandoned", "abandoned")],
+)
 def test_info_and_start_blocked_by_enrollment(client, bank_312, student_headers, monkeypatch, status, code):
     monkeypatch.setattr(course_gateway, "get_enrollment_status", lambda *_: status)
 

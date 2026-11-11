@@ -170,7 +170,7 @@ def test_second_pass_only_records_history(client, bank_312, student_headers, db_
     assert db_session.query(UserSkill).filter_by(skill_id=SKILL_IDS[0]).count() == 0  # không thêm lại
 
 
-@pytest.mark.parametrize("status", ["completed", "abandoned", None])
+@pytest.mark.parametrize("status", ["completed", "abandoned", "bookmarked", None])
 def test_no_completion_unless_in_progress(client, bank_312, student_headers, db_session, monkeypatch, status):
     attempt_id = start(client, student_headers)["attempt_id"]  # bắt đầu khi đang học
     answer_mcq(client, student_headers, db_session, attempt_id, correct=12)
