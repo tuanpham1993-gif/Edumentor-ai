@@ -1,0 +1,205 @@
+/* Làm bài ôn tập — màn demo ReviewQuiz (module 09 · Tuấn · GĐ4, 09/11/2026). */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 16px;
+  margin-bottom: 18px;
+}
+.course { margin: 0; color: var(--text-muted); font-size: 14px; }
+.course b { color: var(--text); }
+.topActions { display: flex; align-items: center; gap: 12px; }
+
+.save { color: var(--text-dim); min-width: 1px; display: inline-flex; align-items: center; gap: 8px; }
+.saved { color: var(--ok-fg); }
+.error { color: var(--danger-fg); }
+.retry {
+  padding: 2px 8px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--danger-border);
+  background: none;
+  color: var(--danger-fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 24px;
+  align-items: start;
+}
+.main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+.meta { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--text-muted); }
+.meta b { color: var(--text); }
+.track { height: 5px; border-radius: var(--r-pill); background: var(--track); overflow: hidden; }
+.track span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+  transition: width var(--d-slow) var(--e-std);
+}
+
+.card { padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+.level { margin: 0; font-size: 12.5px; color: var(--accent-soft-fg); letter-spacing: 0.02em; }
+.question { margin: 0; font-size: 21px; line-height: 1.45; }
+/* Câu hỏi có code (xuống dòng, thụt lề) → giữ nguyên khoảng trắng */
+.content { white-space: pre-wrap; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+.options > p { margin: 2px 0 0; }
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 18px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--d-fast), background var(--d-fast), transform var(--d-fast) var(--e-std);
+}
+.option:hover { border-color: var(--accent-soft-border); transform: translateX(2px); }
+.radio {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--outline);
+  transition: border-color var(--d-fast), box-shadow var(--d-fast);
+}
+.letter { flex: none; font-weight: 700; color: var(--text-muted); }
+.optionText { white-space: pre-wrap; overflow-wrap: anywhere; }
+.selected { border-color: var(--accent); background: var(--accent-tint); }
+.selected .radio { border-color: var(--accent); box-shadow: inset 0 0 0 4px var(--card-inner), inset 0 0 0 9px var(--accent); }
+.selected .letter { color: var(--accent); }
+
+.essay { display: flex; flex-direction: column; gap: 8px; }
+.textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--input-border);
+  background: var(--input);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color var(--d-fast), box-shadow var(--d-fast);
+}
+.textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px #f5a5241f; }
+.textarea::placeholder { color: var(--text-dim); }
+.counter { align-self: flex-end; }
+
+.stepper { display: flex; justify-content: space-between; gap: 12px; }
+
+/* ---------- Bảng số câu ---------- */
+.nav {
+  position: sticky;
+  top: 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+}
+.navHead { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.navHead h2 { margin: 0; font-size: 18px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cell {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.15;
+  border-radius: var(--r-md);
+  border: 1px solid var(--card-border);
+  background: none;
+  color: var(--text-soft);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--d-fast), border-color var(--d-fast), color var(--d-fast), transform var(--d-fast);
+}
+.cell:hover { border-color: var(--accent-soft-border); transform: translateY(-1px); }
+.done { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.done:hover { border-color: var(--accent-hover); }
+.current { box-shadow: 0 0 0 2px var(--accent); }
+.cell.current:not(.done) { color: var(--accent); }
+.essayDot {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--info-fg);
+}
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 0; list-style: none; font-size: 12px; color: var(--text-muted); }
+.legend li { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--card-border); }
+.swatch.current { box-shadow: 0 0 0 1.5px var(--accent); border-color: transparent; }
+
+.hint {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* ---------- Hộp xác nhận nộp bài ---------- */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: var(--scrim);
+  animation: fade var(--d-base) var(--e-in) both;
+}
+.dialog {
+  width: min(440px, 100%);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: pop var(--d-base) var(--e-spring) both;
+}
+.dialog h2 { margin: 0; font-size: 20px; }
+.dialog p { margin: 0; }
+.dialogActions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+
+@keyframes fade { 0% { opacity: 0; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(0.96); } }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .nav { position: static; order: -1; }
+  .grid { grid-template-columns: repeat(8, 1fr); }
+}
+@media (max-width: 560px) {
+  .card { padding: 20px 16px; }
+  .question { font-size: 18px; }
+  .grid { grid-template-columns: repeat(5, 1fr); }
+  .topActions { width: 100%; justify-content: space-between; }
+}

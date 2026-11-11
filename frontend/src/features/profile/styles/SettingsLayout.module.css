@@ -1,0 +1,37 @@
+/* Khung "Cài đặt tài khoản": menu trái + khung nội dung — chép từ demo app.css (_layout_10nx3). */
+.layout { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.menu { flex: 0 1 220px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.item {
+  position: relative; display: block; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px;
+  background: transparent; color: var(--text-soft); font: inherit; font-size: 14px; text-align: left;
+  cursor: pointer; transition: background var(--d-base) var(--e-std), color var(--d-base);
+}
+.item:hover { color: var(--text); background: var(--row-hover); }
+.active { background: var(--accent-soft-bg); color: var(--accent); font-weight: 600; }
+.active:hover { color: var(--accent); background: var(--accent-soft-bg); }
+.logout, .logout:hover { color: var(--danger-fg); }
+.theme {
+  display: flex; flex-direction: column; gap: 8px; margin-top: 8px; padding: 12px 4px 2px;
+  border-top: 1px solid var(--line);
+}
+.theme > span { font-size: 12px; color: var(--text-muted); }
+.panel {
+  flex: 999 1 520px; min-width: 0; padding: 28px; display: flex; flex-direction: column; gap: 20px;
+  animation: rise var(--d-slow) var(--e-in) both;
+}
+.panel h2 { margin: 0; font-size: 20px; }
+.panel h2 + p { margin: -12px 0 0; color: var(--text-muted); font-size: 13.5px; }
+.title { margin: 6px 0 20px; font-size: 30px; line-height: 1.2; }
+
+@media (max-width: 720px) {
+  /* Xuống dòng (không cuộn ngang): mục "Kỹ năng", "Đăng xuất", công tắc giao diện luôn nhìn thấy */
+  .menu { flex-basis: 100%; flex-direction: row; flex-wrap: wrap; }
+  .item { white-space: nowrap; width: auto; }
+  .panel { padding: 20px; }
+  .theme {
+    flex-direction: row; align-items: center; flex-basis: 100%; margin: 4px 0 0; padding: 8px 4px 0;
+  }
+  .theme > span { display: none; }
+}
+
+@keyframes rise { 0% { opacity: 0; transform: translateY(8px); } }

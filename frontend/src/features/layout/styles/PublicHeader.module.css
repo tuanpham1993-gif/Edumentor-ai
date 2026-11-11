@@ -1,0 +1,79 @@
+/* Header cho khách: trang chủ, Đăng nhập, Đăng ký, Quên mật khẩu (FĐ7, 08/11). */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition: background var(--d-base), border-color var(--d-base);
+}
+.headerScrolled {
+  background: var(--header-glass);
+  border-bottom-color: var(--line);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.headerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px 32px;
+}
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); font-weight: 600; font-size: 18px; }
+.brand:hover { color: var(--text); }
+.brand b { color: var(--accent); font-weight: 600; }
+.nav { margin-left: auto; display: flex; gap: 6px; font-size: 14px; }
+/* ---------- Hover "nhấc lên" (08/11, Tuấn) ----------
+   Rê chuột / Tab tới: chữ nhấc lên 3px, nền viên thuốc vàng nhạt hiện ra, quầng sáng bên dưới,
+   gạch chân vàng chạy ra từ giữa. Người dùng chọn "giảm chuyển động" → reduced-motion.css tắt chuyển động. */
+.navLink {
+  position: relative;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--text-soft);
+  transition:
+    transform var(--d-base) var(--e-spring),
+    color var(--d-fast),
+    background var(--d-base),
+    box-shadow var(--d-base),
+    text-shadow var(--d-base);
+}
+.navLink:hover,
+.navLink:focus-visible {
+  color: var(--text);
+  background: var(--accent-soft-bg);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px -8px rgba(245, 165, 36, 0.55);
+  text-shadow: 0 0 12px rgba(255, 196, 92, 0.35);
+}
+.navLink:active { transform: translateY(-1px); }
+/* Gạch chân vàng: mở rộng từ giữa khi mục đang mở / khi rê chuột */
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform var(--d-slow) var(--e-std);
+}
+.navLink:hover::after,
+.navLink:focus-visible::after { transform: scaleX(0.5); }
+.navActive { color: var(--accent); font-weight: 600; }
+.navActive:hover,
+.navActive:focus-visible { color: var(--accent); }
+.navActive::after,
+.navActive:hover::after { transform: scaleX(1); }
+.loginBtn { border-radius: 999px; padding: 0 16px; }
+
+
+@media (max-width: 720px) {
+  .headerInner { padding: 12px 16px; gap: 12px; }
+  .nav { display: none; } /* điện thoại: chỉ logo + nút */
+  .loginBtn { margin-left: auto; }
+}

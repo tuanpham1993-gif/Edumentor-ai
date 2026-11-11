@@ -1,0 +1,33 @@
+/* Trạng thái ô nhập và dòng thông báo dưới ô (FĐ3 bổ sung, 07/11). */
+.valid {
+  border-color: var(--ok-border);
+}
+
+.valid:focus-within {
+  border-color: var(--ok-fg);
+}
+
+/* Dòng trạng thái có icon: ✓ xanh / ✗ đỏ / ⇪ cảnh báo */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.statusOk {
+  color: var(--ok-fg);
+}
+
+.statusError {
+  color: var(--danger-fg);
+}
+
+.statusWarn {
+  color: var(--accent-soft-fg);
+}
+
+.status svg {
+  flex-shrink: 0;
+}

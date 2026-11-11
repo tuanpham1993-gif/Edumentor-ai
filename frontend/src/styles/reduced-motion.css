@@ -1,0 +1,23 @@
+/* Tắt hiệu ứng khi người dùng chọn giảm chuyển động — PHẢI nạp cuối cùng. (tách từ index.css, 08/11/2026) */
+
+/* ---------- Giảm chuyển động ---------- */
+/* Theo hệ điều hành, trừ khi người dùng chọn data-motion="full". */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) *,
+  :root:not([data-motion='full']) *::before,
+  :root:not([data-motion='full']) *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+/* Tùy chọn giảm chuyển động của người dùng (utils/theme.js setMotion). */
+:root[data-motion='reduce'] *,
+:root[data-motion='reduce'] *::before,
+:root[data-motion='reduce'] *::after {
+  animation-duration: 1ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}

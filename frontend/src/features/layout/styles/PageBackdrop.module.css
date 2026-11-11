@@ -1,0 +1,76 @@
+/* Nền chuyển động trang đã đăng nhập (FĐ7 08/11). Chỉ transform / opacity → mượt, nhẹ. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Quầng sáng lớn phía trên (giống hero trang chủ) */
+.glow {
+  position: absolute;
+  left: 50%;
+  top: -340px;
+  width: 1100px;
+  height: 700px;
+  margin-left: -550px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(245, 165, 36, 0.26), transparent); /* 08/11: sáng hơn trang chủ (0.2) */
+  animation: breathe 7s ease-in-out infinite;
+}
+
+/* Vầng sáng trôi hai bên */
+.aurora {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  opacity: 0.85; /* không dùng filter: blur — gây vệt hình chữ nhật; gradient tròn đã đủ mềm */
+}
+.left {
+  left: -220px;
+  top: 30%;
+  background: radial-gradient(closest-side, rgba(245, 165, 36, 0.18), transparent);
+  animation: driftA 22s ease-in-out infinite;
+}
+.right {
+  right: -240px;
+  top: 60%;
+  background: radial-gradient(closest-side, rgba(255, 196, 92, 0.16), transparent);
+  animation: driftB 26s ease-in-out infinite;
+}
+
+/* Hạt bụi sáng */
+.particles span {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  background: #ffd27a;
+  box-shadow: 0 0 10px 3px rgba(255, 196, 92, 0.75);
+  opacity: 0;
+  animation: rise 15s linear infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+@keyframes driftA {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(140px, -90px); }
+}
+@keyframes driftB {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-160px, -120px); }
+}
+@keyframes rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 0.95; }
+  50% { transform: translate(16px, -50vh); }
+  85% { opacity: 0.5; }
+  100% { transform: translate(-12px, -100vh); opacity: 0; }
+}
+
+/* Giao diện Sáng: dịu hẳn để không bẩn nền kem */
+:global([data-theme='light']) .backdrop { opacity: 0.45; }

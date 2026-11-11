@@ -1,0 +1,70 @@
+/* Trang Kỹ năng của tôi — theo màn demo (_selectSm_1sl4i, _bar…), FĐ6 08/11/2026. Thêm kỹ năng: trang Khám phá. */
+
+/* ---------- Ô "Thêm kỹ năng" → sang trang Khám phá ---------- */
+.addBox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 16px 18px;
+}
+.addBox > div { display: flex; flex-direction: column; gap: 4px; }
+
+/* ---------- Bảng ---------- */
+.selectSm {
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.selKnown { color: var(--accent-soft-fg); }
+.selLearning { color: var(--info-fg); }
+.name { display: block; }
+.note { display: block; margin-top: 2px; font-size: 12px; color: var(--ok-fg); }
+.tag {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--accent-soft-bg);
+  color: var(--accent-soft-fg);
+}
+.added td { background: #f5a5240d; }
+.removed td { opacity: 0.65; }
+.removed td:first-child .name { text-decoration: line-through; color: var(--text-dim); }
+.empty { padding: 28px 14px !important; text-align: center; color: var(--text-muted); }
+
+/* ---------- Thanh "N thay đổi chưa lưu" — dính đáy màn hình ---------- */
+.bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-soft-border);
+  color: var(--accent-soft-fg);
+  font-size: 13px;
+  box-shadow: 0 16px 34px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k)));
+  animation: barIn var(--d-slow) var(--e-spring) both;
+}
+
+/* Điện thoại: ẩn cột "Cập nhật" để bảng không tràn ngang, nút gỡ luôn nhìn thấy */
+@media (max-width: 560px) {
+  .colDate { display: none; }
+  .selectSm { max-width: 110px; }
+}
+
+@keyframes barIn { 0% { opacity: 0; transform: translateY(16px); } }
