@@ -9,6 +9,9 @@ from app.models.learning_path import LearningPath, LearningPathNode, LearningPat
 from app.models.auth_token import PasswordResetToken, RefreshToken
 from app.models.user import Users
 from app.models.user_skill import UserSkill
+from app.models.user_profile import UserProfile
+from app.models.notification import Notification
+from app.models.email_preference import EmailPreference
 
 # Model của Tuấn: ôn tập (module 09)
 from app.models.knowledge_chunk import KnowledgeChunk
@@ -27,6 +30,9 @@ __all__ = [
     "PasswordResetToken",
     "RefreshToken",
     "UserSkill",
+    "UserProfile",
+    "Notification",
+    "EmailPreference",
     "KnowledgeChunk",
     "ReviewQuestion",
     "ReviewAttempt",

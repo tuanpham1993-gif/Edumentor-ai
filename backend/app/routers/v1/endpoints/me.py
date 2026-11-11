@@ -51,14 +51,21 @@ def read_me(current_user: Users = Depends(get_current_user)):
     return current_user
 
 
-@router.patch("", response_model=UserMe, summary="Sửa họ tên")
+@router.patch("", response_model=UserMe, summary="Sửa họ tên + thông tin cá nhân (ngày sinh, giới tính, quê quán, SĐT, CCCD)")
 def update_me(
     request: UpdateMeRequest,
     current_user: Users = Depends(get_current_user),
     # Cùng phiên DB với get_current_user (FastAPI chỉ gọi get_db một lần mỗi request).
     db: Session = Depends(get_db),
 ):
-    return user_service.update_profile(db, current_user, full_name=request.full_name)
+    details = {k: getattr(request, k) for k in request.model_fields_set if k != "full_name"}
+    try:
+        return user_service.update_profile(db, current_user, full_name=request.full_name, details=details)
+    except user_service.CitizenIdTakenError:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Số CCCD này đã được dùng cho một tài khoản khác.",
+        ) from None
 
 
 @router.post("/change-password", response_model=MessageResponse, summary="Đổi mật khẩu")

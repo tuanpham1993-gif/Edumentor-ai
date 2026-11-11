@@ -9,8 +9,10 @@ export async function getMe() {
 }
 
 // PATCH /me — chỉ sửa họ tên
-export async function updateMe({ fullName }) {
-  const response = await client.patch('/me', { full_name: fullName });
+// details (12/11, không bắt buộc): { date_of_birth, gender, hometown, phone, citizen_id } — chỉ gửi trường đã đổi;
+// giá trị null = xóa. citizen_id chỉ GHI; đọc lại có citizen_id_masked (vd "345*********").
+export async function updateMe({ fullName, details = {} }) {
+  const response = await client.patch('/me', { full_name: fullName, ...details });
   return response.data;
 }
 
@@ -70,3 +72,15 @@ export async function browseSkillCatalog(params) {
 }
 
 // GET /me/summary (4 ô thống kê trên Hồ sơ): thêm khi backend 7.2 xong.
+
+// Tùy chọn nhận email (11/11) — { review_reminder, course_suggestions, feedback_replies }
+export async function getEmailPreferences() {
+  const response = await client.get('/me/email-preferences');
+  return response.data;
+}
+
+// PATCH một phần, vd { course_suggestions: true } → trả lại đủ 3 công tắc
+export async function updateEmailPreferences(changes) {
+  const response = await client.patch('/me/email-preferences', changes);
+  return response.data;
+}

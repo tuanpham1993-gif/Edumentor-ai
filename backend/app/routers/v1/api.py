@@ -12,7 +12,9 @@ from app.routers.v1.endpoints import (
     health,
     learning_path_node_service,
     learning_path_service,
+    email_preferences,
     me,
+    notifications,
     review,
     skill_service,
 )
@@ -29,6 +31,10 @@ api_router.include_router(health.router, tags=["System Health"], prefix="/health
 # 2. Tài khoản & hồ sơ (Tuấn)
 api_router.include_router(auth.router, tags=["Auth"], prefix="/auth")
 api_router.include_router(me.router, tags=["Me"], prefix="/me")
+# Thông báo (chuông trên header — Tuấn, 11/11)
+api_router.include_router(notifications.router, tags=["Notifications (Thông báo)"], prefix="/me/notifications")
+# Tùy chọn nhận email (Tuấn, 11/11)
+api_router.include_router(email_preferences.router, tags=["Me"], prefix="/me/email-preferences")
 # Ôn tập (Tuấn, module 09) — không prefix: router tự khai đường dẫn /courses/... và /review-attempts/...
 api_router.include_router(review.router, tags=["Review (Ôn tập)"])
 

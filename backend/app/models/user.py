@@ -5,6 +5,7 @@ Lớp MODEL: mô tả bảng bằng Python; khi server khởi động, `create_a
 """
 
 from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, Integer, String, func
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -46,3 +47,30 @@ class Users(Base):  # Kế thừa Base → SQLAlchemy biết đây là một b�
     __table_args__ = (
         CheckConstraint("role IN ('student', 'admin')", name="ck_users_role"),
     )
+
+    # Thông tin cá nhân thêm (12/11) — bảng user_profiles, tải kèm khi đọc user (selectin: 1 truy vấn nhỏ)
+    profile = relationship(
+        "UserProfile", uselist=False, lazy="selectin", cascade="all, delete-orphan", passive_deletes=True
+    )
+
+    # Đọc thẳng các trường hồ sơ → schema UserMe (from_attributes) lấy được như cột của users.
+    # KHÔNG có thuộc tính trả số CCCD đầy đủ — chỉ bản che.
+    @property
+    def date_of_birth(self):
+        return self.profile.date_of_birth if self.profile else None
+
+    @property
+    def gender(self):
+        return self.profile.gender if self.profile else None
+
+    @property
+    def hometown(self):
+        return self.profile.hometown if self.profile else None
+
+    @property
+    def phone(self):
+        return self.profile.phone if self.profile else None
+
+    @property
+    def citizen_id_masked(self):
+        return self.profile.citizen_id_masked if self.profile else None

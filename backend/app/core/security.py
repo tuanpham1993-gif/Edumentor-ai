@@ -7,13 +7,16 @@
 Không phụ thuộc HTTP hay DB → dùng được ở mọi nơi (service, script, test).
 """
 
+import base64
 import hashlib
+import hmac
 import re
 import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
+from cryptography.fernet import Fernet
 
 from app.core.config import settings
 
@@ -134,3 +137,28 @@ def generate_token() -> str:
 def hash_token(token: str) -> str:
     """Bản băm SHA-256 (hex) — lưu vào DB và dùng để tìm token."""
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+# ─────────────── Mã hóa dữ liệu cá nhân nhạy cảm (CCCD) — 12/11/2026 ───────────────
+# Khóa suy ra từ SECRET_KEY (không cần thêm biến .env). ⚠️ Đổi SECRET_KEY → không giải mã được CCCD cũ
+# (người dùng nhập lại) — chấp nhận ở đồ án; triển khai thật nên dùng khóa riêng PII_ENCRYPTION_KEY.
+
+
+def _derived_key(label: bytes) -> bytes:
+    return hashlib.sha256(label + settings.SECRET_KEY.encode()).digest()
+
+
+def encrypt_pii(value: str) -> str:
+    """Mã hóa (Fernet = AES + chống sửa) → chuỗi lưu DB. Không ai đọc được nếu không có SECRET_KEY."""
+    fernet = Fernet(base64.urlsafe_b64encode(_derived_key(b"edumentor-pii-enc:")))
+    return fernet.encrypt(value.encode()).decode()
+
+
+def decrypt_pii(token: str) -> str:
+    fernet = Fernet(base64.urlsafe_b64encode(_derived_key(b"edumentor-pii-enc:")))
+    return fernet.decrypt(token.encode()).decode()
+
+
+def pii_fingerprint(value: str) -> str:
+    """Dấu vân tay HMAC (một chiều) — để DB chặn một số CCCD dùng cho 2 tài khoản mà không lưu số thật."""
+    return hmac.new(_derived_key(b"edumentor-pii-mac:"), value.encode(), hashlib.sha256).hexdigest()

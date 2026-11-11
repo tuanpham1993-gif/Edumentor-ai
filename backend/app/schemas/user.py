@@ -6,7 +6,9 @@
 - MessageResponse      : response chỉ có một thông báo.
 """
 
-from datetime import datetime
+import re
+from datetime import date, datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -24,16 +26,64 @@ class UserMe(BaseModel):
     role: str
     avatar_url: str | None = None  # None khi chưa có ảnh (GĐ7 mới làm upload)
     created_at: datetime
+    # Thông tin cá nhân thêm (12/11) — bảng user_profiles; chưa nhập → None
+    date_of_birth: date | None = None
+    gender: Literal["male", "female"] | None = None
+    hometown: str | None = None
+    phone: str | None = None
+    citizen_id_masked: str | None = None  # vd "345*********" — KHÔNG BAO GIỜ trả số CCCD đầy đủ
     # KHÔNG có hashed_password, is_active, updated_at → không bao giờ bị trả ra ngoài.
 
 
 class UpdateMeRequest(BaseModel):
-    """PATCH /me — chỉ sửa họ tên; email, vai trò chỉ đọc (FR-03).
+    """PATCH /me — sửa họ tên + thông tin cá nhân (12/11); email, vai trò chỉ đọc (FR-03).
 
-    Chỉ khai báo full_name → client gửi kèm "email"/"role" cũng bị Pydantic bỏ qua.
+    Không khai báo email / role → client gửi kèm cũng bị Pydantic bỏ qua.
+    Các trường cá nhân: KHÔNG gửi = giữ nguyên; gửi null = xóa; gửi giá trị = cập nhật.
+    citizen_id chỉ GHI (12 chữ số) — đọc lại chỉ có bản che citizen_id_masked.
     """
 
     full_name: str = Field(min_length=1, max_length=100)
+    date_of_birth: date | None = None
+    gender: Literal["male", "female"] | None = None
+    hometown: str | None = Field(default=None, max_length=100)
+    phone: str | None = None
+    citizen_id: str | None = None
+
+    @field_validator("date_of_birth")
+    @classmethod
+    def check_birth_date(cls, value: date | None) -> date | None:
+        if value is not None and not (date(1900, 1, 1) <= value <= date.today()):
+            raise ValueError("Ngày sinh không hợp lệ.")
+        return value
+
+    @field_validator("hometown")
+    @classmethod
+    def clean_hometown(cls, value: str | None) -> str | None:
+        value = (value or "").strip()
+        return value or None
+
+    @field_validator("phone")
+    @classmethod
+    def check_phone(cls, value: str | None) -> str | None:
+        if value is None or not value.strip():
+            return None
+        digits = re.sub(r"[\s.\-()]", "", value)
+        if digits.startswith("+84"):
+            digits = "0" + digits[3:]
+        if not re.fullmatch(r"0\d{9}", digits):
+            raise ValueError("Số điện thoại phải gồm 10 chữ số, bắt đầu bằng 0.")
+        return digits
+
+    @field_validator("citizen_id")
+    @classmethod
+    def check_citizen_id(cls, value: str | None) -> str | None:
+        if value is None or not value.strip():
+            return None
+        digits = re.sub(r"\s", "", value)
+        if not re.fullmatch(r"\d{12}", digits):
+            raise ValueError("Số CCCD phải gồm đúng 12 chữ số.")
+        return digits
 
     @field_validator("full_name")
     @classmethod

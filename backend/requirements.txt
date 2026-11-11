@@ -12,6 +12,7 @@ psycopg[binary]>=3.2.0
 
 # Auth
 bcrypt>=4.1.0
+cryptography>=42.0  # mã hóa CCCD (core/security.encrypt_pii) — 12/11
 pyjwt>=2.8.0
 
 # HTTP client (gọi LLM + test client)
