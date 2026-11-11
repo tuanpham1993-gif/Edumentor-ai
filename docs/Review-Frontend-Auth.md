@@ -75,14 +75,14 @@
   - Bản demo **không** kiểm tra đăng nhập — bản thật phải có (và backend vẫn là lớp chặn chính — NFR-05).
 - [x] **2.4 `components/layout/Header.jsx`, `PageLayout.jsx`** — tên + avatar người dùng, liên kết hồ sơ — dự kiến 09/11 · thực tế 07/11 — Claude viết (+ `Header.module.css`, `utils/formatters.js`: initials, formatDate, roleLabel)
 - [x] **2.5 `App.jsx`** — bọc `AuthProvider` + router — dự kiến 09/11 · thực tế 07/11 — Claude viết. LoginPage / ProfilePage là BẢN TẠM để kiểm tra luồng (FĐ3, FĐ5 làm lại)
-- [ ] **2.6 Nhờ Claude review FĐ2** — dự kiến 09/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay K1, K4, K6, K11 trên trình duyệt
+- [x] **2.6 Nhờ Claude review FĐ2** — dự kiến 09/11 · thực tế 11/11 🤖 — K1, K4, K6, K7, K11 đạt (Chrome thật, script `scratchpad/shots/k_tests.mjs` — tạo tài khoản tạm qua form Đăng ký, xóa sau khi chạy)
 
 ## FĐ3 — Đăng nhập, đăng ký (10/11)
 
 - [x] **3.1 `components/auth/AuthLayout.jsx` + `Lamp.jsx`** — dây kéo đèn: mở trang đèn tắt, form ẩn và khóa; kéo → sáng — dự kiến 10/11 · thực tế 07/11 — Claude viết (theo yêu cầu): CSS chép từ màn demo vào CSS Module; form bị khóa (inert) khi đèn tắt; điện thoại ẩn 2 đèn phụ
 - [x] **3.2 `LoginPage.jsx`** — email, mật khẩu, hiện/ẩn mật khẩu; sai → "Lỗi 401: …" + rung form (`.shake`); đúng → `/me` (admin → trang quản trị khi có); liên kết Quên mật khẩu, Đăng ký — dự kiến 10/11 · thực tế 07/11 — Claude viết; + `TextField`, `PasswordField` (hiện/ẩn), `icons.jsx`; thông báo sau đăng ký / hết phiên; bỏ dòng "tài khoản demo"
 - [x] **3.3 `RegisterPage.jsx`** — 4 ô; kiểm tra ngay trên form theo **cùng quy tắc mật khẩu với backend** (≥ 8 ký tự, hoa, thường, số, ký tự đặc biệt, ≤ 72 byte); hiện lỗi 409 / 422 từ server; thành công → `/login` điền sẵn email — dự kiến 10/11 · thực tế 07/11 — Claude viết; `utils/validators.js` khớp backend 13/13 mật khẩu thử; 409 → ô Email, 422 → đúng ô
-- [ ] **3.4 Thử theo bảng kiểm thử FĐ3 + nhờ Claude review** — dự kiến 10/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay trên trình duyệt (K2, K3, K5)
+- [x] **3.4 Thử theo bảng kiểm thử FĐ3 + nhờ Claude review** — dự kiến 10/11 · thực tế 11/11 🤖 — K2, K3, K5 đạt (Chrome thật). Lưu ý: trang Đăng nhập / Đăng ký có màn "kéo dây đèn để mở trang" (nhớ trong `sessionStorage`)
 
 ## FĐ4 — Quên / đặt lại mật khẩu (11/11)
 
@@ -99,7 +99,7 @@
 - [x] **5.3 `EditProfilePage.jsx`** — sửa họ tên (`PATCH /me`); email, vai trò, ngày tham gia chỉ đọc; **bấm avatar để đổi ảnh**: kiểm tra trước PNG/JPEG ≤ 5 MB, hiện lỗi 413 / 415 từ server; thông báo "Đã lưu" — dự kiến 12/11 · thực tế 07/11 — Claude viết; khung chung `SettingsLayout.jsx` (← Hồ sơ, menu trái, khung phải); chọn ảnh là tải lên ngay; lưu xong cập nhật Header
 - [x] **5.4 `ChangePasswordPage.jsx`** — 3 ô + quy tắc; sai mật khẩu hiện tại → lỗi 400 trên form (không đăng xuất); thành công → backend đã thu hồi refresh token (Q10) → thông báo và **đăng xuất, về `/login`** — dự kiến 12/11 · thực tế 07/11 — Claude viết; thêm quy tắc "Khác mật khẩu hiện tại" (prop `notSameAs` của `PasswordRules`) — 08/11: backend cũng chặn (400 "Mật khẩu này đã được sử dụng." → hiện dưới ô Mật khẩu mới)
 - [x] **5.5 `LogoutDialog.jsx`** — xác nhận → `POST /auth/logout` → xóa token → `/login` — dự kiến 12/11 · thực tế 07/11 — Claude viết: hộp thoại xác nhận (Esc / bấm nền / Hủy để đóng; con trỏ đặt sẵn ở Hủy)
-- [ ] **5.6 Thử + nhờ Claude review FĐ5** — dự kiến 12/11 · thực tế __/__ — build OK; chờ Tuấn kiểm thử tay (K9–K12)
+- [x] **5.6 Thử + nhờ Claude review FĐ5** — dự kiến 12/11 · thực tế 11/11 🤖 — K9–K12 đạt (Chrome thật): ảnh PNG lưu; .txt và ảnh > 5 MB chặn ngay trên trình duyệt; .txt đổi đuôi .png → server 415
 
 ## FĐ6 — Kỹ năng, thống kê (13/11 — sau backend GĐ4, 7.2) — làm sớm 08/11 (GĐ4 xong 08/11)
 
@@ -117,9 +117,9 @@
 - [x] **7.0f Trang chủ cho khách `/`** (theo mockup Tuấn gửi) — thực tế 08/11 — Claude viết (theo yêu cầu): `pages/home/` — header khách (neo #, mục đang xem tô vàng), hero + thẻ bắt đầu nhanh (Đăng ký / Đăng nhập: nhận họ tên + email rồi chuyển sang trang đầy đủ, điền sẵn), 3 bước, 6 tính năng, lộ trình mẫu, Khóa học nổi bật, Tin nổi bật, kêu gọi đăng ký, Footer dùng chung (`guest`). Khối hiện dần khi cuộn. **Khóa học / Tin nổi bật là DỮ LIỆU MẪU** (`homeContent.js`) — chờ API khóa học. Đã đăng nhập vào `/` → `/me`; logo trang Đăng nhập / Đăng ký / Quên mật khẩu dẫn về `/`. Header khách dùng chung `components/layout/PublicHeader.jsx` cho cả trang chủ, Đăng nhập, Đăng ký, Quên mật khẩu (trang khác bấm mục → về `/#id`)
 - [x] **7.0g Đồng bộ nền + chuyển động** — thực tế 08/11 — Claude viết (theo yêu cầu): Đăng nhập / Đăng ký dùng nền liền + quầng sáng như trang chủ, khung 1200px thẳng hàng header (màn rộng), sửa màu ô khi trình duyệt tự điền (autofill); trang đã đăng nhập: `PageBackdrop` (quầng sáng thở, vầng sáng trôi, hạt bụi), header khung 1200px + vệt sáng chạy + vòng sáng avatar, Hồ sơ: khối trượt lên lần lượt, viền sáng chạy quanh thẻ hồ sơ, ô thống kê nhấp nháy chờ dữ liệu, khối "Đang cập nhật" icon lơ lửng + vệt sáng lướt
 - [x] **7.0h Sắp xếp lại CSS / thư mục (phương án A)** — thực tế 08/11 — Claude làm (theo yêu cầu): `src/styles/` (CSS dùng chung tách 9 file) + `src/features/<tính năng>/{pages,components,styles}`; giao diện kiểm chứng giống hệt (xem `SetUp-CSS.md` §7); hướng dẫn `frontend/src/features/README.md`
-- [ ] **7.1 Kiểm thử thủ công theo bảng dưới**, so với ảnh demo — dự kiến 13/11 · thực tế __/__
+- [ ] **7.1 Kiểm thử thủ công theo bảng dưới**, so với ảnh demo — dự kiến 13/11 · thực tế __/__ — 11/11 🤖 chạy **K1–K15 + W1, W8, W10 = 18/18 đạt** trên Chrome thật, không lỗi JS. 👤 Còn: Tuấn **so giao diện với ảnh demo** (ảnh chụp từng bước trong `scratchpad/shots/k/`)
 - [x] **7.2 Giao diện hẹp (điện thoại)**, chế độ Sáng, trạng thái đang tải / lỗi mạng — dự kiến 13/11 · thực tế 08/11 — Claude kiểm bằng Chrome headless ở 375 / 768 / 1280 px (8 trang): **không trang nào tràn ngang**; sửa: menu Cài đặt trên điện thoại bị che mục (cuộn ngang ẩn) → xuống dòng; Đổi mật khẩu trên điện thoại: quy tắc nằm dưới nút Lưu → đưa lên ngay dưới ô nhập; thống kê Hồ sơ 1 → 2 cột; Header thêm `-webkit-backdrop-filter` (Safari < 18); font dự phòng có dấu tiếng Việt khi không tải được Google Fonts; reset `img max-width`, `text-size-adjust`. Còn chờ: Tuấn thử trên điện thoại thật + Firefox / Safari (nếu có)
-- [ ] **7.3 `npm run build`** không lỗi — dự kiến 13/11 · thực tế __/__
+- [x] **7.3 `npm run build`** không lỗi — dự kiến 13/11 · thực tế 11/11 🤖 (sửa chữ "Ôn tập 20 câu" → **15 câu** theo quyết định 09/11 ở trang Đăng nhập / Đăng ký và trang chủ)
 - [ ] **7.4 Commit, báo nhóm phần nền dùng chung** (`client.js`, `authStore`, route, layout) — dự kiến 13/11 · thực tế __/__
 
 ---
@@ -128,21 +128,21 @@
 
 | # | Thao tác | Mong đợi | FĐ | Đạt |
 |---|---|---|---|---|
-| K1 | Vào `/me` khi chưa đăng nhập | Chuyển `/login` | 2 | [ ] |
-| K2 | Đăng nhập sai | "Lỗi 401: …", form rung | 3 | [ ] |
-| K3 | Đăng nhập đúng | Vào `/me`, header có tên | 3 | [ ] |
-| K4 | Đã đăng nhập, vào `/login` | Chuyển `/me` | 2 | [ ] |
-| K5 | Đăng ký email đã có / mật khẩu yếu / xác nhận lệch | Lỗi hiện đúng ô | 3 | [ ] |
-| K6 | Tải lại trang (F5) khi đang đăng nhập | Vẫn đăng nhập | 2 | [ ] |
-| K7 | Để access token hết hạn (hoặc sửa tạm `ACCESS_TOKEN_EXPIRE_MINUTES=1`) rồi thao tác | Tự refresh, không bị đá ra | 1 | [ ] |
-| K8 | Quên mật khẩu → mở link trong terminal backend → đặt lại → dùng lại link | Lần 2 sang ResetExpired | 4 | [ ] |
-| K9 | Sửa họ tên, đổi ảnh PNG/JPEG; thử file .txt và ảnh > 5 MB; thử file .txt đổi đuôi thành .png | Lưu được; báo lỗi trên trình duyệt; file giả .png → server báo 415 | 5 | [ ] |
-| K10 | Đổi mật khẩu sai / đúng | Sai: lỗi trên form; đúng: về `/login` | 5 | [ ] |
-| K11 | Đăng xuất, bấm Back của trình duyệt | Không vào lại được `/me` | 5 | [ ] |
-| K12 | Đổi Tối / Sáng, tải lại trang | Giữ lựa chọn | 5 | [ ] |
-| K13 | Cài đặt → "Kỹ năng của tôi": thêm 2 kỹ năng, đổi 1, gỡ 1, bấm Hoàn tác; làm lại rồi Lưu tất cả; F5 | Thanh "N thay đổi chưa lưu" đúng số; Hoàn tác về như cũ; lưu xong F5 vẫn còn; Hồ sơ hiện đúng kỹ năng + số "Kỹ năng đã biết" | 6 | [ ] |
-| K14 | Đang đăng nhập → tắt backend (Ctrl+C) → F5 → bật lại backend → bấm "Thử lại" | Trang 503, KHÔNG bị đăng xuất; Thử lại → vào lại `/me` | 7 | [ ] |
-| K15 | Gõ URL lạ, vd `/abc` | Trang 404 "Không tìm thấy trang" | 7 | [ ] |
+| K1 | Vào `/me` khi chưa đăng nhập | Chuyển `/login` | 2 | ✅ 11/11 |
+| K2 | Đăng nhập sai | "Lỗi 401: …", form rung | 3 | ✅ 11/11 |
+| K3 | Đăng nhập đúng | Vào `/me`, header có tên | 3 | ✅ 11/11 |
+| K4 | Đã đăng nhập, vào `/login` | Chuyển `/me` | 2 | ✅ 11/11 |
+| K5 | Đăng ký email đã có / mật khẩu yếu / xác nhận lệch | Lỗi hiện đúng ô | 3 | ✅ 11/11 |
+| K6 | Tải lại trang (F5) khi đang đăng nhập | Vẫn đăng nhập | 2 | ✅ 11/11 |
+| K7 | Để access token hết hạn (hoặc sửa tạm `ACCESS_TOKEN_EXPIRE_MINUTES=1`) rồi thao tác | Tự refresh, không bị đá ra | 1 | ✅ 11/11 (token hỏng → tự refresh, xoay refresh token) |
+| K8 | Quên mật khẩu → mở link trong terminal backend → đặt lại → dùng lại link | Lần 2 sang ResetExpired | 4 | ✅ 11/11 (link lấy từ service, không qua email) |
+| K9 | Sửa họ tên, đổi ảnh PNG/JPEG; thử file .txt và ảnh > 5 MB; thử file .txt đổi đuôi thành .png | Lưu được; báo lỗi trên trình duyệt; file giả .png → server báo 415 | 5 | ✅ 11/11 |
+| K10 | Đổi mật khẩu sai / đúng | Sai: lỗi trên form; đúng: về `/login` | 5 | ✅ 11/11 |
+| K11 | Đăng xuất, bấm Back của trình duyệt | Không vào lại được `/me` | 5 | ✅ 11/11 |
+| K12 | Đổi Tối / Sáng, tải lại trang | Giữ lựa chọn | 5 | ✅ 11/11 |
+| K13 | Cài đặt → "Kỹ năng của tôi": thêm 2 kỹ năng, đổi 1, gỡ 1, bấm Hoàn tác; làm lại rồi Lưu tất cả; F5 | Thanh "N thay đổi chưa lưu" đúng số; Hoàn tác về như cũ; lưu xong F5 vẫn còn; Hồ sơ hiện đúng kỹ năng + số "Kỹ năng đã biết" | 6 | ✅ 11/11 (thêm kỹ năng qua trang Khám phá chưa kiểm — script thêm bằng API) |
+| K14 | Đang đăng nhập → tắt backend (Ctrl+C) → F5 → bật lại backend → bấm "Thử lại" | Trang 503, KHÔNG bị đăng xuất; Thử lại → vào lại `/me` | 7 | ✅ 11/11 (chặn `/api` trong trình duyệt thay cho tắt backend) |
+| K15 | Gõ URL lạ, vd `/abc` | Trang 404 "Không tìm thấy trang" | 7 | ✅ 11/11 |
 
 ---
 

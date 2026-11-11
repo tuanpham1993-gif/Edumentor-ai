@@ -6,7 +6,7 @@
 export const HERO_POINTS = [
   { icon: 'route', text: 'Lộ trình học cá nhân hóa' },
   { icon: 'bulb', text: 'Gợi ý khóa học theo năng lực' },
-  { icon: 'check', text: 'Ôn tập 20 câu để ghi nhận kỹ năng' },
+  { icon: 'check', text: 'Ôn tập 15 câu để ghi nhận kỹ năng' },
 ];
 
 export const STEPS = [
@@ -20,14 +20,14 @@ export const STEPS = [
   },
   {
     title: 'Học, ôn tập, ghi nhận kỹ năng',
-    text: 'Hoàn thành bài ôn tập 20 câu để kỹ năng được cập nhật vào hồ sơ của bạn.',
+    text: 'Hoàn thành bài ôn tập 15 câu để kỹ năng được cập nhật vào hồ sơ của bạn.',
   },
 ];
 
 export const FEATURES = [
   { icon: 'route', title: 'Lộ trình cá nhân hóa', text: 'Mỗi người một lộ trình, xây dựng từ mục tiêu và năng lực thực tế.' },
   { icon: 'bulb', title: 'Gợi ý khóa học thông minh', text: 'Đề xuất khóa học vừa sức, không quá dễ cũng không quá khó.' },
-  { icon: 'check', title: 'Ôn tập và đánh giá', text: 'Bài ôn tập 20 câu sau mỗi khóa, chấm điểm và lưu lịch sử làm bài.' },
+  { icon: 'check', title: 'Ôn tập và đánh giá', text: 'Bài ôn tập 15 câu sau mỗi khóa, chấm điểm và lưu lịch sử làm bài.' },
   { icon: 'chart', title: 'Theo dõi tiến độ', text: 'Biết mình đang ở đâu trong lộ trình và còn bao nhiêu để hoàn thành.' },
   { icon: 'badge', title: 'Hồ sơ kỹ năng', text: 'Kỹ năng đạt được tự động cập nhật vào hồ sơ cá nhân của bạn.' },
   { icon: 'bot', title: 'Trợ lý AI', text: 'Hỏi đáp và giải thích kiến thức bất cứ khi nào bạn cần.' },

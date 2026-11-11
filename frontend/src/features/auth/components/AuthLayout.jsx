@@ -38,7 +38,7 @@ function saveLampOn(on) {
 const FEATURES = [
   'Lộ trình học do AI đề xuất theo mục tiêu',
   'Gợi ý khóa học theo từng kỹ năng',
-  'Ôn tập 20 câu để ghi nhận kỹ năng',
+  'Ôn tập 15 câu để ghi nhận kỹ năng',
 ];
 
 export default function AuthLayout({ children, cardClassName = '', onCardAnimationEnd }) {
