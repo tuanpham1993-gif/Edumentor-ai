@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import * as authApi from '../../../api/auth.api.js';
 import CenterLayout, { BackToLogin, Orb, centerStyles } from '../components/CenterLayout.jsx';
-import { MailIcon } from '../../common/components/icons.jsx';
+import { ArrowIcon, MailIcon } from '../../common/components/icons.jsx';
 import TextField from '../../common/components/TextField.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { validateEmail } from '../../../utils/validators.js';
@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
           className={`btn btn-primary btn-lg btn-block ${submitting ? 'loading' : ''}`}
           disabled={submitting}
         >
-          Gửi yêu cầu
+          Gửi yêu cầu <ArrowIcon />
           <span className="spinner" aria-hidden="true" />
         </button>
       </form>

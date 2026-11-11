@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as meApi from '../../../api/me.api.js';
+import { ArrowIcon } from '../../common/components/icons.jsx';
 import PasswordField from '../../common/components/PasswordField.jsx';
 import PasswordRules from '../../common/components/PasswordRules.jsx';
 import SettingsLayout from '../components/SettingsLayout.jsx';
@@ -171,7 +172,7 @@ export default function ChangePasswordPage() {
           className={`btn btn-primary ${submitting ? 'loading' : ''}`}
           disabled={submitting}
         >
-          Lưu thay đổi
+          Lưu thay đổi <ArrowIcon />
           <span className="spinner" aria-hidden="true" />
         </button>
       </div>

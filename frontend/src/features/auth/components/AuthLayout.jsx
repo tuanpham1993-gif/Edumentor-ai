@@ -41,7 +41,23 @@ const FEATURES = [
   'Ôn tập 15 câu để ghi nhận kỹ năng',
 ];
 
-export default function AuthLayout({ children, cardClassName = '', onCardAnimationEnd }) {
+// Câu chào bên trái theo trang (11/11: trang Đăng ký dùng câu riêng như màn demo Register)
+const HERO = {
+  login: {
+    title: ['Học đúng hướng,', 'tiến bộ mỗi ngày.'],
+    text: 'EduMentor AI gợi ý lộ trình theo mục tiêu, kết nối khóa học MOOC phù hợp và ghi nhận kỹ năng qua bài ôn tập.',
+    features: FEATURES,
+  },
+  register: {
+    title: ['Bắt đầu hành trình', 'học tập của bạn.'],
+    text: 'Tạo tài khoản học viên miễn phí để lưu khóa học, theo dõi lộ trình và ghi nhận kỹ năng.',
+    features: [],
+  },
+};
+
+// variant: 'login' (mặc định) | 'register'
+export default function AuthLayout({ children, cardClassName = '', onCardAnimationEnd, variant = 'login' }) {
+  const hero = HERO[variant] ?? HERO.login;
   const [lampOn, setLampOn] = useState(readLampOn); // đọc trạng thái đã nhớ (chỉ lần đầu vẽ)
   const [flashKey, setFlashKey] = useState(0); // > 0 và đổi → lóe sáng; 0 = không lóe (vào trang khi đèn đã sáng)
   const cardRef = useRef(null);
@@ -77,22 +93,21 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
 
         <div className={styles.copy}>
           <h2>
-            Học đúng hướng,
+            {hero.title[0]}
             <br />
-            <span>tiến bộ mỗi ngày.</span>
+            <span>{hero.title[1]}</span>
           </h2>
-          <p>
-            EduMentor AI gợi ý lộ trình theo mục tiêu, kết nối khóa học MOOC phù hợp và ghi nhận
-            kỹ năng qua bài ôn tập.
-          </p>
-          <div className={styles.features}>
-            {FEATURES.map((text) => (
-              <span key={text}>
-                <CheckCircleIcon />
-                {text}
-              </span>
-            ))}
-          </div>
+          <p>{hero.text}</p>
+          {hero.features.length > 0 && (
+            <div className={styles.features}>
+              {hero.features.map((text) => (
+                <span key={text}>
+                  <CheckCircleIcon />
+                  {text}
+                </span>
+              ))}
+            </div>
+          )}
           <span className={styles.lampState} aria-live="polite">
             {lampOn ? 'Kéo dây đèn lần nữa để tắt cả 3 đèn' : 'Đèn đang tắt · kéo dây đèn để mở trang'}
           </span>

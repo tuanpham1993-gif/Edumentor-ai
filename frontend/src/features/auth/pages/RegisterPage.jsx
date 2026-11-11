@@ -114,7 +114,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <AuthLayout cardClassName={shake ? 'shake' : ''} onCardAnimationEnd={() => setShake(false)}>
+    <AuthLayout variant="register" cardClassName={shake ? 'shake' : ''} onCardAnimationEnd={() => setShake(false)}>
       <div>
         <h1>Đăng ký tài khoản</h1>
         <p className="sub">Điền thông tin bên dưới để tạo tài khoản.</p>
