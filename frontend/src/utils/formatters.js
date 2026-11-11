@@ -41,6 +41,22 @@ export function formatDateTime(iso) {
   return `${parts.day}/${parts.month}/${parts.year} ${parts.hour}:${parts.minute}`;
 }
 
+/** Thời gian tương đối kiểu Facebook: "Vừa xong", "5 phút trước", "3 giờ trước", "2 ngày trước";
+ *  quá 7 ngày → ngày dd/mm/yyyy (chuông thông báo, 11/11). */
+export function timeAgo(iso, now = Date.now()) {
+  const time = new Date(iso).getTime();
+  if (Number.isNaN(time)) return '';
+  const seconds = Math.max(0, Math.floor((now - time) / 1000));
+  if (seconds < 60) return 'Vừa xong';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} phút trước`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} giờ trước`;
+  const days = Math.floor(hours / 24);
+  if (days <= 7) return `${days} ngày trước`;
+  return formatDate(iso);
+}
+
 /** "student" → "Học viên", "admin" → "Quản trị viên". */
 export function roleLabel(role) {
   return role === 'admin' ? 'Quản trị viên' : 'Học viên';

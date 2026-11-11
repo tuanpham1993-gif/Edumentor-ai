@@ -37,6 +37,7 @@ from app.schemas.review import SaveAnswersRequest
 from app.services import (
     course_gateway,
     exam_builder,
+    notification_service,
     rag_service,
     review_grader,
     user_skill_service,
@@ -431,11 +432,28 @@ def submit_attempt(db: Session, user: Users, attempt_id: int, *, ai: ReviewAI | 
             user_skill_service.mark_known(db, user.user_id, skill_ids, source="review")
         # JSON: gán dict MỚI để SQLAlchemy biết cột đã đổi
         attempt.trace = {**(attempt.trace or {}), "grading": grading}
+        _notify_result(db, user, attempt)  # chuông (11/11) — cùng commit, nộp lỗi thì không có thông báo
         db.commit()
     except Exception:
         db.rollback()
         raise
     return result_view(db, attempt_id)
+
+
+def _notify_result(db: Session, user: Users, attempt: ReviewAttempt) -> None:
+    """Thông báo trên chuông: kết quả ôn tập; đạt lần đầu thì thêm \"khóa đã hoàn thành\"."""
+    title = repo.get_course_title(db, attempt.course_id) or ""
+    verdict = "Đạt" if attempt.passed else "Chưa đạt"
+    notification_service.notify(
+        db, user.user_id, "review_graded", f"Kết quả ôn tập: {float(attempt.score):g}/10 — {verdict}",
+        body=title, link=f"/review/{attempt.attempt_id}/result", source_id=attempt.attempt_id,
+    )
+    if attempt.is_first_pass:
+        notification_service.notify(
+            db, user.user_id, "course_completed", f"Chúc mừng! Bạn đã hoàn thành khóa {title}",
+            body="Các kỹ năng của khóa đã được ghi nhận là Đã biết.", link="/me/skills",
+            source_id=attempt.course_id,
+        )
 
 
 def result_view(db: Session, attempt_id: int) -> dict:

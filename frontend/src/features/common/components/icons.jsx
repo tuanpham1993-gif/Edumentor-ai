@@ -29,6 +29,24 @@ export function LockIcon() {
   );
 }
 
+// Bút chì — nút "Chỉnh sửa hồ sơ" (11/11, theo demo Profile)
+export function PencilIcon() {
+  return (
+    <svg {...base} width={16} height={16}>
+      <path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4" />
+    </svg>
+  );
+}
+
+// Cửa + mũi tên ra — nút "Đăng xuất" (11/11, theo demo Profile)
+export function LogoutIcon() {
+  return (
+    <svg {...base} width={16} height={16}>
+      <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11" />
+    </svg>
+  );
+}
+
 export function UserIcon() {
   return (
     <svg {...base}>
