@@ -167,7 +167,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 ## GĐ2 — Sinh đề và làm bài (11/11)
 
-- [ ] **2.1 `scripts/build_embeddings.py`** — 🤖 đã viết 09/11 · 👤 **Tuấn chạy**: `python -m scripts.build_embeddings` (lần đầu tải mô hình ~470 MB) — thực tế __/__
+- [x] **2.1 `scripts/build_embeddings.py`** — 🤖 đã viết 09/11 · 👤 **Tuấn chạy**: `python -m scripts.build_embeddings` (lần đầu tải mô hình ~470 MB) — thực tế 10/11 👤 (kiểm DB: **15/15** đoạn có `embedding`)
   - Mô hình **đa ngôn ngữ** `paraphrase-multilingual-MiniLM-L12-v2` (`REVIEW_EMBEDDING_MODEL`) — mô hình `all-MiniLM-L6-v2` của Hòa chỉ hiểu tiếng Anh, tài liệu tri thức viết tiếng Việt.
   - ✅ Xong khi: 15 đoạn có `embedding`; lượt ôn mới có `score` trong trace.
 - [x] **2.2 `services/rag_service.py`** — lọc theo kỹ năng → xếp cosine; vector câu truy vấn tính lúc chạy bằng mô hình **đã tải sẵn** (`local_files_only`); chưa có vector / mô hình → vẫn trả đoạn theo thứ tự tạo (không chặn ôn tập) — thực tế 09/11 🤖
@@ -182,7 +182,8 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - [x] **2.9 `PATCH /api/review-attempts/{attempt_id}/answers`** — gửi một phần; TN `selected_index` (null = bỏ chọn), TL `text_answer`; sai câu nào → 422, **không lưu câu nào**; đã nộp → 409 — thực tế 09/11 🤖
 - [x] **2.10 Quyền sở hữu** — người khác (kể cả admin) → 404 — thực tế 09/11 🤖
   - ✅ Test: `test_exam_builder.py` (208), `test_review_ai.py` (11), `test_review_api.py` (26, chạy 5 lần liền đều đạt); toàn bộ **404 passed**. Chạy thử trên PostgreSQL thật bằng tài khoản test: đề 15 câu đúng khung, không lộ đáp án, lưu + làm tiếp đúng; đã xóa lượt thử.
-- [ ] **2.11 Thử tay trên Swagger** đủ luồng bắt đầu → lấy đề → lưu → làm tiếp — dự kiến 11/11 · thực tế __/__ 👤
+- [x] **2.11 Thử tay trên Swagger** đủ luồng bắt đầu → lấy đề → lưu → làm tiếp — dự kiến 11/11 · thực tế 10/11 🤖
+  - Gọi thẳng server đang chạy (`/api/docs` đủ **8** endpoint ôn tập) bằng đúng request Swagger gửi: bắt đầu → lấy đề → lưu 5 câu → bắt đầu lại = `resumed` cùng lượt, còn 5/5 câu. Script: `scratchpad/manual_r1_r15.py`; đã dọn dữ liệu thử.
 - [ ] **2.12 Nhờ Claude review GĐ2** — dự kiến 11/11 · thực tế __/__
 
 ## GĐ3 — Chấm điểm, Hoàn thành, test (12/11)
@@ -231,7 +232,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 ## GĐ6 — Tích hợp và hoàn thiện (19/11 → 25/11)
 
 - [ ] **6.1 Nối hàm thật của Hòa** (thay hàm giả), test luồng đầy đủ với module khóa học — thực tế __/__
-- [ ] **6.2 Kiểm thử thủ công** theo bảng dưới — thực tế __/__
+- [ ] **6.2 Kiểm thử thủ công** theo bảng dưới — thực tế __/__ (10/11: chạy API 19/19 đạt; còn R1 chờ Hòa, phần giao diện R4/R5/R15 + email R7 👤)
 - [ ] **6.3 Rà bảo mật**: không lộ đáp án / barem trước khi nộp; không xem được bài người khác; API debug chặn student; API key không nằm trong repo — thực tế __/__
 - [ ] **6.4 Tập demo + tạo Pull Request** — thực tế __/__
 
@@ -241,21 +242,21 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 | # | Thao tác | Mong đợi | GĐ | Đạt |
 |---|---|---|---|---|
-| R1 | Vào trang ôn tập khóa **chưa đăng ký** | Báo chưa thể ôn, không có nút Bắt đầu | 2, 4 | [ ] |
-| R2 | Vào trang ôn tập khóa **không có ngân hàng** | "Chưa có đề ôn tập" | 2, 4 | [ ] |
-| R3 | Bắt đầu ôn khóa 312 | Đề 15 câu: 12 TN + 3 TL, đủ 5 kỹ năng | 2, 4 | [ ] |
-| R4 | Làm 5 câu → Tạm rời → vào lại | "Làm tiếp", 5 câu vẫn còn | 2, 4 | [ ] |
-| R5 | Mở `F12` → xem response lấy đề | Không có đáp án, barem, giải thích | 2 | [ ] |
-| R6 | Đăng nhập tài khoản khác, mở link bài của người kia | 404 | 2 | [ ] |
-| R7 | Nộp bài đạt (≥ 6) | Kết quả Đạt; khóa Hoàn thành; hồ sơ có 5 kỹ năng "Đã biết"; có email | 3, 4 | [ ] |
-| R8 | Nộp bài chưa đạt → làm lại | Đề mới, không trùng câu lượt trước; khóa vẫn đang học | 3, 4 | [ ] |
-| R9 | Gỡ 1 kỹ năng của khóa khỏi hồ sơ → làm đạt lần đầu | Kỹ năng đó quay lại "Đã biết" (6b) | 3 | [ ] |
-| R10 | Khóa đã Hoàn thành → ôn lại (đạt hoặc trượt) | Chỉ thêm lịch sử; khóa và kỹ năng không đổi (B2) | 3 | [ ] |
-| R11 | Viết tự luận không dấu ("list thay doi duoc") | Vẫn chấm đúng ý | 3 | [ ] |
-| R12 | Tự luận chỉ liệt kê từ khóa ("list tuple mutable") | Tối đa "một phần" | 3 | [ ] |
-| R13 | Bấm Nộp 2 lần liên tiếp | Lần 2 bị từ chối, điểm không đổi | 3 | [ ] |
-| R14 | Student gọi API debug trace | 403 | 3 | [ ] |
-| R15 | Lịch sử ôn tập → mở 1 lượt | Từng câu, đáp án đúng, điểm từng ý + bằng chứng | 3, 4 | [ ] |
+| R1 | Vào trang ôn tập khóa **chưa đăng ký** | Báo chưa thể ôn, không có nút Bắt đầu | 2, 4 | ⚠️ chờ Hòa — stub coi mọi người đã đăng ký; hiện chỉ test tự động kiểm |
+| R2 | Vào trang ôn tập khóa **không có ngân hàng** | "Chưa có đề ôn tập" | 2, 4 | ✅ 10/11 — khóa 37: `no_question_bank` |
+| R3 | Bắt đầu ôn khóa 312 | Đề 15 câu: 12 TN + 3 TL, đủ 5 kỹ năng | 2, 4 | ✅ 10/11 — 12 TN + 3 TL (2 dễ, 1 nâng cao), 5 kỹ năng |
+| R4 | Làm 5 câu → Tạm rời → vào lại | "Làm tiếp", 5 câu vẫn còn | 2, 4 | ✅ 10/11 (API) — `resumed`, còn 5/5 |
+| R5 | Mở `F12` → xem response lấy đề | Không có đáp án, barem, giải thích | 2 | ✅ 10/11 (API) — 👤 còn xem bằng F12 |
+| R6 | Đăng nhập tài khoản khác, mở link bài của người kia | 404 | 2 | ✅ 10/11 — xem / lưu / nộp / lịch sử đều 404 |
+| R7 | Nộp bài đạt (≥ 6) | Kết quả Đạt; khóa Hoàn thành; hồ sơ có 5 kỹ năng "Đã biết"; có email | 3, 4 | ✅ 10/11 — 10/10, Hoàn thành, 5 kỹ năng · 👤 email chưa xem (tài khoản test @example.com) |
+| R8 | Nộp bài chưa đạt → làm lại | Đề mới, không trùng câu lượt trước; khóa vẫn đang học | 3, 4 | ✅ 10/11 — trùng 0/15 câu |
+| R9 | Gỡ 1 kỹ năng của khóa khỏi hồ sơ → làm đạt lần đầu | Kỹ năng đó quay lại "Đã biết" (6b) | 3 | ✅ 10/11 — gỡ 400 → quay lại `known`/`review` |
+| R10 | Khóa đã Hoàn thành → ôn lại (đạt hoặc trượt) | Chỉ thêm lịch sử; khóa và kỹ năng không đổi (B2) | 3 | ✅ 10/11 — `completed_course=false`, kỹ năng không đổi |
+| R11 | Viết tự luận không dấu ("list thay doi duoc") | Vẫn chấm đúng ý | 3 | ✅ 10/11 — đáp án mẫu không dấu đủ điểm |
+| R12 | Tự luận chỉ liệt kê từ khóa ("list tuple mutable") | Tối đa "một phần" | 3 | ✅ 10/11 — chỉ `partial` / `none` |
+| R13 | Bấm Nộp 2 lần liên tiếp | Lần 2 bị từ chối, điểm không đổi | 3 | ✅ 10/11 — lần 2 → 409, điểm giữ nguyên |
+| R14 | Student gọi API debug trace | 403 | 3 | ✅ 10/11 — 403 |
+| R15 | Lịch sử ôn tập → mở 1 lượt | Từng câu, đáp án đúng, điểm từng ý + bằng chứng | 3, 4 | ✅ 10/11 (API) — 15 câu, đáp án đúng, điểm + bằng chứng từng ý |
 
 ---
 
