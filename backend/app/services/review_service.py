@@ -315,8 +315,9 @@ def start_attempt(
 # ─────────────── Xem đề, lưu câu trả lời ───────────────
 
 
-def _owned_attempt(db: Session, user: Users, attempt_id: int) -> ReviewAttempt:
-    attempt = repo.get_attempt(db, attempt_id)
+def _owned_attempt(db: Session, user: Users, attempt_id: int, *, lock: bool = False) -> ReviewAttempt:
+    """lock=True (lưu / nộp): khóa dòng tới khi commit — bấm Nộp 2 lần cùng lúc, request sau chờ rồi nhận 409."""
+    attempt = repo.get_attempt(db, attempt_id, for_update=lock)
     if attempt is None or attempt.user_id != user.user_id:
         raise AttemptNotFoundError
     return attempt
@@ -368,7 +369,7 @@ def get_attempt(db: Session, user: Users, attempt_id: int) -> dict:
 
 def save_answers(db: Session, user: Users, attempt_id: int, request: SaveAnswersRequest) -> dict:
     """Lưu một phần hoặc toàn bộ câu trả lời. Sai ở câu nào → báo, KHÔNG lưu câu nào."""
-    attempt = _owned_attempt(db, user, attempt_id)
+    attempt = _owned_attempt(db, user, attempt_id, lock=True)
     if attempt.status != "in_progress":
         raise AttemptLockedError
     by_position = {a.position: a for a in attempt.answers}
@@ -404,7 +405,7 @@ def submit_attempt(db: Session, user: Users, attempt_id: int, *, ai: ReviewAI | 
     Lỗi giữa chừng → rollback toàn bộ, bài vẫn ở trạng thái đang làm (nộp lại được).
     Email kết quả do router gửi SAU khi hàm này trả về (đã commit xong).
     """
-    attempt = _owned_attempt(db, user, attempt_id)
+    attempt = _owned_attempt(db, user, attempt_id, lock=True)
     if attempt.status != "in_progress":
         raise AttemptLockedError
 

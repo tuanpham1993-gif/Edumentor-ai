@@ -69,13 +69,21 @@ def chunks_for_skill(db: Session, skill_id: int) -> list[KnowledgeChunk]:
 # ─────────────── Lượt làm bài ───────────────
 
 
-def get_attempt(db: Session, attempt_id: int) -> ReviewAttempt | None:
-    """Kèm sẵn câu trả lời + câu hỏi (tránh truy vấn lặp khi hiển thị đề)."""
-    return db.scalar(
+def get_attempt(db: Session, attempt_id: int, *, for_update: bool = False) -> ReviewAttempt | None:
+    """Kèm sẵn câu trả lời + câu hỏi (tránh truy vấn lặp khi hiển thị đề).
+
+    for_update=True: khóa dòng lượt làm bài tới khi commit/rollback (SELECT … FOR UPDATE) — dùng khi
+    LƯU / NỘP để 2 request cùng lúc phải xếp hàng: request sau đọc lại trạng thái mới nhất → 409.
+    """
+    stmt = (
         select(ReviewAttempt)
         .where(ReviewAttempt.attempt_id == attempt_id)
         .options(selectinload(ReviewAttempt.answers).selectinload(ReviewAnswer.question))
     )
+    if for_update:
+        # populate_existing: nếu object đã nằm trong session thì vẫn ghi đè bằng dữ liệu vừa khóa
+        stmt = stmt.with_for_update(of=ReviewAttempt).execution_options(populate_existing=True)
+    return db.scalar(stmt)
 
 
 def get_in_progress(db: Session, user_id: int, course_id: int) -> ReviewAttempt | None:

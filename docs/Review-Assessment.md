@@ -163,7 +163,8 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - [x] **1.9 `scripts/seed_review.py`** — dự kiến 10/11 · thực tế 09/11 🤖
   - Kiểm tra trước, ghi sau: sai ở đâu in **tất cả** lỗi, không ghi gì; kỹ năng phải thuộc khóa (`course_skill`, chỉ đọc). Chạy lại: cập nhật theo `code`, không trùng; đổi nội dung đoạn → xóa embedding cũ; câu đã tắt giữ nguyên tắt.
   - ✅ DB thật: lần 1 `+15 đoạn / +40 câu`, lần 2 `cập nhật 15 / 40`. Test `tests/test_seed_review.py` 23/23; toàn bộ **159 passed**.
-- [ ] **1.10 Nhờ Claude review GĐ1** — dự kiến 10/11 · thực tế __/__
+- [x] **1.10 Nhờ Claude review GĐ1** — dự kiến 10/11 · thực tế 11/11 🤖
+  - ⚠️ Phát hiện: sửa ngân hàng 10/11 (L6 đổi chỗ phương án + `correct_index` ngay trong câu cũ) làm lịch sử 3 lượt thử cũ của tài khoản #20 (lượt 3, 7, 10) hiện đúng/sai **lệch** với điểm đã lưu. Bài học: đúng quy tắc README — đổi đáp án = **tắt câu cũ + thêm mã mới**, không sửa đè. Xử lý: xóa các lượt thử cũ (chờ Tuấn đồng ý).
 
 ## GĐ2 — Sinh đề và làm bài (11/11)
 
@@ -184,7 +185,8 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
   - ✅ Test: `test_exam_builder.py` (208), `test_review_ai.py` (11), `test_review_api.py` (26, chạy 5 lần liền đều đạt); toàn bộ **404 passed**. Chạy thử trên PostgreSQL thật bằng tài khoản test: đề 15 câu đúng khung, không lộ đáp án, lưu + làm tiếp đúng; đã xóa lượt thử.
 - [x] **2.11 Thử tay trên Swagger** đủ luồng bắt đầu → lấy đề → lưu → làm tiếp — dự kiến 11/11 · thực tế 10/11 🤖
   - Gọi thẳng server đang chạy (`/api/docs` đủ **8** endpoint ôn tập) bằng đúng request Swagger gửi: bắt đầu → lấy đề → lưu 5 câu → bắt đầu lại = `resumed` cùng lượt, còn 5/5 câu. Script: `scratchpad/manual_r1_r15.py`; đã dọn dữ liệu thử.
-- [ ] **2.12 Nhờ Claude review GĐ2** — dự kiến 11/11 · thực tế __/__
+- [x] **2.12 Nhờ Claude review GĐ2** — dự kiến 11/11 · thực tế 11/11 🤖
+  - Ghi nhận cho GĐ5: request ôn tập **đầu tiên sau khi bật server** nạp mô hình embedding → có lúc > 60 giây (đo 11/11). Nên nạp sẵn mô hình lúc khởi động server.
 
 ## GĐ3 — Chấm điểm, Hoàn thành, test (12/11)
 
@@ -204,7 +206,8 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - [x] **3.8 Test đủ kịch bản** — `test_keyword_grader.py` (13), `test_review_submit.py` (19): 10/10 + Hoàn thành + kỹ năng, bỏ trống = 0, ngưỡng 6,0 / 5,5, ví dụ 7/10 → 1,4đ, đạt lần 2 chỉ lưu lịch sử, kỹ năng đã gỡ quay lại, lỗi giữa transaction, AI chấm lỗi → từ khóa, lịch sử + phân trang, quyền — thực tế 09/11 🤖
 - [x] **3.9 Toàn bộ `pytest` + `ruff`** — **436 passed**; ruff sạch các file module 09 (B008 `Depends` giữ như module 01) — thực tế 09/11 🤖
   - Chạy thử PostgreSQL thật (tài khoản test): 9,4/10 Đạt (câu list/tuple 1,4đ), khóa Hoàn thành, 5 kỹ năng "Đã biết"; đã khôi phục hồ sơ + xóa lượt thử.
-- [ ] **3.10 Nhờ Claude review GĐ3** (giai đoạn quan trọng nhất) — dự kiến 12/11 · thực tế __/__
+- [x] **3.10 Nhờ Claude review GĐ3** (giai đoạn quan trọng nhất) — dự kiến 12/11 · thực tế 11/11 🤖
+  - 🐞 **Đã sửa:** 2 request Nộp **cùng lúc** đều được chấm (đo trên server thật: 5/5 vòng ra 200 + 200 → chấm 2 lần, gửi 2 email). Sửa: khóa dòng lượt làm bài (`SELECT … FOR UPDATE`) khi **lưu** và **nộp** (`review_repository.get_attempt(for_update=True)`) → request sau chờ rồi nhận 409. Đo lại: 5/5 vòng 200 + 409. Toàn bộ **462 passed**.
 
 ## GĐ4 — Frontend 09 + demo đầu–cuối (13/11)
 
