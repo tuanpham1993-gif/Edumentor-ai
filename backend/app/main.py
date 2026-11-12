@@ -1,31 +1,22 @@
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-from app.routers.v1.api import api_router
 from app.core.config import settings
-from app.core.database import init_db, SessionLocal
-from app.core.seed_data.seed_data_code import seed_data
+from app.core.database import init_db
+from app.routers.v1.api import api_router
+from app.services.review_rag_service import warm_up_in_background
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 1. Khởi tạo database
     init_db()
-
-    # 2. Seed dữ liệu
-    db = SessionLocal()
-
-    try:
-        seed_data(db)
-        print("SEED DATA SUCCESS!")
-    except Exception as e:
-        print("SEED DATA FAILED!")
-        print(f"Error: {e}")
-        raise
-
+    warm_up_in_background()  # Tuấn 12/11: nạp sẵn mô hình embedding (ôn tập) ở luồng nền
     yield
 
     print("Close app")
@@ -50,5 +41,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(api_router, prefix=settings.API_STR)
+
+# GĐ7 (Tuấn): phục vụ ảnh đại diện đã upload tại /uploads/... (thư mục không commit — .gitignore)
+Path(settings.UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")

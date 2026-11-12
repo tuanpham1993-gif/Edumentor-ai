@@ -18,3 +18,6 @@ class SkillRelationCreate(SkillRelationBase):
 
 class SkillRelationResponse(SkillRelationBase):
     model_config = ConfigDict(from_attributes=True)
+
+class SkillRelationUpdate(BaseModel):
+    relation_type: RelationType

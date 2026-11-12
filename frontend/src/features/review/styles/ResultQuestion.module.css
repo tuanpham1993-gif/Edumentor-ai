@@ -1,0 +1,74 @@
+/* Một câu trong trang Kết quả — màn demo ReviewDetail(-Explanation) (module 09 · Tuấn · GĐ4). */
+.card { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.content { margin: 0; font-size: calc(16.5px * var(--reading-scale, 1)); line-height: 1.5; white-space: pre-wrap; }
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  font-size: calc(14px * var(--reading-scale, 1));
+}
+.letter { flex: none; font-weight: 700; color: var(--text-muted); }
+.text { flex: 1; white-space: pre-wrap; overflow-wrap: anywhere; }
+.tag { flex: none; font-size: 11.5px; font-weight: 600; }
+.correct { border-color: var(--ok-border); background: var(--ok-bg); }
+.correct .tag, .correct .letter { color: var(--ok-fg); }
+.wrong { border-color: var(--danger-border); background: var(--danger-bg); }
+.wrong .tag, .wrong .letter { color: var(--danger-fg); }
+
+.essay { display: flex; flex-direction: column; gap: 10px; }
+.essay > p { margin: 0; }
+.answer {
+  margin: 0;
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: var(--card-inner);
+  white-space: pre-wrap;
+  font-size: calc(14.5px * var(--reading-scale, 1));
+  line-height: 1.6;
+}
+.rubric td { vertical-align: top; font-size: 13.5px; }
+.points { white-space: nowrap; font-weight: 600; }
+.evidence { color: var(--text-soft); font-style: italic; }
+
+.explain { border-top: 1px solid var(--line); padding-top: 10px; }
+.toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.explainText {
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--accent-tint);
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.6;
+  animation: rise var(--d-base) var(--e-in) both;
+}
+@keyframes rise { 0% { opacity: 0; transform: translateY(-4px); } }
+
+@media (max-width: 640px) {
+  .options { grid-template-columns: 1fr; }
+  .head { flex-wrap: wrap; }
+}

@@ -1,14 +1,57 @@
-from sqlalchemy import Select, func, or_, select, case
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from typing import Literal
-from app.schemas.learning_path import (
-    LearningPathCreate, LearningPathResponse,
-    LearningPathNodeCreate, LearningPathNodeResponse,
-    LearningPathEdgeCreate, LearningPathEdgeResponse)
-from app.models.learning_path import (LearningPath, LearningPathNode, LearningPathEdge)
-from app.models import Skills
+from app.models.learning_path import LearningPathEdge
 
 RelationType = Literal["prerequisite", "related", "extension"]
+
+def add_new_learning_path_edges(db: Session, path_id: int, edges: list[dict],nodes: list[dict],) -> list[LearningPathEdge]:
+    valid_relation_types = { "prerequisite", "related", "extension",}
+
+    # 1. Get all skill IDs belonging to this submitted path.
+    path_skill_ids = {node["skill_id"] for node in nodes}
+
+    # 2. Validate and prepare edge records.
+    new_edges = []
+    seen_edges = set()
+
+    for edge in edges:
+        from_skill_id = edge["from_skill_id"]
+        to_skill_id = edge["to_skill_id"]
+        relation_type = edge["relation_type"]
+
+        # Both endpoints must exist in the submitted nodes.
+        if (from_skill_id not in path_skill_ids or to_skill_id not in path_skill_ids):
+            raise ValueError(
+                f"Edge references a skill outside the learning path: "
+                f"{from_skill_id} -> {to_skill_id}"
+            )
+
+        # Prevent an edge connecting a skill to itself.
+        if from_skill_id == to_skill_id: raise ValueError("A skill cannot have an edge to itself.")
+
+        # Validate relationship type.
+        if relation_type not in valid_relation_types:
+            raise ValueError(f"Invalid relation type: {relation_type}")
+
+        # Prevent duplicate directed edges.
+        edge_pair = (from_skill_id, to_skill_id)
+        if edge_pair in seen_edges: raise ValueError(f"Duplicate edge found: {from_skill_id} -> {to_skill_id}")
+        seen_edges.add(edge_pair)
+
+        new_edge = LearningPathEdge(
+            path_id=path_id, from_skill_id=from_skill_id,
+            to_skill_id=to_skill_id, relation_type=relation_type,
+        )
+
+        new_edges.append(new_edge)
+
+    # 3. Add all edges to the current transaction.
+    db.add_all(new_edges)
+    db.flush()
+
+    return new_edges
+
 def add_edge(db: Session, path_id: int, target_skill_id: int, skill_id: int, relation_type: RelationType | None) -> None:
     if relation_type is None: return
     if relation_type == "extension":
@@ -21,32 +64,35 @@ def add_edge(db: Session, path_id: int, target_skill_id: int, skill_id: int, rel
         to_skill_id = target_skill_id
     db.add(LearningPathEdge(path_id=path_id, from_skill_id=from_skill_id, to_skill_id=to_skill_id, relation_type=relation_type))
 
+def update_edge(db: Session, path_id: int, 
+                from_skill_id: int, to_skill_id: int, 
+                relation_type: RelationType) -> LearningPathEdge:
+    edge = db.scalar(
+        select(LearningPathEdge).where(
+            LearningPathEdge.path_id == path_id,
+            LearningPathEdge.from_skill_id == from_skill_id,
+            LearningPathEdge.to_skill_id == to_skill_id,
+        ))
+    if edge is None: raise ValueError("Learning path edge not found.")
+    edge.relation_type = relation_type
+    return edge
 
-def update_learning_path_node(
+
+def delete_edge(
     db: Session, path_id: int,
-    student_id: int, skill_id: int,
-    node_role: RelationType | None = None,
-    passed_test: bool | None = None) -> LearningPathNode:
-    try:
-        # 1. Check that the learning path belongs to this student.
-        path_exists = db.scalar(select(LearningPath.record_id).where(LearningPath.record_id == path_id, LearningPath.student_id == student_id))
-        if path_exists is None: raise ValueError("Learning path not found or access denied.")
+    from_skill_id: int, to_skill_id: int) -> None:
+    # 1. Find the edge.
+    edge = db.scalar(
+        select(LearningPathEdge).where(
+            LearningPathEdge.path_id == path_id,
+            LearningPathEdge.from_skill_id == from_skill_id,
+            LearningPathEdge.to_skill_id == to_skill_id,
+        )
+    )
 
-        # 2. Find the node to update.
-        node = db.scalar(select(LearningPathNode).where(LearningPathNode.path_id == path_id, LearningPathNode.skill_id == skill_id,))
-        if node is None: raise ValueError("Learning path node not found.")
+    # 2. Check whether the edge exists.
+    if edge is None:
+        raise ValueError("Learning path edge not found.")
 
-        # 3. Update node_role if a new value was provided.
-        if node_role is not None: node.node_role = node_role
-
-        # 4. Update is_target only when a test result is provided.
-        if passed_test is not None: node.is_target = passed_test
-
-        db.commit()
-        db.refresh(node)
-
-        return node
-
-    except Exception:
-        db.rollback()
-        raise
+    # 3. Mark the edge for deletion.
+    db.delete(edge)

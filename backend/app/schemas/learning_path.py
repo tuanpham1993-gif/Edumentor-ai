@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Literal
 
+RelationType = Literal["prerequisite", "related", "extension"]
 class SkillSummary(BaseModel):
     skill_id: int
     skill: str
@@ -23,6 +24,21 @@ class LearningPathNodeResponse(LearningPathNodeBase):
     skill: SkillSummary
     model_config = ConfigDict(from_attributes=True)
 
+class LearningPathNodeInsert(BaseModel):
+    skill_id: int
+    insert_before_skill_id: int
+
+    relation_to_current: RelationType | None = None
+    relation_to_next: RelationType | None = None
+
+    node_role: RelationType | None = None
+    is_target: bool = False
+    is_required: bool = False
+
+class LearningPathNodeUpdate(BaseModel):
+    node_role: RelationType | None = None
+    passed_test: bool | None = None
+
 ######################################################
 class LearningPathEdgeBase(BaseModel):
     from_skill_id: int
@@ -36,6 +52,7 @@ class LearningPathEdgeResponse(LearningPathEdgeBase):
     from_skill: SkillSummary
     to_skill: SkillSummary
     model_config = ConfigDict(from_attributes=True)
+
 ######################################################
 class LearningPathBase(BaseModel):
     student_id: int
@@ -43,7 +60,11 @@ class LearningPathBase(BaseModel):
     goal_type: Literal["career", "project"]
     status: Literal["completed", "ongoing", "abandoned"]
 
-class LearningPathCreate(LearningPathBase): pass
+class LearningPathCreate(BaseModel):
+    original_query: str
+    goal_type: Literal["career", "project"]
+    nodes: list[LearningPathNodeCreate]
+    edges: list[LearningPathEdgeCreate]
 
 class LearningPathResponse(LearningPathBase):
     record_id: int
@@ -51,6 +72,12 @@ class LearningPathResponse(LearningPathBase):
     edges: list[LearningPathEdgeResponse]
     model_config = ConfigDict(from_attributes=True)
 
+class LearningPathListResponse(BaseModel):
+    total: int
+    skip: int
+    limit: int
+    current_total: int
+    data: list[LearningPathResponse]
 
 """
 sample output

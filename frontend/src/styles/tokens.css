@@ -1,0 +1,159 @@
+/* Biến thiết kế: màu theme Tối / Sáng, chuyển động, bo góc + hiệu ứng đổi theme. (tách từ index.css, 08/11/2026) */
+
+/* ---------- Token: theme Tối (mặc định) ---------- */
+:root {
+  --bg: #100e0c;
+  --bg-deep: #0b0a09;
+  --bg-header: #121110;
+  --card: #16171a;
+  --card-inner: #1c1d20;
+  --card-border: #2c2b29;
+  --line: #221f1c;
+  --input: #1f2024;
+  --input-border: #33322f;
+  --outline: #3a3835;
+  --text: #f3efe8;
+  --text-muted: #a39d93;
+  --text-soft: #c9c2b7;
+  --text-dim: #8f897f;
+  --accent: #f5a524;
+  --accent-hover: #ffc35c;
+  --on-accent: #1a1206;
+  --accent-soft-bg: #2e2414;
+  --accent-soft-fg: #f5c46d;
+  --accent-soft-border: #5a4220;
+  --info-bg: #1f2a36;
+  --info-fg: #a9c6e8;
+  --info-border: #34465a;
+  --danger-bg: #2a1a17;
+  --danger-fg: #f4a58e;
+  --danger-border: #5a2e25;
+  --danger-icon: #f08a6c;
+  --ok-bg: #16241a;
+  --ok-fg: #a8e0b5;
+  --ok-border: #2f5a3a;
+  --surface-sunk: #131417;
+  --accent-tint: #2a2114;
+  --accent-tint-strong: #3a2a10;
+  --avatar-bg: #3a4150;
+  --track: #26272b;
+  --track-strong: #3a3b40;
+  --chip-bg: #232427;
+  --hover: #1a1b1e;
+  --node-bg: #1b1c20;
+  --node-border: #34363c;
+  --edge: #6b6458;
+  --row-hover: rgba(255, 255, 255, 0.02);
+  --header-glass: rgba(18, 17, 16, 0.92);
+  --skeleton-hi: #1d1e21;
+  --scrim: rgba(8, 7, 6, 0.7);
+  --scrim-strong: rgba(8, 7, 6, 0.78);
+  --card-fade: rgba(22, 23, 26, 0.92);
+  --code-bg: #0f1012;
+  --hero-dark: #070606;
+  --lamp-glow: rgba(245, 165, 36, 0.26);
+  --glass: rgba(16, 14, 12, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-rgb: 0, 0, 0;
+  --shadow-k: 1;
+
+  /* Motion (demo) */
+  --ease-out: cubic-bezier(0.22, 0.9, 0.24, 1);
+  --d-instant: 80ms;
+  --d-fast: 0.15s;
+  --d-base: 0.22s;
+  --d-slow: 0.32s;
+  --d-emph: 0.6s;
+  --e-std: cubic-bezier(0.2, 0, 0, 1);
+  --e-in: cubic-bezier(0, 0, 0.2, 1);
+  --e-exit: cubic-bezier(0.4, 0, 1, 1);
+  --e-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --stagger: 40ms;
+
+  /* Radius — ĐỀ XUẤT tên token; giá trị là các giá trị demo dùng trực tiếp */
+  --r-sm: 8px;
+  --r-md: 10px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 18px;
+  --r-pill: 999px;
+
+  color-scheme: dark;
+}
+
+/* ---------- Token: theme Sáng ---------- */
+:root[data-theme='light'] {
+  --bg: #f6f1e9;
+  --bg-deep: #eee6d9;
+  --bg-header: #fbf8f2;
+  --card: #fffdf9;
+  --card-inner: #f9f4ec;
+  --card-border: #e5dccd;
+  --line: #ebe3d6;
+  --input: #fffdf9;
+  --input-border: #dcd1bf;
+  --outline: #cdc1ad;
+  --text: #2b2219;
+  --text-muted: #786c5c;
+  --text-soft: #4e4436;
+  --text-dim: #998d7c;
+  --accent: #dc8a0c;
+  --accent-hover: #b97200;
+  --on-accent: #fffaf0;
+  --accent-soft-bg: #fcefd6;
+  --accent-soft-fg: #93570a;
+  --accent-soft-border: #efcd92;
+  --info-bg: #e6eff9;
+  --info-fg: #2e5d8f;
+  --info-border: #bad1ea;
+  --danger-bg: #fcebe7;
+  --danger-fg: #ad3f28;
+  --danger-border: #efc0b5;
+  --danger-icon: #cf5236;
+  --ok-bg: #e7f4e9;
+  --ok-fg: #2d7541;
+  --ok-border: #b7dcc0;
+  --surface-sunk: #f2ece2;
+  --accent-tint: #fdf1db;
+  --accent-tint-strong: #fbe3b4;
+  --avatar-bg: #e8dfd1;
+  --track: #ebe3d6;
+  --track-strong: #d8cdbb;
+  --chip-bg: #f0eadf;
+  --hover: #f4ede2;
+  --node-bg: #fffdf9;
+  --node-border: #d8cdbb;
+  --edge: #b1a38c;
+  --row-hover: rgba(150, 110, 40, 0.05);
+  --header-glass: rgba(251, 248, 242, 0.9);
+  --skeleton-hi: #f6f0e6;
+  --scrim: rgba(70, 52, 28, 0.32);
+  --scrim-strong: rgba(70, 52, 28, 0.42);
+  --card-fade: rgba(255, 253, 249, 0.96);
+  --code-bg: #f3ede3;
+  --hero-dark: #efe5d5;
+  --lamp-glow: rgba(245, 165, 36, 0.18);
+  --glass: rgba(255, 252, 246, 0.78);
+  --glass-border: rgba(120, 90, 40, 0.14);
+  --shadow-rgb: 110, 80, 35;
+  --shadow-k: 0.32;
+  color-scheme: light;
+}
+
+/* ---------- Chuyển theme (utils/theme.js) ---------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+:root.theme-anim,
+:root.theme-anim *,
+:root.theme-anim *::before,
+:root.theme-anim *::after {
+  transition:
+    background-color 0.36s var(--e-std),
+    border-color 0.36s var(--e-std),
+    color 0.36s var(--e-std),
+    fill 0.36s var(--e-std),
+    stroke 0.36s var(--e-std) !important;
+}

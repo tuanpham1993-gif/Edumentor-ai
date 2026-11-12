@@ -1,0 +1,24 @@
+/* Khối thông báo trạng thái dùng chung: 404, 501 (đang phát triển), 503 (máy chủ). FĐ7 */
+.panel {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  max-width: 460px; margin: 0 auto; padding: 12px 0; text-align: center;
+  animation: rise var(--d-slow) var(--e-in) both;
+}
+.icon {
+  width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft-bg); color: var(--accent); border: 1px solid var(--accent-soft-border);
+  box-shadow: 0 0 0 8px var(--accent-tint);
+}
+.danger { background: var(--danger-bg); color: var(--danger-icon); border-color: var(--danger-border); box-shadow: 0 0 0 8px var(--danger-bg); }
+.panel h2 { margin: 6px 0 0; font-size: 22px; }
+.panel p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.code { font-size: 12px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+/* Dòng mã nổi bật (trang 404): cùng màu tiêu đề, cỡ lớn — Tuấn chỉnh 11/11 */
+.codeLarge { font-size: 32px; font-weight: 700; color: var(--text); }
+
+/* Dùng cả trang (không có Header): căn giữa màn hình */
+.page { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--bg); }
+.page .panel { padding: 32px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; width: 100%; }
+
+@keyframes rise { 0% { opacity: 0; transform: translateY(8px); } }

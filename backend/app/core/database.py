@@ -25,9 +25,15 @@ def create_tables() -> None:
 
 
 def init_db() -> None:
-    """Khởi tạo các bảng khi ứng dụng khởi động."""
+    """Gọi một lần lúc ứng dụng khởi động."""
     create_tables()
-
+    try:
+        from app.core.seed_data.seed_data_code import seed_data
+        seed_data(SessionLocal())
+    except FileNotFoundError as e:
+        print(f"[WARNING] Seed data file not found, skipping seed: {e}")
+    except Exception as e:
+        print(f"[WARNING] Seed data failed: {e}")
 
 def get_db():
     db = SessionLocal()

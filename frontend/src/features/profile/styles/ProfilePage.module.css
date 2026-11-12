@@ -1,0 +1,78 @@
+/* Trang Hồ sơ — chép từ demo app.css (_header_7j34e, _stats_7j34e). */
+.header { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 24px; padding: 24px; position: relative; }
+.avatar {
+  width: 84px; height: 84px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  overflow: hidden; background: var(--avatar-bg); border: 3px solid var(--accent);
+  font-size: 26px; font-weight: 700; box-shadow: 0 0 #f5a52466;
+  animation: halo 1.4s var(--e-std) 0.3s 1;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.who { flex: 1 1 220px; display: flex; flex-direction: column; gap: 6px; }
+.who strong { font-size: 20px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+.stat {
+  padding: 20px; display: flex; flex-direction: column; gap: 8px;
+  transition: transform var(--d-base) var(--e-std), border-color var(--d-base);
+}
+.stat:hover { transform: translateY(-2px); border-color: var(--accent-soft-border); }
+.stat b { font-size: 34px; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat > span { color: var(--text-soft); font-size: 13px; }
+
+/* 3 khối dưới: trái rộng, phải 320px; màn hẹp xếp 1 cột (demo _grid_7j34e) */
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
+@media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+
+@keyframes halo {
+  0% { box-shadow: 0 0 #f5a52473; }
+  50% { box-shadow: 0 0 0 10px #f5a52400; }
+}
+
+/* ---------- Chuyển động (FĐ7 08/11) ---------- */
+/* Các khối lần lượt trượt lên khi vào trang */
+.enter > * { animation: enterUp 0.6s var(--ease-out) both; }
+.enter > *:nth-child(2) { animation-delay: 80ms; }
+.enter > *:nth-child(3) { animation-delay: 160ms; }
+.enter > *:nth-child(4) { animation-delay: 240ms; }
+.enter > *:nth-child(n + 5) { animation-delay: 320ms; }
+.stats > * { animation: enterUp 0.6s var(--ease-out) both; }
+.stats > *:nth-child(2) { animation-delay: 240ms; }
+.stats > *:nth-child(3) { animation-delay: 300ms; }
+.stats > *:nth-child(4) { animation-delay: 360ms; }
+
+/* Thẻ hồ sơ: viền sáng chạy vòng (giống thẻ đăng nhập) */
+@property --pf-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.header::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(from var(--pf-angle), transparent 0deg, rgba(255, 195, 92, 0.9) 40deg, transparent 100deg, transparent 200deg, rgba(245, 165, 36, 0.5) 240deg, transparent 290deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: pfSpin 7s linear infinite;
+}
+.header { box-shadow: 0 0 60px -24px rgba(245, 165, 36, 0.45); }
+
+/* Ô thống kê: số "—" nhấp nháy nhẹ (đang chờ dữ liệu) + phát sáng khi rê chuột */
+.stat { position: relative; overflow: hidden; }
+.stat b { animation: pulse 2.4s ease-in-out infinite; }
+.stat::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 220, 160, 0.08) 50%, transparent 65%);
+  transform: translateX(-100%);
+  transition: transform 0.8s var(--ease-out);
+  pointer-events: none;
+}
+.stat:hover::after { transform: translateX(100%); }
+.stat:hover { box-shadow: 0 10px 30px -12px rgba(245, 165, 36, 0.4); }
+
+@keyframes enterUp { 0% { opacity: 0; transform: translateY(16px); } }
+@keyframes pfSpin { to { --pf-angle: 360deg; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }

@@ -1,0 +1,106 @@
+/* Form: .field, .input, .input.invalid, .field-error, autofill. (tách từ index.css, 08/11/2026) */
+
+/* ---------- Form ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+.input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: var(--r-md);
+  transition:
+    border-color var(--d-fast) var(--e-std),
+    box-shadow var(--d-fast) var(--e-std);
+}
+.input:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px #f5a5241f;
+}
+.input.invalid {
+  border-color: var(--danger-icon);
+}
+.input input,
+.input textarea {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--text);
+  font-size: 14px;
+}
+/* Trình duyệt tự điền (autofill) tô nền xanh xám → phủ lại đúng màu ô nhập của theme (08/11) */
+.input input:-webkit-autofill,
+.input input:-webkit-autofill:hover,
+.input input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--input) inset;
+  box-shadow: 0 0 0 1000px var(--input) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+.input input[readonly] {
+  color: var(--text-muted);
+}
+.input input::placeholder,
+.input textarea::placeholder {
+  color: var(--text-dim);
+}
+.input > svg {
+  flex: none;
+  color: var(--text-muted);
+}
+.select {
+  height: 44px;
+  padding: 0 12px;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: var(--r-md);
+  color: var(--text);
+  transition: border-color var(--d-fast);
+}
+.select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.field-error {
+  font-size: 12.5px;
+  color: var(--danger-fg);
+  animation: rise var(--d-base) var(--e-in) both;
+}
+.alert {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--danger-fg);
+  animation: rise var(--d-base) var(--e-in) both;
+}
+.alert-ok {
+  background: var(--ok-bg);
+  border-color: var(--ok-border);
+  color: var(--ok-fg);
+}
+.alert svg {
+  flex: none;
+}
+.check-draw path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: draw var(--d-base) var(--e-std) 0.1s forwards;
+}

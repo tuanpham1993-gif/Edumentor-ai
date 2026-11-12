@@ -20,7 +20,6 @@ from app.services.rag_service import retrieve_knowledge
 # ==========================================
 
 RAG_TOP_K = 12
-
 LEARNING_PATH_TOP_K = 6
 
 # Các nhóm từ khóa dùng để nhận diện route.
@@ -33,60 +32,51 @@ ROUTE_KEYWORDS = {
         "vao trang dang nhap",
         "link dang nhap",
     ],
-
     "/register": [
         "dang ky",
         "register",
         "registration",
         "tao tai khoan",
     ],
-
     "/forgot-password": [
         "quen mat khau",
         "forgot password",
         "khoi phuc mat khau",
     ],
-
     "/reset-password": [
         "dat lai mat khau",
         "reset password",
         "doi mat khau",
     ],
-
     "/profile": [
         "ho so",
         "profile",
         "tai khoan ca nhan",
         "trang ca nhan",
     ],
-
     "/courses": [
         "khoa hoc",
         "course catalog",
         "danh sach khoa hoc",
         "trang khoa hoc",
     ],
-
     "/my-courses": [
         "khoa hoc cua toi",
         "my courses",
         "khoa hoc da luu",
         "khoa hoc da dang ky",
     ],
-
     "/ai-tutor": [
         "ai tutor",
         "gia su ai",
         "tro ly hoc tap",
         "chatbot",
     ],
-
     "/ai-learning-path": [
         "learning path",
         "lo trinh hoc tap",
         "lo trinh hoc",
     ],
-
     "/ai-quiz-practice": [
         "quiz practice",
         "luyen tap trac nghiem",
@@ -99,7 +89,6 @@ ROUTE_KEYWORDS = {
 # 2. CATEGORY CONFIGURATION
 # ==========================================
 
-# Ánh xạ route sang category trong metadata Qdrant.
 ROUTE_CATEGORY_MAP = {
     "/login": "account_management",
     "/register": "account_management",
@@ -113,7 +102,6 @@ ROUTE_CATEGORY_MAP = {
     "/ai-quiz-practice": "quiz",
 }
 
-# Ánh xạ intent sang category cần ưu tiên.
 INTENT_CATEGORY_MAP = {
     "learning_path_request": "learning_path",
     "skill_question": None,
@@ -139,7 +127,6 @@ def normalize_text(text: str) -> str:
     """
 
     text = text.lower().strip()
-
     text = unicodedata.normalize("NFD", text)
 
     text = "".join(
@@ -165,9 +152,7 @@ def detect_target_route(user_content: str) -> str | None:
     normalized_query = normalize_text(user_content)
 
     for route, keywords in ROUTE_KEYWORDS.items():
-
         for keyword in keywords:
-
             if keyword in normalized_query:
                 return route
 
@@ -195,8 +180,6 @@ def build_expanded_rag_query(
 
     target_route = None
     target_category = None
-
-    normalized_query = normalize_text(user_content)
 
     # --------------------------------------
     # LEARNING PATH
@@ -265,7 +248,6 @@ def build_expanded_rag_query(
     target_route = detect_target_route(user_content)
 
     if not target_route:
-
         return (
             user_content,
             None,
@@ -279,47 +261,38 @@ def build_expanded_rag_query(
             "Login Process authentication "
             "login page đăng nhập Direct Static URL"
         ),
-
         "/register": (
             "Registration Process create account "
             "register page đăng ký Direct Static URL"
         ),
-
         "/forgot-password": (
             "Password Recovery Process forgot password "
             "quên mật khẩu Direct Static URL"
         ),
-
         "/reset-password": (
             "Password Reset Process reset password "
             "đặt lại mật khẩu Direct Static URL"
         ),
-
         "/profile": (
             "Personal Profile Management profile "
             "hồ sơ cá nhân Direct Static URL"
         ),
-
         "/courses": (
             "Course Catalog Browse Page courses "
             "danh sách khóa học Direct Static URL"
         ),
-
         "/my-courses": (
             "My Courses saved courses "
             "khóa học của tôi Direct Static URL"
         ),
-
         "/ai-tutor": (
             "AI Tutor page chatbot gia sư AI "
             "Direct Static URL"
         ),
-
         "/ai-learning-path": (
             "AI Learning Path learning roadmap "
             "lộ trình học tập Direct Static URL"
         ),
-
         "/ai-quiz-practice": (
             "AI Quiz Practice quiz practice "
             "luyện tập trắc nghiệm Direct Static URL"
@@ -369,11 +342,9 @@ def rerank_rag_results(
         metadata = item.get("metadata") or {}
 
         original_score = item.get("score") or 0
-
         rerank_score = original_score
 
         category = metadata.get("category")
-
         tags = metadata.get("tags") or []
 
         feature_title = normalize_text(
@@ -394,15 +365,8 @@ def rerank_rag_results(
         # ----------------------------------
 
         if target_category:
-
             if category == target_category:
-
                 rerank_score += 0.30
-
-            else:
-
-                # Không cộng điểm cho category khác.
-                pass
 
         # ----------------------------------
         # 2. LEARNING PATH BOOST
@@ -411,36 +375,24 @@ def rerank_rag_results(
         if intent == "learning_path_request":
 
             if category == "learning_path":
-
                 rerank_score += 0.10
 
             if "learning_path" in normalized_tags:
-
                 rerank_score += 0.05
 
             if "roadmap" in normalized_tags:
-
                 rerank_score += 0.03
 
-            # Ưu tiên feature tạo lộ trình.
             if (
                 "conversational path generation"
                 in feature_title
             ):
-
                 rerank_score += 0.10
 
-            # Ưu tiên feature quản lý lộ trình.
-            if (
-                "roadmap canvas detail"
-                in feature_title
-            ):
-
+            if "roadmap canvas detail" in feature_title:
                 rerank_score += 0.08
 
-            # Ưu tiên Section 5.
             if "ai learning path advisor" in section_title:
-
                 rerank_score += 0.05
 
         # ----------------------------------
@@ -452,18 +404,14 @@ def rerank_rag_results(
             retrieved_route = metadata.get("route")
 
             if retrieved_route == target_route:
-
                 rerank_score += 0.30
 
             if target_route == "/login":
-
                 if "login process" in feature_title:
-
                     rerank_score += 0.10
 
         item["rerank_score"] = rerank_score
 
-    # Sắp xếp theo điểm rerank giảm dần.
     results.sort(
         key=lambda item: item.get("rerank_score", 0),
         reverse=True,
@@ -483,17 +431,9 @@ def filter_relevant_rag_results(
 ) -> list[dict]:
     """
     Lọc kết quả không đúng chủ đề.
-
-    Ví dụ:
-        learning_path_request
-        -> ưu tiên category learning_path.
-
-    Nếu không tìm thấy category phù hợp,
-    giữ lại kết quả gốc để tránh mất toàn bộ context.
     """
 
     if not results or not target_category:
-
         return results
 
     if intent == "learning_path_request":
@@ -508,7 +448,6 @@ def filter_relevant_rag_results(
         ]
 
         if matched_results:
-
             return matched_results[:LEARNING_PATH_TOP_K]
 
     return results
@@ -529,12 +468,9 @@ def format_assistant_history(
 
     answer = saved_response.get("answer", "")
 
-    # JSON mới: answer là string.
     if isinstance(answer, str):
-
         return answer
 
-    # JSON cũ: answer là object.
     if isinstance(answer, dict):
 
         history_parts = []
@@ -550,7 +486,6 @@ def format_assistant_history(
             value = answer.get(field, "")
 
             if isinstance(value, str) and value.strip():
-
                 history_parts.append(value.strip())
 
         return "\n".join(history_parts)
@@ -566,9 +501,20 @@ def build_retrieval_context(
     db: Session,
     route_result: dict,
     user_content: str,
+    allow_sql: bool = True,
 ) -> dict:
     """
     Điều phối SQL Retrieval và RAG Retrieval.
+
+    allow_sql:
+        True  -> Cho phép truy vấn SQL.
+        False -> Không truy vấn SQL.
+
+    Chat đã đăng nhập:
+        allow_sql = True
+
+    Chat công khai:
+        allow_sql = False
     """
 
     retrieval_modes = route_result.get(
@@ -578,21 +524,13 @@ def build_retrieval_context(
 
     context = {
         "intent": route_result.get("intent"),
-
         "entity_type": route_result.get("entity_type"),
-
         "entity_name": route_result.get("entity_name"),
-
         "routing_source": route_result.get("source"),
-
         "target_route": None,
-
         "target_category": None,
-
         "expanded_query": user_content,
-
         "sql_data": None,
-
         "rag_data": [],
     }
 
@@ -600,7 +538,7 @@ def build_retrieval_context(
     # SQL RETRIEVAL
     # ======================================
 
-    if "sql" in retrieval_modes:
+    if "sql" in retrieval_modes and allow_sql:
 
         sql_result = retrieve_for_query(
             db=db,
@@ -608,6 +546,12 @@ def build_retrieval_context(
         )
 
         context["sql_data"] = sql_result
+
+    elif "sql" in retrieval_modes and not allow_sql:
+
+        print("\n========== SQL RETRIEVAL SKIPPED ==========")
+
+        print("Public chat không được truy vấn SQL.")
 
     # ======================================
     # RAG RETRIEVAL
@@ -625,19 +569,14 @@ def build_retrieval_context(
         )
 
         context["expanded_query"] = expanded_query
-
         context["target_route"] = target_route
-
         context["target_category"] = target_category
 
         print("\n========== RAG QUERY EXPANSION ==========")
 
         print("Original query:", user_content)
-
         print("Expanded query:", expanded_query)
-
         print("Target route:", target_route)
-
         print("Target category:", target_category)
 
         # ----------------------------------
@@ -680,39 +619,26 @@ def build_retrieval_context(
 
         print("Retrieved results:", len(rag_results))
 
-        for index, item in enumerate(
-            rag_results,
-            start=1,
-        ):
+        for index, item in enumerate(rag_results, start=1):
 
             metadata = item.get("metadata") or {}
 
             print(f"\n--- RESULT {index} ---")
 
             print("Original Score:", item.get("score"))
-
             print("Rerank Score:", item.get("rerank_score"))
-
             print("Category:", metadata.get("category"))
-
             print("Tags:", metadata.get("tags"))
-
             print("Section:", metadata.get("section"))
-
             print("Feature:", metadata.get("feature_title"))
-
             print("Feature Number:", metadata.get("feature_number"))
-
             print("Route:", metadata.get("route"))
-
             print("Content:")
-
             print(item.get("content"))
 
     else:
 
         print("\n========== RAG SKIPPED ==========")
-
         print("Retrieval modes:", retrieval_modes)
 
     return context
@@ -732,11 +658,9 @@ def build_system_operation_response(
     """
 
     rag_data = retrieval_context.get("rag_data", [])
-
     target_route = retrieval_context.get("target_route")
 
     if not target_route:
-
         return None
 
     for item in rag_data:
@@ -744,7 +668,6 @@ def build_system_operation_response(
         metadata = item.get("metadata") or {}
 
         if metadata.get("route") != target_route:
-
             continue
 
         content = item.get("content") or ""
@@ -755,12 +678,9 @@ def build_system_operation_response(
         )
 
         if not url_match:
-
             continue
 
-        url = url_match.group(0).rstrip(
-            ".,;:!?)`"
-        )
+        url = url_match.group(0).rstrip(".,;:!?)`")
 
         feature_title = (
             metadata.get("feature_title")
@@ -786,9 +706,21 @@ def build_system_operation_response(
 
 def save_assistant_response(
     db: Session,
-    session_id: UUID,
+    session_id: UUID | None,
     response_data: dict,
 ) -> dict:
+    """
+    Lưu câu trả lời AI nếu có session_id.
+
+    session_id = UUID:
+        Lưu vào ChatMessage.
+
+    session_id = None:
+        Không lưu, dùng cho public chat.
+    """
+
+    if session_id is None:
+        return response_data
 
     ai_message = ChatMessage(
         session_id=session_id,
@@ -800,9 +732,7 @@ def save_assistant_response(
     )
 
     db.add(ai_message)
-
     db.commit()
-
     db.refresh(ai_message)
 
     return response_data
@@ -922,12 +852,28 @@ Quy tắc bắt buộc:
 
 def process_chat_message(
     db: Session,
-    session_id: UUID,
+    session_id: UUID | None,
     user_content: str,
+    allow_sql_retrieval: bool = True,
 ) -> dict:
+    """
+    Xử lý tin nhắn chatbot.
+
+    Chat đã đăng nhập:
+        - Có session_id.
+        - Lưu tin nhắn người dùng.
+        - Lấy lịch sử hội thoại.
+        - Có thể sử dụng SQL và RAG.
+        - Lưu câu trả lời AI.
+
+    Chat công khai:
+        - session_id = None.
+        - Không lưu tin nhắn.
+        - Không lấy lịch sử từ database.
+        - Chỉ sử dụng RAG, không sử dụng SQL.
+    """
 
     if not isinstance(user_content, str) or not user_content.strip():
-
         raise ValueError("Message cannot be empty.")
 
     user_content = user_content.strip()
@@ -936,63 +882,75 @@ def process_chat_message(
     # STEP 1. SAVE USER MESSAGE
     # ======================================
 
-    user_message = ChatMessage(
-        session_id=session_id,
-        role="user",
-        content=user_content,
-    )
+    if session_id is not None:
 
-    db.add(user_message)
+        user_message = ChatMessage(
+            session_id=session_id,
+            role="user",
+            content=user_content,
+        )
 
-    db.commit()
+        db.add(user_message)
+        db.commit()
+
+    else:
+
+        print("\n========== PUBLIC CHAT ==========")
+        print("Không lưu user message vào database.")
 
     # ======================================
     # STEP 2. GET CONVERSATION HISTORY
     # ======================================
 
-    history = (
-        db.query(ChatMessage)
-        .filter(ChatMessage.session_id == session_id)
-        .order_by(
-            ChatMessage.created_at.asc(),
-            ChatMessage.message_id.asc(),
-        )
-        .all()
-    )
+    if session_id is not None:
 
-    conversation_lines = []
-
-    for message in history:
-
-        content = message.content
-
-        if message.role == "assistant":
-
-            try:
-
-                saved_response = json.loads(content)
-
-                if isinstance(saved_response, dict):
-
-                    content = format_assistant_history(
-                        saved_response
-                    )
-
-            except (json.JSONDecodeError, TypeError):
-
-                pass
-
-        role_name = (
-            "Người dùng"
-            if message.role == "user"
-            else "Gia sư AI"
+        history = (
+            db.query(ChatMessage)
+            .filter(ChatMessage.session_id == session_id)
+            .order_by(
+                ChatMessage.created_at.asc(),
+                ChatMessage.message_id.asc(),
+            )
+            .all()
         )
 
-        conversation_lines.append(
-            f"{role_name}: {content}"
-        )
+        conversation_lines = []
 
-    conversation = "\n".join(conversation_lines)
+        for message in history:
+
+            content = message.content
+
+            if message.role == "assistant":
+
+                try:
+
+                    saved_response = json.loads(content)
+
+                    if isinstance(saved_response, dict):
+
+                        content = format_assistant_history(
+                            saved_response
+                        )
+
+                except (json.JSONDecodeError, TypeError):
+                    pass
+
+            role_name = (
+                "Người dùng"
+                if message.role == "user"
+                else "Gia sư AI"
+            )
+
+            conversation_lines.append(
+                f"{role_name}: {content}"
+            )
+
+        conversation = "\n".join(conversation_lines)
+
+    else:
+
+        # Public chat không có lịch sử hội thoại được lưu.
+        conversation = f"Người dùng: {user_content}"
 
     # ======================================
     # STEP 3. QUERY ROUTER
@@ -1018,6 +976,7 @@ def process_chat_message(
         db=db,
         route_result=route_result,
         user_content=user_content,
+        allow_sql=allow_sql_retrieval,
     )
 
     print("\n========== RETRIEVAL CONTEXT ==========")
@@ -1047,7 +1006,6 @@ def process_chat_message(
         if system_response is not None:
 
             print("\n========== SYSTEM OPERATION ==========")
-
             print("Response generated directly from RAG.")
 
             print(
@@ -1164,7 +1122,6 @@ INSTRUCTIONS
     ai_text = generate_text(prompt)
 
     print("\n========== GEMINI RAW RESPONSE ==========")
-
     print(repr(ai_text))
 
     # ======================================

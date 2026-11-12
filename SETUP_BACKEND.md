@@ -31,7 +31,7 @@ Lệnh này cài đặt các thư viện được liệt kê trong file `\backen
 ## 4. Cấu hình biến môi trường (Environment Variables) + docker postgres
 
 1. Chuyển `\Edumentor-ai\.env.example` sang `\Edumentor-ai\.env` tại thư mục gốc của dự án, cùng cấp với file `docker-compose.yaml`.
-2. đối với file docker-compose.yaml. Tại `\Edumentor-ai\` chạy lệnh: "docker docker-compose up --build -d"
+2. đối với file docker-compose.yaml. Tại `\Edumentor-ai\` chạy lệnh: "docker compose up -d"
 
 3. setting pgadmin4 cấu hình:
     - General/name: edumentor

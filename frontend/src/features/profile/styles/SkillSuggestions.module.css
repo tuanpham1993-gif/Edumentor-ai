@@ -1,0 +1,80 @@
+/* Dải "Gợi ý cho bạn" — trang Khám phá kỹ năng (FĐ6, 08/11/2026). */
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--accent-soft-border);
+  background:
+    radial-gradient(420px 140px at 0% 0%, rgba(245, 165, 36, 0.12), transparent),
+    var(--accent-tint);
+}
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.head h3 { margin: 0; font-size: 15px; color: var(--accent-soft-fg); }
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  animation: rise var(--d-slow) var(--e-in) both;
+  transition: border-color var(--d-base), transform var(--d-base) var(--e-std), box-shadow var(--d-base);
+}
+.card:hover { border-color: var(--accent-soft-border); transform: translateY(-2px); }
+.cardPicked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 10px 26px -14px rgba(245, 165, 36, 0.6); }
+.card:nth-child(2) { animation-delay: 40ms; }
+.card:nth-child(3) { animation-delay: 80ms; }
+.card:nth-child(4) { animation-delay: 120ms; }
+.card:nth-child(n + 5) { animation-delay: 160ms; }
+
+.cardHead { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cardHead strong { font-size: 13.5px; line-height: 1.35; overflow-wrap: anywhere; }
+.reason { font-size: 11.5px; color: var(--text-dim); }
+.next { color: var(--ok-fg); }
+.related { color: var(--info-fg); }
+
+.choices { display: flex; gap: 6px; }
+.choice {
+  flex: 1;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: none;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--d-fast), color var(--d-fast), background var(--d-fast);
+}
+.choice:hover { border-color: var(--accent); color: var(--accent); }
+.choiceOn,
+.choiceOn:hover { background: var(--accent-soft-bg); border-color: var(--accent); color: var(--accent); }
+
+/* Điện thoại: 1 hàng vuốt ngang để không đẩy danh mục xuống quá xa */
+@media (max-width: 720px) {
+  .list {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .list::-webkit-scrollbar { display: none; }
+}
+
+@keyframes rise { 0% { opacity: 0; transform: translateY(6px); } }
