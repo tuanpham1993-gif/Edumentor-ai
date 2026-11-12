@@ -1,0 +1,35 @@
+/* Bề mặt: .card, .chip, .alert, chữ phụ (.muted, .small). (tách từ index.css, 08/11/2026) */
+
+/* ---------- Bề mặt, chip, chữ ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-xl);
+}
+.inner {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--chip-bg);
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    background var(--d-base),
+    color var(--d-base),
+    border-color var(--d-base);
+}
+.chip-accent { background: var(--accent-soft-bg); color: var(--accent-soft-fg); }
+.chip-info { background: var(--info-bg); color: var(--info-fg); }
+.chip-ok { background: var(--ok-bg); color: var(--ok-fg); }
+.chip-danger { background: var(--danger-bg); color: var(--danger-fg); }
+.muted { color: var(--text-muted); }
+.small { font-size: 12.5px; }

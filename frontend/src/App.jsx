@@ -1,18 +1,16 @@
+// Component gốc (FĐ2, 07/11/2026).
+// Thứ tự bọc: BrowserRouter (điều hướng) → AuthProvider (trạng thái đăng nhập, cần useNavigate) → routes.
 import { BrowserRouter } from 'react-router-dom';
 
-// Thứ tự bọc theo docs/structure.md §1: BrowserRouter → ToastProvider → CardOpeningProvider → routes + ChatBubble.
-// ToastProvider, CardOpeningProvider (C2) và khai báo route (C3) chưa được thêm ở giai đoạn C1.
+import AppRoutes from './routes/index.jsx';
+import { AuthProvider } from './store/authStore.js';
+
 export default function App() {
   return (
     <BrowserRouter>
-      <main className="container page-in">
-        <div className="page-head">
-          <div>
-            <h1>EduMentor AI</h1>
-            <p>Nền frontend đã sẵn sàng. Các trang sẽ được thêm ở những giai đoạn sau.</p>
-          </div>
-        </div>
-      </main>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

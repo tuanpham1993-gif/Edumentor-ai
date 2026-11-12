@@ -1,0 +1,29 @@
+/* Thanh tab có nền trượt — chép từ màn demo (_tabs_aoy8b), FĐ6 08/11/2026. */
+.tabs { position: relative; display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: transform var(--d-slow) var(--e-std), width var(--d-slow) var(--e-std);
+}
+.tab {
+  position: relative;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--d-base), border-color var(--d-base);
+}
+.tab:hover { color: var(--text); }
+.active { color: var(--on-accent); border-color: transparent; font-weight: 600; }
+.active:hover { color: var(--on-accent); }
+.count { display: inline-block; animation: pop var(--d-slow) var(--e-spring); }
+
+@keyframes pop { 0% { transform: scale(0.6); opacity: 0; } }

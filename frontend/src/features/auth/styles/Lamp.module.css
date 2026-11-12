@@ -1,0 +1,125 @@
+/* Đèn treo + dây kéo — chép từ CSS màn demo Main (FĐ3). */
+.lamp {
+  position: absolute;
+  top: 0;
+  width: 120px;
+  z-index: 1;
+  transform-origin: 60px 0;
+  animation: sway 5.2s ease-in-out infinite alternate;
+}
+
+.lamp svg {
+  position: relative;
+  display: block;
+}
+
+@keyframes sway {
+  0% {
+    transform: rotate(-2.5deg);
+  }
+  to {
+    transform: rotate(2.5deg);
+  }
+}
+
+.glow {
+  position: absolute;
+  left: -150px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f5a5244d, #f5a52400 65%);
+  pointer-events: none;
+  transition: opacity var(--d-slow) var(--e-std);
+}
+
+.flick {
+  animation: flick 0.42s steps(1) 1;
+}
+
+@keyframes flick {
+  0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.5;
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+.ring {
+  fill: #ffb347;
+  transition: fill var(--d-slow) var(--e-std);
+}
+
+.core {
+  fill: #ffd27a;
+  transition: fill var(--d-slow) var(--e-std);
+}
+
+.off .glow {
+  opacity: 0.05;
+}
+
+.off .ring {
+  fill: #3a342d;
+}
+
+.off .core {
+  fill: #4a4239;
+}
+
+.pull {
+  position: absolute;
+  left: 60px;
+  width: 44px;
+  height: 84px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pull:active {
+  cursor: grabbing;
+}
+
+.string {
+  width: 1px;
+  height: 52px;
+  background: #6b5a40;
+  transform-origin: top;
+  transform: scaleY(var(--sy, 1));
+  transition: transform var(--d-slow) var(--e-spring);
+}
+
+.bead {
+  width: 9px;
+  height: 9px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(var(--dy, 0px));
+  transition:
+    transform var(--d-slow) var(--e-spring),
+    box-shadow var(--d-fast);
+}
+
+.pull:hover .bead,
+.pull:focus-visible .bead {
+  box-shadow: 0 0 0 6px #f5a52433;
+}
+
+.pulling .string,
+.pulling .bead {
+  transition-duration: 60ms;
+}

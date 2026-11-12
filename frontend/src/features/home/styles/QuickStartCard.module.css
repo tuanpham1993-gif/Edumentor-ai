@@ -1,0 +1,45 @@
+/* Thẻ "bắt đầu nhanh" (tab Đăng ký / Đăng nhập) ở hero trang chủ — tách khỏi HomePage.module.css 08/11/2026. */
+.quick {
+  position: relative;
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  box-shadow: 0 30px 60px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k))), 0 0 60px -12px rgba(245, 165, 36, 0.3);
+  animation: enter 0.7s var(--ease-out) 0.12s both;
+}
+.quick h2 { margin: 0; font-size: 22px; }
+.tabs {
+  position: relative;
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--card-border);
+}
+.tabPill {
+  position: absolute; top: 4px; bottom: 4px; left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 9px;
+  background: var(--card-inner);
+  border: 1px solid var(--outline);
+  transition: transform var(--d-slow) var(--e-std);
+}
+.tab {
+  position: relative; z-index: 1;
+  height: 36px; border: 0; background: none;
+  color: var(--text-muted); font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: color var(--d-base);
+}
+.tab:hover { color: var(--text); }
+.tabActive { color: var(--text); }
+.quickBody { display: flex; flex-direction: column; gap: 18px; animation: fadeUp var(--d-slow) var(--e-in) both; }
+
+@keyframes enter { 0% { opacity: 0; transform: translateY(18px); } }
+@keyframes fadeUp { 0% { opacity: 0; transform: translateY(6px); } }
+
+/* Hai cột xếp chồng: thẻ không giãn quá rộng */
+@media (max-width: 1000px) {
+  .quick { max-width: 460px; width: 100%; }
+}

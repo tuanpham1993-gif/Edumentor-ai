@@ -4,10 +4,11 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.services.course_service import CourseService
 from app.schemas.course import (
+    AdminCourseDetailResponse,
     CourseCreate,
-    CourseUpdate,
+    CourseLevel,
     CourseResponse,
-    CourseDetailResponse,
+    CourseUpdate,
 )
 from app.schemas.common import PaginatedResponse
 
@@ -24,7 +25,10 @@ def get_admin_courses(
     page: int = Query(default=1, ge=1, description="Số trang (bắt đầu từ 1)"),
     page_size: int = Query(default=10, ge=1, le=100, description="Số bản ghi trên mỗi trang"),
     search: Optional[str] = Query(default=None, description="Từ khóa tìm kiếm"),
-    level: Optional[str] = Query(default=None, description="Lọc theo cấp độ khóa học"),
+    level: Optional[CourseLevel] = Query(
+        default=None,
+        description="Lọc theo cấp độ khóa học (beginner, intermediate, advanced)",
+    ),
     db: Session = Depends(get_db),
 ):
     service = CourseService(db)
@@ -48,7 +52,7 @@ def create_admin_course(
 
 @router.get(
     "/{course_id}",
-    response_model=CourseDetailResponse,
+    response_model=AdminCourseDetailResponse,
     summary="Lấy chi tiết khóa học",
     description="Lấy thông tin chi tiết khóa học kèm danh sách kỹ năng liên kết.",
 )

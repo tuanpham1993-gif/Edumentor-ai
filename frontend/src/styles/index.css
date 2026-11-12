@@ -1,0 +1,20 @@
+/*
+ * EduMentor AI — CSS DÙNG CHUNG toàn app (global). main.jsx chỉ import file này.
+ * Tách thành nhiều file nhỏ 08/11/2026 (SetUp-CSS.md). THỨ TỰ @import quan trọng:
+ * tokens → base → … → reduced-motion (luôn cuối). CSS riêng từng tính năng: src/features/<tính năng>/styles/.
+ * --- (ghi chú gốc) ---
+ * Giá trị màu, motion, kích thước lấy từ CSS toàn cục của bản demo `EduMentor AI Demo.html`
+ * (docs/decisions.md D-FE-02; docs/ui-animation/FRONTEND-SYNC-AUDIT.md §A4).
+ * Riêng nhóm token radius (--r-*) là ĐỀ XUẤT: demo viết thẳng các giá trị này, ở đây chỉ đặt tên.
+ * Quy ước dùng: docs/conventions.md §4 — không ghi mã màu cứng trong component.
+ */
+
+@import './tokens.css';
+@import './base.css';
+@import './animations.css';
+@import './buttons.css';
+@import './surfaces.css';
+@import './forms.css';
+@import './tables.css';
+@import './layout.css';
+@import './reduced-motion.css';

@@ -1,11 +1,25 @@
-from typing import Optional, List, Tuple
+from typing import Literal, Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+from app.models.course import Courses
+from app.models.skill import Skills
+from app.repositories import course_repository
 from app.repositories.course_repository import CourseRepository
 from app.repositories.skill_repository import SkillRepository
-from app.schemas.course import CourseCreate, CourseUpdate, CourseResponse, CourseDetailResponse, CourseSkillItem
-from app.schemas.course_skill import CourseSkillCreate, CourseSkillResponse, CourseSkillDetailResponse
 from app.schemas.common import PaginatedResponse
+from app.schemas.course import (
+    AdminCourseDetailResponse,
+    CourseCreate,
+    CourseLevel,
+    CourseResponse,
+    CourseSkillItem,
+    CourseUpdate,
+)
+from app.schemas.course_skill import (
+    CourseSkillCreate,
+    CourseSkillDetailResponse,
+    CourseSkillResponse,
+)
 
 
 class CourseService:
@@ -19,7 +33,7 @@ class CourseService:
         page: int = 1,
         page_size: int = 10,
         search: Optional[str] = None,
-        level: Optional[str] = None,
+        level: Optional[CourseLevel] = None,
     ) -> PaginatedResponse[CourseResponse]:
         total, items = self.course_repo.list_courses(
             page=page, page_size=page_size, search=search, level=level
@@ -31,7 +45,7 @@ class CourseService:
             page_size=page_size,
         )
 
-    def get_course_detail(self, course_id: int) -> CourseDetailResponse:
+    def get_course_detail(self, course_id: int) -> AdminCourseDetailResponse:
         course = self.course_repo.get_by_id(course_id)
         if not course:
             raise HTTPException(
@@ -48,7 +62,7 @@ class CourseService:
             for s in course.skills_info
         ]
 
-        course_res = CourseDetailResponse.model_validate(course)
+        course_res = AdminCourseDetailResponse.model_validate(course)
         course_res.skills = skills_list
         return course_res
 
@@ -151,3 +165,33 @@ class CourseService:
             )
         return {"message": f"Đã xóa liên kết giữa khóa học {course_id} và kỹ năng {skill_id}"}
 
+
+def list_courses(
+    db: Session,
+    page: int = 1,
+    page_size: int = 10,
+    search: str | None = None,
+    skill_id: int | None = None,
+    level: str | None = None,
+    sort_by: Literal["rating", "num_reviews"] | None = None,
+) -> tuple[int, list[Courses]]:
+    """Xử lý nghiệp vụ lấy danh sách khóa học kèm bộ lọc và phân trang."""
+    return course_repository.list_courses(
+        db=db,
+        page=page,
+        page_size=page_size,
+        search=search,
+        skill_id=skill_id,
+        level=level,
+        sort_by=sort_by,
+    )
+
+
+def get_course(db: Session, course_id: int) -> Courses | None:
+    """Xử lý nghiệp vụ lấy chi tiết khóa học theo ID."""
+    return course_repository.get_course_by_id(db=db, course_id=course_id)
+
+
+def get_course_skills(db: Session, course_id: int) -> list[Skills] | None:
+    """Xử lý nghiệp vụ lấy danh sách kỹ năng của khóa học."""
+    return course_repository.get_course_skills(db=db, course_id=course_id)

@@ -1,0 +1,78 @@
+/* Kết quả ôn tập — màn demo ReviewResult + ReviewDetail (module 09 · Tuấn · GĐ4, 09/11/2026). */
+.summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 560px;
+  margin: 8px auto 0;
+  padding: 36px 28px;
+  text-align: center;
+}
+.summary > p { margin: 0; }
+
+/* Vòng điểm: conic-gradient theo --ratio (0..1) */
+.ring {
+  --ratio: 0;
+  --ring-color: var(--accent);
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--ring-color) calc(var(--ratio) * 1turn), var(--track) 0);
+  animation: grow 0.9s var(--e-std) both;
+}
+.ringFail { --ring-color: var(--danger-icon); }
+.ringInner {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.ringInner strong { font-size: 44px; line-height: 1; }
+.ringInner span { font-size: 13px; color: var(--text-muted); }
+@property --ratio {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+@keyframes grow { 0% { --ratio: 0; } }
+
+.verdict { font-size: 14px; padding: 6px 16px; }
+
+.facts {
+  width: 100%;
+  margin: 0;
+  padding: 14px 18px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  text-align: left;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+.facts:empty { display: none; }
+.facts li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.accent { color: var(--accent); }
+
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+.detail { margin-top: 36px; display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 90px; }
+.detailHead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ring { animation: none; }
+}
+@media (max-width: 560px) {
+  .summary { padding: 26px 16px; }
+}

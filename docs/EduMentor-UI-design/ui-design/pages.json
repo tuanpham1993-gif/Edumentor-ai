@@ -1,0 +1,853 @@
+[
+ {
+  "name": "Main",
+  "title": "Đăng nhập · POST /api/auth/login",
+  "route": "/login",
+  "feature": "01 · Tuấn",
+  "status": "sửa",
+  "change": "Thêm bong bóng chat; chỉ còn 1 dây kéo điều khiển cả 3 đèn; mở trang thì đèn tắt sẵn (xem Main-LampOff), kéo dây thì cả 3 đèn sáng và form hiện",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "note": "Đăng nhập { email, password } → access_token, user"
+   }
+  ]
+ },
+ {
+  "name": "Main-LampOff",
+  "title": "Đăng nhập · mở trang, đèn tắt sẵn",
+  "route": "/login",
+  "feature": "01 · Tuấn",
+  "status": "mới",
+  "change": "Trạng thái khi mở trang: cả 3 đèn tắt sẵn, form ẩn và bị khóa; kéo dây (chỉ 1 dây) thì cả 3 đèn sáng và form hiện; kéo lần nữa thì tắt cả 3",
+  "endpoints": [
+   {
+    "method": "—",
+    "path": "Không gọi API",
+    "note": "Hiệu ứng giao diện; form bị khóa tới khi kéo dây bật đèn"
+   }
+  ]
+ },
+ {
+  "name": "Register",
+  "title": "Đăng ký · POST /api/auth/register",
+  "route": "/register",
+  "feature": "01 · Tuấn",
+  "status": "sửa",
+  "change": "Thêm bong bóng chat; đổi theo Đăng nhập: 1 dây kéo điều khiển cả 3 đèn, mở trang đèn tắt sẵn, form ẩn và bị khóa",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/auth/register",
+    "note": "Tạo tài khoản { full_name, email, password }"
+   }
+  ]
+ },
+ {
+  "name": "ForgotPassword",
+  "title": "Quên mật khẩu · POST /api/auth/forgot-password",
+  "route": "/forgot-password",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/auth/forgot-password",
+    "note": "Gửi email đặt lại mật khẩu { email }"
+   }
+  ]
+ },
+ {
+  "name": "ForgotSent",
+  "title": "Đã gửi yêu cầu",
+  "route": "/forgot-sent",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "—",
+    "path": "Không gọi API",
+    "note": "Thông báo chung, không lộ email có tồn tại hay không"
+   }
+  ]
+ },
+ {
+  "name": "ResetPassword",
+  "title": "Đặt lại mật khẩu · POST /api/auth/reset-password",
+  "route": "/reset-password",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/auth/reset-password",
+    "note": "Đặt mật khẩu mới { token, new_password }"
+   }
+  ]
+ },
+ {
+  "name": "ResetExpired",
+  "title": "Liên kết hết hạn · POST /api/auth/reset-password",
+  "route": "/reset-expired",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/auth/reset-password",
+    "note": "Lỗi 400: token hết hạn hoặc đã dùng"
+   }
+  ]
+ },
+ {
+  "name": "Profile",
+  "title": "Hồ sơ · GET /api/me, GET /api/me/summary, GET /api/me/courses?status= …",
+  "route": "/me",
+  "feature": "01 · Tuấn",
+  "status": "sửa",
+  "change": "Thêm công tắc giao diện Tối/Sáng",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me",
+    "note": "Thông tin người dùng"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/summary",
+    "note": "Số liệu tổng quan"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/courses?status=",
+    "note": "Khóa đang học / đã xong"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/skills",
+    "note": "Kỹ năng"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/review-history",
+    "note": "Lần ôn tập gần đây"
+   }
+  ]
+ },
+ {
+  "name": "Profile-Light",
+  "title": "Hồ sơ · giao diện Sáng · GET /api/me, GET /api/me/summary",
+  "route": "/me",
+  "feature": "01 · Tuấn",
+  "status": "mới",
+  "change": "Chế độ Sáng tông kem ấm; lựa chọn lưu ở localStorage (em-theme)",
+  "theme": "light",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me",
+    "note": "Như màn Hồ sơ"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/summary",
+    "note": "Như màn Hồ sơ"
+   },
+   {
+    "method": "—",
+    "path": "localStorage em-theme",
+    "note": "Theme lưu ở trình duyệt, không gọi API"
+   }
+  ]
+ },
+ {
+  "name": "EditProfile",
+  "title": "Sửa hồ sơ · GET /api/me, PATCH /api/me, POST /api/me/avatar",
+  "route": "/me/edit",
+  "feature": "01 · Tuấn",
+  "status": "sửa",
+  "change": "Bỏ nút \"Tải ảnh lên\" và ô đường dẫn ảnh; bấm vào avatar (icon camera) để đổi ảnh",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me",
+    "note": "Nạp họ tên, email"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/me",
+    "note": "Lưu { full_name }"
+   },
+   {
+    "method": "POST",
+    "path": "/api/me/avatar",
+    "note": "Đổi ảnh khi bấm avatar (multipart)"
+   }
+  ]
+ },
+ {
+  "name": "ChangePassword",
+  "title": "Đổi mật khẩu · POST /api/me/change-password",
+  "route": "/me/password",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/me/change-password",
+    "note": "{ current_password, new_password }"
+   }
+  ]
+ },
+ {
+  "name": "Skills",
+  "title": "Kỹ năng của tôi · GET /api/me/skills, PATCH /api/me/skills",
+  "route": "/me/skills",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/skills",
+    "note": "Danh sách kỹ năng"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/me/skills",
+    "note": "{ add, update, remove } trong một transaction"
+   }
+  ]
+ },
+ {
+  "name": "Logout",
+  "title": "Xác nhận đăng xuất · POST /api/auth/logout",
+  "route": "/logout",
+  "feature": "01 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/auth/logout",
+    "note": "Đăng xuất, xóa token phía client"
+   }
+  ]
+ },
+ {
+  "name": "Courses",
+  "title": "Danh mục khóa học · GET /api/courses?search=&level=&sort_by=, POST /api/me/bookmarks, DELETE /api/me/bookmarks/{course_id}",
+  "route": "/courses",
+  "feature": "02 · Khôi",
+  "status": "sửa",
+  "change": "Header thêm mục \"Liên hệ\"; thêm bong bóng chat",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/courses?search=&level=&sort_by=",
+    "note": "Tìm, lọc, sắp xếp"
+   },
+   {
+    "method": "POST",
+    "path": "/api/me/bookmarks",
+    "note": "Lưu khóa học"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/me/bookmarks/{course_id}",
+    "note": "Bỏ lưu"
+   }
+  ]
+ },
+ {
+  "name": "Courses-Light",
+  "title": "Danh mục khóa học · giao diện Sáng · GET /api/courses?search=&level=&sort_by=",
+  "route": "/courses",
+  "feature": "02 · Khôi",
+  "status": "mới",
+  "change": "Bìa khóa học dùng bảng màu pastel riêng cho chế độ Sáng",
+  "theme": "light",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/courses?search=&level=&sort_by=",
+    "note": "Như màn Danh mục"
+   }
+  ]
+ },
+ {
+  "name": "CourseDetail",
+  "title": "Chi tiết khóa học · GET /api/courses/{id}, GET /api/courses/{id}/skills, GET /api/me/courses/{id}/status …",
+  "route": "/courses/1",
+  "feature": "02 · Khôi",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/courses/{id}",
+    "note": "Thông tin khóa"
+   },
+   {
+    "method": "GET",
+    "path": "/api/courses/{id}/skills",
+    "note": "Kỹ năng của khóa"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/courses/{id}/status",
+    "note": "Trạng thái học của tôi"
+   },
+   {
+    "method": "POST",
+    "path": "/api/me/bookmarks",
+    "note": "Lưu khóa"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/me/bookmarks/{course_id}",
+    "note": "Bỏ lưu"
+   }
+  ]
+ },
+ {
+  "name": "JoinDialog",
+  "title": "Tham gia khóa học · POST /api/courses/{id}/join",
+  "route": "/courses/5/join",
+  "feature": "02 · Khôi",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/courses/{id}/join",
+    "note": "Ghi nhận tham gia, sau đó mở URL khóa ở thẻ mới"
+   }
+  ]
+ },
+ {
+  "name": "MyCourses",
+  "title": "Khóa học của tôi · GET /api/me/courses?status=, GET /api/me/bookmarks, DELETE /api/me/bookmarks/{course_id} …",
+  "route": "/me/courses",
+  "feature": "03–04 · Tâm, Hòa",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/courses?status=",
+    "note": "Khóa đang học / hoàn thành"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/bookmarks",
+    "note": "Khóa đã lưu"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/me/bookmarks/{course_id}",
+    "note": "Bỏ lưu"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/me/courses/{id}/status",
+    "note": "Đổi trạng thái"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/me/courses/{id}",
+    "note": "Rời khóa"
+   }
+  ]
+ },
+ {
+  "name": "Consultant",
+  "title": "AI tư vấn lộ trình · POST /api/chat/learning-path, POST /api/learning-paths",
+  "route": "/consultant",
+  "feature": "05 · Hòa",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/chat/learning-path",
+    "note": "{ message, proposal } → { reply, proposal }"
+   },
+   {
+    "method": "POST",
+    "path": "/api/learning-paths",
+    "note": "Chỉ gọi khi bấm Lưu lộ trình"
+   }
+  ]
+ },
+ {
+  "name": "MyPaths",
+  "title": "Lộ trình của tôi · GET /api/me/learning-paths",
+  "route": "/me/learning-paths",
+  "feature": "05 · Hòa",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/learning-paths",
+    "note": "Danh sách lộ trình và tiến độ"
+   }
+  ]
+ },
+ {
+  "name": "PathDetail",
+  "title": "Chi tiết lộ trình · GET /api/learning-paths/{id}, PATCH /api/learning-paths/{id}, DELETE /api/learning-paths/{id} …",
+  "route": "/learning-paths/1",
+  "feature": "06–07 · Hòa",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/learning-paths/{id}",
+    "note": "Lộ trình, nodes, edges"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/learning-paths/{id}",
+    "note": "Đổi tên / trạng thái"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/learning-paths/{id}",
+    "note": "Xóa lộ trình"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/learning-paths/{id}/nodes/{skill_id}",
+    "note": "Xóa node"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/learning-paths/{id}/edges/{from}/{to}",
+    "note": "Xóa cạnh"
+   },
+   {
+    "method": "GET",
+    "path": "/api/learning-paths/{id}/nodes/{skill_id}/courses?sort_by=",
+    "note": "Gợi ý khóa cho node"
+   }
+  ]
+ },
+ {
+  "name": "PathEdit",
+  "title": "Thêm node / cạnh · POST /api/learning-paths/{id}/nodes, POST /api/learning-paths/{id}/edges",
+  "route": "/learning-paths/1/edit",
+  "feature": "06 · Hòa",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/learning-paths/{id}/nodes",
+    "note": "Thêm node { skill_id, role }"
+   },
+   {
+    "method": "POST",
+    "path": "/api/learning-paths/{id}/edges",
+    "note": "Thêm cạnh { from, to, type }"
+   }
+  ]
+ },
+ {
+  "name": "Tutor",
+  "title": "AI Tutor · GET /api/chat/sessions, POST /api/chat/sessions, GET /api/chat/sessions/{id} …",
+  "route": "/tutor",
+  "feature": "08 · Tâm",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/chat/sessions",
+    "note": "Danh sách phiên"
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat/sessions",
+    "note": "Tạo phiên"
+   },
+   {
+    "method": "GET",
+    "path": "/api/chat/sessions/{id}",
+    "note": "Tin nhắn của phiên"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/chat/sessions/{id}",
+    "note": "Xóa phiên"
+   },
+   {
+    "method": "POST",
+    "path": "/api/chat/sessions/{id}/messages",
+    "note": "Gửi câu hỏi"
+   }
+  ]
+ },
+ {
+  "name": "ReviewStart",
+  "title": "Bắt đầu ôn tập · GET /api/courses/{id}/review, GET /api/me/review-history?course_id=",
+  "route": "/courses/1/review",
+  "feature": "09 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/courses/{id}/review",
+    "note": "Thông tin bài ôn tập"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/review-history?course_id=",
+    "note": "Các lần làm trước"
+   }
+  ]
+ },
+ {
+  "name": "ReviewQuiz",
+  "title": "Làm bài · POST /api/courses/{id}/review-attempts, POST /api/review-attempts/{id}/submit, M1 · lưu bài làm dở",
+  "route": "/courses/1/review/attempt",
+  "feature": "09 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "/api/courses/{id}/review-attempts",
+    "note": "Tạo lần làm (trả bài dở nếu có)"
+   },
+   {
+    "method": "POST",
+    "path": "/api/review-attempts/{id}/submit",
+    "note": "Nộp bài"
+   },
+   {
+    "method": "MISMATCH",
+    "path": "M1 · lưu bài làm dở",
+    "note": "\"Tạm rời, làm tiếp sau\" chưa có endpoint"
+   }
+  ]
+ },
+ {
+  "name": "ReviewResult",
+  "title": "Kết quả · GET /api/me/review-history/{attempt_id}",
+  "route": "/review-result/101",
+  "feature": "09 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/review-history/{attempt_id}",
+    "note": "Điểm, đạt/chưa đạt, kỹ năng được ghi nhận"
+   }
+  ]
+ },
+ {
+  "name": "ReviewHistory",
+  "title": "Lịch sử ôn tập · GET /api/me/review-history?course_id=&passed=",
+  "route": "/me/review-history",
+  "feature": "09 · Tuấn",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/review-history?course_id=&passed=",
+    "note": "Danh sách lần làm, có lọc"
+   }
+  ]
+ },
+ {
+  "name": "ReviewDetail",
+  "title": "Chi tiết lần làm · GET /api/me/review-history/{attempt_id}",
+  "route": "/me/review-history/103",
+  "feature": "09 · Tuấn",
+  "status": "sửa",
+  "change": "Giải thích ẩn mặc định; nút \"Xem giải thích\" từng câu và \"Hiện tất cả giải thích\"",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/review-history/{attempt_id}",
+    "note": "Câu hỏi, đáp án đã chọn, đáp án đúng, giải thích"
+   }
+  ]
+ },
+ {
+  "name": "ReviewDetail-Explanation",
+  "title": "Chi tiết lần làm · mở giải thích · GET /api/me/review-history/{attempt_id}",
+  "route": "/me/review-history/103",
+  "feature": "09 · Tuấn",
+  "status": "mới",
+  "change": "Trạng thái sau khi bấm \"Hiện tất cả giải thích\"",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/me/review-history/{attempt_id}",
+    "note": "Không gọi thêm: giải thích có sẵn trong dữ liệu"
+   }
+  ]
+ },
+ {
+  "name": "Contact",
+  "title": "Liên hệ & góp ý · GET /api/courses, M2 · liên hệ khóa học, M2 · gửi phản hồi",
+  "route": "/contact",
+  "feature": "10 · Tâm",
+  "status": "mới",
+  "change": "Màn mới: phản hồi về khóa học hoặc hệ thống, thẻ liên hệ của khóa học",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/courses",
+    "note": "Danh sách khóa để chọn"
+   },
+   {
+    "method": "MISMATCH",
+    "path": "M2 · liên hệ khóa học",
+    "note": "CourseContact + Course.instructor"
+   },
+   {
+    "method": "MISMATCH",
+    "path": "M2 · gửi phản hồi",
+    "note": "{ target_type, course_id, feedback_type, content }"
+   }
+  ]
+ },
+ {
+  "name": "ContactGuest",
+  "title": "Liên hệ & góp ý · chưa đăng nhập",
+  "route": "/contact-guest",
+  "feature": "10 · Tâm",
+  "status": "mới",
+  "change": "Banner yêu cầu đăng nhập, form bị khóa",
+  "endpoints": [
+   {
+    "method": "—",
+    "path": "Không gọi API",
+    "note": "Chưa đăng nhập nên không gửi được; nút dẫn tới /login"
+   }
+  ]
+ },
+ {
+  "name": "AdminCourses",
+  "title": "Quản trị khóa học · GET /api/admin/courses, POST /api/admin/courses, PATCH /api/admin/courses/{id} …",
+  "route": "/admin/courses",
+  "feature": "11 · Khôi",
+  "status": "sửa",
+  "change": "Sidebar thêm Phản hồi và Lộ trình người dùng",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/admin/courses",
+    "note": "Danh sách khóa"
+   },
+   {
+    "method": "POST",
+    "path": "/api/admin/courses",
+    "note": "Thêm khóa"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/admin/courses/{id}",
+    "note": "Sửa khóa"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/admin/courses/{id}",
+    "note": "Xóa khóa"
+   },
+   {
+    "method": "POST",
+    "path": "/api/admin/course-skill-relations",
+    "note": "Gắn kỹ năng"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/admin/course-skill-relations/{course_id}/{skill_id}",
+    "note": "Gỡ kỹ năng"
+   }
+  ]
+ },
+ {
+  "name": "AdminSkills",
+  "title": "Kỹ năng và quan hệ · GET /api/admin/skills, POST /api/admin/skills, DELETE /api/admin/skills/{id}",
+  "route": "/admin/skills",
+  "feature": "11–12 · Khôi, Hòa",
+  "status": "sửa",
+  "change": "Danh mục kỹ năng chiếm toàn bộ chiều rộng; bấm một kỹ năng để mở sơ đồ quan hệ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/admin/skills",
+    "note": "Danh mục kỹ năng"
+   },
+   {
+    "method": "POST",
+    "path": "/api/admin/skills",
+    "note": "Thêm kỹ năng"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/admin/skills/{id}",
+    "note": "Xóa kỹ năng"
+   }
+  ]
+ },
+ {
+  "name": "AdminSkills-Relations",
+  "title": "Kỹ năng · hộp thoại sơ đồ quan hệ · GET /api/admin/skill-relations, POST /api/admin/skill-relations, PATCH /api/admin/skill-relations/{from}/{to} …",
+  "route": "/admin/skills",
+  "feature": "12 · Hòa",
+  "status": "mới",
+  "change": "Hộp thoại lớn: cột \"Học trước\" và \"Mở ra\", đổi loại / xóa quan hệ trên sơ đồ, form tạo quan hệ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/admin/skill-relations",
+    "note": "Toàn bộ quan hệ, lọc theo kỹ năng đang mở"
+   },
+   {
+    "method": "POST",
+    "path": "/api/admin/skill-relations",
+    "note": "Tạo quan hệ { from, to, type }"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/admin/skill-relations/{from}/{to}",
+    "note": "Đổi loại quan hệ"
+   },
+   {
+    "method": "DELETE",
+    "path": "/api/admin/skill-relations/{from}/{to}",
+    "note": "Xóa quan hệ"
+   }
+  ]
+ },
+ {
+  "name": "AdminBasePaths",
+  "title": "Mẫu lộ trình cơ sở · GET /api/admin/base-learning-paths, PATCH /api/admin/base-learning-paths/{template_id}",
+  "route": "/admin/base-paths",
+  "feature": "Quản trị",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/admin/base-learning-paths",
+    "note": "Danh sách mẫu"
+   },
+   {
+    "method": "PATCH",
+    "path": "/api/admin/base-learning-paths/{template_id}",
+    "note": "Bật/tắt, sửa mẫu"
+   }
+  ]
+ },
+ {
+  "name": "AdminHistorical",
+  "title": "Dữ liệu lịch sử · GET /api/admin/historical-learning-paths, POST /api/admin/historical-learning-path-imports",
+  "route": "/admin/historical",
+  "feature": "Quản trị",
+  "status": "giữ",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/api/admin/historical-learning-paths",
+    "note": "Dữ liệu đã nhập"
+   },
+   {
+    "method": "POST",
+    "path": "/api/admin/historical-learning-path-imports",
+    "note": "Nhập file (multipart, is_synthetic)"
+   }
+  ]
+ },
+ {
+  "name": "AdminFeedback",
+  "title": "Quản trị phản hồi · M2 · danh sách phản hồi",
+  "route": "/admin/feedback",
+  "feature": "13 · Tâm",
+  "status": "mới",
+  "change": "Màn mới: số liệu, tab, tìm kiếm, lọc loại, lọc thời gian, sắp xếp theo thời gian",
+  "endpoints": [
+   {
+    "method": "MISMATCH",
+    "path": "M2 · danh sách phản hồi",
+    "note": "Lọc target_type, feedback_type, search, date_from, date_to, sort"
+   }
+  ]
+ },
+ {
+  "name": "AdminFeedback-Detail",
+  "title": "Quản trị phản hồi · lọc 30 ngày + ngăn chi tiết · M2 · danh sách phản hồi",
+  "route": "/admin/feedback",
+  "feature": "13 · Tâm",
+  "status": "mới",
+  "change": "Chọn \"30 ngày qua\" và bấm một dòng: ngăn chi tiết trượt ra, nút trả lời qua email",
+  "endpoints": [
+   {
+    "method": "MISMATCH",
+    "path": "M2 · danh sách phản hồi",
+    "note": "date_from, date_to theo khoảng đã chọn"
+   },
+   {
+    "method": "—",
+    "path": "mailto:",
+    "note": "Trả lời bằng email, không qua API"
+   }
+  ]
+ },
+ {
+  "name": "AdminUserPaths",
+  "title": "Lộ trình người dùng · M3 · danh sách người dùng, M3 · lộ trình của người dùng",
+  "route": "/admin/user-paths",
+  "feature": "14 · Hòa",
+  "status": "mới",
+  "change": "Màn mới: thẻ mục tiêu phổ biến, xem theo Người dùng hoặc Mục tiêu lộ trình, lọc trạng thái, mục đích lộ trình, tiến độ và đồ thị chỉ xem",
+  "endpoints": [
+   {
+    "method": "MISMATCH",
+    "path": "M3 · danh sách người dùng",
+    "note": "Tìm theo tên, email"
+   },
+   {
+    "method": "MISMATCH",
+    "path": "M3 · lộ trình của người dùng",
+    "note": "Lộ trình, nodes, edges và UserSkill"
+   }
+  ]
+ },
+ {
+  "name": "ChatBubble-Menu",
+  "title": "Bong bóng chat · 4 lối tắt",
+  "route": "/courses",
+  "feature": "Tiện ích chung",
+  "status": "mới",
+  "change": "Bong bóng cố định góc phải dưới: GitHub, Zalo, Liên hệ, AI tư vấn khóa học",
+  "endpoints": [
+   {
+    "method": "—",
+    "path": "Link ngoài",
+    "note": "GitHub, Zalo (src/config/links.js, đang để link tạm)"
+   },
+   {
+    "method": "—",
+    "path": "/contact",
+    "note": "Điều hướng nội bộ"
+   }
+  ]
+ },
+ {
+  "name": "ChatBubble-Advisor",
+  "title": "Bong bóng chat · AI tư vấn khóa học · M4 · chat tư vấn khóa học, GET /api/me/skills",
+  "route": "/courses",
+  "feature": "Tiện ích chung",
+  "status": "mới",
+  "change": "AI gợi ý khóa học kèm thẻ khóa; người mới ưu tiên khóa cơ bản, tài khoản dựa trên kỹ năng",
+  "endpoints": [
+   {
+    "method": "MISMATCH",
+    "path": "M4 · chat tư vấn khóa học",
+    "note": "{ message, guest } → { reply, courses, cta }"
+   },
+   {
+    "method": "GET",
+    "path": "/api/me/skills",
+    "note": "Kỹ năng để cá nhân hóa (tài khoản đã đăng ký)"
+   }
+  ]
+ }
+]

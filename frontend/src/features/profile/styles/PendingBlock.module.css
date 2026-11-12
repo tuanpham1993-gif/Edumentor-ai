@@ -1,0 +1,35 @@
+/* Khối "Đang cập nhật" trên trang Hồ sơ — khung theo demo (_block_7j34e), nội dung theo StatusPanel. */
+.block { padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+.block h2 { margin: 0; font-size: 18px; }
+
+.empty {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  padding: 22px 12px; border: 1px dashed var(--card-border); border-radius: 12px;
+  background: var(--surface-sunk);
+}
+.icon {
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft-bg); color: var(--accent); border: 1px solid var(--accent-soft-border);
+  margin-bottom: 4px;
+}
+.empty strong { font-size: 14px; }
+.empty p { margin: 0; font-size: 13px; line-height: 1.55; color: var(--text-muted); max-width: 340px; }
+
+/* Chuyển động (FĐ7 08/11): icon lơ lửng, vệt sáng lướt qua khung "Đang cập nhật" */
+.icon { animation: bob 3.2s ease-in-out infinite; box-shadow: 0 0 18px rgba(245, 165, 36, 0.25); }
+.icon svg { animation: wiggle 3.2s ease-in-out infinite; }
+.empty::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 210, 140, 0.06) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: sweep 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+.block { transition: border-color var(--d-base), box-shadow var(--d-base), transform var(--d-base) var(--e-std); }
+.block:hover { border-color: var(--accent-soft-border); box-shadow: 0 12px 34px -16px rgba(245, 165, 36, 0.45); transform: translateY(-2px); }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes wiggle { 0%, 70%, 100% { transform: rotate(0); } 78% { transform: rotate(-14deg); } 86% { transform: rotate(10deg); } }
+@keyframes sweep { 0%, 30% { transform: translateX(-100%); } 70%, 100% { transform: translateX(100%); } }
