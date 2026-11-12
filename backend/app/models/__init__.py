@@ -8,6 +8,7 @@ from app.models.learning_path import LearningPath, LearningPathNode, LearningPat
 # Model của Tuấn: tài khoản, token, kỹ năng trong hồ sơ
 from app.models.auth_token import PasswordResetToken, RefreshToken
 from app.models.user import Users
+from app.models.user_course import UserCourse
 from app.models.user_skill import UserSkill
 from app.models.user_profile import UserProfile
 from app.models.notification import Notification
@@ -27,6 +28,7 @@ __all__ = [
     "LearningPathNode",
     "LearningPathEdge",
     "Users",
+    "UserCourse",
     "PasswordResetToken",
     "RefreshToken",
     "UserSkill",
