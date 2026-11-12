@@ -156,17 +156,15 @@ def test_removed_skill_comes_back_on_first_pass(client, bank_312, student_header
     assert row.status == "known" and row.source == "review"
 
 
-def test_second_pass_only_records_history(client, bank_312, student_headers, db_session, monkeypatch):
-    """B2: đạt lần 2 (khóa đã Hoàn thành) → không đánh dấu Hoàn thành lại, không cập nhật kỹ năng."""
-    completed = []
-    monkeypatch.setattr(course_gateway, "mark_course_completed", lambda db, u, c: completed.append(c))
+def test_second_pass_only_records_history(client, bank_312, student_headers, db_session):
+    """B2: đạt lần 2 (khóa đã Hoàn thành — user_courses thật của Khôi) → không Hoàn thành lại, không cập nhật kỹ năng."""
     first = pass_once(client, student_headers, db_session)
+    assert course_gateway.get_enrollment_status(db_session, user_of(db_session).user_id, 312) == course_gateway.COMPLETED
     client.patch("/api/me/skills", headers=student_headers, json={"remove": [SKILL_IDS[0]]})  # tự gỡ sau khi đạt
 
     second = pass_once(client, student_headers, db_session)
 
     assert first["completed_course"] is True and second["completed_course"] is False
-    assert completed == [312]  # chỉ gọi đúng MỘT lần
     assert db_session.query(UserSkill).filter_by(skill_id=SKILL_IDS[0]).count() == 0  # không thêm lại
 
 

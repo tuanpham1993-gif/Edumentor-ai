@@ -75,7 +75,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | `services/review_service.py` | Service | **Luồng chính** + **commit duy nhất**: bắt đầu → tạo đề → lưu bài → nộp → chấm → Hoàn thành + "Đã biết" → email | 2, 3 |
 | `services/exam_builder.py` | Service | Ráp đề theo khung 6 NB + 6 TH + 2 dễ + 1 nâng cao (A1) | 2 |
 | `services/review_grader.py` | Service | Chấm TN; chấm TL theo ý; quy đổi thang 10 | 3 |
-| `services/course_gateway.py` | Service | Cổng sang module Khóa học của **Khôi** (`get_enrollment_status`, `mark_course_completed`) — **hàm giả** tới khi Khôi có hàm thật | 2, 3 |
+| `services/course_gateway.py` | Service | Cổng sang module Khóa học của **Khôi** (`get_enrollment_status`, `mark_course_completed`) — **nối hàm thật** `course_tracking_service` của Khôi (12/11) | 2, 3 |
 | `services/rag_service.py` | Service | Từ kỹ năng → các đoạn tri thức gần nhất (cosine) | 2 |
 | `ai/review/base.py` | AI | Khuôn chung: `generate_questions()`, `grade_essay()` | 2 |
 | `ai/review/mock_ai.py` | AI | AI giả: bốc câu gắn với đoạn RAG; chấm từ khóa | 2, 3 |
@@ -269,6 +269,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 ## GĐ6 — Tích hợp và hoàn thiện (19/11 → 25/11)
 
 - [ ] **6.1 Nối hàm thật của Khôi** (`course_tracking_service`, Khôi hẹn trước 12/11 — kiểm 11/11: chưa push, `user_course.py` + `course_tracking_service.py` trên nhánh Khôi còn rỗng) (thay hàm giả), test luồng đầy đủ với module khóa học — thực tế __/__
+  - ✅ **12/11 — nối xong với Khôi** (nhánh tạm `tuan/merge-khoi`, chờ Tuấn duyệt mới đưa vào `tuan/future-auth`): gộp nhánh `feat/Khoi-LuuKhoaHocVaThamGiaKhoaHoc` (bảng `user_courses`, `course_tracking_service`, API `/me/courses`, `/me/bookmarks`, `/courses/{id}/join`). Xung đột 4 file (`course_gateway`, `api.py`, `conftest`, `test_review_api`) đã gộp tay. Điều kiện Hoàn thành đổi thành **đạt + khóa `ongoing`** (bỏ `has_first_pass` — điểm 3). **Test chung T1–T9 đạt 9/9** (`tests/test_review_course_integration.py`, gọi API thật hai bên); toàn bộ test đạt. ⚠️ Frontend chưa có nút "Tham gia khóa học" → sau khi gộp, người dùng phải tham gia khóa (Swagger `POST /api/courses/{id}/join`) mới ôn được.
   - Cần chốt với Khôi trước khi nối (gửi 11/11, `BA-nhom/Gui-Khoi-…` Phần 2–3): (1) cột người dùng của `student_courses` = `users.user_id`; (2) 2 hàm **chỉ flush**; (3) không cho bỏ khóa `completed` + phía Tuấn đổi điều kiện Hoàn thành thành "đạt + đang `ongoing`" (bỏ kiểm lần đạt đầu, tránh kẹt khi bỏ → đăng ký lại); (4) `bookmarked` = chưa tham gia. Test chung T1–T9.
 - [ ] **6.2 Kiểm thử thủ công** theo bảng dưới — thực tế __/__ (10/11: chạy API 19/19 đạt; còn R1 chờ Khôi, phần giao diện R4/R5/R15 + email R7 👤)
 - [ ] **6.3 Rà bảo mật**: không lộ đáp án / barem trước khi nộp; không xem được bài người khác; API debug chặn student; API key không nằm trong repo — thực tế __/__
@@ -327,4 +328,5 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | 09/11 | Chốt khóa demo 312 (37 làm khóa thứ 2). Chốt ngân hàng 3 bước, mục tiêu 20 câu/kỹ năng. Viết lại kế hoạch theo khung `Review-Frontend-Auth.md`: cấu trúc file, màn hình/API, GĐ0–GĐ6, bảng kiểm thử R1–R15. Phát hiện: repo dùng `create_all()` (không migration); `ai/client.py`, `ai/validators.py` là của chatbot Tâm → module 09 dùng `ai/review/` | Tâm chưa merge chatbot — không đụng nhánh Tâm |
 | 12/11 | **T1 xong** (mục 5.8): chấm tự luận song song, quá 20 giây → "Đang chấm" (202) + chấm nền ≤ 120 giây + cứu bài kẹt; frontend tự cập nhật. Xóa thư mục khung rỗng `frontend/src/pages`, `src/components` (0 dòng, không ai dùng) | Chờ Tâm chốt model rồi bật `AI_MODE=real` |
 | 12/11 | Tâm dùng `gemini-3.6-flash` → thử so sánh, chốt Ôn tập dùng `REVIEW_LLM_MODEL=gemini-3.5-flash-lite` riêng (mục GĐ5 RealAI) | — |
+| 12/11 | Khôi push `course_tracking_service` → gộp thử ở `tuan/merge-khoi`, nối `course_gateway` hàm thật, bỏ `has_first_pass`; **T1–T9 đạt 9/9** | Chờ Tuấn duyệt đưa vào `tuan/future-auth` |
 | | | |

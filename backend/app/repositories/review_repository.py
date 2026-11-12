@@ -150,20 +150,6 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
 
 
-def has_first_pass(db: Session, user_id: int, course_id: int) -> bool:
-    """Người dùng đã có lượt ĐẠT ĐẦU TIÊN của khóa chưa (B1 chỉ áp dụng một lần)."""
-    return (
-        db.scalar(
-            select(ReviewAttempt.attempt_id).where(
-                ReviewAttempt.user_id == user_id,
-                ReviewAttempt.course_id == course_id,
-                ReviewAttempt.is_first_pass.is_(True),
-            )
-        )
-        is not None
-    )
-
-
 def list_history(
     db: Session,
     user_id: int,

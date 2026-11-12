@@ -473,12 +473,11 @@ def _finalize(
         attempt.status = "graded"
         attempt.submitted_at = attempt.submitted_at or datetime.now(UTC)  # "grading": giữ giờ nộp thật
 
+        # Hoàn thành = đạt + khóa đang 'ongoing' (chốt với Khôi, điểm 3 — 12/11). Khóa đã Hoàn thành không bỏ
+        # được và Khôi giữ nguyên 'completed' khi tham gia lại → không cần kiểm "lần đạt đầu" nữa; bỏ khóa rồi
+        # tham gia lại (T9) vẫn Hoàn thành được.
         enrollment = course_gateway.get_enrollment_status(db, user.user_id, attempt.course_id)
-        first_pass = (
-            attempt.passed
-            and enrollment == course_gateway.IN_PROGRESS
-            and not repo.has_first_pass(db, user.user_id, attempt.course_id)
-        )
+        first_pass = bool(attempt.passed) and enrollment == course_gateway.IN_PROGRESS
         attempt.is_first_pass = first_pass
         if first_pass:  # B1 + 6b: kể cả kỹ năng người dùng đã tự gỡ
             course_gateway.mark_course_completed(db, user.user_id, attempt.course_id)
