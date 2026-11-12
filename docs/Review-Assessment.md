@@ -187,6 +187,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
   - Gọi thẳng server đang chạy (`/api/docs` đủ **8** endpoint ôn tập) bằng đúng request Swagger gửi: bắt đầu → lấy đề → lưu 5 câu → bắt đầu lại = `resumed` cùng lượt, còn 5/5 câu. Script: `scratchpad/manual_r1_r15.py`; đã dọn dữ liệu thử.
 - [x] **2.12 Nhờ Claude review GĐ2** — dự kiến 11/11 · thực tế 11/11 🤖
   - Ghi nhận cho GĐ5: request ôn tập **đầu tiên sau khi bật server** nạp mô hình embedding → có lúc > 60 giây (đo 11/11). Nên nạp sẵn mô hình lúc khởi động server.
+  - ✅ **Đã làm 12/11:** `rag_service.warm_up_in_background()` gọi trong `main.py` (lifespan) → nạp mô hình ở **luồng nền**, server vẫn lên ngay. Khóa `_MODEL_LOCK` + kiểm tra lại → luồng nền và request đầu tiên tới cùng lúc vẫn chỉ nạp **1 lần** (thử 5 luồng). Đo: `import sentence_transformers` ~42 giây + nạp ~6 giây; server mới bật, chờ 70 giây → request ôn tập đầu tiên **0.7 giây** (trước: 48–67 giây). Bỏ qua khi chạy pytest. Lưu ý: dùng `uvicorn --reload` mà sửa file liên tục thì mỗi lần reload phải nạp lại từ đầu.
 
 ## GĐ3 — Chấm điểm, Hoàn thành, test (12/11)
 
@@ -234,6 +235,9 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
   - ✅ **Đã chốt 11/11 — phương án (a): ghi là hạn chế của bản mock, KHÔNG thêm luật chặn; AI thật (5.1) chấm theo nghĩa.** Chi tiết giới hạn bộ chấm mock: viết mỗi ý thành một câu cực ngắn kèm chữ đệm (vd "cả hai and là. ít nhất một or là. đảo not là.") vẫn được 10/10 — xảy ra ở cả câu CŨ (COND-TL-01, CS-TL-01, COND-TL-02…) lẫn câu mới, vì mật độ từ khóa < 85% nhờ chữ đệm. Hướng: (a) ghi là hạn chế của mock, AI thật (5.1) chấm theo nghĩa; (b) thêm luật: câu được "Đạt" phải có ≥ N từ KHÔNG phải từ khóa (cuộc đua lách – chặn, khó dứt điểm).
 - [ ] **5.3 Cập nhật BA/SRS** FR-24/25/26 theo quyết định 09/11 — thực tế __/__
 - [ ] **5.4 Làm đẹp giao diện 09** (theo phong cách module 01) — thực tế __/__
+- [ ] **5.7 (CHỜ KHÔI XÁC NHẬN) Sửa bộ chấm tự luận theo nhận xét 11/11** — đã thử trên bản sao + đã viết vào code rồi **hoàn tác** (Tuấn: chờ Khôi). Bản sửa lưu sẵn: `BA-nhom/grader_fix_loi_1_2_4.patch` (áp lại: `git apply …patch` ở thư mục repo, rồi seed lại).
+  - Lỗi 1 (bài đúng viết tự nhiên bị 0 — thêm từ đồng nghĩa CS-TL-03, PY-TL-04) · Lỗi 2 ("chưa biết trước" vẫn khớp "biết trước" → bỏ khớp đứng sau chưa / không / chẳng; bỏ "số lần" ở ITER-TL-02) · Lỗi 4 (bỏ luật "câu khớp ≥ 3 từ" → bài viết bằng code / "Lỗi logic." không bị trừ; COND-TL-05 thêm chủ thể `print`) · VAR-TL-05 bỏ "rỗng" ("None là chuỗi rỗng" từng được 10/10). Đo khi áp: 30 đáp án mẫu vẫn 10/10, 526 passed.
+  - Lỗi 3 (câu ghép 2 vế đảo chủ thể, vd "break bỏ qua … còn continue thoát …" được 10/10) — **chưa làm**, chờ Khôi; patch có sẵn test `xfail` ghi rõ giới hạn này.
 - [ ] **5.5 Nghiên cứu lại kho vector** (A7 — có thể chuyển pgvector) — thực tế __/__
 - [ ] **5.6 (CHỜ BÀN — sau khi xong các việc khác) Lối vào ôn tập từ đồ thị lộ trình** — Tuấn đề xuất 11/11, ảnh `BA-nhom/PathDetail-on-tap-de-xuat-Tuan.png` (sửa từ màn `PathDetail` của Hòa)
   - Ý tưởng: icon ôn tập trên từng ô kỹ năng → popover "Ôn tập <kỹ năng>: N khóa học có bài ôn tập" (mỗi khóa: điểm lần trước, thời gian, nút Ôn tập) + thẻ "Ôn tập <kỹ năng>" ở khung phải + chú thích "Ôn tập" / "Đến hạn ôn" (chấm cam).

@@ -196,7 +196,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
   - [ ] Khi có **RealAI** chấm lâu (trạng thái `grading`): thông báo "Kết quả ôn tập" lúc chấm xong là lối báo chính → làm cùng 5.1 (module 09).
   - [ ] Báo nhóm: header giờ có chuông + menu avatar; logo trỏ `/courses` (Khôi).
 
-## Checklist 13 endpoint
+## Checklist endpoint (13 ban đầu + 6 thêm 11–12/11)
 
 | Method | Endpoint | GĐ | Code | Test | Review |
 |---|---|---|---|---|---|
@@ -211,8 +211,17 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | POST | `/api/me/avatar` | 7 | [x] | [x] | [x] |
 | POST | `/api/me/change-password` | 3 | [x] | [x] | [x] |
 | GET | `/api/me/summary` | 7 | [ ] | [ ] | [ ] |
-| GET | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
-| PATCH | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
+| GET | `/api/me/skills` | 4 | [x] | [x] | [ ] |
+| PATCH | `/api/me/skills` | 4 | [x] | [x] | [ ] |
+| PATCH | `/api/me` + ngày sinh, giới tính, quê quán, SĐT, CCCD (12/11) | 9.10 | [x] | [x] | [ ] |
+| GET | `/api/me/notifications?unread_only=&page=&size=` (11/11) | 9.3 | [x] | [x] | [ ] |
+| GET | `/api/me/notifications/unread-count` (11/11) | 9.3 | [x] | [x] | [ ] |
+| PATCH | `/api/me/notifications/{id}/read` (11/11) | 9.3 | [x] | [x] | [ ] |
+| POST | `/api/me/notifications/read-all` (11/11) | 9.3 | [x] | [x] | [ ] |
+| GET | `/api/me/email-preferences` (12/11) | 9.8 | [x] | [x] | [ ] |
+| PATCH | `/api/me/email-preferences` (12/11) | 9.8 | [x] | [x] | [ ] |
+
+> Cột Review = Tuấn tự đọc lại + thử trên Swagger (Claude đã review khi viết).
 
 ## Câu hỏi cần chốt (BA chưa nói rõ)
 
@@ -239,4 +248,6 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | 05/11 | Xong GĐ0; viết model `Users` (1.1), bật `SECRET_KEY` (1.2); bảng `users` đã tạo trong DB | Lỡ viết model vào `skill.py` của Hòa → đã chuyển sang `user.py` và `git restore` lại `skill.py` |
 | 05/11 | Xong GĐ1 (security, dependencies); GĐ2: register/login + `GET /me`; tự chạy trên Swagger: đăng ký → đăng nhập → Authorize → `/me` ra 200 | Đăng nhập 401 vì chưa đăng ký; đăng ký 422 vì `password` và `confirm_password` lệch dấu `!` — validator chặn đúng |
 | 07/11 | GĐ6 refresh/logout; GĐ7.1 avatar; merge nhánh Hòa (datajson); GĐ8.1–8.3 | **Rà bảo mật:** B1 ✅ không response nào có hashed_password/token_hash · B2 ⚠️ `.env` từng bị commit (9372a94, 30/10, đã xóa ở d40509d) — chỉ chứa giá trị dev/mẫu, SECRET_KEY hiện tại KHÔNG bị lộ · B3 ✅ SECRET_KEY 86 ký tự · B4 ⚠️ email.py in link chứa token khi chưa cấu hình SMTP (chỉ chấp nhận khi dev) · B5 ✅ JWT khóa HS256 · B6 ⚠️ `SQL_ECHO=True` in cả GIÁ TRỊ tham số (email, bản băm) ra log → đặt SQL_ECHO=False khi không debug, hoặc báo Hòa thêm `hide_parameters=True` trong database.py. **Hạn chế đã biết:** chưa giới hạn số lần đăng nhập sai (brute force); access token sống tới 30 phút sau đổi mật khẩu; refresh token qua JSON body |
+| 11/11 | Module 01 khớp ảnh demo (câu chào Đăng ký, "Ôn tập gần đây" dữ liệu thật, icon / mũi tên, nhãn Ảnh đại diện); trang 404 "404 · Not Found" lớn, đậm. **GĐ9:** bảng `notifications` + API 4 endpoint + chuông (2 tab Tất cả / Chưa đọc) + menu avatar + logo → `/courses`; 4 loại thông báo gắn vào đăng ký / đổi & đặt lại mật khẩu / nộp ôn tập. Kiểm Chrome thật: chuông/menu 11/11, K1–K15 18/18 | Lỗi tìm thấy khi kiểm: rê chuột mở menu rồi bấm avatar → menu đóng ngay → sửa (bấm giữ mở). Footer: Tuấn để sau |
+| 12/11 | Menu avatar bỏ Kỹ năng / Lịch sử ôn tập → thêm **Giao diện** (Tối / Sáng / Theo hệ thống, cỡ chữ, giảm chuyển động — lưu trên trình duyệt) + **Thông báo qua email** (bảng `email_preferences`, 3 công tắc). Đăng xuất: nút riêng ở giữa menu, bỏ khỏi Hồ sơ. Hồ sơ bỏ công tắc giao diện + nút Đổi mật khẩu ("Cài đặt tài khoản" → `/me/password`). **Thông tin cá nhân:** bảng `user_profiles` (ngày sinh, giới tính, quê quán, SĐT, CCCD mã hóa + che `345*********`). Backend **518 passed**; Chrome: giao diện/email 8/8, thông tin cá nhân 5/5. Commit + push: d10af24, 3c7e4c1, 8509907, 038da8a | 3 loại email mới là TÙY CHỌN, chưa có nơi gửi. CCCD: khóa suy từ `SECRET_KEY` (đổi khóa → mất CCCD cũ). Chờ Tuấn xem 9.7 |
 | | | |

@@ -125,6 +125,16 @@
 - [x] **7.3 `npm run build`** không lỗi — dự kiến 13/11 · thực tế 11/11 🤖 (sửa chữ "Ôn tập 20 câu" → **15 câu** theo quyết định 09/11 ở trang Đăng nhập / Đăng ký và trang chủ)
 - [ ] **7.4 Commit, báo nhóm phần nền dùng chung** (`client.js`, `authStore`, route, layout) — dự kiến 13/11 · thực tế __/__
 
+## FĐ8 — Header mới + trang cài đặt (11–12/11) — chi tiết ở `Review-Auth.md` GĐ9 (9.1–9.11)
+
+- [x] **8.1 Chuông thông báo** `layout/components/NotificationBell.jsx` — số chưa đọc (99+), khung 2 tab Tất cả / Chưa đọc, đọc 1 / đọc hết, hỏi lại 60 giây; điện thoại trải ngang — thực tế 11/11 🤖
+- [x] **8.2 Menu avatar** `layout/components/UserMenu.jsx` — rê chuột / bấm / bàn phím; mục: Hồ sơ của tôi · Cài đặt tài khoản (→ `/me/password`) · Giao diện · Thông báo qua email · (admin) Quản trị · Đăng xuất (nút riêng ở giữa). Logo → `/courses` — thực tế 11–12/11 🤖
+- [x] **8.3 Trang Giao diện** `/me/appearance` — Tối / Sáng / Theo hệ thống, cỡ chữ (`--reading-scale`, chỉ nội dung câu hỏi ôn tập), giảm chuyển động; lưu localStorage (`utils/theme.js`) — thực tế 12/11 🤖
+- [x] **8.4 Trang Thông báo qua email** `/me/email-notifications` — 3 công tắc lưu ngay lên máy chủ — thực tế 12/11 🤖
+- [x] **8.5 Trang Sửa hồ sơ** thêm ngày sinh, giới tính, quê quán, SĐT, CCCD (chỉ hiện bản che) — thực tế 12/11 🤖
+- [x] **8.6 Trang Hồ sơ gọn lại** — chỉ còn nút Chỉnh sửa hồ sơ (bỏ công tắc giao diện, Đổi mật khẩu, Đăng xuất); "Ôn tập gần đây" dữ liệu thật — thực tế 11–12/11 🤖
+- Kiểm thử Chrome thật (script trong scratchpad): `bell_menu.mjs` 11/11 · `prefs.mjs` 8/8 · `profile_info.mjs` 5/5 · `k_tests.mjs` (K1–K15) 18/18. K12 nay đổi giao diện ở trang Giao diện.
+
 ---
 
 ## Bảng kiểm thử thủ công
@@ -165,4 +175,6 @@
 | Ngày | Đã làm | Vướng mắc |
 |---|---|---|
 | 07/11 | Lập kế hoạch frontend module 01 | — |
+| 11/11 | K1–K15 chạy trên Chrome thật 18/18; so 13 màn với ảnh demo, sửa theo quyết định Tuấn (Footer để sau); chuông + menu avatar (FĐ8) | Trang Đăng nhập / Đăng ký có màn "kéo dây đèn" — script kiểm phải bật đèn trước |
+| 12/11 | Trang Giao diện, Thông báo qua email, thông tin cá nhân; Hồ sơ chỉ còn nút Chỉnh sửa hồ sơ | — |
 | | | |
