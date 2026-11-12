@@ -36,7 +36,7 @@ from app.schemas.review import (
     ReviewInfoOut,
     SaveAnswersRequest,
 )
-from app.services import review_service
+from app.services import course_gateway, review_service
 
 router = APIRouter()
 
@@ -143,6 +143,11 @@ def submit_review(
         raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
     except review_service.AttemptLockedError:
         raise HTTPException(status.HTTP_409_CONFLICT, "Bài này đã được nộp.") from None
+    except course_gateway.EnrollmentChangedError:
+        # L1: khóa vừa đổi trạng thái (vd bỏ khóa) đúng lúc chấm → đã hủy lần nộp, bài vẫn đang làm
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Trạng thái khóa học vừa thay đổi. Vui lòng nộp lại bài."
+        ) from None
     if result["status"] == "grading":
         # T1: AI chấm quá thời gian → 202 "Đang chấm"; chấm nốt ở nền, xong thì có chuông + email.
         response.status_code = status.HTTP_202_ACCEPTED

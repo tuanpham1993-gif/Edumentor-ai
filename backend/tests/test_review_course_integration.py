@@ -153,3 +153,41 @@ def test_t9_rejoin_then_pass_completes(client, fresh, student_headers, db_sessio
 
     assert result["completed_course"] is True
     assert course_status(client, student_headers) == "completed"
+
+
+# ─────────────── L1: bỏ khóa đúng lúc đang chấm (12/11) ───────────────
+
+
+def test_l1_abandon_during_grading_cancels_submit_then_resubmit_works(
+    client, fresh, student_headers, db_session, monkeypatch
+):
+    """Lúc nộp, khóa còn 'ongoing' (đã kiểm) nhưng ngay trước khi chuyển Hoàn thành thì người học bỏ khóa.
+    Hàm của Khôi im lặng → cổng đọc lại thấy chưa 'completed' → hủy cả lần nộp (409), bài vẫn đang làm,
+    không có kỹ năng "Đã biết". Nộp lại → chấm bình thường, KHÔNG Hoàn thành (khóa đã bỏ)."""
+    from app.services import course_tracking_service
+
+    join(client, student_headers)
+    attempt_id = client.post(START_URL, headers=student_headers).json()["attempt_id"]
+    answer_mcq(client, student_headers, db_session, attempt_id, correct=12)
+    real_mark = course_tracking_service.mark_course_completed_in_tx
+
+    def abandon_just_before(db, user_id, course_id):
+        row = db.query(UserCourse).filter_by(user_id=user_id, course_id=course_id).one()
+        row.status = "abandoned"  # như request "Bỏ khóa" chen vào đúng lúc
+        db.flush()
+        real_mark(db, user_id, course_id)  # hàm thật của Khôi: không 'ongoing' → im lặng
+
+    monkeypatch.setattr(course_tracking_service, "mark_course_completed_in_tx", abandon_just_before)
+
+    response = client.post(submit_url(attempt_id), headers=student_headers)
+
+    assert response.status_code == 409 and "nộp lại" in response.json()["detail"]
+    db_session.expire_all()
+    assert client.get(f"/api/review-attempts/{attempt_id}", headers=student_headers).json()["status"] == "in_progress"
+    assert "known" not in my_skills(client, student_headers).values()
+
+    monkeypatch.undo()
+    db_session.query(UserCourse).filter_by(course_id=COURSE).update({"status": "abandoned"})
+    db_session.commit()
+    result = client.post(submit_url(attempt_id), headers=student_headers).json()
+    assert result["passed"] is True and result["completed_course"] is False

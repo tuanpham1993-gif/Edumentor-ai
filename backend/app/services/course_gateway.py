@@ -6,7 +6,8 @@ BA-nhom/Gui-Khoi-On-tap-09-va-Khoa-hoc.md), gọi sang `course_tracking_service`
   - get_enrollment_status: 'ongoing' | 'completed' | 'abandoned'; 'bookmarked' (mới lưu, chưa tham gia)
     hoặc chưa có bản ghi → None (không cho ôn).
   - mark_course_completed: 'ongoing' → 'completed' + completed_at, CHỈ flush — module 09 commit/rollback
-    chung trong transaction nộp bài (B1).
+    chung trong transaction nộp bài (B1). Hàm của Khôi im lặng khi khóa không 'ongoing' → cổng tự đọc lại,
+    chưa 'completed' thì báo EnrollmentChangedError (lỗi L1 — bỏ khóa đúng lúc đang chấm).
 """
 
 from sqlalchemy.orm import Session
@@ -22,6 +23,11 @@ BOOKMARKED = "bookmarked"  # mới lưu khóa, chưa tham gia → không đượ
 _ENROLLED = (IN_PROGRESS, COMPLETED, ABANDONED)
 
 
+class EnrollmentChangedError(Exception):
+    """Trạng thái khóa vừa đổi giữa lúc chấm (vd người học bấm "Bỏ khóa") → không chuyển Hoàn thành được.
+    review_service rollback cả lần nộp; router trả 409 để người học nộp lại."""
+
+
 def get_enrollment_status(db: Session, user_id: int, course_id: int) -> str | None:
     """Trạng thái tham gia khóa của người dùng; None = chưa tham gia (kể cả mới bookmarked)."""
     raw_status = course_tracking_service.get_tracking_status_value(db, user_id, course_id)
@@ -31,3 +37,6 @@ def get_enrollment_status(db: Session, user_id: int, course_id: int) -> str | No
 def mark_course_completed(db: Session, user_id: int, course_id: int) -> None:
     """Chuyển khóa sang Hoàn thành — CHỈ flush, module 09 commit chung (GĐ3)."""
     course_tracking_service.mark_course_completed_in_tx(db, user_id, course_id)
+    status = course_tracking_service.get_tracking_status_value(db, user_id, course_id)
+    if status != COMPLETED:
+        raise EnrollmentChangedError(f"Khóa {course_id} đang '{status}', không chuyển Hoàn thành được")
