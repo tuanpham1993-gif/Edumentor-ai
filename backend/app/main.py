@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.database import init_db
 from app.routers.v1.api import api_router
-from app.services.rag_service import warm_up_in_background
+from app.services.review_rag_service import warm_up_in_background
 
 
 @asynccontextmanager

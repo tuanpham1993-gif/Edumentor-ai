@@ -20,6 +20,7 @@
 | 4 | Frontend 09 bản gọn + demo đầu–cuối | 13/11 → 13/11 | __/__ | __/__ | [ ] |
 | 5 | Mở rộng: AI thật, ngân hàng bước 2, khóa 37, BA/SRS, làm đẹp UI | 14/11 → 18/11 | __/__ | __/__ | [ ] |
 | 6 | Tích hợp với nhóm, kiểm thử thủ công, tập demo, PR | 19/11 → 25/11 | __/__ | __/__ | [ ] |
+| 7 | **Quản trị Ôn tập** (FR-17/54): ngân hàng câu hỏi + phiên bản + mức sẵn sàng khóa + câu AI sinh | 13/11 → 17/11 | 12/11 | __/__ | [ ] |
 
 ---
 
@@ -76,7 +77,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | `services/exam_builder.py` | Service | Ráp đề theo khung 6 NB + 6 TH + 2 dễ + 1 nâng cao (A1) | 2 |
 | `services/review_grader.py` | Service | Chấm TN; chấm TL theo ý; quy đổi thang 10 | 3 |
 | `services/course_gateway.py` | Service | Cổng sang module Khóa học của **Khôi** (`get_enrollment_status`, `mark_course_completed`) — **nối hàm thật** `course_tracking_service` của Khôi (12/11) | 2, 3 |
-| `services/rag_service.py` | Service | Từ kỹ năng → các đoạn tri thức gần nhất (cosine) | 2 |
+| `services/review_rag_service.py` | Service | Từ kỹ năng → các đoạn tri thức gần nhất (cosine). Tên cũ `rag_service.py` — đổi 12/11 vì trùng tên file RAG của Tâm (Tutor, Qdrant) | 2 |
 | `ai/review/base.py` | AI | Khuôn chung: `generate_questions()`, `grade_essay()` | 2 |
 | `ai/review/mock_ai.py` | AI | AI giả: bốc câu gắn với đoạn RAG; chấm từ khóa | 2, 3 |
 | `ai/review/real_ai.py` | AI | AI thật gọi API (giai đoạn 2) — chọn bằng `AI_MODE` | 5 |
@@ -171,7 +172,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - [x] **2.1 `scripts/build_embeddings.py`** — 🤖 đã viết 09/11 · 👤 **Tuấn chạy**: `python -m scripts.build_embeddings` (lần đầu tải mô hình ~470 MB) — thực tế 10/11 👤 (kiểm DB: **15/15** đoạn có `embedding`)
   - Mô hình **đa ngôn ngữ** `paraphrase-multilingual-MiniLM-L12-v2` (`REVIEW_EMBEDDING_MODEL`) — mô hình `all-MiniLM-L6-v2` của Hòa chỉ hiểu tiếng Anh, tài liệu tri thức viết tiếng Việt.
   - ✅ Xong khi: 15 đoạn có `embedding`; lượt ôn mới có `score` trong trace.
-- [x] **2.2 `services/rag_service.py`** — lọc theo kỹ năng → xếp cosine; vector câu truy vấn tính lúc chạy bằng mô hình **đã tải sẵn** (`local_files_only`); chưa có vector / mô hình → vẫn trả đoạn theo thứ tự tạo (không chặn ôn tập) — thực tế 09/11 🤖
+- [x] **2.2 `services/review_rag_service.py`** — lọc theo kỹ năng → xếp cosine; vector câu truy vấn tính lúc chạy bằng mô hình **đã tải sẵn** (`local_files_only`); chưa có vector / mô hình → vẫn trả đoạn theo thứ tự tạo (không chặn ôn tập) — thực tế 09/11 🤖
   - Ghi chú: `sentence-transformers` đã có trong `requirements.txt` (nhóm dùng cho gợi ý lộ trình) nên backend nạp được mô hình cho câu truy vấn; đoạn tri thức vẫn tính sẵn offline.
 - [x] **2.3 `ai/review/base.py` + `mock_ai.py` + `__init__.get_review_ai()` + `ai/prompts/review.py`** — thực tế 09/11 🤖
 - [x] **2.4 `ai/review/validator.py`** — **dùng chung** cho ngân hàng soạn tay (`seed_review.py` đổi sang dùng file này) và câu AI sinh; sinh lại ≤ 2 lần → ngân hàng dự phòng; câu AI mới (giai đoạn 2) tự lưu `source='ai'` — thực tế 09/11 🤖
@@ -187,7 +188,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
   - Gọi thẳng server đang chạy (`/api/docs` đủ **8** endpoint ôn tập) bằng đúng request Swagger gửi: bắt đầu → lấy đề → lưu 5 câu → bắt đầu lại = `resumed` cùng lượt, còn 5/5 câu. Script: `scratchpad/manual_r1_r15.py`; đã dọn dữ liệu thử.
 - [x] **2.12 Nhờ Claude review GĐ2** — dự kiến 11/11 · thực tế 11/11 🤖
   - Ghi nhận cho GĐ5: request ôn tập **đầu tiên sau khi bật server** nạp mô hình embedding → có lúc > 60 giây (đo 11/11). Nên nạp sẵn mô hình lúc khởi động server.
-  - ✅ **Đã làm 12/11:** `rag_service.warm_up_in_background()` gọi trong `main.py` (lifespan) → nạp mô hình ở **luồng nền**, server vẫn lên ngay. Khóa `_MODEL_LOCK` + kiểm tra lại → luồng nền và request đầu tiên tới cùng lúc vẫn chỉ nạp **1 lần** (thử 5 luồng). Đo: `import sentence_transformers` ~42 giây + nạp ~6 giây; server mới bật, chờ 70 giây → request ôn tập đầu tiên **0.7 giây** (trước: 48–67 giây). Bỏ qua khi chạy pytest. Lưu ý: dùng `uvicorn --reload` mà sửa file liên tục thì mỗi lần reload phải nạp lại từ đầu.
+  - ✅ **Đã làm 12/11:** `review_rag_service.warm_up_in_background()` gọi trong `main.py` (lifespan) → nạp mô hình ở **luồng nền**, server vẫn lên ngay. Khóa `_MODEL_LOCK` + kiểm tra lại → luồng nền và request đầu tiên tới cùng lúc vẫn chỉ nạp **1 lần** (thử 5 luồng). Đo: `import sentence_transformers` ~42 giây + nạp ~6 giây; server mới bật, chờ 70 giây → request ôn tập đầu tiên **0.7 giây** (trước: 48–67 giây). Bỏ qua khi chạy pytest. Lưu ý: dùng `uvicorn --reload` mà sửa file liên tục thì mỗi lần reload phải nạp lại từ đầu.
 
 ## GĐ3 — Chấm điểm, Hoàn thành, test (12/11)
 
@@ -296,6 +297,60 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 ---
 
+## GĐ7 — Quản trị Ôn tập (13/11 → 17/11) — lập kế hoạch 12/11
+
+> Lý do: SRS **FR-17**, BA **FR-54** / UC-21, `api-endpoints.md` T19–T21 yêu cầu admin quản lý câu hỏi ôn tập; route `/admin/questions`
+> có trong SRS nhưng **thiết kế UI không có màn này**. Q1 (09/11) đã hoãn → **mở lại 12/11**. BA/SRS chỉ nói trắc nghiệm + không AI —
+> **đã cũ** so với chốt 09/11 (tự luận + barem, mức độ, câu AI sinh, RAG) → làm theo dữ liệu thật, không theo BA.
+
+### Tuấn chốt 12/11
+| # | Câu hỏi | Chốt |
+|---|---|---|
+| QT1 | Phạm vi đợt này | **A** ngân hàng câu hỏi (TN + tự luận, tắt / bật) · **B** mức sẵn sàng của khóa · **C** lọc / tắt câu AI sinh. **D** (theo dõi lượt làm bài, tỉ lệ Gemini lỗi, xem vết RAG) **làm sau**. E (sửa đoạn tri thức RAG) để sau. |
+| QT2 | Sửa câu đã có người làm | **Lưu phiên bản** — bài cũ luôn hiện đúng câu lúc làm (tránh lặp lỗi 11/11: sửa đè đáp án làm lịch sử sai) |
+| QT3 | Giao diện | Claude phác màn `/admin/questions` theo bố cục các màn admin có sẵn (AdminSkills: bảng + lọc + ngăn chi tiết phải) → **Tuấn duyệt ảnh phác trước khi code** |
+
+### Thiết kế phiên bản (QT2) — "sao chép khi sửa"
+- `create_all` không thêm được cột vào bảng `review_questions` đã có → **không đổi bảng cũ**, thêm **1 bảng mới** `review_question_versions`
+  (`question_id` PK/FK → review_questions, `family_id` = id câu gốc, `version` 1, 2, 3…, `created_at`, `created_by` → users).
+- **Sửa câu CHƯA ai làm** → sửa tại chỗ (không cần phiên bản).
+- **Sửa câu ĐÃ có trong bài làm** → tạo **dòng mới** (bản sao + thay đổi, `version + 1`, cùng `family_id`), dòng cũ `is_active=false`;
+  `code` chuyển sang dòng mới, dòng cũ đổi thành `<code>~v<n>` (giữ unique). Bài cũ vẫn trỏ dòng cũ (FK RESTRICT) → **chấm / kết quả /
+  lịch sử không phải sửa gì**.
+- **Xóa**: chưa ai làm → xóa thật; đã làm → chỉ tắt (`api-endpoints` T20). Response nói rõ đã xóa hay đã tắt.
+- **Seed** (`scripts/seed_review.py`) đang sửa đè theo `code` → chuyển sang dùng cùng hàm phiên bản (gốc lỗi 11/11).
+- Sinh đề "tránh câu lượt trước" so theo `family_id` (không lặp lại câu cùng họ chỉ vì đổi phiên bản).
+
+### Backend
+| API (`require_admin`) | Việc |
+|---|---|
+| `GET /api/admin/review/questions` | Lọc `skill_id`, `course_id`, `type`, `level`, `source` (bank / ai), `is_active`, `q` (tìm nội dung) + phân trang; mỗi dòng có `version`, `used_count` (số bài đã dùng) |
+| `GET /api/admin/review/questions/{id}` | Chi tiết + đáp án / barem + **lịch sử phiên bản** |
+| `POST /api/admin/review/questions` | Thêm câu (TN: 4 lựa chọn + đáp án; TL: barem tổng 10 + từ khóa) — **dùng chung validator** của ngân hàng |
+| `PATCH /api/admin/review/questions/{id}` | Sửa — tự quyết sửa tại chỗ hay tạo phiên bản mới; trả `{question, versioned: bool}` |
+| `POST …/{id}/deactivate` · `…/activate` | Tắt / bật (C: tắt câu AI sinh kém) |
+| `DELETE /api/admin/review/questions/{id}` | Xóa thật nếu chưa dùng, ngược lại tắt — trả `{deleted | deactivated}` |
+| `GET /api/admin/review/readiness?course_id=` | **B**: từng khóa → ôn được chưa (dùng lại kiểm tra A1 `plan_exam`), từng kỹ năng: số câu đang bật theo loại / mức độ so với mục tiêu 20, thiếu gì |
+| (tùy chọn) `POST /api/admin/review/questions/import` | Nhập JSON đúng định dạng `data/review/*.json`, báo cáo từng dòng (T21) |
+- Đường dẫn `/api/admin/review/...` (không dùng `/api/admin/questions` của BA) để không đụng router admin của Khôi; ghi vào `api-endpoints.md`.
+- File: `routers/v1/endpoints/admin/review_admin.py`, `services/review_admin_service.py`, `repositories/review_repository.py` (thêm hàm), `models/review_question_version.py`, `schemas/review_admin.py`.
+
+### Frontend (`features/review-admin/` hoặc trong `features/review/admin/`)
+- `/admin/questions`: thanh lọc (khóa, kỹ năng, loại, mức độ, nguồn, trạng thái, tìm) · bảng câu hỏi (mã, nội dung rút gọn, loại / mức, nguồn, phiên bản, số bài đã dùng, bật / tắt) · ngăn phải: xem / sửa (form TN hoặc form barem tự luận, tổng điểm tự cộng) + lịch sử phiên bản.
+- Thẻ trên cùng / tab "Mức sẵn sàng": mỗi khóa → ✅ ôn được / ⚠️ thiếu (kỹ năng nào, thiếu loại câu nào).
+- Báo trước khi lưu: "Câu đã có N bài làm → lưu thành phiên bản mới, bài cũ giữ bản cũ".
+
+### Các bước
+- [x] **7.0 Lập kế hoạch + chốt QT1–QT3** — 12/11
+- [ ] **7.1 Ảnh phác màn `/admin/questions`** → Tuấn duyệt — ảnh: `BA-nhom/Admin-cau-hoi-on-tap-phac-thao-Tuan.png` (+ .html), 12/11
+- [ ] **7.2 Model `review_question_versions` + hàm phiên bản** (sửa tại chỗ / tạo bản mới / tắt / xóa) + test (bài cũ vẫn hiện bản cũ)
+- [ ] **7.3 API danh sách / chi tiết / thêm / sửa / tắt-bật / xóa** + test quyền (student 403)
+- [ ] **7.4 API mức sẵn sàng khóa (B)** + test
+- [ ] **7.5 Seed dùng hàm phiên bản**; sinh đề tránh theo `family_id`
+- [ ] **7.6 Frontend `/admin/questions`** + thử trình duyệt
+- [ ] **7.7 (tùy chọn) Nhập JSON** · cập nhật `api-endpoints.md`, BA/SRS FR-17/54
+- [ ] **D (đợt sau)**: theo dõi lượt làm bài, tỉ lệ đạt, tỉ lệ Gemini lỗi → chấm từ khóa, xem vết RAG
+
 ## Bảng kiểm thử thủ công
 
 | # | Thao tác | Mong đợi | GĐ | Đạt |
@@ -322,7 +377,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 | # | Câu hỏi | Cần trước GĐ | Đề xuất | Trả lời | Ngày chốt |
 |---|---|---|---|---|---|
-| Q1 | Quản trị ngân hàng câu hỏi qua API (FR-54)? | 5 | Không làm ở giai đoạn này — ngân hàng nạp từ seed đã duyệt; câu AI sinh tự vào sau validator (A5) | Không làm | 09/11 |
+| Q1 | Quản trị ngân hàng câu hỏi qua API (FR-54)? | 5 → 7 | 09/11: không làm. **12/11 mở lại** → GĐ7 (A+B+C, lưu phiên bản, giao diện theo mẫu AdminSkills) | Làm ở GĐ7 | 12/11 |
 | Q2 | Lưu 4 lựa chọn: 4 cột hay JSON? Đáp án dạng chỉ số hay ký tự? | 1 | `options` JSON + `correct_index` 0–3 | | |
 | Q3 | Chia câu khi không chia hết số kỹ năng / kỹ năng thiếu câu | 2 | Theo A1 | Theo A1 | 09/11 |
 | Q4 | Xáo thứ tự câu / lựa chọn? | 2 | Có | Có (A1) | 09/11 |
@@ -348,4 +403,6 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | 12/11 | **T1 xong** (mục 5.8): chấm tự luận song song, quá 20 giây → "Đang chấm" (202) + chấm nền ≤ 120 giây + cứu bài kẹt; frontend tự cập nhật. Xóa thư mục khung rỗng `frontend/src/pages`, `src/components` (0 dòng, không ai dùng) | Chờ Tâm chốt model rồi bật `AI_MODE=real` |
 | 12/11 | Tâm dùng `gemini-3.6-flash` → thử so sánh, chốt Ôn tập dùng `REVIEW_LLM_MODEL=gemini-3.5-flash-lite` riêng (mục GĐ5 RealAI) | — |
 | 12/11 | Khôi push `course_tracking_service` → gộp thử ở `tuan/merge-khoi`, nối `course_gateway` hàm thật, bỏ `has_first_pass`; **T1–T9 đạt 9/9** | Đã đưa vào `tuan/future-auth`; sửa thêm L1 (bỏ khóa lúc đang chấm) |
+| 12/11 | Thảo luận quản trị Ôn tập: tài liệu BA/SRS (FR-17/54) có nhưng chưa có kế hoạch, UI không có màn → lập **GĐ7**: chốt A+B+C (D sau), **lưu phiên bản** khi sửa câu đã dùng, giao diện theo mẫu AdminSkills | Claude phác ảnh màn `/admin/questions` |
+| 12/11 | Đổi `services/rag_service.py` → **`review_rag_service.py`** (trùng tên file RAG chatbot của Tâm, gây xung đột khi Tâm merge); `course_table.json` khác nhánh Tâm chỉ ở lỗi chính tả `intermidiate` do Khôi sửa | Tâm merge lại |
 | | | |

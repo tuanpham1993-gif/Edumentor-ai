@@ -43,8 +43,8 @@ from app.services import (
     course_gateway,
     exam_builder,
     notification_service,
-    rag_service,
     review_grader,
+    review_rag_service,
     user_skill_service,
 )
 
@@ -218,7 +218,7 @@ def start_attempt(
     *,
     rng: random.Random | None = None,
     ai: ReviewAI | None = None,
-    embedder: rag_service.Embedder | None = None,
+    embedder: review_rag_service.Embedder | None = None,
 ) -> dict:
     title = repo.get_course_title(db, course_id)
     if title is None:
@@ -265,7 +265,7 @@ def start_attempt(
     picked: list[dict] = []
     try:
         for skill_id, need in plan.items():
-            chunks = rag_service.retrieve_chunks(db, skill_id, names[skill_id], embedder=embedder)
+            chunks = review_rag_service.retrieve_chunks(db, skill_id, names[skill_id], embedder=embedder)
             prompt = build_generation_prompt(
                 course_title=title, skill_name=names[skill_id], chunks=chunks, need=need
             )
