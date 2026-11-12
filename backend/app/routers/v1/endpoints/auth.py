@@ -1,6 +1,6 @@
 """Router /api/auth/* (module 01 · Tuấn).
 
-- GĐ2 (05/11/2026): đăng ký, đăng nhập.
+- GĐ2 (05/11/2026): đăng ký, đăng nhập. (12/11: đăng ký xong gửi email chào mừng.)
 - GĐ5 (06/11/2026): quên mật khẩu, đặt lại mật khẩu.
 - GĐ6 (07/11/2026): làm mới access token (refresh), đăng xuất.
 
@@ -13,7 +13,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.email import send_password_reset_email
+from app.core.email import send_password_reset_email, send_welcome_email
 from app.schemas.auth import (
     ForgotPasswordRequest,
     LoginRequest,
@@ -37,10 +37,10 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     summary="Đăng ký tài khoản",
 )
-def register(request: RegisterRequest, db: Session = Depends(get_db)):
+def register(request: RegisterRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     # `request: RegisterRequest` → FastAPI tự đọc JSON và chạy mọi validator; sai → 422, hàm không chạy.
     try:
-        return auth_service.register(
+        user = auth_service.register(
             db,
             email=request.email,
             full_name=request.full_name,
@@ -51,6 +51,10 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_409_CONFLICT,  # 409 = xung đột dữ liệu đã có
             detail="Email đã được sử dụng.",
         ) from None
+    # Email chào mừng (12/11): gửi SAU khi trả response (BackgroundTasks) → người dùng không phải chờ SMTP;
+    # gửi lỗi chỉ ghi log, tài khoản vẫn tạo xong.
+    background_tasks.add_task(send_welcome_email, user.email, user.full_name)
+    return user
 
 
 @router.post("/login", response_model=TokenResponse, summary="Đăng nhập")

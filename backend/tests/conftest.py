@@ -19,6 +19,17 @@ test_engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_t
 #StaticPool: reuses the same connection so the in-memory database remains available across sessions.
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 
+
+@pytest.fixture(autouse=True)
+def _no_real_email_or_ai(monkeypatch):
+    """Test KHÔNG BAO GIỜ gửi email thật / gọi AI thật, kể cả khi .env đã cấu hình Gmail, AI_MODE=real (Tuấn 12/11).
+
+    SMTP_HOST rỗng → core/email in thư ra terminal thay vì gửi (tránh Gmail bị khóa vì gửi hàng loạt khi chạy test).
+    AI_MODE=mock → không tốn lượt Gemini; test nào cần chế độ khác tự monkeypatch lại.
+    """
+    monkeypatch.setattr(settings, "SMTP_HOST", "")
+    monkeypatch.setattr(settings, "AI_MODE", "mock")
+
 @pytest.fixture()
 def db_session():
     import app.models

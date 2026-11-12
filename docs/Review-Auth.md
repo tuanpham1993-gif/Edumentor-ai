@@ -187,6 +187,12 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
   - Kiểm: backend `tests/test_me_profile.py` **16 test** (lưu đủ, mã hóa trong DB, không lộ số, giữ / xóa từng trường, +84, 7 kiểu dữ liệu sai, CCCD trùng 409, không đổi được email / role); toàn bộ **518 passed**. Chrome thật `scratchpad/shots/profile_info.mjs` **5/5** (không còn công tắc ở Hồ sơ, đủ ô, báo lỗi, lưu + F5 giữ, API / DB không chứa số CCCD đầy đủ); K1–K15 vẫn 18/18.
 - [x] **9.11 "Cài đặt tài khoản" → Đổi mật khẩu** (Tuấn 12/11) — mục "Cài đặt tài khoản" trong menu avatar mở thẳng `/me/password`; **bỏ nút Đổi mật khẩu** trên thẻ đầu trang Hồ sơ (chỉ còn Chỉnh sửa hồ sơ). Kiểm: chuông/menu 11/11 (M3 → `/me/password`), thông tin cá nhân 5/5, K1–K15 18/18.
 - [x] **9.12 Sửa lỗi hộp thoại Đăng xuất bị kẹt ở mép trên** (Tuấn báo 12/11) — mở từ menu avatar thì hộp nằm TRONG header; header có `backdrop-filter` nên `position: fixed` bị tính theo header → hộp bị cắt ở trên. Sửa: `LogoutDialog` render qua **portal ra `<body>`** → luôn giữa màn hình dù mở từ đâu. Kiểm Chrome (`logout_dialog.mjs`) 5/5: giữa màn hình ở 1280px và 375px, mở từ menu avatar và từ menu trái Cài đặt, Hủy thì vẫn đăng nhập; K1–K15 18/18.
+- [x] **9.13 Email chào mừng khi đăng ký + gửi email thật** (Tuấn 12/11) — thực tế 12/11 🤖
+  - `core/email.send_welcome_email`; router `/auth/register` gửi bằng `BackgroundTasks` **sau** khi tài khoản đã lưu (gửi lỗi chỉ ghi log). Trang Đăng nhập sau khi đăng ký báo: "Đăng ký thành công! Chúng tôi đã gửi email chào mừng tới <email>…".
+  - Gmail SMTP đã cấu hình (12/11, gửi từ phamthanht009@gmail.com, mật khẩu ứng dụng) — đã gửi thật thư quên mật khẩu, kết quả ôn tập (mẫu), chào mừng tới phamthanht009@gmail.com. Người nhận lấy tự động từ `users.email`.
+  - **`tests/conftest.py`** thêm fixture tự động: test **không bao giờ gửi email thật / gọi Gemini thật** (SMTP_HOST rỗng, AI_MODE=mock) — tránh Gmail bị khóa khi chạy hàng trăm test.
+  - Test `tests/test_welcome_email.py` (4); toàn bộ **534 passed**.
+  - ⚠️ Script kiểm trên Chrome (`k_tests.mjs`) đăng ký tài khoản tạm `@example.com` → server thật sẽ gửi thư chào mừng tới địa chỉ không tồn tại → thư trả về (bounce) hộp thư gửi. Không hại, nhưng nên biết.
 - [ ] **9.7 Tuấn xem lại — đã đủ ý chưa?** (Claude liệt kê điểm có thể bổ sung)
   - [ ] Ai gửi 3 loại email ở 9.8 và khi nào (nhắc ôn tập cần chốt quy tắc "đến hạn" — 5.6 module 09).
   - [ ] Trang **"Xem tất cả thông báo"** riêng (`/me/notifications`) — hiện chỉ có khung trên chuông, xem được 20 thông báo mới nhất mỗi tab.
