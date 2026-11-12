@@ -118,3 +118,12 @@ class ChangePasswordRequest(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+
+class MeSummary(BaseModel):
+    """4 ô thống kê trang Hồ sơ (7.2 · 12/11/2026). None = chưa có dữ liệu → frontend hiện "—"."""
+
+    courses_in_progress: int  # user_courses 'ongoing' (Khôi)
+    courses_completed: int  # user_courses 'completed' — chỉ do ôn tập đạt (module 09)
+    known_skills: int  # user_skills 'known'
+    active_paths: int | None  # lộ trình 'ongoing' (Hòa) — None tới khi learning_paths dùng users.user_id

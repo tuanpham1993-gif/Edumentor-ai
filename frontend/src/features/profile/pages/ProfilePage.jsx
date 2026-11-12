@@ -3,8 +3,8 @@
 //   - Nút: Chỉnh sửa hồ sơ (/me/edit). (12/11: bỏ nút Đổi mật khẩu — vào từ menu avatar "Cài đặt tài khoản".) (12/11: bỏ nút Đăng xuất — đã có trong
 //     menu avatar và cột trái Cài đặt.)
 //   - (12/11) Bỏ công tắc Tối / Sáng ở đầu trang — đã có trang "Giao diện" trong menu avatar.
-//   - 4 ô thống kê: "Kỹ năng đã biết" lấy từ GET /me/skills (FĐ6, 08/11); 3 ô còn lại chờ
-//     GET /me/summary (backend 7.2) → tạm hiện "—".
+//   - 4 ô thống kê: GET /me/summary (7.2 · 12/11) — khóa đang học / đã hoàn thành (user_courses của Khôi),
+//     kỹ năng đã biết; "Lộ trình đang theo" = null (chờ lộ trình của Hòa dùng user_id) → hiện "—".
 //   - 3 khối dưới: Kỹ năng của tôi = dữ liệu thật (SkillsSummary, FĐ6); Ôn tập gần đây = dữ liệu thật
 //     module 09 (RecentReviews, 11/11); Khóa học của tôi (module khóa học) chưa có API → <PendingBlock>.
 //   - Icon trên 3 nút theo demo (11/11).
@@ -20,7 +20,7 @@ import { useAuth } from '../../../hooks/useAuth.js';
 import { formatDate, initials, roleLabel } from '../../../utils/formatters.js';
 import styles from '../styles/ProfilePage.module.css';
 
-// Thứ tự & nhãn theo demo. value: null = chưa có dữ liệu (chờ /me/summary).
+// Thứ tự & nhãn theo demo; key = trường của GET /me/summary. null / chưa tải → "—".
 const STATS = [
   { key: 'courses_in_progress', label: 'Khóa học đang học' },
   { key: 'courses_completed', label: 'Khóa học đã hoàn thành' },
@@ -32,6 +32,7 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const [skills, setSkills] = useState(null); // null = đang tải
   const [skillsError, setSkillsError] = useState(false);
+  const [summary, setSummary] = useState(null); // null = đang tải hoặc lỗi → "—"
 
   useEffect(() => {
     let cancelled = false;
@@ -39,15 +40,17 @@ export default function ProfilePage() {
       .getMySkills()
       .then((data) => !cancelled && setSkills(data))
       .catch(() => !cancelled && setSkillsError(true));
+    meApi
+      .getSummary()
+      .then((data) => !cancelled && setSummary(data))
+      .catch(() => {}); // lỗi → các ô giữ "—", phần còn lại của trang vẫn dùng được
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Giá trị từng ô thống kê; undefined → "—" (chưa có API)
-  const statValue = {
-    known_skills: skills ? skills.filter((s) => s.status === 'known').length : undefined,
-  };
+  // Giá trị từng ô thống kê; null / undefined → "—"
+  const statValue = summary ?? {};
 
   return (
     <div className={`stack ${styles.enter}`} style={{ gap: 24 }}>
@@ -80,7 +83,7 @@ export default function ProfilePage() {
       <section className={styles.stats} aria-label="Thống kê học tập">
         {STATS.map((stat) => (
           <div key={stat.key} className={`card ${styles.stat}`}>
-            {statValue[stat.key] === undefined ? (
+            {statValue[stat.key] == null ? (
               <b title="Đang cập nhật">—</b>
             ) : (
               <b>{statValue[stat.key]}</b>

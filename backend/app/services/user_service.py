@@ -18,8 +18,8 @@ from app.core.security import (
 )
 from app.models.user import Users
 from app.models.user_profile import UserProfile
-from app.repositories import token_repository
-from app.services import notification_service
+from app.repositories import token_repository, user_skill_repository
+from app.services import course_gateway, notification_service
 from app.utils import files
 
 
@@ -118,3 +118,19 @@ def update_avatar(db: Session, user: Users, *, data: bytes) -> Users:
     files.delete_avatar(old_url)  # xóa ảnh cũ SAU KHI lưu DB thành công
     db.refresh(user)
     return user
+
+
+def summary(db: Session, user: Users) -> dict:
+    """GET /api/me/summary — 4 ô thống kê trang Hồ sơ (7.2 · 12/11/2026, Q9).
+
+    - Khóa đang học / đã hoàn thành: bảng user_courses của Khôi, đi qua course_gateway (không đọc thẳng).
+    - Kỹ năng đã biết: user_skills 'known' (Tuấn).
+    - Lộ trình đang theo: None — learning_paths của Hòa còn dùng `student_id` tạm (id học viên mẫu, nhận từ
+      query, không phải users.user_id) → đếm theo user_id sẽ ra số sai. Khi Hòa đổi sang user_id: chỉ sửa dòng này.
+    """
+    return {
+        "courses_in_progress": course_gateway.count_courses(db, user, course_gateway.IN_PROGRESS),
+        "courses_completed": course_gateway.count_courses(db, user, course_gateway.COMPLETED),
+        "known_skills": len(user_skill_repository.list_by_user(db, user.user_id, "known")),
+        "active_paths": None,  # TODO(Hòa): đếm learning_paths 'ongoing' theo user_id
+    }

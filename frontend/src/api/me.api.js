@@ -84,3 +84,10 @@ export async function updateEmailPreferences(changes) {
   const response = await client.patch('/me/email-preferences', changes);
   return response.data;
 }
+
+// GET /me/summary → { courses_in_progress, courses_completed, known_skills, active_paths }
+//   (7.2 · 12/11) active_paths = null tới khi lộ trình của Hòa dùng users.user_id → hiện "—"
+export async function getSummary() {
+  const response = await client.get('/me/summary');
+  return response.data;
+}

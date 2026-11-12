@@ -117,7 +117,11 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 - [x] **7.1 `POST /api/me/avatar`** + `utils/files.py` — kiểm tra loại file, dung lượng; lưu file, cập nhật `avatar_url` — dự kiến 14/11 · thực tế 07/11 → 07/11 ✔ Claude đã review — 9 test (Claude viết); tổng 62 passed; A1–A7 qua trên app thật (mở được ảnh qua /uploads). Claude sửa: giới hạn 2→5 MB theo Q8, thông báo 413 ghi cứng, import lặp, thiếu .gitignore
   - Quyết định Q8 (07/11): PNG + JPEG · tối đa 5 MB (413) · sai định dạng 415 · lưu `backend/uploads/avatars/` · sau này chuyển lên đám mây.
-- [ ] **7.2 `GET /api/me/summary`** — khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo — dự kiến 14/11 · thực tế __/__
+- [x] **7.2 `GET /api/me/summary`** — khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo — dự kiến 14/11 · thực tế 12/11 🤖
+  - Trả `{courses_in_progress, courses_completed, known_skills, active_paths}`. Khóa học đếm qua `course_gateway.count_courses` → `list_my_courses` của Khôi (bảng `user_courses`, không đọc thẳng); kỹ năng = `user_skills` 'known'.
+  - `active_paths = null` (frontend hiện "—"): `learning_paths` của Hòa còn nhận `student_id` tạm từ query (id học viên mẫu, không phải `users.user_id`) → đếm theo tài khoản sẽ sai. Hòa đổi sang `user_id` thì chỉ sửa 1 dòng trong `user_service.summary`.
+  - Frontend: trang Hồ sơ lấy cả 4 ô từ API này (trước: chỉ ô kỹ năng, 3 ô "—"); lỗi API → các ô "—", trang vẫn dùng được.
+  - ✅ Test: `tests/test_me_summary.py` 3 test (cần đăng nhập · người mới toàn 0 · chỉ đếm dòng của mình, đúng trạng thái — bookmarked / abandoned / learning không tính). Trình duyệt: tham gia khóa 312 → Hồ sơ hiện 1 · 0 · 0 · — (4/4 PASS).
   - ⚠️ Cần bảng của module khác (khóa học của tôi, lộ trình). Nếu chưa có: trả `known_skills` thật, các số còn lại chờ gộp.
 - [ ] **7.3 Test + nhờ Claude review GĐ7** — dự kiến 14/11 · thực tế __/__
 
@@ -217,7 +221,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | PATCH | `/api/me` | 3 | [x] | [x] | [x] |
 | POST | `/api/me/avatar` | 7 | [x] | [x] | [x] |
 | POST | `/api/me/change-password` | 3 | [x] | [x] | [x] |
-| GET | `/api/me/summary` | 7 | [ ] | [ ] | [ ] |
+| GET | `/api/me/summary` | 7 | [x] | [x] | [x] |
 | GET | `/api/me/skills` | 4 | [x] | [x] | [ ] |
 | PATCH | `/api/me/skills` | 4 | [x] | [x] | [ ] |
 | PATCH | `/api/me` + ngày sinh, giới tính, quê quán, SĐT, CCCD (12/11) | 9.10 | [x] | [x] | [ ] |
@@ -244,7 +248,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | Q6 | Link đặt lại mật khẩu sống bao lâu? Gửi email bằng SMTP nào? | 5 | **Đề xuất (chờ nhóm xác nhận):** 30 phút (`RESET_TOKEN_EXPIRE_MINUTES`); dev in link ra terminal, khi có SMTP thật dùng `smtplib` (không thêm thư viện) | 06/11 |
 | Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | **Đề xuất (chờ nhóm xác nhận):** 7 ngày (`REFRESH_TOKEN_EXPIRE_DAYS`); có xoay vòng (mỗi refresh token dùng 1 lần); gửi trong JSON body | 06/11 |
 | Q8 | Ảnh đại diện: định dạng, dung lượng tối đa, lưu ở đâu? | 7 | **Tuấn chốt:** định dạng **PNG + JPEG** (khớp `accept` màn demo; kiểm tra chữ ký byte đầu file, không tin content_type; không nhận SVG/GIF/HEIC); tối đa **5 MB** (`AVATAR_MAX_BYTES`); lưu **thư mục server** `backend/uploads/avatars/` (không commit; Docker cần volume) — **mở rộng sau lên dịch vụ đám mây** (Cloudinary/S3…): chỉ viết lại `utils/files.py`, cột `avatar_url` chứa được URL đầy đủ. Thu nhỏ ảnh phía frontend: chưa chốt | 07/11 |
-| Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | | |
+| Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | Khóa học: `user_courses` của Khôi (`ongoing` / `completed`, qua `course_gateway`). Lộ trình: `learning_paths` của Hòa `ongoing` — **chờ Hòa đổi `student_id` → `user_id`**, tạm trả `null` | 12/11 |
 | Q10 | Đổi mật khẩu xong có hủy các phiên đăng nhập khác không? (access token cũ vẫn sống tối đa 30 phút; refresh token ở GĐ6) | 6 | **Đề xuất (chờ nhóm xác nhận):** có — đổi/đặt lại mật khẩu thì thu hồi mọi refresh token của user | 06/11 |
 
 ## Nhật ký

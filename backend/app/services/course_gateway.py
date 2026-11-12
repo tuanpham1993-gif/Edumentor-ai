@@ -28,6 +28,12 @@ class EnrollmentChangedError(Exception):
     review_service rollback cả lần nộp; router trả 409 để người học nộp lại."""
 
 
+def count_courses(db: Session, user, status: str) -> int:
+    """Số khóa của người dùng ở một trạng thái (ongoing / completed …) — cho ô thống kê trang Hồ sơ (7.2).
+    Dùng `list_my_courses` của Khôi (đã có `total`), lấy 1 dòng để chỉ đọc tổng."""
+    return course_tracking_service.list_my_courses(db, user, status_filter=status, page_size=1)["total"]
+
+
 def get_enrollment_status(db: Session, user_id: int, course_id: int) -> str | None:
     """Trạng thái tham gia khóa của người dùng; None = chưa tham gia (kể cả mới bookmarked)."""
     raw_status = course_tracking_service.get_tracking_status_value(db, user_id, course_id)

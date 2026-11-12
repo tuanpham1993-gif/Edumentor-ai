@@ -28,6 +28,7 @@ from app.models.user import Users
 from app.schemas.user import (
     ChangePasswordRequest,
     MessageResponse,
+    MeSummary,
     UpdateMeRequest,
     UserMe,
 )
@@ -49,6 +50,14 @@ router = APIRouter()
 def read_me(current_user: Users = Depends(get_current_user)):
     # get_current_user đã làm hết: đọc token, giải mã, tìm user → chỉ cần trả về.
     return current_user
+
+
+@router.get("/summary", response_model=MeSummary, summary="4 ô thống kê trang Hồ sơ (khóa học, kỹ năng, lộ trình)")
+def read_my_summary(
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return user_service.summary(db, current_user)
 
 
 @router.patch("", response_model=UserMe, summary="Sửa họ tên + thông tin cá nhân (ngày sinh, giới tính, quê quán, SĐT, CCCD)")
