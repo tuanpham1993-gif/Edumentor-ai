@@ -185,9 +185,13 @@ export default function ReviewStartPage() {
                   <li key={a.attempt_id}>
                     <Link to={`/review/${a.attempt_id}/result`} className={styles.attempt}>
                       <span>{formatDateTime(a.submitted_at ?? a.started_at)}</span>
-                      <span className={`chip ${a.passed ? 'chip-ok' : 'chip-danger'}`}>
-                        {formatScore(a.score)}/10 · {a.passed ? 'Đạt' : 'Chưa đạt'}
-                      </span>
+                      {a.status === 'grading' ? (
+                        <span className="chip">Đang chấm…</span>
+                      ) : (
+                        <span className={`chip ${a.passed ? 'chip-ok' : 'chip-danger'}`}>
+                          {formatScore(a.score)}/10 · {a.passed ? 'Đạt' : 'Chưa đạt'}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 ))}

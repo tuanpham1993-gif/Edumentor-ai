@@ -56,11 +56,12 @@ export default function RecentReviews() {
               <Link to={`/review/${a.attempt_id}/result`} style={{ color: 'inherit', minWidth: 0 }}>
                 <span style={{ display: 'block', fontWeight: 600 }}>{a.course_title}</span>
                 <span className="small muted">
-                  {formatDate(a.submitted_at)} · {a.passed ? 'Đạt' : 'Chưa đạt'}
+                  {formatDate(a.submitted_at)} ·{' '}
+                  {a.status === 'grading' ? 'Đang chấm' : a.passed ? 'Đạt' : 'Chưa đạt'}
                 </span>
               </Link>
               <strong style={{ color: a.passed ? 'var(--accent)' : 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                {a.score}/10
+                {a.status === 'grading' ? '…' : `${a.score}/10`}
               </strong>
             </li>
           ))}

@@ -86,6 +86,19 @@ def get_attempt(db: Session, attempt_id: int, *, for_update: bool = False) -> Re
     return db.scalar(stmt)
 
 
+def stuck_grading_ids(db: Session, user_id: int, submitted_before) -> list[int]:
+    """Lượt 'grading' nộp TRƯỚC mốc thời gian — luồng chấm nền đã mất (server khởi động lại / lỗi) (T1)."""
+    return list(
+        db.scalars(
+            select(ReviewAttempt.attempt_id).where(
+                ReviewAttempt.user_id == user_id,
+                ReviewAttempt.status == "grading",
+                ReviewAttempt.submitted_at < submitted_before,
+            )
+        )
+    )
+
+
 def get_in_progress(db: Session, user_id: int, course_id: int) -> ReviewAttempt | None:
     return db.scalar(
         select(ReviewAttempt).where(

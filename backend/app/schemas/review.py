@@ -142,8 +142,8 @@ class AttemptResultOut(BaseModel):
     score: float | None
     passed: bool | None
     pass_score: float
-    mcq_score: float
-    essay_score: float
+    mcq_score: float | None  # None khi status="grading" (đang chấm — T1)
+    essay_score: float | None
     completed_course: bool  # lượt này làm khóa Hoàn thành + kỹ năng "Đã biết" (đạt lần đầu — B1)
     started_at: datetime
     submitted_at: datetime | None

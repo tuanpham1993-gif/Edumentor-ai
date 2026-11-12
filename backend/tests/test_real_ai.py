@@ -26,6 +26,8 @@ ANSWER = "break thì dừng luôn vòng lặp. continue thì nhảy sang vòng s
 def gemini_settings(monkeypatch):
     monkeypatch.setattr(settings, "LLM_API_KEY", "test-key")
     monkeypatch.setattr(settings, "LLM_MODEL", "gemini-test")
+    monkeypatch.setattr(settings, "REVIEW_LLM_API_KEY", "")  # không phụ thuộc .env trên máy
+    monkeypatch.setattr(settings, "REVIEW_LLM_MODEL", "")
 
 
 def fake_gemini(payload=None, *, status=200, raw_text=None, seen=None):
@@ -133,3 +135,22 @@ def test_get_review_ai_real_mode(monkeypatch):
     assert get_review_ai().name == "gemini"
     monkeypatch.setattr(settings, "LLM_API_KEY", "")
     assert get_review_ai().name == "unavailable"  # thiếu khóa → service tự dùng dự phòng
+    monkeypatch.setattr(settings, "REVIEW_LLM_API_KEY", "review-key")
+    assert get_review_ai().name == "gemini"  # Ôn tập có khóa riêng → vẫn chạy
+
+
+def test_review_model_overrides_chatbot_model():
+    """12/11: chatbot (Tâm) dùng LLM_MODEL, Ôn tập đặt REVIEW_LLM_MODEL riêng → gọi đúng model của Ôn tập."""
+    seen = []
+    settings.REVIEW_LLM_MODEL = "gemini-review"  # fixture gemini_settings tự trả lại sau test
+    RealAI(transport=fake_gemini([{"item": 1, "result": "full"}, {"item": 2, "result": "full"}], seen=seen)).grade_essay(
+        QUESTION, ANSWER
+    )
+    assert "/models/gemini-review:generateContent" in str(seen[0].url)
+
+    settings.REVIEW_LLM_MODEL = ""
+    seen.clear()
+    RealAI(transport=fake_gemini([{"item": 1, "result": "full"}, {"item": 2, "result": "full"}], seen=seen)).grade_essay(
+        QUESTION, ANSWER
+    )
+    assert "/models/gemini-test:generateContent" in str(seen[0].url)  # để trống → dùng LLM_MODEL chung

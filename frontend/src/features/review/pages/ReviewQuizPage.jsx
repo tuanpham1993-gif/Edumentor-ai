@@ -374,6 +374,11 @@ export default function ReviewQuizPage() {
                 : 'Bạn đã trả lời đủ 15 câu.'}{' '}
               Sau khi nộp không sửa được nữa.
             </p>
+            {submitting && (
+              <p className="small muted" role="status">
+                AI đang chấm phần tự luận — thường vài giây, tối đa khoảng 20 giây. Đừng đóng trang.
+              </p>
+            )}
             {submitError && (
               <p className="alert" role="alert">
                 {submitError}

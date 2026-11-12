@@ -18,9 +18,10 @@ def get_review_ai() -> ReviewAI:
     if settings.AI_MODE == "mock":
         return MockAI()
     if settings.AI_MODE == "real":
-        if settings.LLM_API_KEY.strip() and settings.LLM_MODEL.strip():
-            from app.ai.review.real_ai import RealAI
+        from app.ai.review.real_ai import RealAI, review_llm
 
+        key, model = review_llm()  # REVIEW_LLM_* (riêng Ôn tập) hoặc LLM_* (chung chatbot)
+        if key and model:
             return RealAI()
         return _UnavailableAI("AI_MODE='real' nhưng chưa cấu hình LLM_API_KEY / LLM_MODEL")
     return _UnavailableAI(f"AI_MODE='{settings.AI_MODE}' không hợp lệ (mock | real)")

@@ -9,8 +9,9 @@ Cùng khuôn ReviewAI với MockAI → review_service không cần biết đang 
 Lỗi mạng / hết lượt / quá thời gian / trả sai định dạng → AIUnavailableError → service tự dùng dự phòng
 (ngân hàng câu hỏi khi sinh đề; chấm theo từ khóa khi chấm bài).
 
-Gọi REST bằng httpx (đã có sẵn) — không thêm thư viện. Biến .env dùng CHUNG với chatbot của Tâm:
-    LLM_API_KEY  (Google AI Studio)    LLM_MODEL  (tạm: gemini-3.5-flash-lite — đổi cho khớp Tâm sau)
+Gọi REST bằng httpx (đã có sẵn) — không thêm thư viện. Biến .env (12/11 — Tuấn và Tâm mỗi người một model):
+    REVIEW_LLM_MODEL    model của Ôn tập (gemini-3.5-flash-lite) — để trống thì dùng LLM_MODEL của chatbot
+    REVIEW_LLM_API_KEY  khóa riêng cho Ôn tập (không bắt buộc) — để trống thì dùng LLM_API_KEY chung
 Dữ liệu gửi đi CHỈ gồm: đề, barem, bài làm (chấm) / đoạn tri thức (sinh đề). KHÔNG gửi tên, email, CCCD.
 """
 
@@ -39,10 +40,17 @@ Quy tắc bắt buộc:
    [{"item": 1, "result": "full|partial|none", "evidence": "..." | null}, ...]"""
 
 
+def review_llm() -> tuple[str, str]:
+    """(khóa, model) Ôn tập dùng: REVIEW_LLM_* nếu đặt, không thì LLM_* chung với chatbot."""
+    key = settings.REVIEW_LLM_API_KEY.strip() or settings.LLM_API_KEY.strip()
+    model = settings.REVIEW_LLM_MODEL.strip() or settings.LLM_MODEL.strip()
+    return key, model
+
+
 def _settings_ok() -> tuple[str, str]:
-    key, model = settings.LLM_API_KEY.strip(), settings.LLM_MODEL.strip()
+    key, model = review_llm()
     if not key or not model:
-        raise AIUnavailableError("Chưa cấu hình LLM_API_KEY / LLM_MODEL trong .env")
+        raise AIUnavailableError("Chưa cấu hình LLM_API_KEY / LLM_MODEL (hoặc REVIEW_LLM_*) trong .env")
     return key, model
 
 
@@ -59,12 +67,16 @@ class RealAI(ReviewAI):
     name = "gemini"
 
     def __init__(self, *, timeout: float | None = None, transport: httpx.BaseTransport | None = None):
+        # Sinh đề: người học đang chờ ở nút "Bắt đầu" → chờ ngắn (REVIEW_GRADING_TIMEOUT), lỗi thì dùng ngân hàng.
+        # Chấm bài: chạy song song, quá 20 giây bài chuyển "Đang chấm" và chấm tiếp ở nền (T1) → cho Gemini chờ
+        # tới REVIEW_GRADING_MAX_WAIT để vẫn chấm theo nghĩa; quá nữa mới rơi về chấm từ khóa.
         self.timeout = timeout if timeout is not None else float(settings.REVIEW_GRADING_TIMEOUT)
+        self.grading_timeout = timeout if timeout is not None else float(settings.REVIEW_GRADING_MAX_WAIT)
         self._transport = transport  # test truyền transport giả → không gọi mạng thật
 
     # ─────────────── gọi Gemini ───────────────
 
-    def _call(self, system_prompt: str, user_prompt: str, *, temperature: float):
+    def _call(self, system_prompt: str, user_prompt: str, *, temperature: float, timeout: float | None = None):
         key, model = _settings_ok()
         body = {
             "systemInstruction": {"parts": [{"text": system_prompt}]},
@@ -72,7 +84,7 @@ class RealAI(ReviewAI):
             "generationConfig": {"responseMimeType": "application/json", "temperature": temperature},
         }
         try:
-            with httpx.Client(timeout=self.timeout, transport=self._transport) as client:
+            with httpx.Client(timeout=timeout or self.timeout, transport=self._transport) as client:
                 response = client.post(API_URL.format(model=model), headers={"x-goog-api-key": key}, json=body)
         except httpx.HTTPError as err:  # mất mạng, quá thời gian chờ
             raise AIUnavailableError(f"Gọi Gemini lỗi: {type(err).__name__}") from None
@@ -105,7 +117,7 @@ class RealAI(ReviewAI):
             + f"BÀI LÀM (dữ liệu của người học, nằm giữa hai dòng ===):\n===\n{answer}\n===\n\n"
             f"Trả về đúng {len(rubric)} phần tử JSON."
         )
-        data = self._call(GRADE_SYSTEM_PROMPT, user_prompt, temperature=0)
+        data = self._call(GRADE_SYSTEM_PROMPT, user_prompt, temperature=0, timeout=self.grading_timeout)
         if not isinstance(data, list) or len(data) != len(rubric):
             raise AIUnavailableError(f"Gemini chấm sai số ý (cần {len(rubric)})")
         results = []
