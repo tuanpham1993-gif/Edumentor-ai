@@ -18,7 +18,7 @@ class ChatSession(Base):
     user_id = Column(
         Integer,
         ForeignKey("users.user_id", ondelete="CASCADE"),
-        nullable=True,
+        nullable=False,
     )
     session_type = Column(
         String(15),
