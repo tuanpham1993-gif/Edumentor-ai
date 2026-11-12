@@ -340,9 +340,74 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - Thẻ trên cùng / tab "Mức sẵn sàng": mỗi khóa → ✅ ôn được / ⚠️ thiếu (kỹ năng nào, thiếu loại câu nào).
 - Báo trước khi lưu: "Câu đã có N bài làm → lưu thành phiên bản mới, bài cũ giữ bản cũ".
 
+### Thảo luận bản demo của Tuấn (12/11 tối) — ĐANG CHỜ Tuấn trả lời, chưa code
+Tuấn gọt lại ảnh phác thành demo `Downloads/AdminReviewQuestions.html` (bản sửa của Tuấn). Thay đổi so với ảnh phác của Claude:
+- **Bỏ nút "Nhập JSON"** — database là nơi lưu chính; admin thêm / sửa trên trang ghi thẳng DB. ✅ đồng ý.
+- **Câu AI sinh = "Chờ duyệt"**: chưa có mã, công tắc khóa; bấm câu → khung **Duyệt và bật** / **Từ chối** (ẩn, không xóa). Duyệt → cấp mã + bật.
+- Form sửa thêm **Kỹ năng**, **Đoạn tri thức**, **Nhóm loại trừ** (hai câu cùng nhóm không vào cùng một đề). Mức độ chỉ ghi Dễ / Nâng cao (không ghi điểm).
+- Từ khóa barem dạng **thẻ** (× để bỏ, Enter để thêm), tổng điểm tự kiểm 10/10.
+- **Chấm thử** trong panel: dán bài làm → điểm từng ý + lý do (vd ý 2 được ½ vì "another condition" khác vế với "elif"; ý 3 = 0 vì barem thiếu "nothing" → thêm từ khóa thì điểm cập nhật ngay). Demo dùng cách **tách vế ở dấu phẩy / "but"** (bản sửa bộ chấm lỗi 1/2/4).
+- Nút **"Sửa nhỏ"** (không tạo phiên bản) bên cạnh "Lưu phiên bản mới".
+- Bộ lọc gọn: tìm · kỹ năng · trạng thái (có "Chờ duyệt"). Thẻ khóa: 100/100 = 20 câu × 5 kỹ năng.
+- **Nội dung câu hỏi đổi sang tiếng Anh** "theo quyết định của nhóm".
+
+Claude đề xuất ban đầu (mã Đ1–Đ7 — **đã thay bằng bảng "Phương án đề xuất chốt" QT4–QT13 bên dưới**, giữ lại làm lịch sử):
+| # | Điểm | Đề xuất của Claude | Tuấn chốt |
+|---|---|---|---|
+| Đ1 | Seed sau khi DB là nơi lưu chính | Seed chỉ **thêm câu chưa có** (không sửa đè admin đã sửa); mỗi máy DB riêng → demo thống nhất dùng DB một máy | → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+| Đ2 | Giới hạn "Sửa nhỏ" | Được: giải thích, đoạn tri thức, nhóm loại trừ, chính tả đề. **Phải tạo phiên bản**: đáp án, lựa chọn, barem, từ khóa, điểm ý | → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+| Đ3 | Câu AI "Chờ duyệt" — **đổi A5** (09/11: không cần duyệt) | AI sinh thành việc **bổ sung ngân hàng** (admin bấm "AI soạn thêm câu cho kỹ năng X" → Chờ duyệt); đề thi chỉ dùng câu đã duyệt — bỏ việc AI sinh câu đưa thẳng vào đề || → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+| Đ4 | Dữ liệu mới (phiên bản, nhóm loại trừ, trạng thái duyệt) | Không thêm cột được vào `review_questions` → **1 bảng phụ** `review_question_meta` (`family_id`, `version`, `exclusion_group`, `review_status`, người / ngày duyệt) | → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+| Đ5 | Mã câu khi duyệt (`312-VAR-TN-15`) | Câu thuộc **kỹ năng** (dùng chung nhiều khóa) → câu mới đặt mã theo kỹ năng (`VAR-TN-15`), giữ mã cũ cho ngân hàng hiện có | → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+| **Đ6** | **Chấm thử dùng hàm nào** | Gọi API `POST /api/admin/review/grade-preview` dùng **đúng `keyword_grader` của backend** (không viết bộ chấm JS riêng — admin thấy một điểm, học viên nhận điểm khác). → phải **sửa bộ chấm tách vế ở backend trước** (bản sửa lỗi 1/2/4, `BA-nhom/grader_fix_loi_1_2_4.patch`). Thêm nút "Chấm thử bằng Gemini" (tốn 1 lượt) | → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+| **Đ7** | **Ngân hàng tiếng Anh** | Ảnh hưởng: dịch 100 câu + 15 đoạn tri thức (chạy lại embedding), đổi prompt AI sinh / chấm sang tiếng Anh, bộ chấm từ khóa thêm tách vế "but"/"and". Cần biết: học viên trả lời tự luận bằng **tiếng Anh hay được cả tiếng Việt** (cả hai → barem phải có từ khóa 2 thứ tiếng; Gemini chấm được cả hai) | → đã chuyển sang bảng "Phương án đề xuất chốt" bên dưới (mã QT mới) |
+
+### Phương án đề xuất chốt (thảo luận 12/11 tối) — CHỜ Tuấn xác nhận, chưa code
+Mỗi điểm: ⭐ = phương án Claude đề xuất. Tuấn trả lời theo mã (vd "QT4-A").
+
+| # | Điểm | Phương án | Tuấn chốt |
+|---|---|---|---|
+| QT4 | Seed khi DB là nơi lưu chính | **A ⭐** seed chỉ thêm câu chưa có, không sửa câu đã có · B sửa đè theo mã (mất phần admin sửa) | ✅ **A** (12/11): seed chỉ thêm câu chưa có, không sửa câu đã có; admin sửa trên trang không bị ghi đè; demo dùng DB của một máy |
+| QT5 | Giới hạn "Sửa nhỏ" | **A ⭐** chỉ giải thích / đoạn tri thức / nhóm loại trừ / chính tả đề; đáp án, lựa chọn, barem, từ khóa, điểm ý → bắt buộc phiên bản · B sửa nhỏ mọi thứ · C bỏ nút Sửa nhỏ | ✅ **A** (12/11): sửa nhỏ chỉ giải thích / đoạn tri thức / nhóm loại trừ / chính tả đề; đáp án, lựa chọn, barem, từ khóa, điểm ý → bắt buộc phiên bản |
+| QT6 | Câu AI sinh "Chờ duyệt" (đổi A5) | **A ⭐** AI chỉ bổ sung ngân hàng (admin bấm "AI soạn thêm câu cho kỹ năng X" → Chờ duyệt); đề chỉ dùng câu đã duyệt · B giữ AI đưa thẳng vào đề, duyệt sau | ✅ **A** (12/11): AI chỉ bổ sung ngân hàng — admin bấm "AI soạn thêm câu cho kỹ năng X" → Chờ duyệt; đề thi chỉ dùng câu đã duyệt (thay A5) · **xác nhận lại 12/11: bỏ B, chốt A** |
+| QT7 | Nhóm loại trừ | **A ⭐** làm, sửa `exam_builder` · B chưa làm, bỏ ô khỏi form | ✅ **A** (12/11): làm, sửa `exam_builder` theo nhóm loại trừ |
+| QT8 | Lưu dữ liệu mới (phiên bản, nhóm loại trừ, trạng thái duyệt) | **A ⭐** 1 bảng phụ `review_question_meta` · B chuyển nhóm sang Alembic để thêm cột | ✅ **A** (12/11): 1 bảng phụ `review_question_meta` |
+| QT9 | Mã câu khi duyệt | **A ⭐** câu cũ giữ mã cũ, câu mới mã theo kỹ năng (`VAR-TN-15`) · B giữ tiền tố khóa (`312-VAR-TN-15`) | ✅ **A** (12/11): câu cũ giữ mã cũ (`312-VAR-TN-09`), câu mới mã theo kỹ năng (`VAR-TN-15`) |
+| QT10 | "Chấm thử" dùng hàm nào | **A ⭐** sửa bộ chấm backend (tách vế) trước, Chấm thử gọi API dùng đúng hàm đó + nút "Chấm thử bằng Gemini" · B gọi API với bộ chấm hiện tại · C giữ hàm JS riêng | ✅ **A, có chỉnh** (12/11) — xem "QT10 chốt" dưới bảng: Gemini là bộ chấm chính; Chấm thử chạy đúng quy trình chấm thật, hiện điểm Gemini + điểm từ khóa để so |
+| QT11 | Ngôn ngữ ngân hàng | **A** đề + bài làm tiếng Anh (Tuấn nghiêng về A — kèm nút dịch nội dung khóa học, xem `Review-Auth.md` 9.14) · B đề Anh, trả lời Anh hoặc Việt · C giữ tiếng Việt | ✅ **A** (12/11): đề tiếng Anh, học viên chỉ trả lời tiếng Anh |
+| QT12 | Cách tách vế khi chấm từ khóa (góp ý 12/11) | **A ⭐** cắt cứng ở `. ! ? ;` và "but" / "whereas" / "however"; **KHÔNG tách ở "and"** (cùng một ý: "checks a condition and runs the block"); dấu phẩy KHÔNG cắt cứng — từ khóa chính và phụ tính là cùng ý nếu ở cùng đoạn hoặc 2 đoạn liền kề quanh dấu phẩy ("if, elif and else are…"); không dùng "while" làm điểm tách (từ khóa Python). Kiểm bằng bộ 10 bài thử + bài mẫu gửi thầy, ghi kết quả trước / sau · B tách ở mọi dấu phẩy như demo JS | ✅ **A** (12/11) + luật **chặn mượn vế** — xem "QT12 chốt" dưới bảng |
+| QT13 | Bài tự luận viết tiếng Việt (góp ý 12/11) | Nhận biết: chữ có dấu tiếng Việt > ~15% số chữ cái. **A ⭐** ô trả lời nhắc ngay "Hãy trả lời bằng tiếng Anh"; bấm Nộp → hộp xác nhận liệt kê câu viết tiếng Việt, nút chính "Sửa lại", nút phụ "Vẫn nộp" (ghi rõ có thể 0 điểm) · B chặn hẳn, không nộp được. Cả hai: backend ghi cờ "viết tiếng Việt" vào vết chấm cho admin xem; Gemini còn chạy thì vẫn chấm theo nghĩa || ✅ **A** — Tuấn chốt 12/11: ô tự luận hiện "Hãy trả lời bằng tiếng Anh" ngay khi phát hiện; bấm Nộp → hộp xác nhận liệt kê các câu đang viết tiếng Việt, nút chính **"Sửa lại"**, nút phụ **"Vẫn nộp"**, ghi rõ "câu này có thể được 0 điểm" |
+| QT14 | Nút "Báo lỗi câu này" | A ⭐ ở trang kết quả (sau khi nộp) · B cả lúc làm bài · C chưa làm | ✅ **A** (12/11) — xem "QT14 chốt" dưới bảng |
+
+**QT6** — phương án B (AI vào thẳng đề, duyệt sau + chấm lại) đã **bỏ** (Tuấn xác nhận 12/11): đề chỉ dùng câu đã duyệt.
+
+**QT12 chốt (12/11) — tách vế cho bộ chấm từ khóa:**
+- Cắt cứng ở `. ! ? ;` và từ đối lập "but", "whereas", "however".
+- **Không cắt ở "and"** ("checks a condition and runs the block" là một ý); **không cắt ở "while"** (từ khóa Python).
+- **Dấu phẩy không cắt cứng**: từ khóa chính và phụ vẫn tính cùng ý nếu ở **2 đoạn liền kề** quanh dấu phẩy ("if, elif and else are used to…").
+- **Luật chặn mượn vế**: chỉ mượn đoạn bên cạnh khi đoạn của chính từ khóa chính **không chứa từ khóa phụ của tiêu chí khác** — để bài đảo ngược ("while … number of loops, for … don't know") không được trọn điểm.
+- Bộ bài thử (10 bài + bài mẫu gửi thầy) **phải có câu đảo for / while** dạng trên; ghi điểm trước / sau khi sửa.
+
+**QT14 chốt (12/11) — nút "Báo lỗi câu này":**
+- Ở **trang kết quả (sau khi nộp)**: chọn lý do (đáp án sai / đề khó hiểu / khác) + ghi thêm; bảng mới `review_question_reports`; trang quản trị đưa câu bị báo lên đầu kèm số lượt, bộ lọc "Bị báo lỗi".
+- Mỗi người báo **1 lần cho mỗi PHIÊN BẢN câu** (không phải mỗi câu) — admin sửa thành phiên bản mới mà vẫn sai thì báo lại được.
+- Vì **QT6 = A**: admin xác nhận câu sai → **tạo phiên bản mới** (QT5/QT8), câu sai tắt; **bài cũ giữ bản cũ, không chấm lại** (đúng nguyên tắc QT2 "lưu phiên bản"). Nếu sau này muốn bù điểm cho bài đã làm câu sai thì bàn riêng.
+
+**QT10 chốt (12/11) — bộ chấm tự luận:**
+- **Bộ chấm chính cho học viên là Gemini**: nhận đề, barem, bài làm → trả kết quả từng ý kèm lý do (như `RealAI.grade_essay` hiện có; điểm do code tính).
+- **Bộ chấm từ khóa** (`keyword_grader.py`) làm 2 việc phụ:
+  1. **Chấm thay** khi Gemini lỗi / quá thời gian (T1) để học viên vẫn có điểm.
+  2. **Đối chiếu**: chấm song song với Gemini; nếu điểm hai bên **lệch quá 3** (thang 10 của câu tự luận) → **gắn cờ** cho admin xem lại.
+- Nút **"Chấm thử"** trên trang quản trị gọi **đúng quy trình đó** (API backend): hiện **điểm Gemini** (= điểm học viên sẽ nhận, nút chính) và **điểm từ khóa** bên cạnh để so; Gemini lỗi thì hiện điểm từ khóa như khi chấm thật.
+- Nguyên tắc giữ nguyên: điểm admin thấy khi chấm thử phải đến từ **cùng hàm chấm bài thật** — không viết bộ chấm JS riêng.
+- Vẫn sửa bộ chấm từ khóa theo cách tách vế (QT12) vì nó chấm thay khi Gemini lỗi và dùng để đối chiếu.
+- Hệ quả: chạy thật (demo, server nhóm) đặt `AI_MODE=real`; test tự động vẫn mock (không gọi Gemini). Cần chỗ lưu cờ lệch điểm (vết chấm `trace.grading` hoặc bảng phụ) + bộ lọc "Bị gắn cờ" trên trang quản trị.
+
+Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức sang tiếng Anh rồi chạy lại embedding · prompt sinh câu / chấm đổi sang tiếng Anh · barem chỉ cần từ khóa tiếng Anh · lời giải thích viết tiếng Anh, học viên muốn đọc tiếng Việt thì dùng nút dịch ở trang kết quả (không lưu 2 bản).
+
 ### Các bước
 - [x] **7.0 Lập kế hoạch + chốt QT1–QT3** — 12/11
-- [ ] **7.1 Ảnh phác màn `/admin/questions`** → Tuấn duyệt — ảnh: `BA-nhom/Admin-cau-hoi-on-tap-phac-thao-Tuan.png` (+ .html), 12/11
+- [x] **7.1 Ảnh phác màn `/admin/questions`** → Tuấn gọt lại thành demo `Downloads/AdminReviewQuestions.html` (12/11) — ảnh phác gốc: `BA-nhom/Admin-cau-hoi-on-tap-phac-thao-Tuan.png` (+ .html), 12/11
 - [ ] **7.2 Model `review_question_versions` + hàm phiên bản** (sửa tại chỗ / tạo bản mới / tắt / xóa) + test (bài cũ vẫn hiện bản cũ)
 - [ ] **7.3 API danh sách / chi tiết / thêm / sửa / tắt-bật / xóa** + test quyền (student 403)
 - [ ] **7.4 API mức sẵn sàng khóa (B)** + test
@@ -405,4 +470,10 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | 12/11 | Khôi push `course_tracking_service` → gộp thử ở `tuan/merge-khoi`, nối `course_gateway` hàm thật, bỏ `has_first_pass`; **T1–T9 đạt 9/9** | Đã đưa vào `tuan/future-auth`; sửa thêm L1 (bỏ khóa lúc đang chấm) |
 | 12/11 | Thảo luận quản trị Ôn tập: tài liệu BA/SRS (FR-17/54) có nhưng chưa có kế hoạch, UI không có màn → lập **GĐ7**: chốt A+B+C (D sau), **lưu phiên bản** khi sửa câu đã dùng, giao diện theo mẫu AdminSkills | Claude phác ảnh màn `/admin/questions` |
 | 12/11 | Đổi `services/rag_service.py` → **`review_rag_service.py`** (trùng tên file RAG chatbot của Tâm, gây xung đột khi Tâm merge); `course_table.json` khác nhánh Tâm chỉ ở lỗi chính tả `intermidiate` do Khôi sửa | Tâm merge lại |
+| 12/11 | Thảo luận tiếp GĐ7: lập bảng phương án QT4–QT13 (⭐ = đề xuất), thêm góp ý tách vế (không tách ở "and", phẩy dùng 2 đoạn liền kề) và chặn bài tự luận tiếng Việt; nút dịch nội dung ghi ở `Review-Auth.md` 9.14 | Chờ Tuấn chốt theo mã |
+| 12/11 | Tuấn chốt **QT13-A**: bài tự luận phải viết tiếng Anh — nhắc ngay tại ô trả lời, hộp xác nhận khi nộp ("Sửa lại" / "Vẫn nộp", có thể 0 điểm) | Chờ chốt QT4–QT12 |
+| 12/11 | Thảo luận QT6: Tuấn đề xuất B + 3 điểm (ưu tiên câu đã duyệt, chấm lại khi sửa / từ chối câu AI, ghi chú + nút báo lỗi) → Claude tách thành QT6.1–QT6.6 | Chờ Tuấn chốt |
+| 12/11 | Tuấn chốt **QT4–QT11 = A** (QT10 chỉnh: Gemini là bộ chấm chính, từ khóa chấm thay + đối chiếu lệch > 3 thì gắn cờ, Chấm thử chạy đúng quy trình thật). Còn chờ: QT12 (cách tách vế), nút báo lỗi (QT6.6) | — |
+| 12/11 | Tuấn chốt **QT12-A** (+ luật chặn mượn vế, thêm bài đảo for/while vào bộ thử), **QT14-A** (báo lỗi theo phiên bản; chấm lại phụ thuộc QT6), QT15a–d = A (ghi ở `Review-Auth.md` 9.14). ⚠️ QT6 cần xác nhận lại A hay B | — |
+| 12/11 | Tuấn xác nhận **QT6 = A**, bỏ phương án B (xóa phần phân tích QT6.1–6.6). QT14: câu bị xác nhận sai → phiên bản mới, bài cũ không chấm lại | — |
 | | | |
