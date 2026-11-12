@@ -18,5 +18,16 @@ services:
       timeout: 3s
       retries: 10
 
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: edumentor_qdrant
+    restart: unless-stopped
+    ports:
+      - "6335:6333"
+      - "6336:6334"
+    volumes:
+      - edumentor_qdrant_data:/qdrant/storage
+
 volumes:
   edumentor_pgdata:
+  edumentor_qdrant_data:

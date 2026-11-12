@@ -1,0 +1,1493 @@
+[
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 621,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Programming Principles",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 1400,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Data Structure",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 187,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Algorithms",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1400,
+    "to_skill_id": 187,
+    "from_skill_name": "Data Structure",
+    "to_skill_name": "Algorithms",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 1290,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Debugging",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 430,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Object-Oriented Programming (OOP)",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 430,
+    "to_skill_id": 1804,
+    "from_skill_name": "Object-Oriented Programming (OOP)",
+    "to_skill_name": "Design Patterns",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 187,
+    "to_skill_id": 285,
+    "from_skill_name": "Algorithms",
+    "to_skill_name": "Dynamic Programming",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 170,
+    "to_skill_id": 26,
+    "from_skill_name": "Computer Science",
+    "to_skill_name": "Computer Programming",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 170,
+    "to_skill_id": 187,
+    "from_skill_name": "Computer Science",
+    "to_skill_name": "Algorithms",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 170,
+    "to_skill_id": 1400,
+    "from_skill_name": "Computer Science",
+    "to_skill_name": "Data Structure",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 170,
+    "to_skill_id": 1525,
+    "from_skill_name": "Computer Science",
+    "to_skill_name": "Computer Network",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 167,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Python Programming",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 941,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Java Programming",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 1184,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "C Programming",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 4,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "JavaScript",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1184,
+    "to_skill_id": 499,
+    "from_skill_name": "C Programming",
+    "to_skill_name": "C++",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 430,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Object-Oriented Programming (OOP)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 941,
+    "to_skill_id": 430,
+    "from_skill_name": "Java Programming",
+    "to_skill_name": "Object-Oriented Programming (OOP)",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 499,
+    "to_skill_id": 430,
+    "from_skill_name": "C++",
+    "to_skill_name": "Object-Oriented Programming (OOP)",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 941,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Java Programming",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 499,
+    "to_skill_id": 941,
+    "from_skill_name": "C++",
+    "to_skill_name": "Java Programming",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 26,
+    "to_skill_id": 158,
+    "from_skill_name": "Computer Programming",
+    "to_skill_name": "Software Engineering",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 158,
+    "to_skill_id": 159,
+    "from_skill_name": "Software Engineering",
+    "to_skill_name": "Software Development",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 158,
+    "to_skill_id": 137,
+    "from_skill_name": "Software Engineering",
+    "to_skill_name": "Software Testing",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 137,
+    "to_skill_id": 120,
+    "from_skill_name": "Software Testing",
+    "to_skill_name": "Unit Testing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 137,
+    "to_skill_id": 4155,
+    "from_skill_name": "Software Testing",
+    "to_skill_name": "Integration Testing (I&T)",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 137,
+    "to_skill_id": 139,
+    "from_skill_name": "Software Testing",
+    "to_skill_name": "Test Automation",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 120,
+    "to_skill_id": 4155,
+    "from_skill_name": "Unit Testing",
+    "to_skill_name": "Integration Testing (I&T)",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 158,
+    "to_skill_id": 749,
+    "from_skill_name": "Software Engineering",
+    "to_skill_name": "Agile Software Development",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 749,
+    "to_skill_id": 322,
+    "from_skill_name": "Agile Software Development",
+    "to_skill_name": "Scrum (Software Development)",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 749,
+    "to_skill_id": 1458,
+    "from_skill_name": "Agile Software Development",
+    "to_skill_name": "Kanban",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 322,
+    "to_skill_id": 1171,
+    "from_skill_name": "Scrum (Software Development)",
+    "to_skill_name": "Scrum Master",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 158,
+    "to_skill_id": 1804,
+    "from_skill_name": "Software Engineering",
+    "to_skill_name": "Design Patterns",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 486,
+    "to_skill_id": 113,
+    "from_skill_name": "HTML",
+    "to_skill_name": "Cascading Style Sheets (CSS)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 486,
+    "to_skill_id": 111,
+    "from_skill_name": "HTML",
+    "to_skill_name": "Web Development",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 113,
+    "to_skill_id": 111,
+    "from_skill_name": "Cascading Style Sheets (CSS)",
+    "to_skill_name": "Web Development",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 486,
+    "to_skill_id": 2870,
+    "from_skill_name": "HTML",
+    "to_skill_name": "Frontend Development",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 113,
+    "to_skill_id": 2870,
+    "from_skill_name": "Cascading Style Sheets (CSS)",
+    "to_skill_name": "Frontend Development",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 111,
+    "to_skill_id": 2870,
+    "from_skill_name": "Web Development",
+    "to_skill_name": "Frontend Development",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 113,
+    "to_skill_id": 5268,
+    "from_skill_name": "Cascading Style Sheets (CSS)",
+    "to_skill_name": "Bootstrap",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 113,
+    "to_skill_id": 1066,
+    "from_skill_name": "Cascading Style Sheets (CSS)",
+    "to_skill_name": "Responsive Web Design",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 2870,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "Frontend Development",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 486,
+    "to_skill_id": 4,
+    "from_skill_name": "HTML",
+    "to_skill_name": "JavaScript",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 2,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "Jquery",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 125,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "React (Web Framework)",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 363,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "React",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 4582,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "Typescript",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 4582,
+    "to_skill_id": 297,
+    "from_skill_name": "Typescript",
+    "to_skill_name": "Angularjs",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 297,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "Angularjs",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 363,
+    "to_skill_id": 1887,
+    "from_skill_name": "React",
+    "to_skill_name": "React Native",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 2870,
+    "to_skill_id": 4467,
+    "from_skill_name": "Frontend Development",
+    "to_skill_name": "User Interface (UI)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 4467,
+    "to_skill_id": 92,
+    "from_skill_name": "User Interface (UI)",
+    "to_skill_name": "User Experience (UX)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 92,
+    "to_skill_id": 93,
+    "from_skill_name": "User Experience (UX)",
+    "to_skill_name": "User Experience Design (UXD)",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 4467,
+    "to_skill_id": 2870,
+    "from_skill_name": "User Interface (UI)",
+    "to_skill_name": "Frontend Development",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 4,
+    "to_skill_id": 1141,
+    "from_skill_name": "JavaScript",
+    "to_skill_name": "Node.js",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1141,
+    "to_skill_id": 1143,
+    "from_skill_name": "Node.js",
+    "to_skill_name": "Express",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 773,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Flask",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 771,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Django (Web Framework)",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 773,
+    "to_skill_id": 771,
+    "from_skill_name": "Flask",
+    "to_skill_name": "Django (Web Framework)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 941,
+    "to_skill_id": 2137,
+    "from_skill_name": "Java Programming",
+    "to_skill_name": "Spring Framework",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 2137,
+    "to_skill_id": 2139,
+    "from_skill_name": "Spring Framework",
+    "to_skill_name": "Spring Boot",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 111,
+    "to_skill_id": 3625,
+    "from_skill_name": "Web Development",
+    "to_skill_name": "RESTful API",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 3625,
+    "to_skill_id": 798,
+    "from_skill_name": "RESTful API",
+    "to_skill_name": "Microservices",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 3625,
+    "to_skill_id": 1463,
+    "from_skill_name": "RESTful API",
+    "to_skill_name": "Microservices Architecture",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 798,
+    "to_skill_id": 1463,
+    "from_skill_name": "Microservices",
+    "to_skill_name": "Microservices Architecture",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1141,
+    "to_skill_id": 3625,
+    "from_skill_name": "Node.js",
+    "to_skill_name": "RESTful API",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 771,
+    "to_skill_id": 3625,
+    "from_skill_name": "Django (Web Framework)",
+    "to_skill_name": "RESTful API",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 773,
+    "to_skill_id": 3625,
+    "from_skill_name": "Flask",
+    "to_skill_name": "RESTful API",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 2137,
+    "to_skill_id": 3625,
+    "from_skill_name": "Spring Framework",
+    "to_skill_name": "RESTful API",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 2871,
+    "to_skill_id": 1463,
+    "from_skill_name": "Backend Systems",
+    "to_skill_name": "Microservices Architecture",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 111,
+    "to_skill_id": 2871,
+    "from_skill_name": "Web Development",
+    "to_skill_name": "Backend Systems",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 87,
+    "to_skill_id": 691,
+    "from_skill_name": "Database (DBMS)",
+    "to_skill_name": "Database Management",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 87,
+    "to_skill_id": 305,
+    "from_skill_name": "Database (DBMS)",
+    "to_skill_name": "SQL",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 691,
+    "from_skill_name": "SQL",
+    "to_skill_name": "Database Management",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 87,
+    "to_skill_id": 1241,
+    "from_skill_name": "Database (DBMS)",
+    "to_skill_name": "Data Modeling",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1241,
+    "to_skill_id": 2446,
+    "from_skill_name": "Data Modeling",
+    "to_skill_name": "Relational Database",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 2446,
+    "from_skill_name": "SQL",
+    "to_skill_name": "Relational Database",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 152,
+    "from_skill_name": "SQL",
+    "to_skill_name": "MySQL",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 3432,
+    "from_skill_name": "SQL",
+    "to_skill_name": "PostgreSQL",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 349,
+    "from_skill_name": "SQL",
+    "to_skill_name": "Sqlite",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 152,
+    "to_skill_id": 3432,
+    "from_skill_name": "MySQL",
+    "to_skill_name": "PostgreSQL",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 87,
+    "to_skill_id": 517,
+    "from_skill_name": "Database (DBMS)",
+    "to_skill_name": "NoSQL",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 517,
+    "to_skill_id": 1027,
+    "from_skill_name": "NoSQL",
+    "to_skill_name": "MongoDB",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 2446,
+    "to_skill_id": 517,
+    "from_skill_name": "Relational Database",
+    "to_skill_name": "NoSQL",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 517,
+    "from_skill_name": "SQL",
+    "to_skill_name": "NoSQL",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 87,
+    "to_skill_id": 265,
+    "from_skill_name": "Database (DBMS)",
+    "to_skill_name": "Data Warehousing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 305,
+    "to_skill_id": 265,
+    "from_skill_name": "SQL",
+    "to_skill_name": "Data Warehousing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 305,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "SQL",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 1241,
+    "to_skill_id": 691,
+    "from_skill_name": "Data Modeling",
+    "to_skill_name": "Database Management",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 357,
+    "to_skill_id": 947,
+    "from_skill_name": "Linux",
+    "to_skill_name": "Bash",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 357,
+    "to_skill_id": 3986,
+    "from_skill_name": "Linux",
+    "to_skill_name": "Command-Line Interface",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 354,
+    "to_skill_id": 355,
+    "from_skill_name": "Version Control",
+    "to_skill_name": "Github",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 354,
+    "to_skill_id": 3819,
+    "from_skill_name": "Version Control",
+    "to_skill_name": "Git (Version Control System)",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 3819,
+    "to_skill_id": 355,
+    "from_skill_name": "Git (Version Control System)",
+    "to_skill_name": "Github",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 3819,
+    "to_skill_id": 2613,
+    "from_skill_name": "Git (Version Control System)",
+    "to_skill_name": "Git (Software)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 355,
+    "to_skill_id": 2975,
+    "from_skill_name": "Github",
+    "to_skill_name": "GitHub Actions",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 158,
+    "to_skill_id": 354,
+    "from_skill_name": "Software Engineering",
+    "to_skill_name": "Version Control",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 357,
+    "to_skill_id": 591,
+    "from_skill_name": "Linux",
+    "to_skill_name": "DevOps",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 591,
+    "to_skill_id": 930,
+    "from_skill_name": "DevOps",
+    "to_skill_name": "CI/CD",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 591,
+    "to_skill_id": 592,
+    "from_skill_name": "DevOps",
+    "to_skill_name": "CI/CD Pipeline",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 930,
+    "to_skill_id": 592,
+    "from_skill_name": "CI/CD",
+    "to_skill_name": "CI/CD Pipeline",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 2975,
+    "to_skill_id": 592,
+    "from_skill_name": "GitHub Actions",
+    "to_skill_name": "CI/CD Pipeline",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 357,
+    "to_skill_id": 192,
+    "from_skill_name": "Linux",
+    "to_skill_name": "Docker",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 192,
+    "to_skill_id": 1031,
+    "from_skill_name": "Docker",
+    "to_skill_name": "Docker Container",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 192,
+    "to_skill_id": 193,
+    "from_skill_name": "Docker",
+    "to_skill_name": "Kubernetes",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1031,
+    "to_skill_id": 459,
+    "from_skill_name": "Docker Container",
+    "to_skill_name": "Kubernetes Orchestration",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 193,
+    "to_skill_id": 459,
+    "from_skill_name": "Kubernetes",
+    "to_skill_name": "Kubernetes Orchestration",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 192,
+    "to_skill_id": 591,
+    "from_skill_name": "Docker",
+    "to_skill_name": "DevOps",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 193,
+    "to_skill_id": 591,
+    "from_skill_name": "Kubernetes",
+    "to_skill_name": "DevOps",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 591,
+    "to_skill_id": 3842,
+    "from_skill_name": "DevOps",
+    "to_skill_name": "Site Reliability Engineering",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 591,
+    "to_skill_id": 2569,
+    "from_skill_name": "DevOps",
+    "to_skill_name": "Infrastructure as Code (IaC)",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 492,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Amazon Web Services",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 49,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Microsoft Azure",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 316,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Google Cloud Platform",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 492,
+    "to_skill_id": 81,
+    "from_skill_name": "Amazon Web Services",
+    "to_skill_name": "AWS cloud",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 492,
+    "to_skill_id": 49,
+    "from_skill_name": "Amazon Web Services",
+    "to_skill_name": "Microsoft Azure",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 492,
+    "to_skill_id": 316,
+    "from_skill_name": "Amazon Web Services",
+    "to_skill_name": "Google Cloud Platform",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 49,
+    "to_skill_id": 316,
+    "from_skill_name": "Microsoft Azure",
+    "to_skill_name": "Google Cloud Platform",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 534,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Cloud Storage",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 1507,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Cloud Architecture",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 491,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Serverless Computing",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 492,
+    "to_skill_id": 250,
+    "from_skill_name": "Amazon Web Services",
+    "to_skill_name": "AWS Lambda",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 192,
+    "to_skill_id": 52,
+    "from_skill_name": "Docker",
+    "to_skill_name": "Cloud Computing",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 193,
+    "to_skill_id": 52,
+    "from_skill_name": "Kubernetes",
+    "to_skill_name": "Cloud Computing",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 591,
+    "to_skill_id": 52,
+    "from_skill_name": "DevOps",
+    "to_skill_name": "Cloud Computing",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 52,
+    "to_skill_id": 504,
+    "from_skill_name": "Cloud Computing",
+    "to_skill_name": "Cloud Computing Security",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1123,
+    "to_skill_id": 1218,
+    "from_skill_name": "Mathematics",
+    "to_skill_name": "Statistics",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1218,
+    "to_skill_id": 523,
+    "from_skill_name": "Statistics",
+    "to_skill_name": "Statistical Analysis",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1218,
+    "to_skill_id": 107,
+    "from_skill_name": "Statistics",
+    "to_skill_name": "Probability And Statistics",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 523,
+    "to_skill_id": 1203,
+    "from_skill_name": "Statistical Analysis",
+    "to_skill_name": "Statistical Hypothesis Testing",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1218,
+    "to_skill_id": 44,
+    "from_skill_name": "Statistics",
+    "to_skill_name": "Data Analysis",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 44,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Data Analysis",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 1114,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Numpy",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 299,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Pandas",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1114,
+    "to_skill_id": 299,
+    "from_skill_name": "Numpy",
+    "to_skill_name": "Pandas",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 299,
+    "to_skill_id": 44,
+    "from_skill_name": "Pandas",
+    "to_skill_name": "Data Analysis",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 44,
+    "to_skill_id": 240,
+    "from_skill_name": "Data Analysis",
+    "to_skill_name": "Data Visualization",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 44,
+    "to_skill_id": 241,
+    "from_skill_name": "Data Analysis",
+    "to_skill_name": "Exploratory Data Analysis",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 240,
+    "to_skill_id": 307,
+    "from_skill_name": "Data Visualization",
+    "to_skill_name": "Tableau Software",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 240,
+    "to_skill_id": 1542,
+    "from_skill_name": "Data Visualization",
+    "to_skill_name": "Power BI",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 307,
+    "to_skill_id": 1542,
+    "from_skill_name": "Tableau Software",
+    "to_skill_name": "Power BI",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 240,
+    "to_skill_id": 300,
+    "from_skill_name": "Data Visualization",
+    "to_skill_name": "Matplotlib",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 300,
+    "to_skill_id": 298,
+    "from_skill_name": "Matplotlib",
+    "to_skill_name": "Seaborn",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 44,
+    "to_skill_id": 64,
+    "from_skill_name": "Data Analysis",
+    "to_skill_name": "Data Science",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 109,
+    "to_skill_id": 44,
+    "from_skill_name": "R Programming",
+    "to_skill_name": "Data Analysis",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 109,
+    "to_skill_id": 523,
+    "from_skill_name": "R Programming",
+    "to_skill_name": "Statistical Analysis",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 109,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "R Programming",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 64,
+    "to_skill_id": 44,
+    "from_skill_name": "Data Science",
+    "to_skill_name": "Data Analysis",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 87,
+    "to_skill_id": 302,
+    "from_skill_name": "Database (DBMS)",
+    "to_skill_name": "Big Data",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 265,
+    "to_skill_id": 302,
+    "from_skill_name": "Data Warehousing",
+    "to_skill_name": "Big Data",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 302,
+    "to_skill_id": 1030,
+    "from_skill_name": "Big Data",
+    "to_skill_name": "Apache Hadoop",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1030,
+    "to_skill_id": 4280,
+    "from_skill_name": "Apache Hadoop",
+    "to_skill_name": "Hadoop Ecosystem",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1030,
+    "to_skill_id": 117,
+    "from_skill_name": "Apache Hadoop",
+    "to_skill_name": "Apache Spark",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 302,
+    "to_skill_id": 117,
+    "from_skill_name": "Big Data",
+    "to_skill_name": "Apache Spark",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 117,
+    "to_skill_id": 3023,
+    "from_skill_name": "Apache Spark",
+    "to_skill_name": "Apache PySpark",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 3023,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Apache PySpark",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 117,
+    "to_skill_id": 1629,
+    "from_skill_name": "Apache Spark",
+    "to_skill_name": "Apache Kafka",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 44,
+    "to_skill_id": 51,
+    "from_skill_name": "Data Analysis",
+    "to_skill_name": "Machine Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1218,
+    "to_skill_id": 51,
+    "from_skill_name": "Statistics",
+    "to_skill_name": "Machine Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 167,
+    "to_skill_id": 51,
+    "from_skill_name": "Python Programming",
+    "to_skill_name": "Machine Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1114,
+    "to_skill_id": 51,
+    "from_skill_name": "Numpy",
+    "to_skill_name": "Machine Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 299,
+    "to_skill_id": 51,
+    "from_skill_name": "Pandas",
+    "to_skill_name": "Machine Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 1350,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Scikit-Learn",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 233,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Supervised Learning",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 178,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Unsupervised Learning",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 233,
+    "to_skill_id": 61,
+    "from_skill_name": "Supervised Learning",
+    "to_skill_name": "Linear Regression",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 233,
+    "to_skill_id": 350,
+    "from_skill_name": "Supervised Learning",
+    "to_skill_name": "Logistic Regression",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 61,
+    "to_skill_id": 350,
+    "from_skill_name": "Linear Regression",
+    "to_skill_name": "Logistic Regression",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 233,
+    "to_skill_id": 352,
+    "from_skill_name": "Supervised Learning",
+    "to_skill_name": "Decision Trees",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 352,
+    "to_skill_id": 2267,
+    "from_skill_name": "Decision Trees",
+    "to_skill_name": "Random Forest",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 2077,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Feature Engineering",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 610,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "hyperparameter tuning",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 560,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Predictive Analytics",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 85,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Deep Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 351,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Artificial Neural Network",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 351,
+    "to_skill_id": 85,
+    "from_skill_name": "Artificial Neural Network",
+    "to_skill_name": "Deep Learning",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 85,
+    "to_skill_id": 211,
+    "from_skill_name": "Deep Learning",
+    "to_skill_name": "Tensorflow",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 85,
+    "to_skill_id": 1644,
+    "from_skill_name": "Deep Learning",
+    "to_skill_name": "PyTorch",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 211,
+    "to_skill_id": 212,
+    "from_skill_name": "Tensorflow",
+    "to_skill_name": "keras",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 211,
+    "to_skill_id": 1644,
+    "from_skill_name": "Tensorflow",
+    "to_skill_name": "PyTorch",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 85,
+    "to_skill_id": 219,
+    "from_skill_name": "Deep Learning",
+    "to_skill_name": "Convolutional Neural Network",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 85,
+    "to_skill_id": 1195,
+    "from_skill_name": "Deep Learning",
+    "to_skill_name": "Recurrent Neural Network",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 219,
+    "to_skill_id": 231,
+    "from_skill_name": "Convolutional Neural Network",
+    "to_skill_name": "Computer Vision",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 231,
+    "to_skill_id": 740,
+    "from_skill_name": "Computer Vision",
+    "to_skill_name": "Object Detection",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1195,
+    "to_skill_id": 63,
+    "from_skill_name": "Recurrent Neural Network",
+    "to_skill_name": "Natural Language Processing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 63,
+    "to_skill_id": 5668,
+    "from_skill_name": "Natural Language Processing",
+    "to_skill_name": "Text Processing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 63,
+    "to_skill_id": 5049,
+    "from_skill_name": "Natural Language Processing",
+    "to_skill_name": "Sentiment Analysis",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 63,
+    "to_skill_id": 262,
+    "from_skill_name": "Natural Language Processing",
+    "to_skill_name": "Large Language Models",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 262,
+    "to_skill_id": 313,
+    "from_skill_name": "Large Language Models",
+    "to_skill_name": "Prompt Engineering",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 262,
+    "to_skill_id": 512,
+    "from_skill_name": "Large Language Models",
+    "to_skill_name": "ChatGPT",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 96,
+    "to_skill_id": 51,
+    "from_skill_name": "Artificial Intelligence",
+    "to_skill_name": "Machine Learning",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 96,
+    "to_skill_id": 162,
+    "from_skill_name": "Artificial Intelligence",
+    "to_skill_name": "Generative AI",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 85,
+    "to_skill_id": 162,
+    "from_skill_name": "Deep Learning",
+    "to_skill_name": "Generative AI",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 162,
+    "to_skill_id": 262,
+    "from_skill_name": "Generative AI",
+    "to_skill_name": "Large Language Models",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 162,
+    "to_skill_id": 313,
+    "from_skill_name": "Generative AI",
+    "to_skill_name": "Prompt Engineering",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 51,
+    "to_skill_id": 83,
+    "from_skill_name": "Machine Learning",
+    "to_skill_name": "Reinforcement Learning",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1525,
+    "to_skill_id": 579,
+    "from_skill_name": "Computer Network",
+    "to_skill_name": "Network Protocols",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 1525,
+    "to_skill_id": 104,
+    "from_skill_name": "Computer Network",
+    "to_skill_name": "Network Security",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1525,
+    "to_skill_id": 455,
+    "from_skill_name": "Computer Network",
+    "to_skill_name": "Cybersecurity",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 730,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Information Security (INFOSEC)",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 104,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Network Security",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 50,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Data Security",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 289,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Cryptography",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 289,
+    "to_skill_id": 3318,
+    "from_skill_name": "Cryptography",
+    "to_skill_name": "Public-Key Cryptography",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 5664,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Vulnerability Assessment",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 5664,
+    "to_skill_id": 1738,
+    "from_skill_name": "Vulnerability Assessment",
+    "to_skill_name": "Penetration Testing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 1738,
+    "to_skill_id": 788,
+    "from_skill_name": "Penetration Testing",
+    "to_skill_name": "Ethical Hacking",
+    "relation_type": "related"
+  },
+  {
+    "from_skill_id": 357,
+    "to_skill_id": 1738,
+    "from_skill_name": "Linux",
+    "to_skill_name": "Penetration Testing",
+    "relation_type": "prerequisite"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 102,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Computer Security Incident Management",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 5005,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Security Information And Event Management (SIEM)",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 365,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Web Application Security",
+    "relation_type": "extension"
+  },
+  {
+    "from_skill_id": 455,
+    "to_skill_id": 504,
+    "from_skill_name": "Cybersecurity",
+    "to_skill_name": "Cloud Computing Security",
+    "relation_type": "prerequisite"
+  }
+]

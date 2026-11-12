@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, CheckConstraint, true
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 
@@ -18,7 +18,7 @@ class ChatSession(Base):
     user_id = Column(
         Integer,
         ForeignKey("users.user_id", ondelete="CASCADE"),
-        nullable=true,
+        nullable=True,
     )
     session_type = Column(
         String(15),

@@ -1,3 +1,16 @@
+
+# RAG Framework
+llama-index-core
+llama-index-readers-file
+
+# Qdrant
+qdrant-client
+llama-index-vector-stores-qdrant
+
+# Embedding
+sentence-transformers
+llama-index-embeddings-huggingface
+
 # Web
 fastapi>=0.110.0
 uvicorn[standard]>=0.28.0

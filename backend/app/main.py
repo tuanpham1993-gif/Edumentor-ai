@@ -1,18 +1,35 @@
 
-
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.routers.v1.api import api_router
 from app.core.config import settings
-from app.core.database import init_db
+from app.core.database import init_db, SessionLocal
+from app.core.seed_data.seed_data_code import seed_data
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # 1. Khởi tạo database
     init_db()
+
+    # 2. Seed dữ liệu
+    db = SessionLocal()
+
+    try:
+        seed_data(db)
+        print("SEED DATA SUCCESS!")
+    except Exception as e:
+        print("SEED DATA FAILED!")
+        print(f"Error: {e}")
+        raise
+
     yield
+
     print("Close app")
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,6 +41,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -31,5 +49,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(api_router, prefix=settings.API_STR)

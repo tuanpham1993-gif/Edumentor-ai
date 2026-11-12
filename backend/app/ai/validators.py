@@ -2,10 +2,24 @@
 import json
 
 
+MAX_SUGGESTIONS = 3
+
+
 def parse_ai_response(ai_text: str) -> dict:
     """
     Chuyển nội dung Gemini trả về thành JSON object
-    và kiểm tra cấu trúc dữ liệu.
+    và kiểm tra cấu trúc dữ liệu mới.
+
+    Cấu trúc:
+    {
+        "answer": "Nội dung trả lời",
+        "suggestions": [
+            {
+                "label": "Tên nút",
+                "prompt": "Câu hỏi gửi đến AI"
+            }
+        ]
+    }
     """
 
     if not isinstance(ai_text, str) or not ai_text.strip():
@@ -17,7 +31,7 @@ def parse_ai_response(ai_text: str) -> dict:
     if text.startswith("```"):
         lines = text.splitlines()
 
-        if lines and lines[0].startswith("```"):
+        if lines and lines[0].strip().startswith("```"):
             lines = lines[1:]
 
         if lines and lines[-1].strip() == "```":
@@ -29,7 +43,9 @@ def parse_ai_response(ai_text: str) -> dict:
     try:
         response_data = json.loads(text)
     except json.JSONDecodeError as e:
-        raise ValueError(f"AI trả về JSON không hợp lệ: {e}") from e
+        raise ValueError(
+            f"AI trả về JSON không hợp lệ: {e}"
+        ) from e
 
     if not isinstance(response_data, dict):
         raise ValueError("Phản hồi AI phải là JSON object")
@@ -37,57 +53,52 @@ def parse_ai_response(ai_text: str) -> dict:
     # Kiểm tra answer
     answer = response_data.get("answer")
 
-    if not isinstance(answer, str) or not answer.strip():
-        raise ValueError("answer phải là chuỗi và không được để trống")
+    if not isinstance(answer, str):
+        raise ValueError("answer phải là chuỗi")
 
-    # Kiểm tra reinforcement
-    reinforcement = response_data.get("reinforcement")
+    if not answer.strip():
+        raise ValueError("answer không được để trống")
 
-    if not isinstance(reinforcement, dict):
-        raise ValueError("reinforcement phải là object")
+    # Kiểm tra suggestions
+    suggestions = response_data.get("suggestions")
 
-    explanation = reinforcement.get("explanation")
-    example = reinforcement.get("example")
+    if not isinstance(suggestions, list):
+        raise ValueError("suggestions phải là danh sách")
 
-    if not isinstance(explanation, str):
-        raise ValueError("reinforcement.explanation phải là chuỗi")
+    if len(suggestions) > MAX_SUGGESTIONS:
+        raise ValueError(
+            f"Chỉ được tạo tối đa {MAX_SUGGESTIONS} gợi ý"
+        )
 
-    if not isinstance(example, str):
-        raise ValueError("reinforcement.example phải là chuỗi")
+    validated_suggestions = []
 
-    # Kiểm tra related_skills
-    related_skills = response_data.get("related_skills")
+    for index, item in enumerate(suggestions):
 
-    if not isinstance(related_skills, list):
-        raise ValueError("related_skills phải là danh sách")
+        if not isinstance(item, dict):
+            raise ValueError(
+                f"suggestions[{index}] phải là object"
+            )
 
-    for skill in related_skills:
-        if not isinstance(skill, dict):
-            raise ValueError("Mỗi related_skill phải là object")
+        label = item.get("label")
+        prompt = item.get("prompt")
 
-        if not isinstance(skill.get("name"), str):
-            raise ValueError("related_skill thiếu name")
+        if not isinstance(label, str) or not label.strip():
+            raise ValueError(
+                f"suggestions[{index}].label không hợp lệ"
+            )
 
-        if not isinstance(skill.get("prompt"), str):
-            raise ValueError("related_skill thiếu prompt")
+        if not isinstance(prompt, str) or not prompt.strip():
+            raise ValueError(
+                f"suggestions[{index}].prompt không hợp lệ"
+            )
 
-    # Kiểm tra suggested_questions
-    suggested_questions = response_data.get("suggested_questions")
+        validated_suggestions.append({
+            "label": label.strip(),
+            "prompt": prompt.strip(),
+        })
 
-    if not isinstance(suggested_questions, list):
-        raise ValueError("suggested_questions phải là danh sách")
-
-    for question in suggested_questions:
-        if not isinstance(question, str):
-            raise ValueError("Mỗi suggested_question phải là chuỗi")
-
-    # Trả về dữ liệu đã kiểm tra
+    # Chỉ trả về các trường thuộc cấu trúc đã quy định
     return {
-        "answer": answer,
-        "reinforcement": {
-            "explanation": explanation,
-            "example": example,
-        },
-        "related_skills": related_skills,
-        "suggested_questions": suggested_questions,
+        "answer": answer.strip(),
+        "suggestions": validated_suggestions,
     }
