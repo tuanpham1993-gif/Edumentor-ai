@@ -98,8 +98,9 @@ def test_pass_threshold_is_6(client, bank_312, student_headers, db_session, corr
     assert result["score"] == correct * 0.5 and result["passed"] is passed
 
 
-def test_meeting_example_essay_scores_7_of_10(client, bank_312, student_headers, db_session):
-    """Câu nâng cao list/tuple (2đ) với bài làm mẫu → 7/10 × 2 = 1,4đ, bằng chứng từng ý (mục 5 tài liệu họp)."""
+def test_meeting_example_essay_scores_8_of_10(client, bank_312, student_headers, db_session):
+    """Câu nâng cao list/tuple (2đ) với bài làm mẫu gửi thầy → 8/10 × 2 = 1,6đ (12/11: trước 7/10 = 1,4đ — tách vế QT12
+    + barem cú pháp 3a / 3b; xem test_keyword_grader.test_meeting_example_scores_8_of_10)."""
     attempt = None
     for _ in range(30):  # đề ngẫu nhiên — làm lại tới khi đề có câu list/tuple
         attempt_id = start(client, student_headers)["attempt_id"]
@@ -116,8 +117,8 @@ def test_meeting_example_essay_scores_7_of_10(client, bank_312, student_headers,
     result = submit(client, student_headers, attempt_id)
 
     q = result["questions"][position - 1]
-    assert q["points"] == 1.4 and q["max_points"] == 2
-    assert [r["result"] for r in q["rubric"]] == ["full", "full", "partial", "none"]
+    assert q["points"] == 1.6 and q["max_points"] == 2
+    assert [r["result"] for r in q["rubric"]] == ["full", "full", "full", "full", "none"]
     assert q["rubric"][0]["evidence"] == "List thì sửa được còn tuple thì không sửa được."
     assert q["text_answer"] == LIST_TUPLE_ANSWER and q["explanation"].startswith("Đáp án mẫu")
 

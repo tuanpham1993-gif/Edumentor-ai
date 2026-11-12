@@ -388,6 +388,39 @@ Mỗi điểm: ⭐ = phương án Claude đề xuất. Tuấn trả lời theo m
 - **Luật chặn mượn vế**: chỉ mượn đoạn bên cạnh khi đoạn của chính từ khóa chính **không chứa từ khóa phụ của tiêu chí khác** — để bài đảo ngược ("while … number of loops, for … don't know") không được trọn điểm.
 - Bộ bài thử (10 bài + bài mẫu gửi thầy) **phải có câu đảo for / while** dạng trên; ghi điểm trước / sau khi sửa.
 
+**QT12 — ĐÃ LÀM (12/11), bước 1 của GĐ7** (`ai/review/keyword_grader.py`):
+- Áp bản vá lỗi 1/2/4 (`BA-nhom/grader_fix_loi_1_2_4.patch`): phủ định ("for khi **chưa** biết trước" không khớp "biết trước"), bỏ luật "câu khớp ≥ 3 từ", thêm từ đồng nghĩa barem 6 câu.
+- Tách vế theo QT12-A + luật chặn mượn vế. Không cắt chữ: chỉ đánh dấu vị trí ranh giới, mỗi lần khớp thuộc đoạn chứa vị trí đầu của nó → từ khóa có dấu phẩy (`a, b = b, a`, `6,5`, `1, 5, 9`) hay chứa "còn" (`còn lại`, `còn sai`) vẫn khớp. Dấu phẩy giữa hai chữ số không tính.
+- Luật chặn mượn vế chỉ xét chủ thể của ý KHÁC **không trùng** chủ thể của ý đang xét (từ khóa phụ dùng chung giữa nhiều ý không bị chặn nhầm).
+- **Barem `312-PY-TL-02`** (Tuấn chốt phương án C): ý cú pháp 2đ tách thành **3a** "List viết trong ngoặc vuông [ ]" (1đ, chính: ngoặc vuông / `[]` / `[ ]`, phụ: list) + **3b** "Tuple viết trong ngoặc tròn ( )" (1đ, chính: ngoặc tròn / `()` / `( )`, phụ: tuple). Không dùng từ khóa 1 ký tự `(` `[` (khớp mọi lời gọi hàm `print(…)`). Đáp án mẫu 10 · bài gửi thầy 8 · chỉ nêu ngoặc tuple → cú pháp 1/2 · đảo ngoặc → 1/2.
+  - ⚠️ **Chỉ sửa file JSON + test, CHƯA nạp vào DB**: câu đổi số ý 4 → 5, nạp đè sẽ làm bài cũ đã làm câu này lỗi khi mở trang kết quả (ghép ý barem với kết quả chấm phải khớp số lượng). Nạp khi có bảng phiên bản (7.2) → thành phiên bản 2. Seed chỉ chạy tay, server không tự nạp.
+- **Bài mẫu gửi thầy: 7/10 → 8/10** (Tuấn chốt — đúng hơn: nêu đủ list/tuple sửa được hay không + đủ hai loại ngoặc, chỉ thiếu ví dụ khi dùng tuple; Gemini cũng chấm 8). Trước được 7 vì bộ chấm cũ đòi hai loại ngoặc nằm cùng một câu. → **Báo thầy đổi 7 thành 8 kèm lý do.**
+- Test: `test_keyword_grader.py` 77 (thêm: đảo vế qua "còn" / dấu phẩy, câu tiếng Anh đảo for/while bị luật chặn mượn vế, không tách ở "and", từ khóa có dấu phẩy, 3a / 3b, từ khóa phụ dùng chung); sửa kỳ vọng bài mẫu 7 → 8 (3 test) + `test_review_submit` 1,4 → 1,6đ + `test_seed_review` 4 → 5 ý. **Toàn bộ test đạt.**
+
+**Bộ bài thử đã dùng khi chỉnh (14 bài)** — số bài cho điểm đúng kỳ vọng (đúng ≥ 8, sai ≤ 5, bài mẫu ≈ 7–8):
+
+| Mốc | Đúng kỳ vọng |
+|---|---|
+| Bộ chấm cũ | 7/14 |
+| Sau bản vá lỗi 1/2/4 | 12/14 (còn sai: đảo vế qua dấu phẩy, đảo vế qua "còn") |
+| Sau QT12 (tách vế + chặn mượn vế) | **14/14** |
+
+> Lưu ý: bộ này đã dùng để chỉnh barem nên dễ đạt điểm tuyệt đối → kiểm thêm bằng bộ bài MỚI dưới đây.
+
+**Bộ kiểm cuối — 5 bài MỚI (12/11)**: viết trước khi chạy, chưa từng dùng khi chỉnh, chạy 1 lần không chỉnh theo kết quả; chuẩn = Gemini (`gemini-3.5-flash-lite`):
+
+| Bài | Câu | Từ khóa | Gemini | Lệch | Cờ (> 3) |
+|---|---|---|---|---|---|
+| H1 đúng, viết tự nhiên | CS-TL-01 | 10 | 10 | 0 | |
+| H2 sai, đảo print / input | PY-TL-03 | 3,5 | (503) | — | |
+| H3 đúng, viết bằng code | ITER-TL-05 | 10 | (503) | — | |
+| H4 thiếu ý (không nêu tuoi = 30) | COND-TL-06 | 7 | 5,5 | 1,5 | |
+| H5 đúng, viết không dấu | VAR-TL-03 | **5** | 10 | **5** | **⚑** |
+
+- Gemini quá tải (503) ở H2, H3 cả 2 lần thử → **chạy lại sau** để đủ 5/5 trước khi ghi vào tài liệu gửi thầy.
+- 3 bài có điểm Gemini: lệch trung bình 2,2 điểm; 1/3 bài lệch > 3.
+- **H5** (không chỉnh barem — giữ khách quan): ý 1 cần "lưu / đặt giá trị / gán giá trị", học viên viết "**đưa** giá trị vào biến" → thiếu từ đồng nghĩa (kiểu lỗi 1, giới hạn vốn có của chấm từ khóa). Đúng là trường hợp **cờ lệch điểm QT10** sinh ra để bắt: Gemini chấm 10 (điểm học viên nhận), từ khóa 5 → gắn cờ → admin thêm "đưa giá trị" vào barem.
+
 **QT14 chốt (12/11) — nút "Báo lỗi câu này":**
 - Ở **trang kết quả (sau khi nộp)**: chọn lý do (đáp án sai / đề khó hiểu / khác) + ghi thêm; bảng mới `review_question_reports`; trang quản trị đưa câu bị báo lên đầu kèm số lượt, bộ lọc "Bị báo lỗi".
 - Mỗi người báo **1 lần cho mỗi PHIÊN BẢN câu** (không phải mỗi câu) — admin sửa thành phiên bản mới mà vẫn sai thì báo lại được.
@@ -476,4 +509,5 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
 | 12/11 | Tuấn chốt **QT4–QT11 = A** (QT10 chỉnh: Gemini là bộ chấm chính, từ khóa chấm thay + đối chiếu lệch > 3 thì gắn cờ, Chấm thử chạy đúng quy trình thật). Còn chờ: QT12 (cách tách vế), nút báo lỗi (QT6.6) | — |
 | 12/11 | Tuấn chốt **QT12-A** (+ luật chặn mượn vế, thêm bài đảo for/while vào bộ thử), **QT14-A** (báo lỗi theo phiên bản; chấm lại phụ thuộc QT6), QT15a–d = A (ghi ở `Review-Auth.md` 9.14). ⚠️ QT6 cần xác nhận lại A hay B | — |
 | 12/11 | Tuấn xác nhận **QT6 = A**, bỏ phương án B (xóa phần phân tích QT6.1–6.6). QT14: câu bị xác nhận sai → phiên bản mới, bài cũ không chấm lại | — |
+| 12/11 | **QT12 làm xong**: bản vá lỗi 1/2/4 + tách vế + chặn mượn vế; barem PY-TL-02 tách 3a / 3b (chỉ JSON, chưa nạp DB); bài mẫu gửi thầy 7 → 8. Bộ chỉnh 14/14; bộ kiểm mới 5 bài: H1 khớp, H4 lệch 1,5, H5 lệch 5 (thiếu từ đồng nghĩa → cờ QT10), H2/H3 Gemini 503 — chạy lại sau | Báo thầy 7 → 8; chạy lại H2, H3 |
 | | | |

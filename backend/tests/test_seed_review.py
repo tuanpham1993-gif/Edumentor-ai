@@ -123,7 +123,7 @@ def test_seed_inserts_everything(db_session, course_312, bank):
 
     assert counts == {"chunks_added": 15, "chunks_updated": 0, "questions_added": len(bank["questions"]), "questions_updated": 0}
     q = db_session.query(ReviewQuestion).filter_by(code="312-PY-TL-02").one()
-    assert q.skill_id == 167 and q.source == "bank" and len(q.rubric) == 4
+    assert q.skill_id == 167 and q.source == "bank" and len(q.rubric) == 5  # 12/11: ý cú pháp tách 3a / 3b
     assert q.chunk_id == db_session.query(KnowledgeChunk).filter_by(code="312-PY-K03").one().chunk_id
 
 
