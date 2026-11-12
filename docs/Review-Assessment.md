@@ -278,7 +278,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
     | L3 | Khôi sửa `tests/conftest.py`, `tests/test_review_api.py` (của Tuấn) — chủ yếu định dạng lại (black) + thêm `UserCourse` vào `bank_312` | Thấp | Gộp tay: giữ fixture chặn email/AI thật, kỹ năng 99001, test `bookmarked`; nhận `UserCourse` của Khôi |
     | L4 | Tên bảng đổi student_courses → **`user_courses`** (Khôi đề xuất) — tài liệu còn ghi tên cũ | Thấp | Đổi tên trong `Review-Assessment.md` + file gửi Khôi |
     | L5 | Test cũ `test_second_pass_only_records_history` dựa vào hàm giả (khóa không bao giờ thành `completed`) → lỗi khi nối thật | Thấp | Sửa test dùng trạng thái thật |
-    | L6 | Frontend **chưa có nút "Tham gia khóa học"** → sau khi gộp phải tham gia qua Swagger mới ôn được | Trung bình (ảnh hưởng demo) | Chờ Tuấn quyết: thêm tạm nút ở trang ôn tập hay chờ Khôi |
+    | L6 | Frontend **chưa có nút "Tham gia khóa học"** → sau khi gộp phải tham gia qua Swagger mới ôn được | Trung bình (ảnh hưởng demo) | ✅ Tạm: nút ở trang ôn tập (B8); xóa khi Khôi xong (B9) |
   - **Kế hoạch chỉnh cho khớp rồi gộp (12/11):**
     - [x] B1. Gộp thử nhánh Khôi vào nhánh tạm `tuan/merge-khoi`, gộp tay 4 file xung đột (L2, L3) — `d721ad7`
     - [x] B2. Test chung T1–T9 tự động (`tests/test_review_course_integration.py`) — 9/9 đạt — `411e83f`
@@ -287,7 +287,8 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
     - [x] B5. Đổi tên student_courses → `user_courses` trong tài liệu (L4); file gửi Khôi thêm Phần 4
     - [x] B6. Chạy lại toàn bộ test — **595 passed**
     - [x] B7. Gộp `tuan/merge-khoi` vào `tuan/future-auth` (fast-forward, 12/11)
-    - [ ] B8. L6 — chờ Tuấn quyết
+    - [x] B8. L6 — Tuấn chọn **thêm TẠM** nút "Tham gia khóa học" / "Tham gia lại" vào trang ôn tập (khi chưa tham gia / đã bỏ khóa), gọi `POST /api/courses/{id}/join` của Khôi. Code gói trong 1 file `features/review/components/TempJoinCourseButton.jsx` + 2 dòng trong `ReviewStartPage.jsx`. Thử trình duyệt 4/4 PASS (chưa tham gia → bấm → hiện Bắt đầu).
+    - [ ] B9. **Khi Khôi xong trang khóa học**: xóa `TempJoinCourseButton.jsx` + 2 dòng dùng nó (tìm "TempJoinCourseButton"), dùng nút / API của Khôi (`api/courseTracking.api.js`)
   - Cần chốt với Khôi trước khi nối (gửi 11/11, `BA-nhom/Gui-Khoi-…` Phần 2–3): (1) cột người dùng của `user_courses` = `users.user_id`; (2) 2 hàm **chỉ flush**; (3) không cho bỏ khóa `completed` + phía Tuấn đổi điều kiện Hoàn thành thành "đạt + đang `ongoing`" (bỏ kiểm lần đạt đầu, tránh kẹt khi bỏ → đăng ký lại); (4) `bookmarked` = chưa tham gia. Test chung T1–T9.
 - [ ] **6.2 Kiểm thử thủ công** theo bảng dưới — thực tế __/__ (10/11: chạy API 19/19 đạt; còn R1 chờ Khôi, phần giao diện R4/R5/R15 + email R7 👤)
 - [ ] **6.3 Rà bảo mật**: không lộ đáp án / barem trước khi nộp; không xem được bài người khác; API debug chặn student; API key không nằm trong repo — thực tế __/__

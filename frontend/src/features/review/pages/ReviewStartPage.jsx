@@ -9,6 +9,7 @@ import * as reviewApi from '../../../api/review.api.js';
 import StatusPanel from '../../common/components/StatusPanel.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
+import TempJoinCourseButton from '../components/TempJoinCourseButton.jsx'; // TẠM — xóa khi Khôi có trang khóa học
 import { formatScore } from '../reviewFormat.js';
 import styles from '../styles/ReviewStartPage.module.css';
 
@@ -207,6 +208,9 @@ export default function ReviewStartPage() {
                   {info.blocked.code === 'no_question_bank' ? 'Bài ôn tập chưa sẵn sàng' : 'Bạn chưa thể ôn khóa này'}
                 </strong>
                 <p className="muted small">{info.blocked.message}</p>
+                {['not_enrolled', 'abandoned'].includes(info.blocked.code) && (
+                  <TempJoinCourseButton courseId={courseId} rejoin={info.blocked.code === 'abandoned'} onJoined={load} />
+                )}
               </div>
             </section>
           )}
