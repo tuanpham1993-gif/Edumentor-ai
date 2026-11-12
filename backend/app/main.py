@@ -10,11 +10,13 @@ from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.database import init_db
 from app.routers.v1.api import api_router
+from app.services.rag_service import warm_up_in_background
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    warm_up_in_background()  # Tuấn 12/11: nạp sẵn mô hình embedding (ôn tập) ở luồng nền
     yield
     print("Close app")
 

@@ -11,8 +11,9 @@
 
 import logging
 import math
+import sys
+import threading
 from collections.abc import Callable
-from functools import lru_cache
 
 from sqlalchemy.orm import Session
 
@@ -35,9 +36,22 @@ def cosine(a: list[float], b: list[float]) -> float:
     return dot / norm if norm else 0.0
 
 
-@lru_cache(maxsize=1)
+# Luồng nạp nền + request đầu tiên có thể gọi CÙNG LÚC → khóa + kiểm tra lại bên trong khóa → chỉ nạp MỘT lần (12/11)
+_MODEL_LOCK = threading.Lock()
+_model_state: dict = {}  # {"model": SentenceTransformer | None} sau khi đã thử nạp
+
+
 def _load_model():
-    """Nạp mô hình MỘT lần (lần đầu mất vài giây). Không có thư viện / chưa tải mô hình → None."""
+    """Nạp mô hình MỘT lần (import ~40 giây + nạp ~6 giây khi máy nguội). Không có thư viện / mô hình → None."""
+    if "model" in _model_state:
+        return _model_state["model"]
+    with _MODEL_LOCK:
+        if "model" not in _model_state:  # bên tới sau: bên kia đã nạp xong trong lúc mình chờ khóa
+            _model_state["model"] = _try_load()
+    return _model_state["model"]
+
+
+def _try_load():
     try:
         from sentence_transformers import SentenceTransformer
 
@@ -45,6 +59,25 @@ def _load_model():
     except Exception as err:  # noqa: BLE001 — thiếu thư viện / chưa tải mô hình / lỗi file: đều rơi về chế độ không xếp hạng
         logger.warning("RAG: không nạp được mô hình embedding (%s) — xếp đoạn theo thứ tự tạo", err)
         return None
+
+
+def warm_up_in_background() -> None:
+    """Nạp sẵn mô hình embedding ở LUỒNG NỀN lúc bật server (12/11).
+
+    Trước đây mô hình chỉ nạp ở request ôn tập ĐẦU TIÊN → request đó có lúc > 60 giây (đo 11/11).
+    Chạy nền nên server vẫn khởi động ngay; request tới trước khi nạp xong thì chờ phần còn lại
+    (_MODEL_LOCK: bên tới sau chờ bên đang nạp rồi dùng luôn kết quả). Bỏ qua khi chạy pytest.
+    """
+    if "pytest" in sys.modules:
+        return
+
+    def _work() -> None:
+        model = _load_model()
+        if model is not None:
+            model.encode("khởi động", normalize_embeddings=True)  # lần encode đầu cũng chậm → làm luôn
+            logger.info("RAG: đã nạp sẵn mô hình embedding %s", settings.REVIEW_EMBEDDING_MODEL)
+
+    threading.Thread(target=_work, name="rag-warm-up", daemon=True).start()
 
 
 def embed_query(text: str) -> list[float] | None:
