@@ -202,6 +202,8 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 - [x] **3.4 Đạt lần đầu — một transaction** — `mark_course_completed` (cổng, hàm giả) + `mark_known(source="review")` mọi kỹ năng của khóa (kể cả kỹ năng đã tự gỡ — 6b) → commit một lần; lỗi giữa chừng → rollback, bài vẫn đang làm, nộp lại được — thực tế 09/11 🤖
   - Chỉ khi trạng thái khóa là **đang học**; đã Hoàn thành (B2) / đã bỏ / chưa đăng ký → chỉ lưu kết quả.
 - [x] **3.5 Email kết quả** — `core/email.send_review_result_email`, router gửi bằng `BackgroundTasks` **sau** khi trả kết quả (đã commit) — thực tế 09/11 🤖
+  - ⚠️ 12/11: code gửi đã có, nhưng `.env` đang dùng SMTP **mẫu** → email chỉ in ra terminal backend. Bật gửi thật: cấu hình Gmail (mật khẩu ứng dụng) trong `.env`.
+  - ✅ 12/11: đã cấu hình Gmail, gửi thật thành công. Người nhận lấy **tự động** từ email tài khoản (`users.email`) — `.env` chỉ cấu hình MỘT hộp thư gửi cho cả hệ thống. Nên đổi sang Gmail riêng cho đồ án trước khi demo.
 - [x] **3.6 `GET /api/me/review-history`** (lọc `course_id`, `passed`, `page`, `size`) + **`GET /api/me/review-history/{attempt_id}`** (lượt đang làm → 404, chưa lộ đáp án) — thực tế 09/11 🤖
 - [x] **3.7 `GET /api/admin/review-attempts/{attempt_id}/trace`** — student 403, admin 200 — thực tế 09/11 🤖
 - [x] **3.8 Test đủ kịch bản** — `test_keyword_grader.py` (13), `test_review_submit.py` (19): 10/10 + Hoàn thành + kỹ năng, bỏ trống = 0, ngưỡng 6,0 / 5,5, ví dụ 7/10 → 1,4đ, đạt lần 2 chỉ lưu lịch sử, kỹ năng đã gỡ quay lại, lỗi giữa transaction, AI chấm lỗi → từ khóa, lịch sử + phân trang, quyền — thực tế 09/11 🤖
@@ -226,7 +228,15 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 
 ## GĐ5 — Mở rộng (14/11 → 18/11)
 
-- [ ] **5.1 `ai/review/real_ai.py`** (giai đoạn 2): API key miễn phí trong `.env`, `AI_MODE=real`, thử trên khóa 312; lỗi / hết lượt → dự phòng — thực tế __/__
+- [ ] **5.1 `ai/review/real_ai.py`** (giai đoạn 2): API key miễn phí trong `.env`, `AI_MODE=real`, thử trên khóa 312; lỗi / hết lượt → dự phòng — thực tế 12/11 🤖 (chạy thử — chờ chốt model với Tâm)
+  - Nhà cung cấp: **Google Gemini** (giống chatbot của Tâm), gọi REST bằng `httpx` (không thêm thư viện). Biến `.env` dùng chung: `LLM_API_KEY`, `LLM_MODEL`. Key của Tuấn: hợp lệ (12/11). Model **tạm** `gemini-3.5-flash-lite` (thử 4 model: 3.1-flash-lite 2.8s · 3.5-flash-lite 3.5s · flash-lite-latest 7.3s · 3.5-flash 30s; `gemini-2.5-flash` đã ngừng cấp cho người dùng mới) → **đổi cho khớp Tâm sau**.
+  - `RealAI.grade_essay`: Gemini chấm **theo nghĩa** từng ý → full / partial / none + câu trích; **điểm do code tính** (đủ / ½ / 0); câu trích không có trong bài → bỏ; bài trống không gửi AI. Lỗi mạng / 429 hết lượt / quá giờ / sai JSON / thiếu ý → `AIUnavailableError` → chấm từ khóa dự phòng (đã có).
+  - `RealAI.generate_questions`: kỹ năng đủ `REVIEW_BANK_TARGET_PER_SKILL` (20) câu → bốc ngân hàng, **không gọi AI**; thiếu → Gemini soạn theo prompt RAG (validator kiểm, lưu `source='ai'`). Khóa 312 đủ 20/kỹ năng → chỉ phần CHẤM dùng AI.
+  - Chỉ gửi đề, barem, bài làm / đoạn tri thức — **không** gửi tên, email, CCCD. Gói miễn phí: Google có thể dùng dữ liệu để cải thiện sản phẩm → ghi vào báo cáo.
+  - Chạy thử Gemini thật (`scratchpad/real_ai_trial.py`): bài đúng viết tự nhiên **0 → 10** (CS-TL-03, PY-TL-04); viết bằng code 7.5 → 10; **bài sai** đảo for/while 7.5 → **0**, đảo break/continue (lỗi 3) 10 → **0**, "None là chuỗi rỗng" 10 → 5; **bài cố tình lừa AI** → 0 (không bị lừa); bài mẫu gửi thầy 7 → 8. Mỗi câu 1.4–8 giây. Gemini soạn 3 câu kỹ năng `variable` → validator **hợp lệ 3/3**, đúng ngữ cảnh.
+  - Luồng đầy đủ trên DB thật (`AI_MODE=real`): nộp + chấm 3 tự luận **7.2 giây**, trace `ai: gemini`, không phải dùng từ khóa dự phòng; đã dọn dữ liệu thử.
+  - Test: `tests/test_real_ai.py` **12 test** dùng Gemini GIẢ (`httpx.MockTransport`) — không gọi mạng, không tốn lượt. Toàn bộ test vẫn chạy mock.
+  - Còn lại: chốt model với Tâm · bật cho server: `.env` đặt `AI_MODE=real` + `LLM_MODEL=…` · **T1** (chấm lâu → trạng thái `grading`) chưa làm — 3 câu × tối đa 20 giây có thể ~60 giây · sinh câu cho kỹ năng **chưa có câu nào** cần sửa `plan_exam` (hiện A1 chặn khóa có kỹ năng thiếu câu) → bàn sau.
   - Ngân hàng bước 3: kỹ năng thiếu câu → AI sinh → validator → lưu `source="ai"`; đủ 20 câu/kỹ năng thì ngừng sinh.
 - [ ] **5.2 Ngân hàng bước 2**: khóa 312 đủ 100 câu (70 TN + 30 TL); khóa 37 (sau khi gỡ "Web") — thực tế 11/11 (khóa 312) 🤖 · khóa 37 còn chờ gỡ "Web"
   - ✅ Khóa 312: **40 → 100 câu** (+40 TN, +20 TL). Mỗi kỹ năng 20 câu = 14 TN (7 NB + 7 TH) + 6 TL; cả khóa 30 TL = 18 dễ + 12 nâng cao. Đáp án đúng TN rải đều (A18 · B17 · C18 · D17). Gắn với 15 đoạn tri thức sẵn có (không cần chạy lại embedding). Đã seed DB: `+60 / cập nhật 40`. 👤 **Tuấn duyệt nội dung 60 câu mới** (mã `…-TN-07..14`, `…-TL-03..06`, `CS-TL-02..06`).
@@ -244,6 +254,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
   - Claude góp ý (cần chỉnh khi bàn): (1) không ghi cứng "7/10" — ngưỡng đã chốt 6/10, lấy `pass_score` từ API; (2) đạt = **cả khóa** Hoàn thành + mọi kỹ năng của khóa "Đã biết", không riêng 1 kỹ năng; (3) khóa **chưa tham gia** không cho ôn (B1, R1) → hiện mờ + "Tham gia học"; (4) chỉ hiện icon khi kỹ năng có ≥ 1 khóa ôn được (hiện mới khóa 312 có ngân hàng); (5) "Đến hạn ôn" là **khái niệm mới** — tính từ `review_attempts.submitted_at`, không cần bảng mới, cần chốt số ngày (đề xuất 30); (6) điện thoại: popover → khung trượt từ dưới; vùng bấm icon ≥ 28px.
   - Kỹ thuật (Tuấn): API gộp `GET /api/me/review-options?skill_ids=…` (1 lần cho cả lộ trình) + component `ReviewPopover` trong `features/review/`; Hòa chỉ đặt icon + gọi component. Phụ thuộc: `student_courses` của Khôi; lộ trình của Hòa phải dùng `users.user_id` (hiện `student_id`).
   - Cần chốt khi bàn: quy tắc "Đến hạn ôn" (số ngày) · có làm trong GĐ5 không.
+  - 12/11: Tuấn mở lại → Claude soạn kế hoạch gửi Hòa `BA-nhom/Gui-Hoa-On-tap-tu-do-thi-lo-trinh.md` (bản nháp): chia việc T1–T4 (Tuấn: API `GET /api/me/review-options`, component `ReviewPopover` + `ReviewNodeBadge`, nút về lộ trình, quy tắc đến hạn) · H1–H6 (Hòa: gọi API 1 lần, đặt badge / popover, chú thích, đổi `student_id` → `user_id`); đề xuất đến hạn = 30 ngày; lịch 13–18/11. Kiểm 12/11: frontend lộ trình của Hòa (`PathGraph`, `NodeCoursePanel`, `LearningPathDetailPage`) **còn rỗng**. Chờ Hòa trả lời 5 câu.
 
 ## GĐ6 — Tích hợp và hoàn thiện (19/11 → 25/11)
 
@@ -265,7 +276,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | R4 | Làm 5 câu → Tạm rời → vào lại | "Làm tiếp", 5 câu vẫn còn | 2, 4 | ✅ 10/11 (API) — `resumed`, còn 5/5 |
 | R5 | Mở `F12` → xem response lấy đề | Không có đáp án, barem, giải thích | 2 | ✅ 10/11 (API) — 👤 còn xem bằng F12 |
 | R6 | Đăng nhập tài khoản khác, mở link bài của người kia | 404 | 2 | ✅ 10/11 — xem / lưu / nộp / lịch sử đều 404 |
-| R7 | Nộp bài đạt (≥ 6) | Kết quả Đạt; khóa Hoàn thành; hồ sơ có 5 kỹ năng "Đã biết"; có email | 3, 4 | ✅ 10/11 — 10/10, Hoàn thành, 5 kỹ năng · 👤 email chưa xem (tài khoản test @example.com) |
+| R7 | Nộp bài đạt (≥ 6) | Kết quả Đạt; khóa Hoàn thành; hồ sơ có 5 kỹ năng "Đã biết"; có email | 3, 4 | ✅ 10/11 — 10/10, Hoàn thành, 5 kỹ năng · 👤 email chưa xem (tài khoản test @example.com) · ⚠️ **Đính chính 12/11:** `.env` có `SMTP_HOST=smtp.example.com` (chữ mẫu) → backend **chỉ in email ra terminal** (`[DEV EMAIL]`), CHƯA gửi thật; báo cáo 10/11 "SMTP đã cấu hình" là SAI (khi đó chỉ kiểm có giá trị). Cần cấu hình Gmail (hướng dẫn: `BA-nhom/Huong-dan-test-backend-Tuan.md` mục 0b) rồi test lại R7 · ✅ **12/11 Tuấn cấu hình Gmail xong** (gửi từ phamthanht009@gmail.com, mật khẩu ứng dụng): đăng nhập SMTP OK, đã gửi thử 2 thư (quên mật khẩu + kết quả ôn tập mẫu) tới phamthanht009@gmail.com — 👤 Tuấn xác nhận đã nhận, rồi làm R7 bằng tài khoản email thật |
 | R8 | Nộp bài chưa đạt → làm lại | Đề mới, không trùng câu lượt trước; khóa vẫn đang học | 3, 4 | ✅ 10/11 — trùng 0/15 câu |
 | R9 | Gỡ 1 kỹ năng của khóa khỏi hồ sơ → làm đạt lần đầu | Kỹ năng đó quay lại "Đã biết" (6b) | 3 | ✅ 10/11 — gỡ 400 → quay lại `known`/`review` |
 | R10 | Khóa đã Hoàn thành → ôn lại (đạt hoặc trượt) | Chỉ thêm lịch sử; khóa và kỹ năng không đổi (B2) | 3 | ✅ 10/11 — `completed_course=false`, kỹ năng không đổi |

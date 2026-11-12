@@ -84,7 +84,10 @@ def test_mock_ai_uses_retrieved_chunks():
 def test_get_review_ai_by_mode(monkeypatch):
     assert get_review_ai().name == "mock"
 
+    # AI_MODE=real nhưng thiếu khóa → AI "không dùng được" (service tự dùng dự phòng).
+    # Đặt khóa rỗng để test KHÔNG phụ thuộc .env trên máy (máy có khóa thật sẽ ra RealAI — xem test_real_ai.py).
     monkeypatch.setattr(settings, "AI_MODE", "real")
+    monkeypatch.setattr(settings, "LLM_API_KEY", "")
     with pytest.raises(AIUnavailableError):
         get_review_ai().generate_questions(None, random.Random(0))
 

@@ -13,11 +13,17 @@ from app.core.config import settings
 
 
 def get_review_ai() -> ReviewAI:
-    """AI_MODE=mock → MockAI. AI_MODE=real → AI thật (giai đoạn 2, chưa có) → báo không dùng được,
-    review_service tự rơi về ngân hàng dự phòng (A6)."""
+    """AI_MODE=mock → MockAI. AI_MODE=real → RealAI (Gemini, 12/11) — thiếu LLM_API_KEY / LLM_MODEL thì báo
+    không dùng được, review_service tự rơi về dự phòng (ngân hàng + chấm từ khóa — A6)."""
     if settings.AI_MODE == "mock":
         return MockAI()
-    return _UnavailableAI(f"AI_MODE='{settings.AI_MODE}' chưa được hỗ trợ (giai đoạn 2)")
+    if settings.AI_MODE == "real":
+        if settings.LLM_API_KEY.strip() and settings.LLM_MODEL.strip():
+            from app.ai.review.real_ai import RealAI
+
+            return RealAI()
+        return _UnavailableAI("AI_MODE='real' nhưng chưa cấu hình LLM_API_KEY / LLM_MODEL")
+    return _UnavailableAI(f"AI_MODE='{settings.AI_MODE}' không hợp lệ (mock | real)")
 
 
 class _UnavailableAI(ReviewAI):
