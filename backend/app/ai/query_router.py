@@ -16,6 +16,7 @@ ALLOWED_INTENTS = {
     "course_question",
     "course_review",
     "course_search",
+    "course_enrollment_link",
     "system_operation",
     "code_help",
     "learning_path_request",
@@ -28,10 +29,6 @@ ALLOWED_ENTITY_TYPES = {
     "none",
 }
 
-# Learning Path không bắt buộc có Entity.
-# Người dùng có thể yêu cầu tạo lộ trình chung
-# hoặc yêu cầu tạo lộ trình theo một Skill cụ thể.
-
 ENTITY_REQUIRED_INTENTS = {
     "skill_question",
     "skill_review",
@@ -39,8 +36,8 @@ ENTITY_REQUIRED_INTENTS = {
     "course_question",
     "course_review",
     "course_search",
+    "course_enrollment_link",
 }
-
 
 RETRIEVAL_MAP = {
     "skill_question": ["sql", "no_rag"],
@@ -49,6 +46,7 @@ RETRIEVAL_MAP = {
     "course_question": ["sql", "no_rag"],
     "course_review": ["sql", "rag"],
     "course_search": ["sql"],
+    "course_enrollment_link": ["sql"],
     "system_operation": ["rag"],
     "code_help": ["no_rag"],
     "learning_path_request": ["rag"],
@@ -110,6 +108,8 @@ def detect_operation_type(user_message: str) -> str:
 def clean_entity_name(entity_name: str) -> str:
     """
     Làm sạch tên Skill/Course trước khi truy vấn SQL.
+
+    Không tự ý xóa những từ có thể thuộc tên Course.
     """
 
     if not isinstance(entity_name, str):
@@ -242,9 +242,6 @@ def detect_entity_type(text: str) -> str:
 # ==========================================
 
 def extract_skill_search_entity(user_message: str) -> dict:
-    """
-    Trích xuất chủ đề khi người dùng muốn tìm Skill.
-    """
 
     text = user_message.strip()
 
@@ -295,9 +292,6 @@ def extract_skill_search_entity(user_message: str) -> dict:
 # ==========================================
 
 def extract_course_review_entity(user_message: str) -> dict:
-    """
-    Trích xuất Course mà người dùng muốn ôn tập.
-    """
 
     text = user_message.strip()
 
@@ -306,10 +300,6 @@ def extract_course_review_entity(user_message: str) -> dict:
             r"(?:khóa học|khoa hoc|course|courses)"
             r"\s+(?:về\s+|ve\s+)?"
             r"(.+?)$"
-        ),
-        (
-            r"(?:course|courses)"
-            r"\s+(.+?)$"
         ),
     ]
 
@@ -343,9 +333,6 @@ def extract_course_review_entity(user_message: str) -> dict:
 # ==========================================
 
 def extract_skill_review_entity(user_message: str) -> dict:
-    """
-    Trích xuất Skill mà người dùng muốn ôn tập.
-    """
 
     text = user_message.strip()
 
@@ -396,16 +383,6 @@ def extract_skill_review_entity(user_message: str) -> dict:
 # ==========================================
 
 def extract_learning_path_entity(user_message: str) -> dict:
-    """
-    Trích xuất Skill khi người dùng muốn tạo lộ trình học.
-
-    Nếu người dùng không nêu Skill cụ thể thì trả về none.
-    Không lấy các cụm như:
-    - của riêng mình
-    - của tôi
-    - cho bản thân
-    - cá nhân
-    """
 
     text = user_message.strip()
 
@@ -493,9 +470,6 @@ def extract_learning_path_entity(user_message: str) -> dict:
 # ==========================================
 
 def extract_course_search_entity(user_message: str) -> dict:
-    """
-    Trích xuất Skill/chủ đề mà người dùng muốn tìm khóa học.
-    """
 
     text = user_message.strip()
 
@@ -568,7 +542,73 @@ def extract_course_search_entity(user_message: str) -> dict:
 
 
 # ==========================================
-# 9. GENERAL ENTITY EXTRACTION
+# 9. COURSE ENROLLMENT ENTITY EXTRACTION
+# ==========================================
+
+def extract_course_enrollment_entity(user_message: str) -> dict:
+    """
+    Trích xuất tên khóa học khi người dùng muốn lấy
+    link tham gia hoặc đăng ký một Course cụ thể.
+    """
+
+    text = user_message.strip()
+
+    patterns = [
+        # khóa học trực tiếp ABC
+        (
+            r"(?:khóa học|khoa hoc|courses?)"
+            r"\s+(?:trực tiếp\s+)?"
+            r"(.+?)[?.!]*$"
+        ),
+
+        # tham gia khóa học ABC
+        (
+            r"(?:tham gia|đăng ký|dang ky|ghi danh|enroll|join)"
+            r"\s+(?:vào\s+|vao\s+)?"
+            r"(?:khóa học|khoa hoc|courses?)"
+            r"\s+(?:trực tiếp\s+)?"
+            r"(.+?)[?.!]*$"
+        ),
+
+        # link để tham gia khóa học ABC
+        (
+            r"(?:link|đường dẫn|duong dan|url)"
+            r"\s+(?:để\s+|de\s+)?"
+            r"(?:tham gia|đăng ký|dang ky|ghi danh)"
+            r"\s+(?:khóa học|khoa hoc|course|courses)"
+            r"\s+(?:trực tiếp\s+)?"
+            r"(.+?)[?.!]*$"
+        ),
+    ]
+
+    for pattern in patterns:
+        match = re.search(
+            pattern,
+            text,
+            flags=re.IGNORECASE,
+        )
+
+        if not match:
+            continue
+
+        entity_name = clean_entity_name(match.group(1))
+
+        if not entity_name:
+            continue
+
+        return {
+            "entity_type": "course",
+            "entity_name": entity_name,
+        }
+
+    return {
+        "entity_type": "course",
+        "entity_name": None,
+    }
+
+
+# ==========================================
+# 10. GENERAL ENTITY EXTRACTION
 # ==========================================
 
 def extract_entity_by_rules(
@@ -576,9 +616,11 @@ def extract_entity_by_rules(
     intent: str,
 ) -> dict:
 
-    # Learning Path có Entity tùy chọn.
     if intent == "learning_path_request":
         return extract_learning_path_entity(user_message)
+
+    if intent == "course_enrollment_link":
+        return extract_course_enrollment_entity(user_message)
 
     if intent not in ENTITY_REQUIRED_INTENTS:
         return {
@@ -603,7 +645,6 @@ def extract_entity_by_rules(
     entity_type = detect_entity_type(text)
 
     if entity_type == "course":
-
         markers = [
             "khóa học",
             "khoa hoc",
@@ -614,7 +655,6 @@ def extract_entity_by_rules(
         ]
 
     elif entity_type == "skill":
-
         markers = [
             "kỹ năng",
             "ky nang",
@@ -638,7 +678,6 @@ def extract_entity_by_rules(
         )
 
         if match:
-
             entity_name = clean_entity_name(match.group(1))
             entity_name = normalize_entity_name(entity_name)
 
@@ -655,7 +694,7 @@ def extract_entity_by_rules(
 
 
 # ==========================================
-# 10. GEMINI ENTITY EXTRACTION
+# 11. GEMINI ENTITY EXTRACTION
 # ==========================================
 
 def extract_entity_by_llm(user_message: str) -> dict:
@@ -700,14 +739,12 @@ Câu hỏi:
     text = ai_text.strip()
 
     if text.startswith("```"):
-
         text = re.sub(
             r"^```(?:json)?\s*",
             "",
             text,
             flags=re.IGNORECASE,
         )
-
         text = re.sub(r"\s*```$", "", text)
 
     result = json.loads(text)
@@ -734,7 +771,7 @@ Câu hỏi:
 
 
 # ==========================================
-# 11. RULE-BASED INTENT CLASSIFICATION
+# 12. RULE-BASED INTENT CLASSIFICATION
 # ==========================================
 
 def classify_by_rules(user_message: str) -> dict | None:
@@ -776,7 +813,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     has_code_block = "```" in user_message
 
     if has_code_block or any(keyword in text for keyword in code_keywords):
-
         return {
             "intent": "code_help",
             "entity_type": "none",
@@ -784,8 +820,57 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     # --------------------------------------
-    # 2. LEARNING PATH
-    # Đặt trước REVIEW và các intent khác.
+    # 2. COURSE ENROLLMENT LINK
+    # Phải đặt trước SYSTEM OPERATION.
+    # --------------------------------------
+
+    has_link_keyword = any(
+        keyword in text
+        for keyword in [
+            "link",
+            "đường dẫn",
+            "duong dan",
+            "url",
+        ]
+    )
+
+    has_course_keyword = any(
+        keyword in text
+        for keyword in [
+            "khóa học",
+            "khoa hoc",
+            "course",
+            "courses",
+        ]
+    )
+
+    has_enrollment_keyword = any(
+        keyword in text
+        for keyword in [
+            "tham gia",
+            "đăng ký",
+            "dang ky",
+            "ghi danh",
+            "enroll",
+            "join",
+        ]
+    )
+
+    if (
+        has_link_keyword
+        and has_course_keyword
+        and has_enrollment_keyword
+    ):
+        entity = extract_course_enrollment_entity(user_message)
+
+        return {
+            "intent": "course_enrollment_link",
+            "entity_type": "course",
+            "entity_name": entity["entity_name"],
+        }
+
+    # --------------------------------------
+    # 3. LEARNING PATH
     # --------------------------------------
 
     learning_path_keywords = [
@@ -801,7 +886,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     ]
 
     if any(keyword in text for keyword in learning_path_keywords):
-
         return {
             "intent": "learning_path_request",
             "entity_type": "none",
@@ -809,7 +893,7 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     # --------------------------------------
-    # 3. REVIEW
+    # 4. REVIEW
     # --------------------------------------
 
     review_keywords = [
@@ -831,7 +915,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     if any(keyword in text for keyword in review_keywords):
 
         if entity_type == "course":
-
             return {
                 "intent": "course_review",
                 "entity_type": "course",
@@ -839,7 +922,6 @@ def classify_by_rules(user_message: str) -> dict | None:
             }
 
         if entity_type == "skill":
-
             return {
                 "intent": "skill_review",
                 "entity_type": "skill",
@@ -847,7 +929,6 @@ def classify_by_rules(user_message: str) -> dict | None:
             }
 
         if re.search(r"\bskill\b|\bskills\b|kỹ năng|ky nang", text):
-
             return {
                 "intent": "skill_review",
                 "entity_type": "skill",
@@ -857,7 +938,7 @@ def classify_by_rules(user_message: str) -> dict | None:
         return None
 
     # --------------------------------------
-    # 4. SKILL SEARCH
+    # 5. SKILL SEARCH
     # --------------------------------------
 
     skill_search_patterns = [
@@ -879,7 +960,6 @@ def classify_by_rules(user_message: str) -> dict | None:
         re.search(pattern, text, flags=re.IGNORECASE)
         for pattern in skill_search_patterns
     ):
-
         return {
             "intent": "skill_search",
             "entity_type": "skill",
@@ -887,7 +967,7 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     # --------------------------------------
-    # 5. COURSE SEARCH
+    # 6. COURSE SEARCH
     # --------------------------------------
 
     course_search_patterns = [
@@ -916,7 +996,6 @@ def classify_by_rules(user_message: str) -> dict | None:
         re.search(pattern, text, flags=re.IGNORECASE)
         for pattern in course_search_patterns
     ):
-
         return {
             "intent": "course_search",
             "entity_type": "skill",
@@ -924,7 +1003,7 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     # --------------------------------------
-    # 6. SYSTEM OPERATION
+    # 7. SYSTEM OPERATION
     # --------------------------------------
 
     link_keywords = [
@@ -1012,7 +1091,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     has_system_feature = any(keyword in text for keyword in system_features)
 
     if has_link_request and has_system_feature:
-
         return {
             "intent": "system_operation",
             "entity_type": "none",
@@ -1020,7 +1098,6 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     if has_operation_request and has_system_feature:
-
         return {
             "intent": "system_operation",
             "entity_type": "none",
@@ -1037,7 +1114,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     ]
 
     if any(keyword in text for keyword in auth_keywords):
-
         return {
             "intent": "system_operation",
             "entity_type": "none",
@@ -1045,7 +1121,7 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     # --------------------------------------
-    # 7. COURSE QUESTION
+    # 8. COURSE QUESTION
     # --------------------------------------
 
     course_question_keywords = [
@@ -1058,7 +1134,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     ]
 
     if any(keyword in text for keyword in course_question_keywords):
-
         return {
             "intent": "course_question",
             "entity_type": "course",
@@ -1066,7 +1141,7 @@ def classify_by_rules(user_message: str) -> dict | None:
         }
 
     # --------------------------------------
-    # 8. SKILL QUESTION
+    # 9. SKILL QUESTION
     # --------------------------------------
 
     skill_question_keywords = [
@@ -1079,7 +1154,6 @@ def classify_by_rules(user_message: str) -> dict | None:
     ]
 
     if any(keyword in text for keyword in skill_question_keywords):
-
         return {
             "intent": "skill_question",
             "entity_type": "skill",
@@ -1090,7 +1164,7 @@ def classify_by_rules(user_message: str) -> dict | None:
 
 
 # ==========================================
-# 12. GEMINI INTENT CLASSIFICATION
+# 13. GEMINI INTENT CLASSIFICATION
 # ==========================================
 
 def build_classifier_prompt(user_message: str) -> str:
@@ -1123,17 +1197,21 @@ Các Intent hợp lệ:
    Người dùng muốn tìm các khóa học trong EduMentor
    theo tên hoặc theo chủ đề.
 
-7. system_operation:
+7. course_enrollment_link:
+   Người dùng muốn lấy link tham gia, đăng ký hoặc ghi danh
+   vào một khóa học cụ thể.
+
+8. system_operation:
    Người dùng hỏi cách sử dụng hoặc thao tác trên EduMentor,
    bao gồm yêu cầu link đến trang chức năng.
 
-8. code_help:
+9. code_help:
    Người dùng muốn giải thích, sửa lỗi hoặc tối ưu code.
 
-9. learning_path_request:
-   Người dùng muốn tạo lộ trình học bằng AI.
+10. learning_path_request:
+    Người dùng muốn tạo lộ trình học bằng AI.
 
-10. general_question:
+11. general_question:
     Câu hỏi kiến thức chung hoặc trường hợp khác.
 
 Entity type hợp lệ:
@@ -1146,10 +1224,6 @@ Quy tắc:
 - "Cho tôi những skill liên quan đến SQL"
   => skill_search, skill, SQL.
 
-- "Cho tôi những skill liên quan đến SQL trong hệ thống
-  và ngoài hệ thống"
-  => skill_search, skill, SQL.
-
 - "Tìm các kỹ năng về Python"
   => skill_search, skill, Python.
 
@@ -1158,6 +1232,14 @@ Quy tắc:
 
 - "Cho tôi những khóa học của Python"
   => course_search, skill, Python.
+
+- "Cho tôi link để tham gia khóa học Analytical Solutions
+  to Common Healthcare Problems"
+  => course_enrollment_link, course,
+     Analytical Solutions to Common Healthcare Problems.
+
+- "Cho tôi link đăng ký khóa học Python"
+  => course_enrollment_link, course, Python.
 
 - "Cho tôi link vào trang đăng nhập"
   => system_operation, none, null.
@@ -1174,7 +1256,7 @@ Quy tắc:
 - "Tôi muốn tạo lộ trình học về SQL"
   => learning_path_request, skill, SQL.
 
-- Nếu người dùng hỏi về một khóa học cụ thể,
+- Nếu người dùng hỏi thông tin một khóa học cụ thể,
   dùng course_question và entity_type là course.
 
 - Nếu người dùng hỏi kiến thức về một Skill,
@@ -1225,14 +1307,12 @@ def classify_by_llm(user_message: str) -> dict:
     text = ai_text.strip()
 
     if text.startswith("```"):
-
         text = re.sub(
             r"^```(?:json)?\s*",
             "",
             text,
             flags=re.IGNORECASE,
         )
-
         text = re.sub(r"\s*```$", "", text)
 
     result = json.loads(text)
@@ -1264,7 +1344,7 @@ def classify_by_llm(user_message: str) -> dict:
 
 
 # ==========================================
-# 13. MAIN QUERY ROUTER
+# 14. MAIN QUERY ROUTER
 # ==========================================
 
 def route_query(user_message: str) -> dict:
@@ -1285,7 +1365,6 @@ def route_query(user_message: str) -> dict:
         source = "rule"
 
     else:
-
         # ==================================
         # STEP 2. GEMINI CLASSIFICATION
         # ==================================
@@ -1369,6 +1448,7 @@ def route_query(user_message: str) -> dict:
     if intent in {
         "course_question",
         "course_review",
+        "course_enrollment_link",
     }:
         entity_type = "course"
 
