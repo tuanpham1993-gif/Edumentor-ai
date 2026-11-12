@@ -17,6 +17,7 @@ from app.models.email_preference import EmailPreference
 # Model của Tuấn: ôn tập (module 09)
 from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_question import ReviewQuestion
+from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.review_attempt import ReviewAttempt, ReviewAnswer
 
 __all__ = [
@@ -37,6 +38,7 @@ __all__ = [
     "EmailPreference",
     "KnowledgeChunk",
     "ReviewQuestion",
+    "ReviewQuestionMeta",
     "ReviewAttempt",
     "ReviewAnswer",
 ]

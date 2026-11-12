@@ -121,21 +121,31 @@ def test_seed_inserts_everything(db_session, course_312, bank):
 
     counts = script.seed_bank(db_session, bank)
 
-    assert counts == {"chunks_added": 15, "chunks_updated": 0, "questions_added": len(bank["questions"]), "questions_updated": 0}
+    assert counts == {
+        "chunks_added": 15, "chunks_updated": 0, "questions_added": len(bank["questions"]),
+        "questions_unchanged": 0, "questions_differ": [], "questions_updated": 0, "questions_versioned": 0,
+    }
     q = db_session.query(ReviewQuestion).filter_by(code="312-PY-TL-02").one()
     assert q.skill_id == 167 and q.source == "bank" and len(q.rubric) == 5  # 12/11: ý cú pháp tách 3a / 3b
     assert q.chunk_id == db_session.query(KnowledgeChunk).filter_by(code="312-PY-K03").one().chunk_id
 
 
-def test_seed_twice_updates_without_duplicates(db_session, course_312, bank):
+def test_seed_twice_reports_changes_without_overwriting(db_session, course_312, bank):
+    """QT4 (12/11): database là nơi lưu chính — chạy lại seed KHÔNG ghi đè; câu khác file chỉ được báo."""
     script.seed_bank(db_session, bank)
+    old = db_session.query(ReviewQuestion).filter_by(code="312-PY-TN-01").one().explanation
     question(bank, "312-PY-TN-01")["explanation"] = "Giải thích mới"
 
     counts = script.seed_bank(db_session, bank)
 
-    assert counts["questions_added"] == 0 and counts["questions_updated"] == len(bank["questions"])
+    assert counts["questions_added"] == 0 and counts["questions_differ"] == ["312-PY-TN-01"]
+    assert counts["questions_unchanged"] == len(bank["questions"]) - 1
     assert db_session.query(ReviewQuestion).count() == len(bank["questions"])
     assert db_session.query(KnowledgeChunk).count() == 15
+    assert db_session.query(ReviewQuestion).filter_by(code="312-PY-TN-01").one().explanation == old
+
+    counts = script.seed_bank(db_session, bank, apply_changes=True)  # chưa ai làm → sửa tại chỗ
+    assert counts["questions_updated"] == 1 and counts["questions_versioned"] == 0
     assert db_session.query(ReviewQuestion).filter_by(code="312-PY-TN-01").one().explanation == "Giải thích mới"
 
 

@@ -441,7 +441,13 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
 ### Các bước
 - [x] **7.0 Lập kế hoạch + chốt QT1–QT3** — 12/11
 - [x] **7.1 Ảnh phác màn `/admin/questions`** → Tuấn gọt lại thành demo `Downloads/AdminReviewQuestions.html` (12/11) — ảnh phác gốc: `BA-nhom/Admin-cau-hoi-on-tap-phac-thao-Tuan.png` (+ .html), 12/11
-- [ ] **7.2 Model `review_question_versions` + hàm phiên bản** (sửa tại chỗ / tạo bản mới / tắt / xóa) + test (bài cũ vẫn hiện bản cũ)
+- [x] **7.2 Bảng `review_question_meta` + hàm phiên bản** — thực tế 13/11 🤖
+  - Model `models/review_question_meta.py` (1–1 với `review_questions`): `family_id`, `version` (unique theo họ), `exclusion_group`, `review_status` pending / approved / rejected, người / ngày duyệt, `created_by`, `change_note`. Câu nạp trước 13/11 chưa có meta → `ensure_meta` tự tạo (họ = chính nó, v1, đã duyệt).
+  - `services/review_bank_service.py` (chỉ flush, người gọi commit): `create_question` (câu AI `pending` → luôn tắt) · `update_question` (chưa ai làm / câu chờ duyệt → sửa tại chỗ; đã có bài làm → **dòng mới v+1**, dòng cũ tắt + mã đổi `<mã>~v<n>`, mã gốc sang dòng mới; `minor=True` = **Sửa nhỏ** QT5: chỉ giải thích / đoạn tri thức / nhóm loại trừ / đề giống ≥ 90%, đổi trường khác → `MinorEditNotAllowedError`) · `set_active` (không bật được câu chưa duyệt / phiên bản cũ) · `delete_question` (chưa dùng → xóa thật, đã dùng → tắt) · `versions` (lịch sử, mới nhất trước, kèm số bài đã làm).
+  - **Seed theo QT4** (`scripts/seed_review.py`): mặc định chỉ thêm câu chưa có; câu khác file → chỉ báo, không đè. `--apply-changes` áp thay đổi qua `update_question` (đã có bài làm → phiên bản mới).
+  - ✅ Test: `tests/test_review_bank.py` **18 test** + sửa 2 test seed. Toàn bộ **637 passed**.
+  - ✅ **Nạp vào DB thật (13/11)**: chạy seed thường → báo 6 câu khác file (thay đổi bước 1 / QT12) → `--apply-changes`: 4 câu chưa ai làm sửa tại chỗ, **2 câu đã có bài làm → phiên bản 2** (`312-PY-TL-02` barem 4 → 5 ý, `312-CS-TL-03`). Kiểm: bài cũ #27 vẫn mở được với **barem 4 ý** như lúc làm (không lỗi), mỗi kỹ năng vẫn 20 câu đang bật.
+  - Chưa làm (bước sau): đề tránh câu lượt trước theo `family_id` (7.5) · nhóm loại trừ trong `exam_builder` (QT7) · bỏ AI sinh câu thẳng vào đề (QT6-A, `review_service._save_ai_question`).
 - [ ] **7.3 API danh sách / chi tiết / thêm / sửa / tắt-bật / xóa** + test quyền (student 403)
 - [ ] **7.4 API mức sẵn sàng khóa (B)** + test
 - [ ] **7.5 Seed dùng hàm phiên bản**; sinh đề tránh theo `family_id`
@@ -510,4 +516,5 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
 | 12/11 | Tuấn chốt **QT12-A** (+ luật chặn mượn vế, thêm bài đảo for/while vào bộ thử), **QT14-A** (báo lỗi theo phiên bản; chấm lại phụ thuộc QT6), QT15a–d = A (ghi ở `Review-Auth.md` 9.14). ⚠️ QT6 cần xác nhận lại A hay B | — |
 | 12/11 | Tuấn xác nhận **QT6 = A**, bỏ phương án B (xóa phần phân tích QT6.1–6.6). QT14: câu bị xác nhận sai → phiên bản mới, bài cũ không chấm lại | — |
 | 12/11 | **QT12 làm xong**: bản vá lỗi 1/2/4 + tách vế + chặn mượn vế; barem PY-TL-02 tách 3a / 3b (chỉ JSON, chưa nạp DB); bài mẫu gửi thầy 7 → 8. Bộ chỉnh 14/14; bộ kiểm mới 5 bài: H1 khớp, H4 lệch 1,5, H5 lệch 5 (thiếu từ đồng nghĩa → cờ QT10), H2/H3 Gemini 503 — chạy lại sau | Báo thầy 7 → 8; chạy lại H2, H3 |
+| 13/11 | **7.2 xong**: bảng `review_question_meta` + `review_bank_service` (phiên bản / sửa nhỏ / bật-tắt / xóa) + seed QT4. Nạp DB thật: 4 câu sửa tại chỗ, 2 câu phiên bản 2; bài cũ vẫn mở đúng barem cũ. 637 test đạt | Tiếp 7.3 API quản trị |
 | | | |
