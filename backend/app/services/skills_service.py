@@ -14,6 +14,18 @@ from app.models.skill import Skills
 from app.models.skill_relation import SkillRelation
 
 
+def sync_skill_to_qdrant(skill):
+    """Hòa: cập nhật vector kỹ năng trong Qdrant khi sửa / tắt kỹ năng (import trong hàm — gộp nhánh 13/11)."""
+    from app.core.embedding_model import generate_embedding_skills_name
+    from app.services.qdrant_service import qdrant_skill_service
+
+    if not skill.is_active:
+        qdrant_skill_service.delete_skill(skill.skill_id)
+        return
+    embedding = generate_embedding_skills_name([skill.skill])[0]
+    qdrant_skill_service.update_skill(skill_id=skill.skill_id, skill=skill.skill, embedding=embedding)
+
+
 class SkillsService:
     def __init__(self, db: Session):
         self.db = db

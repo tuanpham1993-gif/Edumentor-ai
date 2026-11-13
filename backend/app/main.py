@@ -8,6 +8,10 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.database import init_db
+import httpx
+import os
+
+import logging
 from app.routers.v1.api import api_router
 from app.services.review_rag_service import warm_up_in_background
 
@@ -17,10 +21,25 @@ async def lifespan(app: FastAPI):
     # 1. Khởi tạo database
     init_db()
     warm_up_in_background()  # Tuấn 12/11: nạp sẵn mô hình embedding (ôn tập) ở luồng nền
-    yield
+    app.state.llm_client = httpx.AsyncClient(
+        base_url=settings.LLM_URL_ADAPTER,
+        timeout=180.0
+    )
 
+    app.state.llm_client_base = httpx.AsyncClient(
+        base_url=settings.LLM_URL_BASE,
+        timeout=180.0
+    )
+    yield
+    await app.state.llm_client_base.aclose()
+    await app.state.llm_client.aclose()
     print("Close app")
 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

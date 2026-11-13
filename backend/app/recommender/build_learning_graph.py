@@ -75,75 +75,97 @@ def build_learning_graph_basic(db: Session, skill_input):
         skill_list.append(to_skill)
         incoming_graph[from_skill] = skill_list
     return root, incoming_graph, visited_skill, node_freq_to_skills, edges_list
+def find_cycle_edges(visited_skill, edges_list):
+    graph = {node: [] for node in visited_skill}
 
-def find_cycle_edges(visited_skill, edges_list, incoming_graph = None):
-    if(incoming_graph):
-        graph = incoming_graph.copy()
-    else:
-        graph = {node: [] for node in visited_skill}
-        for from_node, to_node in edges_list:
-            listSkill = graph.get(from_node, [])
-            listSkill.append(to_node)
-            graph[from_node] = listSkill
-    #print(graph)
-    #0: unvisited, 1: ongoing, 2: finised
-    state = {}
-    for each in visited_skill: 
-        state[each] = 0
-    path_node = []
-    edge_node = []
+    for from_node, to_node in sorted(edges_list):
+        graph[from_node].append(to_node)
+
+    state = {node: 0 for node in visited_skill}
+    path_nodes = []
+    path_edges = []
 
     def dfs(current):
         state[current] = 1
-        path_node.append(current)
-        for next_skill in graph.get(current, []):
-            if (state[next_skill] == 0):
-                edge_node.append((current, next_skill))
-                have_cycle = dfs(next_skill)
-                if(have_cycle is not None): return have_cycle
-                edge_node.pop()
-                
-            elif (state[next_skill] == 1):
-                position = path_node.index(next_skill)
-                return edge_node[position:] + [(current, next_skill)]
-        
-        state[current] = 2       
-        path_node.pop()
+        path_nodes.append(current)
+
+        for next_skill in graph[current]:
+            if state[next_skill] == 0:
+                path_edges.append((current, next_skill))
+
+                cycle = dfs(next_skill)
+
+                if cycle is not None:
+                    return cycle
+
+                path_edges.pop()
+
+            elif state[next_skill] == 1:
+                position = path_nodes.index(next_skill)
+                return path_edges[position:] + [(current, next_skill)]
+
+        path_nodes.pop()
+        state[current] = 2
+
         return None
 
-    for node in graph:
-        if(state[node] == 0):
+    for node in sorted(visited_skill):
+        if state[node] == 0:
             cycle = dfs(node)
-            if(cycle is not None):
+
+            if cycle is not None:
                 return cycle
+
     return None
 
 def repair_cycle(all_nodes, all_edges):
-    remaining_edges = all_edges.copy()
-    removed_edges = list()
+    remaining_edges = set(all_edges)
+    removed_edges = []
+
     while True:
-        cycle = find_cycle_edges(visited_skill= all_nodes, edges_list = remaining_edges)
-        if (cycle is None): break
-        removeNode = cycle[-1]
-        remaining_edges.remove(removeNode)
-        removed_edges.append(removeNode)
+        cycle = find_cycle_edges(all_nodes, remaining_edges)
+
+        if cycle is None:
+            break
+
+        edge_to_remove = cycle[-1]
+
+        remaining_edges.remove(edge_to_remove)
+        removed_edges.append(edge_to_remove)
+
     return remaining_edges, removed_edges
 
-def buildLayers(visited_skill, node_freq_to_skills, incomming_graph, root):
-    layer = {} 
-    queue = root.copy()
-    freq = node_freq_to_skills.copy()
+def buildLayers(visited_skill, node_freq_to_skills, outgoing_graph, root):
+    layers = {skill_id: 0 for skill_id in visited_skill}
+
+    indegree = node_freq_to_skills.copy()
+
+    queue = sorted(root)
     processed = 0
-    for each in visited_skill: layer[each] = 0
-    while(queue):
-        current_skill = queue.pop(0)
+    index = 0
+
+    while index < len(queue):
+        current_skill = queue[index]
+        index += 1
         processed += 1
-        for next_skill in incomming_graph.get(current_skill, []):
-            layer[next_skill] = max(layer[current_skill] + 1, layer[next_skill])
-            freq[next_skill]-= 1;
-            if (freq[next_skill] == 0):
+
+        for next_skill in sorted(outgoing_graph.get(current_skill, [])):
+            layers[next_skill] = max(
+                layers[next_skill],
+                layers[current_skill] + 1
+            )
+
+            indegree[next_skill] -= 1
+
+            if indegree[next_skill] == 0:
                 queue.append(next_skill)
-    return layer
+
+    if processed != len(visited_skill):
+        raise ValueError(
+            "Unable to calculate learning path layers: graph contains a cycle."
+        )
+
+    return layers
 
 def build_learning_path_pipeline(
     db:Session,
@@ -264,28 +286,54 @@ def build_learning_path_pipeline(
         node_freq_to_skills,
         edges_list, 
     )
+def fixing_building_learning_graph(
+    visited_skill: set[int],
+    edges_list: set[tuple[int, int]]
+):
+    # Step 1: Remove edges that reference nodes outside the graph
+    valid_edges = {
+        (from_skill, to_skill)
+        for from_skill, to_skill in edges_list
+        if from_skill in visited_skill and to_skill in visited_skill
+    }
 
-def fixing_building_learning_graph(visited_skill: set[int], edges_list: set[tuple[int, int]]):
-    # Step 1: Detect and repair cycles
-    remaining_edges, removed_edges = repair_cycle(visited_skill,edges_list)
+    # Step 2: Detect and repair cycles
+    remaining_edges, removed_edges = repair_cycle(
+        visited_skill,
+        valid_edges
+    )
 
-    # Step 2: Rebuild graph structures
-    node_freq_to_skills = { skill_id: 0 for skill_id in visited_skill }
-    adjacency_graph = { skill_id: [] for skill_id in visited_skill }
+    # Step 3: Rebuild adjacency graph and indegree
+    node_freq_to_skills = {
+        skill_id: 0 for skill_id in visited_skill
+    }
 
-    for from_skill, to_skill in remaining_edges:
-        adjacency_graph[from_skill].append(to_skill)
+    outgoing_graph = {
+        skill_id: [] for skill_id in visited_skill
+    }
+
+    for from_skill, to_skill in sorted(remaining_edges):
+        outgoing_graph[from_skill].append(to_skill)
         node_freq_to_skills[to_skill] += 1
 
-    # Step 3: Find root nodes
-    root = [skill_id for skill_id, indegree in node_freq_to_skills.items() if indegree == 0]
+    # Step 4: Find root nodes
+    root = sorted(
+        skill_id
+        for skill_id, indegree in node_freq_to_skills.items()
+        if indegree == 0
+    )
 
-    # Step 4: Calculate graph layers
-    layers = buildLayers( visited_skill, node_freq_to_skills, adjacency_graph, root)
+    # Step 5: Calculate layers
+    layers = buildLayers(
+        visited_skill,
+        node_freq_to_skills,
+        outgoing_graph,
+        root
+    )
 
     return (
         root,
-        adjacency_graph,
+        outgoing_graph,
         node_freq_to_skills,
         layers
     )
@@ -298,76 +346,101 @@ def build_learning_path_response(
     layers: dict[int, int],
     outgoing_graph: dict[int, list[int]]
 ):
-    node_roles = {skill_id: "prerequisite" for skill_id in visited_skill}
-    # ======================================================
-    # 2. Collect graph edge pairs
-    # =====================================================
+    # Step 1: Initialize node roles
+    node_roles = {
+        skill_id: "prerequisite"
+        for skill_id in visited_skill
+    }
 
-    edge_pairs = []
-    for from_skill,neighbors in outgoing_graph.items():
-        for to_skill in neighbors:
-            edge_pairs.append((from_skill, to_skill))
+    # Step 2: Collect edge pairs
+    edge_pairs = sorted(
+        (from_skill, to_skill)
+        for from_skill, neighbors in outgoing_graph.items()
+        for to_skill in neighbors
+    )
 
-    # ======================================================
-    # 3. Retrieve relationships from SkillRelation
-    # ======================================================
+    # Step 3: Retrieve relationship types
     edge_pair_set = set(edge_pairs)
     relation_map = {}
+
     if edge_pair_set:
+        from_ids = {from_skill for from_skill, _ in edge_pair_set}
+        to_ids = {to_skill for _, to_skill in edge_pair_set}
+
         statement = select(SkillRelation).where(
-            SkillRelation.from_skill_id.in_({from_skill for from_skill, _ in edge_pair_set}),
-            SkillRelation.to_skill_id.in_({to_skill for _, to_skill in edge_pair_set})
+            SkillRelation.from_skill_id.in_(from_ids),
+            SkillRelation.to_skill_id.in_(to_ids),
+            SkillRelation.relation_type.in_([
+                "prerequisite",
+                "related",
+                "extension"
+            ])
         )
 
         relations = db.execute(statement).scalars().all()
 
         relation_map = {
-            (relation.from_skill_id, relation.to_skill_id): relation.relation_type
+            (relation.from_skill_id, relation.to_skill_id):
+                relation.relation_type
             for relation in relations
-            if (relation.from_skill_id, relation.to_skill_id) in edge_pair_set
+            if (
+                relation.from_skill_id,
+                relation.to_skill_id
+            ) in edge_pair_set
         }
 
-    # ======================================================
-    # 4. Determine node roles using incoming relationships
-    # ======================================================
-
-    role_priority = { "prerequisite": 0, "related": 1, "extension": 2}
+    # Step 4: Determine node roles
+    role_priority = {
+        "prerequisite": 0,
+        "related": 1,
+        "extension": 2
+    }
 
     for from_skill, to_skill in edge_pairs:
-        relation_type = relation_map.get((from_skill, to_skill), "extension")
+        relation_type = relation_map.get((from_skill, to_skill))
+
+        if relation_type is None:
+            continue
+
         current_role = node_roles[to_skill]
+
         if role_priority[relation_type] > role_priority[current_role]:
             node_roles[to_skill] = relation_type
 
-    # ======================================================
-    # 5. Sort nodes by layer, then skill ID
-    # ======================================================
+    # Step 5: Sort nodes by layer, then skill ID
+    ordered_skills = sorted(
+        visited_skill,
+        key=lambda skill_id: (layers[skill_id], skill_id)
+    )
 
-    ordered_skills = sorted(visited_skill, key=lambda skill_id: (layers[skill_id], skill_id))
-
-    # ======================================================
-    # 6. Build nodes
-    # ======================================================
+    # Step 6: Build nodes
     nodes = []
+
     for index, skill_id in enumerate(ordered_skills):
         node_role = node_roles[skill_id]
+
         nodes.append({
             "path_id": path_id,
             "skill_id": skill_id,
             "node_role": node_role,
+
+            # This is controlled by course registration.
             "is_target": False,
+
             "added_by": "system",
             "is_required": node_role == "prerequisite",
             "display_order": (index + 1) * 1000
         })
 
-    # ======================================================
-    # 7. Build edges using SkillRelation
-    # ======================================================
+    # Step 7: Build edges
     edges = []
+
     for from_skill, to_skill in edge_pairs:
         relation_type = relation_map.get((from_skill, to_skill))
-        if relation_type is None: continue
+
+        if relation_type is None:
+            continue
+
         edges.append({
             "path_id": path_id,
             "from_skill_id": from_skill,
@@ -375,16 +448,17 @@ def build_learning_path_response(
             "relation_type": relation_type
         })
 
-    # ======================================================
-    # 8. Group skills by layer
-    # ======================================================
+    # Step 8: Group nodes by layer
     layer_groups = {}
+
     for skill_id, layer_number in layers.items():
         layer_groups.setdefault(layer_number, []).append(skill_id)
+
     layer_groups = {
         layer_number: sorted(skill_ids)
         for layer_number, skill_ids in sorted(layer_groups.items())
     }
+
     return {
         "original_query": original_query,
         "goal_type": goal_type,
@@ -392,7 +466,6 @@ def build_learning_path_response(
         "edges": edges,
         "layer": layer_groups
     }
-
 def generate_learning_path(
     db: Session,
     LLM_input_skill_list: list[int],

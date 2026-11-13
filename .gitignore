@@ -21,6 +21,13 @@ coverage.xml
 .env.*
 !.env.example
 
+# AI model weights
+backend/app/ai/models/*.gguf
+backend/app/ai/models/*.bin
+backend/app/ai/models/*.safetensors
+
+# Keep the models directory in Git
+!backend/app/ai/models/.gitkeep
 
 # GĐ7 (Tuấn): ảnh người dùng upload — không commit
 backend/uploads/
