@@ -349,7 +349,7 @@
       "code": "312-ITER-TL-02", "skill": "ITER", "chunk": "312-ITER-K02", "type": "essay", "level": "easy",
       "content": "Khi nào nên dùng vòng lặp for, khi nào nên dùng vòng lặp while?",
       "rubric": [
-        {"text": "for: khi biết trước số lần lặp hoặc duyệt từng phần tử của một dãy", "max_points": 5, "main_keywords": ["biết trước", "số lần", "duyệt", "từng phần tử", "danh sách", "range"], "sub_keywords": ["for"]},
+        {"text": "for: khi biết trước số lần lặp hoặc duyệt từng phần tử của một dãy", "max_points": 5, "main_keywords": ["biết trước", "duyệt", "từng phần tử", "danh sách", "range"], "sub_keywords": ["for"]},
         {"text": "while: khi chưa biết trước số lần lặp, lặp theo điều kiện", "max_points": 5, "main_keywords": ["chưa biết", "không biết", "điều kiện"], "sub_keywords": ["while"]}
       ],
       "explanation": "Đáp án mẫu: Dùng for khi biết trước số lần lặp hoặc cần duyệt từng phần tử của danh sách; dùng while khi chưa biết trước số lần lặp, chỉ lặp khi điều kiện còn đúng."
@@ -381,7 +381,8 @@
       "rubric": [
         {"text": "List thay đổi được (thêm, sửa, xóa phần tử)", "max_points": 3, "main_keywords": ["sửa", "thay đổi", "thêm", "xóa", "mutable", "append"], "sub_keywords": ["list"]},
         {"text": "Tuple không thay đổi được sau khi tạo", "max_points": 3, "main_keywords": ["không thay đổi", "không sửa", "không đổi", "immutable", "bất biến"], "sub_keywords": ["tuple"]},
-        {"text": "Cú pháp: list dùng [ ], tuple dùng ( )", "max_points": 2, "main_keywords": ["ngoặc tròn", "()", "( )"], "sub_keywords": ["ngoặc vuông", "[]", "[ ]"]},
+        {"text": "List viết trong ngoặc vuông [ ]", "max_points": 1, "main_keywords": ["ngoặc vuông", "[]", "[ ]"], "sub_keywords": ["list"]},
+        {"text": "Tuple viết trong ngoặc tròn ( )", "max_points": 1, "main_keywords": ["ngoặc tròn", "()", "( )"], "sub_keywords": ["tuple"]},
         {"text": "Ví dụ hợp lý khi dùng tuple (tọa độ, ngày tháng, khóa của dict…)", "max_points": 2, "main_keywords": ["tọa độ", "ngày tháng", "cố định", "hằng", "khóa", "key"], "sub_keywords": []}
       ],
       "explanation": "Đáp án mẫu: List thay đổi được (append, sửa, xóa), tuple không thay đổi được sau khi tạo. List viết trong ngoặc vuông [1, 2], tuple trong ngoặc tròn (1, 2). Dùng tuple cho dữ liệu cố định như tọa độ (x, y) hoặc làm khóa của dict."
@@ -716,9 +717,9 @@
       "code": "312-PY-TL-04", "skill": "PY", "chunk": "312-PY-K02", "type": "essay", "level": "easy",
       "content": "Giải thích sự khác nhau giữa phép chia / và phép chia // trong Python, cho ví dụ.",
       "rubric": [
-        {"text": "/ là chia thường, kết quả luôn là số thực (float)", "max_points": 4, "main_keywords": ["số thực", "float"], "sub_keywords": []},
-        {"text": "// là chia lấy phần nguyên", "max_points": 4, "main_keywords": ["phần nguyên", "làm tròn xuống"], "sub_keywords": []},
-        {"text": "Có ví dụ đúng (vd 7 / 2 = 3.5, 7 // 2 = 3)", "max_points": 2, "main_keywords": ["7 / 2", "7 // 2", "= 3.5", "= 3"], "sub_keywords": []}
+        {"text": "/ là chia thường, kết quả luôn là số thực (float)", "max_points": 4, "main_keywords": ["số thực", "float", "thập phân", "số lẻ", "chia bình thường"], "sub_keywords": []},
+        {"text": "// là chia lấy phần nguyên", "max_points": 4, "main_keywords": ["phần nguyên", "làm tròn xuống", "chia nguyên", "lấy nguyên", "bỏ phần dư", "bỏ phần lẻ", "bỏ phần thập phân"], "sub_keywords": []},
+        {"text": "Có ví dụ đúng (vd 7 / 2 = 3.5, 7 // 2 = 3)", "max_points": 2, "main_keywords": ["7 / 2", "7 // 2", "= 3.5", "= 3", "ví dụ", "vd"], "sub_keywords": []}
       ],
       "explanation": "Đáp án mẫu: Phép chia / cho kết quả là số thực float, ví dụ 7 / 2 = 3.5. Phép chia // chỉ lấy phần nguyên của thương, ví dụ 7 // 2 = 3."
     },
@@ -756,9 +757,9 @@
       "code": "312-CS-TL-03", "skill": "CS", "chunk": "312-CS-K03", "type": "essay", "level": "easy",
       "content": "Lỗi cú pháp khác lỗi logic như thế nào? Cho mỗi loại một ví dụ.",
       "rubric": [
-        {"text": "Lỗi cú pháp: viết sai quy tắc của ngôn ngữ, chương trình không chạy được", "max_points": 4, "main_keywords": ["sai quy tắc", "không chạy", "syntaxerror"], "sub_keywords": ["cú pháp"]},
-        {"text": "Lỗi logic: chương trình vẫn chạy, không báo lỗi nhưng kết quả sai", "max_points": 4, "main_keywords": ["kết quả sai", "sai kết quả", "vẫn chạy", "không báo lỗi"], "sub_keywords": ["logic"]},
-        {"text": "Có ví dụ hợp lý (thiếu dấu hai chấm; viết nhầm điều kiện…)", "max_points": 2, "main_keywords": ["dấu hai chấm", "thiếu dấu", "nhầm điều kiện", "sai điều kiện", "viết nhầm", "nhầm dấu"], "sub_keywords": []}
+        {"text": "Lỗi cú pháp: viết sai quy tắc của ngôn ngữ, chương trình không chạy được", "max_points": 4, "main_keywords": ["sai quy tắc", "không chạy", "syntaxerror", "viết sai", "không cho chạy", "báo lỗi ngay", "không chạy được"], "sub_keywords": ["cú pháp"]},
+        {"text": "Lỗi logic: chương trình vẫn chạy, không báo lỗi nhưng kết quả sai", "max_points": 4, "main_keywords": ["kết quả sai", "sai kết quả", "vẫn chạy", "không báo lỗi", "không đúng", "không như mong muốn", "chạy được", "chạy xong", "chạy bình thường"], "sub_keywords": ["logic"]},
+        {"text": "Có ví dụ hợp lý (thiếu dấu hai chấm; viết nhầm điều kiện…)", "max_points": 2, "main_keywords": ["dấu hai chấm", "thiếu dấu", "nhầm điều kiện", "sai điều kiện", "viết nhầm", "nhầm dấu", "quên dấu", "thiếu ngoặc", "quên ngoặc", "thay vì", "nhầm"], "sub_keywords": []}
       ],
       "explanation": "Đáp án mẫu: Lỗi cú pháp là viết sai quy tắc của ngôn ngữ nên chương trình không chạy được, ví dụ thiếu dấu hai chấm sau if. Lỗi logic là chương trình vẫn chạy, không báo lỗi nhưng kết quả sai, ví dụ viết nhầm điều kiện."
     },
@@ -851,7 +852,7 @@
       "code": "312-VAR-TL-05", "skill": "VAR", "chunk": "312-VAR-K03", "type": "essay", "level": "easy",
       "content": "None là gì trong Python? Nó khác gì với một biến chưa được gán giá trị?",
       "rubric": [
-        {"text": "None là giá trị đặc biệt biểu thị không có giá trị", "max_points": 5, "main_keywords": ["không có giá trị", "rỗng", "trống"], "sub_keywords": ["none"]},
+        {"text": "None là giá trị đặc biệt biểu thị không có giá trị", "max_points": 5, "main_keywords": ["không có giá trị"], "sub_keywords": ["none"]},
         {"text": "Dùng biến chưa gán sẽ báo lỗi NameError", "max_points": 5, "main_keywords": ["nameerror", "báo lỗi"], "sub_keywords": ["chưa gán", "chưa được gán", "chưa tồn tại"]}
       ],
       "explanation": "Đáp án mẫu: None là giá trị đặc biệt biểu thị không có giá trị, ví dụ x = None. Còn biến chưa được gán thì khi dùng sẽ báo lỗi NameError."
@@ -893,7 +894,7 @@
       "rubric": [
         {"text": "Điều kiện if n % 2 == 0", "max_points": 4, "main_keywords": ["% 2 == 0"], "sub_keywords": []},
         {"text": "In 'Chẵn' khi điều kiện đúng", "max_points": 3, "main_keywords": ["chẵn"], "sub_keywords": ["print"]},
-        {"text": "else in 'Lẻ'", "max_points": 3, "main_keywords": ["lẻ"], "sub_keywords": ["else"]}
+        {"text": "else in 'Lẻ'", "max_points": 3, "main_keywords": ["lẻ"], "sub_keywords": ["else", "print"]}
       ],
       "explanation": "Đáp án mẫu: Dùng if n % 2 == 0: print('Chẵn') vì số chia hết cho 2 là số chẵn. Ngược lại dùng else: print('Lẻ')."
     },

@@ -22,6 +22,7 @@ from app.models.learning_path import (
 # Model ôn tập của Tuấn
 from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_question import ReviewQuestion
+from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.review_attempt import ReviewAttempt, ReviewAnswer
 
 # Model chatbot Tutor của Tâm
@@ -52,6 +53,7 @@ __all__ = [
     # Ôn tập
     "KnowledgeChunk",
     "ReviewQuestion",
+    "ReviewQuestionMeta",
     "ReviewAttempt",
     "ReviewAnswer",
 

@@ -1,5 +1,6 @@
 """Chấm tự luận theo TỪ KHÓA — dùng cho MockAI và làm dự phòng khi AI thật lỗi
-(A10 — chốt 09/11, cách a; sửa theo checklist 10/11: L4, L7, L8, L10, L13) (module 09 · Tuấn).
+(A10 — chốt 09/11, cách a; sửa theo checklist 10/11: L4, L7, L8, L10, L13; 12/11: phủ định, bỏ luật câu ≥ 3 từ)
+(module 09 · Tuấn).
 
 Mỗi ý barem có main_keywords (nội dung ý) và sub_keywords (chủ thể của ý):
   - full    (đủ điểm ý): có từ khóa chính NẰM CÙNG CÂU với một từ khóa phụ
@@ -14,6 +15,8 @@ So khớp (L10, L4 — chốt 10/11):
     Câu gõ HOÀN TOÀN không dấu → so bản bỏ dấu ("dieu kien" khớp "điều kiện").
   - Từ khóa chữ/số khớp NGUYÊN TỪ ("if" không khớp trong "elif", "for" không khớp "format");
     từ khóa bắt đầu / kết thúc bằng ký hiệu ("+=", "int(") khớp chuỗi con ở phía đó.
+  - Phủ định (12/11): từ khóa CHÍNH đứng ngay sau "chưa / không / chẳng" thì KHÔNG tính ("for khi chưa biết trước"
+    không khớp "biết trước"). Từ khóa tự mang phủ định ("không thay đổi") vẫn khớp bình thường. Chủ thể không xét.
 
 Chống lách:
   - Chép đề (L7): câu trong bài làm có ≥ COPY_RATIO cụm 3 từ liên tiếp nằm trong đề → bỏ qua câu đó.
@@ -21,13 +24,24 @@ Chống lách:
     ≥ LIST_MIN_ITEMS ý khác nhau (nhồi nhiều ý vào một chuỗi từ khóa) → không được "full".
   - Liệt kê trên CẢ BÀI: tính mật độ từ khóa trên mọi câu không chép đề; > ANSWER_LIST_DENSITY → cả bài tối đa
     "partial" (bắt kiểu chia chuỗi từ khóa thành nhiều câu ngắn, mỗi câu một ý — luật theo câu không bắt được).
-  - Bài quá ngắn (< MIN_ANSWER_WORDS từ, không tính câu chép đề) hoặc câu khớp < MIN_SENTENCE_WORDS từ
-    → tối đa "partial".
+  - Bài quá ngắn (< MIN_ANSWER_WORDS từ, không tính câu chép đề) → tối đa "partial".
+    (12/11: BỎ luật "câu khớp phải ≥ 3 từ" — trừ oan bài viết bằng code `tong = 0` và câu ngắn "Lỗi logic.";
+    các luật chống liệt kê / chép đề / mật độ cả bài ở trên đã đủ chặn bài nhồi từ khóa.)
 Bằng chứng (evidence) = câu gốc trong bài làm đã khớp.
 Hạn chế (ghi rõ khi bảo vệ): chỉ dò từ khóa, không hiểu nghĩa — giai đoạn 2 AI thật chấm theo ngữ nghĩa.
   Ví dụ đã biết (chốt 11/11 — chấp nhận, KHÔNG thêm luật chặn): viết mỗi ý thành một câu cực ngắn kèm chữ đệm,
   vd "cả hai and là. ít nhất một or là. đảo not là." vẫn được 10/10 (mật độ từ khóa < ANSWER_LIST_DENSITY nhờ chữ
   đệm). Chặn thêm chỉ thành cuộc đua lách – chặn; AI thật (bước 5.1) chấm theo nghĩa sẽ xử lý.
+
+Tách vế (QT12 — chốt 12/11): "full" xét theo VẾ, không theo cả câu, để câu ghép đảo chủ thể không được trọn điểm
+(vd "break bỏ qua … còn continue thoát …", "while … biết trước số lần, for … không biết").
+  - Ranh giới CỨNG (sang ý khác): `. ! ? ;` và từ đối lập "but", "whereas", "however", "nhưng", "còn".
+    KHÔNG tách ở "and" / "và" (cùng một ý: "checks a condition and runs the block") và "while" (từ khóa Python).
+  - Dấu phẩy là ranh giới MỀM: từ khóa chính + chủ thể ở cùng đoạn, hoặc ở 2 đoạn LIỀN KỀ trong cùng vế
+    ("if, elif and else are used to …").
+  - Luật chặn mượn vế: chỉ mượn chủ thể ở đoạn bên cạnh khi đoạn chứa từ khóa chính KHÔNG có chủ thể của ý khác.
+  - Không cắt chữ: chỉ đánh dấu vị trí ranh giới; mỗi lần khớp thuộc đoạn chứa VỊ TRÍ ĐẦU của nó → từ khóa có dấu
+    phẩy ("a, b = b, a", "6,5") hay chứa "còn" ("còn lại") vẫn khớp. Dấu phẩy giữa hai chữ số ("6,5") không tính.
 """
 
 import re
@@ -35,7 +49,6 @@ import unicodedata
 from dataclasses import dataclass, field
 
 MIN_ANSWER_WORDS = 6
-MIN_SENTENCE_WORDS = 3
 COPY_NGRAM = 3  # độ dài cụm từ dùng để phát hiện chép đề
 COPY_RATIO = 0.7  # L7: ≥ 70% cụm 3 từ của câu nằm trong đề → câu chép đề
 LIST_MIN_WORDS = 5  # L8: chỉ xét liệt kê với câu từ 5 từ (câu ngắn đã có luật riêng)
@@ -108,6 +121,99 @@ def _pattern(sentence: Sentence, keyword: str) -> re.Pattern | None:
     return re.compile(left + re.escape(kw) + right)
 
 
+# Phủ định ngay trước từ khóa (có dấu + không dấu) — 12/11
+_NEGATION_BEFORE = re.compile(r"(?:^|[\s,(])(?:chưa|không|chẳng|ko|chua|khong|chang)\s+$")
+_NEGATIVE_KEYWORD = re.compile(r"(?:chưa|không|chẳng|ko|chua|khong|chang)(?!\w)")
+
+
+def _has_affirmed(sentence: Sentence, keywords: list[str]) -> bool:
+    """Như _has nhưng bỏ lần khớp đứng ngay sau "chưa / không / chẳng" (dùng cho từ khóa CHÍNH)."""
+    for k in keywords:
+        p = _pattern(sentence, k)
+        if p is None:
+            continue
+        if _NEGATIVE_KEYWORD.match(fold(k)):  # "không thay đổi" tự mang phủ định → khớp bình thường
+            if p.search(sentence.text):
+                return True
+            continue
+        if any(not _NEGATION_BEFORE.search(sentence.text[: m.start()]) for m in p.finditer(sentence.text)):
+            return True
+    return False
+
+
+def _affirmed_starts(sentence: Sentence, keywords: list[str]) -> list[int]:
+    """Vị trí đầu các lần khớp từ khóa CHÍNH, bỏ lần khớp đứng ngay sau "chưa / không / chẳng" (như _has_affirmed)."""
+    starts = []
+    for k in keywords:
+        p = _pattern(sentence, k)
+        if p is None:
+            continue
+        negative_kw = bool(_NEGATIVE_KEYWORD.match(fold(k)))
+        for m in p.finditer(sentence.text):
+            if negative_kw or not _NEGATION_BEFORE.search(sentence.text[: m.start()]):
+                starts.append(m.start())
+    return starts
+
+
+def _starts(sentence: Sentence, keywords: list[str]) -> list[int]:
+    """Vị trí đầu mọi lần khớp (dùng cho chủ thể — không xét phủ định)."""
+    starts = []
+    for k in keywords:
+        p = _pattern(sentence, k)
+        if p is not None:
+            starts.extend(m.start() for m in p.finditer(sentence.text))
+    return starts
+
+
+# ─────────────── Tách vế (QT12 · 12/11) ───────────────
+# Cứng: ";" + từ đối lập (có dấu và không dấu; "con" không dấu quá phổ biến nên không dùng). Mềm: "," (trừ "6,5").
+_HARD_BOUNDARY = re.compile(r";|(?<!\w)(?:but|whereas|however|nhưng|nhung|còn)(?!\w)")
+_SOFT_BOUNDARY = re.compile(r"(?<!\d),|,(?!\d)")
+
+
+@dataclass
+class Segments:
+    cuts: list[tuple[int, bool]]  # (vị trí bắt đầu đoạn mới, là ranh giới cứng?) — đã sắp xếp
+
+    @classmethod
+    def build(cls, text: str) -> "Segments":
+        cuts = [(m.start(), True) for m in _HARD_BOUNDARY.finditer(text)]
+        cuts += [(m.start(), False) for m in _SOFT_BOUNDARY.finditer(text)]
+        return cls(sorted(cuts))
+
+    def index(self, pos: int) -> int:
+        """Đoạn chứa vị trí pos (lần khớp nằm ĐÚNG ở từ ranh giới, vd "còn lại", thuộc đoạn phía sau)."""
+        return sum(1 for c, _ in self.cuts if c <= pos)
+
+    def same_clause(self, a: int, b: int) -> bool:
+        """Hai đoạn liền kề a < b có cùng vế không (ranh giới giữa chúng là dấu phẩy, không phải ranh giới cứng)."""
+        lo, hi = min(a, b), max(a, b)
+        return hi == lo + 1 and not self.cuts[lo][1]
+
+
+def _full_in_sentence(sentence: Sentence, main: list[str], sub: list[str], other_sub: list[str]) -> bool:
+    """Ý "đủ" trong câu này: từ khóa chính + chủ thể cùng đoạn, hoặc chủ thể ở đoạn liền kề cùng vế khi đoạn chứa
+    từ khóa chính không có chủ thể của ý khác (luật chặn mượn vế)."""
+    main_segs = set()
+    segs = Segments.build(sentence.text)
+    for pos in _affirmed_starts(sentence, main):
+        main_segs.add(segs.index(pos))
+    if not main_segs:
+        return False
+    if not sub:
+        return True
+    sub_segs = {segs.index(pos) for pos in _starts(sentence, sub)}
+    other_segs = {segs.index(pos) for pos in _starts(sentence, other_sub)}
+    for m in main_segs:
+        if m in sub_segs:
+            return True
+        if m in other_segs:
+            continue  # đoạn này đang nói về chủ thể của ý khác → không mượn chủ thể bên cạnh
+        if any(n in sub_segs and segs.same_clause(m, n) for n in (m - 1, m + 1)):
+            return True
+    return False
+
+
 def _has(sentence: Sentence, keywords: list[str]) -> bool:
     return any((p := _pattern(sentence, k)) is not None and p.search(sentence.text) for k in keywords)
 
@@ -163,17 +269,19 @@ def prepare(answer: str | None, rubric: list[dict], question: str | None = None)
     return sentences
 
 
-def grade_item(sentences: list[Sentence], item: dict, *, cap_partial: bool) -> dict:
-    """Kết quả MỘT ý: {"result", "points", "evidence"}."""
+def grade_item(
+    sentences: list[Sentence], item: dict, *, cap_partial: bool, other_sub: list[str] | None = None
+) -> dict:
+    """Kết quả MỘT ý: {"result", "points", "evidence"}. other_sub: chủ thể của các ý KHÁC (luật chặn mượn vế)."""
     main = item.get("main_keywords") or []
     sub = item.get("sub_keywords") or []
     max_points = float(item["max_points"])
 
     usable = [s for s in sentences if not s.copied]
-    main_hits = [s for s in usable if _has(s, main)]
+    main_hits = [s for s in usable if _has_affirmed(s, main)]
     with_subject = [s for s in main_hits if not sub or _has(s, sub)]
     full_hits = [
-        s for s in with_subject if len(s.tokens) >= MIN_SENTENCE_WORDS and not s.listing
+        s for s in with_subject if not s.listing and _full_in_sentence(s, main, sub, other_sub or [])
     ]
 
     if full_hits and not cap_partial:
@@ -197,4 +305,15 @@ def grade_essay(rubric: list[dict], answer: str | None, question: str | None = N
     total = sum(t for _, t in counts)
     answer_density = sum(h for h, _ in counts) / total if total else 0.0
     cap_partial = own_words < MIN_ANSWER_WORDS or answer_density > ANSWER_LIST_DENSITY
-    return [grade_item(sentences, item, cap_partial=cap_partial) for item in rubric]
+    results = []
+    for item in rubric:
+        own_sub = {fold(k) for k in item.get("sub_keywords") or []}
+        other_sub = [
+            k
+            for other in rubric
+            if other is not item
+            for k in other.get("sub_keywords") or []
+            if fold(k) not in own_sub
+        ]
+        results.append(grade_item(sentences, item, cap_partial=cap_partial, other_sub=other_sub))
+    return results

@@ -197,6 +197,18 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
   - **`tests/conftest.py`** thêm fixture tự động: test **không bao giờ gửi email thật / gọi Gemini thật** (SMTP_HOST rỗng, AI_MODE=mock) — tránh Gmail bị khóa khi chạy hàng trăm test.
   - Test `tests/test_welcome_email.py` (4); toàn bộ **534 passed**.
   - ⚠️ Script kiểm trên Chrome (`k_tests.mjs`) đăng ký tài khoản tạm `@example.com` → server thật sẽ gửi thư chào mừng tới địa chỉ không tồn tại → thư trả về (bounce) hộp thư gửi. Không hại, nhưng nên biết.
+- [ ] **9.14 Ngôn ngữ bản dịch (trang Giao diện)** — ý tưởng Tuấn 12/11 · **Tuấn chốt QT15a–d = A (12/11)**, chưa code
+  - Lựa chọn trong trang Giao diện: "Ngôn ngữ bản dịch". Câu mô tả: *"Mô tả khóa học và lời giải thích sau khi nộp bài ôn tập có nút dịch sang ngôn ngữ này. Đề ôn tập và bài làm luôn bằng tiếng Anh. Tên kỹ năng giữ nguyên."*
+  - **QT15a-A — Phạm vi**: dịch **mô tả khóa học** + **lời giải thích ở trang kết quả ôn tập (sau khi nộp)**. Không dịch: tên kỹ năng, đề + bài làm khi đang ôn tập.
+    - *Tùy chọn làm sau nếu còn thời gian (QT15a-C):* gắn cùng nút dịch vào **đề bài ở trang kết quả** — rẻ (chỉ thêm nút), không ảnh hưởng công bằng vì bài đã nộp.
+  - **QT15b-A — Dịch khi bấm**: nút "Dịch" nhỏ cạnh từng đoạn, bấm lại xem bản gốc; không tự dịch cả trang.
+  - **QT15c-A — Ngôn ngữ**: Tiếng Việt · Không dịch (giữ tiếng Anh).
+  - **QT15d-A — Kỹ thuật:**
+    - Dịch bằng Gemini (dùng chung khóa). Bảng mới `content_translations`, **khóa = sha256(nội dung gốc chuẩn hóa) + ngôn ngữ + phiên bản bảng thuật ngữ** → nội dung đổi (admin sửa mô tả, phiên bản câu mới) hoặc bảng thuật ngữ đổi thì bản dịch cũ tự hết hiệu lực; cùng nội dung chỉ dịch 1 lần cho mọi người.
+    - **Code và từ khóa Python trong code luôn giữ nguyên văn** (thay bằng ký hiệu giữ chỗ `⟦0⟧`… trước khi gửi, nhận về kiểm đủ ký hiệu rồi trả lại; thiếu → bỏ bản dịch, hiện bản gốc + "Chưa dịch được").
+    - **Tên kỹ năng chỉ giữ chỗ khi đứng riêng** (chip, tiêu đề); nằm trong câu văn thì dựa vào **bảng thuật ngữ trong prompt** — vì nhiều tên kỹ năng là từ thường ("Communication", "Leadership"), giữ chỗ cứng sẽ làm câu dịch lủng củng.
+    - Chia việc: Tuấn làm API dịch + component `<TranslateButton>` dùng chung + nút ở trang kết quả ôn tập; Khôi gắn nút vào trang chi tiết khóa học. Lựa chọn ngôn ngữ lưu như các cài đặt Giao diện khác (trình duyệt trước, đồng bộ tài khoản sau).
+    - Gemini lỗi → giữ bản gốc, báo "Chưa dịch được, thử lại sau"; không làm hỏng trang.
 - [ ] **9.7 Tuấn xem lại — đã đủ ý chưa?** (Claude liệt kê điểm có thể bổ sung)
   - [ ] Ai gửi 3 loại email ở 9.8 và khi nào (nhắc ôn tập cần chốt quy tắc "đến hạn" — 5.6 module 09).
   - [ ] Trang **"Xem tất cả thông báo"** riêng (`/me/notifications`) — hiện chỉ có khung trên chuông, xem được 20 thông báo mới nhất mỗi tab.

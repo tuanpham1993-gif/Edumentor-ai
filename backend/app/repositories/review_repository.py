@@ -11,6 +11,7 @@ from app.models.course_skill import CourseSkill
 from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_attempt import ReviewAnswer, ReviewAttempt
 from app.models.review_question import ReviewQuestion
+from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.skill import Skills
 
 # ─────────────── Khóa học, kỹ năng (chỉ đọc) ───────────────
@@ -175,3 +176,37 @@ def list_history(
         .limit(limit)
     ).all()
     return [(attempt, title) for attempt, title in rows], total
+
+
+# ─────────────── Quản trị ngân hàng câu hỏi (GĐ7 · 13/11) ───────────────
+
+
+def get_question(db: Session, question_id: int, *, for_update: bool = False) -> ReviewQuestion | None:
+    stmt = select(ReviewQuestion).where(ReviewQuestion.question_id == question_id)
+    if for_update:
+        stmt = stmt.with_for_update().execution_options(populate_existing=True)
+    return db.scalar(stmt)
+
+
+def get_question_by_code(db: Session, code: str) -> ReviewQuestion | None:
+    return db.scalar(select(ReviewQuestion).where(ReviewQuestion.code == code))
+
+
+def used_count(db: Session, question_id: int) -> int:
+    """Số bài làm (lượt) đã có câu này — > 0 thì sửa nội dung phải tạo phiên bản mới."""
+    return db.scalar(select(func.count()).select_from(ReviewAnswer).where(ReviewAnswer.question_id == question_id))
+
+
+def get_meta(db: Session, question_id: int) -> ReviewQuestionMeta | None:
+    return db.get(ReviewQuestionMeta, question_id)
+
+
+def family_metas(db: Session, family_id: int) -> list[ReviewQuestionMeta]:
+    """Mọi phiên bản của một họ câu hỏi, mới nhất trước."""
+    return list(
+        db.scalars(
+            select(ReviewQuestionMeta)
+            .where(ReviewQuestionMeta.family_id == family_id)
+            .order_by(ReviewQuestionMeta.version.desc())
+        )
+    )

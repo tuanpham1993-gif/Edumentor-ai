@@ -3,9 +3,13 @@
 Chạy (trong thư mục backend):
     python -m scripts.seed_review                                   # mặc định data/review/course_312.json
     python -m scripts.seed_review --file data/review/course_37.json
+    python -m scripts.seed_review --apply-changes                   # áp thay đổi của file vào câu ĐÃ có
 
 - KIỂM TRA TRƯỚC, GHI SAU: dữ liệu sai ở đâu → in TẤT CẢ lỗi, không ghi gì vào DB.
-- Chạy lại nhiều lần an toàn: tìm theo `code` → có rồi thì CẬP NHẬT, chưa có thì THÊM (không tạo bản trùng).
+- QT4 (chốt 12/11): DATABASE là nơi lưu chính (admin sửa trên trang quản trị). Seed mặc định CHỈ THÊM câu chưa có
+  (tìm theo `code`); câu đã có mà nội dung khác file → chỉ BÁO, KHÔNG ghi đè (tránh xóa mất phần admin đã sửa).
+  `--apply-changes`: áp thay đổi của file qua review_bank_service.update_question → câu đã có trong bài làm thì tạo
+  PHIÊN BẢN MỚI (bài cũ giữ bản cũ — tránh lỗi 11/11 sửa đè đáp án làm lịch sử sai).
 - Đoạn tri thức đổi nội dung → xóa embedding cũ (phải chạy lại scripts/build_embeddings.py).
 - Câu hỏi đang tắt (is_active=false) giữ nguyên trạng thái tắt — seed không tự bật lại.
 
@@ -27,6 +31,7 @@ from app.core.database import SessionLocal, create_tables
 from app.models.course_skill import CourseSkill
 from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_question import ReviewQuestion
+from app.services import review_bank_service
 
 DEFAULT_FILE = Path(__file__).resolve().parents[1] / "data" / "review" / "course_312.json"
 
@@ -96,10 +101,22 @@ def check_against_db(db: Session, data: dict) -> list[str]:
     ]
 
 
-def seed_bank(db: Session, data: dict) -> dict:
-    """Ghi vào DB (chỉ flush — main() commit). Gọi SAU khi validate_bank + check_against_db không lỗi."""
+def seed_bank(db: Session, data: dict, *, apply_changes: bool = False) -> dict:
+    """Ghi vào DB (chỉ flush — main() commit). Gọi SAU khi validate_bank + check_against_db không lỗi.
+
+    Câu hỏi (QT4): chưa có → thêm (phiên bản 1); có rồi, giống file → bỏ qua; khác file → chỉ ghi mã vào
+    `questions_differ` (không đè) trừ khi apply_changes=True (sửa tại chỗ / tạo phiên bản mới nếu đã có bài làm).
+    """
     skills = data["skills"]
-    counts = {"chunks_added": 0, "chunks_updated": 0, "questions_added": 0, "questions_updated": 0}
+    counts = {
+        "chunks_added": 0,
+        "chunks_updated": 0,
+        "questions_added": 0,
+        "questions_unchanged": 0,
+        "questions_differ": [],
+        "questions_updated": 0,
+        "questions_versioned": 0,
+    }
 
     chunk_ids = {}
     for c in data["chunks"]:
@@ -119,22 +136,31 @@ def seed_bank(db: Session, data: dict) -> dict:
         chunk_ids[c["code"]] = row.chunk_id
 
     for q in data["questions"]:
+        wanted = {
+            "skill_id": skills[q["skill"]],
+            "chunk_id": chunk_ids.get(q.get("chunk")),
+            "level": q["level"],
+            "content": q["content"],
+            "options": q.get("options"),
+            "correct_index": q.get("correct_index"),
+            "rubric": q.get("rubric"),
+            "explanation": q.get("explanation"),
+        }
         row = db.query(ReviewQuestion).filter_by(code=q["code"]).one_or_none()
         if row is None:
-            row = ReviewQuestion(code=q["code"], source="bank")
-            db.add(row)
+            review_bank_service.create_question(db, {"code": q["code"], "type": q["type"], **wanted})
             counts["questions_added"] += 1
+            continue
+        differs = sorted(f for f, v in wanted.items() if getattr(row, f) != v)
+        if not differs:
+            counts["questions_unchanged"] += 1
+        elif not apply_changes:
+            counts["questions_differ"].append(q["code"])  # QT4: chỉ báo, không ghi đè
         else:
-            counts["questions_updated"] += 1
-        row.skill_id = skills[q["skill"]]
-        row.chunk_id = chunk_ids.get(q.get("chunk"))
-        row.type = q["type"]
-        row.level = q["level"]
-        row.content = q["content"]
-        row.options = q.get("options")
-        row.correct_index = q.get("correct_index")
-        row.rubric = q.get("rubric")
-        row.explanation = q.get("explanation")
+            result = review_bank_service.update_question(
+                db, row, {f: wanted[f] for f in differs}, note=f"seed --apply-changes: {', '.join(differs)}"
+            )
+            counts["questions_versioned" if result.versioned else "questions_updated"] += 1
     db.flush()
     return counts
 
@@ -142,6 +168,11 @@ def seed_bank(db: Session, data: dict) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Nạp ngân hàng câu hỏi ôn tập từ JSON")
     parser.add_argument("--file", default=str(DEFAULT_FILE))
+    parser.add_argument(
+        "--apply-changes",
+        action="store_true",
+        help="áp thay đổi của file vào câu đã có (câu đã có bài làm → phiên bản mới)",
+    )
     args = parser.parse_args()
 
     data = load_bank(args.file)
@@ -161,7 +192,7 @@ def main() -> int:
             for e in errors:
                 print("-", e)
             return 1
-        counts = seed_bank(db, data)
+        counts = seed_bank(db, data, apply_changes=args.apply_changes)
         db.commit()
     except Exception:
         db.rollback()
@@ -171,9 +202,16 @@ def main() -> int:
 
     print(
         f"Khóa {data['course_id']}: đoạn tri thức +{counts['chunks_added']} / cập nhật "
-        f"{counts['chunks_updated']}; câu hỏi +{counts['questions_added']} / cập nhật "
-        f"{counts['questions_updated']}"
+        f"{counts['chunks_updated']}; câu hỏi +{counts['questions_added']} / giữ nguyên "
+        f"{counts['questions_unchanged']} / sửa tại chỗ {counts['questions_updated']} / "
+        f"phiên bản mới {counts['questions_versioned']}"
     )
+    if counts["questions_differ"]:
+        print(
+            f"{len(counts['questions_differ'])} câu khác file nhưng KHÔNG ghi đè (database là nơi lưu chính — QT4): "
+            + ", ".join(counts["questions_differ"])
+        )
+        print("Muốn áp thay đổi của file: chạy lại với --apply-changes (câu đã có bài làm → phiên bản mới).")
     return 0
 
 
