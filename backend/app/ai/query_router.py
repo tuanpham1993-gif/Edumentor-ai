@@ -86,9 +86,7 @@ GENERIC_ENTITIES = {
 # ==========================================
 
 def remove_accents(text: str) -> str:
-    """
-    Loại bỏ dấu tiếng Việt.
-    """
+    """Loại bỏ dấu tiếng Việt."""
 
     if not isinstance(text, str):
         return ""
@@ -105,9 +103,7 @@ def remove_accents(text: str) -> str:
 
 
 def normalize_text(text: str) -> str:
-    """
-    Chuẩn hóa văn bản để so sánh từ khóa.
-    """
+    """Chuẩn hóa văn bản để so sánh từ khóa."""
 
     if not isinstance(text, str):
         return ""
@@ -120,9 +116,7 @@ def normalize_text(text: str) -> str:
 
 
 def extract_json_object(text: str) -> dict:
-    """
-    Đọc JSON Gemini trả về.
-    """
+    """Đọc JSON Gemini trả về."""
 
     if not isinstance(text, str) or not text.strip():
         raise ValueError("AI không trả về nội dung.")
@@ -136,11 +130,7 @@ def extract_json_object(text: str) -> dict:
         flags=re.IGNORECASE,
     )
 
-    text = re.sub(
-        r"\s*```$",
-        "",
-        text,
-    )
+    text = re.sub(r"\s*```$", "", text)
 
     try:
         result = json.loads(text)
@@ -160,9 +150,7 @@ def extract_json_object(text: str) -> dict:
         result = json.loads(match.group(0))
 
     except json.JSONDecodeError as error:
-        raise ValueError(
-            f"JSON AI không hợp lệ: {error}"
-        )
+        raise ValueError(f"JSON AI không hợp lệ: {error}")
 
     if not isinstance(result, dict):
         raise ValueError("Kết quả AI phải là JSON object.")
@@ -175,9 +163,7 @@ def extract_json_object(text: str) -> dict:
 # ==========================================
 
 def detect_operation_type(user_message: str) -> str:
-    """
-    Phân biệt yêu cầu lấy link và hướng dẫn thao tác.
-    """
+    """Phân biệt yêu cầu lấy link và hướng dẫn thao tác."""
 
     text = normalize_text(user_message)
 
@@ -231,30 +217,24 @@ def clean_entity_name(entity_name: str) -> str:
     Ví dụ:
     - liên quan đến Python được không -> Python
     - khóa học Python nhé -> Python
+    - SQL bạn có thể gợi ý skill -> SQL
     - của riêng mình -> rỗng
     """
 
     if not isinstance(entity_name, str):
         return ""
 
-    name = entity_name.strip()
+    name = normalize_text(entity_name)
 
-    if not name:
-        return ""
-
-    # Chuẩn hóa để làm sạch từ khóa.
-    name = normalize_text(name)
-
-    # Loại bỏ dấu câu ở hai đầu.
     name = name.strip(" \t\n.,!?;:\"'`")
 
     # Các cụm thừa ở đầu tên.
     leading_phrases = [
-        "cac ",
-        "nhung ",
-        "mot so ",
         "danh sach cac ",
         "danh sach nhung ",
+        "mot so ",
+        "cac ",
+        "nhung ",
         "lien quan den ",
         "lien quan toi ",
         "co chu de ",
@@ -265,10 +245,30 @@ def clean_entity_name(entity_name: str) -> str:
         "cho ",
     ]
 
+    # Các cụm mở đầu một yêu cầu khác.
+    # Nếu xuất hiện ở giữa Entity thì cắt phần phía sau.
+    stop_phrases = [
+        " ban co the goi y",
+        " ban hay goi y",
+        " hay goi y",
+        " goi y them",
+        " ngoai ra",
+        " ben canh do",
+        " dong thoi",
+        " va co khoa hoc nao",
+        " va co nhung khoa hoc nao",
+        " va khoa hoc nao",
+        " co khoa hoc nao",
+        " neu chua co",
+        " neu khong co",
+        " trong he thong",
+        " ngoai he thong",
+    ]
+
     # Các cụm thừa ở cuối tên.
     trailing_phrases = [
-        " duoc khong",
         " co duoc khong",
+        " duoc khong",
         " co khong",
         " hay khong",
         " duoc chu",
@@ -276,8 +276,6 @@ def clean_entity_name(entity_name: str) -> str:
         " giup minh",
         " cho toi",
         " cho minh",
-        " trong he thong",
-        " ngoai he thong",
         " cua rieng minh",
         " cua rieng toi",
         " cua ban than",
@@ -304,17 +302,25 @@ def clean_entity_name(entity_name: str) -> str:
 
         name = name.strip(" \t\n.,!?;:\"'`")
 
+        # Cắt phần yêu cầu khác phía sau Entity.
+        for phrase in stop_phrases:
+            index = name.find(phrase)
+
+            if index > 0:
+                name = name[:index].strip()
+
+        # Xóa cụm thừa ở đầu.
         for phrase in leading_phrases:
             if name.startswith(phrase):
                 name = name[len(phrase):].strip()
 
+        # Xóa cụm thừa ở cuối.
         for phrase in trailing_phrases:
             if name.endswith(phrase):
                 name = name[:-len(phrase)].strip()
 
         changed = name != previous
 
-    # Không nhận các tên chung chung.
     if name in GENERIC_ENTITIES:
         return ""
 
@@ -322,9 +328,7 @@ def clean_entity_name(entity_name: str) -> str:
 
 
 def is_generic_entity(entity_name: str) -> bool:
-    """
-    Kiểm tra Entity có phải cụm chung chung không.
-    """
+    """Kiểm tra Entity có phải cụm chung chung không."""
 
     if not entity_name:
         return True
@@ -335,9 +339,7 @@ def is_generic_entity(entity_name: str) -> bool:
 
 
 def normalize_entity_name(entity_name: str) -> str:
-    """
-    Chuẩn hóa tên công nghệ phổ biến.
-    """
+    """Chuẩn hóa tên công nghệ phổ biến."""
 
     if not entity_name:
         return ""
@@ -377,10 +379,7 @@ def normalize_entity_name(entity_name: str) -> str:
 
     normalized = normalize_text(entity_name)
 
-    return known_names.get(
-        normalized,
-        entity_name.strip(),
-    )
+    return known_names.get(normalized, entity_name.strip())
 
 
 # ==========================================
@@ -541,9 +540,7 @@ def extract_skill_review_entity(user_message: str) -> dict:
 # ==========================================
 
 def extract_learning_path_entity(user_message: str) -> dict:
-    """
-    Trích xuất chủ đề người dùng muốn học.
-    """
+    """Trích xuất chủ đề người dùng muốn học."""
 
     text = normalize_text(user_message)
 
@@ -670,41 +667,34 @@ def extract_course_search_entity(user_message: str) -> dict:
 def extract_course_enrollment_entity(user_message: str) -> dict:
     """
     Trích xuất tên Course hoặc chủ đề Course cần tìm link.
-
-    Ví dụ:
-    - Link tham gia khóa học Python -> Python
-    - Link khóa học liên quan đến Python -> Python
-    - Link đăng ký khóa học SQL -> SQL
-    - Link tham gia khóa học Analytical Solutions -> Analytical Solutions
     """
 
     text = normalize_text(user_message)
 
     patterns = [
-        # Ưu tiên lấy chủ đề sau "liên quan đến".
-        # Ví dụ: khóa học liên quan đến Python được không
+        # Khóa học liên quan đến Python
         r"(?:lien quan den|lien quan toi)"
         r"\s+(.+?)[?.!]*$",
 
-        # Ví dụ: khóa học về Python
+        # Khóa học về Python
         r"(?:khoa hoc|course|courses)"
         r"\s+(?:ve|cua|cho|day|co chu de)\s+"
         r"(.+?)[?.!]*$",
 
-        # Ví dụ: link tham gia khóa học Python
+        # Link tham gia khóa học Python
         r"(?:link|duong dan|url).*?"
         r"(?:tham gia|dang ky|ghi danh|enroll|join)"
         r"\s+(?:vao\s+)?"
         r"(?:khoa hoc|course|courses)"
         r"\s+(.+?)[?.!]*$",
 
-        # Ví dụ: tham gia khóa học Python
+        # Tham gia khóa học Python
         r"(?:tham gia|dang ky|ghi danh|enroll|join)"
         r"\s+(?:vao\s+)?"
         r"(?:khoa hoc|course|courses)"
         r"\s+(.+?)[?.!]*$",
 
-        # Ví dụ: khóa học Python
+        # Khóa học Python
         r"(?:khoa hoc|course|courses)"
         r"\s+(.+?)[?.!]*$",
     ]
@@ -902,10 +892,7 @@ Câu hỏi:
 # ==========================================
 
 def classify_by_rules(user_message: str) -> dict | None:
-    """
-    Phân loại Intent bằng luật.
-    Không gọi Gemini.
-    """
+    """Phân loại Intent bằng luật. Không gọi Gemini."""
 
     text = normalize_text(user_message)
 
@@ -947,35 +934,14 @@ def classify_by_rules(user_message: str) -> dict | None:
 
     has_link_keyword = any(
         keyword in text
-        for keyword in [
-            "link",
-            "duong dan",
-            "url",
-        ]
+        for keyword in ["link", "duong dan", "url"]
     )
 
     has_course_keyword = any(
         keyword in text
-        for keyword in [
-            "khoa hoc",
-            "course",
-            "courses",
-        ]
+        for keyword in ["khoa hoc", "course", "courses"]
     )
 
-    has_enrollment_keyword = any(
-        keyword in text
-        for keyword in [
-            "tham gia",
-            "dang ky",
-            "ghi danh",
-            "enroll",
-            "join",
-        ]
-    )
-
-    # Chỉ cần có link và khóa học là đủ nhận diện
-    # yêu cầu lấy link khóa học.
     if has_link_keyword and has_course_keyword:
 
         entity = extract_course_enrollment_entity(user_message)
@@ -1000,19 +966,12 @@ def classify_by_rules(user_message: str) -> dict | None:
 
     has_learning_path = any(
         keyword in text
-        for keyword in [
-            "lo trinh",
-            "learning path",
-        ]
+        for keyword in ["lo trinh", "learning path"]
     )
 
     has_creation_keyword = any(
         keyword in text
-        for keyword in [
-            "tao",
-            "generate",
-            "create",
-        ]
+        for keyword in ["tao", "generate", "create"]
     )
 
     if (
@@ -1055,12 +1014,7 @@ def classify_by_rules(user_message: str) -> dict | None:
 
         if entity_type == "skill" or any(
             keyword in text
-            for keyword in [
-                "skill",
-                "skills",
-                "ky nang",
-                "kien thuc",
-            ]
+            for keyword in ["skill", "skills", "ky nang", "kien thuc"]
         ):
             entity = extract_skill_review_entity(user_message)
 
@@ -1366,6 +1320,8 @@ QUY TẮC QUAN TRỌNG:
 14. Nếu không có tên cụ thể, entity_name là null.
 15. Không nhầm tên Course với Skill.
 16. Nếu không chắc chắn, chọn general_question.
+17. Chỉ phân loại yêu cầu trong câu được cung cấp.
+18. Không tự thêm yêu cầu khác.
 
 CHỈ TRẢ VỀ JSON HỢP LỆ:
 
@@ -1414,33 +1370,22 @@ def classify_by_llm(user_message: str) -> dict:
 
 
 # ==========================================
-# 16. MAIN QUERY ROUTER
+# 16. SINGLE QUERY ROUTER
 # ==========================================
 
-def route_query(user_message: str) -> dict:
+def _route_single_query(user_message: str) -> dict:
     """
+    Xử lý một yêu cầu đơn lẻ.
+
     Pipeline:
-
-    1. Validate input.
-    2. Rule-based intent classification.
-    3. Gemini classification nếu Rule không nhận diện được.
-    4. Rule-based entity extraction.
-    5. Gemini entity extraction nếu cần.
-    6. Enforce entity type.
-    7. Quyết định retrieval modes.
-    8. Xác định operation type.
-    9. Return kết quả.
+    1. Rule-based intent classification.
+    2. Gemini classification nếu Rule không nhận diện được.
+    3. Rule-based entity extraction.
+    4. Gemini entity extraction nếu cần.
+    5. Enforce entity type.
+    6. Quyết định retrieval modes.
+    7. Xác định operation type.
     """
-
-    if (
-        not isinstance(user_message, str)
-        or not user_message.strip()
-    ):
-        raise ValueError("Câu hỏi không được để trống.")
-
-    # ======================================
-    # STEP 1. INTENT CLASSIFICATION
-    # ======================================
 
     result = classify_by_rules(user_message)
 
@@ -1469,9 +1414,9 @@ def route_query(user_message: str) -> dict:
 
     intent = result["intent"]
 
-    # ======================================
-    # STEP 2. RULE-BASED ENTITY EXTRACTION
-    # ======================================
+    # --------------------------------------
+    # STEP 1. RULE-BASED ENTITY EXTRACTION
+    # --------------------------------------
 
     entity = extract_entity_by_rules(
         user_message=user_message,
@@ -1485,9 +1430,9 @@ def route_query(user_message: str) -> dict:
         entity_name = entity["entity_name"]
         entity_type = entity["entity_type"]
 
-    # ======================================
-    # STEP 3. OPTIONAL LLM ENTITY EXTRACTION
-    # ======================================
+    # --------------------------------------
+    # STEP 2. OPTIONAL LLM ENTITY EXTRACTION
+    # --------------------------------------
 
     if (
         source == "llm"
@@ -1510,9 +1455,9 @@ def route_query(user_message: str) -> dict:
                 str(error),
             )
 
-    # ======================================
-    # STEP 4. ENFORCE ENTITY TYPE
-    # ======================================
+    # --------------------------------------
+    # STEP 3. ENFORCE ENTITY TYPE
+    # --------------------------------------
 
     if intent in {
         "skill_question",
@@ -1522,7 +1467,6 @@ def route_query(user_message: str) -> dict:
         entity_type = "skill"
 
     elif intent == "course_search":
-        # Course search theo một Skill/chủ đề.
         entity_type = "skill"
 
     elif intent in {
@@ -1543,43 +1487,33 @@ def route_query(user_message: str) -> dict:
         entity_type = "none"
         entity_name = None
 
-    # Không cho phép Entity chung chung lọt qua.
     if is_generic_entity(entity_name):
         entity_name = None
 
         if intent == "learning_path_request":
             entity_type = "none"
 
-    # ======================================
-    # STEP 5. RETRIEVAL DECISION
-    # ======================================
+    # --------------------------------------
+    # STEP 4. RETRIEVAL DECISION
+    # --------------------------------------
 
     retrieval_modes = RETRIEVAL_MAP[intent].copy()
-
-    # Learning Path:
-    #
-    # Không có Skill:
-    #   RAG để lấy hướng dẫn chức năng.
-    #
-    # Có Skill:
-    #   SQL lấy Skill và quan hệ.
-    #   RAG lấy quy trình tạo Learning Path.
 
     if intent == "learning_path_request" and entity_name:
         retrieval_modes = ["sql", "rag"]
 
-    # ======================================
-    # STEP 6. OPERATION TYPE
-    # ======================================
+    # --------------------------------------
+    # STEP 5. OPERATION TYPE
+    # --------------------------------------
 
     operation_type = None
 
     if intent == "system_operation":
         operation_type = detect_operation_type(user_message)
 
-    # ======================================
-    # STEP 7. RETURN
-    # ======================================
+    # --------------------------------------
+    # STEP 6. RETURN
+    # --------------------------------------
 
     return {
         "intent": intent,
@@ -1589,4 +1523,337 @@ def route_query(user_message: str) -> dict:
         "entity_name": entity_name,
         "source": source,
         "query": user_message,
+    }
+
+
+# ==========================================
+# 17. MULTI-QUERY DETECTION
+# ==========================================
+
+def may_contain_multiple_requests(user_message: str) -> bool:
+    """
+    Kiểm tra sơ bộ xem tin nhắn có khả năng chứa
+    nhiều yêu cầu độc lập hay không.
+
+    Đây chỉ là bước phát hiện sơ bộ.
+    Gemini mới quyết định có thực sự cần tách hay không.
+    """
+
+    text = normalize_text(user_message)
+
+    connectors = [
+        " ngoai ra ",
+        " ben canh do ",
+        " dong thoi ",
+        " them nua ",
+        " them cho toi ",
+        " con ",
+        " va ",
+        " neu ",
+        " sau do ",
+        " tiep theo ",
+        " khong nhung ",
+        " ma con ",
+        " cung nhu ",
+        ";",
+        "\n",
+        "? ",
+    ]
+
+    return any(connector in text for connector in connectors)
+
+
+# ==========================================
+# 18. GEMINI MULTI-QUERY DECOMPOSITION
+# ==========================================
+
+def decompose_query_by_llm(user_message: str) -> list:
+    """
+    Dùng Gemini tách một tin nhắn thành các yêu cầu độc lập.
+
+    Chú ý:
+    Hàm này chỉ tách yêu cầu.
+    Không phân loại intent ở bước này.
+    """
+
+    prompt = f"""
+Bạn là Query Decomposer của EduMentor AI.
+
+NHIỆM VỤ:
+Phân tích tin nhắn người dùng và tách thành các yêu cầu
+độc lập có thể cần xử lý riêng.
+
+QUY TẮC:
+
+1. Một tin nhắn có thể có một hoặc nhiều yêu cầu.
+2. Không giới hạn số lượng yêu cầu.
+3. Không phụ thuộc vào dấu chấm, dấu phẩy hoặc dấu hỏi.
+4. Phải hiểu các từ nối tiếng Việt như:
+   - ngoài ra
+   - bên cạnh đó
+   - thêm nữa
+   - và
+   - còn
+   - đồng thời
+   - nếu có thể
+   - nếu chưa có
+   - sau đó
+   - tiếp theo
+5. Chỉ tách khi người dùng thực sự đưa ra một yêu cầu
+   có thể xử lý độc lập.
+6. Không tách một yêu cầu thành nhiều câu nhỏ chỉ vì
+   người dùng yêu cầu giải thích nhiều khía cạnh.
+7. Giữ nguyên ngữ cảnh và chủ đề chung.
+8. Không tự thêm yêu cầu người dùng không nói.
+9. Không bỏ sót yêu cầu nào.
+10. Giữ nguyên tên công nghệ, Skill, Course.
+11. Nếu chỉ có một yêu cầu, trả về một phần tử.
+12. Không phân loại intent ở bước này.
+13. Không trả lời câu hỏi.
+14. Không giải thích.
+15. Không tự chuyển yêu cầu gợi ý bên ngoài hệ thống
+    thành yêu cầu tìm kiếm trong database.
+
+VÍ DỤ 1:
+
+Đầu vào:
+SQL là gì bạn giải thích giúp tôi với ngoài ra trong hệ thống
+có những skill nào liên quan đến SQL và có khóa học nào không
+
+Đầu ra:
+{{
+    "queries": [
+        "SQL là gì? Giải thích cho tôi.",
+        "Trong hệ thống có những Skill nào liên quan đến SQL?",
+        "Có khóa học nào liên quan đến SQL không?"
+    ]
+}}
+
+VÍ DỤ 2:
+
+Đầu vào:
+Tìm skill liên quan đến Python và gợi ý thêm những skill
+ngoài hệ thống.
+
+Đầu ra:
+{{
+    "queries": [
+        "Tìm các Skill liên quan đến Python trong hệ thống.",
+        "Gợi ý thêm các Skill liên quan đến Python ngoài hệ thống."
+    ]
+}}
+
+VÍ DỤ 3:
+
+Đầu vào:
+Giải thích SQL và cho ví dụ về JOIN.
+
+Đầu ra:
+{{
+    "queries": [
+        "Giải thích SQL và cho ví dụ về JOIN."
+    ]
+}}
+
+Lý do:
+Đây là một yêu cầu giải thích kiến thức có kèm ví dụ,
+không phải hai yêu cầu độc lập.
+
+VÍ DỤ 4:
+
+Đầu vào:
+Tôi muốn học Python, tìm khóa học phù hợp,
+tạo lộ trình học và hướng dẫn cách lưu tiến độ.
+
+Đầu ra:
+{{
+    "queries": [
+        "Tôi muốn học Python.",
+        "Tìm khóa học phù hợp với Python.",
+        "Tạo lộ trình học Python.",
+        "Hướng dẫn cách lưu tiến độ học."
+    ]
+}}
+
+ĐỊNH DẠNG ĐẦU RA:
+
+Chỉ trả về JSON hợp lệ theo cấu trúc:
+
+{{
+    "queries": [
+        "Yêu cầu thứ nhất",
+        "Yêu cầu thứ hai"
+    ]
+}}
+
+TIN NHẮN NGƯỜI DÙNG:
+{user_message}
+"""
+
+    ai_text = generate_text(prompt)
+
+    result = extract_json_object(ai_text)
+
+    queries = result.get("queries")
+
+    if not isinstance(queries, list):
+        raise ValueError("LLM không trả về danh sách queries.")
+
+    cleaned_queries = []
+
+    for query in queries:
+
+        if not isinstance(query, str):
+            continue
+
+        query = query.strip()
+
+        if query and query not in cleaned_queries:
+            cleaned_queries.append(query)
+
+    if not cleaned_queries:
+        raise ValueError("Không tách được yêu cầu từ câu hỏi.")
+
+    return cleaned_queries
+
+
+# ==========================================
+# 19. MAIN MULTI-QUERY ROUTER
+# ==========================================
+
+def route_query(user_message: str) -> dict:
+    """
+    Router tổng.
+
+    Pipeline:
+
+    1. Validate input.
+    2. Kiểm tra khả năng có nhiều yêu cầu.
+    3. Nếu cần, dùng Gemini tách yêu cầu.
+    4. Phân loại từng yêu cầu riêng biệt.
+    5. Tổng hợp kết quả.
+    6. Trả về sub_queries cho chatbot service.
+
+    Lưu ý:
+    retrieval_modes ở cấp ngoài là danh sách hợp nhất.
+    Khi xử lý từng yêu cầu, phải dùng retrieval_modes
+    nằm bên trong từng sub_query.
+    """
+
+    if (
+        not isinstance(user_message, str)
+        or not user_message.strip()
+    ):
+        raise ValueError("Câu hỏi không được để trống.")
+
+    user_message = user_message.strip()
+
+    # --------------------------------------
+    # STEP 1. DEFAULT: ONE QUERY
+    # --------------------------------------
+
+    queries = [user_message]
+
+    # --------------------------------------
+    # STEP 2. CHECK MULTIPLE REQUESTS
+    # --------------------------------------
+
+    if may_contain_multiple_requests(user_message):
+
+        try:
+            queries = decompose_query_by_llm(user_message)
+
+        except Exception as error:
+
+            print(
+                "[QUERY ROUTER] Decomposition failed:",
+                str(error),
+            )
+
+            # Nếu Gemini tách lỗi, quay lại xử lý
+            # toàn bộ tin nhắn như một yêu cầu.
+            queries = [user_message]
+
+    # --------------------------------------
+    # STEP 3. ROUTE EACH SUB-QUERY
+    # --------------------------------------
+
+    sub_queries = []
+
+    for query in queries:
+
+        try:
+            route = _route_single_query(query)
+
+        except Exception as error:
+
+            print(
+                "[QUERY ROUTER] Single query routing failed:",
+                str(error),
+            )
+
+            route = {
+                "intent": "general_question",
+                "operation_type": None,
+                "retrieval_modes": ["no_rag"],
+                "entity_type": "none",
+                "entity_name": None,
+                "source": "fallback",
+                "query": query,
+            }
+
+        sub_queries.append({
+            "query": query,
+            "intent": route["intent"],
+            "operation_type": route.get("operation_type"),
+            "retrieval_modes": route["retrieval_modes"],
+            "entity_type": route["entity_type"],
+            "entity_name": route["entity_name"],
+            "source": route["source"],
+        })
+
+    # --------------------------------------
+    # STEP 4. COMBINE RETRIEVAL MODES
+    # --------------------------------------
+
+    all_modes = []
+
+    for item in sub_queries:
+
+        for mode in item["retrieval_modes"]:
+
+            if mode not in all_modes:
+                all_modes.append(mode)
+
+    # --------------------------------------
+    # STEP 5. BACKWARD COMPATIBILITY
+    # --------------------------------------
+
+    # Các service cũ có thể vẫn đang đọc:
+    # route["intent"]
+    # route["entity_name"]
+    # route["retrieval_modes"]
+    #
+    # Vì vậy giữ lại các trường này ở cấp ngoài.
+    #
+    # Tuy nhiên, chúng chỉ đại diện cho yêu cầu đầu tiên.
+
+    primary = sub_queries[0]
+
+    # --------------------------------------
+    # STEP 6. RETURN
+    # --------------------------------------
+
+    return {
+        "intent": primary["intent"],
+        "operation_type": primary["operation_type"],
+        "retrieval_modes": all_modes,
+        "entity_type": primary["entity_type"],
+        "entity_name": primary["entity_name"],
+        "source": primary["source"],
+        "query": user_message,
+
+        # Thông tin mới dành cho multi-query.
+        "is_compound": len(sub_queries) > 1,
+        "sub_queries": sub_queries,
     }
