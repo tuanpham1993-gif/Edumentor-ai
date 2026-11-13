@@ -201,6 +201,113 @@ def get_meta(db: Session, question_id: int) -> ReviewQuestionMeta | None:
     return db.get(ReviewQuestionMeta, question_id)
 
 
+def codes_for_skill(db: Session, skill_id: int) -> list[str]:
+    """Mọi mã câu (kể cả phiên bản cũ "~v1") của một kỹ năng — để gợi ý mã khi duyệt."""
+    return list(
+        db.scalars(
+            select(ReviewQuestion.code).where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.code.is_not(None))
+        )
+    )
+
+
+def skill_exists(db: Session, skill_id: int) -> bool:
+    return db.scalar(select(func.count()).select_from(Skills).where(Skills.skill_id == skill_id)) > 0
+
+
+def chunk_skill_id(db: Session, chunk_id: int) -> int | None:
+    """Kỹ năng của đoạn tri thức (None = đoạn không tồn tại)."""
+    return db.scalar(select(KnowledgeChunk.skill_id).where(KnowledgeChunk.chunk_id == chunk_id))
+
+
+def list_questions(
+    db: Session,
+    *,
+    skill_ids: list[int] | None = None,
+    type: str | None = None,
+    level: str | None = None,
+    source: str | None = None,
+    is_active: bool | None = None,
+    review_status: str | None = None,
+    q: str | None = None,
+    latest_only: bool = True,
+    offset: int = 0,
+    limit: int = 20,
+) -> tuple[list, int]:
+    """Danh sách câu hỏi cho trang quản trị + tổng số dòng khớp bộ lọc.
+
+    Mỗi dòng: (ReviewQuestion, version, family_id, review_status, used_count, skill_name).
+    - Câu chưa có meta (nạp trước 13/11) → coi như phiên bản 1, họ = chính nó, đã duyệt (OUTER JOIN + COALESCE).
+    - used_count đếm bằng subquery GROUP BY — một truy vấn cho cả trang (không N+1).
+    - latest_only: chỉ phiên bản mới nhất của mỗi họ (bản cũ xem ở "Lịch sử phiên bản" của trang chi tiết).
+    - skill_ids=[] (vd khóa không có kỹ năng) → không có dòng nào.
+    """
+    used = select(ReviewAnswer.question_id, func.count().label("n")).group_by(ReviewAnswer.question_id).subquery()
+    latest = (
+        select(
+            ReviewQuestionMeta.family_id,
+            func.max(ReviewQuestionMeta.version).label("max_version"),
+        )
+        .group_by(ReviewQuestionMeta.family_id)
+        .subquery()
+    )
+    version = func.coalesce(ReviewQuestionMeta.version, 1)
+    family = func.coalesce(ReviewQuestionMeta.family_id, ReviewQuestion.question_id)
+    status = func.coalesce(ReviewQuestionMeta.review_status, "approved")
+
+    conditions = []
+    if skill_ids is not None:
+        conditions.append(ReviewQuestion.skill_id.in_(skill_ids))
+    if type is not None:
+        conditions.append(ReviewQuestion.type == type)
+    if level is not None:
+        conditions.append(ReviewQuestion.level == level)
+    if source is not None:
+        conditions.append(ReviewQuestion.source == source)
+    if is_active is not None:
+        conditions.append(ReviewQuestion.is_active.is_(is_active))
+    if review_status is not None:
+        conditions.append(status == review_status)
+    if q:
+        text = q.strip().lower()
+        conditions.append(
+            func.lower(ReviewQuestion.content).contains(text, autoescape=True)
+            | func.lower(func.coalesce(ReviewQuestion.code, "")).contains(text, autoescape=True)
+        )
+    if latest_only:
+        conditions.append(
+            ReviewQuestionMeta.question_id.is_(None) | (ReviewQuestionMeta.version == latest.c.max_version)
+        )
+
+    def _from(stmt):
+        stmt = stmt.outerjoin(
+            ReviewQuestionMeta,
+            ReviewQuestionMeta.question_id == ReviewQuestion.question_id,
+        )
+        if latest_only:
+            stmt = stmt.outerjoin(latest, latest.c.family_id == ReviewQuestionMeta.family_id)
+        return stmt.where(*conditions)
+
+    total = db.scalar(_from(select(func.count()).select_from(ReviewQuestion)))
+    rows = db.execute(
+        _from(
+            select(
+                ReviewQuestion,
+                version.label("version"),
+                family.label("family_id"),
+                status.label("review_status"),
+                func.coalesce(used.c.n, 0).label("used_count"),
+                Skills.skill.label("skill_name"),
+            ).select_from(ReviewQuestion)
+        )
+        .outerjoin(used, used.c.question_id == ReviewQuestion.question_id)
+        .outerjoin(Skills, Skills.skill_id == ReviewQuestion.skill_id)
+        .order_by(ReviewQuestion.question_id.desc())
+        .offset(offset)
+        .limit(limit)
+    ).all()
+    return rows, total
+
+
 def family_metas(db: Session, family_id: int) -> list[ReviewQuestionMeta]:
     """Mọi phiên bản của một họ câu hỏi, mới nhất trước."""
     return list(

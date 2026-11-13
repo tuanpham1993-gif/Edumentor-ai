@@ -448,12 +448,46 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
   - ✅ Test: `tests/test_review_bank.py` **18 test** + sửa 2 test seed. Toàn bộ **637 passed**.
   - ✅ **Nạp vào DB thật (13/11)**: chạy seed thường → báo 6 câu khác file (thay đổi bước 1 / QT12) → `--apply-changes`: 4 câu chưa ai làm sửa tại chỗ, **2 câu đã có bài làm → phiên bản 2** (`312-PY-TL-02` barem 4 → 5 ý, `312-CS-TL-03`). Kiểm: bài cũ #27 vẫn mở được với **barem 4 ý** như lúc làm (không lỗi), mỗi kỹ năng vẫn 20 câu đang bật.
   - Chưa làm (bước sau): đề tránh câu lượt trước theo `family_id` (7.5) · nhóm loại trừ trong `exam_builder` (QT7) · bỏ AI sinh câu thẳng vào đề (QT6-A, `review_service._save_ai_question`).
-- [ ] **7.3 API danh sách / chi tiết / thêm / sửa / tắt-bật / xóa** + test quyền (student 403)
-- [ ] **7.4 API mức sẵn sàng khóa (B)** + test
-- [ ] **7.5 Seed dùng hàm phiên bản**; sinh đề tránh theo `family_id`
-- [ ] **7.6 Frontend `/admin/questions`** + thử trình duyệt
-- [ ] **7.7 (tùy chọn) Nhập JSON** · cập nhật `api-endpoints.md`, BA/SRS FR-17/54
+- [ ] **7.3 API quản trị câu hỏi** — code xong 13/11 🤖 (nhánh `tuan/future-auth`, chưa commit) · 👤 **còn: Tuấn dò code** theo thứ tự schema → repository → service → router → test, thử trên Swagger mục "Admin Review (Quản trị ôn tập)"
+  - File: `schemas/review_admin.py` · `repositories/review_repository.py` (+ `list_questions`, `codes_for_skill`, `skill_exists`, `chunk_skill_id`) · `services/review_admin_service.py` · `routers/v1/endpoints/admin/review_admin.py` · `api.py` (+2 dòng, prefix `/admin/review`).
+  - 10 API (`require_admin`): danh sách (lọc khóa / kỹ năng / loại / mức / nguồn / bật / trạng thái duyệt, tìm nội dung + mã, `latest_only` mặc định chỉ bản mới nhất, phân trang) · chi tiết + lịch sử phiên bản · thêm · sửa (`minor`, `note`) → `{question, versioned, changed}` · bật · tắt · xóa → `deleted | deactivated` · duyệt · từ chối · mã gợi ý.
+  - Lỗi: không thấy 404 · nội dung sai 422 (kèm `errors`) · mã trùng / sửa nhỏ sai / không bật được / không duyệt được 409 · kỹ năng / đoạn tri thức sai 400. Mỗi thao tác ghi commit 1 lần, lỗi → rollback.
+  - **Tuấn chốt 13/11 — duyệt câu AI**: mã **bắt buộc** (thiếu → 422; chưa kịp nhập thì cứ để Chờ duyệt, câu không vào đề) · `GET …/{id}/suggested-code` gợi ý mã theo các mã đã có của kỹ năng, bỏ tiền tố khóa (QT9): đã có `312-VAR-TN-01..14` → `VAR-TN-15`; kỹ năng chưa có mã → `null` · duyệt xong **bật luôn** (theo demo).
+  - Demo chuẩn: `Downloads/AdminReviewQuestions.html` (giữ nguyên bản Tuấn, đã có Chờ duyệt / Duyệt và bật / Từ chối).
+  - ✅ Test: `tests/test_review_admin.py` **53 test** (10 test quyền, mỗi test kiểm cả 401 và 403). Toàn bộ **690 passed**.
+  - Review test 13/11 → bổ sung 13 test: câu chưa có meta (OUTER JOIN + COALESCE, xem chi tiết tự tạo meta) · `used_count` khác 0 trong danh sách · tạo tự luận (giữ điểm nguyên, barem sai → 422) · lọc kết hợp khóa + kỹ năng, mức, nguồn, bật/tắt · tìm theo nội dung (không phân biệt hoa thường, `%` không phải ký tự đại diện) · sắp mới nhất trước · tham số sai → 422 · sửa sai kỹ năng / đoạn tri thức → 400 · xóa thật thì meta xóa theo · câu bị từ chối không bật / không duyệt lại được. **Kiểm ngược**: cố ý làm hỏng 4 chỗ (used_count luôn 0, INNER JOIN meta, bỏ giao khóa + kỹ năng, điểm barem thành số thực) → cả 4 lần test mới đều trượt.
+- [ ] **7.4 API mức sẵn sàng của khóa (B)** — dự kiến 14/11
+  - `GET /api/admin/review/readiness` — mọi khóa **đã có câu hỏi** + số khóa chưa có (thẻ "Khóa khác · N khóa"); `?course_id=` → 1 khóa.
+  - Mỗi khóa: `ready` = **dùng lại `exam_builder.plan_exam`** với `bank_counts` (đúng điều kiện bắt đầu ôn, không viết luật riêng) · tổng câu đang bật / mục tiêu (`REVIEW_BANK_TARGET_PER_SKILL` × số kỹ năng) · số TN / TL.
+  - Mỗi kỹ năng: số câu đang bật theo mức (NB / TH / dễ / nâng cao) so với tối thiểu của `STRUCTURE` và mục tiêu 20 · số câu **chờ duyệt** · danh sách thiếu (vd "thiếu tự luận nâng cao").
+  - Câu chờ duyệt / bị từ chối / đã tắt **không** tính vào mức sẵn sàng.
+  - Test: khóa đủ → `ready=true`; tắt bớt câu 1 kỹ năng → `false` + đúng mục thiếu; khóa không có câu → nằm trong số "chưa có"; học viên 403.
+- [ ] **7.5 Sinh đề theo luật quản trị mới** — dự kiến 14/11 → 15/11
+  - (Phần seed dùng hàm phiên bản **đã xong ở 7.2** — QT4.)
+  - **a. Tránh câu lượt trước theo `family_id`**: câu lượt trước → họ của nó → tránh **mọi phiên bản** cùng họ (không lặp lại câu chỉ vì đã đổi phiên bản). Sửa `review_service.start_attempt` (tập `avoid`, `fresh`) + hàm repo lấy `question_id` theo họ. Test: lượt 1 dùng câu v1, admin sửa thành v2 → lượt 2 không ra v2 (nếu còn câu khác).
+  - **b. Nhóm loại trừ (QT7)**: hai câu cùng `exclusion_group` không vào cùng một đề. Đưa `exclusion_group` vào `candidates`, bộ chọn câu bỏ qua câu trùng nhóm đã chọn; không đủ câu thì vẫn ra đề (ghi vào `trace`). Test: 2 câu cùng nhóm không bao giờ cùng đề (chạy nhiều seed).
+  - **c. QT6-A — AI không đưa câu thẳng vào đề**: bỏ `_save_ai_question` trong luồng làm bài; đề chỉ bốc câu **đã duyệt, đang bật**. Câu AI sinh lưu vào ngân hàng qua `review_bank_service.create_question(source="ai", review_status="pending")`.
+  - **d. Nút "AI soạn thêm câu cho kỹ năng X"**: `POST /api/admin/review/skills/{skill_id}/generate` (`need` theo mức) → RAG + AI như lúc sinh đề → validator → lưu **Chờ duyệt**. Dừng khi kỹ năng đủ `REVIEW_BANK_TARGET_PER_SKILL`. AI lỗi → 503, không lưu nửa vời. Test bằng AI mock.
+  - Chạy lại toàn bộ test luồng ôn tập (R3, R8) để chắc đề vẫn đủ 15 câu.
+- [ ] **7.6 Frontend `/admin/questions`** — dự kiến 16/11 → 17/11 · theo demo `Downloads/AdminReviewQuestions.html`
+  - Backend kèm theo: `POST /api/admin/review/grade-preview` (QT10 "Chấm thử") — nhận barem + bài làm, gọi **đúng hàm chấm thật** (Gemini + từ khóa, AI lỗi → điểm từ khóa), trả điểm từng ý + lý do; **không lưu** gì. Test bằng AI mock.
+  - `src/api/reviewAdmin.api.js` + `features/review-admin/{pages,components,styles}`; route `/admin/questions` trong khu admin (chỉ admin).
+  - Thẻ mức sẵn sàng (7.4) · thanh lọc + tìm · bảng (mã, nội dung, loại · mức, nguồn + Chờ duyệt, phiên bản, đã dùng, công tắc — khóa khi Chờ duyệt) · phân trang.
+  - Ngăn phải: form TN (4 lựa chọn + đáp án) / form tự luận (barem, từ khóa dạng thẻ, tổng điểm tự kiểm 10/10) · cảnh báo "đã có N bài làm → lưu thành phiên bản mới" · nút **Lưu phiên bản mới** / **Sửa nhỏ** (409 → hiện lý do) · Chấm thử · lịch sử phiên bản.
+  - Khung duyệt câu AI: **thêm ô "Mã câu (bắt buộc)" điền sẵn `suggested-code`** (demo đang tự gán `312-VAR-TN-15` — sai QT9) · Duyệt và bật / Từ chối.
+  - ❓ Cần Tuấn chốt khi làm: câu **bị từ chối** hiện ở đâu — demo xóa khỏi danh sách, backend giữ (`review_status=rejected`). Gợi ý: ẩn mặc định, xem qua bộ lọc.
+  - Thử trình duyệt: lọc, thêm câu sai (422 hiện lỗi từng dòng), sửa câu đã dùng → v2, sửa nhỏ sai → 409, xóa, duyệt thiếu mã, Tối / Sáng.
+- [ ] **7.7 Tài liệu** — dự kiến 17/11 · ~~Nhập JSON~~ (bỏ theo demo 12/11: database là nơi lưu chính)
+  - `api-endpoints.md`: thêm nhóm `/api/admin/review/...` (10 API của 7.3 + readiness + generate + grade-preview).
+  - BA/SRS FR-17 / FR-54 / UC-21: thay "chỉ trắc nghiệm, không AI" bằng quyết định QT1–QT15 (gộp với 5.3).
+- [ ] **7.8 Báo lỗi câu hỏi (QT14)** — dự kiến 17/11 (nếu kịp; không thì sang GĐ6)
+  - Bảng `review_question_reports` (người báo, `question_id` = đúng phiên bản, lý do, ghi chú, trạng thái) — mỗi người 1 lần / phiên bản.
+  - Học viên: nút "Báo lỗi câu này" ở trang kết quả. Admin: bộ lọc "Bị báo lỗi", câu bị báo lên đầu kèm số lượt; xác nhận sai → sửa thành phiên bản mới (bài cũ không chấm lại).
+- [ ] **7.9 Cờ lệch điểm Gemini / từ khóa (QT10)** — dự kiến 17/11 (nếu kịp)
+  - Khi chấm thật: chấm từ khóa song song, lệch > 3 (thang 10 của câu) → gắn cờ vào `trace.grading`; trang quản trị có bộ lọc "Bị gắn cờ".
 - [ ] **D (đợt sau)**: theo dõi lượt làm bài, tỉ lệ đạt, tỉ lệ Gemini lỗi → chấm từ khóa, xem vết RAG
+
+**Thứ tự và phụ thuộc:** 7.3 (Tuấn dò) → 7.4 → 7.5 a–c → 7.5 d → 7.6 (cần 7.4 cho thẻ sẵn sàng, 7.5 d cho nút "AI soạn thêm") → 7.7. 7.8, 7.9 độc lập, làm sau cùng. Hạn GĐ7 17/11; nếu trễ, 7.8 / 7.9 chuyển sang GĐ6 (19/11 →).
 
 ## Bảng kiểm thử thủ công
 
@@ -517,4 +551,5 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
 | 12/11 | Tuấn xác nhận **QT6 = A**, bỏ phương án B (xóa phần phân tích QT6.1–6.6). QT14: câu bị xác nhận sai → phiên bản mới, bài cũ không chấm lại | — |
 | 12/11 | **QT12 làm xong**: bản vá lỗi 1/2/4 + tách vế + chặn mượn vế; barem PY-TL-02 tách 3a / 3b (chỉ JSON, chưa nạp DB); bài mẫu gửi thầy 7 → 8. Bộ chỉnh 14/14; bộ kiểm mới 5 bài: H1 khớp, H4 lệch 1,5, H5 lệch 5 (thiếu từ đồng nghĩa → cờ QT10), H2/H3 Gemini 503 — chạy lại sau | Báo thầy 7 → 8; chạy lại H2, H3 |
 | 13/11 | **7.2 xong**: bảng `review_question_meta` + `review_bank_service` (phiên bản / sửa nhỏ / bật-tắt / xóa) + seed QT4. Nạp DB thật: 4 câu sửa tại chỗ, 2 câu phiên bản 2; bài cũ vẫn mở đúng barem cũ. 637 test đạt | Tiếp 7.3 API quản trị |
+| 13/11 | **7.3 code xong** 🤖 (nhánh `tuan/future-auth`): 10 API quản trị câu hỏi, 40 test, toàn bộ 677 đạt. Tuấn chốt: **duyệt câu AI bắt buộc nhập mã** + API mã gợi ý (`VAR-TN-15`, QT9). Xác nhận demo chuẩn là `Downloads/AdminReviewQuestions.html` (giữ nguyên bản Tuấn). Viết kế hoạch chi tiết 7.4 → 7.9 | Tuấn dò code 7.3 · 7.6 cần chốt chỗ hiện câu bị từ chối |
 | | | |

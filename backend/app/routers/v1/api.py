@@ -21,6 +21,7 @@ from app.routers.v1.endpoints import (
     review,
     skill_service,
 )
+from app.routers.v1.endpoints.admin import review_admin
 
 # Tạm comment để khỏi tải/nạp SentenceTransformer ngay khi chạy server hay pytest;
 # nếu cần test /api/learning-paths-generation thì bỏ comment dòng này và dòng include_router ở cuối file:
@@ -42,6 +43,8 @@ api_router.include_router(courses.router, tags=["Course Catalog"], prefix="/cour
 api_router.include_router(course_tracking.router, tags=["Course Tracking"])
 # Ôn tập (Tuấn, module 09) — không prefix: router tự khai đường dẫn /courses/... và /review-attempts/...
 api_router.include_router(review.router, tags=["Review (Ôn tập)"])
+# Quản trị ngân hàng câu hỏi ôn tập (Tuấn, GĐ7 · 13/11) — tách khỏi router admin của Khôi
+api_router.include_router(review_admin.router, tags=["Admin Review (Quản trị ôn tập)"], prefix="/admin/review")
 # 4. Lộ trình, kỹ năng, gợi ý (Hòa)
 api_router.include_router(
     learning_path_service.router,
