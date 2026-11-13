@@ -1,4 +1,3 @@
-
 """
 Tập hợp tất cả các Sub-router của API v1 thành một Router thống nhất.
 """
@@ -15,6 +14,7 @@ from app.routers.v1.endpoints import (
     learning_path_node_service,
     learning_path_service,
     email_preferences,
+    recommendation_service,
     me,
     notifications,
     review,
@@ -95,11 +95,11 @@ api_router.include_router(
 )
 
 # Tạm thời chưa bật recommendation service
-# api_router.include_router(
-#     recommendation_service.router,
-#     tags=["learning path generation"],
-#     prefix="/learning-paths-generation",
-# )
+api_router.include_router(
+    recommendation_service.router,
+    tags=["learning path generation"],
+    prefix="/learning-paths-generation",
+)
 
 # 5. Chatbot gia sư của Tâm
 

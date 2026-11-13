@@ -31,7 +31,7 @@ services:
     image: ghcr.io/ggml-org/llama.cpp:server
     container_name: edumentor_llm_base
     ports:
-      - "8080:8080"
+      - "8082:8080" # máy chủ 8080 hay bị chiếm (vd MiniTool ShadowMaker) → dùng 8082
     volumes:
       - ./backend/app/ai/models:/models:ro
     command:

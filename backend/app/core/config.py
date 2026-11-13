@@ -55,7 +55,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5171",
         "http://localhost:5171",
     ]
-    LLM_URL_BASE: str = "http://localhost:8080"     # Hòa: llama.cpp (docker-compose llama-base)
+    LLM_URL_BASE: str = "http://localhost:8082"     # Hòa: llama.cpp (docker-compose llama-base)
     LLM_URL_ADAPTER: str = "http://localhost:8081"  # Hòa: llama.cpp + LoRA (llama-adapter)
 
     SYSTEM_PROMPT: str = """
