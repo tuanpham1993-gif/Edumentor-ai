@@ -207,10 +207,10 @@ def test_trace_records_rag_and_prompt(client, bank_312, student_headers, db_sess
     trace = db_session.get(ReviewAttempt, body["attempt_id"]).trace
 
     assert trace["ai_mode"] == "mock" and trace["ai"] == "mock"
-    assert "Bạn là giảng viên" in trace["system_prompt"]
+    assert "You are a teacher" in trace["system_prompt"]
     assert sorted(s["skill_id"] for s in trace["skills"]) == SKILL_IDS
     for s in trace["skills"]:
-        assert s["chunks"] and "NGỮ CẢNH" in s["prompt"]
+        assert s["chunks"] and "CONTEXT" in s["prompt"]
         assert s["fallback"] is False and s["retries"] == 0
 
 

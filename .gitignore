@@ -27,3 +27,6 @@ backend/uploads/
 
 # Tài liệu cá nhân của Tuấn — chỉ để trên máy, KHÔNG push
 docs/review Quy trình tính năng Auth.md
+
+# B4 (Tuấn): bài làm thật + phiếu chấm của bộ bài chuẩn — dữ liệu người dùng, KHÔNG commit
+backend/data/ai-grading/private/

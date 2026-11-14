@@ -7,12 +7,14 @@ nhưng sửa cho bài toán CHẤM BÀI (đã thử trên NLTK 3.10, xem docs/Re
   1. Giữ phủ định. Danh sách stopwords của NLTK có "not", "no", "nor" — bỏ đi thì
      "tuples cannot be changed" thành "tuple change": nghĩa bị đảo. NLTK còn tách
      "can't" → "ca" + "n't", "cannot" → "can" + "not" → đổi "n't" thành "not".
-  2. Giữ vài từ đổi nghĩa câu ("only", "all", "both", "same", "but") dù nằm trong stopwords.
+  2. Giữ vài từ đổi nghĩa câu ("only", "all", "both", "same", "but", "again") dù nằm trong stopwords.
+     Giữ TỪ KHÓA PYTHON (for, while, if, in, is, and, or...) — stopwords NLTK có chúng (sửa 14/11 khi làm B3).
   3. Lemmatize THEO TỪ LOẠI (demo cố định pos='v' — "lists" là danh từ, không đưa về gốc được).
      Từ "-ing" / "-ed" bị gán nhầm danh từ / tính từ ("looping") → thử thêm dạng gốc động từ.
   4. Thuật ngữ lập trình WordNet không biết ("tuples") → tự bỏ đuôi số nhiều theo luật.
-  5. Giữ ký hiệu lập trình ("[", "]", "(", ")", "=", "=="...) vì barem có ý "list dùng [ ]";
-     bỏ dấu câu (". , : ; ! ?").
+  5. Giữ ký hiệu lập trình ("[", "]", "(", ")", "=", "==", "//", "!="...) vì barem có ý "list dùng [ ]";
+     ghép toán tử NLTK tách đôi ("!" "=" → "!="); giữ số thập phân ("3.5"); bỏ dấu câu (". , : ; ! ?").
+     Tên biến "a", "i" (trùng stopword) giữ lại khi đứng cạnh ký hiệu ("a = 7", "total + i") — sửa 14/11 khi duyệt B2.
 
 Dùng ở: chấm từ khóa tiếng Anh (B3), Verifier so câu trích (B8), phát hiện chép đề (B8).
 Dữ liệu NLTK cần tải trước (một lần): punkt_tab, stopwords, wordnet, averaged_perceptron_tagger_eng
@@ -20,6 +22,7 @@ Dữ liệu NLTK cần tải trước (một lần): punkt_tab, stopwords, wordn
 Không tải lúc chạy server; thiếu dữ liệu → lỗi rõ ràng khi GỌI hàm (không làm hỏng lúc import).
 """
 
+import keyword
 import re
 import unicodedata
 from functools import lru_cache
@@ -28,15 +31,27 @@ from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 
 NEGATIONS = frozenset({"not", "no", "nor", "never", "none", "nothing", "neither", "nobody", "nowhere"})
+# Từ khóa Python (for, while, if, in, is, and, or, ...) — stopwords của NLTK có nhiều từ này; bỏ đi thì
+# "while loop" chỉ còn "loop" → không phân biệt được for / while. Giữ nguyên, KHÔNG lemmatize ("is" giữ là "is").
+PYTHON_KEYWORDS = frozenset(k.lower() for k in keyword.kwlist)
 # Có trong stopwords của NLTK nhưng làm đổi nghĩa câu khi chấm → giữ lại.
-MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after"})
+MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after", "again"})
 # Ký hiệu lập trình được giữ; dấu câu khác bị bỏ.
 CODE_SYMBOLS = frozenset(
     {"[", "]", "(", ")", "{", "}", "=", "==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%", "+=", "-="}
+    | {"//", "**", "*=", "/=", "%=", "//=", "**="}
 )
+# word_tokenize tách "!=" → "!" "=", "**" → "*" "*", "<=" → "<" "=" — ghép lại (bỏ "!" thì "!=" thành "=": sai nghĩa).
+_JOINABLE = frozenset({"!", "<", ">", "=", "+", "-", "*", "/", "%", "//", "**"})
+_NUMBER = re.compile(r"\d+\.\d+")  # số thập phân "3.5" (isalnum() trả False)
+# Tách ký hiệu toán tử khỏi chữ / số trước word_tokenize: NLTK coi "n+1", "x+=1", "tong=0" là MỘT từ rồi bị bỏ.
+# Không đụng "-" giữa hai chữ ("read-only") và "." (số thập phân, "a.append").
+_OPERATOR_CHARS = re.compile(r"([+*/%=<>!()\[\]{}]|(?<![a-z])-|-(?![a-z]))")
 # Dấu nháy cong (gõ từ Word / điện thoại) → nháy thẳng, để "can’t" tách giống "can't".
 _QUOTES = str.maketrans({"’": "'", "‘": "'", "“": '"', "”": '"'})
 _SPACES = re.compile(r"\s+")
+# "a is 7": mạo từ "a" không đứng trước các động từ này → "a" là tên biến (xem _is_code_variable).
+_VALUE_VERBS = frozenset({"is", "becomes", "equals"})
 
 
 # ─────────────── dữ liệu NLTK (nạp lần đầu dùng) ───────────────
@@ -46,7 +61,7 @@ _SPACES = re.compile(r"\s+")
 def _stopwords() -> frozenset[str]:
     from nltk.corpus import stopwords
 
-    return frozenset(stopwords.words("english")) - NEGATIONS - MEANINGFUL
+    return frozenset(stopwords.words("english")) - NEGATIONS - MEANINGFUL - PYTHON_KEYWORDS
 
 
 @lru_cache(maxsize=1)
@@ -73,20 +88,24 @@ def normalize(text: str) -> str:
 
 
 def tokenize(text: str) -> list[str]:
-    """Tách từ bằng word_tokenize; "n't" → "not"; giữ chữ / số và ký hiệu lập trình, bỏ dấu câu."""
+    """Tách từ bằng word_tokenize; "n't" → "not"; ghép lại toán tử bị tách ("!" "=" → "!="); giữ chữ, số
+    (cả số thập phân "3.5") và ký hiệu lập trình, bỏ dấu câu."""
     tokens = []
-    for token in word_tokenize(text):
+    for token in _merge_operators(word_tokenize(_OPERATOR_CHARS.sub(r" \1 ", text))):
         if token == "n't":
             token = "not"
-        if token.isalnum() or token in CODE_SYMBOLS or _is_word(token):
+        if token.isalnum() or token in CODE_SYMBOLS or _NUMBER.fullmatch(token) or _is_word(token):
             tokens.append(token)
     return tokens
 
 
 def remove_stopwords(tokens: list[str]) -> list[str]:
-    """Bỏ stopwords tiếng Anh, NHƯNG giữ phủ định (NEGATIONS) và từ đổi nghĩa (MEANINGFUL)."""
+    """Bỏ stopwords tiếng Anh, NHƯNG giữ phủ định (NEGATIONS) và từ đổi nghĩa (MEANINGFUL).
+
+    Tên biến một chữ cái trùng stopword ("a", "i") được giữ khi đứng gần ký hiệu lập trình (cách ≤ 2 từ):
+    "a = 7" không được thành "= 7" (khớp nhầm "b = 7"), "total + i" không thành "total +"."""
     stop = _stopwords()
-    return [t for t in tokens if t not in stop]
+    return [t for i, t in enumerate(tokens) if t not in stop or _is_code_variable(tokens, i)]
 
 
 def lemmatize(tokens: list[str]) -> list[str]:
@@ -94,7 +113,7 @@ def lemmatize(tokens: list[str]) -> list[str]:
     lemmatizer = _lemmatizer()
     out = []
     for token, tag in pos_tag(tokens):
-        if not token.isalpha():
+        if not token.isalpha() or token in PYTHON_KEYWORDS:
             out.append(token)
             continue
         pos = _wordnet_pos(tag)
@@ -115,6 +134,27 @@ def preprocess(text: str) -> list[str]:
 
 
 # ─────────────── nội bộ ───────────────
+
+
+def _is_code_variable(tokens: list[str], i: int) -> bool:
+    """Từ một chữ cái là tên biến khi: có ký hiệu lập trình trong phạm vi 2 từ hai bên ("a, b = b, a"), hoặc
+    đứng ngay trước "is" / "becomes" / "equals" ("a is 7" — mạo từ "a" không bao giờ đứng trước động từ)."""
+    if len(tokens[i]) != 1 or not tokens[i].isalpha():
+        return False
+    if i + 1 < len(tokens) and tokens[i + 1] in _VALUE_VERBS:
+        return True
+    return any(t in CODE_SYMBOLS for t in tokens[max(0, i - 2) : i + 3])
+
+
+def _merge_operators(tokens: list[str]) -> list[str]:
+    """Ghép toán tử bị word_tokenize tách đôi khi ghép lại ra một toán tử Python hợp lệ ("!" + "=" → "!=")."""
+    out: list[str] = []
+    for token in tokens:
+        if out and out[-1] in _JOINABLE and out[-1] + token in CODE_SYMBOLS:
+            out[-1] += token
+        else:
+            out.append(token)
+    return out
 
 
 def _is_word(token: str) -> bool:

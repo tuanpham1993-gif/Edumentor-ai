@@ -1,0 +1,10 @@
+{
+  "_note": "B4 (14/11/2026): bo bai chuan chia dev / test THEO CAU HOI - moi ky nang 1 cau dev + 1 cau test, xen ke easy / advanced. Chi chinh prompt tren dev; test chay MOT lan (docs/Review-AI-Grading.md muc 3). Form A = cau easy, Form B = cau advanced.",
+  "bank": "data/review/course_312_en.json",
+  "dev": ["PY-TL-03", "CS-TL-05", "ITER-TL-01", "VAR-TL-02", "COND-TL-03"],
+  "test": ["PY-TL-02", "CS-TL-03", "ITER-TL-05", "VAR-TL-05", "COND-TL-06"],
+  "forms": {
+    "A": ["PY-TL-03", "CS-TL-03", "ITER-TL-01", "VAR-TL-05", "COND-TL-03"],
+    "B": ["PY-TL-02", "CS-TL-05", "ITER-TL-05", "VAR-TL-02", "COND-TL-06"]
+  }
+}

@@ -17,7 +17,7 @@ import logging
 from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import wait as wait_futures
 
-from app.ai.review import keyword_grader
+from app.ai.review import keyword_grading
 from app.ai.review.base import AIUnavailableError, ReviewAI
 from app.ai.review.validator import grading_errors
 from app.models.review_attempt import ReviewAnswer
@@ -97,7 +97,7 @@ def grade_essay(ai: ReviewAI, answer: ReviewAnswer, ai_result: AIResult | None =
     if results is not None:
         return results, None
     logger.warning("Ôn tập: chấm tự luận câu %s bằng từ khóa (%s)", answer.position, error)
-    return keyword_grader.grade_essay(rubric, answer.text_answer, answer.question.content), error
+    return keyword_grading.grade_essay(rubric, answer.text_answer, answer.question.content), error
 
 
 def grade_answers(

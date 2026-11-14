@@ -103,10 +103,10 @@ def test_generation_prompt_contains_context_and_counts():
         course_title="Python Basics", skill_name="Iteration", chunks=chunks, need={"recognize": 2, "easy": 0}
     )
 
-    assert "Kỹ năng cần ôn: Iteration" in prompt
-    assert "[Đoạn 1] Vòng lặp for" in prompt and "for duyệt dãy" in prompt
-    assert "2 câu trắc nghiệm mức Nhận biết" in prompt
-    assert "tự luận DỄ" not in prompt  # mức độ cần 0 câu thì không yêu cầu
+    assert "Skill to review: Iteration" in prompt
+    assert "[Passage 1] Vòng lặp for" in prompt and "for duyệt dãy" in prompt
+    assert "2 multiple-choice questions at the Recognize level" in prompt
+    assert "EASY short-answer" not in prompt  # mức độ cần 0 câu thì không yêu cầu
 
 
 # ─────────────── RAG ───────────────

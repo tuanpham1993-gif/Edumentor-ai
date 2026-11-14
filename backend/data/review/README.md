@@ -3,7 +3,24 @@
 Mỗi khóa một file `course_<course_id>.json`. Nạp vào DB: `python -m scripts.seed_review --file data/review/course_<id>.json`
 (trong thư mục `backend`). Script **kiểm tra trước, ghi sau** — sai ở đâu in hết lỗi, không ghi gì.
 
-## Quy ước ngôn ngữ (chốt 10/11)
+## ⚠️ Từ 14/11/2026: ngân hàng TIẾNG ANH (D1 — chốt 13/11)
+
+- File đang dùng: **`course_312_en.json`** (dịch từ `course_312.json`, giữ nguyên đáp án, mức, đoạn tri thức, điểm từng ý).
+  `course_312.json` (tiếng Việt) giữ lại làm lịch sử — **không nạp mới**.
+- Chuyển DB sang tiếng Anh (một giao dịch: nạp bản tiếng Anh + tắt câu tiếng Việt + xóa đoạn tri thức tiếng Việt):
+  ```
+  python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/course_312.json
+  python -m scripts.build_embeddings
+  ```
+- **Mã mới theo QT9** (bỏ tiền tố khóa): `PY-TN-01`, `PY-TL-01`, `PY-K01` — không trùng mã tiếng Việt `312-PY-TN-01`.
+- **Nội dung tiếng Anh**; từ khóa chấm tiếng Anh (`keyword_grader_en.py`, chọn tự động theo ngôn ngữ ở `keyword_grading.py`):
+  viết dạng tự nhiên (bộ chấm tự đưa về dạng gốc: "loops" ≡ "loop"); cụm nhiều từ phải **liền nhau sau khi bỏ stopwords**
+  ("number of loops" → number loop); ý phủ định viết kèm "not" ("not change"); ký hiệu viết "[ ]", "==", "% 2".
+- Kiểm tra tự động: `tests/test_keyword_grader_en.py` (đáp án mẫu mọi câu tự luận đạt 10/10, chép đề = 0) và
+  `tests/test_seed_review_en.py` (khớp bản tiếng Việt, chuyển ngân hàng giữ lịch sử).
+- Các mục bên dưới là quy ước của bản tiếng Việt (10/11), giữ để tham khảo.
+
+## Quy ước ngôn ngữ (chốt 10/11 — bản tiếng Việt, đã thay bằng mục trên)
 
 | Phần | Ngôn ngữ | Ví dụ |
 |---|---|---|

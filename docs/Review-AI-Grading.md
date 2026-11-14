@@ -111,21 +111,35 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - Thêm `nltk` vào `backend/requirements.txt`; tải dữ liệu `punkt_tab`, `stopwords`, `wordnet`, `averaged_perceptron_tagger_eng` **một lần** (máy: lệnh tay; Docker: một dòng `RUN` trong Dockerfile). Không tải lúc chạy server, không tắt kiểm tra SSL như demo.
   - `backend/app/ai/review/text_pipeline.py`: `normalize`, `tokenize`, `remove_stopwords` (giữ từ phủ định), `lemmatize` (theo POS, không cố định `pos='v'`), `preprocess`.
   - ✅ `tests/test_text_pipeline.py`: "Lists CAN be changed!" → có `list`, `change`; "tuples cannot be modified" còn từ phủ định; chuỗi rỗng → `[]`; loops / looping / looped → `loop`. Toàn bộ test xanh.
-- [ ] **B2 Ngân hàng câu hỏi tiếng Anh** — dự kiến 14–15/11 · thực tế __/__ 👤 (🤖 hỗ trợ dịch nháp)
+- [ ] **B2 Ngân hàng câu hỏi tiếng Anh** — dự kiến 14–15/11 · thực tế 14/11 (🤖 dịch nháp xong) · 👤 **còn: Tuấn duyệt bản dịch + nạp DB thật**
+  - 🤖 Review bản dịch 14/11: 70 câu trắc nghiệm, đáp án đúng (tính lại các câu đọc code); 30 câu tự luận. Sửa: tên biến một chữ `a`, `i` bị khối 1 bỏ như stopword ("a = 7" → "= 7", nên bài sai "b = 7" vẫn được ½ ý ở VAR-TL-06). Nay giữ khi đứng cạnh ký hiệu hoặc trước is/becomes/equals. Dấu phẩy trong code ("a, b = b, a") không tách vế. Thêm "again" vào từ giữ lại. Bỏ 3 từ khóa vô hiệu hoặc quá chung (`other`, `_2nums`, `example` ở PY-TL-04). Thêm 8 test.
+  - ✅ 14/11 🤖: `data/review/course_312_en.json` — 100 câu (70 TN + 30 TL) + 15 đoạn, mã QT9 (`PY-TN-01`, `PY-K01`). Kiểm tự động: validator OK; loại / mức / đáp án / đoạn / điểm từng ý khớp bản tiếng Việt; **đáp án mẫu 30/30 câu tự luận đạt 10/10** với bộ chấm tiếng Anh; chép đề = 0.
+  - ✅ `seed_review.py --retire <file cũ>`: nạp bản mới + tắt câu tiếng Việt (giữ lịch sử) + xóa đoạn tiếng Việt, **cùng một giao dịch**. `tests/test_seed_review_en.py` 4 test.
+  - ✅ `GENERATE_SYSTEM_PROMPT` + `build_generation_prompt` sang tiếng Anh, thêm quy ước viết từ khóa (sửa 2 test kiểm câu chữ prompt). `data/review/README.md` cập nhật quy ước.
+  - Khối 1 sửa thêm khi dịch: giữ `//`, số thập phân `3.5`, ghép `!=` / `**` / `<=`, tách `n+1` / `total+=i` viết liền. Toàn bộ **815 passed**.
+  - 👤 Tuấn duyệt: ưu tiên **30 câu tự luận** (đề, barem, từ khóa, đáp án mẫu) rồi 70 câu trắc nghiệm.
+  - 👤 Nạp DB thật (sau khi duyệt): `python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/course_312.json` → `python -m scripts.build_embeddings` → bắt đầu ôn khóa 312 thấy 15 câu tiếng Anh.
   - `backend/data/review/course_312_en.json`: 100 câu (70 TN + 30 TL) + 15 đoạn tri thức, cùng định dạng `course_312.json`; barem và từ khóa tiếng Anh.
   - Nạp bằng **mã câu mới**, tắt câu tiếng Việt (không sửa đè — đúng quy tắc phiên bản); chạy lại `scripts/build_embeddings.py`.
   - Đổi `GENERATE_SYSTEM_PROMPT` (đang yêu cầu "Viết bằng tiếng Việt") sang tiếng Anh.
   - ✅ Validator không báo lỗi; đề ôn tập khóa 312 ra 15 câu tiếng Anh.
-- [ ] **B3 Bộ chấm từ khóa tiếng Anh** — dự kiến 15/11 · thực tế __/__ 👤
+- [x] **B3 Bộ chấm từ khóa tiếng Anh** — dự kiến 15/11 · thực tế 14/11 🤖 (Tuấn chọn: file mới + tự chọn theo ngôn ngữ)
+  - ✅ `keyword_grader_en.py` (cùng luật bộ tiếng Việt: full / partial / none, phủ định, tách vế QT12, chặn mượn vế, chép đề, liệt kê, bài ngắn) — khớp trên **dãy từ đã lemmatize** của khối 1, từ khóa nhiều từ khớp khi liền nhau. `keyword_grading.py` chọn bộ chấm theo ngôn ngữ (barem / đề có dấu tiếng Việt → bộ cũ); `mock_ai.py`, `review_grader.py` gọi qua đây.
+  - ✅ `tests/test_keyword_grader_en.py` **21 test**; toàn bộ **739 passed**. Kiểm ngược: bỏ phủ định → 3 test trượt; bỏ tách vế "but" → 1 trượt; bỏ chặn mượn vế → 1 trượt.
+  - Sửa B1 khi làm B3: stopwords NLTK chứa **từ khóa Python** (`for, while, if, in, and, or`) → "while loop" chỉ còn "loop" → giữ nguyên từ khóa Python (`keyword.kwlist`), không lemmatize. Sửa lỗi đếm mật độ liệt kê (ký hiệu `[ ]` bị tính vào tử số).
+  - **Quy ước viết từ khóa tiếng Anh cho B2**: viết dạng tự nhiên (bộ chấm tự lemmatize cả hai phía); từ khóa nhiều từ phải là cụm **liền nhau sau khi bỏ stopwords** (vd "number of loops" → number loop); ý phủ định viết kèm "not" ("not change"); ký hiệu viết cả hai dạng "[ ]" và "[]".
   - Dựa trên khối 1; giữ luật QT12 (tách vế, chặn bài chỉ liệt kê từ khóa, bỏ câu chép đề).
   - ✅ Test: diễn đạt khác dạng từ vẫn khớp; phủ định ("cannot change") không bị tính là "change"; bài chỉ liệt kê từ khóa không được đủ điểm.
 - [ ] **B4 Bộ bài chuẩn (gold set)** — dự kiến 15–17/11 (song song) · thực tế __/__ 👤 soạn + **Hòa, Tâm chấm**
+  - 🤖 14/11 xong phần chuẩn bị: `docs/ai-grading/RATER_GUIDELINE.md` (bản 1.0); `docs/ai-grading/DATA_COLLECTION.md` (nội dung 2 Form, loại bài nhóm cần viết, lịch, quyền riêng tư); `backend/data/ai-grading/split.json` (10 câu: 5 dev + 5 test, chia theo câu hỏi); `backend/scripts/gold_sheets.py` (`collect`, `sheets`, `merge` + kappa / QWK giữa hai người chấm; chặn bài AI ở test); `.gitignore` cho `backend/data/ai-grading/private/`; 9 test. 👤 Còn: tạo Form, thu bài, vòng hiệu chỉnh, Hòa và Tâm chấm.
   - `docs/ai-grading/RATER_GUIDELINE.md` (tiếng Anh, ví dụ full / partial / none cho từng loại ý).
   - Google Form thu bài thật (có câu đồng ý dùng cho nghiên cứu, không hỏi tên); nhóm viết thêm các loại bài còn thiếu; bài do AI sinh ≤ 30% và **không vào test**.
   - Vòng hiệu chỉnh 20 bài (Hòa + Tâm cùng chấm, so sánh, sửa hướng dẫn) → hai bạn chấm độc lập phần còn lại, **không xem điểm của nhau và không xem điểm AI** → bất đồng do Tuấn hoặc thầy quyết.
   - ✅ ≥ 120 bài (≥ 40 bài thật), có `gold.csv`, kappa giữa hai người, chia dev / test theo câu hỏi. Dữ liệu thật **không commit** lên repo.
-- [ ] **B5 Script đánh giá** — dự kiến 15–16/11 · thực tế __/__ 👤
-  - `backend/scripts/eval_grading.py`: đọc `gold.csv` + kết quả một lần chạy → các chỉ số mục 3 + bootstrap + **Precision / Recall / F1 theo từng nhãn full / partial / none** (cách tính như `Session02/demo2.py`); mỗi lần chạy lưu `results/<run_id>.csv` (method, model, prompt_version, kết quả từng ý, latency, lỗi).
+- [x] **B5 Script đánh giá** — dự kiến 15–16/11 · thực tế 14/11 🤖 (chờ gold.csv thật để chạy số liệu)
+  - ✅ `backend/scripts/eval_grading.py` có 3 lệnh. `run`: chấm, ghi `results/<run_id>.csv` (method, model, prompt_version, kết quả từng ý, độ trễ, lỗi; một bài lỗi không dừng cả lần chạy). `report`: MAE, RMSE, QWK, khớp từng ý, lệch ≤ 1, bài sai bị chấm cao, độ lệch trung bình, P / R / F1 từng nhãn theo công thức demo2, ma trận nhầm, p95 độ trễ; lưu `.metrics.json`. `compare`: paired bootstrap 1.000 lần theo bài, CI 95%, độ ổn định khi cùng cách chấm. Thêm cách chấm mới (B7, B9) bằng cách đăng ký vào `METHODS`. 11 test.
+  - ✅ Chạy thử cả chuỗi `gold_sheets` → `eval_grading` trên dữ liệu giả. Bộ chấm từ khóa chấm **full cả 2 ý** cho bài đảo nghĩa "break skips to the next iteration and continue exits the loop" (vì "and" không phải ranh giới vế). Đây là ví dụ cho báo cáo: chấm từ khóa không hiểu nghĩa nên cần LLM.
+  - (kế hoạch gốc) `backend/scripts/eval_grading.py`: đọc `gold.csv` + kết quả một lần chạy → các chỉ số mục 3 + bootstrap + **Precision / Recall / F1 theo từng nhãn full / partial / none** (cách tính như `Session02/demo2.py`); mỗi lần chạy lưu `results/<run_id>.csv` (method, model, prompt_version, kết quả từng ý, latency, lỗi).
   - ✅ Chạy được với chấm từ khóa trên dev; số liệu tái lập được.
 - [ ] **B6 Runner pipeline** — dự kiến 16/11 · thực tế __/__ 👤
   - `backend/app/ai/review/pipeline/`: runner + bọc khối 0, 3, 4, 7, 8 từ code có sẵn; ghi `trace.nodes`.
@@ -164,6 +178,9 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
 |---|---|---|
 | 13/11 | Khảo sát AI Grading; chốt D1 tiếng Anh, D2 fine-tune để sau, D12 hạn 25/11 | — |
 | 14/11 | Thầy đồng ý phiên bản 1 LLM + RAG + Prompt; yêu cầu thêm độ chính xác + pipeline kiểu n8n. Gom tài liệu pipeline Session 01. Lập file kế hoạch này | GĐ7 trùng lịch |
+| 14/11 | **B5 xong**: `eval_grading.py` (run / report / compare, P/R/F1 theo demo2, bootstrap), 11 test; chạy thử cả chuỗi trên dữ liệu giả | Chờ gold.csv thật; tiếp B6 |
+| 14/11 | **Review B2** (sửa khối 1: tên biến một chữ, dấu phẩy trong code; bỏ 3 từ khóa) + **B4 phần chuẩn bị** (hướng dẫn chấm, quy trình Form, split dev / test, script `gold_sheets`) | Tuấn tạo Form, báo Hòa, Tâm; nạp DB tiếng Anh |
+| 14/11 | **B3 xong** (bộ chấm từ khóa tiếng Anh + chọn theo ngôn ngữ, 21 test, kiểm ngược 3 luật). **B2 bản nháp xong**: ngân hàng tiếng Anh 100 câu + 15 đoạn, đáp án mẫu 30/30 đạt 10/10; seed `--retire`; prompt sinh câu tiếng Anh. Khối 1 sửa: từ khóa Python, toán tử, số thập phân. 815 passed | Tuấn duyệt bản dịch, rồi nạp DB thật |
 | 14/11 | **B1 xong**: khối 1 tiền xử lý NLP (giữ phủ định, lemmatize theo từ loại, luật số nhiều cho thuật ngữ lập trình, giữ ký hiệu `[ ] ( ) =`), 22 test, toàn bộ 713 passed | Dockerfile cần thêm bước tải dữ liệu NLTK khi gộp nhánh |
 | 14/11 | Chốt B0: GĐ7 chỉ làm 7.5a + 7.5c; người chấm Hòa, Tâm. Duyệt câu AI: bấm Duyệt là xong, tự cấp mã gợi ý lúc duyệt (sửa backend 7.3, 54 test). 7.8 đi qua module Phản hồi của Tâm — gửi `BA-nhom/Gui-Tam-Bao-loi-on-tap-qua-Phan-hoi.md` | Chờ Tâm trả lời 4 câu |
 | 14/11 | Chép Session01 + Session02 từ thư mục môn NLP vào `BA-nhom/pipeline/`; đối chiếu: Session01 → khối 1, demo2 (P/R/F1) → B5, demo3 (Pydantic + instructor) → khối 4 | — |

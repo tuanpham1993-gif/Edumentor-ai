@@ -1,0 +1,2733 @@
+{
+  "course_id": 312,
+  "course_title": "Python Basics: Selection and Iteration",
+  "note": "English bank (D1, 13/11/2026): translated from course_312.json (Vietnamese, now retired). 5 skills x 20 questions = 100 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays); 30 essays = 18 easy + 12 advanced. Codes follow QT9 (no course prefix). Load with: python -m scripts.seed_review --file data/review/course_312_en.json",
+  "skills": {
+    "PY": 167,
+    "CS": 170,
+    "ITER": 400,
+    "VAR": 769,
+    "COND": 770
+  },
+  "chunks": [
+    {
+      "code": "PY-K01",
+      "skill": "PY",
+      "title": "What Python is — running a program, input and output",
+      "content": "Python is an interpreted programming language with short, readable syntax. Python uses indentation to create code blocks instead of curly braces: the lines that belong to the body of an if, for, while or a function must be indented to the same level. The print() function displays data on the screen; the input() function reads data that the user types on the keyboard and always returns a string (str). A comment line starts with the # symbol, and Python ignores it when running the program."
+    },
+    {
+      "code": "PY-K02",
+      "skill": "PY",
+      "title": "Basic data types, operators and type conversion",
+      "content": "The basic data types are int (integers, e.g. 5), float (real numbers, e.g. 3.14), str (strings, e.g. 'hello') and bool (True / False). Convert between types with int('5'), float('2.5') and str(10). Operators: + addition, - subtraction, * multiplication, / division which always gives a float (7 / 2 = 3.5), // floor division which keeps only the integer part (7 // 2 = 3), % remainder (7 % 2 = 1) and ** power (2 ** 3 = 8). Adding a string to a number (e.g. '5' + 1) raises a TypeError, so you must convert the type first."
+    },
+    {
+      "code": "PY-K03",
+      "skill": "PY",
+      "title": "Lists and tuples",
+      "content": "A list is written in square brackets, e.g. [1, 2, 3], and is mutable: you can add an item with append(), change an item with a[0] = 9, and remove an item with remove() or del. A tuple is written in parentheses, e.g. (1, 2, 3), and is immutable: it cannot be changed after it is created. Use a tuple for fixed data such as coordinates (x, y) or dates (day, month, year); a tuple can also be used as a dictionary key, a list cannot. Both are indexed from 0, and len() returns the number of items."
+    },
+    {
+      "code": "CS-K01",
+      "skill": "CS",
+      "title": "Algorithms and programs",
+      "content": "An algorithm is a finite sequence of clear steps, in a defined order, that solves a problem by turning the input into the output. Properties of an algorithm: finiteness (it must stop after a number of steps), definiteness (each step is clear and has only one meaning), and it has input and output. A program is an algorithm written in a programming language so that a computer can carry it out."
+    },
+    {
+      "code": "CS-K02",
+      "skill": "CS",
+      "title": "The three basic control structures and flowcharts",
+      "content": "Every algorithm is built from three basic control structures: sequence (steps are done one after another), selection or branching (do one thing or another depending on a condition) and iteration or repetition (do something many times). A flowchart shows an algorithm as a drawing: an oval is start / end, a rectangle is a processing step, a parallelogram is input / output, a diamond is a branching condition, and arrows show the direction of flow."
+    },
+    {
+      "code": "CS-K03",
+      "skill": "CS",
+      "title": "Types of errors and debugging",
+      "content": "There are three common types of errors. A syntax error (SyntaxError) breaks the rules of the language, e.g. a missing colon after if, so the program cannot run. A runtime error stops the program while it is running, e.g. dividing by 0 raises ZeroDivisionError and using a variable that was never assigned raises NameError. A logic error lets the program run normally without any error message, but the result is wrong, e.g. because of a wrong condition. Debugging means finding the mistake by printing the values of variables or running the program step by step."
+    },
+    {
+      "code": "ITER-K01",
+      "skill": "ITER",
+      "title": "The for loop and range()",
+      "content": "A for loop visits each item of a sequence (a list, a string, a range) one by one. range(n) produces the numbers 0, 1, ..., n-1 (n is not included). range(a, b) produces numbers from a to b-1. range(a, b, step) starts at a, increases by step each time and stops before b; e.g. range(2, 10, 3) gives 2, 5, 8. Use for when the number of repetitions is known in advance or when you need to go through each item of a list."
+    },
+    {
+      "code": "ITER-K02",
+      "skill": "ITER",
+      "title": "The while loop",
+      "content": "A while loop repeats its block of code as long as the condition is true and stops when the condition becomes false. The body of the loop must update the variable used in the condition (e.g. i += 1); otherwise the condition stays true forever and the program loops infinitely. Use while when the number of repetitions is not known in advance, e.g. asking for a password until the user enters the correct one, or reading data until a stop value appears."
+    },
+    {
+      "code": "ITER-K03",
+      "skill": "ITER",
+      "title": "break, continue and accumulator variables",
+      "content": "The break statement exits the loop completely, so the remaining iterations do not run. The continue statement skips the rest of the current iteration and moves on to the next iteration. An accumulator variable is used to count or to add up values: initialise it before the loop (e.g. total = 0, count = 0) and add to it inside the loop body (total += i). Example of adding 1 to n: n = int(input()); total = 0; for i in range(1, n + 1): total += i."
+    },
+    {
+      "code": "VAR-K01",
+      "skill": "VAR",
+      "title": "Variables and assignment",
+      "content": "A variable is a name attached to a value stored in memory, used to store data and use it again. Assignment uses the = sign, e.g. x = 5 means assigning the value 5 to the variable x (= is not a comparison). Assigning again changes the value of the variable: x = x + 1, or the short form x += 1, increases x by 1. Python can assign several variables at once and swap them quickly: a, b = b, a."
+    },
+    {
+      "code": "VAR-K02",
+      "skill": "VAR",
+      "title": "Rules for naming variables",
+      "content": "A variable name in Python must start with a letter or an underscore (_), cannot start with a digit, cannot contain spaces or special characters (such as -, @, #), and cannot be a Python keyword (if, for, while, class, def...). Variable names are case-sensitive: Total and total are two different variables. Convention: use meaningful names in lowercase joined by underscores (snake_case), e.g. total_score. Valid examples: total_sum, _count, x1; invalid: 2nums, total sum, for."
+    },
+    {
+      "code": "VAR-K03",
+      "skill": "VAR",
+      "title": "Dynamic typing",
+      "content": "Python is a dynamically typed language: you do not declare a type when you create a variable, and Python works out the type from the value assigned while the program runs. The same variable can later be assigned a value of another type, e.g. x = 10 (int) and then x = 'ten' (str). The type(x) function returns the current type of a variable. None is a special value meaning 'no value' (e.g. x = None). This is different from a variable that was never assigned: using an unassigned variable raises NameError."
+    },
+    {
+      "code": "COND-K01",
+      "skill": "COND",
+      "title": "The if, elif and else statements",
+      "content": "The if statement checks a condition: if it is true, the indented block below it runs. elif (short for else if) checks another condition when all the previous conditions are false. else runs when all the conditions above are false. In an if / elif / else chain exactly one branch runs: the first branch whose condition is true. A colon (:) must follow the condition and the block must be indented."
+    },
+    {
+      "code": "COND-K02",
+      "skill": "COND",
+      "title": "Comparison operators and logical operators",
+      "content": "Comparison operators: == (equal), != (not equal), <, >, <=, >=; the result is True or False. Note: == compares, = assigns. Logical operators: and is true when both sides are true; or is true when at least one side is true; not reverses the value. Examples: True and False gives False, True or False gives True, not True gives False. String comparison is case-sensitive."
+    },
+    {
+      "code": "COND-K03",
+      "skill": "COND",
+      "title": "Nested conditions, branch order and falsy values",
+      "content": "An if can be placed inside another if (nested conditions). The order of elif branches matters: because only the first true branch runs, a broad condition placed first will block the branches after it. For example, grading a score must go from high to low: if score >= 8 (Excellent), elif score >= 6.5 (Good), elif score >= 5 (Average), else (Weak). In a condition, the values 0, the empty string '', the empty list [] and None are treated as False (falsy); all other values are treated as True."
+    }
+  ],
+  "questions": [
+    {
+      "code": "PY-TN-01",
+      "skill": "PY",
+      "chunk": "PY-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How does Python mark a block of code (for example, the body of an if statement)?",
+      "options": [
+        "Indentation",
+        "Curly braces { }",
+        "The keywords begin / end",
+        "Semicolons ;"
+      ],
+      "correct_index": 0,
+      "explanation": "Python uses indentation to create code blocks; lines at the same indentation level belong to the same block."
+    },
+    {
+      "code": "PY-TN-02",
+      "skill": "PY",
+      "chunk": "PY-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these data types CANNOT be changed after it is created?",
+      "options": [
+        "list",
+        "dict",
+        "set",
+        "tuple"
+      ],
+      "correct_index": 3,
+      "explanation": "tuple is immutable; list, dict and set can all be changed."
+    },
+    {
+      "code": "PY-TN-03",
+      "skill": "PY",
+      "chunk": "PY-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What data type does the input() function return?",
+      "options": [
+        "str",
+        "int",
+        "float",
+        "bool"
+      ],
+      "correct_index": 0,
+      "explanation": "input() always returns a string (str); to use it as a number you must convert it with int() or float()."
+    },
+    {
+      "code": "PY-TN-04",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the result of the expression 7 // 2?",
+      "options": [
+        "3",
+        "3.5",
+        "4",
+        "1"
+      ],
+      "correct_index": 0,
+      "explanation": "// is floor division: 7 // 2 = 3 (only 7 / 2 gives 3.5)."
+    },
+    {
+      "code": "PY-TN-05",
+      "skill": "PY",
+      "chunk": "PY-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Given a = [1, 2, 3], we run a.append(4). What is the value of len(a)?",
+      "options": [
+        "4",
+        "3",
+        "5",
+        "An error, because you cannot add to a list"
+      ],
+      "correct_index": 0,
+      "explanation": "append() adds one item to the end of the list → a = [1, 2, 3, 4], so len(a) = 4."
+    },
+    {
+      "code": "PY-TN-06",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "We run x = input(), the user types 5, and then we run print(x + 1). What happens?",
+      "options": [
+        "It prints 6",
+        "It prints 51",
+        "It raises a TypeError",
+        "It prints 5"
+      ],
+      "correct_index": 2,
+      "explanation": "x is the string '5'; adding a string to an integer raises a TypeError. You need to write int(x) + 1."
+    },
+    {
+      "code": "PY-TL-01",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Name the Python data types used for integers, real numbers and strings.",
+      "rubric": [
+        {
+          "text": "Integer type: int (e.g. 5)",
+          "max_points": 3,
+          "main_keywords": [
+            "int",
+            "integer"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Real number type: float (e.g. 3.14)",
+          "max_points": 3,
+          "main_keywords": [
+            "float",
+            "real number",
+            "decimal"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "String type: str (e.g. 'hello')",
+          "max_points": 4,
+          "main_keywords": [
+            "str",
+            "string",
+            "text"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: int is used for integers, e.g. 5; float is used for real numbers, e.g. 3.14; str is used for strings, e.g. 'hello'."
+    },
+    {
+      "code": "PY-TL-02",
+      "skill": "PY",
+      "chunk": "PY-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Compare lists and tuples in Python, and give an example of when you should use a tuple.",
+      "rubric": [
+        {
+          "text": "A list can be changed (add, edit or remove items)",
+          "max_points": 3,
+          "main_keywords": [
+            "change",
+            "mutable",
+            "modify",
+            "edit",
+            "add",
+            "remove",
+            "append"
+          ],
+          "sub_keywords": [
+            "list"
+          ]
+        },
+        {
+          "text": "A tuple cannot be changed after it is created",
+          "max_points": 3,
+          "main_keywords": [
+            "immutable",
+            "not change",
+            "not modify",
+            "not edit"
+          ],
+          "sub_keywords": [
+            "tuple"
+          ]
+        },
+        {
+          "text": "A list is written in square brackets [ ]",
+          "max_points": 1,
+          "main_keywords": [
+            "square bracket",
+            "[]",
+            "[ ]"
+          ],
+          "sub_keywords": [
+            "list"
+          ]
+        },
+        {
+          "text": "A tuple is written in parentheses ( )",
+          "max_points": 1,
+          "main_keywords": [
+            "parenthesis",
+            "round bracket",
+            "()",
+            "( )"
+          ],
+          "sub_keywords": [
+            "tuple"
+          ]
+        },
+        {
+          "text": "A sensible example of when to use a tuple (coordinates, dates, a dictionary key...)",
+          "max_points": 2,
+          "main_keywords": [
+            "coordinate",
+            "date",
+            "fixed",
+            "constant",
+            "key"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A list can be changed (append, edit, remove items), while a tuple cannot be changed after it is created. A list is written in square brackets [1, 2], a tuple in parentheses (1, 2). Use a tuple for fixed data such as coordinates (x, y) or as a dictionary key."
+    },
+    {
+      "code": "PY-TN-07",
+      "skill": "PY",
+      "chunk": "PY-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In Python, which symbol starts a comment line?",
+      "options": [
+        "//",
+        "#",
+        "/*",
+        "--"
+      ],
+      "correct_index": 1,
+      "explanation": "A comment in Python starts with #; Python ignores that line when running."
+    },
+    {
+      "code": "PY-TN-08",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which operator gives the remainder of a division in Python?",
+      "options": [
+        "//",
+        "**",
+        "%",
+        "/"
+      ],
+      "correct_index": 2,
+      "explanation": "% gives the remainder (7 % 2 = 1); // is floor division, ** is power and / is normal division."
+    },
+    {
+      "code": "PY-TN-09",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What data type does the value True belong to?",
+      "options": [
+        "str",
+        "int",
+        "float",
+        "bool"
+      ],
+      "correct_index": 3,
+      "explanation": "True and False are the two values of the bool type."
+    },
+    {
+      "code": "PY-TN-10",
+      "skill": "PY",
+      "chunk": "PY-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Given a list a, how do you get the FIRST item of a?",
+      "options": [
+        "a[0]",
+        "a[1]",
+        "a(0)",
+        "a.first"
+      ],
+      "correct_index": 0,
+      "explanation": "Lists are indexed from 0, so the first item is a[0]."
+    },
+    {
+      "code": "PY-TN-11",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the result of the expression 2 ** 3?",
+      "options": [
+        "6",
+        "8",
+        "9",
+        "5"
+      ],
+      "correct_index": 1,
+      "explanation": "** is power: 2 ** 3 = 2 × 2 × 2 = 8."
+    },
+    {
+      "code": "PY-TN-12",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does the expression 7 / 2 give?",
+      "options": [
+        "3",
+        "3.0",
+        "4",
+        "3.5"
+      ],
+      "correct_index": 3,
+      "explanation": "/ is normal division and always gives a real number: 7 / 2 = 3.5."
+    },
+    {
+      "code": "PY-TN-13",
+      "skill": "PY",
+      "chunk": "PY-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Given t = (1, 2, 3), we run t[0] = 9. What happens?",
+      "options": [
+        "It raises a TypeError",
+        "t becomes (9, 2, 3)",
+        "t becomes (1, 2, 9)",
+        "t becomes [9, 2, 3]"
+      ],
+      "correct_index": 0,
+      "explanation": "A tuple cannot be changed after it is created; assigning t[0] = 9 raises a TypeError."
+    },
+    {
+      "code": "PY-TN-14",
+      "skill": "PY",
+      "chunk": "PY-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nname = 'An'\nprint('Hello', name)",
+      "options": [
+        "HelloAn",
+        "Hello name",
+        "Hello An",
+        "'Hello', name"
+      ],
+      "correct_index": 2,
+      "explanation": "print() separates its values with a space and prints the VALUE of the variable name: Hello An."
+    },
+    {
+      "code": "PY-TL-03",
+      "skill": "PY",
+      "chunk": "PY-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain what the print() and input() functions do in Python.",
+      "rubric": [
+        {
+          "text": "print() displays data on the screen",
+          "max_points": 4,
+          "main_keywords": [
+            "display",
+            "show",
+            "output",
+            "screen"
+          ],
+          "sub_keywords": [
+            "print"
+          ]
+        },
+        {
+          "text": "input() reads data that the user types on the keyboard",
+          "max_points": 3,
+          "main_keywords": [
+            "read",
+            "keyboard",
+            "enter",
+            "receive",
+            "get"
+          ],
+          "sub_keywords": [
+            "input"
+          ]
+        },
+        {
+          "text": "input() always returns a string (str)",
+          "max_points": 3,
+          "main_keywords": [
+            "string",
+            "str",
+            "text"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The print() function displays data on the screen. The input() function reads the data that the user types on the keyboard. The value that input() returns is always a string (str)."
+    },
+    {
+      "code": "PY-TL-04",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the difference between the / operator and the // operator in Python, with an example.",
+      "rubric": [
+        {
+          "text": "/ is normal division and the result is always a real number (float)",
+          "max_points": 4,
+          "main_keywords": [
+            "float",
+            "real number",
+            "decimal"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "// is floor division (keeps only the integer part)",
+          "max_points": 4,
+          "main_keywords": [
+            "integer part",
+            "whole number",
+            "whole part",
+            "floor",
+            "round down",
+            "integer division"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A correct example (e.g. 7 / 2 = 3.5, 7 // 2 = 3)",
+          "max_points": 2,
+          "main_keywords": [
+            "7 / 2",
+            "7 // 2",
+            "3.5"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The / operator gives a real number (float), for example 7 / 2 = 3.5. The // operator keeps only the integer part of the result, for example 7 // 2 = 3."
+    },
+    {
+      "code": "PY-TL-05",
+      "skill": "PY",
+      "chunk": "PY-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "How do you add an item to the end of a list, and how do you get the number of items in a list in Python?",
+      "rubric": [
+        {
+          "text": "Use append() to add an item to the end of the list",
+          "max_points": 5,
+          "main_keywords": [
+            "append"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Use len() to get the number of items",
+          "max_points": 5,
+          "main_keywords": [
+            "len"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Use the append() method to add an item to the end of a list, for example a.append(4). Use the len() function to get the number of items, for example len(a)."
+    },
+    {
+      "code": "PY-TL-06",
+      "skill": "PY",
+      "chunk": "PY-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "The user enters two integers on the keyboard. Write (or describe) a program that prints their sum, and explain why you have to convert the input.",
+      "rubric": [
+        {
+          "text": "Read the data with input()",
+          "max_points": 2,
+          "main_keywords": [
+            "input"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Convert it to a number with int() (or float())",
+          "max_points": 3,
+          "main_keywords": [
+            "int(",
+            "float(",
+            "convert",
+            "cast",
+            "conversion"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Print the sum with print()",
+          "max_points": 2,
+          "main_keywords": [
+            "print"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Explanation: input() returns a string, and adding two strings only joins them (e.g. '5' + '3' = '53')",
+          "max_points": 3,
+          "main_keywords": [
+            "string",
+            "str",
+            "join",
+            "concatenate"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: a = int(input()) and b = int(input()) read two numbers and convert them to integers. Then print(a + b) prints the sum. We must convert them because input() always returns a string, so without converting, '5' + '3' would be joined into '53'."
+    },
+    {
+      "code": "CS-TN-01",
+      "skill": "CS",
+      "chunk": "CS-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is an algorithm?",
+      "options": [
+        "A programming language",
+        "A special kind of variable",
+        "A hardware part of a computer",
+        "A finite sequence of clear steps that solves a problem"
+      ],
+      "correct_index": 3,
+      "explanation": "An algorithm is a finite sequence of clear steps, in order, that solves a problem."
+    },
+    {
+      "code": "CS-TN-02",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What are the three basic control structures used to build every algorithm?",
+      "options": [
+        "Sequence, selection, iteration",
+        "Variable, function, class",
+        "Input, output, storage",
+        "Addition, subtraction, multiplication"
+      ],
+      "correct_index": 0,
+      "explanation": "Every algorithm is built from three structures: sequence, selection (branching) and iteration."
+    },
+    {
+      "code": "CS-TN-03",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In a flowchart, which shape represents a branching condition?",
+      "options": [
+        "Rectangle",
+        "Oval",
+        "Diamond",
+        "Parallelogram"
+      ],
+      "correct_index": 2,
+      "explanation": "A diamond is a condition; a rectangle is processing, an oval is start / end and a parallelogram is input / output."
+    },
+    {
+      "code": "CS-TN-04",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A program runs normally and shows no error, but it prints a wrong result. What type of error is this?",
+      "options": [
+        "Syntax error",
+        "Runtime error",
+        "Logic error",
+        "Hardware error"
+      ],
+      "correct_index": 2,
+      "explanation": "Logic error: the program still runs but does not do what the writer intended, so the result is wrong."
+    },
+    {
+      "code": "CS-TN-05",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What error does the statement print(10 / 0) cause?",
+      "options": [
+        "SyntaxError",
+        "ZeroDivisionError",
+        "NameError",
+        "No error, it prints 0"
+      ],
+      "correct_index": 1,
+      "explanation": "Dividing by 0 is a runtime error; Python raises ZeroDivisionError."
+    },
+    {
+      "code": "CS-TN-06",
+      "skill": "CS",
+      "chunk": "CS-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which property MUST every algorithm have?",
+      "options": [
+        "It must be written in Python",
+        "It must contain a loop",
+        "It must use as little memory as possible",
+        "It must stop after a finite number of steps"
+      ],
+      "correct_index": 3,
+      "explanation": "Finiteness: an algorithm must stop after a finite number of steps. The language, loops or memory use are not required."
+    },
+    {
+      "code": "CS-TL-01",
+      "skill": "CS",
+      "chunk": "CS-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is an algorithm? Name two properties of an algorithm.",
+      "rubric": [
+        {
+          "text": "An algorithm is a sequence of steps that solves a problem",
+          "max_points": 4,
+          "main_keywords": [
+            "step",
+            "sequence"
+          ],
+          "sub_keywords": [
+            "algorithm",
+            "problem"
+          ]
+        },
+        {
+          "text": "Finiteness: it must stop after a finite number of steps",
+          "max_points": 3,
+          "main_keywords": [
+            "finite",
+            "finiteness",
+            "stop",
+            "end",
+            "terminate"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Definiteness: each step is clear; it has input and output",
+          "max_points": 3,
+          "main_keywords": [
+            "definite",
+            "definiteness",
+            "clear",
+            "unambiguous",
+            "input",
+            "output"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: An algorithm is a finite sequence of clear steps that solves a problem. Its properties are finiteness (it must stop), definiteness (each step is clear), and it has input and output."
+    },
+    {
+      "code": "CS-TN-07",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In a flowchart, what step does a parallelogram represent?",
+      "options": [
+        "Start / end",
+        "Input / output of data",
+        "A branching condition",
+        "A processing step"
+      ],
+      "correct_index": 1,
+      "explanation": "A parallelogram is input / output; an oval is start / end, a diamond is a condition and a rectangle is processing."
+    },
+    {
+      "code": "CS-TN-08",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Forgetting the colon after if causes which type of error?",
+      "options": [
+        "A syntax error (SyntaxError)",
+        "A logic error",
+        "A division by zero error",
+        "No error at all"
+      ],
+      "correct_index": 0,
+      "explanation": "A missing colon breaks the rules of the language → a syntax error, so the program cannot run."
+    },
+    {
+      "code": "CS-TN-09",
+      "skill": "CS",
+      "chunk": "CS-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is a computer program?",
+      "options": [
+        "An algorithm written in a programming language",
+        "A shape in a flowchart",
+        "Data that the user enters",
+        "A kind of runtime error"
+      ],
+      "correct_index": 0,
+      "explanation": "A program is an algorithm written in a programming language so that a computer can carry it out."
+    },
+    {
+      "code": "CS-TN-10",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which control structure is used to do something many times?",
+      "options": [
+        "Sequence",
+        "Selection",
+        "Iteration",
+        "Input / output"
+      ],
+      "correct_index": 2,
+      "explanation": "Iteration repeats something many times."
+    },
+    {
+      "code": "CS-TN-11",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "We run print(score) when the variable score has never been assigned a value. Which error happens?",
+      "options": [
+        "SyntaxError",
+        "ZeroDivisionError",
+        "NameError",
+        "No error, it prints 0"
+      ],
+      "correct_index": 2,
+      "explanation": "Using an unassigned variable is a runtime error; Python raises NameError."
+    },
+    {
+      "code": "CS-TN-12",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Algorithm: enter a score; if the score is 5 or more, print 'Pass', otherwise print 'Fail'. Which structure is mainly used?",
+      "options": [
+        "Iteration",
+        "Selection",
+        "Sequence only",
+        "No structure at all"
+      ],
+      "correct_index": 1,
+      "explanation": "Choosing one of two actions depending on a condition is the selection structure."
+    },
+    {
+      "code": "CS-TN-13",
+      "skill": "CS",
+      "chunk": "CS-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A list of steps contains the step 'add 1 to x, repeat forever', so it never stops. Which property of an algorithm does it break?",
+      "options": [
+        "Definiteness",
+        "Having input",
+        "Having output",
+        "Finiteness"
+      ],
+      "correct_index": 3,
+      "explanation": "An algorithm must stop after a finite number of steps (finiteness); repeating forever breaks it."
+    },
+    {
+      "code": "CS-TN-14",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is a common way to find where a logic error is?",
+      "options": [
+        "Delete everything and write it again",
+        "Switch to another language",
+        "Turn the computer off and run again",
+        "Print the values of variables to check them"
+      ],
+      "correct_index": 3,
+      "explanation": "Debug by printing the values of variables or running step by step to see where the result starts to go wrong."
+    },
+    {
+      "code": "CS-TL-02",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Name the three basic control structures used to build algorithms and briefly explain each one.",
+      "rubric": [
+        {
+          "text": "Sequence: the steps are done one after another",
+          "max_points": 3,
+          "main_keywords": [
+            "one after another",
+            "in order",
+            "one by one",
+            "in turn"
+          ],
+          "sub_keywords": [
+            "sequence",
+            "sequential"
+          ]
+        },
+        {
+          "text": "Selection (branching): do one thing or another depending on a condition",
+          "max_points": 4,
+          "main_keywords": [
+            "condition",
+            "depending"
+          ],
+          "sub_keywords": [
+            "selection",
+            "branching",
+            "branch"
+          ]
+        },
+        {
+          "text": "Iteration: do something many times",
+          "max_points": 3,
+          "main_keywords": [
+            "many times",
+            "several times",
+            "repeat",
+            "again"
+          ],
+          "sub_keywords": [
+            "iteration",
+            "loop",
+            "repetition"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Sequence means the steps are done one after another from top to bottom. Selection (branching) means choosing to do one thing or another depending on a condition. Iteration means doing something many times."
+    },
+    {
+      "code": "CS-TL-03",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "How is a syntax error different from a logic error? Give an example of each.",
+      "rubric": [
+        {
+          "text": "A syntax error breaks the rules of the language, so the program cannot run",
+          "max_points": 4,
+          "main_keywords": [
+            "rule",
+            "not run",
+            "syntaxerror",
+            "wrong syntax",
+            "written incorrectly",
+            "grammar"
+          ],
+          "sub_keywords": [
+            "syntax"
+          ]
+        },
+        {
+          "text": "A logic error: the program still runs without an error message, but the result is wrong",
+          "max_points": 4,
+          "main_keywords": [
+            "wrong result",
+            "result is wrong",
+            "still run",
+            "no error",
+            "run normally",
+            "incorrect result",
+            "unexpected result"
+          ],
+          "sub_keywords": [
+            "logic"
+          ]
+        },
+        {
+          "text": "A sensible example (a missing colon; a wrong condition...)",
+          "max_points": 2,
+          "main_keywords": [
+            "colon",
+            "missing",
+            "wrong condition",
+            "typo",
+            "forget",
+            "instead of",
+            "bracket"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A syntax error breaks the rules of the language, so the program cannot run, for example a missing colon after if. A logic error means the program still runs without any error message but the result is wrong, for example a wrong condition."
+    },
+    {
+      "code": "CS-TL-04",
+      "skill": "CS",
+      "chunk": "CS-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Write an algorithm (as steps) that finds the larger of two numbers a and b. State the input, the output and the control structure used.",
+      "rubric": [
+        {
+          "text": "Input: enter the two numbers a, b",
+          "max_points": 2,
+          "main_keywords": [
+            "input",
+            "enter",
+            "read"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Compare a with b (e.g. if a > b take a, otherwise take b)",
+          "max_points": 3,
+          "main_keywords": [
+            "a > b",
+            "b > a",
+            "a < b",
+            "compare"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Output: print the larger number",
+          "max_points": 2,
+          "main_keywords": [
+            "output",
+            "print",
+            "display"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Selection structure (if / else)",
+          "max_points": 3,
+          "main_keywords": [
+            "selection",
+            "branching",
+            "branch",
+            "if / else"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Step 1: enter the two numbers a and b, this is the input. Step 2: compare a with b; if a > b then max = a, otherwise max = b. Step 3: print max, this is the output. The algorithm uses a selection structure because it has to choose based on a condition."
+    },
+    {
+      "code": "CS-TL-05",
+      "skill": "CS",
+      "chunk": "CS-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "This program should compute the average of two numbers, but it prints a wrong result:\na = 4\nb = 6\navg = a + b / 2\nprint(avg)\nWhat type of error is this, why is it wrong, how do you fix it, and name one way to debug it.",
+      "rubric": [
+        {
+          "text": "It is a logic error",
+          "max_points": 2,
+          "main_keywords": [
+            "logic"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Why it is wrong: the division is done before the addition (it prints 7.0)",
+          "max_points": 3,
+          "main_keywords": [
+            "precedence",
+            "priority",
+            "before",
+            "order",
+            "7.0"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Fix: add parentheses, avg = (a + b) / 2",
+          "max_points": 3,
+          "main_keywords": [
+            "(a + b) / 2",
+            "parenthesis",
+            "bracket"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Debugging: print the values of the variables or run step by step",
+          "max_points": 2,
+          "main_keywords": [
+            "print the value",
+            "step by step",
+            "debugger"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: This is a logic error because the program still runs but prints 7.0 instead of 5. The cause is that division has a higher priority and is done before addition, so only b is divided by 2. Fix it as avg = (a + b) / 2 so that the addition is done first and then the division. To debug it, you can print the value of each variable or run the program step by step."
+    },
+    {
+      "code": "CS-TL-06",
+      "skill": "CS",
+      "chunk": "CS-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Describe in words (or as a flowchart) an algorithm that checks whether an integer n is even or odd. State which flowchart shape is used for the input step, the condition check and the start / end.",
+      "rubric": [
+        {
+          "text": "Input n uses a parallelogram",
+          "max_points": 2,
+          "main_keywords": [
+            "parallelogram"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Even condition: n % 2 == 0 (divisible by 2)",
+          "max_points": 2,
+          "main_keywords": [
+            "% 2",
+            "divisible by 2"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The condition is placed in a diamond",
+          "max_points": 2,
+          "main_keywords": [
+            "diamond",
+            "rhombus"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Two branches: if true print even, if false print odd",
+          "max_points": 2,
+          "main_keywords": [
+            "odd"
+          ],
+          "sub_keywords": [
+            "even"
+          ]
+        },
+        {
+          "text": "Start / end uses an oval",
+          "max_points": 2,
+          "main_keywords": [
+            "oval",
+            "ellipse"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Start with an oval. Input the number n in a parallelogram. Check the condition n % 2 == 0 in a diamond. If it is true, print that the number is even, otherwise print that the number is odd. Finally, end with an oval."
+    },
+    {
+      "code": "ITER-TN-01",
+      "skill": "ITER",
+      "chunk": "ITER-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which numbers does range(5) produce?",
+      "options": [
+        "1, 2, 3, 4, 5",
+        "0, 1, 2, 3, 4",
+        "0, 1, 2, 3, 4, 5",
+        "Only the number 5"
+      ],
+      "correct_index": 1,
+      "explanation": "range(n) produces numbers from 0 to n-1; n is not included."
+    },
+    {
+      "code": "ITER-TN-02",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which statement exits a loop completely?",
+      "options": [
+        "continue",
+        "pass",
+        "break",
+        "else"
+      ],
+      "correct_index": 2,
+      "explanation": "break exits the loop completely; continue only skips the current iteration."
+    },
+    {
+      "code": "ITER-TN-03",
+      "skill": "ITER",
+      "chunk": "ITER-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "When does a while loop repeat its block of code?",
+      "options": [
+        "While the condition is still true",
+        "Exactly 10 times",
+        "When the condition is false",
+        "Only once"
+      ],
+      "correct_index": 0,
+      "explanation": "while repeats as long as the condition is true and stops when the condition becomes false."
+    },
+    {
+      "code": "ITER-TN-04",
+      "skill": "ITER",
+      "chunk": "ITER-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nfor i in range(2, 10, 3):\n    print(i)",
+      "options": [
+        "2 3 4 5 6 7 8 9",
+        "3 6 9",
+        "2 5 8 11",
+        "2 5 8"
+      ],
+      "correct_index": 3,
+      "explanation": "It starts at 2, increases by 3 each time and stops before 10: 2, 5, 8."
+    },
+    {
+      "code": "ITER-TN-05",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "After running this code, what is the value of total?\ntotal = 0\nfor i in range(1, 4):\n    total += i",
+      "options": [
+        "4",
+        "6",
+        "10",
+        "3"
+      ],
+      "correct_index": 1,
+      "explanation": "range(1, 4) gives 1, 2, 3 → total = 1 + 2 + 3 = 6."
+    },
+    {
+      "code": "ITER-TN-06",
+      "skill": "ITER",
+      "chunk": "ITER-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "How does this code run?\ni = 0\nwhile i < 3:\n    print(i)",
+      "options": [
+        "It prints 0 1 2 and stops",
+        "It prints 0 once and stops",
+        "It raises a syntax error",
+        "It loops forever, printing 0 again and again"
+      ],
+      "correct_index": 3,
+      "explanation": "Nothing increases i, so i is always 0 and the condition i < 3 is always true → an infinite loop."
+    },
+    {
+      "code": "ITER-TL-01",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the difference between the break statement and the continue statement in a loop.",
+      "rubric": [
+        {
+          "text": "break exits / stops the loop completely",
+          "max_points": 5,
+          "main_keywords": [
+            "exit",
+            "stop",
+            "end",
+            "leave",
+            "terminate",
+            "quit"
+          ],
+          "sub_keywords": [
+            "break"
+          ]
+        },
+        {
+          "text": "continue skips the rest of the current iteration and moves on to the next iteration",
+          "max_points": 5,
+          "main_keywords": [
+            "skip",
+            "next iteration",
+            "next loop",
+            "next round",
+            "next time"
+          ],
+          "sub_keywords": [
+            "continue"
+          ]
+        }
+      ],
+      "explanation": "Model answer: break exits the loop completely; continue skips the rest of the current iteration and moves on to the next iteration."
+    },
+    {
+      "code": "ITER-TL-02",
+      "skill": "ITER",
+      "chunk": "ITER-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "When should you use a for loop, and when should you use a while loop?",
+      "rubric": [
+        {
+          "text": "for: when the number of repetitions is known in advance, or to go through each item of a sequence",
+          "max_points": 5,
+          "main_keywords": [
+            "known in advance",
+            "know in advance",
+            "each item",
+            "each element",
+            "iterate",
+            "list",
+            "range",
+            "fixed number"
+          ],
+          "sub_keywords": [
+            "for"
+          ]
+        },
+        {
+          "text": "while: when the number of repetitions is not known in advance; it repeats based on a condition",
+          "max_points": 5,
+          "main_keywords": [
+            "not known",
+            "not know",
+            "unknown",
+            "condition"
+          ],
+          "sub_keywords": [
+            "while"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Use for when the number of repetitions is known in advance or when you need to go through each item of a list; use while when the number of repetitions is not known in advance, and it only repeats while the condition is true."
+    },
+    {
+      "code": "ITER-TL-03",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Write (or describe) a program that uses a loop to add up the numbers from 1 to n, where n is entered on the keyboard. Explain each part.",
+      "rubric": [
+        {
+          "text": "Read n and convert it to an integer with int(input())",
+          "max_points": 2,
+          "main_keywords": [
+            "int(",
+            "convert",
+            "cast"
+          ],
+          "sub_keywords": [
+            "input",
+            "enter",
+            "read"
+          ]
+        },
+        {
+          "text": "Initialise the sum variable to 0 before the loop",
+          "max_points": 2,
+          "main_keywords": [
+            "= 0",
+            "initialise",
+            "initialize",
+            "start at 0",
+            "set to 0"
+          ],
+          "sub_keywords": [
+            "total",
+            "sum"
+          ]
+        },
+        {
+          "text": "The loop runs from 1 to n, e.g. range(1, n + 1)",
+          "max_points": 3,
+          "main_keywords": [
+            "n + 1",
+            "1 to n"
+          ],
+          "sub_keywords": [
+            "for",
+            "range",
+            "while"
+          ]
+        },
+        {
+          "text": "Add each number to the sum (total += i)",
+          "max_points": 3,
+          "main_keywords": [
+            "+=",
+            "total + i",
+            "accumulate",
+            "add"
+          ],
+          "sub_keywords": [
+            "total",
+            "sum"
+          ]
+        }
+      ],
+      "explanation": "Model answer: n = int(input()) converts the input to a number; total = 0 initialises the sum variable; for i in range(1, n + 1) runs i from 1 to n; total += i adds each number to the total; finally print(total)."
+    },
+    {
+      "code": "ITER-TN-07",
+      "skill": "ITER",
+      "chunk": "ITER-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which numbers does range(1, 4) produce?",
+      "options": [
+        "1, 2, 3",
+        "1, 2, 3, 4",
+        "0, 1, 2, 3",
+        "4, 3, 2, 1"
+      ],
+      "correct_index": 0,
+      "explanation": "range(a, b) produces numbers from a to b - 1: 1, 2, 3."
+    },
+    {
+      "code": "ITER-TN-08",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does the continue statement do in a loop?",
+      "options": [
+        "It exits the loop completely",
+        "It skips the rest and moves on to the next iteration",
+        "It stops the whole program",
+        "It runs the current iteration again"
+      ],
+      "correct_index": 1,
+      "explanation": "continue skips the rest of the current iteration and moves on to the next iteration."
+    },
+    {
+      "code": "ITER-TN-09",
+      "skill": "ITER",
+      "chunk": "ITER-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which loop is suitable when the number of repetitions is NOT known in advance?",
+      "options": [
+        "for",
+        "if",
+        "else",
+        "while"
+      ],
+      "correct_index": 3,
+      "explanation": "while repeats based on a condition, so it is used when the number of repetitions is not known in advance."
+    },
+    {
+      "code": "ITER-TN-10",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Where should an accumulator variable (e.g. total) be initialised?",
+      "options": [
+        "Inside the loop body",
+        "After the loop",
+        "Before the loop",
+        "It does not need to be initialised"
+      ],
+      "correct_index": 2,
+      "explanation": "Initialise it before the loop (total = 0); inside the loop body it would be reset to 0 on every iteration."
+    },
+    {
+      "code": "ITER-TN-11",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nfor i in range(5):\n    if i == 3:\n        break\n    print(i)",
+      "options": [
+        "0 1 2",
+        "0 1 2 3",
+        "0 1 2 4",
+        "3"
+      ],
+      "correct_index": 0,
+      "explanation": "When i = 3, break exits the loop before printing, so only 0 1 2 are printed."
+    },
+    {
+      "code": "ITER-TN-12",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nfor i in range(5):\n    if i == 2:\n        continue\n    print(i)",
+      "options": [
+        "0 1",
+        "0 1 2 3 4",
+        "2",
+        "0 1 3 4"
+      ],
+      "correct_index": 3,
+      "explanation": "When i = 2, continue skips the print and the loop goes on: 0 1 3 4."
+    },
+    {
+      "code": "ITER-TN-13",
+      "skill": "ITER",
+      "chunk": "ITER-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "How many lines does this code print?\ni = 1\nwhile i <= 5:\n    print(i)\n    i += 2",
+      "options": [
+        "5",
+        "2",
+        "3",
+        "It loops forever"
+      ],
+      "correct_index": 2,
+      "explanation": "i takes the values 1, 3, 5 and then becomes 7, so the loop stops → 3 lines."
+    },
+    {
+      "code": "ITER-TN-14",
+      "skill": "ITER",
+      "chunk": "ITER-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nfor c in 'abc':\n    print(c)",
+      "options": [
+        "abc on one line",
+        "a, b, c, one letter per line",
+        "An error, because a string cannot be looped over",
+        "0, 1, 2, one number per line"
+      ],
+      "correct_index": 1,
+      "explanation": "for visits each character of the string in turn; each print() prints one line."
+    },
+    {
+      "code": "ITER-TL-04",
+      "skill": "ITER",
+      "chunk": "ITER-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the meaning of the three parameters of range(a, b, step), and say which numbers range(1, 10, 4) produces.",
+      "rubric": [
+        {
+          "text": "a is the start value; step is the increment (the value increases by step each time)",
+          "max_points": 3,
+          "main_keywords": [
+            "increment",
+            "increase",
+            "jump",
+            "step size",
+            "each time"
+          ],
+          "sub_keywords": [
+            "step"
+          ]
+        },
+        {
+          "text": "The sequence stops before b (b is not included)",
+          "max_points": 3,
+          "main_keywords": [
+            "stop before",
+            "not included",
+            "not include",
+            "exclude",
+            "excluded"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "range(1, 10, 4) gives 1, 5, 9",
+          "max_points": 4,
+          "main_keywords": [
+            "1, 5, 9",
+            "1 5 9"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The parameter a is the start value, and step is the increment, so the value increases by step each time. The sequence stops before b, so b is not included. Therefore range(1, 10, 4) produces 1, 5, 9."
+    },
+    {
+      "code": "ITER-TL-05",
+      "skill": "ITER",
+      "chunk": "ITER-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Write (or describe) a program that asks the user to enter a password until they enter 'abc123', and then prints 'Login successful'. Explain why you use while instead of for.",
+      "rubric": [
+        {
+          "text": "while with the condition that the password is still wrong (pw != 'abc123')",
+          "max_points": 3,
+          "main_keywords": [
+            "!=",
+            "still wrong",
+            "not correct",
+            "not equal",
+            "incorrect",
+            "wrong"
+          ],
+          "sub_keywords": [
+            "while"
+          ]
+        },
+        {
+          "text": "Enter the password again with input() inside the loop body",
+          "max_points": 3,
+          "main_keywords": [
+            "again",
+            "input"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Print the message with print() once it is correct (after the loop)",
+          "max_points": 2,
+          "main_keywords": [
+            "print"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Explanation: we do not know in advance how many times the user will try",
+          "max_points": 2,
+          "main_keywords": [
+            "not know",
+            "not known",
+            "unknown"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: First pw = input() reads the password the first time. Use while pw != 'abc123' to repeat while the password is still wrong. Inside the loop body call pw = input() to enter it again. When the loop ends, print('Login successful'). Use while because we do not know in advance how many times the user will try."
+    },
+    {
+      "code": "ITER-TL-06",
+      "skill": "ITER",
+      "chunk": "ITER-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Write (or describe) a program that counts how many even numbers are in the list nums = [3, 8, 5, 10, 6]. Explain the role of the counter variable.",
+      "rubric": [
+        {
+          "text": "Initialise the counter to 0 before the loop",
+          "max_points": 2,
+          "main_keywords": [
+            "= 0",
+            "initialise",
+            "initialize",
+            "start at 0",
+            "set to 0"
+          ],
+          "sub_keywords": [
+            "count",
+            "counter"
+          ]
+        },
+        {
+          "text": "Go through each item with for",
+          "max_points": 3,
+          "main_keywords": [
+            "in nums",
+            "each item",
+            "each element",
+            "iterate"
+          ],
+          "sub_keywords": [
+            "for"
+          ]
+        },
+        {
+          "text": "Even-number condition: x % 2 == 0",
+          "max_points": 3,
+          "main_keywords": [
+            "% 2",
+            "divisible by 2"
+          ],
+          "sub_keywords": [
+            "if",
+            "even"
+          ]
+        },
+        {
+          "text": "Increase the counter by 1 (count += 1) when an even number is found; the result is 3",
+          "max_points": 2,
+          "main_keywords": [
+            "+= 1",
+            "increase by 1",
+            "add 1",
+            "increment"
+          ],
+          "sub_keywords": [
+            "count",
+            "counter"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Initialise count = 0 before the loop so that counting starts from zero. Use for x in nums to go through each item. For each item, if x % 2 == 0 then it is an even number. When an even number is found, count += 1 increases the counter. The result is count = 3 because of 8, 10 and 6."
+    },
+    {
+      "code": "VAR-TN-01",
+      "skill": "VAR",
+      "chunk": "VAR-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these variable names is VALID in Python?",
+      "options": [
+        "2total",
+        "total sum",
+        "total_sum",
+        "for"
+      ],
+      "correct_index": 2,
+      "explanation": "total_sum is valid. 2total starts with a digit, 'total sum' contains a space, and for is a keyword."
+    },
+    {
+      "code": "VAR-TN-02",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In Python, what does the = sign mean in the statement x = 5?",
+      "options": [
+        "Compare x with 5",
+        "Assign the value 5 to the variable x",
+        "Declare the type of x",
+        "Add 5 to x"
+      ],
+      "correct_index": 1,
+      "explanation": "= is assignment; to compare for equality you must use ==."
+    },
+    {
+      "code": "VAR-TN-03",
+      "skill": "VAR",
+      "chunk": "VAR-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which function tells you the current data type of a variable?",
+      "options": [
+        "len()",
+        "print()",
+        "input()",
+        "type()"
+      ],
+      "correct_index": 3,
+      "explanation": "type(x) returns the type of x, e.g. <class 'int'>."
+    },
+    {
+      "code": "VAR-TN-04",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "After running this code, what is the value of x?\nx = 5\nx = x + 2\nx += 1",
+      "options": [
+        "5",
+        "7",
+        "8",
+        "6"
+      ],
+      "correct_index": 2,
+      "explanation": "x = 5 → x = 7 → x += 1 makes it 8."
+    },
+    {
+      "code": "VAR-TN-05",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Given a = 1 and b = 2, we run a, b = b, a. What are a and b afterwards?",
+      "options": [
+        "2 and 1",
+        "1 and 2",
+        "2 and 2",
+        "An error"
+      ],
+      "correct_index": 0,
+      "explanation": "a, b = b, a swaps the values of the two variables: a = 2, b = 1."
+    },
+    {
+      "code": "VAR-TN-06",
+      "skill": "VAR",
+      "chunk": "VAR-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "We run x = 10 and then x = 'ten'. Which statement is true?",
+      "options": [
+        "It raises an error because the type of the variable changes",
+        "x is still an int",
+        "x now has the type str because Python uses dynamic typing",
+        "You must declare the type again before assigning"
+      ],
+      "correct_index": 2,
+      "explanation": "Python is dynamically typed: a variable's type follows the value currently assigned, so x is now a str."
+    },
+    {
+      "code": "VAR-TL-01",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is a variable? Give an example of assigning a value to a variable in Python.",
+      "rubric": [
+        {
+          "text": "A variable is a name attached to a value / data stored in memory",
+          "max_points": 5,
+          "main_keywords": [
+            "data",
+            "store",
+            "memory",
+            "value"
+          ],
+          "sub_keywords": [
+            "variable",
+            "name"
+          ]
+        },
+        {
+          "text": "An example of assignment with = (e.g. x = 5)",
+          "max_points": 5,
+          "main_keywords": [
+            "="
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A variable is a name attached to a value that is stored in memory so it can be used again. For example: age = 20."
+    },
+    {
+      "code": "VAR-TL-02",
+      "skill": "VAR",
+      "chunk": "VAR-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "State the rules for naming variables in Python, give one valid name and one invalid name, and explain what \"dynamic typing\" means.",
+      "rubric": [
+        {
+          "text": "A name cannot start with a digit (it starts with a letter or _)",
+          "max_points": 3,
+          "main_keywords": [
+            "letter",
+            "underscore",
+            "not start with a digit",
+            "not start with a number",
+            "not begin with a digit",
+            "not begin with a number"
+          ],
+          "sub_keywords": [
+            "start",
+            "begin"
+          ]
+        },
+        {
+          "text": "No spaces / special characters, and it cannot be a keyword",
+          "max_points": 2,
+          "main_keywords": [
+            "special character",
+            "no space",
+            "not contain space",
+            "not be a keyword",
+            "not a keyword"
+          ],
+          "sub_keywords": [
+            "not",
+            "no"
+          ]
+        },
+        {
+          "text": "An example of a valid name and an invalid name",
+          "max_points": 2,
+          "main_keywords": [
+            "invalid",
+            "not valid",
+            "wrong"
+          ],
+          "sub_keywords": [
+            "valid",
+            "example"
+          ]
+        },
+        {
+          "text": "Dynamic typing: no need to declare the type; the type follows the value assigned at run time",
+          "max_points": 3,
+          "main_keywords": [
+            "not need to declare",
+            "no need to declare",
+            "not declare",
+            "automatically",
+            "based on the value",
+            "at run time",
+            "runtime",
+            "change type"
+          ],
+          "sub_keywords": [
+            "type",
+            "typing"
+          ]
+        }
+      ],
+      "explanation": "Model answer: A variable name starts with a letter or _, it cannot start with a digit, it cannot contain spaces or special characters, and it cannot be a keyword. For example, total_score is a valid name and 2nums is an invalid name. Dynamic typing means you do not need to declare the type, because Python works out the type from the value assigned at run time."
+    },
+    {
+      "code": "VAR-TN-07",
+      "skill": "VAR",
+      "chunk": "VAR-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these variable names is NOT valid?",
+      "options": [
+        "_count",
+        "x1",
+        "total_score",
+        "total-score"
+      ],
+      "correct_index": 3,
+      "explanation": "total-score contains the - sign (a special character), so it is not valid."
+    },
+    {
+      "code": "VAR-TN-08",
+      "skill": "VAR",
+      "chunk": "VAR-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In Python, what are Total and total?",
+      "options": [
+        "Two names of the same variable",
+        "Two different variables",
+        "Two invalid names",
+        "Two Python keywords"
+      ],
+      "correct_index": 1,
+      "explanation": "Variable names are case-sensitive, so Total and total are two different variables."
+    },
+    {
+      "code": "VAR-TN-09",
+      "skill": "VAR",
+      "chunk": "VAR-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which special value means 'no value'?",
+      "options": [
+        "0",
+        "''",
+        "None",
+        "False"
+      ],
+      "correct_index": 2,
+      "explanation": "None means no value; 0, '' and False are still values."
+    },
+    {
+      "code": "VAR-TN-10",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "The statement x += 3 is equivalent to which statement?",
+      "options": [
+        "x = 3",
+        "x = x * 3",
+        "x == x + 3",
+        "x = x + 3"
+      ],
+      "correct_index": 3,
+      "explanation": "x += 3 is the short form of x = x + 3."
+    },
+    {
+      "code": "VAR-TN-11",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "After running this code, what is the value of b?\na = 3\nb = a\na = 10",
+      "options": [
+        "10",
+        "3",
+        "13",
+        "An error"
+      ],
+      "correct_index": 1,
+      "explanation": "b = a assigns the value 3 to b; assigning a again later does not change b."
+    },
+    {
+      "code": "VAR-TN-12",
+      "skill": "VAR",
+      "chunk": "VAR-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nx = 3.5\nprint(type(x))",
+      "options": [
+        "<class 'int'>",
+        "<class 'str'>",
+        "<class 'float'>",
+        "<class 'bool'>"
+      ],
+      "correct_index": 2,
+      "explanation": "3.5 is a real number, so type(x) is float."
+    },
+    {
+      "code": "VAR-TN-13",
+      "skill": "VAR",
+      "chunk": "VAR-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Run 1: print(score) when score has never been assigned. Run 2: score = None and then print(score). What are the results?",
+      "options": [
+        "NameError, then it prints None",
+        "Both runs print None",
+        "Both runs raise NameError",
+        "It prints 0, then None"
+      ],
+      "correct_index": 0,
+      "explanation": "An unassigned variable raises NameError; a variable assigned None still exists and prints None."
+    },
+    {
+      "code": "VAR-TN-14",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "After running this code, what are x and y?\nx, y = 1, 2\nx = x + y\ny = x - y",
+      "options": [
+        "3 and 1",
+        "1 and 2",
+        "3 and 2",
+        "2 and 1"
+      ],
+      "correct_index": 0,
+      "explanation": "x = 1 + 2 = 3, then y = 3 - 2 = 1."
+    },
+    {
+      "code": "VAR-TL-03",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is assignment in Python? What does the statement x = x + 1 do?",
+      "rubric": [
+        {
+          "text": "Assignment uses = to store a value in a variable (it is not a comparison)",
+          "max_points": 5,
+          "main_keywords": [
+            "store",
+            "save",
+            "put",
+            "assign a value"
+          ],
+          "sub_keywords": [
+            "="
+          ]
+        },
+        {
+          "text": "x = x + 1 increases the value of x by 1",
+          "max_points": 5,
+          "main_keywords": [
+            "increase",
+            "add 1",
+            "plus 1",
+            "increment",
+            "1 more"
+          ],
+          "sub_keywords": [
+            "x"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Assignment uses the = sign to store a value in a variable; the = sign is not a comparison. The statement x = x + 1 takes the old value of x, adds 1 and assigns it back, so it increases x by 1."
+    },
+    {
+      "code": "VAR-TL-04",
+      "skill": "VAR",
+      "chunk": "VAR-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Why are the variable names 2nums and total sum invalid in Python? Correct them.",
+      "rubric": [
+        {
+          "text": "2nums is wrong because it starts with a digit",
+          "max_points": 4,
+          "main_keywords": [
+            "start with a digit",
+            "start with a number",
+            "begin with a digit",
+            "begin with a number",
+            "first character is a digit"
+          ],
+          "sub_keywords": [
+            "2nums"
+          ]
+        },
+        {
+          "text": "total sum is wrong because it contains a space",
+          "max_points": 3,
+          "main_keywords": [
+            "space",
+            "blank",
+            "gap"
+          ],
+          "sub_keywords": [
+            "total sum"
+          ]
+        },
+        {
+          "text": "A corrected valid name (e.g. nums2, total_sum)",
+          "max_points": 3,
+          "main_keywords": [
+            "total_sum",
+            "nums2",
+            "nums_2",
+            "totalsum"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The name 2nums is wrong because it starts with a digit. The name total sum is wrong because it has a space in the middle. They can be corrected to nums2 and total_sum."
+    },
+    {
+      "code": "VAR-TL-05",
+      "skill": "VAR",
+      "chunk": "VAR-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is None in Python? How is it different from a variable that has never been assigned a value?",
+      "rubric": [
+        {
+          "text": "None is a special value meaning 'no value'",
+          "max_points": 5,
+          "main_keywords": [
+            "no value",
+            "nothing",
+            "absence",
+            "empty"
+          ],
+          "sub_keywords": [
+            "none"
+          ]
+        },
+        {
+          "text": "Using a variable that was never assigned raises a NameError",
+          "max_points": 5,
+          "main_keywords": [
+            "nameerror",
+            "error"
+          ],
+          "sub_keywords": [
+            "never assigned",
+            "not assigned",
+            "unassigned",
+            "not defined",
+            "undefined"
+          ]
+        }
+      ],
+      "explanation": "Model answer: None is a special value that means there is no value, for example x = None. A variable that has never been assigned raises a NameError when you use it."
+    },
+    {
+      "code": "VAR-TL-06",
+      "skill": "VAR",
+      "chunk": "VAR-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Given a = 3 and b = 7, show two ways to swap the values of a and b (one using a temporary variable, one using Python's short form) and state the values of a and b after the swap.",
+      "rubric": [
+        {
+          "text": "Way 1: store a in a temporary variable (temp = a)",
+          "max_points": 3,
+          "main_keywords": [
+            "temp = a",
+            "tmp = a",
+            "temporary variable",
+            "temporary"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Then a = b and b = temp",
+          "max_points": 3,
+          "main_keywords": [
+            "b = temp",
+            "b = tmp"
+          ],
+          "sub_keywords": [
+            "a = b"
+          ]
+        },
+        {
+          "text": "Way 2, the short form: a, b = b, a",
+          "max_points": 2,
+          "main_keywords": [
+            "a, b = b, a"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Result: a = 7, b = 3",
+          "max_points": 2,
+          "main_keywords": [
+            "a = 7",
+            "a is 7",
+            "a becomes 7"
+          ],
+          "sub_keywords": [
+            "b = 3",
+            "b is 3",
+            "b becomes 3"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Way 1 uses a temporary variable: temp = a, then a = b, then b = temp. Way 2 is the short Python form a, b = b, a. After the swap, a = 7 and b = 3."
+    },
+    {
+      "code": "COND-TN-01",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which operator is used to COMPARE for equality in Python?",
+      "options": [
+        "=",
+        "==",
+        "!=",
+        "=>"
+      ],
+      "correct_index": 1,
+      "explanation": "== compares for equality; = assigns; != compares for inequality."
+    },
+    {
+      "code": "COND-TN-02",
+      "skill": "COND",
+      "chunk": "COND-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which keyword checks another condition when the previous if condition is false?",
+      "options": [
+        "else if",
+        "then",
+        "elseif",
+        "elif"
+      ],
+      "correct_index": 3,
+      "explanation": "Python uses elif (short for else if)."
+    },
+    {
+      "code": "COND-TN-03",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the result of the expression True and False?",
+      "options": [
+        "True",
+        "False",
+        "None",
+        "An error"
+      ],
+      "correct_index": 1,
+      "explanation": "and is true only when both sides are true; here one side is false, so the result is False."
+    },
+    {
+      "code": "COND-TN-04",
+      "skill": "COND",
+      "chunk": "COND-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nx = 15\nif x > 10:\n    print('A')\nelif x > 5:\n    print('B')\nelse:\n    print('C')",
+      "options": [
+        "A",
+        "B",
+        "A and B",
+        "C"
+      ],
+      "correct_index": 0,
+      "explanation": "x > 10 is true, so it prints A; only the first true branch runs, so the elif is not checked."
+    },
+    {
+      "code": "COND-TN-05",
+      "skill": "COND",
+      "chunk": "COND-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What result does this grading code give when score = 9?\nif score >= 5:\n    grade = 'Average'\nelif score >= 8:\n    grade = 'Excellent'",
+      "options": [
+        "Excellent",
+        "Both Average and Excellent",
+        "Average",
+        "An error"
+      ],
+      "correct_index": 2,
+      "explanation": "Average: the branch score >= 5 is true first, so the elif is never checked. The branch order is wrong — the broad condition placed first blocks the Excellent branch; check from high to low instead."
+    },
+    {
+      "code": "COND-TN-06",
+      "skill": "COND",
+      "chunk": "COND-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which of these values is treated as False in an if condition?",
+      "options": [
+        "'0' (a string containing the digit 0)",
+        "0",
+        "[0]",
+        "' ' (a string with one space)"
+      ],
+      "correct_index": 1,
+      "explanation": "The number 0, the empty string '', the empty list [] and None are falsy; '0', [0] and ' ' are not empty, so they are True."
+    },
+    {
+      "code": "COND-TL-01",
+      "skill": "COND",
+      "chunk": "COND-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain what if, elif and else do in Python.",
+      "rubric": [
+        {
+          "text": "if checks a condition and runs the block when it is true",
+          "max_points": 4,
+          "main_keywords": [
+            "condition",
+            "true"
+          ],
+          "sub_keywords": [
+            "if"
+          ]
+        },
+        {
+          "text": "elif checks another condition when the previous conditions are false",
+          "max_points": 3,
+          "main_keywords": [
+            "another",
+            "next",
+            "previous",
+            "else if"
+          ],
+          "sub_keywords": [
+            "elif"
+          ]
+        },
+        {
+          "text": "else runs when all the conditions above are false",
+          "max_points": 3,
+          "main_keywords": [
+            "false",
+            "otherwise",
+            "remaining",
+            "all"
+          ],
+          "sub_keywords": [
+            "else"
+          ]
+        }
+      ],
+      "explanation": "Model answer: if checks a condition and runs the block below it when the condition is true; elif checks another condition when the previous conditions are false; else runs when all the conditions are false."
+    },
+    {
+      "code": "COND-TL-02",
+      "skill": "COND",
+      "chunk": "COND-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Write code that classifies a score (out of 10): 8 or more is Excellent, 6.5 or more is Good, 5 or more is Average, and anything lower is Weak. Explain why the order of the branches matters.",
+      "rubric": [
+        {
+          "text": "Uses an if / elif / else chain",
+          "max_points": 2,
+          "main_keywords": [
+            "elif"
+          ],
+          "sub_keywords": [
+            "if"
+          ]
+        },
+        {
+          "text": "Checks from high to low: the first branch is score >= 8 → Excellent",
+          "max_points": 2,
+          "main_keywords": [
+            ">= 8",
+            "from high",
+            "highest first",
+            "excellent first"
+          ],
+          "sub_keywords": [
+            "excellent",
+            "if"
+          ]
+        },
+        {
+          "text": "Has the Good (>= 6.5) and Average (>= 5) branches with the correct thresholds",
+          "max_points": 2,
+          "main_keywords": [
+            "6.5"
+          ],
+          "sub_keywords": [
+            "good",
+            "elif"
+          ]
+        },
+        {
+          "text": "else for the remaining case → Weak",
+          "max_points": 2,
+          "main_keywords": [
+            "weak"
+          ],
+          "sub_keywords": [
+            "else"
+          ]
+        },
+        {
+          "text": "Explanation: only the first true branch runs, so a broad condition placed first blocks the later branches",
+          "max_points": 2,
+          "main_keywords": [
+            "first",
+            "only one",
+            "block",
+            "skip",
+            "not checked"
+          ],
+          "sub_keywords": [
+            "order",
+            "branch",
+            "condition"
+          ]
+        }
+      ],
+      "explanation": "Model answer: if score >= 8: grade = 'Excellent' / elif score >= 6.5: grade = 'Good' / elif score >= 5: grade = 'Average' / else: grade = 'Weak'. The order matters because only the first true branch runs; if score >= 5 were placed first, a score of 9 would also be classified as Average."
+    },
+    {
+      "code": "COND-TN-07",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which operator means 'not equal'?",
+      "options": [
+        "<>",
+        "!=",
+        "=!",
+        "not="
+      ],
+      "correct_index": 1,
+      "explanation": "!= compares for inequality; == compares for equality."
+    },
+    {
+      "code": "COND-TN-08",
+      "skill": "COND",
+      "chunk": "COND-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which symbol must follow the condition of an if?",
+      "options": [
+        "A colon :",
+        "A semicolon ;",
+        "A curly brace {",
+        "No symbol is needed"
+      ],
+      "correct_index": 0,
+      "explanation": "A colon must follow the condition, and the block is indented on the lines below."
+    },
+    {
+      "code": "COND-TN-09",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the result of the expression not True?",
+      "options": [
+        "True",
+        "None",
+        "False",
+        "An error"
+      ],
+      "correct_index": 2,
+      "explanation": "not reverses the value: not True is False."
+    },
+    {
+      "code": "COND-TN-10",
+      "skill": "COND",
+      "chunk": "COND-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these values is treated as True in an if condition?",
+      "options": [
+        "0",
+        "''",
+        "None",
+        "'a'"
+      ],
+      "correct_index": 3,
+      "explanation": "0, the empty string '' and None are falsy; the string 'a' is not empty, so it is True."
+    },
+    {
+      "code": "COND-TN-11",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the result of the expression (5 > 3) or (2 > 4)?",
+      "options": [
+        "True",
+        "False",
+        "None",
+        "An error"
+      ],
+      "correct_index": 0,
+      "explanation": "5 > 3 is true; or needs only one true side, so the result is True."
+    },
+    {
+      "code": "COND-TN-12",
+      "skill": "COND",
+      "chunk": "COND-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nx = 4\nif x > 5:\n    print('A')\nelif x > 2:\n    print('B')\nelse:\n    print('C')",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "B and C"
+      ],
+      "correct_index": 1,
+      "explanation": "x > 5 is false and x > 2 is true → it prints B; the else does not run."
+    },
+    {
+      "code": "COND-TN-13",
+      "skill": "COND",
+      "chunk": "COND-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does this code print?\nnums = []\nif nums:\n    print('Not empty')\nelse:\n    print('Empty')",
+      "options": [
+        "Not empty",
+        "An error",
+        "Empty",
+        "Nothing"
+      ],
+      "correct_index": 2,
+      "explanation": "The empty list [] is falsy, so the condition is false → the else runs and prints Empty."
+    },
+    {
+      "code": "COND-TN-14",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the result of the comparison 'Python' == 'python'?",
+      "options": [
+        "True",
+        "An error",
+        "None",
+        "False"
+      ],
+      "correct_index": 3,
+      "explanation": "String comparison is case-sensitive, so the result is False."
+    },
+    {
+      "code": "COND-TL-03",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the meaning of the three logical operators and, or, not.",
+      "rubric": [
+        {
+          "text": "and is true when both sides are true",
+          "max_points": 4,
+          "main_keywords": [
+            "both"
+          ],
+          "sub_keywords": [
+            "and"
+          ]
+        },
+        {
+          "text": "or is true when at least one side is true",
+          "max_points": 3,
+          "main_keywords": [
+            "at least one",
+            "one of the two",
+            "either"
+          ],
+          "sub_keywords": [
+            "or"
+          ]
+        },
+        {
+          "text": "not reverses the value",
+          "max_points": 3,
+          "main_keywords": [
+            "not reverse",
+            "not operator reverse",
+            "not flip",
+            "not invert",
+            "reverse",
+            "opposite",
+            "flip",
+            "invert",
+            "negate"
+          ],
+          "sub_keywords": [
+            "not"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The and operator gives true when both sides are true. The or operator gives true when at least one side is true. The not operator reverses the value, so True becomes False."
+    },
+    {
+      "code": "COND-TL-04",
+      "skill": "COND",
+      "chunk": "COND-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is a falsy value? List three falsy values in Python.",
+      "rubric": [
+        {
+          "text": "A falsy value is a value treated as False in a condition",
+          "max_points": 4,
+          "main_keywords": [
+            "treated as false",
+            "considered false",
+            "counted as false",
+            "evaluates to false",
+            "as false"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Example: the number 0 or None",
+          "max_points": 3,
+          "main_keywords": [
+            "0",
+            "none"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Example: the empty string '' or the empty list []",
+          "max_points": 3,
+          "main_keywords": [
+            "empty string",
+            "empty list",
+            "[]"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A falsy value is a value that is treated as False when it is placed in an if condition. For example, the number 0 and None are both falsy. The empty string '' and the empty list [] are also falsy."
+    },
+    {
+      "code": "COND-TL-05",
+      "skill": "COND",
+      "chunk": "COND-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Write code that checks a number n: if n is divisible by 2, print 'Even', otherwise print 'Odd'.",
+      "rubric": [
+        {
+          "text": "The condition if n % 2 == 0",
+          "max_points": 4,
+          "main_keywords": [
+            "% 2 == 0"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Print 'Even' when the condition is true",
+          "max_points": 3,
+          "main_keywords": [
+            "even"
+          ],
+          "sub_keywords": [
+            "print"
+          ]
+        },
+        {
+          "text": "else prints 'Odd'",
+          "max_points": 3,
+          "main_keywords": [
+            "odd"
+          ],
+          "sub_keywords": [
+            "else",
+            "print"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Use if n % 2 == 0: print('Even') because a number divisible by 2 is even. Otherwise use else: print('Odd')."
+    },
+    {
+      "code": "COND-TL-06",
+      "skill": "COND",
+      "chunk": "COND-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A person gets a ticket discount if they are under 12 or aged 60 or over. Write the matching if condition, explain why you use or and not and, and say what happens when age = 30.",
+      "rubric": [
+        {
+          "text": "Condition age < 12",
+          "max_points": 2,
+          "main_keywords": [
+            "< 12"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Condition age >= 60",
+          "max_points": 2,
+          "main_keywords": [
+            ">= 60"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Use or because only one of the two conditions needs to be true (and needs both, and nobody is both at once)",
+          "max_points": 3,
+          "main_keywords": [
+            "one of the two",
+            "only one",
+            "at least one",
+            "either"
+          ],
+          "sub_keywords": [
+            "or"
+          ]
+        },
+        {
+          "text": "age = 30: both conditions are false → no discount",
+          "max_points": 3,
+          "main_keywords": [
+            "no discount",
+            "not get a discount",
+            "not get the discount",
+            "not discounted"
+          ],
+          "sub_keywords": [
+            "30"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The condition is if age < 12 or age >= 60: discount = True. We use or because only one of the two conditions needs to be true to get the discount, while and would need both to be true and nobody is under 12 and 60 or over at the same time. With age = 30 both conditions are false, so the person does not get a discount."
+    }
+  ]
+}
