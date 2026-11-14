@@ -31,3 +31,6 @@ numpy
 scipy
 scikit-learn
 sentence-transformers
+
+#tiền xử lý NLP
+nltk
