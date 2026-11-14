@@ -1,16 +1,16 @@
-from typing import Optional
-from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.services.course_service import CourseService
+from app.core.dependencies import require_admin
+from app.schemas.common import PaginatedResponse
 from app.schemas.course_skill import (
     CourseSkillCreate,
-    CourseSkillResponse,
     CourseSkillDetailResponse,
+    CourseSkillResponse,
 )
-from app.schemas.common import PaginatedResponse
+from app.services.course_service import CourseService
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])
 
 
 @router.get(
@@ -21,9 +21,11 @@ router = APIRouter()
 )
 def get_admin_course_skill_relations(
     page: int = Query(default=1, ge=1, description="Số trang (bắt đầu từ 1)"),
-    page_size: int = Query(default=20, ge=1, le=100, description="Số bản ghi trên mỗi trang"),
-    course_id: Optional[int] = Query(default=None, description="Lọc theo ID khóa học"),
-    skill_id: Optional[int] = Query(default=None, description="Lọc theo ID kỹ năng"),
+    page_size: int = Query(
+        default=20, ge=1, le=100, description="Số bản ghi trên mỗi trang"
+    ),
+    course_id: int | None = Query(default=None, description="Lọc theo ID khóa học"),
+    skill_id: int | None = Query(default=None, description="Lọc theo ID kỹ năng"),
     db: Session = Depends(get_db),
 ):
     service = CourseService(db)
@@ -59,4 +61,3 @@ def delete_admin_course_skill_relation(
 ):
     service = CourseService(db)
     return service.delete_course_skill_relation(course_id=course_id, skill_id=skill_id)
-

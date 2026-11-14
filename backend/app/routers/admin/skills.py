@@ -1,16 +1,16 @@
-from typing import Optional
-from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.services.skills_service import SkillsService
+from app.core.dependencies import require_admin
+from app.schemas.common import PaginatedResponse
 from app.schemas.skill import (
     SkillCreate,
-    SkillUpdate,
     SkillRequestResponse,
+    SkillUpdate,
 )
-from app.schemas.common import PaginatedResponse
+from app.services.skills_service import SkillsService
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])
 
 
 @router.get(
@@ -21,13 +21,19 @@ router = APIRouter()
 )
 def get_admin_skills(
     page: int = Query(default=1, ge=1, description="Số trang (bắt đầu từ 1)"),
-    page_size: int = Query(default=20, ge=1, le=100, description="Số bản ghi trên mỗi trang"),
-    search: Optional[str] = Query(default=None, description="Tìm kiếm theo tên kỹ năng"),
-    is_active: Optional[bool] = Query(default=None, description="Lọc theo trạng thái hoạt động"),
+    page_size: int = Query(
+        default=20, ge=1, le=100, description="Số bản ghi trên mỗi trang"
+    ),
+    search: str | None = Query(default=None, description="Tìm kiếm theo tên kỹ năng"),
+    is_active: bool | None = Query(
+        default=None, description="Lọc theo trạng thái hoạt động"
+    ),
     db: Session = Depends(get_db),
 ):
     service = SkillsService(db)
-    return service.list_skills_admin(page=page, page_size=page_size, search=search, is_active=is_active)
+    return service.list_skills_admin(
+        page=page, page_size=page_size, search=search, is_active=is_active
+    )
 
 
 @router.post(
@@ -71,4 +77,3 @@ def delete_admin_skill(
 ):
     service = SkillsService(db)
     return service.delete_skill(skill_id)
-
