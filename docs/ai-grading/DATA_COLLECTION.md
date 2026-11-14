@@ -31,6 +31,8 @@ Tổng ≥ 120 bài, tức khoảng 400 ý. Mỗi người chấm mất khoảng
 
 ## 3. Tạo Google Form (Tuấn làm)
 
+**Cách nhanh, tự động:** mở [script.google.com](https://script.google.com), tạo *New project*, dán toàn bộ [create_forms.gs](create_forms.gs), chọn hàm `createGoldForms` rồi bấm *Run* và cho phép quyền. Script tạo cả 2 Form đúng các cài đặt dưới đây; link nằm ở *Execution log*. Các mục bên dưới mô tả nội dung để đối chiếu, hoặc để tạo tay nếu không dùng script.
+
 **Cài đặt:** không thu email, không bắt đăng nhập, không hỏi tên. Mỗi câu là một câu hỏi kiểu *Paragraph*, không bắt buộc trả lời. Tắt "Cho phép sửa sau khi gửi".
 
 **Tiêu đề mỗi câu bắt buộc bắt đầu bằng mã trong ngoặc vuông**, ví dụ `[ITER-TL-01] Explain the difference ...`. Lệnh `collect` dựa vào mã này để nhận ra câu, thiếu mã thì câu bị bỏ qua. Nội dung câu chép đúng từ danh sách bên dưới. Code trong đề giữ nguyên xuống dòng.

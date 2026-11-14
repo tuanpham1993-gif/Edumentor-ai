@@ -11,18 +11,20 @@ T1 (12/11/2026) — chấm quá lâu:
   start_ai_grading()  gửi các câu tự luận cho AI SONG SONG (luồng riêng, không đụng DB) → Future theo vị trí câu.
   collect()           chờ tối đa N giây, lấy các câu AI đã chấm xong.
   grade_answers(..., ai_results=…)  ghi điểm; câu AI chưa xong / lỗi → chấm bằng từ khóa.
+
+B6 (14/11/2026): mỗi câu tự luận đi qua pipeline kiểu n8n (app/ai/review/pipeline) — hành vi chấm không đổi,
+thêm trace từng khối vào attempt.trace["grading"]["essays"] (khối nào chạy, bao lâu, ra gì, lỗi gì).
 """
 
-import logging
 from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import wait as wait_futures
 
-from app.ai.review import keyword_grading
-from app.ai.review.base import AIUnavailableError, ReviewAI
-from app.ai.review.validator import grading_errors
+from app.ai.review import pipeline
+from app.ai.review.base import ReviewAI
+from app.ai.review.pipeline import TIMEOUT_ERROR, AIResult, ai_grade
 from app.models.review_attempt import ReviewAnswer
 
-logger = logging.getLogger(__name__)
+__all__ = ["TIMEOUT_ERROR", "AIResult", "ai_grade"]  # giữ tên cũ cho code gọi từ ngoài
 
 
 def displayed_correct_index(answer: ReviewAnswer) -> int:
@@ -41,35 +43,15 @@ def _question_dict(answer: ReviewAnswer) -> dict:
     return {"content": q.content, "rubric": q.rubric, "explanation": q.explanation}
 
 
-AIResult = tuple[list[dict] | None, str | None]  # (kết quả từng ý | None nếu không dùng được, lỗi)
-TIMEOUT_ERROR = "AI chấm quá thời gian chờ"
-
-
 def _has_text(answer: ReviewAnswer) -> bool:
     return bool(answer.text_answer and answer.text_answer.strip())
 
 
-def ai_grade(ai: ReviewAI, question: dict, text: str) -> AIResult:
-    """Gọi AI chấm MỘT câu + kiểm quy tắc. Không đụng DB → chạy được trong luồng riêng."""
-    try:
-        results = ai.grade_essay(question, text)
-    except AIUnavailableError as err:
-        return None, f"AI không dùng được: {err}"
-    except Exception as err:  # lỗi lạ trong luồng chấm không được làm treo bài → rơi về từ khóa
-        logger.exception("Ôn tập: AI chấm lỗi không lường trước")
-        return None, f"AI lỗi: {type(err).__name__}"
-    problems = grading_errors(results, question["rubric"])
-    if problems:
-        return None, "; ".join(problems[:3])
-    return results, None
-
-
 def start_ai_grading(ai: ReviewAI, answers: list[ReviewAnswer]) -> dict[int, Future]:
-    """Gửi mọi câu tự luận CÓ bài làm cho AI cùng lúc (3 câu ≈ thời gian 1 câu). Trả {vị trí câu: Future}."""
+    """Gửi mọi câu tự luận CÓ bài làm cho AI cùng lúc (3 câu ≈ thời gian 1 câu). Trả {vị trí câu: Future}.
+    Luồng chỉ chạy công việc khối 4 (ai_grade); các khối còn lại chạy khi ghi điểm (grade_answers)."""
     jobs = {
-        a.position: (_question_dict(a), a.text_answer)
-        for a in answers
-        if a.question.type == "essay" and _has_text(a)
+        a.position: (_question_dict(a), a.text_answer) for a in answers if a.question.type == "essay" and _has_text(a)
     }
     if not jobs:
         return {}
@@ -87,17 +69,15 @@ def collect(futures: dict[int, Future], timeout: float) -> tuple[dict[int, AIRes
     return done, len(done) < len(futures)
 
 
-def grade_essay(ai: ReviewAI, answer: ReviewAnswer, ai_result: AIResult | None = None) -> tuple[list[dict], str | None]:
-    """Trả (kết quả từng ý, lỗi AI nếu phải dùng chấm từ khóa).
-    ai_result: kết quả AI đã chấm sẵn (luồng song song — T1); None → gọi AI ngay tại đây."""
-    rubric = answer.question.rubric
-    if not _has_text(answer):
-        return [{"result": "none", "points": 0.0, "evidence": None} for _ in rubric], None
-    results, error = ai_result if ai_result is not None else ai_grade(ai, _question_dict(answer), answer.text_answer)
-    if results is not None:
-        return results, None
-    logger.warning("Ôn tập: chấm tự luận câu %s bằng từ khóa (%s)", answer.position, error)
-    return keyword_grading.grade_essay(rubric, answer.text_answer, answer.question.content), error
+def grade_essay(
+    ai: ReviewAI, answer: ReviewAnswer, ai_result: AIResult | None = None
+) -> tuple[list[dict], str | None, list[dict]]:
+    """Chạy pipeline cho một câu. Trả (kết quả từng ý, lỗi AI nếu phải dùng chấm từ khóa, trace từng khối).
+    ai_result: kết quả khối 4 đã chạy sẵn (luồng song song — T1); None → gọi AI ngay trong pipeline."""
+    ctx = pipeline.grade_essay(
+        ai, _question_dict(answer), answer.text_answer, precomputed=ai_result, position=answer.position
+    )
+    return ctx.results, ctx.error, ctx.trace
 
 
 def grade_answers(
@@ -108,22 +88,24 @@ def grade_answers(
     ai_results=None: gọi AI lần lượt ngay tại đây (như trước T1).
     ai_results={vị trí: kết quả}: dùng kết quả đã chấm song song; câu có bài làm mà THIẾU trong dict
     (AI chưa xong khi hết giờ) → chấm bằng từ khóa với lỗi "quá thời gian".
+    Vết chấm: {"ai", "keyword_fallback": [{position, error}], "essays": [{position, nodes: [trace từng khối]}]}.
     """
     total = 0.0
-    fallbacks = []
+    fallbacks, essays = [], []
     for answer in answers:
         max_points = float(answer.max_points)
         if answer.question.type == "mcq":
             points = max_points if is_mcq_correct(answer) else 0.0
         else:
             given = None
-            if ai_results is not None:
-                given = ai_results.get(answer.position, (None, TIMEOUT_ERROR))
-            results, error = grade_essay(ai, answer, given)
+            if ai_results is not None and _has_text(answer):
+                given = ai_results.get(answer.position, (None, TIMEOUT_ERROR, None))
+            results, error, nodes = grade_essay(ai, answer, given)
             answer.rubric_result = results
             points = sum(r["points"] for r in results) / 10 * max_points
             if error:
                 fallbacks.append({"position": answer.position, "error": error})
+            essays.append({"position": answer.position, "nodes": nodes})
         answer.points = round(points, 2)
         total += points
-    return total, {"ai": ai.name, "keyword_fallback": fallbacks}
+    return total, {"ai": ai.name, "keyword_fallback": fallbacks, "essays": essays}

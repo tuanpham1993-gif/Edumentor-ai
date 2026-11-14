@@ -141,7 +141,12 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - ✅ Chạy thử cả chuỗi `gold_sheets` → `eval_grading` trên dữ liệu giả. Bộ chấm từ khóa chấm **full cả 2 ý** cho bài đảo nghĩa "break skips to the next iteration and continue exits the loop" (vì "and" không phải ranh giới vế). Đây là ví dụ cho báo cáo: chấm từ khóa không hiểu nghĩa nên cần LLM.
   - (kế hoạch gốc) `backend/scripts/eval_grading.py`: đọc `gold.csv` + kết quả một lần chạy → các chỉ số mục 3 + bootstrap + **Precision / Recall / F1 theo từng nhãn full / partial / none** (cách tính như `Session02/demo2.py`); mỗi lần chạy lưu `results/<run_id>.csv` (method, model, prompt_version, kết quả từng ý, latency, lỗi).
   - ✅ Chạy được với chấm từ khóa trên dev; số liệu tái lập được.
-- [ ] **B6 Runner pipeline** — dự kiến 16/11 · thực tế __/__ 👤
+- [x] **B6 Runner pipeline** — dự kiến 16/11 · thực tế 14/11 🤖
+  - ✅ `app/ai/review/pipeline/runner.py`: `Node(name, run, retries, on_error)`, `Step(goto, output)`, `run_pipeline`. Chạy lần lượt; `goto` để rẽ nhánh; `ctx.done` để dừng sớm. Khối raise `NodeFailed` → thử lại `retries` lần → đi nhánh `on_error`; lỗi lạ không nuốt. Giới hạn 20 bước chống lặp vô hạn. Trace mỗi khối gồm `{node, status, ms, attempts, output, error}`; khối bị nhánh bỏ qua không vào trace (như node xám trong n8n).
+  - ✅ `pipeline/essay.py`: `0_input` → `3_context` → `4_llm_grade` →(lỗi)→ `4b_keyword_fallback` → `7_aggregate` → `8_trace`. Bọc code có sẵn: `ai_grade` chuyển từ `review_grader` sang đây và đo thêm thời gian gọi AI. Khối 1, 2, 5, 6 (B8) và RAG ở khối 3 (B9) chỉ cần chèn Node vào `ESSAY_NODES`.
+  - ✅ `review_grader` chạy mọi câu tự luận qua pipeline; luồng song song T1 giữ nguyên (luồng chạy khối 4, khối 4 dùng lại kết quả, `source: "parallel"`). `attempt.trace["grading"]["essays"]` = trace từng câu; `ai` và `keyword_fallback` giữ như cũ.
+  - ✅ **Hành vi không đổi**: 66 test chấm bài cũ xanh không sửa. Thêm 21 test runner và pipeline, 1 test trace qua API, mở rộng test dự phòng. Toàn bộ 870 passed. Kiểm ngược: bỏ nhánh `goto="7_aggregate"` → 2 test trượt; bỏ `retryable` → 2 test trượt.
+  - 🤖 Review lần 2 (14/11): khối lỗi giữ `output` trong trace (vd `llm_ms` để phân biệt quá giờ với lỗi ngay); `NodeFailed(retryable=False)` để kết quả song song đã quá giờ không bị thử lại (khi B7 bật `retries` sẽ không giữ người học chờ thêm); có test bảo đảm trace không chứa bài làm.
   - `backend/app/ai/review/pipeline/`: runner + bọc khối 0, 3, 4, 7, 8 từ code có sẵn; ghi `trace.nodes`.
   - ✅ **Hành vi không đổi**: toàn bộ test cũ vẫn xanh; trace có thời gian từng khối.
 - [ ] **B7 Khối 4 — chấm có cấu trúc** — dự kiến 17/11 · thực tế __/__ 👤
@@ -178,6 +183,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
 |---|---|---|
 | 13/11 | Khảo sát AI Grading; chốt D1 tiếng Anh, D2 fine-tune để sau, D12 hạn 25/11 | — |
 | 14/11 | Thầy đồng ý phiên bản 1 LLM + RAG + Prompt; yêu cầu thêm độ chính xác + pipeline kiểu n8n. Gom tài liệu pipeline Session 01. Lập file kế hoạch này | GĐ7 trùng lịch |
+| 14/11 | **B6 xong**: runner pipeline kiểu n8n + pipeline chấm một câu; trace từng khối lưu vào attempt; hành vi không đổi; 865 passed | Tiếp B7 (chấm có cấu trúc) |
 | 14/11 | **B5 xong**: `eval_grading.py` (run / report / compare, P/R/F1 theo demo2, bootstrap), 11 test; chạy thử cả chuỗi trên dữ liệu giả | Chờ gold.csv thật; tiếp B6 |
 | 14/11 | **Review B2** (sửa khối 1: tên biến một chữ, dấu phẩy trong code; bỏ 3 từ khóa) + **B4 phần chuẩn bị** (hướng dẫn chấm, quy trình Form, split dev / test, script `gold_sheets`) | Tuấn tạo Form, báo Hòa, Tâm; nạp DB tiếng Anh |
 | 14/11 | **B3 xong** (bộ chấm từ khóa tiếng Anh + chọn theo ngôn ngữ, 21 test, kiểm ngược 3 luật). **B2 bản nháp xong**: ngân hàng tiếng Anh 100 câu + 15 đoạn, đáp án mẫu 30/30 đạt 10/10; seed `--retire`; prompt sinh câu tiếng Anh. Khối 1 sửa: từ khóa Python, toán tử, số thập phân. 815 passed | Tuấn duyệt bản dịch, rồi nạp DB thật |
