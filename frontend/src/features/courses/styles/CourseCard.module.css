@@ -1,0 +1,313 @@
+/* CSS Module cho Thẻ khóa học (CourseCard) chuẩn thiết kế EduMentor AI */
+
+.card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 1px 0 var(--row-hover) inset, 0 6px 18px rgba(var(--shadow-rgb), calc(0.28 * var(--shadow-k)));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(245, 165, 36, 0.45);
+  box-shadow:
+    0 18px 40px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k))),
+    0 0 0 1px rgba(245, 165, 36, 0.12),
+    0 10px 40px -10px rgba(245, 165, 36, 0.25);
+}
+
+/* Phần Cover trên của thẻ */
+.media {
+  position: relative;
+}
+
+.cover {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  --cb: var(--cover-base, var(--card-inner));
+  --ci: var(--cover-ink, var(--accent));
+  --cover-end: #121212;
+  --cover-line: rgba(255, 255, 255, 0.04);
+  background: var(--cb);
+}
+
+:global([data-theme="light"]) .cover {
+  --cb: var(--cover-base-l, var(--card-inner));
+  --ci: var(--cover-ink-l, var(--accent));
+  --cover-end: #fffaf2;
+  --cover-line: rgba(120, 90, 40, 0.08);
+}
+
+.coverArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--ci) 34%, transparent), transparent 60%),
+    linear-gradient(160deg, var(--cb), var(--cover-end));
+  transition: transform 0.35s ease-out;
+}
+
+.card:hover .coverArt {
+  transform: scale(1.04);
+}
+
+.coverGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--cover-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cover-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(180deg, #000 20%, transparent 95%);
+  mask-image: linear-gradient(180deg, #000 20%, transparent 95%);
+}
+
+.coverOrb {
+  position: absolute;
+  right: 34px;
+  top: 30px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffd27a;
+  box-shadow: 0 0 24px 8px rgba(255, 179, 71, 0.45), 0 0 80px 30px rgba(245, 165, 36, 0.18);
+}
+
+.coverMono {
+  position: absolute;
+  left: 20px;
+  bottom: 6px;
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: var(--ci);
+  opacity: 0.85;
+  user-select: none;
+}
+
+.coverShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, var(--card-fade, rgba(20, 18, 16, 0.8)) 100%);
+  opacity: 0.6;
+  transition: opacity 0.3s ease-out;
+}
+
+.card:hover .coverShade {
+  opacity: 0.9;
+}
+
+/* Thanh huy hiệu & bookmark trên cover */
+.mediaTop {
+  position: absolute;
+  inset: 14px 14px auto 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  z-index: 2;
+}
+
+.platform {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--glass, rgba(20, 18, 16, 0.65));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 500;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saveBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
+  background: var(--glass, rgba(20, 18, 16, 0.65));
+  color: var(--text-soft);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease-out, border-color 0.2s ease-out, background 0.2s ease-out, color 0.2s ease-out;
+}
+
+.saveBtn:hover {
+  transform: scale(1.08);
+  border-color: var(--accent-soft-border);
+}
+
+.saveBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.saveBtnSaved {
+  background: var(--accent-soft-bg, rgba(245, 165, 36, 0.2));
+  border-color: var(--accent-soft-border);
+  color: var(--accent);
+}
+
+.saveBtnSaved svg {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.ongoingBadge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.18);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+  font-size: 11.5px;
+  font-weight: 600;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.completedBadge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  font-size: 11.5px;
+  font-weight: 600;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+/* Thân nội dung thẻ */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 22px 22px;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 48px;
+}
+
+.level {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 28px;
+}
+
+.skill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--info-bg, rgba(46, 144, 250, 0.12));
+  color: var(--info-fg, #53b1fd);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.rating {
+  color: var(--accent-soft-fg, var(--accent));
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reviews {
+  color: var(--text-dim);
+}
+
+/* Nút CTA "Xem chi tiết" */
+.cta {
+  margin-top: 12px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--outline, var(--card-border));
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out;
+}
+
+.cta svg {
+  transition: transform 0.3s ease-out;
+}
+
+.card:hover .cta {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent, #1a1206);
+}
+
+.card:hover .cta svg {
+  transform: translateX(4px);
+}
+
+/* Trợ năng giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+  .card:hover .coverArt {
+    transform: none;
+  }
+}

@@ -1,0 +1,543 @@
+/* CSS Module cho Trang "Khóa học của tôi" (/me/courses) */
+/* Chuẩn theo Mockup, quy chuẩn tokens.css và tiêu chuẩn UX/Design-Taste */
+
+.pageWrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Đèn treo nghệ thuật ấm cúng bên trái */
+.ambientLamp {
+  position: fixed;
+  left: 24px;
+  top: 72px;
+  width: 120px;
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: 60px 0;
+  animation: swayLeftLamp 6s ease-in-out infinite alternate;
+}
+
+.lampGlow {
+  position: absolute;
+  left: -130px;
+  top: 70px;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(245, 158, 11, 0.22) 0%,
+    rgba(245, 158, 11, 0.08) 40%,
+    rgba(245, 158, 11, 0) 70%
+  );
+  animation: breatheLampGlow 5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes swayLeftLamp {
+  0% { transform: rotate(-2deg); }
+  100% { transform: rotate(2deg); }
+}
+
+@keyframes breatheLampGlow {
+  0% { opacity: 0.75; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1.04); }
+}
+
+/* Khung nội dung chính */
+.contentContainer {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Phần tiêu đề trang */
+.pageHead {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.subheading {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+
+/* Thông báo phản hồi nhẹ */
+.actionNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--accent-tint, rgba(245, 158, 11, 0.1));
+  border: 1px solid var(--accent, #f59e0b);
+  color: var(--accent-soft-fg, #fbbf24);
+  font-size: 13.5px;
+  font-weight: 500;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.closeNoticeBtn {
+  background: transparent;
+  border: none;
+  color: var(--accent-soft-fg, #fbbf24);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* Khối báo lỗi và nút thử lại */
+.errorBox {
+  padding: 24px;
+  border-radius: 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.errorBox p {
+  margin: 0;
+}
+
+.retryBtn {
+  height: 34px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: transparent;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* Skeleton Loading */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 0;
+}
+
+.skeletonItem {
+  height: 72px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmerSkeleton 1.6s infinite;
+}
+
+@keyframes shimmerSkeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Thanh Tab dạng viên thuốc */
+.tabsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.tabBtn {
+  height: 38px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  color: var(--text-soft);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease-out;
+}
+
+.tabBtn:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.activeTab {
+  background: var(--accent, #f59e0b);
+  color: var(--on-accent, #181614);
+  border-color: transparent;
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(245, 158, 11, 0.28);
+}
+
+.activeTab:hover {
+  background: #fbbf24;
+  color: var(--on-accent, #181614);
+}
+
+.tabCount {
+  font-size: 12.5px;
+  opacity: 0.9;
+}
+
+/* Thẻ bao bọc danh sách */
+.cardContainer {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 6px 28px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 32px -12px rgba(0, 0, 0, 0.45);
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hàng từng khóa học */
+.courseItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s ease-out;
+}
+
+.courseItem:last-child {
+  border-bottom: none;
+}
+
+.itemInfo {
+  flex: 1 1 320px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.courseTitle {
+  margin: 0;
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.courseTitle a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s ease-out;
+}
+
+.courseTitle a:hover {
+  color: var(--accent);
+}
+
+.courseTitleBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s ease-out;
+}
+
+.courseTitleBtn:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.courseMeta {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Cụm hành động bên phải */
+.itemActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Huy hiệu trạng thái */
+.ongoingBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.bookmarkedBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.completedBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.abandonedBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(156, 163, 175, 0.12);
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(156, 163, 175, 0.25);
+}
+
+/* Nút Mở khóa học ngoài */
+.openMoocBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 9px;
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.openMoocBtn:hover {
+  background: var(--surface-sunk);
+  color: var(--accent);
+  border-color: var(--text-dim);
+  transform: translateY(-1px);
+}
+
+/* Nút Làm bài ôn tập */
+.reviewBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 9px;
+  background: var(--accent, #f59e0b);
+  color: var(--on-accent, #181614);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.22);
+}
+
+.reviewBtn:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+
+/* Nút Ngừng theo dõi (Danger outline) */
+.abandonBtn {
+  height: 36px;
+  padding: 0 15px;
+  border-radius: 9px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: transparent;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.abandonBtn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  transform: translateY(-1px);
+}
+
+/* Nút Tham gia học từ Bookmark */
+.joinBtn {
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 9px;
+  border: none;
+  background: var(--accent, #f59e0b);
+  color: var(--on-accent, #181614);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.22);
+}
+
+.joinBtn:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+}
+
+/* Nút Bỏ lưu */
+.removeBookmarkBtn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 9px;
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.removeBookmarkBtn:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+  background: var(--surface-sunk);
+}
+
+/* ================== KHỐI ĐÃ LƯU ĐỂ HỌC SAU ================== */
+.bookmarkSection {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sectionDesc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Trạng thái trống */
+.emptyState {
+  padding: 44px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.emptyHint {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  max-width: 440px;
+}
+
+.browseLink {
+  margin-top: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.browseLink:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .ambientLamp {
+    display: none; /* Ẩn đèn treo trên màn hình hẹp để không đè chữ */
+  }
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    padding: 24px 16px 60px;
+  }
+  .cardContainer {
+    padding: 4px 18px;
+  }
+  .courseItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .itemActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

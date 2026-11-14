@@ -1,0 +1,410 @@
+/* CSS Module cho Hộp thoại Chi tiết Khóa học */
+/* Căn giữa Top - Bottom và Left - Right chuẩn 100% theo mockup */
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center; /* Căn giữa Top - Bottom */
+  justify-content: center; /* Căn giữa Trái - Phải */
+  padding: 24px;
+  margin: 0;
+  box-sizing: border-box;
+  animation: fadeIn 0.2s ease-out both;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  margin: auto; /* Flexbox margin auto đảm bảo luôn căn giữa tuyệt đối */
+  display: flex;
+  flex-direction: column;
+  background: #191715;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: popModal 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popModal {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Header modal */
+.header {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid #292522;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.platformPill {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #383430;
+  background: #262422;
+  color: #9ca3af;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease-out;
+}
+
+.closeBtn:hover {
+  background: #332f2b;
+  color: #ffffff;
+  border-color: #4a443e;
+  transform: scale(1.05);
+}
+
+/* Nội dung cuộn */
+.content {
+  padding: 22px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+/* Huy hiệu chuẩn theo mockup */
+.badgesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  align-items: center;
+}
+
+.levelBadge {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ratingBadge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.reviewsBadge {
+  background: rgba(255, 255, 255, 0.04);
+  color: #9ca3af;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.enrolledBadge {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ongoingStatusBadge {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.joinSuccessNotice {
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Bảng thông tin 2 cột */
+.metaInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 24px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #1b1917;
+  border: 1px solid #2e2a25;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaLabel {
+  font-size: 12px;
+  color: #8c827a;
+}
+
+.metaValue {
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Khối giới thiệu nội dung */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #a8a29e;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.descriptionScroll {
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Custom sleek scrollbar */
+.descriptionScroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.descriptionScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.descriptionScroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.descriptionScroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #d6d3d1;
+  text-align: justify;
+}
+
+/* Kỹ năng */
+.skillsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skillChip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* Footer cố định */
+.footer {
+  padding: 16px 28px;
+  border-top: 1px solid #292522;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: #191715;
+  flex-shrink: 0;
+}
+
+.bookmarkActionBtn {
+  background: #252220;
+  border: 1px solid #3d3833;
+  color: #f5f5f4;
+  border-radius: 10px;
+  padding: 11px 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.bookmarkActionBtn:hover {
+  background: #2f2b28;
+  border-color: #4a443e;
+  transform: translateY(-1px);
+}
+
+.bookmarkActionBtnSaved {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+}
+
+.bookmarkActionBtnSaved:hover {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: rgba(245, 158, 11, 0.6);
+  color: #fef08a;
+}
+
+.ongoingFooterIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.32);
+  color: #4ade80;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.completedFooterIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  color: #38bdf8;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.joinMoocBtn {
+  background: #f59e0b;
+  color: #181614;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joinMoocBtn:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35);
+}
+
+.noLinkMuted {
+  font-size: 13px;
+  color: #78716c;
+}
+
+@media (max-width: 600px) {
+  .backdrop {
+    padding: 12px;
+  }
+  .modal {
+    max-height: 94vh;
+    max-height: 94dvh;
+  }
+  .header, .content, .footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .metaInfoGrid {
+    grid-template-columns: 1fr;
+  }
+  .footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}

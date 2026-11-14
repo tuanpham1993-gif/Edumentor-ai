@@ -30,6 +30,8 @@ import ReviewHistoryPage from '../features/review/pages/ReviewHistoryPage.jsx';
 import ReviewQuizPage from '../features/review/pages/ReviewQuizPage.jsx';
 import ReviewResultPage from '../features/review/pages/ReviewResultPage.jsx';
 import ReviewStartPage from '../features/review/pages/ReviewStartPage.jsx';
+import CoursesPage from '../features/courses/pages/CoursesPage.jsx';
+import MyCoursesPage from '../features/courses/pages/MyCoursesPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
@@ -68,6 +70,10 @@ export default function AppRoutes() {
           <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
           <Route path="/review/:attemptId" element={<ReviewQuizPage />} />
           <Route path="/review/:attemptId/result" element={<ReviewResultPage />} />
+          {/* Khóa học — module Khôi */}
+          <Route path="/courses" element={<CoursesPage />} />
+          {/* Khóa học của tôi — module Tâm */}
+          <Route path="/me/courses" element={<MyCoursesPage />} />
           {/* Trang của nhóm khác / module 09 chưa làm → "Tạm thời chưa khả dụng" (08/11).
               Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
               (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}
