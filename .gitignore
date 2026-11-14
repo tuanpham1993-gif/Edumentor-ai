@@ -34,3 +34,7 @@ backend/uploads/
 
 # Tài liệu cá nhân của Tuấn — chỉ để trên máy, KHÔNG push
 docs/review Quy trình tính năng Auth.md
+
+
+.agents/
+powershell.cmd
