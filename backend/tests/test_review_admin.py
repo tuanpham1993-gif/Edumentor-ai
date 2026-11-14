@@ -409,12 +409,19 @@ def test_approve_gives_code_and_activates(client, pending, admin_headers):
 
 
 @pytest.mark.parametrize("body", [None, {}, {"code": ""}, {"code": "   "}])
-def test_approve_requires_code(client, pending, admin_headers, body):
-    """Tuấn chốt 13/11: duyệt BẮT BUỘC nhập mã (chưa kịp nhập → cứ để Chờ duyệt)."""
+def test_approve_without_code_assigns_suggested(client, pending, admin_headers, body):
+    """Nhóm chốt 14/11: bấm Duyệt là xong — không nhập mã thì hệ thống tự cấp mã gợi ý (PY đã có TN-01..14)."""
     response = client.post(f"{URL}/{pending.question_id}/approve", json=body, headers=admin_headers)
-    assert response.status_code == 422
-    detail = client.get(f"{URL}/{pending.question_id}", headers=admin_headers).json()
-    assert (detail["review_status"], detail["is_active"]) == ("pending", False)
+    assert response.status_code == 200, response.text
+    body_out = response.json()
+    assert (body_out["code"], body_out["review_status"], body_out["is_active"]) == ("PY-TN-15", "approved", True)
+
+
+def test_approve_fallback_code_when_skill_has_no_codes(client, pending, admin_headers, db_session):
+    db_session.query(ReviewQuestion).filter(ReviewQuestion.skill_id == pending.skill_id).update({"code": None})
+    db_session.commit()
+    body = client.post(f"{URL}/{pending.question_id}/approve", headers=admin_headers).json()
+    assert body["code"] == f"AI-{pending.question_id}"
 
 
 def test_suggested_code_follows_skill_codes(client, pending, admin_headers, db_session):

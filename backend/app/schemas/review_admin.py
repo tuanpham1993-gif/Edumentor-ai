@@ -8,7 +8,7 @@ và câu AI sinh, không viết lại bằng Pydantic.
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 QuestionType = Literal["mcq", "essay"]
 QuestionLevel = Literal["recognize", "understand", "easy", "advanced"]
@@ -56,11 +56,17 @@ class QuestionUpdate(BaseModel):
 
 
 class ApproveRequest(BaseModel):
-    """Duyệt câu AI soạn → cấp mã + bật. Mã BẮT BUỘC (Tuấn chốt 13/11); frontend điền sẵn mã gợi ý (QT9: "VAR-TN-15")."""
+    """Duyệt câu AI soạn → cấp mã + bật. Mã TÙY CHỌN (nhóm chốt 14/11): bỏ trống → hệ thống tự cấp mã gợi ý
+    (QT9: "VAR-TN-15"); admin nhập mã khác thì dùng mã đó."""
 
     model_config = ConfigDict(str_strip_whitespace=True)
 
-    code: str = Field(min_length=1, max_length=50)
+    code: str | None = Field(default=None, max_length=50)
+
+    @field_validator("code")
+    @classmethod
+    def _blank_is_none(cls, value: str | None) -> str | None:
+        return value or None  # "" / "   " (sau strip) = không nhập
 
 
 class SuggestedCodeOut(BaseModel):

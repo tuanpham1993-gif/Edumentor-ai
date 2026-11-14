@@ -10,7 +10,7 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     POST   /api/admin/review/questions/{id}/activate   — bật
     POST   /api/admin/review/questions/{id}/deactivate — tắt
     DELETE /api/admin/review/questions/{id}            — chưa ai làm → xóa thật; đã làm → chỉ tắt
-    POST   /api/admin/review/questions/{id}/approve    — duyệt câu AI soạn: mã BẮT BUỘC + bật (QT6)
+    POST   /api/admin/review/questions/{id}/approve    — duyệt câu AI soạn + bật (QT6); không gửi mã → tự cấp mã gợi ý
     GET    /api/admin/review/questions/{id}/suggested-code — mã gợi ý điền sẵn khi duyệt (vd VAR-TN-15)
     POST   /api/admin/review/questions/{id}/reject     — từ chối câu AI soạn (ẩn, không xóa)
 
@@ -193,12 +193,12 @@ def delete_question(question_id: int, _: Users = Depends(require_admin), db: Ses
 )
 def approve_question(
     question_id: int,
-    body: ApproveRequest,
+    body: ApproveRequest | None = None,
     admin: Users = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
     try:
-        return service.approve(db, question_id, body, admin.user_id)
+        return service.approve(db, question_id, body or ApproveRequest(), admin.user_id)
     except ERRORS as err:
         raise _http(err) from None
 

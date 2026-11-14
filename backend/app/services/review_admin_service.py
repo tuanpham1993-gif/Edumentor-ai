@@ -92,13 +92,16 @@ TYPE_TAG = {"mcq": "TN", "essay": "TL"}
 
 
 def suggest_code(db: Session, question_id: int) -> dict:
-    """Gợi ý mã khi duyệt (Tuấn chốt 13/11): lấy viết tắt kỹ năng từ các mã ĐÃ CÓ của kỹ năng đó (DB chưa lưu viết
-    tắt — chỉ có trong data/review/*.json), số = lớn nhất cùng loại + 1, bỏ tiền tố khóa (QT9).
-    Vd kỹ năng đã có 312-VAR-TN-01..14 → "VAR-TN-15". Kỹ năng chưa có mã nào → None (admin tự nhập)."""
-    question = _get(db, question_id)
+    """Mã gợi ý để frontend điền sẵn ở khung duyệt (admin sửa được). None = kỹ năng chưa có mã nào."""
+    return {"code": _suggested_code(db, _get(db, question_id))}
+
+
+def _suggested_code(db: Session, question) -> str | None:
+    """Lấy viết tắt kỹ năng từ các mã ĐÃ CÓ của kỹ năng đó (DB chưa lưu viết tắt — chỉ có trong data/review/*.json),
+    số = lớn nhất cùng loại + 1, bỏ tiền tố khóa (QT9). Vd kỹ năng đã có 312-VAR-TN-01..14 → "VAR-TN-15"."""
     parsed = [m.groups() for m in map(CODE_PATTERN.match, repo.codes_for_skill(db, question.skill_id)) if m]
     if not parsed:
-        return {"code": None}
+        return None
     abbr = Counter(a for a, _, _ in parsed).most_common(1)[0][0]
     tag = TYPE_TAG[question.type]
     number = max((int(n) for a, t, n in parsed if a == abbr and t == tag), default=0) + 1
@@ -106,7 +109,12 @@ def suggest_code(db: Session, question_id: int) -> dict:
     while repo.get_question_by_code(db, code) is not None:  # phòng mã đã bị dùng ở kỹ năng khác
         number += 1
         code = f"{abbr}-{tag}-{number:02d}"
-    return {"code": code}
+    return code
+
+
+def _auto_code(db: Session, question) -> str:
+    """Mã tự cấp khi admin bấm Duyệt mà không nhập: mã gợi ý; kỹ năng chưa có mã nào → "AI-<question_id>"."""
+    return _suggested_code(db, question) or f"AI-{question.question_id}"
 
 
 # ─────────────── ghi (mỗi hàm commit một lần) ───────────────
@@ -153,16 +161,20 @@ def delete(db: Session, question_id: int) -> dict:
 
 
 def approve(db: Session, question_id: int, body: ApproveRequest, admin_id: int) -> dict:
-    """Duyệt câu AI soạn (QT6): cấp mã (bắt buộc — schema kiểm) + đã duyệt + bật (nếu là phiên bản mới nhất)."""
+    """Duyệt câu AI soạn (QT6): cấp mã + đã duyệt + bật (nếu là phiên bản mới nhất).
+
+    Nhóm chốt 14/11: bấm Duyệt là xong — không gửi mã thì hệ thống tự cấp mã gợi ý; admin gửi mã thì dùng mã đó.
+    Mã cấp LÚC DUYỆT (không phải lúc AI soạn) để câu bị từ chối không chiếm mã, dãy số liền mạch."""
     question = _get(db, question_id, for_update=True)
 
     def run():
         meta = bank.ensure_meta(db, question)
         if meta.review_status != "pending":
             raise ApprovalNotAllowedError("Chỉ duyệt được câu đang chờ duyệt")
-        if body.code != question.code:
-            _check_code_free(db, body.code)
-            question.code = body.code
+        code = body.code or question.code or _auto_code(db, question)
+        if code != question.code:
+            _check_code_free(db, code)
+            question.code = code
         bank.mark_reviewed(meta, "approved", admin_id)
         db.flush()
         if bank.is_latest(db, question):
