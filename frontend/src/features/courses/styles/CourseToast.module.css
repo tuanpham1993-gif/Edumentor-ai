@@ -1,0 +1,211 @@
+/* Style cho CourseToast - thông báo nổi tương tác người dùng */
+
+.toastContainer {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100010; /* Cao hơn modal để luôn nổi lên trên cùng */
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.toast {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #191715;
+  background: linear-gradient(145deg, #221e1a 0%, #171513 100%);
+  color: #f5f5f4;
+  box-shadow:
+    0 20px 45px -8px rgba(0, 0, 0, 0.75),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: toastSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+@keyframes toastSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Các biến thể màu sắc theo loại thông báo */
+.toastSuccess {
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow:
+    0 20px 45px -8px rgba(0, 0, 0, 0.75),
+    0 0 25px rgba(245, 158, 11, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.toastSuccess .iconWrap {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.toastInfo {
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow:
+    0 20px 45px -8px rgba(0, 0, 0, 0.75),
+    0 0 25px rgba(56, 189, 248, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.toastInfo .iconWrap {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.toastWarning {
+  border: 1px solid rgba(251, 146, 60, 0.4);
+  box-shadow:
+    0 20px 45px -8px rgba(0, 0, 0, 0.75),
+    0 0 25px rgba(251, 146, 60, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.toastWarning .iconWrap {
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+
+.toastError {
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow:
+    0 20px 45px -8px rgba(0, 0, 0, 0.75),
+    0 0 25px rgba(239, 68, 68, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.toastError .iconWrap {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Biểu tượng */
+.iconWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconSvg {
+  display: block;
+}
+
+/* Phần chữ */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 360px;
+}
+
+.message {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f5f5f4;
+}
+
+.subtext {
+  font-size: 12px;
+  color: #a8a29e;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Nút hành động xem nhanh */
+.actionBtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: 8px;
+  padding: 6px 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s ease-out;
+  display: inline-flex;
+  align-items: center;
+}
+
+.actionBtn:hover {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+  transform: translateY(-1px);
+}
+
+/* Nút đóng */
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: #78716c;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.closeBtn:hover {
+  color: #d6d3d1;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Responsive trên di động */
+@media (max-width: 640px) {
+  .toastContainer {
+    bottom: 20px;
+    width: 100%;
+    padding: 0 12px;
+  }
+
+  .toast {
+    width: 100%;
+    max-width: 420px;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .content {
+    max-width: 200px;
+  }
+
+  .actionBtn {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+}

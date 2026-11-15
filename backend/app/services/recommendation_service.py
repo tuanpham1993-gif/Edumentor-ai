@@ -1,25 +1,50 @@
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app.models.skill import Skills
 from app.recommender.build_learning_graph import generate_learning_path
+from app.core.embedding_model import generate_embedding_skills_name
+from app.services.qdrant_service import qdrant_skill_service
 
+MIN_QDRANT_SCORE = 0.75
 
-# ======================================================
-# 1. Mock target skill extraction
-# ======================================================
+def normalize_skill_name(skill: str) -> str:
+    return skill.strip().casefold()
 
-def extract_target_skills(original_query: str) -> list[int]:
-    """
-    Temporary mock implementation.
+def extract_target_skills(extracted_skills: list[str],db: Session) -> list[int]:
+    target_skill_ids = []
+    unmatched_skills = []
 
-    Eventually, replace this function with the QLoRA
-    skill extraction model.
+    for skill in extracted_skills:
+        matched_skill_id = (
+            db.query(Skills.skill_id)
+            .filter(
+                Skills.is_active.is_(True),
+                func.lower(func.trim(Skills.skill))
+                == skill.strip().lower()
+            )
+            .order_by(Skills.skill_id.asc())
+            .limit(1)
+            .scalar()
+        )
 
-    The frontend does not provide target_skill_ids.
-    """
-    goal_type = "career"
-    return [486, 773, 87], goal_type
+        if matched_skill_id is not None:
+            target_skill_ids.append(matched_skill_id)
+        else:
+            unmatched_skills.append(skill)
+
+    if unmatched_skills:
+        embeddings = generate_embedding_skills_name(unmatched_skills)
+        for skill, embedding in zip(unmatched_skills, embeddings):
+            results = qdrant_skill_service.search_skill(embedding,limit=5)
+            if not results: continue
+            best_match = next((
+               result for result in results
+                    if (result.score >= MIN_QDRANT_SCORE)
+                    ),None)
+            if best_match is None: continue
+            target_skill_ids.append(best_match.payload["skill_id"]) 
+    return list(dict.fromkeys(target_skill_ids))
 
 
 # ======================================================
@@ -97,18 +122,13 @@ def enrich_learning_path_with_skill_names(
 def generate_learning_path_preview(
     db: Session,
     original_query: str,
-    #goal_type: str,
+    target_skill_ids: list[int],
+    goal_type: str,
 ) -> dict:
     """
     Generate a learning path preview without saving
     anything to the learning_paths tables.
     """
-
-    # Step 1: Extract target skills.
-    target_skill_ids, goal_type = extract_target_skills(original_query)
-
-    if not target_skill_ids:
-        raise ValueError( "No target skills could be extracted from the learning goal." )
 
     # Step 2: Generate graph using existing pipeline.
     learning_path = generate_learning_path(

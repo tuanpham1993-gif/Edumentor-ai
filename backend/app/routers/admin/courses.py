@@ -1,8 +1,6 @@
-from typing import Optional
-from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.services.course_service import CourseService
+from app.core.dependencies import require_admin
+from app.schemas.common import PaginatedResponse
 from app.schemas.course import (
     AdminCourseDetailResponse,
     CourseCreate,
@@ -10,9 +8,11 @@ from app.schemas.course import (
     CourseResponse,
     CourseUpdate,
 )
-from app.schemas.common import PaginatedResponse
+from app.services.course_service import CourseService
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])
 
 
 @router.get(
@@ -23,16 +23,20 @@ router = APIRouter()
 )
 def get_admin_courses(
     page: int = Query(default=1, ge=1, description="Số trang (bắt đầu từ 1)"),
-    page_size: int = Query(default=10, ge=1, le=100, description="Số bản ghi trên mỗi trang"),
-    search: Optional[str] = Query(default=None, description="Từ khóa tìm kiếm"),
-    level: Optional[CourseLevel] = Query(
+    page_size: int = Query(
+        default=10, ge=1, le=100, description="Số bản ghi trên mỗi trang"
+    ),
+    search: str | None = Query(default=None, description="Từ khóa tìm kiếm"),
+    level: CourseLevel | None = Query(
         default=None,
         description="Lọc theo cấp độ khóa học (beginner, intermediate, advanced)",
     ),
     db: Session = Depends(get_db),
 ):
     service = CourseService(db)
-    return service.list_courses(page=page, page_size=page_size, search=search, level=level)
+    return service.list_courses(
+        page=page, page_size=page_size, search=search, level=level
+    )
 
 
 @router.post(
@@ -90,4 +94,3 @@ def delete_admin_course(
 ):
     service = CourseService(db)
     return service.delete_course(course_id)
-

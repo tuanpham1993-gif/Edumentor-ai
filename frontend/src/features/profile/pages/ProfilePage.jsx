@@ -13,7 +13,8 @@ import { Link } from 'react-router-dom';
 
 import * as meApi from '../../../api/me.api.js';
 import { PencilIcon } from '../../common/components/icons.jsx';
-import PendingBlock from '../components/PendingBlock.jsx';
+import CourseDetailModal from '../../courses/components/CourseDetailModal.jsx';
+import ProfileCourses from '../components/ProfileCourses.jsx';
 import RecentReviews from '../components/RecentReviews.jsx';
 import SkillsSummary from '../components/SkillsSummary.jsx';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -33,6 +34,11 @@ export default function ProfilePage() {
   const [skills, setSkills] = useState(null); // null = đang tải
   const [skillsError, setSkillsError] = useState(false);
   const [summary, setSummary] = useState(null); // null = đang tải hoặc lỗi → "—"
+  const [selectedCourse, setSelectedCourse] = useState(null); // xem chi tiết modal
+
+  function refreshSummary() {
+    meApi.getSummary().then(setSummary).catch(() => {});
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -95,10 +101,10 @@ export default function ProfilePage() {
 
       {/* Bố cục theo demo: trái rộng = khóa học, phải hẹp = kỹ năng + ôn tập */}
       <div className={styles.grid}>
-        <PendingBlock title="Khóa học của tôi">
-          Danh sách khóa học Đang học / Đã lưu / Đã hoàn thành sẽ hiện ở đây khi module khóa học
-          hoàn tất.
-        </PendingBlock>
+        <ProfileCourses
+          onSelectCourse={setSelectedCourse}
+          onStatsChange={refreshSummary}
+        />
 
         <div className="stack" style={{ gap: 20 }}>
           <SkillsSummary skills={skills} error={skillsError} />
@@ -106,6 +112,18 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Hộp thoại xem chi tiết khóa học khi bấm vào tên khóa học */}
+      {selectedCourse && (
+        <CourseDetailModal
+          course={selectedCourse}
+          isBookmarked={selectedCourse.status === 'bookmarked'}
+          isOngoing={selectedCourse.status === 'ongoing'}
+          isCompleted={selectedCourse.status === 'completed'}
+          onToggleBookmark={() => refreshSummary()}
+          onJoinCourse={() => refreshSummary()}
+          onClose={() => setSelectedCourse(null)}
+        />
+      )}
     </div>
   );
 }

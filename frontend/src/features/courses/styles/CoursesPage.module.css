@@ -1,0 +1,340 @@
+/* CSS Module cho Trang Danh mục Khóa học (CoursesPage) */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+  overflow-x: clip;
+}
+
+/* ---------- 1. Hero Section với Đèn treo nghệ thuật ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 64px 24px 52px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-deep, #141210);
+}
+
+.lamp {
+  position: absolute;
+  top: 0;
+  width: 120px;
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: 60px 0;
+  animation: swayLamp 5.2s ease-in-out infinite alternate;
+}
+
+.lamp svg {
+  position: relative;
+  display: block;
+}
+
+.lampLeft {
+  left: 18%;
+  animation-delay: 0s;
+}
+
+.lampRight {
+  right: 18%;
+  animation-delay: -2.6s;
+}
+
+.glow {
+  position: absolute;
+  left: -150px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--lamp-glow, rgba(245, 165, 36, 0.3)), rgba(245, 165, 36, 0) 65%);
+  animation: breatheGlow 6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes swayLamp {
+  0% { transform: rotate(-2.5deg); }
+  100% { transform: rotate(2.5deg); }
+}
+
+@keyframes breatheGlow {
+  0% { filter: brightness(0.85); }
+  100% { filter: brightness(1.15); }
+}
+
+@media (max-width: 768px) {
+  .lamp {
+    display: none;
+  }
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.heading {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.heading span {
+  color: var(--accent);
+}
+
+.sub {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-soft);
+  max-width: 580px;
+}
+
+/* Thanh tìm kiếm */
+.search {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 18px;
+  background: var(--input);
+  border: 1px solid var(--outline, var(--card-border));
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: border-color var(--d-fast) var(--e-std), box-shadow var(--d-fast) var(--e-std);
+}
+
+.search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.18);
+}
+
+.searchIcon {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+}
+
+.search input::placeholder {
+  color: var(--text-dim);
+}
+
+.clearSearchBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.clearSearchBtn:hover {
+  color: var(--text);
+}
+
+/* ---------- 2. Nội dung chính & Bộ lọc ---------- */
+.main {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
+.filterField {
+  flex: 0 1 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.filterField select {
+  height: 44px;
+  padding: 0 14px;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--d-fast);
+}
+
+.filterField select:focus {
+  border-color: var(--accent);
+}
+
+.totalCount {
+  flex: 1 1 160px;
+  text-align: right;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding-bottom: 12px;
+}
+
+/* ---------- 3. Lưới hiển thị khóa học ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Skeleton loader */
+.skeletonCard {
+  height: 400px;
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonCover {
+  height: 150px;
+  width: 100%;
+}
+
+.skeletonBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+/* Trạng thái rỗng / Lỗi */
+.emptyState {
+  padding: 64px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text-muted);
+}
+
+.emptyState h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.emptyState p {
+  margin: 0;
+  max-width: 440px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.errorState {
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border-radius: 14px;
+  background: var(--danger-bg, rgba(240, 68, 56, 0.1));
+  border: 1px solid var(--danger-border, rgba(240, 68, 56, 0.3));
+  color: var(--danger-fg, #f04438);
+  text-align: center;
+}
+
+/* ---------- 4. Phân trang ---------- */
+.pagination {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.pageBtn {
+  min-width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color var(--d-fast), background var(--d-fast);
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface-sunk);
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding: 0 8px;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .hero {
+    padding: 48px 16px 40px;
+  }
+  .heading {
+    font-size: 30px;
+  }
+  .main {
+    padding: 24px 16px 56px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .totalCount {
+    text-align: left;
+    padding-bottom: 0;
+  }
+}

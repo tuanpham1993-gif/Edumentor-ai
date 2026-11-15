@@ -12,6 +12,15 @@ backend_dir = Path(__file__).resolve().parent.parent
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
+# Mock kết nối Qdrant khi chạy test cục bộ / CI không có server Qdrant
+try:
+    from unittest.mock import MagicMock
+    import llama_index.vector_stores.qdrant.base as qb
+
+    qb.QdrantVectorStore._collection_exists = MagicMock(return_value=True)
+except Exception:
+    pass
+
 from app.core.database import Base, get_db
 from app.routers.v1.api import api_router
 from app.core.config import settings
@@ -41,9 +50,11 @@ def _no_real_email_or_ai(monkeypatch):
     monkeypatch.setattr(settings, "SMTP_HOST", "")
     monkeypatch.setattr(settings, "AI_MODE", "mock")
 
+
 @pytest.fixture()
 def db_session():
     import app.models  # Đảm bảo nạp đầy đủ metadata của tất cả models
+
     Base.metadata.create_all(bind=test_engine)
     db = TestSessionLocal()
     try:
@@ -133,7 +144,9 @@ TEST_PASSWORD = "Test@1234"
 
 
 def _login_headers(client, email, password=TEST_PASSWORD):
-    response = client.post("/api/auth/login", json={"email": email, "password": password})
+    response = client.post(
+        "/api/auth/login", json={"email": email, "password": password}
+    )
     assert response.status_code == 200, response.text
     return {"Authorization": f"Bearer {response.json()['access_token']}"}
 
@@ -143,7 +156,9 @@ def admin_headers(client, db_session):
     """Header Bearer của một tài khoản admin (tạo bằng scripts.create_admin)."""
     from scripts.create_admin import create_admin
 
-    create_admin(db_session, email=ADMIN_EMAIL, full_name="Admin Test", password=TEST_PASSWORD)
+    create_admin(
+        db_session, email=ADMIN_EMAIL, full_name="Admin Test", password=TEST_PASSWORD
+    )
     return _login_headers(client, ADMIN_EMAIL)
 
 

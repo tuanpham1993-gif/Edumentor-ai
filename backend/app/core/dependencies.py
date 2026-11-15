@@ -1,3 +1,13 @@
+import httpx
+from fastapi import Request
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.orm import Session
+
+from app.core.database import get_db
+from app.core.security import decode_access_token
+from app.models.user import Users
 """Dependency dùng chung: biết "ai đang gọi API" (module 01 · Tuấn · GĐ1, 05/11/2026).
 
 `Depends(x)` của FastAPI nghĩa là: trước khi chạy API, hãy chạy hàm x và đưa kết quả vào.
@@ -7,19 +17,14 @@ mọi API cần đăng nhập chỉ việc khai báo `current_user: Users = Depe
     401 Unauthorized = "không biết bạn là ai" (thiếu/sai/hết hạn token, user không còn)
     403 Forbidden    = "biết bạn là ai nhưng bạn không có quyền" (student gọi API admin)
 """
-
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy.orm import Session
-
-from app.core.database import get_db
-from app.core.security import decode_access_token
-from app.models.user import Users
-
 # Đọc header "Authorization: Bearer <token>". Nhờ nó Swagger có nút "Authorize".
 # auto_error=False: thiếu header thì trả None, để mình tự quyết định trả 401.
 bearer_scheme = HTTPBearer(auto_error=False)
+def get_llm_client(request: Request) -> httpx.AsyncClient:
+    return request.app.state.llm_client
 
+def get_llm_client_base(request: Request) -> httpx.AsyncClient:
+    return request.app.state.llm_client_base
 
 def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),

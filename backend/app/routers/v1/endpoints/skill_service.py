@@ -7,8 +7,10 @@ from app.core.database import get_db
 
 from app.schemas.skill import SkillRequestResponse, SkillListResponse, SkillWithCoursesResponse, SkillCreate, SkillUpdate
 from app.schemas.skill_relation import SkillRelationCreate, SkillRelationResponse, SkillRelationUpdate 
+import logging
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 @router.get("", response_model=SkillListResponse, summary="list of skills with total skill")
 def list_all_skills(
@@ -57,32 +59,56 @@ def get_skill_courses(skill_id: int,db: Session = Depends(get_db)):
 @router.post("",response_model=SkillRequestResponse, status_code=status.HTTP_201_CREATED, summary="Create skill")
 def create_skill(request: SkillCreate,db: Session = Depends(get_db)):
     try:
-        return crud_skill_service.create_skill(db=db,skill_name=request.skill,)
+        skill =  crud_skill_service.create_skill(db=db,skill_name=request.skill)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
         )
+    try:
+        crud_skill_service.sync_skill_to_qdrant(skill)
+    except Exception:
+        logger.exception(
+            "Failed to synchronize newly created skill %s with Qdrant",
+            skill.skill_id
+        )
+    return skill
 
 @router.put("/{skill_id}",response_model=SkillRequestResponse,summary="Update skill",)
 def update_skill(skill_id: int,request: SkillUpdate,db: Session = Depends(get_db),):
     try:
-        return crud_skill_service.update_skill(db=db, skill_id=skill_id, skill_name=request.skill)
+        skill = crud_skill_service.update_skill(db=db, skill_id=skill_id, skill_name=request.skill)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e),
         )
+    try:
+        crud_skill_service.sync_skill_to_qdrant(skill)
+    except Exception:
+        logger.exception(
+            "Failed to synchronize newly created skill %s with Qdrant",
+            skill.skill_id
+        )
+    return skill
     
 @router.delete("/{skill_id}", response_model=SkillRequestResponse, summary="Deactivate skill",)
 def delete_skill(skill_id: int, db: Session = Depends(get_db)):
     try:
-        return crud_skill_service.delete_skill(db=db, skill_id=skill_id)
+        skill = crud_skill_service.delete_skill(db=db, skill_id=skill_id)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
         )
+    try:
+        crud_skill_service.sync_skill_to_qdrant(skill)
+    except Exception:
+        logger.exception(
+            "Failed to synchronize newly created skill %s with Qdrant",
+            skill.skill_id
+        )
+    return skill
 
 #skill_relation
 # POST /skill-relations

@@ -92,6 +92,7 @@ class CourseResponse(CourseBase):
     course_id: int
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    skills_info: List[CourseSkillItem] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
 
