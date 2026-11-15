@@ -1,7 +1,7 @@
 """Đo độ chính xác chấm tự luận so với bộ bài chuẩn (module 09 · Tuấn · B5, 14/11/2026).
 
 Chỉ số theo docs/Review-AI-Grading.md mục 3. Precision / Recall / F1 từng nhãn tính như bài Session02/demo2.py
-(TP / FP / FN) — mỗi nhãn full / partial / none coi là một lớp.
+(TP / FP / FN) — mỗi nhãn full / none coi là một lớp.
 
 Chạy (trong thư mục backend):
     # 1. Chấm một lần → data/ai-grading/private/results/<run_id>.csv (mỗi dòng một ý: kết quả, điểm, độ trễ, lỗi)
@@ -29,8 +29,10 @@ from pathlib import Path
 
 from sklearn.metrics import cohen_kappa_score
 
+from app.ai.prompts.review_grading import PROMPT_VERSION_EN, RAG_SUFFIX
 from app.ai.review import keyword_grading
 from scripts.gold_sheets import (
+    BACKEND,
     LABELS,
     GoldError,
     load_split,
@@ -57,15 +59,73 @@ def _keyword(question: dict, answer_text: str) -> list[str]:
     return [r["result"] for r in keyword_grading.grade_essay(question["rubric"], answer_text, question["content"])]
 
 
+def _gemini(question: dict, answer_text: str) -> list[str]:
+    """Model A (B7): Gemini chấm có cấu trúc, KHÔNG dự phòng từ khóa — lỗi thì ghi `error` để đo đúng tỉ lệ lỗi của
+    LLM. Tốn lượt gọi API thật: mỗi bài một lần (sai khung thì thêm một lần)."""
+    from app.ai.review.real_ai import RealAI
+
+    return [r["result"] for r in RealAI().grade_essay_detailed(question, answer_text).items]
+
+
+def _gemini_rag(question: dict, answer_text: str) -> list[str]:
+    """Model B (B9): như Model A + đoạn tri thức của kỹ năng — CÙNG hàm xếp hạng với server (rank_for_grading)."""
+    return _gemini({**question, "context_chunks": bank_context(question)}, answer_text)
+
+
+def _pipeline(question: dict, answer_text: str, *, rag: bool = False) -> list[str]:
+    """Cả pipeline 9 khối như khi người học nộp bài (Verifier, Đối chiếu → chấm lại, dự phòng từ khóa khi lỗi).
+    Đo cái người học THẬT SỰ nhận được — khác _gemini (chỉ khối 4)."""
+    from app.ai.review import pipeline
+    from app.ai.review.real_ai import RealAI
+
+    q = {**question, "context_chunks": bank_context(question)} if rag else question
+    return [r["result"] for r in pipeline.grade_essay(RealAI(), q, answer_text).results]
+
+
+_BANK_CHUNKS: dict = {}
+
+
+def bank_context(question: dict) -> list[dict]:
+    """Đoạn tri thức cho Model B lấy từ file ngân hàng (không cần DB): các đoạn cùng kỹ năng, đoạn gắn với câu hỏi
+    đứng đầu, còn lại xếp theo cosine nếu máy có mô hình embedding — giống hệt review_rag_service.retrieve_for_grading.
+    """
+    from app.ai.review.base import RetrievedChunk
+    from app.services import review_rag_service as rag
+
+    if not _BANK_CHUNKS:
+        with open(BACKEND / load_split()["bank"], encoding="utf-8") as f:
+            bank = json.load(f)
+        _BANK_CHUNKS.update({c["code"]: c for c in bank["chunks"]})
+        _BANK_CHUNKS["_vectors"] = {}
+    vectors = _BANK_CHUNKS["_vectors"]
+    same_skill = [c for code, c in _BANK_CHUNKS.items() if code != "_vectors" and c["skill"] == question.get("skill")]
+    pairs = []
+    for c in same_skill:
+        if c["code"] not in vectors:
+            vectors[c["code"]] = rag.embed_query(f"{c.get('title') or ''}\n{c['content']}".strip())
+        pairs.append((RetrievedChunk(chunk_id=c["code"], code=c["code"], title=c.get("title"), content=c["content"]),
+                      vectors[c["code"]]))  # fmt: skip
+    ranked = rag.rank_for_grading(pairs, question.get("chunk"), rag.grading_query(question))
+    return [{"code": c.code, "title": c.title, "content": c.content, "score": c.score} for c in ranked]
+
+
 # tên → (hàm chấm, model, prompt_version)
 METHODS: dict[str, tuple[Callable[[dict, str], list[str]], str, str]] = {
     "keyword": (_keyword, "keyword_grader_en", "-"),
+    "gemini": (_gemini, "REVIEW_LLM_MODEL", PROMPT_VERSION_EN),  # Model A, chỉ khối 4
+    "gemini-rag": (_gemini_rag, "REVIEW_LLM_MODEL", PROMPT_VERSION_EN + RAG_SUFFIX),  # Model B, chỉ khối 4
+    "pipeline": (_pipeline, "REVIEW_LLM_MODEL", PROMPT_VERSION_EN),  # Model A, đủ 9 khối
+    "pipeline-rag": (lambda q, t: _pipeline(q, t, rag=True), "REVIEW_LLM_MODEL", PROMPT_VERSION_EN + RAG_SUFFIX),
 }
 
 
 def run(answers: list[dict], split: dict, method: str, *, run_id: str, which: str = "dev") -> list[dict]:
     """Chấm mọi bài thuộc `which` (dev / test / all). Lỗi một bài → ghi `error`, các ý của bài đó để trống."""
     grade, model, prompt_version = METHODS[method]
+    if model == "REVIEW_LLM_MODEL":  # các cách chấm dùng Gemini
+        from app.ai.review.real_ai import review_llm
+
+        model = review_llm()[1] or "(chưa cấu hình)"  # ghi đúng tên model đã chạy vào kết quả
     if method == "keyword":  # nạp dữ liệu NLTK trước (lần đầu ~ vài giây) để không tính vào độ trễ bài đầu tiên
         _keyword(next(iter(split["questions"].values())), "warm up")
     rows = []

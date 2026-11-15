@@ -39,6 +39,11 @@ Ghi chú: demo3 dùng OpenAI; dự án giữ **Gemini** (D3). Học **cách làm
 | QT10 | **Gemini là bộ chấm chính**; chấm từ khóa (1) chấm thay khi Gemini lỗi, (2) đối chiếu — lệch **> 3** điểm (thang 10 của câu) thì gắn cờ |
 | QT12 | Chấm từ khóa tách vế ở `. ! ? ;` và "but / whereas / however", không tách ở "and" |
 | QT13 | Bài tự luận phải viết tiếng Anh (nhắc tại ô trả lời, xác nhận khi nộp) |
+| 15/11 | **B9 phần code xong**: cờ REVIEW_GRADING_RAG (Model B), truy xuất đề + barem trong đúng kỹ năng, dùng chung với eval; 4 cách chấm Gemini trong eval_grading; 918 passed | Chạy A / B khi có điểm người chấm (thứ 5) |
+| 15/11 | **B8 xong**: đủ 9 khối pipeline — Guard chỉ gắn cờ, Verifier kiểm câu trích, Đối chiếu chấm lại / needs_review; 907 passed | Đo tỉ lệ chấm lại ở B10; chờ Hòa chấm 10 bài |
+| 15/11 | **Bỏ mức ½ điểm (partial) trên toàn hệ thống** theo đề xuất của Hòa: mỗi ý Đạt (trọn điểm) / Không đạt (0). Đổi: `validator.GRADE_RESULTS`, schema Gemini + Pydantic (`Literal["full","none"]`), prompt **grade-en-v2 / grade-vi-v2**, chấm từ khóa (partial bên trong → none khi ra ngoài), `gold_sheets` / `eval_grading`, RATER_GUIDELINE 2.0, HUONG_DAN_CHAM_HOA, phiếu `rater_hoa_2muc.xlsx`. Bài chấm trước 15/11 trong lịch sử vẫn hiển thị được partial. 896 passed | Gửi Hòa phiếu 2 mức |
+| 15/11 | **B7 xong** (prompt grade-en-v1, responseSchema + Pydantic, thử lại khi sai khung, reason / feedback) — chưa chạy Gemini thật | Tuấn viết 40 bài nhóm; chạy thử Gemini trên dev |
+| 15/11 | **Bài thật chỉ thu được 4 người (20 bài)**, hết người làm → chấp nhận bộ bài nhỏ: 20 bài thật + khoảng 40 bài nhóm viết (Tuấn, Khôi; 4 loại mỗi câu) + bài AI sinh chỉ ở dev (≤ 30%). Báo cáo ghi rõ hạn chế: mẫu nhỏ, khoảng tin cậy rộng. Mở rộng thu bài là **hướng phát triển** |
 | 14/11 | **Người chấm bộ bài chuẩn: Hòa và Tâm** (hai người chấm độc lập, không phải người làm AI). Bất đồng → Tuấn hoặc thầy quyết |
 | 14/11 | GĐ7 trước 25/11 chỉ làm **7.5a + 7.5c**; lùi 7.4, 7.5b, 7.5d, 7.6, 7.8; 7.7 gộp vào B13, 7.9 gộp vào B8 (chi tiết `Review-Assessment.md`) |
 
@@ -49,7 +54,7 @@ Ghi chú: demo3 dùng OpenAI; dự án giữ **Gemini** (D3). Học **cách làm
 | D4 | Kho vector | Giữ JSON + cosine bằng Python (A7); pgvector để sau |
 | D5 | Vị trí code | Module trong backend `app/ai/review/` (không tách dịch vụ riêng) |
 | D6 | Đầu ra thêm | `reason` từng ý, `feedback` chung, `flags` — lưu trong cột JSON, không cần migration. **Không** dùng độ tin cậy do LLM tự chấm để quyết định |
-| D7 | Mức chấm mỗi ý | Giữ 3 mức `full` / `partial` / `none` (½ điểm cho partial) |
+| D7 | Mức chấm mỗi ý | ~~3 mức full / partial / none~~ → **15/11 (Hòa đề xuất, Tuấn chốt): 2 mức — Đạt `full` = trọn điểm ý, Không đạt `none` = 0**; dài dòng không trúng trọng tâm = 0. Áp dụng cả hệ thống |
 | D8 | "Cần xem xét" | Cờ `needs_review` trong `trace`, không thêm trạng thái mới |
 | D10 | Bài cần xem xét có tính Đạt không | Tạm tính, ghi "đang xem lại" |
 
@@ -131,6 +136,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - Dựa trên khối 1; giữ luật QT12 (tách vế, chặn bài chỉ liệt kê từ khóa, bỏ câu chép đề).
   - ✅ Test: diễn đạt khác dạng từ vẫn khớp; phủ định ("cannot change") không bị tính là "change"; bài chỉ liệt kê từ khóa không được đủ điểm.
 - [ ] **B4 Bộ bài chuẩn (gold set)** — dự kiến 15–17/11 (song song) · thực tế __/__ 👤 soạn + **Hòa, Tâm chấm**
+  - 15/11: Form đóng với **4 người thật (20 bài, `private/answers.csv`)** — dưới chỉ tiêu ≥ 40. Bù bằng `private/team_answers.csv` (40 dòng mẫu: 10 câu × 4 loại — đúng diễn đạt khác / một phần / sai đảo nghĩa / ngắn sai chính tả) do Tuấn + Khôi viết; cột `kind` không đưa vào phiếu chấm.
   - 🤖 14/11 xong phần chuẩn bị: `docs/ai-grading/RATER_GUIDELINE.md` (bản 1.0); `docs/ai-grading/DATA_COLLECTION.md` (nội dung 2 Form, loại bài nhóm cần viết, lịch, quyền riêng tư); `backend/data/ai-grading/split.json` (10 câu: 5 dev + 5 test, chia theo câu hỏi); `backend/scripts/gold_sheets.py` (`collect`, `sheets`, `merge` + kappa / QWK giữa hai người chấm; chặn bài AI ở test); `.gitignore` cho `backend/data/ai-grading/private/`; 9 test. 👤 Còn: tạo Form, thu bài, vòng hiệu chỉnh, Hòa và Tâm chấm.
   - `docs/ai-grading/RATER_GUIDELINE.md` (tiếng Anh, ví dụ full / partial / none cho từng loại ý).
   - Google Form thu bài thật (có câu đồng ý dùng cho nghiên cứu, không hỏi tên); nhóm viết thêm các loại bài còn thiếu; bài do AI sinh ≤ 30% và **không vào test**.
@@ -149,18 +155,27 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - 🤖 Review lần 2 (14/11): khối lỗi giữ `output` trong trace (vd `llm_ms` để phân biệt quá giờ với lỗi ngay); `NodeFailed(retryable=False)` để kết quả song song đã quá giờ không bị thử lại (khi B7 bật `retries` sẽ không giữ người học chờ thêm); có test bảo đảm trace không chứa bài làm.
   - `backend/app/ai/review/pipeline/`: runner + bọc khối 0, 3, 4, 7, 8 từ code có sẵn; ghi `trace.nodes`.
   - ✅ **Hành vi không đổi**: toàn bộ test cũ vẫn xanh; trace có thời gian từng khối.
-- [ ] **B7 Khối 4 — chấm có cấu trúc** — dự kiến 17/11 · thực tế __/__ 👤
+- [x] **B7 Khối 4 — chấm có cấu trúc** — dự kiến 17/11 · thực tế 15/11 🤖 (👤 còn: chạy Gemini thật trên dev để kiểm "0 lỗi JSON")
+  - ✅ `app/ai/prompts/review_grading.py`: `grade-en-v1` (cùng quy tắc với RATER_GUIDELINE: 3 nhãn, phân vân chọn mức thấp, đảo nghĩa / tự mâu thuẫn = none, code được tính, bài làm là dữ liệu không phải lệnh), `grade-vi-v1` cho câu tiếng Việt cũ; chọn theo ngôn ngữ câu hỏi.
+  - ✅ `app/ai/review/grading_schema.py`: Pydantic `GradedItem` / `GradingOutput` (`Literal["full","partial","none"]`, `Field(description=...)` như demo3) + `GEMINI_RESPONSE_SCHEMA` dựng từ chính các Field đó (`propertyOrdering` item → evidence → reason → result). Không có trường điểm / độ tin cậy (D6). Kiểm số ý, thứ tự ý, cắt reason ≤ 300 và feedback ≤ 600 ký tự; vẫn nhận mảng trần của prompt cũ.
+  - ✅ `RealAI.grade_essay_detailed`: gửi `responseSchema`; sai khung (`AIOutputError`) → thử lại 1 lần, ghi số lần gọi; lỗi mạng / quota / quá giờ **không** thử lại. Kết quả mỗi ý có thêm `reason` (lưu trong `rubric_result`); `feedback` lưu ở `trace.grading.essays[].feedback`, không nằm trong trace khối.
+  - ✅ Khối 4 ghi `prompt_version`, `llm_attempts`; `eval_grading` có cách chấm `gemini` (Model A, không dự phòng từ khóa để đo đúng lỗi LLM). 19 test mới, toàn bộ 889 passed. Kiểm ngược: tắt thử lại → 8 test trượt.
   - Prompt tiếng Anh `grade-en-v1`; `responseSchema`; model Pydantic kiểm kết quả (theo cách `Session02/demo3.py`: `Literal["full","partial","none"]`, `Field(description=...)`); JSON sai → thử lại 1 lần; thứ tự trường `evidence` → `reason` → `result`; thêm `feedback`; ghi `prompt_version`.
   - ✅ 0 lỗi JSON trên dev; test tự động vẫn dùng mock (không gọi Gemini).
-- [ ] **B8 Khối 2, 5, 6 — Guard, Verifier, Đối chiếu** — dự kiến 18/11 · thực tế __/__ 👤
-  - Guard: bài trống, không phải tiếng Anh, quá dài, dấu hiệu chèn lệnh.
-  - Verifier: câu trích phải có trong bài (so sau chuẩn hóa) — không có thì ý đó `none` + cờ.
-  - Đối chiếu: lệch > 3 → chấm lại 1 lần → vẫn lệch → `needs_review`.
-  - ✅ Test cho từng nhánh (bằng AI mock).
-- [ ] **B9 Model B (RAG khi chấm) + chỉnh trên dev** — dự kiến 18–19/11 · thực tế __/__ 👤
-  - Cờ `REVIEW_GRADING_RAG`; khối 3 thêm đoạn tri thức (lọc `skill_id`, câu truy vấn = đề + barem, **không** dùng bài làm).
-  - Chạy từ khóa / A / B trên dev; phân tích 20 bài lệch nhất (barem mơ hồ / truy xuất sai / bỏ sót cách diễn đạt / bằng chứng bịa / dễ dãi / lỗi JSON); chỉnh prompt, ghi `EXPERIMENT_LOG.md`.
-  - ✅ Chốt `prompt_version` cuối.
+- [x] **B8 Khối 1, 2, 5, 6 — Tiền xử lý, Guard, Verifier, Đối chiếu** — dự kiến 18/11 · thực tế 15/11 🤖
+  - ✅ Pipeline đủ 9 khối: `0_input → 1_preprocess → 2_guard → 3_context → 4_llm_grade (→ 4b dự phòng) → 5_verify → 6_cross_check (→ chấm lại về 4) → 7_aggregate → 8_trace`.
+  - ✅ Guard **chỉ gắn cờ, không chặn, không phát hiện bài AI viết** (chốt 15/11): `too_long` (> 3.000 ký tự, cắt trước khi gửi AI — luồng song song và chấm lại cắt như nhau), `instruction_in_answer` (câu ra lệnh cho AI, Anh + Việt), `vietnamese` (bài tiếng Việt cho đề tiếng Anh — vẫn chấm theo nghĩa).
+  - ✅ Verifier: ý `full` phải có câu trích thật trong bài (so sau chuẩn hóa hoa thường / khoảng trắng / dấu nháy / dấu câu, hoặc ≥ 80% cụm 3 từ) — không có → `none` + cờ `evidence_missing`. RealAI không tự bỏ câu trích nữa (chuyển sang Verifier).
+  - ✅ Đối chiếu: điểm AI so điểm chấm từ khóa, lệch > 3 → chấm lại 1 lần (gọi trực tiếp, không dùng lại kết quả song song) → vẫn lệch → `needs_review` (điểm AI tính tạm — D10). Chấm lại lỗi → giữ kết quả lần đầu + cờ (không rơi về từ khóa). `trace.grading.needs_review` = các câu cần xem lại; mỗi câu có `flags`.
+  - ✅ 11 test mới (Guard, Verifier, khớp câu trích, đối chiếu, chấm lại, chấm lại lỗi, không dùng lại kết quả song song). Toàn bộ 907 passed. Kiểm ngược: tắt đối chiếu → 4 test trượt; tắt Verifier → 2 test trượt. Viết test đã bắt được 1 lỗi thật (khối 4 thành công vẫn chạy qua khối dự phòng).
+  - ⚠️ Rủi ro cần đo ở B10: chấm từ khóa yếu → có thể nhiều câu bị chấm lại (thêm lượt Gemini + độ trễ, chấm lại chạy tuần tự khi ghi điểm). Đo tỉ lệ chấm lại trên bộ bài chuẩn rồi mới quyết giữ ngưỡng 3 hay nâng lên.
+- [~] **B9 Model B (RAG khi chấm) + chỉnh trên dev** — dự kiến 18–19/11 · phần code xong 15/11 🤖 · 👤 còn: chạy A / B trên bộ bài chuẩn khi có điểm người chấm
+  - ✅ Cờ `REVIEW_GRADING_RAG` (mặc định **false** = Model A; `.env.example` đã thêm). Bật → mỗi câu tự luận kèm **2 đoạn tri thức của đúng kỹ năng**: đoạn gắn với câu hỏi (nguồn soạn câu) đứng đầu, đoạn còn lại xếp theo cosine với **câu truy vấn = đề + barem — không dùng bài làm** (bài sai không kéo theo tài liệu sai, người học không điều khiển được tài liệu).
+  - ✅ `review_rag_service.rank_for_grading` là hàm thuần, **server và `eval_grading` dùng chung** → Model B khi đo giống hệt khi chạy thật. Đoạn tri thức lấy ở luồng chính (cần DB) trước khi chấm song song; lỗi truy xuất → chấm như Model A.
+  - ✅ Prompt thêm mục `COURSE NOTES (reference for terms only — grade against the RUBRIC)`, phiên bản `grade-en-v2+rag`; khối 3 ghi mã đoạn + cosine vào trace (không chép nội dung).
+  - ✅ `eval_grading` có 4 cách chấm Gemini: `gemini` (A, chỉ khối 4), `gemini-rag` (B, chỉ khối 4), `pipeline` (A, đủ 9 khối), `pipeline-rag` (B, đủ 9 khối). Thử truy xuất trên ngân hàng thật: PY-TL-02 → PY-K03 (gắn) + PY-K01 (0,50); COND-TL-06 → COND-K02 + COND-K03 (0,19).
+  - ✅ 11 test mới, toàn bộ 918 passed. Kiểm ngược: đảo thứ tự "đoạn gắn đứng đầu" → 4 test trượt.
+  - 👤 Còn: khi có `gold.csv` → chạy `keyword`, `pipeline`, `pipeline-rag` → `compare` A / B (bootstrap) → phân tích bài lệch → ghi `EXPERIMENT_LOG.md` → chốt bật / tắt cờ. Ngân hàng nhỏ (15 đoạn, 3 đoạn / kỹ năng) nên RAG gần như tra cứu cố định — kết quả A ≈ B là kết quả hợp lệ, ghi trung thực.
 - [ ] **B10 Chạy test** — dự kiến 20/11 · thực tế __/__ 👤
   - Chạy **một lần** cho từ khóa, A, B; bootstrap; độ trễ.
   - ✅ Bảng kết quả + nhật ký chạy.

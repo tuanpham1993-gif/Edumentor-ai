@@ -15,11 +15,12 @@ Quy trình (chi tiết: docs/ai-grading/DATA_COLLECTION.md), chạy trong thư m
     # 4. Tuấn / thầy điền cột `final` trong disagreements.csv → chạy lại merge kèm --adjudicated disagreements.csv
 
 Dữ liệu thật nằm trong data/ai-grading/private/ — thư mục này bị .gitignore, KHÔNG commit.
-Nhãn mỗi ý: full / partial / none (điểm = max_points / ½ max_points / 0) — giống bộ chấm và AI (docs/ai-grading/RATER_GUIDELINE.md).
+Nhãn mỗi ý: full / none (điểm = max_points / 0 — bỏ mức ½ từ 15/11) — giống bộ chấm và AI (docs/ai-grading/RATER_GUIDELINE.md).
 """
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import random
@@ -31,12 +32,12 @@ from sklearn.metrics import cohen_kappa_score
 
 BACKEND = Path(__file__).resolve().parents[1]
 SPLIT_FILE = BACKEND / "data" / "ai-grading" / "split.json"
-LABELS = ("full", "partial", "none")
+LABELS = ("full", "none")  # 15/11 (Hòa): Đạt / Không đạt
 SOURCES = ("real", "team", "ai")
 ANSWER_FIELDS = ["answer_id", "question_code", "split", "source", "answer_text"]
 SHEET_FIELDS = [
     "row_id",
-    "answer_id",
+    "sheet_id",  # mã ẩn danh của bài (anon_id) — KHÔNG để lộ answer_id (R… = bài thật, T… = bài bổ sung theo loại)
     "question_code",
     "question",
     "answer",
@@ -103,8 +104,14 @@ def round_score(x: float) -> int:
     return math.floor(x + 0.5)
 
 
+def anon_id(answer_id: str) -> str:
+    """Mã bài trên phiếu chấm. answer_id lộ nguồn (R / T) và thứ tự loại bài bổ sung (T001 đúng, T002 một phần…)
+    → người chấm đoán được nhãn. Băm cố định: phiếu nào cũng cùng mã, merge đổi ngược lại được."""
+    return "B" + hashlib.sha256(f"gold-{answer_id}".encode()).hexdigest()[:6].upper()
+
+
 def points_of(label: str, max_points: float) -> float:
-    return {"full": max_points, "partial": max_points / 2, "none": 0.0}[label]
+    return {"full": max_points, "none": 0.0}[label]
 
 
 # ─────────────── 1. collect ───────────────
@@ -180,7 +187,7 @@ def make_sheet(answers: list[dict], split: dict, rater: str) -> list[dict]:
             rows.append(
                 {
                     "row_id": len(rows) + 1,
-                    "answer_id": a["answer_id"],
+                    "sheet_id": anon_id(a["answer_id"]),
                     "question_code": a["question_code"],
                     "question": q["content"],
                     "answer": a["answer_text"],
@@ -197,14 +204,19 @@ def make_sheet(answers: list[dict], split: dict, rater: str) -> list[dict]:
 # ─────────────── 3. merge ───────────────
 
 
-def _labels(sheet: list[dict], name: str, expected: set[tuple[str, int]]) -> tuple[dict, list[str]]:
+def _labels(sheet: list[dict], name: str, expected: set[tuple[str, int]], real_id: dict[str, str]) -> tuple[dict, list]:
+    """Nhãn trên phiếu → {(answer_id, ý): nhãn}. real_id: mã ẩn danh → answer_id."""
     errors, labels = [], {}
     for r in sheet:
-        key = (r["answer_id"], int(r["item_no"]))
+        sheet_id = r.get("sheet_id") or ""
+        if sheet_id not in real_id:
+            errors.append(f"Phiếu {name}, dòng {r.get('row_id')}: mã bài '{sheet_id}' không có trong answers.csv")
+            continue
+        key = (real_id[sheet_id], int(r["item_no"]))
         label = (r.get("label") or "").strip().lower()
         if label not in LABELS:
             errors.append(
-                f"Phiếu {name}, dòng {r.get('row_id')} ({key[0]} ý {key[1]}): nhãn '{label}' phải là full / partial / none"
+                f"Phiếu {name}, dòng {r.get('row_id')} ({sheet_id} ý {key[1]}): nhãn '{label}' phải là full / none (không dùng partial)"
             )
         labels[key] = label
     missing = expected - labels.keys()
@@ -213,31 +225,38 @@ def _labels(sheet: list[dict], name: str, expected: set[tuple[str, int]]) -> tup
     return labels, errors
 
 
-def merge(answers: list[dict], split: dict, sheet_a: list[dict], sheet_b: list[dict], adjudicated=None) -> dict:
-    """Hai phiếu → dòng gold + danh sách bất đồng + thống kê đồng thuận. `adjudicated`: {(answer_id, item_no): nhãn}."""
+def merge(
+    answers: list[dict], split: dict, sheet_a: list[dict], sheet_b: list[dict] | None = None, adjudicated=None
+) -> dict:
+    """Một hoặc hai phiếu → dòng gold (+ bất đồng + đồng thuận khi có hai người).
+    Một người chấm (15/11: chỉ Hòa): nhãn cuối = nhãn của người đó, không có thống kê đồng thuận.
+    `adjudicated`: {(answer_id, item_no): nhãn} cho các ý hai người lệch."""
     errors = answer_errors(answers, split)
     by_id = {a["answer_id"]: a for a in answers}
+    real_id = {anon_id(a["answer_id"]): a["answer_id"] for a in answers if a.get("answer_id")}
     expected = {
         (a["answer_id"], no)
         for a in answers
         if a.get("question_code") in split["questions"]
         for no in range(1, len(split["questions"][a["question_code"]]["rubric"]) + 1)
     }
-    labels_a, err_a = _labels(sheet_a, "A", expected)
-    labels_b, err_b = _labels(sheet_b, "B", expected)
+    labels_a, err_a = _labels(sheet_a, "A", expected, real_id)
+    labels_b, err_b = _labels(sheet_b, "B", expected, real_id) if sheet_b is not None else ({}, [])
     errors += err_a + err_b
     adjudicated = adjudicated or {}
     errors += [f"Phân xử {k[0]} ý {k[1]}: nhãn '{v}' không hợp lệ" for k, v in adjudicated.items() if v not in LABELS]
     if errors:
         raise GoldError(errors)
 
+    two = sheet_b is not None
     gold, disagreements = [], []
     for answer_id, no in sorted(expected):
         a = by_id[answer_id]
         item = split["questions"][a["question_code"]]["rubric"][no - 1]
-        la, lb = labels_a[(answer_id, no)], labels_b[(answer_id, no)]
-        final = la if la == lb else adjudicated.get((answer_id, no), "")
-        if la != lb:
+        la = labels_a[(answer_id, no)]
+        lb = labels_b[(answer_id, no)] if two else ""
+        final = la if not two or la == lb else adjudicated.get((answer_id, no), "")
+        if two and la != lb:
             disagreements.append(
                 {
                     "answer_id": answer_id,
@@ -264,7 +283,8 @@ def merge(answers: list[dict], split: dict, sheet_a: list[dict], sheet_b: list[d
                 "points": points_of(final, float(item["max_points"])) if final else "",
             }
         )
-    return {"gold": gold, "disagreements": disagreements, "stats": agreement(gold)}
+    stats = agreement(gold) if two else {"items": len(gold), "answers": len(by_id), "unresolved": 0}
+    return {"gold": gold, "disagreements": disagreements, "stats": stats}
 
 
 def agreement(gold: list[dict]) -> dict:
@@ -309,7 +329,7 @@ def main() -> int:
     p.add_argument("--answers", required=True)
     p.add_argument("--out-dir", required=True)
     p.add_argument("--rater", action="append", required=True)
-    p = sub.add_parser("merge", help="hai phiếu đã chấm → gold.csv + disagreements.csv")
+    p = sub.add_parser("merge", help="1 hoặc 2 phiếu đã chấm → gold.csv (+ disagreements.csv khi có 2 người)")
     p.add_argument("--answers", required=True)
     p.add_argument("--sheet", action="append", required=True)
     p.add_argument("--out", required=True)
@@ -330,8 +350,8 @@ def main() -> int:
                 write_csv(path, SHEET_FIELDS, rows)
                 print(f"Phiếu {rater}: {len(rows)} ý / {len(answers)} bài → {path}")
         else:
-            if len(args.sheet) != 2:
-                parser.error("merge cần đúng 2 --sheet")
+            if len(args.sheet) not in (1, 2):
+                parser.error("merge cần 1 hoặc 2 --sheet")
             adjudicated = None
             if args.adjudicated:
                 adjudicated = {
@@ -339,11 +359,17 @@ def main() -> int:
                     for r in read_csv(args.adjudicated)
                     if (r.get("final") or "").strip()
                 }
-            result = merge(read_csv(args.answers), split, *(read_csv(s) for s in args.sheet), adjudicated)
+            sheets = [read_csv(path) for path in args.sheet]
+            result = merge(
+                read_csv(args.answers), split, sheets[0], sheets[1] if len(sheets) == 2 else None, adjudicated
+            )
             write_csv(args.out, GOLD_FIELDS, result["gold"])
+            s = result["stats"]
+            if len(sheets) == 1:
+                print(f"{s['answers']} bài / {s['items']} ý — một người chấm, nhãn cuối = nhãn của phiếu → {args.out}")
+                return 0
             dis_path = Path(args.out).with_name("disagreements.csv")
             write_csv(dis_path, DISAGREE_FIELDS, result["disagreements"])
-            s = result["stats"]
             print(
                 f"{s['answers']} bài / {s['items']} ý — trùng nhãn {s['item_agreement']:.1%}, kappa ý {s['item_kappa']:.3f}, "
                 f"QWK tổng điểm {s['total_qwk']:.3f}; {len(result['disagreements'])} ý lệch → {dis_path}"

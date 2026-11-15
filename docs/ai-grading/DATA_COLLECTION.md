@@ -83,7 +83,7 @@ Bài thật thường lệch về một phía (nhiều bài đúng hoặc nhiề
 | Loại bài | Ví dụ (PY-TL-02) | Mục đích |
 |---|---|---|
 | Đúng, diễn đạt khác barem | "Tuples are fixed once made; lists you can edit." | AI có hiểu nghĩa không |
-| Một phần (thiếu ý / thiếu chủ thể) | "One of them can't be changed." | Nhãn partial |
+| Một phần (thiếu ý / thiếu chủ thể) | "One of them can't be changed." | Không đạt (từ 15/11 không còn nửa điểm) |
 | Đảo chủ thể | "Lists are immutable, tuples are mutable." | Phải là none |
 | Phủ định | "A tuple is not something you can't change." | Bẫy phủ định |
 | Liệt kê từ khóa | "mutable immutable [] () coordinates" | Chống lách |

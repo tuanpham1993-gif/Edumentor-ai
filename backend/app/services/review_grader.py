@@ -16,15 +16,22 @@ B6 (14/11/2026): mỗi câu tự luận đi qua pipeline kiểu n8n (app/ai/revi
 thêm trace từng khối vào attempt.trace["grading"]["essays"] (khối nào chạy, bao lâu, ra gì, lỗi gì).
 """
 
+import logging
 from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import wait as wait_futures
+
+from sqlalchemy.orm import object_session
 
 from app.ai.review import pipeline
 from app.ai.review.base import ReviewAI
 from app.ai.review.pipeline import TIMEOUT_ERROR, AIResult, ai_grade
+from app.core.config import settings
 from app.models.review_attempt import ReviewAnswer
+from app.services import review_rag_service
 
 __all__ = ["TIMEOUT_ERROR", "AIResult", "ai_grade"]  # giữ tên cũ cho code gọi từ ngoài
+
+logger = logging.getLogger(__name__)
 
 
 def displayed_correct_index(answer: ReviewAnswer) -> int:
@@ -40,7 +47,26 @@ def is_mcq_correct(answer: ReviewAnswer) -> bool:
 
 def _question_dict(answer: ReviewAnswer) -> dict:
     q = answer.question
-    return {"content": q.content, "rubric": q.rubric, "explanation": q.explanation}
+    question = {"content": q.content, "rubric": q.rubric, "explanation": q.explanation}
+    if settings.REVIEW_GRADING_RAG and q.type == "essay":
+        question["context_chunks"] = _grading_chunks(answer, question)
+    return question
+
+
+def _grading_chunks(answer: ReviewAnswer, question: dict) -> list[dict]:
+    """B9 (Model B): đoạn tri thức của kỹ năng cho câu này. Lấy ở luồng chính (cần DB) TRƯỚC khi gửi luồng song
+    song. Lỗi truy xuất → không kèm đoạn nào (chấm như Model A), không làm hỏng việc chấm."""
+    db = object_session(answer)
+    if db is None:
+        return []
+    try:
+        chunks = review_rag_service.retrieve_for_grading(
+            db, answer.question.skill_id, answer.question.chunk_id, question
+        )
+    except Exception:  # thiếu mô hình / lỗi DB: chấm như Model A
+        logger.exception("Ôn tập: không lấy được đoạn tri thức khi chấm (RAG)")
+        return []
+    return [{"code": c.code, "title": c.title, "content": c.content, "score": c.score} for c in chunks]
 
 
 def _has_text(answer: ReviewAnswer) -> bool:
@@ -71,13 +97,19 @@ def collect(futures: dict[int, Future], timeout: float) -> tuple[dict[int, AIRes
 
 def grade_essay(
     ai: ReviewAI, answer: ReviewAnswer, ai_result: AIResult | None = None
-) -> tuple[list[dict], str | None, list[dict]]:
-    """Chạy pipeline cho một câu. Trả (kết quả từng ý, lỗi AI nếu phải dùng chấm từ khóa, trace từng khối).
+) -> tuple[list[dict], str | None, list[dict], dict]:
+    """Chạy pipeline cho một câu. Trả (kết quả từng ý, lỗi AI nếu phải dùng chấm từ khóa, trace từng khối,
+    thông tin thêm: feedback (B7), flags + needs_review (B8)).
     ai_result: kết quả khối 4 đã chạy sẵn (luồng song song — T1); None → gọi AI ngay trong pipeline."""
     ctx = pipeline.grade_essay(
         ai, _question_dict(answer), answer.text_answer, precomputed=ai_result, position=answer.position
     )
-    return ctx.results, ctx.error, ctx.trace
+    return (
+        ctx.results,
+        ctx.error,
+        ctx.trace,
+        {"feedback": ctx.feedback, "flags": ctx.flags, "needs_review": ctx.needs_review},
+    )
 
 
 def grade_answers(
@@ -88,7 +120,10 @@ def grade_answers(
     ai_results=None: gọi AI lần lượt ngay tại đây (như trước T1).
     ai_results={vị trí: kết quả}: dùng kết quả đã chấm song song; câu có bài làm mà THIẾU trong dict
     (AI chưa xong khi hết giờ) → chấm bằng từ khóa với lỗi "quá thời gian".
-    Vết chấm: {"ai", "keyword_fallback": [{position, error}], "essays": [{position, nodes: [trace từng khối]}]}.
+    Vết chấm: {"ai", "keyword_fallback": [{position, error}],
+               "needs_review": [vị trí câu điểm AI vẫn lệch chấm từ khóa sau khi chấm lại — B8, tính tạm (D10)],
+               "essays": [{position, nodes: [trace từng khối], feedback, flags, needs_review}]}.
+    Lý do từng ý (reason, B7) nằm trong answer.rubric_result.
     """
     total = 0.0
     fallbacks, essays = [], []
@@ -99,13 +134,14 @@ def grade_answers(
         else:
             given = None
             if ai_results is not None and _has_text(answer):
-                given = ai_results.get(answer.position, (None, TIMEOUT_ERROR, None))
-            results, error, nodes = grade_essay(ai, answer, given)
+                given = ai_results.get(answer.position, AIResult(None, TIMEOUT_ERROR, None))
+            results, error, nodes, extra = grade_essay(ai, answer, given)
             answer.rubric_result = results
             points = sum(r["points"] for r in results) / 10 * max_points
             if error:
                 fallbacks.append({"position": answer.position, "error": error})
-            essays.append({"position": answer.position, "nodes": nodes})
+            essays.append({"position": answer.position, "nodes": nodes, **extra})
         answer.points = round(points, 2)
         total += points
-    return total, {"ai": ai.name, "keyword_fallback": fallbacks, "essays": essays}
+    needs_review = [e["position"] for e in essays if e.get("needs_review")]
+    return total, {"ai": ai.name, "keyword_fallback": fallbacks, "needs_review": needs_review, "essays": essays}

@@ -37,13 +37,13 @@ def gold_for(answers, label="full"):
 
 
 def test_label_prf_matches_demo2_formula():
-    pairs = [p("R1", 1, "full", "full"), p("R1", 2, "full", "partial"), p("R2", 1, "none", "full"),
-             p("R2", 2, "partial", "partial")]  # fmt: skip
+    pairs = [p("R1", 1, "full", "full"), p("R1", 2, "full", "none"), p("R2", 1, "none", "full"),
+             p("R2", 2, "none", "none")]  # fmt: skip
     prf = ev.label_prf(pairs)
+    assert set(prf) == {"full", "none"}  # 15/11: Đạt / Không đạt
     assert (prf["full"]["tp"], prf["full"]["fp"], prf["full"]["fn"]) == (1, 1, 1)
     assert prf["full"]["precision"] == 0.5 and prf["full"]["recall"] == 0.5 and prf["full"]["f1"] == 0.5
-    assert prf["partial"]["precision"] == 0.5 and prf["partial"]["recall"] == 1.0
-    assert prf["none"] == {"tp": 0, "fp": 0, "fn": 1, "precision": 0.0, "recall": 0.0, "f1": 0.0}
+    assert (prf["none"]["tp"], prf["none"]["fp"], prf["none"]["fn"]) == (1, 1, 1)
 
 
 def test_metrics_on_known_totals():
@@ -59,9 +59,9 @@ def test_metrics_on_known_totals():
     assert m["confusion"]["none"]["full"] == 2
 
 
-def test_partial_counts_half_points():
-    t = ev.totals([p("R1", 1, "partial", "full", max_points=4), p("R1", 2, "full", "partial", max_points=6)])
-    assert t == {"R1": (2 + 6, 4 + 3)}
+def test_item_points_are_all_or_nothing():
+    t = ev.totals([p("R1", 1, "none", "full", max_points=4), p("R1", 2, "full", "none", max_points=6)])
+    assert t == {"R1": (6, 4)}
 
 
 def test_failed_ai_item_counts_as_none_and_is_reported():
@@ -180,3 +180,28 @@ def test_stability_matches_csv_string_and_int_item_numbers():
     a = [{"answer_id": "R1", "item_no": 1, "result": "full"}]
     b = [{"answer_id": "R1", "item_no": "1", "result": "full"}]
     assert ev.stability(a, b) == 1.0
+
+
+def test_gemini_method_is_registered_and_records_model(monkeypatch):
+    """B7: cách chấm gemini đăng ký sẵn cho B9 / B10; test không gọi mạng — thay hàm chấm bằng hàm giả."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "REVIEW_LLM_MODEL", "gemini-x")
+    _, _, version = ev.METHODS["gemini"]
+    monkeypatch.setitem(ev.METHODS, "gemini", (lambda q, t: ["full"] * len(q["rubric"]), "REVIEW_LLM_MODEL", version))
+    rows = ev.run(model_answers()[:1], SPLIT, "gemini", run_id="g")
+    assert {r["model"] for r in rows} == {"gemini-x"} and {r["prompt_version"] for r in rows} == {"grade-en-v2"}
+
+
+def test_model_b_methods_use_bank_chunks_of_the_same_skill(monkeypatch):
+    """B9: gemini-rag / pipeline-rag lấy đoạn tri thức từ file ngân hàng bằng CÙNG hàm xếp hạng với server."""
+    from app.services import review_rag_service as rag
+
+    monkeypatch.setattr(rag, "embed_query", lambda text: None)  # không nạp mô hình trong test
+    monkeypatch.setattr(ev, "_BANK_CHUNKS", {})
+    q = SPLIT["questions"]["PY-TL-02"]
+    chunks = ev.bank_context(q)
+    assert chunks[0]["code"] == q["chunk"] and all(c["code"].startswith("PY-") for c in chunks)
+    assert len(chunks) == rag.GRADING_TOP_K
+    assert {"gemini", "gemini-rag", "pipeline", "pipeline-rag"} <= set(ev.METHODS)
+    assert ev.METHODS["gemini-rag"][2] == "grade-en-v2+rag"

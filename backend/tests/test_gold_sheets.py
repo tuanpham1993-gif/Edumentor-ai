@@ -22,7 +22,8 @@ def answer(answer_id, code="ITER-TL-01", source="real", text="break exits the lo
 
 def labelled(sheet, labels):
     """Điền nhãn vào phiếu theo {(answer_id, item_no): nhãn}."""
-    return [{**r, "label": labels[(r["answer_id"], int(r["item_no"]))]} for r in sheet]
+    real = {gs.anon_id(a): a for a in {k[0] for k in labels}}
+    return [{**r, "label": labels[(real[r["sheet_id"]], int(r["item_no"]))]} for r in sheet]
 
 
 def test_split_is_by_question_and_bank_matches():
@@ -73,15 +74,15 @@ def test_sheets_have_one_row_per_item_without_scores_and_differ_in_order():
     b = gs.make_sheet(answers, SPLIT, "tam")
     assert len(a) == 10 * 2 + 5  # ITER-TL-01: 2 ý; PY-TL-02: 5 ý
     assert set(a[0]) == set(gs.SHEET_FIELDS) and all(r["label"] == "" for r in a)
-    assert [r["answer_id"] for r in a] != [r["answer_id"] for r in b]
+    assert [r["sheet_id"] for r in a] != [r["sheet_id"] for r in b]
     assert gs.make_sheet(answers, SPLIT, "hoa") == a  # tái lập được
 
 
 def test_merge_agreement_disagreement_and_adjudication():
     answers = [answer("R1"), answer("R2")]
     sheet = gs.make_sheet(answers, SPLIT, "hoa")
-    a = labelled(sheet, {("R1", 1): "full", ("R1", 2): "none", ("R2", 1): "partial", ("R2", 2): "full"})
-    b = labelled(sheet, {("R1", 1): "full", ("R1", 2): "partial", ("R2", 1): "partial", ("R2", 2): "full"})
+    a = labelled(sheet, {("R1", 1): "full", ("R1", 2): "none", ("R2", 1): "none", ("R2", 2): "full"})
+    b = labelled(sheet, {("R1", 1): "full", ("R1", 2): "full", ("R2", 1): "none", ("R2", 2): "full"})
 
     result = gs.merge(answers, SPLIT, a, b)
     assert result["stats"]["item_agreement"] == 0.75 and result["stats"]["unresolved"] == 1
@@ -89,9 +90,9 @@ def test_merge_agreement_disagreement_and_adjudication():
     r1 = [g for g in result["gold"] if g["answer_id"] == "R1"]
     assert r1[0]["label"] == "full" and r1[0]["points"] == 5.0 and r1[1]["label"] == ""
 
-    done = gs.merge(answers, SPLIT, a, b, {("R1", 2): "partial"})
+    done = gs.merge(answers, SPLIT, a, b, {("R1", 2): "full"})
     assert done["stats"]["unresolved"] == 0
-    assert [g["points"] for g in done["gold"] if g["answer_id"] == "R1"] == [5.0, 2.5]
+    assert [g["points"] for g in done["gold"] if g["answer_id"] == "R1"] == [5.0, 5.0]
 
 
 def test_merge_rejects_missing_or_invalid_labels():
@@ -100,7 +101,7 @@ def test_merge_rejects_missing_or_invalid_labels():
     good = labelled(sheet, {("R1", 1): "full", ("R1", 2): "none"})
     with pytest.raises(gs.GoldError) as e:
         gs.merge(answers, SPLIT, good, labelled(sheet, {("R1", 1): "ok", ("R1", 2): "none"}))
-    assert "full / partial / none" in e.value.errors[0]
+    assert "full / none" in e.value.errors[0]
     with pytest.raises(gs.GoldError) as e:
         gs.merge(answers, SPLIT, good, good[:1])
     assert "thiếu 1 ý" in e.value.errors[0]
@@ -119,3 +120,41 @@ def test_csv_roundtrip_keeps_vietnamese_and_excel_bom(tmp_path):
     gs.write_csv(path, gs.ANSWER_FIELDS, [answer("R1", text="vòng lặp — break")])
     assert path.read_bytes().startswith(b"\xef\xbb\xbf")
     assert gs.read_csv(path)[0]["answer_text"] == "vòng lặp — break"
+
+
+# ─────────────── 15/11: mã ẩn danh + một người chấm ───────────────
+
+
+def test_sheet_hides_answer_ids_behind_stable_anonymous_codes():
+    answers = [answer("R0001"), answer("T001"), answer("T002")]
+    sheet = gs.make_sheet(answers, SPLIT, "hoa")
+    shown = {r["sheet_id"] for r in sheet}
+    assert "answer_id" not in sheet[0] and not shown & {"R0001", "T001", "T002"}
+    assert all(s.startswith("B") and len(s) == 7 for s in shown) and len(shown) == 3
+    assert {r["sheet_id"] for r in gs.make_sheet(answers, SPLIT, "tam")} == shown  # mọi phiếu cùng mã
+
+
+def test_single_rater_merge_uses_that_raters_labels():
+    answers = [answer("R1"), answer("T1")]
+    sheet = gs.make_sheet(answers, SPLIT, "hoa")
+    a = labelled(sheet, {("R1", 1): "full", ("R1", 2): "none", ("T1", 1): "none", ("T1", 2): "full"})
+    result = gs.merge(answers, SPLIT, a)
+    assert result["disagreements"] == [] and result["stats"]["unresolved"] == 0
+    assert {(g["answer_id"], g["item_no"]): g["label"] for g in result["gold"]}[("R1", 2)] == "none"
+    assert all(g["label_b"] == "" for g in result["gold"])
+
+
+def test_unknown_sheet_id_is_an_error():
+    answers = [answer("R1")]
+    sheet = [{**r, "label": "full"} for r in gs.make_sheet(answers, SPLIT, "hoa")]
+    sheet[0]["sheet_id"] = "BXXXXXX"
+    with pytest.raises(gs.GoldError, match="không có trong answers.csv"):
+        gs.merge(answers, SPLIT, sheet)
+
+
+def test_partial_label_is_rejected_after_15_11():
+    """15/11 (Hòa): chỉ Đạt / Không đạt — phiếu còn chọn partial thì báo lỗi, không lặng lẽ quy đổi."""
+    answers = [answer("R1")]
+    sheet = gs.make_sheet(answers, SPLIT, "hoa")
+    with pytest.raises(gs.GoldError, match="không dùng partial"):
+        gs.merge(answers, SPLIT, labelled(sheet, {("R1", 1): "partial", ("R1", 2): "full"}))

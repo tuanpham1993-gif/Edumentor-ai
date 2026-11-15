@@ -197,3 +197,14 @@ def test_code_comma_is_not_a_clause_boundary():
 
 def test_english_bank_routes_to_english_grader():
     assert not any(keyword_grading.is_vietnamese(q["rubric"], q["content"]) for q in EN_ESSAYS)
+
+
+# ─────────────── 15/11: Đạt / Không đạt (Hòa) ───────────────
+
+
+def test_dispatcher_turns_partial_into_none_with_zero_points():
+    """Bộ chấm bên trong vẫn biết "partial" (có từ khóa nhưng thiếu chủ thể / bài quá ngắn); khi ra ngoài → none = 0."""
+    assert keyword_grader_en.grade_essay(RUBRIC, "List mutable.", "")[0]["result"] == "partial"
+    out = keyword_grading.grade_essay(RUBRIC, "List mutable.", "")
+    assert out[0] == {"result": "none", "points": 0.0, "evidence": None}
+    assert {r["result"] for r in out} <= {"full", "none"}

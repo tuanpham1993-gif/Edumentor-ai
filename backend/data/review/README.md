@@ -54,7 +54,7 @@ Mỗi ý barem có `main_keywords` (**nội dung** của ý) và `sub_keywords` 
 | Kết quả ý | Điều kiện | Điểm ý |
 |---|---|---|
 | **Đạt** (`full`) | Một câu trong bài làm có từ khóa chính **và** từ khóa phụ (`sub_keywords` rỗng → chỉ cần từ khóa chính) | đủ `max_points` |
-| **Một phần** (`partial`) | Có từ khóa chính nhưng câu đó **không có** chủ thể | ½ `max_points` |
+| **Một phần** (`partial`, nội bộ) | Có từ khóa chính nhưng câu đó **không có** chủ thể | **0** — từ 15/11 quy về `none` (mỗi ý chỉ Đạt / Không đạt, `keyword_grading.py`) |
 | **Chưa có** (`none`) | Không có từ khóa chính — **chỉ nhắc chủ thể cũng = 0** (chốt 10/11) | 0 |
 
 So khớp (chốt 10/11):

@@ -111,7 +111,7 @@ class SaveAnswersRequest(BaseModel):
 class RubricResultOut(BaseModel):
     text: str
     max_points: float
-    result: Literal["full", "partial", "none"]
+    result: Literal["full", "partial", "none"]  # partial: chỉ còn ở bài chấm trước 15/11 (lịch sử)
     points: float
     evidence: str | None  # câu trích từ bài làm làm bằng chứng
 

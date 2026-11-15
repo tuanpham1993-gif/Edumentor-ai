@@ -230,8 +230,9 @@ def test_essay_falls_back_to_keyword_grading(client, bank_312, student_headers, 
     # B6: trace từng khối pipeline — khối 4 lỗi → nhánh dự phòng từ khóa
     for essay in grading["essays"]:
         names = [n["node"] for n in essay["nodes"]]
-        assert names == ["0_input", "3_context", "4_llm_grade", "4b_keyword_fallback", "7_aggregate", "8_trace"]
-        assert essay["nodes"][2]["status"] == "error" and essay["nodes"][-1]["output"] == {"graded_by": "keyword"}
+        assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "4b_keyword_fallback", "7_aggregate", "8_trace"]
+        assert essay["nodes"][names.index("4_llm_grade")]["status"] == "error"
+        assert essay["nodes"][-1]["output"]["graded_by"] == "keyword"
 
 
 def test_grading_trace_has_every_pipeline_node_per_essay(client, bank_312, student_headers, db_session):
@@ -247,9 +248,13 @@ def test_grading_trace_has_every_pipeline_node_per_essay(client, bank_312, stude
     traced = {e["position"]: e["nodes"] for e in db_session.get(ReviewAttempt, attempt_id).trace["grading"]["essays"]}
     assert set(traced) == {a.position for a in essays}
     done = traced[essays[0].position]
-    assert [n["node"] for n in done] == ["0_input", "3_context", "4_llm_grade", "7_aggregate", "8_trace"]
+    names = [n["node"] for n in done]
+    assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "5_verify", "6_cross_check", "7_aggregate", "8_trace"]
     assert all(n["status"] == "ok" and n["ms"] >= 0 for n in done)
-    assert done[2]["output"]["source"] == "parallel" and done[3]["output"]["score_10"] == 10
+    assert done[names.index("4_llm_grade")]["output"]["source"] == "parallel"
+    assert done[names.index("7_aggregate")]["output"]["score_10"] == 10
+    grading = db_session.get(ReviewAttempt, attempt_id).trace["grading"]
+    assert grading["needs_review"] == [] and all("flags" in e for e in grading["essays"])
     assert [n["node"] for n in traced[essays[1].position]] == ["0_input"]  # bỏ trống → không gọi AI
 
 

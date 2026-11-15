@@ -1,6 +1,6 @@
 # Rater Guideline — EduMentor AI short-answer grading (gold set)
 
-> Version 1.0 · 14/11/2026 · owner: Tuấn (module 09) · raters: **Hòa, Tâm**
+> Version 2.0 · 15/11/2026 · owner: Tuấn (module 09) · raters: **Hòa, Tâm**
 > Change log is at the bottom. Read this whole page once before you start (about 10 minutes).
 
 ## 1. Why we need you
@@ -21,13 +21,13 @@ You receive one CSV file (open it in Google Sheets or Excel). **One row = one ru
 
 | Column | Meaning |
 |---|---|
-| `row_id`, `answer_id` | IDs. Do not edit. |
+| `row_id`, `sheet_id` | IDs (anonymous). Do not edit. |
 | `question_code`, `question` | The question the learner answered. |
 | `answer` | The learner's full answer. It is repeated on every row of the same answer. |
 | `item_no`, `item` | The rubric item you grade on this row. |
 | `max_points` | Points of the item (for information only, you do not compute points). |
-| **`label`** | **Fill in:** `full`, `partial` or `none` (lower case, exactly these words). |
-| `note` | Optional: a short reason. **Please write one when you choose `partial` or when you are unsure.** |
+| **`label`** | **Fill in:** `full` or `none` (lower case, exactly these words). |
+| `note` | Optional: a short reason. **Please write one when you are unsure, or when you give `none` to an answer that mentions the idea but misses it.** |
 
 Rows of the same answer are next to each other; the order of answers is shuffled.
 Do not sort, delete or add rows. Leave the other columns as they are.
@@ -38,11 +38,10 @@ Grade **each item on its own**: does the answer, *anywhere*, express the idea of
 
 | Label | Use it when | Points (computed later) |
 |---|---|---|
-| **full** | The idea of the item is stated **correctly** and **clearly linked to the right subject**. | all points of the item |
-| **partial** | The idea is there but **incomplete or vague**: the subject is missing or unclear, only half of the idea is stated, or it is mostly right with a small mistake. | half |
-| **none** | The idea is **missing or wrong**: not mentioned, factually wrong, contradicted elsewhere, only the question copied back, or only the subject named with no idea about it. | 0 |
+| **full** (met) | The idea of the item is stated **correctly, completely and on point**, and **clearly linked to the right subject**. | all points of the item |
+| **none** (not met) | Anything else: **missing, incomplete, vague, unclear subject, partly or fully wrong**, contradicted elsewhere, only the question copied back, only the subject named, or a **long answer that does not clearly state the idea**. | 0 |
 
-When you hesitate between two labels, choose the **lower** one and write why in `note`.
+There is **no half credit** (agreed 15/11 at Hòa's request). When you hesitate, choose **`none`** and write why in `note`.
 
 ## 4. General rules
 
@@ -52,15 +51,27 @@ When you hesitate between two labels, choose the **lower** one and write why in 
    Answers in Vietnamese or mixed language are graded on meaning too (write `vi` in `note`).
 3. **Code counts.** `a, b = b, a`, `if n % 2 == 0:` or `print(a + b)` can satisfy an item by themselves.
 4. **Subject matters.** "It cannot be changed" is `full` only if it is clear that *it* is the tuple. If the
-   reader cannot tell which thing is meant → `partial`.
+   reader cannot tell which thing is meant → `none`.
 5. **Swapped or reversed ideas → `none`.** "A list cannot be changed, a tuple can" gets `none` for both items.
 6. **Contradiction → `none`.** If the answer says the idea and also its opposite, the item is `none`.
 7. **Copying the question earns nothing.** Words that are only repeated from the question do not count.
 8. **Any correct example is fine.** The examples in brackets in the rubric are suggestions, not the only answer.
 9. **Extra wrong statements do not remove points from other items**, unless they contradict that item (rule 6).
-10. **Bare keyword lists** ("mutable immutable [] ()") with no statement about anything → `none`, or `partial` if
-    one idea is still unambiguous. A short but real sentence ("list mutable, tuple not") is fine.
+10. **Bare keyword lists** ("mutable immutable [] ()") with no statement about anything → `none`.
+    A short but real sentence ("list mutable, tuple not") is fine. A long answer that does not clearly state the idea
+    is also `none`: do not hunt for keywords inside rambling.
 11. **Do not grade the overall quality.** Only the rubric items. A messy answer can still get `full` on every item.
+
+## 4b. Question-specific conventions (agreed 15/11)
+
+| Question | Item | Convention |
+|---|---|---|
+| CS-TL-03 | 3 — a sensible example | The question asks for an example of **each** error: two examples (one syntax, one logic) = `full`; one example only = `none`. |
+| COND-TL-06 | 3 — use or because… | Explaining that **only one condition needs to be true** is enough for `full`; the part in brackets is optional. |
+| VAR-TL-02 | 2 — no spaces / special characters, and not a keyword | Both rules = `full`; only one of the two = `none`. |
+
+Rule 9 also means **one mistake is penalised once**: e.g. `while pw == 'abc123'` makes the "while condition" item `none`,
+but "print after the loop" is still judged on whether the answer prints after the loop.
 
 ## 5. Worked examples
 
@@ -69,7 +80,7 @@ When you hesitate between two labels, choose the **lower** one and write why in 
 | Answer (extract) | Label | Why |
 |---|---|---|
 | "break ends the loop immediately." | full | Same idea, different words. |
-| "It stops the loop." (and the answer talks about continue in the same sentence) | partial | Unclear whether *it* is break or continue. |
+| "It stops the loop." (and the answer talks about continue in the same sentence) | none | Unclear whether *it* is break or continue. |
 | "break skips to the next iteration." | none | That describes continue (rule 5). |
 | "break is a keyword used in loops." | none | Only names the subject; no idea about it. |
 
@@ -78,8 +89,8 @@ When you hesitate between two labels, choose the **lower** one and write why in 
 | Answer (extract) | Label | Why |
 |---|---|---|
 | "Tuples are immutable." | full | |
-| "A list can be changed, but not the other one." | partial | Idea present, subject not clear. |
-| "You cannot change it." with no subject anywhere | partial | |
+| "A list can be changed, but not the other one." | none | Subject not clear. |
+| "You cannot change it." with no subject anywhere | none | No subject. |
 | "A tuple can be changed with append()." | none | Wrong. |
 
 **Value / code item** — COND-TL-06, item 1: *"Condition age < 12"*
@@ -88,16 +99,16 @@ When you hesitate between two labels, choose the **lower** one and write why in 
 |---|---|---|
 | `if age < 12 or age >= 60:` | full | Code satisfies the item. |
 | "people younger than 12" | full | Same condition in words. |
-| `age <= 12` | partial | Almost right; boundary wrong (small mistake). |
-| "children get a discount" | partial | Idea but no threshold. |
+| `age <= 12` | none | Boundary wrong. |
+| "children get a discount" | none | No threshold. |
 
 **Explanation item** — CS-TL-05, item 2: *"the division is done before the addition (it prints 7.0)"*
 
 | Answer (extract) | Label | Why |
 |---|---|---|
 | "/ has higher priority than +, so only b is divided." | full | |
-| "It prints 7.0 instead of 5." | partial | Gives the symptom, not the cause. |
-| "Because of operator order." | partial | Cause named but not explained. |
+| "It prints 7.0 instead of 5." | none | Gives the symptom, not the cause. |
+| "Because of operator order." | none | Cause named but not explained. |
 | "Because a and b are integers." | none | Wrong cause. |
 
 **Example item** — CS-TL-03, item 3: *"a sensible example (a missing colon; a wrong condition...)"*
@@ -120,8 +131,8 @@ the agreement between you two is reported (Cohen's kappa).
 
 ## 7. Before you send the sheet back
 
-- [ ] Every row has a `label` (`full` / `partial` / `none`).
-- [ ] `note` is filled for `partial` and unsure rows.
+- [ ] Every row has a `label` (`full` / `none`).
+- [ ] `note` is filled for unsure rows.
 - [ ] Rows were not sorted, deleted or added.
 - [ ] Download as **CSV** and send the file back to Tuấn privately (not in the group chat). The answers are learners'
       data: do not share them.
@@ -131,3 +142,5 @@ the agreement between you two is reported (Cohen's kappa).
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 14/11/2026 | First version. |
+| 2.0 | 15/11/2026 | **Two labels only** (`full` / `none`, no half credit) at Hòa's request; whole system changed too (prompt grade-en-v2). |
+| 1.1 | 15/11/2026 | Added section 4b (three question-specific conventions, one mistake penalised once). Vietnamese short version for Hòa: `HUONG_DAN_CHAM_HOA.md`. |

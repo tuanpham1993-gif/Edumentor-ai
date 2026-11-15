@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     REVIEW_GRADING_TIMEOUT: int = 20      # giây chờ chấm khi nộp; quá → trạng thái "grading" (T1)
     REVIEW_GRADING_MAX_WAIT: int = 120    # giây tối đa chờ AI chấm (tính từ lúc nộp); quá → chấm từ khóa (T1)
     REVIEW_BANK_TARGET_PER_SKILL: int = 20  # AI ngừng sinh thêm khi kỹ năng đủ số câu này (ngân hàng bước 3)
+    # B9 (15/11): chấm tự luận kèm đoạn tri thức của kỹ năng (Model B). False = Model A (đề + barem + đáp án mẫu).
+    # Chỉ bật khi đo trên bộ bài chuẩn thấy B tốt hơn A (docs/Review-AI-Grading.md B9, B10).
+    REVIEW_GRADING_RAG: bool = False
     # Mô hình embedding cho RAG — ĐA NGÔN NGỮ (tài liệu tri thức viết tiếng Việt). Đổi mô hình → chạy lại
     # scripts/build_embeddings.py --all (vector cũ và mới không so được với nhau).
     REVIEW_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

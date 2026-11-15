@@ -46,6 +46,16 @@ class GenerationRequest:
     prompt: str = ""
 
 
+@dataclass
+class EssayGrade:
+    """Kết quả chấm chi tiết MỘT câu (B7): items như grade_essay + nhận xét chung + phiên bản prompt + số lần gọi."""
+
+    items: list[dict]
+    feedback: str | None = None
+    prompt_version: str | None = None
+    attempts: int = 1
+
+
 class ReviewAI(ABC):
     name = "base"
 
@@ -58,6 +68,11 @@ class ReviewAI(ABC):
         """Chấm MỘT câu tự luận theo barem question["rubric"] (H1 — chấm từng câu riêng).
 
         Trả một kết quả cho MỖI ý, đúng thứ tự barem:
-            {"result": "full" | "partial" | "none", "points": số điểm của ý, "evidence": câu trích | None}
+            {"result": "full" | "none", "points": số điểm của ý, "evidence": câu trích | None}
         (validator.grading_errors kiểm lại). Lỗi AI → AIUnavailableError.
         """
+
+    def grade_essay_detailed(self, question: dict, answer: str | None) -> EssayGrade:
+        """Như grade_essay + feedback / prompt_version / attempts (B7). Mặc định bọc grade_essay — AI nào có thêm
+        thông tin (Gemini) thì ghi đè. Pipeline khối 4 gọi hàm này."""
+        return EssayGrade(items=self.grade_essay(question, answer))
