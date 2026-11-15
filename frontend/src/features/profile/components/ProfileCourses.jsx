@@ -280,7 +280,7 @@ export default function ProfileCourses({ onSelectCourse, onStatsChange }) {
                   {c.title}
                 </button>
                 <span className={styles.meta}>
-                  [{c.organization || 'Coursera'}] · Kỹ năng: {getSkillsSummary(c.skills_info)}
+                  [{c.organization || 'Chưa cập nhật'}] · Kỹ năng: {getSkillsSummary(c.skills_info)}
                   {activeTab === 'ongoing' && ` · Tham gia ${formatShortDate(c.joined_at || c.created_at)}`}
                   {activeTab === 'bookmarked' && ` · Lưu ${formatShortDate(c.created_at)}`}
                   {activeTab === 'completed' && ` · Hoàn thành ${formatShortDate(c.completed_at || c.updated_at)}`}

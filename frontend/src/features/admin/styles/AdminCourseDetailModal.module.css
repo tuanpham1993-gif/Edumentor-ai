@@ -1,0 +1,436 @@
+/* Modal Xem Chi Tiết Khóa Học Quản Trị (Admin Course Detail Modal) */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(10, 8, 7, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  border-radius: 16px;
+  background: var(--card, #1c1815);
+  border: 1px solid rgba(245, 165, 36, 0.25);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.header {
+  padding: 20px 24px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid var(--line, #2b2622);
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pillsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.idBadge {
+  font-family: monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent, #f5a524);
+  background: rgba(245, 165, 36, 0.12);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 165, 36, 0.25);
+}
+
+.orgBadge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-soft, #a89f91);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text, #ede8e3);
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid var(--line, #3a342d);
+  color: var(--text-soft, #a89f91);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 16px;
+  transition: all var(--d-fast, 0.15s);
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text, #ede8e3);
+}
+
+/* Thân nội dung có thể cuộn */
+.content {
+  padding: 20px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.content::-webkit-scrollbar {
+  width: 5px;
+}
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.content::-webkit-scrollbar-thumb {
+  background: var(--line, #3a342d);
+  border-radius: 999px;
+}
+
+/* Banner ảnh / Art */
+.bannerWrap {
+  width: 100%;
+  height: 140px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #24201c 0%, #151311 100%);
+  border: 1px solid var(--line, #2b2622);
+}
+
+.bannerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bannerArt {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 30%, rgba(245, 165, 36, 0.18), transparent 70%);
+}
+
+.bannerMonogram {
+  font-size: 48px;
+  font-weight: 800;
+  color: rgba(245, 165, 36, 0.35);
+  letter-spacing: 2px;
+}
+
+/* Hàng huy hiệu */
+.badgesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.badgeLevel {
+  background: rgba(245, 165, 36, 0.14);
+  color: var(--accent, #f5a524);
+  border: 1px solid rgba(245, 165, 36, 0.3);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgeRating {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgeRatingEmpty {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted, #8a8070);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.badgeReviews,
+.badgeSchedule,
+.badgeModules {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-soft, #a89f91);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.badgeEnrolled {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Lưới metadata 2 cột */
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--surface-sunk, #141211);
+  border: 1px solid var(--line, #2b2622);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaLabel {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #8a8070);
+  font-weight: 600;
+}
+
+.metaValue {
+  font-size: 13.5px;
+  color: var(--text, #ede8e3);
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.externalLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent, #f5a524);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity var(--d-fast, 0.15s);
+}
+
+.externalLink:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* Mô tả & Kỹ năng */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent, #f5a524);
+  font-weight: 700;
+}
+
+.descriptionBox {
+  padding: 12px 14px;
+  border-radius: 9px;
+  background: var(--surface-sunk, #141211);
+  border: 1px solid var(--line, #2b2622);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-soft, #a89f91);
+  max-height: 130px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.descriptionBox::-webkit-scrollbar {
+  width: 4px;
+}
+.descriptionBox::-webkit-scrollbar-thumb {
+  background: var(--line, #3a342d);
+  border-radius: 999px;
+}
+
+.skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skillChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(245, 165, 36, 0.12);
+  color: var(--accent, #f5a524);
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid rgba(245, 165, 36, 0.2);
+}
+
+.emptyText {
+  font-size: 13px;
+  color: var(--text-muted, #8a8070);
+  font-style: italic;
+}
+
+/* Footer Modal */
+.footer {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line, #2b2622);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.footerRight {
+  display: flex;
+  gap: 10px;
+}
+
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger-fg, #ef4444);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--d-fast, 0.15s);
+}
+
+.deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: #ef4444;
+}
+
+.cancelBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid var(--line, #3a342d);
+  color: var(--text-soft, #a89f91);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all var(--d-fast, 0.15s);
+}
+
+.cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text, #ede8e3);
+}
+
+.editBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: var(--accent, #f5a524);
+  color: #141211;
+  border: none;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 165, 36, 0.2);
+  transition: all var(--d-fast, 0.15s);
+}
+
+.editBtn:hover {
+  background: #ffb84d;
+  transform: translateY(-1px);
+}
+
+.editBtn:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+  .footer {
+    flex-direction: column-reverse;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .footerRight {
+    flex-direction: column;
+  }
+  .deleteBtn,
+  .cancelBtn,
+  .editBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

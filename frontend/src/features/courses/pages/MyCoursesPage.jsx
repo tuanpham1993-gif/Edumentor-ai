@@ -328,7 +328,7 @@ export default function MyCoursesPage() {
                               </button>
                             </h3>
                             <p className={styles.courseMeta}>
-                              [{c.organization || 'Coursera'}] · Kỹ năng: {getSkillsText(c.skills_info)} · Tham gia {formatDate(c.joined_at || c.created_at)}
+                              [{c.organization || 'Chưa cập nhật'}] · Kỹ năng: {getSkillsText(c.skills_info)} · Tham gia {formatDate(c.joined_at || c.created_at)}
                             </p>
                           </div>
 
@@ -401,7 +401,7 @@ export default function MyCoursesPage() {
                               </button>
                             </h3>
                             <p className={styles.courseMeta}>
-                              [{c.organization || 'Coursera'}]
+                              [{c.organization || 'Chưa cập nhật'}]
                               {c.rating != null ? ` · ★ ${Number(c.rating).toFixed(1)}` : ''}
                               {` · Lưu ${formatDate(c.created_at)}`}
                             </p>
@@ -461,7 +461,7 @@ export default function MyCoursesPage() {
                               </button>
                             </h3>
                             <p className={styles.courseMeta}>
-                              [{c.organization || 'Coursera'}] · Hoàn thành ngày {formatDate(c.completed_at || c.updated_at)}
+                              [{c.organization || 'Chưa cập nhật'}] · Hoàn thành ngày {formatDate(c.completed_at || c.updated_at)}
                             </p>
                           </div>
 
@@ -519,7 +519,7 @@ export default function MyCoursesPage() {
                               </button>
                             </h3>
                             <p className={styles.courseMeta}>
-                              [{c.organization || 'Coursera'}] · Ngừng theo dõi ngày {formatDate(c.updated_at)}
+                              [{c.organization || 'Chưa cập nhật'}] · Ngừng theo dõi ngày {formatDate(c.updated_at)}
                             </p>
                           </div>
 

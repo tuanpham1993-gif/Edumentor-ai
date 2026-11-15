@@ -29,7 +29,12 @@ export default function CourseDetailModal({
   );
   const [joining, setJoining] = useState(false);
   const [joinSuccessNotice, setJoinSuccessNotice] = useState(null);
+  const [bannerError, setBannerError] = useState(false);
   const modalRef = useRef(null);
+
+  useEffect(() => {
+    setBannerError(false);
+  }, [course?.course_id]);
 
   // Tải thông tin theo dõi hiện tại của học viên
   useEffect(() => {
@@ -94,20 +99,23 @@ export default function CourseDetailModal({
   if (!course) return null;
 
   const title = detail?.title || course.title;
-  const orgName = detail?.organization || course?.organization || 'Nền tảng MOOC';
-  const levelText = LEVEL_MAP[detail?.level?.toLowerCase()] || detail?.level || 'Trung cấp';
-  const ratingText = detail?.rating != null ? Number(detail.rating).toFixed(1) : '5.0';
-  const reviewsText = detail?.num_reviews != null
+  const orgName = detail?.organization || course?.organization || 'Chưa cập nhật đơn vị';
+  const levelText = LEVEL_MAP[detail?.level?.toLowerCase()] || detail?.level || 'Chưa phân cấp';
+  const hasRating = detail?.rating != null;
+  const ratingText = hasRating ? `★ ${Number(detail.rating).toFixed(1)}` : 'Chưa có đánh giá';
+  const hasReviews = detail?.num_reviews != null && detail.num_reviews > 0;
+  const reviewsText = hasReviews
     ? `${Number(detail.num_reviews).toLocaleString('vi-VN')} đánh giá`
-    : '40 đánh giá';
-  const enrolledCount = detail?.num_enrolled != null
-    ? Number(detail.num_enrolled).toLocaleString('vi-VN')
-    : '4.906';
-  const enrolledText = `${enrolledCount} học viên`;
+    : 'Chưa có đánh giá';
+  const hasEnrolled = detail?.num_enrolled != null && detail.num_enrolled > 0;
+  const enrolledText = hasEnrolled
+    ? `${Number(detail.num_enrolled).toLocaleString('vi-VN')} học viên`
+    : 'Chưa có học viên';
 
-  const instructorName = detail?.instructor || 'Đang cập nhật';
-  const modulesText = detail?.modules || '5 modules';
-  const scheduleText = detail?.schedule || 'Khoảng 8-12 giờ hoàn thành';
+  const instructorName = detail?.instructor || 'Chưa cập nhật';
+  const modulesText = detail?.modules || 'Chưa cập nhật số chương';
+  const scheduleText = detail?.schedule || 'Chưa cập nhật thời lượng';
+  const courseImage = detail?.image || course?.image;
 
   // Tham gia học khóa học (gọi API backend ghi nhận status = ongoing và mở link gốc)
   async function handleJoinCourse() {
@@ -167,10 +175,24 @@ export default function CourseDetailModal({
 
         {/* Nội dung chi tiết */}
         <div className={styles.content}>
+          {/* Banner ảnh khóa học nếu có */}
+          {courseImage && !bannerError && (
+            <div className={styles.bannerWrap}>
+              <img
+                src={courseImage}
+                alt={title}
+                className={styles.bannerImg}
+                onError={() => setBannerError(true)}
+              />
+            </div>
+          )}
+
           {/* Huy hiệu tóm tắt chuẩn ảnh */}
           <div className={styles.badgesRow}>
             <span className={styles.levelBadge}>{levelText}</span>
-            <span className={styles.ratingBadge}>★ {ratingText}</span>
+            <span className={hasRating ? styles.ratingBadge : styles.ratingBadgeEmpty}>
+              {ratingText}
+            </span>
             <span className={styles.reviewsBadge}>{reviewsText}</span>
             <span className={styles.enrolledBadge}>{enrolledText}</span>
             {trackingStatus === 'ongoing' && (
@@ -204,7 +226,7 @@ export default function CourseDetailModal({
             <div className={styles.descriptionScroll}>
               <p className={styles.description}>
                 {detail?.description ||
-                  'Khóa học cung cấp kiến thức nền tảng và bài tập thực hành theo chuẩn lộ trình MOOC quốc tế.'}
+                  'Khóa học này hiện chưa có mô tả chi tiết từ nhà cung cấp.'}
               </p>
             </div>
           </div>
