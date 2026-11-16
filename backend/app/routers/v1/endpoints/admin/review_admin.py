@@ -13,6 +13,7 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     POST   /api/admin/review/questions/{id}/approve    — duyệt câu AI soạn + bật (QT6); không gửi mã → tự cấp mã gợi ý
     GET    /api/admin/review/questions/{id}/suggested-code — mã gợi ý điền sẵn khi duyệt (vd VAR-TN-15)
     POST   /api/admin/review/questions/{id}/reject     — từ chối câu AI soạn (ẩn, không xóa)
+    GET    /api/admin/review/skills/{skill_id}/chunks  — đoạn tri thức của kỹ năng (ô chọn khi sửa câu, 7.6)
     GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
 
 Lỗi: không thấy câu 404 · nội dung câu sai 422 (kèm danh sách lỗi) · mã trùng / sửa nhỏ sai / không bật được /
@@ -25,8 +26,10 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.dependencies import require_admin
 from app.models.user import Users
+from app.repositories import review_repository as repo
 from app.schemas.review_admin import (
     ApproveRequest,
+    ChunkOut,
     DeleteResultOut,
     EditResultOut,
     QuestionCreate,
@@ -248,3 +251,14 @@ def read_readiness(
         return readiness_service.readiness(db, course_id)
     except readiness_service.CourseNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy khóa học.") from None
+
+
+@router.get(
+    "/skills/{skill_id}/chunks",
+    response_model=list[ChunkOut],
+    summary="[Admin] Đoạn tri thức của kỹ năng",
+)
+def list_skill_chunks(skill_id: int, _: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    if not repo.skill_exists(db, skill_id):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.")
+    return repo.chunks_for_skill(db, skill_id)

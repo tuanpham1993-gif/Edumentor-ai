@@ -45,3 +45,17 @@ export async function getReadiness(courseId) {
   const response = await client.get('/admin/review/readiness', { params: courseId ? { course_id: courseId } : {} });
   return response.data;
 }
+
+// PATCH /admin/review/questions/{id} — chỉ gửi trường muốn đổi + minor ("Sửa nhỏ") + note (ghi chú phiên bản)
+//   → { question: QuestionDetail (dòng MỚI nếu tạo phiên bản), versioned, changed }
+//   422 { detail: { message, errors: [...] } } · 409 sửa nhỏ không hợp lệ · 400 kỹ năng / đoạn tri thức sai
+export async function updateQuestion(questionId, body) {
+  const response = await client.patch(`/admin/review/questions/${questionId}`, body);
+  return response.data;
+}
+
+// GET /admin/review/skills/{skill_id}/chunks → [{ chunk_id, code, title }] (ô chọn "Đoạn tri thức")
+export async function getSkillChunks(skillId) {
+  const response = await client.get(`/admin/review/skills/${skillId}/chunks`);
+  return response.data;
+}

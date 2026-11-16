@@ -3,7 +3,7 @@
 //
 // Đợt này (P1): mức sẵn sàng từng khóa (7.4) · lọc khóa / kỹ năng / trạng thái / loại / mức + tìm · bảng câu hỏi
 // (bật / tắt, xem đáp án / barem, lịch sử phiên bản) · duyệt / từ chối câu AI soạn (7.5c: câu AI chỉ vào đề sau khi duyệt).
-// Đợt sau: ngăn sửa câu có phiên bản (P2), thêm câu (P3), chấm thử (P4).
+// P2 (16/11): sửa câu ngay trong dòng — lưu phiên bản mới / sửa nhỏ (QuestionEditor). Đợt sau: thêm câu (P3), chấm thử (P4).
 import { useCallback, useEffect, useState } from 'react';
 
 import * as reviewAdminApi from '../../../api/reviewAdmin.api.js';
@@ -116,10 +116,11 @@ export default function AdminReviewQuestionsPage() {
     setNotice('');
   }
 
-  function handleChanged(updated, message) {
+  // replacedId: lưu phiên bản mới → dòng cũ (id cũ) được thay bằng phiên bản mới (id mới)
+  function handleChanged(updated, message, replacedId = updated.question_id) {
     setData((d) => ({
       ...d,
-      items: d.items.map((q) => (q.question_id === updated.question_id ? { ...q, ...updated } : q)),
+      items: d.items.map((q) => (q.question_id === replacedId ? { ...q, ...updated } : q)),
     }));
     if (message) setNotice(message);
     loadCounts();
@@ -268,7 +269,8 @@ export default function AdminReviewQuestionsPage() {
               </thead>
               <tbody>
                 {data.items.map((item) => (
-                  <QuestionRow key={item.question_id} item={item} onChanged={handleChanged} />
+                  // key theo HỌ câu: lưu phiên bản mới (id đổi) vẫn giữ dòng đang mở
+                  <QuestionRow key={item.family_id} item={item} skills={skills} onChanged={handleChanged} />
                 ))}
               </tbody>
             </table>

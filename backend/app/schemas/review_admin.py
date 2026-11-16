@@ -134,6 +134,16 @@ class DeleteResultOut(BaseModel):
     result: Literal["deleted", "deactivated"]
 
 
+class ChunkOut(BaseModel):
+    """Đoạn tri thức RAG của kỹ năng — ô chọn "Đoạn tri thức" khi sửa / thêm câu (7.6)."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    chunk_id: int
+    code: str | None
+    title: str | None
+
+
 # ─────────────── mức sẵn sàng (7.4) ───────────────
 
 

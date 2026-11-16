@@ -477,3 +477,16 @@ def test_reject_hides_question(client, pending, admin_headers):
     assert approve.status_code == 409
     rejected = client.get(URL, params={"review_status": "rejected"}, headers=admin_headers).json()
     assert [i["question_id"] for i in rejected["items"]] == [pending.question_id]
+
+
+# ─────────────── đoạn tri thức của kỹ năng (7.6 P2, 16/11) ───────────────
+
+
+def test_skill_chunks(client, seeded, admin_headers, student_headers, db_session):
+    q = by_code(db_session, "312-PY-TN-01")
+    url = f"/api/admin/review/skills/{q.skill_id}/chunks"
+    assert client.get(url, headers=student_headers).status_code == 403
+    chunks = client.get(url, headers=admin_headers).json()
+    assert len(chunks) == 3 and q.chunk_id in [c["chunk_id"] for c in chunks]
+    assert set(chunks[0]) == {"chunk_id", "code", "title"}  # không trả nội dung / vector
+    assert client.get("/api/admin/review/skills/999999/chunks", headers=admin_headers).status_code == 404

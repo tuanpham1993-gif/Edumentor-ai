@@ -257,6 +257,7 @@ qua pipeline 9 khối, dự phòng chấm từ khóa. *(Cập nhật 16/11/2026 
 | GET | `/api/admin/review/questions/{question_id}/suggested-code` | Mã gợi ý cho câu AI soạn. |
 | POST | `/api/admin/review/questions/{question_id}/approve` | Duyệt câu AI soạn (Chờ duyệt → Đã duyệt, bật; tự cấp mã nếu chưa có). |
 | POST | `/api/admin/review/questions/{question_id}/reject` | Từ chối câu AI soạn. |
+| GET | `/api/admin/review/skills/{skill_id}/chunks` | Đoạn tri thức của kỹ năng (mã, tiêu đề) — ô chọn khi sửa / thêm câu. |
 | GET | `/api/admin/review/readiness` | Mức sẵn sàng ôn tập: mọi khóa đã có câu hỏi (tóm tắt: ôn được chưa + lý do, số câu đang bật / mục tiêu, TN / TL, chờ duyệt) + số khóa chưa có câu. `?course_id=` → 1 khóa kèm bảng từng kỹ năng theo mức. "Ôn được" tính bằng đúng hàm ráp đề của học viên. |
 
 Các endpoint cũ **đã bỏ** *(T11)*:

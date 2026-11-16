@@ -1,4 +1,5 @@
-// Một dòng bảng câu hỏi + phần mở rộng (đáp án / barem, lịch sử phiên bản, khung duyệt câu AI) — module 09 (Tuấn · 16/11/2026 · 7.6).
+// Một dòng bảng câu hỏi + phần mở rộng (đáp án / barem, lịch sử phiên bản, khung duyệt câu AI, sửa câu — P2)
+// — module 09 (Tuấn · 16/11/2026 · 7.6).
 import { useState } from 'react';
 
 import * as reviewAdminApi from '../../../api/reviewAdmin.api.js';
@@ -8,6 +9,7 @@ import { LEVEL_TEXT } from '../../review/reviewFormat.js';
 import { SOURCE_TEXT, questionStatus } from '../reviewAdminFormat.js';
 import styles from '../styles/AdminReviewQuestions.module.css';
 import QuestionDetail from './QuestionDetail.jsx';
+import QuestionEditor from './QuestionEditor.jsx';
 
 const COLUMNS = 7;
 
@@ -73,8 +75,9 @@ function Versions({ versions }) {
   );
 }
 
-export default function QuestionRow({ item, onChanged }) {
+export default function QuestionRow({ item, skills, onChanged }) {
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [detail, setDetail] = useState(null);
   const [suggested, setSuggested] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -117,6 +120,13 @@ export default function QuestionRow({ item, onChanged }) {
   function handleReviewed(updated, message) {
     setDetail(updated);
     onChanged(updated, message);
+  }
+
+  // lưu phiên bản mới → câu hiện hành là dòng MỚI (question_id khác) → báo cha thay dòng cũ bằng id cũ
+  function handleSaved(updated, message) {
+    setDetail(updated);
+    setEditing(false);
+    onChanged(updated, message, item.question_id);
   }
 
   return (
@@ -162,9 +172,25 @@ export default function QuestionRow({ item, onChanged }) {
           <td colSpan={COLUMNS}>
             {error && <div className="alert">{error}</div>}
             {open && !detail && !error && <p className="muted small">Đang tải…</p>}
-            {open && detail && (
+            {open && detail && editing && (
+              <QuestionEditor
+                key={detail.question_id}
+                detail={detail}
+                skills={skills}
+                onSaved={handleSaved}
+                onCancel={() => setEditing(false)}
+              />
+            )}
+            {open && detail && !editing && (
               <div className={styles.detailBox}>
-                <p className={styles.content}>{detail.content}</p>
+                <div className={styles.itemHead}>
+                  <p className={styles.content}>{detail.content}</p>
+                  {detail.review_status !== 'rejected' && (
+                    <button type="button" className="btn btn-soft btn-sm" onClick={() => setEditing(true)}>
+                      Sửa
+                    </button>
+                  )}
+                </div>
                 <QuestionDetail detail={detail} />
                 <Versions versions={detail.versions} />
                 {detail.review_status === 'pending' && (
