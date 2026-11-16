@@ -1,20 +1,23 @@
 // Footer cho trang cần đăng nhập (FĐ7, 08/11/2026). Bộ demo chưa có footer → bản đề xuất.
 // 4 cột theo ý Tuấn: Giới thiệu · Học tập · Liên hệ · Địa chỉ. Hàng dưới: bản quyền + lên đầu trang.
 //
-// ⚠ CONTACT bên dưới đang là GIÁ TRỊ TẠM — điền email / số điện thoại / địa chỉ thật của nhóm.
+// 16/11: điền liên hệ thật (Tuấn) + bản đồ nhỏ nhúng Google Maps ở cột Địa chỉ (không cần API key,
+// loading="lazy" → chỉ tải khi cuộn tới footer).
 import { Link } from 'react-router-dom';
 
 import { BrandLogo } from '../../common/components/icons.jsx';
 import styles from '../styles/Footer.module.css';
 import { MAIN_NAV } from '../nav.js';
 
-// Thông tin liên hệ — SỬA Ở ĐÂY (chưa điền thì để nguyên, footer vẫn hiện bình thường)
+// Thông tin liên hệ — SỬA Ở ĐÂY
+const MAP_QUERY = encodeURIComponent('21Bis Hậu Giang, Tân Sơn Nhất, Hồ Chí Minh, Việt Nam');
 const CONTACT = {
-  email: 'contact@edumentor.example',
-  phone: '(+84) 000 000 000',
+  email: 'phamthanht009@gmail.com',
+  phone: '0931 082 341',
   hours: 'Thứ 2 – Thứ 6, 8:00 – 17:00',
-  address: ['Cập nhật tên trường / đơn vị', 'Cập nhật địa chỉ, quận / huyện', 'TP. Hồ Chí Minh, Việt Nam'],
-  mapUrl: '', // link Google Maps (để trống → không hiện "Xem bản đồ")
+  address: ['21Bis Hậu Giang', 'Phường Tân Sơn Nhất', 'TP. Hồ Chí Minh, Việt Nam'],
+  mapUrl: `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`, // mở Google Maps ở tab mới
+  mapEmbedUrl: `https://maps.google.com/maps?q=${MAP_QUERY}&z=16&output=embed`, // khung bản đồ nhỏ (trống → ẩn)
 };
 
 // Cột Học tập: lấy từ menu chính (nav.js) — đổi menu thì footer đổi theo
@@ -106,9 +109,18 @@ export default function Footer({ guest = false }) {
               ))}
             </span>
           </address>
+          {CONTACT.mapEmbedUrl && (
+            <iframe
+              className={styles.map}
+              src={CONTACT.mapEmbedUrl}
+              title="Bản đồ: 21Bis Hậu Giang, Phường Tân Sơn Nhất, TP. Hồ Chí Minh"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          )}
           {CONTACT.mapUrl && (
             <a href={CONTACT.mapUrl} target="_blank" rel="noreferrer" className={styles.cta}>
-              Xem bản đồ ↗
+              Mở Google Maps ↗
             </a>
           )}
         </section>
