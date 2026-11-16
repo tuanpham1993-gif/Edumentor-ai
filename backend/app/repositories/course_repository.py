@@ -13,7 +13,9 @@ class CourseRepository:
     def get_by_id(self, course_id: int) -> Optional[Courses]:
         return self.db.get(Courses, course_id)
 
-    def get_by_url(self, url: str) -> Optional[Courses]:
+    def get_by_url(self, url: Optional[str]) -> Optional[Courses]:
+        if not url:
+            return None
         stmt = select(Courses).where(Courses.url == url)
         return self.db.execute(stmt).scalars().unique().one_or_none()
 

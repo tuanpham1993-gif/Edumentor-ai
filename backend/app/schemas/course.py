@@ -39,6 +39,18 @@ class CourseBase(BaseModel):
             raise ValueError("Điểm đánh giá (rating) phải nằm trong khoảng từ 0 đến 5")
         return v
 
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return None
+        v = v.strip()
+        if not v:
+            return None
+        if not (v.startswith("http://") or v.startswith("https://")):
+            raise ValueError("URL khóa học phải bắt đầu bằng http:// hoặc https://")
+        return v
+
 
 class CourseCreate(CourseBase):
     pass
@@ -65,10 +77,11 @@ class CourseUpdate(BaseModel):
     @field_validator("title")
     @classmethod
     def validate_title(cls, v: Optional[str]) -> Optional[str]:
-        if v is not None:
-            v = v.strip()
-            if not v:
-                raise ValueError("Title không được để trống nếu được cập nhật")
+        if v is None:
+            raise ValueError("Tên khóa học (title) không được phép mang giá trị null")
+        v = v.strip()
+        if not v:
+            raise ValueError("Title không được để trống nếu được cập nhật")
         return v
 
     @field_validator("rating")
@@ -76,6 +89,18 @@ class CourseUpdate(BaseModel):
     def validate_rating(cls, v: Optional[float]) -> Optional[float]:
         if v is not None and not (0.0 <= v <= 5.0):
             raise ValueError("Điểm đánh giá (rating) phải nằm trong khoảng từ 0 đến 5")
+        return v
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return None
+        v = v.strip()
+        if not v:
+            return None
+        if not (v.startswith("http://") or v.startswith("https://")):
+            raise ValueError("URL khóa học phải bắt đầu bằng http:// hoặc https://")
         return v
 
 
