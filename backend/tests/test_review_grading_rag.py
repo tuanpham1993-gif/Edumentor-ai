@@ -144,3 +144,20 @@ def test_mock_ai_ignores_chunks_and_still_grades():
     q = {**QUESTION, "rubric": [{**r, "main_keywords": ["change"], "sub_keywords": []} for r in QUESTION["rubric"]],
          "context_chunks": [{"code": "K", "title": "t", "content": "c"}]}  # fmt: skip
     assert len(MockAI().grade_essay(q, "Lists can change. Tuples cannot change.")) == 2
+
+
+# ─────────────── B12 (16/11): nạp sẵn dữ liệu NLTK lúc khởi động ───────────────
+
+
+def test_warm_up_nlp_loads_nltk_and_never_raises(monkeypatch):
+    from app.ai.review import text_pipeline
+
+    calls = []
+    monkeypatch.setattr(text_pipeline, "preprocess", lambda text: calls.append(text) or ["x"])
+    assert rag.warm_up_nlp() is True and len(calls) == 1
+
+    def missing(text):
+        raise LookupError("Resource punkt_tab not found")
+
+    monkeypatch.setattr(text_pipeline, "preprocess", missing)
+    assert rag.warm_up_nlp() is False  # thiếu dữ liệu: chỉ ghi log, server vẫn khởi động

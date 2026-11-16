@@ -39,6 +39,7 @@ Ghi chú: demo3 dùng OpenAI; dự án giữ **Gemini** (D3). Học **cách làm
 | QT10 | **Gemini là bộ chấm chính**; chấm từ khóa (1) chấm thay khi Gemini lỗi, (2) đối chiếu — lệch **> 3** điểm (thang 10 của câu) thì gắn cờ |
 | QT12 | Chấm từ khóa tách vế ở `. ! ? ;` và "but / whereas / however", không tách ở "and" |
 | QT13 | Bài tự luận phải viết tiếng Anh (nhắc tại ô trả lời, xác nhận khi nộp) |
+| 16/11 | **B12 xong** trên Docker + Gemini thật: nộp có điểm 1,9 s (10,2 s lần đầu), chấm đúng / sai / trống hợp lý, Gemini lỗi → từ khóa; phát hiện thiếu mô hình embedding trong container + khởi động nguội chậm | Đã sửa cả 2 phát hiện (mô hình embedding trong volume; nạp sẵn NLTK → lần nộp đầu 2,1 s); tiếp B13 |
 | 16/11 | GĐ7 **7.5c + 7.5a xong**; **Dockerfile tải dữ liệu NLTK** (build lại image, chạy thử trong container); **B11 code xong** (lý do, nhận xét, tô sáng câu trích, nhãn cách chấm, đang xem lại); 818 test xanh | Tuấn xem giao diện; khởi động lại container backend; B12 |
 | 15/11 | **B9 phần code xong**: cờ REVIEW_GRADING_RAG (Model B), truy xuất đề + barem trong đúng kỹ năng, dùng chung với eval; 4 cách chấm Gemini trong eval_grading; 918 passed | Chạy A / B khi có điểm người chấm (thứ 5) |
 | 15/11 | **B8 xong**: đủ 9 khối pipeline — Guard chỉ gắn cờ, Verifier kiểm câu trích, Đối chiếu chấm lại / needs_review; 907 passed | Đo tỉ lệ chấm lại ở B10; chờ Hòa chấm 10 bài |
@@ -184,8 +185,15 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - ✅ Backend: API kết quả (`result_view`, `/me/review-history/{id}`) trả thêm `rubric[].reason`, và với câu tự luận có bài làm: `graded_by` (`ai` | `keyword` — `AI_MODE=mock` hoặc Gemini lỗi đều là `keyword`, không ghi "Chấm bởi AI" sai sự thật), `needs_review`, `feedback`. Cờ nội bộ (chèn lệnh, quá dài…) KHÔNG trả cho người học. Lượt chấm trước B6 vẫn xem được (giá trị mặc định). 7 test; kiểm ngược: ghi mock là "ai" → test trượt.
   - ✅ Frontend `ResultQuestion`: câu trích **tô sáng ngay trong bài làm**, đánh số theo ý (`highlightSegments` — hàm thuần trong `reviewFormat.js`, kiểm bằng Node: ghép lại luôn ra đúng bài làm gốc); khung **Nhận xét**; cột **Lý do · bằng chứng**; nhãn **Chấm bởi AI / Chấm tự động theo từ khóa**; **Đang xem lại** + ghi chú điểm tạm tính; "Chưa có" → "Chưa đạt" (2 mức). `vite build` đạt.
   - ✅ Kèm theo (chuẩn bị B12): `backend/Dockerfile` tải dữ liệu NLTK (punkt_tab, stopwords, wordnet, averaged_perceptron_tagger_eng) vào image — đã build lại và chạy thử khối 1 + chấm từ khóa trong container. 818 test xanh.
-- [ ] **B12 Kiểm thử toàn luồng** — dự kiến 22/11 · thực tế __/__ 👤
-  - Chạy trên Docker: nộp bài → có điểm ≤ 20 giây hoặc "Đang chấm"; Gemini lỗi → điểm từ khóa + cờ.
+- [x] **B12 Kiểm thử toàn luồng** — dự kiến 22/11 · thực tế 16/11 🤖 (Docker, `AI_MODE=real`, Gemini thật)
+  - Script `backend/scripts/b12_e2e_review.py`: đóng vai học viên gọi đúng API trình duyệt gọi (đăng ký → tham gia khóa 312 → ôn tập → nộp → đọc kết quả).
+  - ✅ Đề 15 câu tiếng Anh, sinh 0,1 s (ngân hàng đủ câu → không gọi Gemini). Nộp bài **10,2 s lần đầu sau khởi động** / **1,9 s khi đã ấm** (mục tiêu ≤ 20 s).
+  - ✅ Chấm Gemini: bài đúng 2/2 ý full, câu trích có thật trong bài, có lý do + nhận xét; bài lạc đề 0 điểm kèm lý do; bài trống dừng ở khối 0. Trace đủ 9 khối, `grade-en-v2`, chấm song song (~2 s / câu), đối chiếu lệch 0.
+  - ✅ Gemini lỗi (giả lập model không tồn tại, chạy trong container) → `4_llm_grade` lỗi → `4b_keyword_fallback` → vẫn 10/10 (cần dữ liệu NLTK — Dockerfile 16/11).
+  - ✅ Frontend Docker :8088 chuyển `/api` sang backend (200).
+  - ✅ Phát hiện 1 (đã sửa 16/11): trong container **không có mô hình embedding RAG** (volume `edumentor_hf_cache` chưa có `paraphrase-multilingual-MiniLM-L12-v2`, code chỉ đọc bản đã tải — `local_files_only`) → RAG xếp đoạn theo thứ tự tạo. **Đã tải mô hình vào volume** (một lần, giữ qua các lần build): log "RAG: đã nạp sẵn mô hình embedding"; sinh đề và Model B xếp theo cosine (vd PY-K03 0,65 cho câu list / tuple). Máy mới / xóa volume → tải lại: `docker exec edumentor_backend python -c "from sentence_transformers import SentenceTransformer as S; S('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')"`.
+  - ✅ Phát hiện 2 (đã sửa 16/11): lần nộp đầu sau khởi động chậm (~8 s) vì nạp dữ liệu NLTK lần đầu → `review_rag_service.warm_up_nlp()` nạp sẵn trong luồng `warm_up_in_background` (lỗi chỉ ghi log). Đo lại trên Docker: lần nộp đầu sau khởi động **10,2 s → 2,1 s**. 1 test.
+  - Ghi chú: mỗi lần chạy script tạo 1 học viên thử `b12.<giờ>@example.com` trong DB dev (đã có 2: lượt 58, 59).
 - [ ] **B13 Báo cáo và tài liệu** — dự kiến 23–24/11 · thực tế __/__ 👤
   - Chương thực nghiệm (bảng mục 3), mục "Hướng phát triển: fine-tune" (khi nào cần, dữ liệu, QLoRA, cách chứng minh).
   - Cập nhật BA / SRS / `api-endpoints.md`: hiện còn ghi **20 câu trắc nghiệm** (FR-24/25/26, UC-09) — sai so với code.

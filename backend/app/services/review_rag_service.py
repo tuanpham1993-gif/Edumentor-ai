@@ -62,6 +62,19 @@ def _try_load():
         return None
 
 
+def warm_up_nlp() -> bool:
+    """Nạp sẵn dữ liệu NLTK của khối 1 tiền xử lý / chấm từ khóa (B12, 16/11): NLTK chỉ đọc dữ liệu từ đĩa ở lần gọi
+    ĐẦU TIÊN → lần nộp bài đầu sau khi khởi động chậm thêm ~8 s (đo trên Docker). Lỗi chỉ ghi log, không chặn."""
+    try:
+        from app.ai.review.text_pipeline import preprocess
+
+        preprocess("Warm up: tuples cannot be changed while loops repeat.")
+        return True
+    except Exception as err:  # noqa: BLE001 — thiếu dữ liệu NLTK: chấm từ khóa sẽ báo lỗi rõ khi dùng tới
+        logger.warning("Ôn tập: không nạp sẵn được dữ liệu NLTK (%s)", err)
+        return False
+
+
 def warm_up_in_background() -> None:
     """Nạp sẵn mô hình embedding ở LUỒNG NỀN lúc bật server (12/11).
 
@@ -73,6 +86,7 @@ def warm_up_in_background() -> None:
         return
 
     def _work() -> None:
+        warm_up_nlp()  # nhanh (vài giây) → làm trước mô hình embedding
         model = _load_model()
         if model is not None:
             model.encode("khởi động", normalize_embeddings=True)  # lần encode đầu cũng chậm → làm luôn
