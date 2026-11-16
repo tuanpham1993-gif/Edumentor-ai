@@ -13,6 +13,7 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     POST   /api/admin/review/questions/{id}/approve    — duyệt câu AI soạn + bật (QT6); không gửi mã → tự cấp mã gợi ý
     GET    /api/admin/review/questions/{id}/suggested-code — mã gợi ý điền sẵn khi duyệt (vd VAR-TN-15)
     POST   /api/admin/review/questions/{id}/reject     — từ chối câu AI soạn (ẩn, không xóa)
+    GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
 
 Lỗi: không thấy câu 404 · nội dung câu sai 422 (kèm danh sách lỗi) · mã trùng / sửa nhỏ sai / không bật được /
 không duyệt được 409 · kỹ năng / đoạn tri thức sai 400.
@@ -34,11 +35,13 @@ from app.schemas.review_admin import (
     QuestionPage,
     QuestionType,
     QuestionUpdate,
+    ReadinessOut,
     ReviewStatus,
     SuggestedCodeOut,
 )
 from app.services import review_admin_service as service
 from app.services import review_bank_service as bank
+from app.services import review_readiness_service as readiness_service
 
 router = APIRouter()
 
@@ -229,3 +232,19 @@ def reject_question(
         return service.reject(db, question_id, admin.user_id)
     except ERRORS as err:
         raise _http(err) from None
+
+
+@router.get(
+    "/readiness",
+    response_model=ReadinessOut,
+    summary="[Admin] Mức sẵn sàng ôn tập của khóa (đủ câu để ráp đề chưa)",
+)
+def read_readiness(
+    course_id: int | None = None,
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    try:
+        return readiness_service.readiness(db, course_id)
+    except readiness_service.CourseNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy khóa học.") from None

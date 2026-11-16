@@ -32,6 +32,22 @@ def course_skills(db: Session, course_id: int) -> list[tuple[int, str]]:
     return [(r.skill_id, r.skill) for r in rows]
 
 
+def course_skills_many(db: Session, course_ids: list[int]) -> dict[int, list[tuple[int, str]]]:
+    """Như course_skills nhưng cho nhiều khóa trong 1 truy vấn (7.4: ~200 khóa dùng chung kỹ năng)."""
+    out: dict[int, list[tuple[int, str]]] = {cid: [] for cid in course_ids}
+    if not course_ids:
+        return out
+    rows = db.execute(
+        select(CourseSkill.course_id, Skills.skill_id, Skills.skill)
+        .join(Skills, Skills.skill_id == CourseSkill.skill_id)
+        .where(CourseSkill.course_id.in_(course_ids), Skills.is_active.is_(True))
+        .order_by(CourseSkill.course_id, Skills.skill_id)
+    )
+    for r in rows:
+        out[r.course_id].append((r.skill_id, r.skill))
+    return out
+
+
 # ─────────────── Ngân hàng câu hỏi, đoạn tri thức ───────────────
 
 
@@ -68,13 +84,40 @@ def pending_count(db: Session, skill_id: int) -> int:
     )
 
 
+def pending_counts(db: Session, skill_ids: list[int]) -> dict[int, int]:
+    """{skill_id: số câu CHỜ DUYỆT} — một truy vấn cho cả khóa (7.4 mức sẵn sàng)."""
+    if not skill_ids:
+        return {}
+    rows = db.execute(
+        select(ReviewQuestion.skill_id, func.count())
+        .join(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.skill_id.in_(skill_ids), ReviewQuestionMeta.review_status == "pending")
+        .group_by(ReviewQuestion.skill_id)
+    )
+    return {skill_id: n for skill_id, n in rows}
+
+
+def courses_with_questions(db: Session) -> list[tuple[int, str]]:
+    """[(course_id, title)] các khóa có ít nhất một kỹ năng ĐANG BẬT đã có câu trong ngân hàng (mọi trạng thái)."""
+    has_question = select(ReviewQuestion.question_id).where(ReviewQuestion.skill_id == CourseSkill.skill_id).exists()
+    rows = db.execute(
+        select(Courses.course_id, Courses.title)
+        .join(CourseSkill, CourseSkill.course_id == Courses.course_id)
+        .join(Skills, Skills.skill_id == CourseSkill.skill_id)
+        .where(Skills.is_active.is_(True), has_question)
+        .distinct()
+        .order_by(Courses.course_id)
+    )
+    return [(r.course_id, r.title) for r in rows]
+
+
+def count_courses(db: Session) -> int:
+    return db.scalar(select(func.count()).select_from(Courses))
+
+
 def chunks_for_skill(db: Session, skill_id: int) -> list[KnowledgeChunk]:
     return list(
-        db.scalars(
-            select(KnowledgeChunk)
-            .where(KnowledgeChunk.skill_id == skill_id)
-            .order_by(KnowledgeChunk.chunk_id)
-        )
+        db.scalars(select(KnowledgeChunk).where(KnowledgeChunk.skill_id == skill_id).order_by(KnowledgeChunk.chunk_id))
     )
 
 

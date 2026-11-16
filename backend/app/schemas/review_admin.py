@@ -132,3 +132,39 @@ class EditResultOut(BaseModel):
 
 class DeleteResultOut(BaseModel):
     result: Literal["deleted", "deactivated"]
+
+
+# ─────────────── mức sẵn sàng (7.4) ───────────────
+
+
+class SkillReadinessOut(BaseModel):
+    skill_id: int
+    skill: str
+    by_level: dict[str, int]  # số câu ĐANG BẬT theo mức: recognize / understand / easy / advanced
+    active: int
+    mcq: int
+    essay: int
+    pending: int  # câu AI soạn chờ duyệt (chưa tính vào ôn được)
+    target: int  # REVIEW_BANK_TARGET_PER_SKILL
+    missing: list[str]  # mức chưa có câu nào (vd "tự luận nâng cao")
+
+
+class CourseReadinessOut(BaseModel):
+    course_id: int
+    title: str
+    ready: bool  # = plan_exam ráp được đề 15 câu (đúng điều kiện học viên bắt đầu ôn)
+    missing: list[str]  # lý do chưa ôn được
+    skill_count: int
+    active: int
+    mcq: int
+    essay: int
+    pending: int
+    target: int  # mục tiêu × số kỹ năng
+    skills: list[SkillReadinessOut]  # chỉ khi gọi ?course_id= (danh sách mọi khóa: rỗng cho nhẹ)
+
+
+class ReadinessOut(BaseModel):
+    target_per_skill: int
+    structure: dict[str, int]  # khung đề: {"recognize": 6, "understand": 6, "easy": 2, "advanced": 1}
+    courses: list[CourseReadinessOut]  # ôn được trước, rồi khóa nhiều câu hơn
+    courses_without_questions: int  # thẻ "Khóa khác · N khóa · chưa có câu hỏi"
