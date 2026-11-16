@@ -57,6 +57,17 @@ def bank_questions(db: Session, skill_id: int) -> list[ReviewQuestion]:
     )
 
 
+def pending_count(db: Session, skill_id: int) -> int:
+    """Số câu của kỹ năng đang CHỜ DUYỆT (AI soạn — QT6-A, 7.5c). Tính vào ngưỡng "ngân hàng đủ câu" để mỗi lượt
+    làm bài không bắt AI soạn thêm một loạt câu chờ duyệt trùng nhau."""
+    return db.scalar(
+        select(func.count())
+        .select_from(ReviewQuestion)
+        .join(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.skill_id == skill_id, ReviewQuestionMeta.review_status == "pending")
+    )
+
+
 def chunks_for_skill(db: Session, skill_id: int) -> list[KnowledgeChunk]:
     return list(
         db.scalars(
@@ -117,6 +128,28 @@ def list_attempts(db: Session, user_id: int, course_id: int) -> list[ReviewAttem
             select(ReviewAttempt)
             .where(ReviewAttempt.user_id == user_id, ReviewAttempt.course_id == course_id)
             .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
+        )
+    )
+
+
+def family_questions(db: Session, question_ids: list[int]) -> list[ReviewQuestion]:
+    """MỌI phiên bản cùng họ với các câu đã cho (7.5a, 16/11). Họ = review_question_meta.family_id; câu chưa có meta
+    (nạp trước 13/11) là họ của chính nó. Vd lượt trước làm câu v1, admin sửa thành v2 → trả cả v1 lẫn v2."""
+    if not question_ids:
+        return []
+    family = func.coalesce(ReviewQuestionMeta.family_id, ReviewQuestion.question_id)
+    families = (
+        select(family)
+        .select_from(ReviewQuestion)
+        .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.question_id.in_(question_ids))
+    )
+    return list(
+        db.scalars(
+            select(ReviewQuestion)
+            .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+            .where(family.in_(families))
+            .order_by(ReviewQuestion.question_id)
         )
     )
 

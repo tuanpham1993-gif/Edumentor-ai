@@ -44,6 +44,7 @@ class GenerationRequest:
     avoid_question_ids: set[int] = field(default_factory=set)
     system_prompt: str = ""
     prompt: str = ""
+    pending_count: int = 0  # câu AI đã soạn đang chờ duyệt (7.5c) — tính vào ngưỡng "đủ câu"
 
 
 @dataclass

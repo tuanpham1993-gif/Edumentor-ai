@@ -160,8 +160,9 @@ class RealAI(ReviewAI):
     # ─────────────── sinh câu hỏi ───────────────
 
     def generate_questions(self, request: GenerationRequest, rng: random.Random) -> list[dict]:
-        if len(request.candidates) >= settings.REVIEW_BANK_TARGET_PER_SKILL:
-            # Ngân hàng đủ → không gọi AI (bước 3: chỉ sinh khi kỹ năng còn thiếu câu)
+        if len(request.candidates) + request.pending_count >= settings.REVIEW_BANK_TARGET_PER_SKILL:
+            # Ngân hàng đủ → không gọi AI (bước 3: chỉ sinh khi kỹ năng còn thiếu câu). Câu đang chờ duyệt cũng
+            # tính (7.5c) — nếu không, mỗi lượt làm bài lại bắt AI soạn thêm câu chờ duyệt trùng nhau.
             return pick_from_bank(
                 request.candidates,
                 request.need,

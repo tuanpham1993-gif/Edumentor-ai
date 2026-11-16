@@ -1,146 +1,152 @@
-# Rater Guideline — EduMentor AI short-answer grading (gold set)
+# Hướng dẫn chấm bài tự luận: bộ bài chuẩn EduMentor AI
 
-> Version 2.0 · 15/11/2026 · owner: Tuấn (module 09) · raters: **Hòa, Tâm**
-> Change log is at the bottom. Read this whole page once before you start (about 10 minutes).
+> Phiên bản 2.1 · 16/11/2026 · phụ trách: Tuấn (module 09) · người chấm: **Hòa, Tâm, Khôi**
+> Nhật ký thay đổi ở cuối trang. Đọc hết một lượt trước khi chấm (khoảng 10 phút).
+> Bản rút gọn kèm ví dụ: [HUONG_DAN_CHAM_HOA.md](HUONG_DAN_CHAM_HOA.md).
 
-## 1. Why we need you
+## 1. Vì sao cần bạn chấm
 
-We are building an AI that grades short answers about basic Python, item by item, using a rubric.
-To show the teacher **how accurate** it is, we need a set of answers graded by people: the *gold set*.
-The AI's grades are compared with yours. Your grades are the reference, so please grade
-**carefully, independently and consistently**: it matters more than speed.
+Nhóm đang làm một AI chấm bài tự luận về Python cơ bản, **chấm từng ý theo barem**.
+Thầy yêu cầu **chứng minh AI chấm đúng bằng số liệu**, nên cần một bộ bài do người chấm: *bộ bài chuẩn* (gold set).
+Điểm AI sẽ được so với điểm bạn chấm. Điểm của bạn là **đáp án chuẩn**, nên hãy chấm
+**cẩn thận, độc lập và nhất quán**. Điều này quan trọng hơn tốc độ.
 
-- You grade **alone**. Do not look at the other rater's sheet and do not discuss specific answers after the
-  calibration round (section 6).
-- You will **never see the AI's grade**. Do not try to guess it, and do not run the answers through any AI tool.
-- Expected effort: about 120 answers ≈ 400 rubric items, roughly **3–4 hours**. You can split it into sessions.
+- Mỗi người chấm **phần bài của mình, một mình**. Không xem nhãn của người khác, và không bàn với nhau về từng bài cụ thể.
+- Bạn **không bao giờ thấy điểm AI chấm**. Đừng đoán, và đừng đưa bài làm vào bất kỳ công cụ AI nào.
+- Khối lượng: bộ bài có **60 bài, 204 ý**, chia cho cả nhóm. Mỗi người khoảng 15–20 bài, chừng **25–30 phút**.
 
-## 2. Your sheet
+## 2. Phiếu chấm
 
-You receive one CSV file (open it in Google Sheets or Excel). **One row = one rubric item of one answer.**
+Bạn nhận một file **`.xlsx`** (mở bằng Excel hoặc Google Sheets) gồm 2 trang:
 
-| Column | Meaning |
+| Trang | Nội dung |
 |---|---|
-| `row_id`, `sheet_id` | IDs (anonymous). Do not edit. |
-| `question_code`, `question` | The question the learner answered. |
-| `answer` | The learner's full answer. It is repeated on every row of the same answer. |
-| `item_no`, `item` | The rubric item you grade on this row. |
-| `max_points` | Points of the item (for information only, you do not compute points). |
-| **`label`** | **Fill in:** `full` or `none` (lower case, exactly these words). |
-| `note` | Optional: a short reason. **Please write one when you are unsure, or when you give `none` to an answer that mentions the idea but misses it.** |
+| `1. Hướng dẫn` | Tóm tắt cách chấm |
+| `2. Chấm bài` | Các bài cần chấm. Mỗi khối là **một bài làm**: dòng xanh là đề, dòng xám là bài làm, bên dưới là các ý barem |
 
-Rows of the same answer are next to each other; the order of answers is shuffled.
-Do not sort, delete or add rows. Leave the other columns as they are.
+Mỗi dòng ý barem có các cột:
 
-## 3. The three labels
+| Cột | Ý nghĩa |
+|---|---|
+| `Ý`, `Nội dung ý barem` | Ý cần chấm ở dòng này (barem ghi bằng tiếng Anh, giống đề) |
+| `Điểm` | Số điểm của ý (chỉ để tham khảo, bạn không cần tính điểm) |
+| **`Nhãn`** | **Bạn điền:** chọn `full` hoặc `none` trong danh sách thả xuống |
+| `Ghi chú` | Không bắt buộc: một câu ngắn giải thích. **Nên ghi khi phân vân, hoặc khi chấm `none` cho bài có nhắc tới ý nhưng chưa trúng** |
+| `row_id`, `sheet_id` | Mã ẩn danh. **Không sửa** |
 
-Grade **each item on its own**: does the answer, *anywhere*, express the idea of this item?
+⚠️ Bài làm dài có thể bị **che bớt trong ô**. Bấm vào ô hoặc kéo rộng dòng để đọc **hết** bài trước khi chấm.
 
-| Label | Use it when | Points (computed later) |
+Không sắp xếp, xóa hay thêm dòng. Các cột khác giữ nguyên.
+
+## 3. Hai mức chấm
+
+Chấm **từng ý riêng**: trong bài làm, ở *bất kỳ chỗ nào*, có nêu được ý này không?
+
+| Nhãn | Dùng khi | Điểm (máy tự tính) |
 |---|---|---|
-| **full** (met) | The idea of the item is stated **correctly, completely and on point**, and **clearly linked to the right subject**. | all points of the item |
-| **none** (not met) | Anything else: **missing, incomplete, vague, unclear subject, partly or fully wrong**, contradicted elsewhere, only the question copied back, only the subject named, or a **long answer that does not clearly state the idea**. | 0 |
+| **full** (Đạt) | Ý được nêu **đúng, đủ, trúng trọng tâm**, và **rõ đang nói về cái gì** | Trọn điểm của ý |
+| **none** (Không đạt) | Mọi trường hợp còn lại: **không có, thiếu, mơ hồ, không rõ chủ thể, sai một phần hoặc sai hoàn toàn**, tự mâu thuẫn, chỉ chép lại đề, chỉ nêu tên mà không nói gì, hoặc **dài dòng mà không nêu rõ ý** | 0 |
 
-There is **no half credit** (agreed 15/11 at Hòa's request). When you hesitate, choose **`none`** and write why in `note`.
+**Không có nửa điểm** (chốt 15/11 theo đề xuất của Hòa). Đừng ghi điểm lẻ như "1 điểm" vào Ghi chú.
+Phân vân thì chọn **`none`** và ghi lý do vào Ghi chú.
 
-## 4. General rules
+## 4. Quy tắc chung
 
-1. **Meaning, not keywords.** Different words with the same meaning are correct ("exits the loop" =
-   "stops the loop" = "jumps out of the loop"). Using the right keyword with a wrong meaning is **not** correct.
-2. **Ignore spelling, grammar and style.** "brake stop the loop" for `break` is still `full` if the idea is clear.
-   Answers in Vietnamese or mixed language are graded on meaning too (write `vi` in `note`).
-3. **Code counts.** `a, b = b, a`, `if n % 2 == 0:` or `print(a + b)` can satisfy an item by themselves.
-4. **Subject matters.** "It cannot be changed" is `full` only if it is clear that *it* is the tuple. If the
-   reader cannot tell which thing is meant → `none`.
-5. **Swapped or reversed ideas → `none`.** "A list cannot be changed, a tuple can" gets `none` for both items.
-6. **Contradiction → `none`.** If the answer says the idea and also its opposite, the item is `none`.
-7. **Copying the question earns nothing.** Words that are only repeated from the question do not count.
-8. **Any correct example is fine.** The examples in brackets in the rubric are suggestions, not the only answer.
-9. **Extra wrong statements do not remove points from other items**, unless they contradict that item (rule 6).
-10. **Bare keyword lists** ("mutable immutable [] ()") with no statement about anything → `none`.
-    A short but real sentence ("list mutable, tuple not") is fine. A long answer that does not clearly state the idea
-    is also `none`: do not hunt for keywords inside rambling.
-11. **Do not grade the overall quality.** Only the rubric items. A messy answer can still get `full` on every item.
+1. **Chấm theo nghĩa, không theo từ khóa.** Từ khác mà cùng nghĩa vẫn đúng ("exits the loop" =
+   "stops the loop" = "jumps out of the loop"). Dùng đúng từ khóa nhưng sai nghĩa thì **không** được tính.
+2. **Bỏ qua lỗi chính tả, ngữ pháp, văn phong.** "brake stop the loop" (ý nói `break`) vẫn là `full` nếu ý rõ ràng.
+   Bài viết bằng tiếng Việt hoặc lẫn hai thứ tiếng cũng chấm theo nghĩa (ghi `vi` vào Ghi chú).
+3. **Code cũng được tính.** `a, b = b, a`, `if n % 2 == 0:` hay `print(a + b)` tự nó đủ để đạt ý.
+4. **Phải rõ chủ thể.** Câu "It cannot be changed" chỉ `full` khi đọc là biết *it* là tuple. Nếu người đọc
+   không biết đang nói về cái nào thì `none`.
+5. **Nói ngược hoặc gán nhầm thì `none`.** "A list cannot be changed, a tuple can" là `none` cho cả hai ý.
+6. **Tự mâu thuẫn thì `none`.** Bài vừa nêu ý vừa nói điều ngược lại thì ý đó `none`.
+7. **Chép lại đề không được điểm.** Những chữ chỉ lặp lại từ đề thì không tính.
+8. **Ví dụ nào đúng cũng được.** Ví dụ trong ngoặc ở barem chỉ là gợi ý, không phải đáp án duy nhất.
+9. **Câu sai ở chỗ khác không làm mất điểm các ý khác**, trừ khi mâu thuẫn trực tiếp với ý đó (quy tắc 6).
+10. **Chỉ liệt kê từ khóa** ("mutable immutable [] ()") mà không nói gì về cái gì thì `none`.
+    Một câu ngắn nhưng có nghĩa ("list mutable, tuple not") vẫn được. Bài dài mà không nêu rõ ý
+    cũng là `none`: đừng lục tìm từ khóa trong một đoạn lan man.
+11. **Không chấm chất lượng chung của bài.** Chỉ chấm các ý barem. Bài trình bày lộn xộn vẫn có thể `full` mọi ý.
 
-## 4b. Question-specific conventions (agreed 15/11)
+## 4b. Quy ước riêng từng câu (chốt 15/11)
 
-| Question | Item | Convention |
+| Câu | Ý | Quy ước |
 |---|---|---|
-| CS-TL-03 | 3 — a sensible example | The question asks for an example of **each** error: two examples (one syntax, one logic) = `full`; one example only = `none`. |
-| COND-TL-06 | 3 — use or because… | Explaining that **only one condition needs to be true** is enough for `full`; the part in brackets is optional. |
-| VAR-TL-02 | 2 — no spaces / special characters, and not a keyword | Both rules = `full`; only one of the two = `none`. |
+| CS-TL-03 | 3: ví dụ hợp lý | Đề yêu cầu ví dụ **mỗi** loại lỗi: đủ hai ví dụ (một lỗi cú pháp, một lỗi logic) là `full`; chỉ một ví dụ là `none` |
+| COND-TL-06 | 3: dùng or vì… | Chỉ cần giải thích **"chỉ cần một điều kiện đúng"** là `full`; phần trong ngoặc ("and needs both…") không bắt buộc |
+| VAR-TL-02 | 2: không khoảng trắng / ký tự đặc biệt, không trùng từ khóa | Nêu đủ cả hai điều là `full`; chỉ một trong hai là `none` |
 
-Rule 9 also means **one mistake is penalised once**: e.g. `while pw == 'abc123'` makes the "while condition" item `none`,
-but "print after the loop" is still judged on whether the answer prints after the loop.
+Quy tắc 9 cũng có nghĩa **mỗi lỗi chỉ trừ một lần**. Ví dụ bài viết `while pw == 'abc123'` thì ý "điều kiện while" là `none`,
+còn ý "in thông báo sau vòng lặp" vẫn chấm theo việc bài có `print` sau vòng lặp hay không.
 
-## 5. Worked examples
+## 5. Ví dụ mẫu
 
-**Concept item** — ITER-TL-01, item 1: *"break exits / stops the loop completely"*
+**Ý khái niệm**: ITER-TL-01, ý 1: *"break exits / stops the loop completely"*
 
-| Answer (extract) | Label | Why |
+| Bài viết (trích) | Nhãn | Vì sao |
 |---|---|---|
-| "break ends the loop immediately." | full | Same idea, different words. |
-| "It stops the loop." (and the answer talks about continue in the same sentence) | none | Unclear whether *it* is break or continue. |
-| "break skips to the next iteration." | none | That describes continue (rule 5). |
-| "break is a keyword used in loops." | none | Only names the subject; no idea about it. |
+| "break ends the loop immediately." | full | Cùng ý, khác từ |
+| "It stops the loop." (cùng câu có nói cả continue) | none | Không rõ *it* là break hay continue |
+| "break skips to the next iteration." | none | Đó là continue, tức nói ngược (quy tắc 5) |
+| "break is a keyword used in loops." | none | Chỉ nêu tên, không nói gì về nó |
 
-**Contrast item with a subject** — PY-TL-02, item 2: *"A tuple cannot be changed after it is created"*
+**Ý so sánh, cần chủ thể**: PY-TL-02, ý 2: *"A tuple cannot be changed after it is created"*
 
-| Answer (extract) | Label | Why |
+| Bài viết (trích) | Nhãn | Vì sao |
 |---|---|---|
 | "Tuples are immutable." | full | |
-| "A list can be changed, but not the other one." | none | Subject not clear. |
-| "You cannot change it." with no subject anywhere | none | No subject. |
-| "A tuple can be changed with append()." | none | Wrong. |
+| "A list can be changed, but not the other one." | none | Không rõ chủ thể |
+| "You cannot change it." mà cả bài không nói "it" là gì | none | Không có chủ thể |
+| "A tuple can be changed with append()." | none | Sai |
 
-**Value / code item** — COND-TL-06, item 1: *"Condition age < 12"*
+**Ý giá trị, code**: COND-TL-06, ý 1: *"Condition age < 12"*
 
-| Answer (extract) | Label | Why |
+| Bài viết (trích) | Nhãn | Vì sao |
 |---|---|---|
-| `if age < 12 or age >= 60:` | full | Code satisfies the item. |
-| "people younger than 12" | full | Same condition in words. |
-| `age <= 12` | none | Boundary wrong. |
-| "children get a discount" | none | No threshold. |
+| `if age < 12 or age >= 60:` | full | Code đạt ý |
+| "people younger than 12" | full | Cùng điều kiện, viết bằng lời |
+| `age <= 12` | none | Sai mốc |
+| "children get a discount" | none | Không có mốc tuổi |
 
-**Explanation item** — CS-TL-05, item 2: *"the division is done before the addition (it prints 7.0)"*
+**Ý giải thích**: CS-TL-05, ý 2: *"the division is done before the addition (it prints 7.0)"*
 
-| Answer (extract) | Label | Why |
+| Bài viết (trích) | Nhãn | Vì sao |
 |---|---|---|
 | "/ has higher priority than +, so only b is divided." | full | |
-| "It prints 7.0 instead of 5." | none | Gives the symptom, not the cause. |
-| "Because of operator order." | none | Cause named but not explained. |
-| "Because a and b are integers." | none | Wrong cause. |
+| "It prints 7.0 instead of 5." | none | Chỉ nêu hiện tượng, không nêu nguyên nhân |
+| "Because of operator order." | none | Có nhắc nguyên nhân nhưng không giải thích |
+| "Because a and b are integers." | none | Sai nguyên nhân |
 
-**Example item** — CS-TL-03, item 3: *"a sensible example (a missing colon; a wrong condition...)"*
+**Ý ví dụ**: CS-TL-03, ý 3: *"a sensible example (a missing colon; a wrong condition...)"*
 
-| Answer (extract) | Label | Why |
+| Bài viết (trích) | Nhãn | Vì sao |
 |---|---|---|
-| "e.g. writing `prnt('hi')`" | full | Any correct example is fine (rule 8). |
-| "for example a mistake in the code" | none | Not an example, just a restatement. |
+| Ví dụ lỗi cú pháp `prnt('hi')` **và** ví dụ lỗi logic "dùng `-` thay cho `+`" | full | Ví dụ nào đúng cũng được (quy tắc 8), đủ hai loại (mục 4b) |
+| Chỉ có ví dụ "quên dấu hai chấm sau if" | none | Thiếu ví dụ lỗi logic (mục 4b) |
+| "for example a mistake in the code" | none | Không phải ví dụ, chỉ là nói lại |
 
-## 6. Calibration round (before the main grading)
+## 6. Cách tổ chức chấm
 
-1. Tuấn sends both of you the **same 20 answers** (`rater_<name>_calibration.csv`).
-2. You grade them alone, then the three of you meet (≈ 30 minutes) and look only at the rows where your labels differ.
-3. If a disagreement comes from an unclear rule, Tuấn updates this guideline (new version below).
-   Calibration answers are **not** part of the gold set.
-4. After that you grade the main sheet **independently**. No more discussion of specific answers.
+1. **Chấm thử:** Hòa chấm trước một phần bài. Tuấn so lại, chỗ nào quy tắc chưa rõ thì cập nhật hướng dẫn này (lên phiên bản mới).
+2. **Chấm chung (thứ 5):** 60 bài chia cho cả nhóm, mỗi người một phiếu riêng, chấm **độc lập** theo hướng dẫn này.
+3. Tuấn gộp các phiếu thành bộ bài chuẩn. Chỗ nào nhãn sai rõ so với hướng dẫn (ví dụ thiếu nhãn, trái quy ước mục 4b) thì Tuấn hỏi lại người chấm. Tuấn **không tự sửa nhãn** của người chấm.
 
-Remaining disagreements in the main sheet are decided by Tuấn or the teacher; your original labels are kept, and
-the agreement between you two is reported (Cohen's kappa).
+Tuấn không chấm, vì Tuấn là người làm AI và biết trước loại của từng bài bổ sung.
 
-## 7. Before you send the sheet back
+## 7. Trước khi gửi lại
 
-- [ ] Every row has a `label` (`full` / `none`).
-- [ ] `note` is filled for unsure rows.
-- [ ] Rows were not sorted, deleted or added.
-- [ ] Download as **CSV** and send the file back to Tuấn privately (not in the group chat). The answers are learners'
-      data: do not share them.
+- [ ] Mọi ý trong phần của bạn đều có Nhãn (`full` hoặc `none`), không bỏ trống ý nào.
+- [ ] Không ghi điểm lẻ ("1 điểm") vào Ghi chú. Chỉ có Đạt hoặc Không đạt.
+- [ ] Ý nào phân vân đã có Ghi chú.
+- [ ] Không sắp xếp, xóa hay thêm dòng.
+- [ ] Lưu đúng **`.xlsx`** và **gửi riêng cho Tuấn** (không gửi vào nhóm chung). Bài làm là dữ liệu của người học, không chia sẻ.
 
-## Change log
+## Nhật ký thay đổi
 
-| Version | Date | Change |
+| Phiên bản | Ngày | Thay đổi |
 |---|---|---|
-| 1.0 | 14/11/2026 | First version. |
-| 2.0 | 15/11/2026 | **Two labels only** (`full` / `none`, no half credit) at Hòa's request; whole system changed too (prompt grade-en-v2). |
-| 1.1 | 15/11/2026 | Added section 4b (three question-specific conventions, one mistake penalised once). Vietnamese short version for Hòa: `HUONG_DAN_CHAM_HOA.md`. |
+| 1.0 | 14/11/2026 | Bản đầu tiên (tiếng Anh). |
+| 1.1 | 15/11/2026 | Thêm mục 4b (ba quy ước riêng từng câu, mỗi lỗi chỉ trừ một lần). Bản rút gọn tiếng Việt cho Hòa: `HUONG_DAN_CHAM_HOA.md`. |
+| 2.0 | 15/11/2026 | **Chỉ còn hai nhãn** (`full` / `none`, không có nửa điểm) theo đề xuất của Hòa; cả hệ thống đổi theo (prompt grade-en-v2). |
+| 2.1 | 16/11/2026 | **Chuyển sang tiếng Việt.** Cập nhật quy trình cho đúng thực tế: phiếu `.xlsx`, 60 bài chia cả nhóm, chấm thử rồi chấm chung (thay cho "2 người chấm 120 bài + vòng hiệu chỉnh"). Ví dụ CS-TL-03 sửa theo quy ước mục 4b. **Quy tắc chấm không đổi.** |

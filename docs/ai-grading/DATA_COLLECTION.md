@@ -1,7 +1,7 @@
 # B4: Thu bài và chấm bộ bài chuẩn (gold set)
 
 > Module 09 · Tuấn · 14/11/2026 · thuộc kế hoạch [Review-AI-Grading.md](../Review-AI-Grading.md) mục B4
-> Hướng dẫn cho người chấm (tiếng Anh): [RATER_GUIDELINE.md](RATER_GUIDELINE.md) · Script: `backend/scripts/gold_sheets.py`
+> Hướng dẫn cho người chấm (tiếng Việt từ 16/11): [RATER_GUIDELINE.md](RATER_GUIDELINE.md) · Script: `backend/scripts/gold_sheets.py`
 
 ## 1. Chọn câu và chia dev / test (đã chốt, file `backend/data/ai-grading/split.json`)
 

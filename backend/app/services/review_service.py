@@ -43,6 +43,7 @@ from app.services import (
     course_gateway,
     exam_builder,
     notification_service,
+    review_bank_service,
     review_grader,
     review_rag_service,
     user_skill_service,
@@ -192,23 +193,23 @@ def _generate_with_fallback(
     return questions, {"retries": len(errors), "fallback": True, "errors": errors}
 
 
-def _save_ai_question(db: Session, skill_id: int, q: dict) -> int:
-    """Câu AI sinh MỚI (giai đoạn 2) → lưu vào ngân hàng, source='ai' (ngân hàng bước 3)."""
-    row = ReviewQuestion(
-        skill_id=skill_id,
-        chunk_id=q.get("chunk_id"),
-        type=q["type"],
-        level=q["level"],
-        content=q["content"],
-        options=q.get("options"),
-        correct_index=q.get("correct_index"),
-        rubric=q.get("rubric"),
-        explanation=q.get("explanation"),
-        source="ai",
-    )
-    db.add(row)
-    db.flush()
-    return row.question_id
+def _save_pending(db: Session, skill_id: int, questions: list[dict]) -> int:
+    """QT6-A (7.5c, 16/11): câu AI soạn MỚI chỉ vào ngân hàng ở trạng thái CHỜ DUYỆT (tắt) — admin duyệt mới được
+    ra đề. Đi qua review_bank_service.create_question (cùng kiểm tra + phiên bản như admin thêm câu).
+    Câu nào lỗi kiểm tra → bỏ qua, ghi log; KHÔNG làm hỏng lượt làm bài của học viên. Trả số câu đã lưu."""
+    saved = 0
+    for q in questions:
+        data = {k: q.get(k) for k in ("chunk_id", "type", "level", "content", "options", "correct_index", "rubric",
+                                      "explanation")}  # fmt: skip
+        try:
+            with db.begin_nested():  # lỗi một câu chỉ hủy câu đó, không hủy cả lượt làm bài
+                review_bank_service.create_question(
+                    db, {**data, "skill_id": skill_id}, source="ai", review_status="pending"
+                )
+            saved += 1
+        except review_bank_service.BankError as err:
+            logger.warning("Ôn tập: bỏ câu AI soạn không hợp lệ (kỹ năng %s): %s", skill_id, err)
+    return saved
 
 
 def start_attempt(
@@ -237,9 +238,12 @@ def start_attempt(
     names = dict(skills)
     skill_ids = list(names)
     previous = repo.last_submitted_questions(db, user.user_id, course_id)
+    # 7.5a (16/11): tránh MỌI phiên bản cùng họ với câu lượt trước — admin sửa câu v1 thành v2 thì lượt sau
+    # cũng không ra v2 (chỉ khác vài chữ). fresh trừ phiên bản ĐANG BẬT của họ (v1 đã tắt, v2 đang bật).
+    family = repo.family_questions(db, [q.question_id for q in previous])
     available = repo.bank_counts(db, skill_ids)
     fresh = dict(available)
-    for q in previous:
+    for q in family:
         if q.is_active and (q.skill_id, q.level) in fresh:
             fresh[(q.skill_id, q.level)] -= 1
     try:
@@ -253,7 +257,7 @@ def start_attempt(
     except exam_builder.NotEnoughQuestionsError:
         raise ReviewBlockedError("no_question_bank") from None
 
-    avoid = {q.question_id for q in previous}
+    avoid = {q.question_id for q in family}
     trace = {
         "ai_mode": settings.AI_MODE,
         "ai": ai.name,
@@ -279,8 +283,23 @@ def start_attempt(
                 avoid_question_ids=avoid,
                 system_prompt=GENERATE_SYSTEM_PROMPT,
                 prompt=prompt,
+                pending_count=repo.pending_count(db, skill_id),
             )
             questions, info = _generate_with_fallback(ai, request, rng)
+            new = [q for q in questions if not q.get("question_id")]
+            if new:
+                # QT6-A: câu AI soạn mới → Chờ duyệt; đề của kỹ năng này bốc câu ĐÃ DUYỆT trong ngân hàng
+                info["ai_new_pending"] = _save_pending(db, skill_id, new)
+                questions = pick_from_bank(
+                    request.candidates,
+                    need,
+                    rng,
+                    prefer_chunk_ids={c.chunk_id for c in chunks},
+                    avoid_question_ids=avoid,
+                )
+                if generated_errors(questions, need):
+                    raise exam_builder.NotEnoughQuestionsError(f"Ngân hàng kỹ năng {skill_id} không đủ câu")
+                info["fallback"] = True
             picked += [{**q, "skill_id": skill_id} for q in questions]
             trace["skills"].append(
                 {
@@ -297,11 +316,10 @@ def start_attempt(
 
     attempt = ReviewAttempt(user_id=user.user_id, course_id=course_id, trace=trace)
     for item in exam_builder.order_exam(picked, rng):
-        question_id = item.get("question_id") or _save_ai_question(db, item["skill_id"], item)
         attempt.answers.append(
             ReviewAnswer(
                 position=item["position"],
-                question_id=question_id,
+                question_id=item["question_id"],  # 7.5c: mọi câu trong đề đều là câu đã duyệt có sẵn trong ngân hàng
                 option_order=item.get("option_order"),
                 max_points=item["max_points"],
             )
