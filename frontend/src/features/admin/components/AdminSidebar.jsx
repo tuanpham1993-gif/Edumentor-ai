@@ -10,6 +10,7 @@ const ADMIN_NAV_LINKS = [
   { to: '/admin/historical', label: 'Dữ liệu lịch sử' },
   { to: '/admin/feedback', label: 'Phản hồi' },
   { to: '/admin/user-paths', label: 'Lộ trình người dùng' },
+  { to: '/admin/questions', label: 'Câu hỏi ôn tập' }, // Tuấn · module 09 (16/11, Tuấn duyệt thêm)
 ];
 
 export default function AdminSidebar() {
