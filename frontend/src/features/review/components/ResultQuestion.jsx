@@ -1,8 +1,29 @@
 // Một câu trong trang Kết quả (module 09 · Tuấn · GĐ4) — màn demo ReviewDetail(-Explanation).
 //   Trắc nghiệm: 4 lựa chọn, đánh dấu "Bạn chọn" / "Đáp án đúng", giải thích ẩn / hiện.
-//   Tự luận: bài làm, bảng chấm từng ý (Đạt / Một phần / Chưa có + điểm + câu trích làm bằng chứng), đáp án mẫu.
-import { LEVEL_TEXT, OPTION_LETTERS, RUBRIC_RESULT, formatScore } from '../reviewFormat.js';
+//   Tự luận: bài làm, bảng chấm từng ý (Đạt / Chưa đạt + điểm + câu trích làm bằng chứng), đáp án mẫu.
+//   B11 (16/11): câu trích TÔ SÁNG ngay trong bài làm (đánh số theo ý), lý do từng ý, nhận xét chung,
+//   nhãn "Chấm bởi AI" / "Chấm tự động theo từ khóa", "Đang xem lại" (điểm tính tạm).
+import { GRADED_BY, LEVEL_TEXT, OPTION_LETTERS, RUBRIC_RESULT, formatScore, highlightSegments } from '../reviewFormat.js';
 import styles from '../styles/ResultQuestion.module.css';
+
+function AnswerWithEvidence({ text, rubric }) {
+  if (!text) return <blockquote className={styles.answer}>Bạn đã bỏ trống câu này.</blockquote>;
+  const segments = highlightSegments(text, rubric.map((r) => (r.result === 'full' ? r.evidence : null)));
+  return (
+    <blockquote className={styles.answer}>
+      {segments.map((s, i) =>
+        s.item ? (
+          <mark key={i} className={styles.mark} title={`Bằng chứng cho ý ${s.item}`}>
+            {s.text}
+            <sup className={styles.markNo}>{s.item}</sup>
+          </mark>
+        ) : (
+          <span key={i}>{s.text}</span>
+        ),
+      )}
+    </blockquote>
+  );
+}
 
 function verdict(q) {
   if (q.type === 'mcq') {
@@ -16,14 +37,24 @@ function verdict(q) {
 
 export default function ResultQuestion({ question: q, showExplanation, onToggle }) {
   const v = verdict(q);
+  const gradedBy = q.graded_by ? GRADED_BY[q.graded_by] : null;
   return (
     <article className={`card ${styles.card}`} id={`cau-${q.position}`}>
       <header className={styles.head}>
         <span className="muted small">
           Câu {q.position} · {q.skill} · {LEVEL_TEXT[q.level]}
         </span>
-        <span className={`chip ${v.chip}`}>{v.text}</span>
+        <span className={styles.badges}>
+          {gradedBy && <span className={`chip ${gradedBy.chip}`}>{gradedBy.text}</span>}
+          {q.needs_review && <span className="chip chip-accent">Đang xem lại</span>}
+          <span className={`chip ${v.chip}`}>{v.text}</span>
+        </span>
       </header>
+      {q.needs_review && (
+        <p className={styles.reviewNote} role="note">
+          Điểm câu này đang được xem lại. Kết quả hiện tại là điểm tạm tính.
+        </p>
+      )}
       <h3 className={styles.content}>{q.content}</h3>
 
       {q.type === 'mcq' ? (
@@ -47,8 +78,17 @@ export default function ResultQuestion({ question: q, showExplanation, onToggle 
         </ul>
       ) : (
         <div className={styles.essay}>
-          <p className="muted small">Bài làm của bạn</p>
-          <blockquote className={styles.answer}>{q.text_answer || 'Bạn đã bỏ trống câu này.'}</blockquote>
+          <p className="muted small">
+            Bài làm của bạn
+            {q.rubric.some((r) => r.result === 'full' && r.evidence) && ' — phần tô màu là căn cứ chấm (số = ý)'}
+          </p>
+          <AnswerWithEvidence text={q.text_answer} rubric={q.rubric} />
+          {q.feedback && (
+            <div className={styles.feedback}>
+              <p className={styles.feedbackTitle}>Nhận xét</p>
+              <p className={styles.feedbackText}>{q.feedback}</p>
+            </div>
+          )}
           <div className="table-wrap">
             <table className={`table ${styles.rubric}`}>
               <thead>
@@ -56,13 +96,15 @@ export default function ResultQuestion({ question: q, showExplanation, onToggle 
                   <th>Ý cần có</th>
                   <th>Kết quả</th>
                   <th>Điểm</th>
-                  <th>Bằng chứng trong bài làm</th>
+                  <th>Lý do · bằng chứng</th>
                 </tr>
               </thead>
               <tbody>
-                {q.rubric.map((item) => (
+                {q.rubric.map((item, i) => (
                   <tr key={item.text}>
-                    <td>{item.text}</td>
+                    <td>
+                      <span className={styles.itemNo}>{i + 1}.</span> {item.text}
+                    </td>
                     <td>
                       <span className={`chip ${RUBRIC_RESULT[item.result].chip}`}>
                         {RUBRIC_RESULT[item.result].text}
@@ -71,7 +113,13 @@ export default function ResultQuestion({ question: q, showExplanation, onToggle 
                     <td className={styles.points}>
                       {formatScore(item.points)}/{formatScore(item.max_points)}
                     </td>
-                    <td className={styles.evidence}>{item.evidence ? `“${item.evidence}”` : '—'}</td>
+                    <td>
+                      <div className={styles.why}>
+                        {item.reason && <span className={styles.reason}>{item.reason}</span>}
+                        {item.evidence && <span className={styles.evidence}>“{item.evidence}”</span>}
+                        {!item.reason && !item.evidence && '—'}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

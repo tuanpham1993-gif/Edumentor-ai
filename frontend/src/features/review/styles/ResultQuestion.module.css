@@ -45,6 +45,35 @@
 .points { white-space: nowrap; font-weight: 600; }
 .evidence { color: var(--text-soft); font-style: italic; }
 
+/* B11 (16/11): nhãn cách chấm, "Đang xem lại", tô sáng câu trích, nhận xét, lý do từng ý */
+.badges { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.reviewNote {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft-bg);
+  color: var(--accent-soft-fg);
+  font-size: 13px;
+}
+.mark {
+  padding: 1px 2px;
+  border-radius: var(--r-sm);
+  background: var(--ok-bg);
+  color: inherit;
+  box-shadow: inset 0 -2px 0 var(--ok-border);
+}
+.markNo { margin-left: 2px; font-size: 10px; font-weight: 700; color: var(--ok-fg); }
+.feedback {
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--accent-tint);
+}
+.feedbackTitle { margin: 0 0 4px; font-size: 12.5px; font-weight: 700; color: var(--text-muted); }
+.feedbackText { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-soft); }
+.itemNo { font-weight: 700; color: var(--text-muted); }
+.why { display: flex; flex-direction: column; gap: 4px; }
+.reason { color: var(--text-soft); }
+
 .explain { border-top: 1px solid var(--line); padding-top: 10px; }
 .toggle {
   padding: 0;

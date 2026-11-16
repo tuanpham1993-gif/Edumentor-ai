@@ -602,6 +602,11 @@ def result_view(db: Session, attempt_id: int) -> dict:
             "questions": [],
         }
     names = repo.skill_names(db, [a.question.skill_id for a in attempt.answers])
+    # B11: thông tin chấm tự luận lưu trong trace (B6–B8). Lượt chấm trước B6 không có "essays" → giá trị mặc định.
+    grading = (attempt.trace or {}).get("grading") or {}
+    fallback = {f["position"] for f in grading.get("keyword_fallback", [])}
+    essays = {e["position"]: e for e in grading.get("essays", [])}
+    keyword_only = grading.get("ai") in ("mock", "unavailable")  # AI_MODE=mock thực chất là chấm từ khóa
     questions = []
     mcq_score = essay_score = 0.0
     for a in attempt.answers:
@@ -623,6 +628,9 @@ def result_view(db: Session, attempt_id: int) -> dict:
             "is_correct": None,
             "text_answer": None,
             "rubric": None,
+            "graded_by": None,  # B11 — chỉ câu tự luận có bài làm mới có
+            "needs_review": False,
+            "feedback": None,
         }
         if q.type == "mcq":
             mcq_score += points
@@ -644,10 +652,18 @@ def result_view(db: Session, attempt_id: int) -> dict:
                         "result": res.get("result", "none"),
                         "points": float(res.get("points", 0.0)),
                         "evidence": res.get("evidence"),
+                        "reason": res.get("reason"),
                     }
                     for r, res in zip(q.rubric, results, strict=True)
                 ],
             )
+            if a.text_answer and a.text_answer.strip() and grading:
+                essay = essays.get(a.position, {})
+                item.update(
+                    graded_by="keyword" if keyword_only or a.position in fallback else "ai",
+                    needs_review=bool(essay.get("needs_review")),
+                    feedback=essay.get("feedback"),
+                )
         questions.append(item)
     return {
         "attempt_id": attempt.attempt_id,

@@ -39,6 +39,7 @@ Ghi chú: demo3 dùng OpenAI; dự án giữ **Gemini** (D3). Học **cách làm
 | QT10 | **Gemini là bộ chấm chính**; chấm từ khóa (1) chấm thay khi Gemini lỗi, (2) đối chiếu — lệch **> 3** điểm (thang 10 của câu) thì gắn cờ |
 | QT12 | Chấm từ khóa tách vế ở `. ! ? ;` và "but / whereas / however", không tách ở "and" |
 | QT13 | Bài tự luận phải viết tiếng Anh (nhắc tại ô trả lời, xác nhận khi nộp) |
+| 16/11 | GĐ7 **7.5c + 7.5a xong**; **Dockerfile tải dữ liệu NLTK** (build lại image, chạy thử trong container); **B11 code xong** (lý do, nhận xét, tô sáng câu trích, nhãn cách chấm, đang xem lại); 818 test xanh | Tuấn xem giao diện; khởi động lại container backend; B12 |
 | 15/11 | **B9 phần code xong**: cờ REVIEW_GRADING_RAG (Model B), truy xuất đề + barem trong đúng kỹ năng, dùng chung với eval; 4 cách chấm Gemini trong eval_grading; 918 passed | Chạy A / B khi có điểm người chấm (thứ 5) |
 | 15/11 | **B8 xong**: đủ 9 khối pipeline — Guard chỉ gắn cờ, Verifier kiểm câu trích, Đối chiếu chấm lại / needs_review; 907 passed | Đo tỉ lệ chấm lại ở B10; chờ Hòa chấm 10 bài |
 | 15/11 | **Bỏ mức ½ điểm (partial) trên toàn hệ thống** theo đề xuất của Hòa: mỗi ý Đạt (trọn điểm) / Không đạt (0). Đổi: `validator.GRADE_RESULTS`, schema Gemini + Pydantic (`Literal["full","none"]`), prompt **grade-en-v2 / grade-vi-v2**, chấm từ khóa (partial bên trong → none khi ra ngoài), `gold_sheets` / `eval_grading`, RATER_GUIDELINE 2.0, HUONG_DAN_CHAM_HOA, phiếu `rater_hoa_2muc.xlsx`. Bài chấm trước 15/11 trong lịch sử vẫn hiển thị được partial. 896 passed | Gửi Hòa phiếu 2 mức |
@@ -116,7 +117,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - Thêm `nltk` vào `backend/requirements.txt`; tải dữ liệu `punkt_tab`, `stopwords`, `wordnet`, `averaged_perceptron_tagger_eng` **một lần** (máy: lệnh tay; Docker: một dòng `RUN` trong Dockerfile). Không tải lúc chạy server, không tắt kiểm tra SSL như demo.
   - `backend/app/ai/review/text_pipeline.py`: `normalize`, `tokenize`, `remove_stopwords` (giữ từ phủ định), `lemmatize` (theo POS, không cố định `pos='v'`), `preprocess`.
   - ✅ `tests/test_text_pipeline.py`: "Lists CAN be changed!" → có `list`, `change`; "tuples cannot be modified" còn từ phủ định; chuỗi rỗng → `[]`; loops / looping / looped → `loop`. Toàn bộ test xanh.
-- [ ] **B2 Ngân hàng câu hỏi tiếng Anh** — dự kiến 14–15/11 · thực tế 14/11 (🤖 dịch nháp xong) · 👤 **còn: Tuấn duyệt bản dịch + nạp DB thật**
+- [x] **B2 Ngân hàng câu hỏi tiếng Anh** — dự kiến 14–15/11 · thực tế 14–15/11 (🤖 dịch + review 15/11 · 👤 Tuấn nạp DB) · ✅ kiểm DB 16/11: 100 câu tiếng Anh đang bật, 0 câu tiếng Việt còn bật, 15 đoạn tri thức đều có vector
   - 🤖 Review bản dịch 14/11: 70 câu trắc nghiệm, đáp án đúng (tính lại các câu đọc code); 30 câu tự luận. Sửa: tên biến một chữ `a`, `i` bị khối 1 bỏ như stopword ("a = 7" → "= 7", nên bài sai "b = 7" vẫn được ½ ý ở VAR-TL-06). Nay giữ khi đứng cạnh ký hiệu hoặc trước is/becomes/equals. Dấu phẩy trong code ("a, b = b, a") không tách vế. Thêm "again" vào từ giữ lại. Bỏ 3 từ khóa vô hiệu hoặc quá chung (`other`, `_2nums`, `example` ở PY-TL-04). Thêm 8 test.
   - ✅ 14/11 🤖: `data/review/course_312_en.json` — 100 câu (70 TN + 30 TL) + 15 đoạn, mã QT9 (`PY-TN-01`, `PY-K01`). Kiểm tự động: validator OK; loại / mức / đáp án / đoạn / điểm từng ý khớp bản tiếng Việt; **đáp án mẫu 30/30 câu tự luận đạt 10/10** với bộ chấm tiếng Anh; chép đề = 0.
   - ✅ `seed_review.py --retire <file cũ>`: nạp bản mới + tắt câu tiếng Việt (giữ lịch sử) + xóa đoạn tiếng Việt, **cùng một giao dịch**. `tests/test_seed_review_en.py` 4 test.
@@ -135,7 +136,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - **Quy ước viết từ khóa tiếng Anh cho B2**: viết dạng tự nhiên (bộ chấm tự lemmatize cả hai phía); từ khóa nhiều từ phải là cụm **liền nhau sau khi bỏ stopwords** (vd "number of loops" → number loop); ý phủ định viết kèm "not" ("not change"); ký hiệu viết cả hai dạng "[ ]" và "[]".
   - Dựa trên khối 1; giữ luật QT12 (tách vế, chặn bài chỉ liệt kê từ khóa, bỏ câu chép đề).
   - ✅ Test: diễn đạt khác dạng từ vẫn khớp; phủ định ("cannot change") không bị tính là "change"; bài chỉ liệt kê từ khóa không được đủ điểm.
-- [ ] **B4 Bộ bài chuẩn (gold set)** — dự kiến 15–17/11 (song song) · thực tế __/__ 👤 soạn + **Hòa, Tâm chấm**
+- [~] **B4 Bộ bài chuẩn (gold set)** — dự kiến 15–17/11 (song song) · 👤 **còn: chấm 30 bài còn lại (chấm chung thứ 5, 20/11) + xem lại các nhãn sót ở 30 bài đã chấm (review 16/11)** · đã có: 60 bài (20 thật + 40 bổ sung), phiếu 2 mức, Hòa chấm 30/60
   - 15/11: Form đóng với **4 người thật (20 bài, `private/answers.csv`)** — dưới chỉ tiêu ≥ 40. Bù bằng `private/team_answers.csv` (40 dòng mẫu: 10 câu × 4 loại — đúng diễn đạt khác / một phần / sai đảo nghĩa / ngắn sai chính tả) do Tuấn + Khôi viết; cột `kind` không đưa vào phiếu chấm.
   - 🤖 14/11 xong phần chuẩn bị: `docs/ai-grading/RATER_GUIDELINE.md` (bản 1.0); `docs/ai-grading/DATA_COLLECTION.md` (nội dung 2 Form, loại bài nhóm cần viết, lịch, quyền riêng tư); `backend/data/ai-grading/split.json` (10 câu: 5 dev + 5 test, chia theo câu hỏi); `backend/scripts/gold_sheets.py` (`collect`, `sheets`, `merge` + kappa / QWK giữa hai người chấm; chặn bài AI ở test); `.gitignore` cho `backend/data/ai-grading/private/`; 9 test. 👤 Còn: tạo Form, thu bài, vòng hiệu chỉnh, Hòa và Tâm chấm.
   - `docs/ai-grading/RATER_GUIDELINE.md` (tiếng Anh, ví dụ full / partial / none cho từng loại ý).
@@ -179,8 +180,10 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
 - [ ] **B10 Chạy test** — dự kiến 20/11 · thực tế __/__ 👤
   - Chạy **một lần** cho từ khóa, A, B; bootstrap; độ trễ.
   - ✅ Bảng kết quả + nhật ký chạy.
-- [ ] **B11 Giao diện kết quả** — dự kiến 21/11 · thực tế __/__ 👤
-  - `ReviewResultPage` / chi tiết lịch sử: từng ý có kết quả, điểm, lý do, **câu trích tô sáng trong bài làm**; nhận xét chung; nhãn "Chấm bởi AI"; bài cần xem xét ghi "đang xem lại".
+- [~] **B11 Giao diện kết quả** — dự kiến 21/11 · code xong 16/11 🤖 · 👤 còn: xem trên trình duyệt với một lượt chấm bằng Gemini
+  - ✅ Backend: API kết quả (`result_view`, `/me/review-history/{id}`) trả thêm `rubric[].reason`, và với câu tự luận có bài làm: `graded_by` (`ai` | `keyword` — `AI_MODE=mock` hoặc Gemini lỗi đều là `keyword`, không ghi "Chấm bởi AI" sai sự thật), `needs_review`, `feedback`. Cờ nội bộ (chèn lệnh, quá dài…) KHÔNG trả cho người học. Lượt chấm trước B6 vẫn xem được (giá trị mặc định). 7 test; kiểm ngược: ghi mock là "ai" → test trượt.
+  - ✅ Frontend `ResultQuestion`: câu trích **tô sáng ngay trong bài làm**, đánh số theo ý (`highlightSegments` — hàm thuần trong `reviewFormat.js`, kiểm bằng Node: ghép lại luôn ra đúng bài làm gốc); khung **Nhận xét**; cột **Lý do · bằng chứng**; nhãn **Chấm bởi AI / Chấm tự động theo từ khóa**; **Đang xem lại** + ghi chú điểm tạm tính; "Chưa có" → "Chưa đạt" (2 mức). `vite build` đạt.
+  - ✅ Kèm theo (chuẩn bị B12): `backend/Dockerfile` tải dữ liệu NLTK (punkt_tab, stopwords, wordnet, averaged_perceptron_tagger_eng) vào image — đã build lại và chạy thử khối 1 + chấm từ khóa trong container. 818 test xanh.
 - [ ] **B12 Kiểm thử toàn luồng** — dự kiến 22/11 · thực tế __/__ 👤
   - Chạy trên Docker: nộp bài → có điểm ≤ 20 giây hoặc "Đang chấm"; Gemini lỗi → điểm từ khóa + cờ.
 - [ ] **B13 Báo cáo và tài liệu** — dự kiến 23–24/11 · thực tế __/__ 👤

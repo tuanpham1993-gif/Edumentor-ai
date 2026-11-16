@@ -448,7 +448,7 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
   - ✅ Test: `tests/test_review_bank.py` **18 test** + sửa 2 test seed. Toàn bộ **637 passed**.
   - ✅ **Nạp vào DB thật (13/11)**: chạy seed thường → báo 6 câu khác file (thay đổi bước 1 / QT12) → `--apply-changes`: 4 câu chưa ai làm sửa tại chỗ, **2 câu đã có bài làm → phiên bản 2** (`312-PY-TL-02` barem 4 → 5 ý, `312-CS-TL-03`). Kiểm: bài cũ #27 vẫn mở được với **barem 4 ý** như lúc làm (không lỗi), mỗi kỹ năng vẫn 20 câu đang bật.
   - Chưa làm (bước sau): đề tránh câu lượt trước theo `family_id` (7.5) · nhóm loại trừ trong `exam_builder` (QT7) · bỏ AI sinh câu thẳng vào đề (QT6-A, `review_service._save_ai_question`).
-- [ ] **7.3 API quản trị câu hỏi** — code xong 13/11 🤖 (nhánh `tuan/future-auth`, chưa commit) · 👤 **còn: Tuấn dò code** theo thứ tự schema → repository → service → router → test, thử trên Swagger mục "Admin Review (Quản trị ôn tập)"
+- [~] **7.3 API quản trị câu hỏi** — code xong 13/11 🤖, **đã commit + push** (`427fd32`, `d7cdfae`, nhánh `tuan/future-auth`) · 👤 **còn: Tuấn dò code** theo thứ tự schema → repository → service → router → test, thử trên Swagger mục "Admin Review (Quản trị ôn tập)"
   - File: `schemas/review_admin.py` · `repositories/review_repository.py` (+ `list_questions`, `codes_for_skill`, `skill_exists`, `chunk_skill_id`) · `services/review_admin_service.py` · `routers/v1/endpoints/admin/review_admin.py` · `api.py` (+2 dòng, prefix `/admin/review`).
   - 10 API (`require_admin`): danh sách (lọc khóa / kỹ năng / loại / mức / nguồn / bật / trạng thái duyệt, tìm nội dung + mã, `latest_only` mặc định chỉ bản mới nhất, phân trang) · chi tiết + lịch sử phiên bản · thêm · sửa (`minor`, `note`) → `{question, versioned, changed}` · bật · tắt · xóa → `deleted | deactivated` · duyệt · từ chối · mã gợi ý.
   - Lỗi: không thấy 404 · nội dung sai 422 (kèm `errors`) · mã trùng / sửa nhỏ sai / không bật được / không duyệt được 409 · kỹ năng / đoạn tri thức sai 400. Mỗi thao tác ghi commit 1 lần, lỗi → rollback.
@@ -466,7 +466,7 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
   - Mỗi kỹ năng: số câu đang bật theo mức (NB / TH / dễ / nâng cao) so với tối thiểu của `STRUCTURE` và mục tiêu 20 · số câu **chờ duyệt** · danh sách thiếu (vd "thiếu tự luận nâng cao").
   - Câu chờ duyệt / bị từ chối / đã tắt **không** tính vào mức sẵn sàng.
   - Test: khóa đủ → `ready=true`; tắt bớt câu 1 kỹ năng → `false` + đúng mục thiếu; khóa không có câu → nằm trong số "chưa có"; học viên 403.
-- [ ] **7.5 Sinh đề theo luật quản trị mới** — **a + c dự kiến 16/11** (sau B2); b, d lùi sau 25/11
+- [~] **7.5 Sinh đề theo luật quản trị mới** — **a + c xong 16/11** (`6325da1`); b, d lùi sau 25/11
   - (Phần seed dùng hàm phiên bản **đã xong ở 7.2** — QT4.)
   - **a. Tránh câu lượt trước theo `family_id`**: câu lượt trước → họ của nó → tránh **mọi phiên bản** cùng họ (không lặp lại câu chỉ vì đã đổi phiên bản). Sửa `review_service.start_attempt` (tập `avoid`, `fresh`) + hàm repo lấy `question_id` theo họ. Test: lượt 1 dùng câu v1, admin sửa thành v2 → lượt 2 không ra v2 (nếu còn câu khác).
     - ✅ **Xong 16/11.** `repo.family_questions` (họ = `family_id`, câu chưa có meta là họ của chính nó) → `start_attempt` tránh mọi phiên bản cùng họ; `fresh` trừ phiên bản **đang bật** của họ (trước chỉ trừ câu cũ đang bật — v1 đã tắt nên không trừ, v2 đang bật lại không bị tính → bộ lập đề tưởng còn nhiều câu mới hơn thực tế). Trace `avoided_question_ids` gồm cả v1 lẫn v2.
@@ -493,7 +493,7 @@ Hệ quả của QT11 = A (đã chốt): dịch 100 câu + 15 đoạn tri thức
   - **Nhóm chốt 14/11:** không báo khi đang làm bài; ở **trang kết quả** cạnh mỗi câu có nút "Báo lỗi" — chọn **Câu hỏi sai** hoặc **Chấm sai** + lý do + ghi chú; **không cần chụp màn hình** (hệ thống tự gắn câu, phiên bản, lượt làm, ý barem làm bằng chứng). Đề xuất gửi vào **module Phản hồi của Tâm** (2 loại phản hồi mới) thay vì bảng riêng → đã gửi `BA-nhom/Gui-Tam-Bao-loi-on-tap-qua-Phan-hoi.md`, chờ Tâm trả lời. Báo "Chấm sai" còn là dữ liệu đo độ chính xác AI chấm.
   - (Phương án B nếu Tâm không nhận) Bảng `review_question_reports` (người báo, `question_id` = đúng phiên bản, lý do, ghi chú, trạng thái) — mỗi người 1 lần / phiên bản.
   - Học viên: nút "Báo lỗi câu này" ở trang kết quả. Admin: bộ lọc "Bị báo lỗi", câu bị báo lên đầu kèm số lượt; xác nhận sai → sửa thành phiên bản mới (bài cũ không chấm lại).
-- [ ] **7.9 Cờ lệch điểm Gemini / từ khóa (QT10)** — **gộp vào B8 của `Review-AI-Grading.md`** (khối 6 Đối chiếu, 18/11)
+- [x] **7.9 Cờ lệch điểm Gemini / từ khóa (QT10)** — **gộp vào B8 của `Review-AI-Grading.md`** — ✅ xong 15/11 (khối 6 Đối chiếu: lệch > 3 → chấm lại → `needs_review`; B11 hiện "Đang xem lại" cho người học)
   - Khi chấm thật: chấm từ khóa song song, lệch > 3 (thang 10 của câu) → gắn cờ vào `trace.grading`; trang quản trị có bộ lọc "Bị gắn cờ".
 - [ ] **D (đợt sau)**: theo dõi lượt làm bài, tỉ lệ đạt, tỉ lệ Gemini lỗi → chấm từ khóa, xem vết RAG
 
