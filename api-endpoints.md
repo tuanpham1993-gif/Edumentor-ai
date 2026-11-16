@@ -222,7 +222,11 @@ Chức năng tạo lộ trình và chức năng gia sư có thể cùng sử d�
 
 ## 10. Hệ thống ôn tập và đánh giá kiến thức
 
-Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ liệu và ghi nhận các lần làm bài của người dùng. Bài ôn tập tính **theo khóa học** *(D01 = A, T11)*: mỗi bài gồm **20 câu trắc nghiệm** lấy từ các kỹ năng mà khóa học đó dạy.
+Bài ôn tập tính **theo khóa học** *(D01 = A, T11)*: mỗi bài gồm **15 câu** lấy từ các kỹ năng khóa học dạy —
+6 trắc nghiệm Nhận biết + 6 trắc nghiệm Thông hiểu (0,5 điểm / câu), 2 tự luận Dễ (1 điểm), 1 tự luận Nâng cao
+(2 điểm); thang 10, đạt từ 6/10. Trắc nghiệm chấm theo đáp án lưu sẵn; tự luận do AI (Gemini) chấm từng ý theo barem
+qua pipeline 9 khối, dự phòng chấm từ khóa. *(Cập nhật 16/11/2026 theo code — module 09; thiết kế chấm tự luận:
+`docs/ai-grading/BAO_CAO_AI_CHAM_BAI.md`.)*
 
 > Cập nhật theo sheet "Endpoint (bản mới)" của `docs/EduMentor_Checklist_Da_Sua_API.xlsx`. Contract chi tiết: `docs/modules/review-assessment.md`.
 
@@ -230,12 +234,29 @@ Hệ thống ôn tập truy xuất các câu hỏi có sẵn từ cơ sở dữ 
 
 | Method | Endpoint | Mô tả | Quyền |
 |---|---|---|---|
-| GET | `/api/courses/{course_id}/review` | Kiểm tra khóa học có bài ôn tập khả dụng không (`available` và lý do nếu không). | Người dùng |
-| POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu một lần ôn tập: tạo lần làm bài và 20 câu (không kèm đáp án đúng). | Người dùng |
-| GET | `/api/review-attempts/{attempt_id}` | Lấy trạng thái và câu hỏi của lần ôn tập. Không phải chủ sở hữu → 404. | Người dùng |
-| POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài, chấm điểm, cập nhật hồ sơ trong một transaction; trả kết quả ngay rồi gửi email kết quả chạy nền. *(T13, T29)* | Người dùng |
+| GET | `/api/courses/{course_id}/review` | Thông tin ôn tập của khóa: kỹ năng, cấu trúc đề, điểm đạt, `can_start` + `blocked` (`not_enrolled` / `abandoned` / `no_question_bank`), bài đang làm dở, các lần làm trước. | Người dùng |
+| POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu một lần ôn tập: ráp đề 15 câu, lưu sẵn danh sách câu (không kèm đáp án, barem). Đã có bài dở → trả lại bài đó. | Người dùng |
+| GET | `/api/review-attempts/{attempt_id}` | Trạng thái và câu hỏi của lần ôn tập (kèm câu trả lời đã lưu). Không phải chủ sở hữu → 404. | Người dùng |
+| PATCH | `/api/review-attempts/{attempt_id}/answers` | Lưu câu trả lời (lựa chọn trắc nghiệm / bài viết tự luận) — dùng cho Tạm rời, làm tiếp. | Người dùng |
+| POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài và chấm. Tự luận chấm song song, chờ tối đa 20 giây: xong → trả kết quả (`graded`); quá giờ → trả `grading`, chấm tiếp ở nền và gửi email khi xong. *(T13, T29)* | Người dùng |
 | GET | `/api/me/review-history` | Lịch sử ôn tập; lọc `?course_id=`, `?passed=true\|false`; phân trang. *(T17)* | Người dùng |
-| GET | `/api/me/review-history/{attempt_id}` | Chi tiết một lần: từng câu, đáp án đã chọn, đáp án đúng, giải thích (chỉ sau khi nộp). | Người dùng |
+| GET | `/api/me/review-history/{attempt_id}` | Kết quả chi tiết (chỉ sau khi nộp): đáp án đã chọn, đáp án đúng, giải thích; câu tự luận có `rubric[]` (kết quả, điểm, `reason`, `evidence` từng ý), `feedback`, `graded_by` (`ai` / `keyword`), `needs_review`. | Người dùng |
+| GET | `/api/admin/review-attempts/{attempt_id}/trace` | Nhật ký sinh đề + chấm (RAG, prompt, trace từng khối pipeline). | Admin |
+
+### API quản trị ngân hàng câu hỏi ôn tập (`/api/admin/review`)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/admin/review/questions` | Danh sách câu (lọc theo khóa, kỹ năng, loại, mức độ, nguồn, trạng thái bật / duyệt, tìm kiếm; phân trang). |
+| GET | `/api/admin/review/questions/{question_id}` | Chi tiết câu + lịch sử phiên bản. |
+| POST | `/api/admin/review/questions` | Thêm câu (trắc nghiệm hoặc tự luận có barem). |
+| PATCH | `/api/admin/review/questions/{question_id}` | Sửa câu: câu đã có bài làm → tạo phiên bản mới (bài cũ giữ bản cũ); "sửa nhỏ" chỉ cho trường không ảnh hưởng chấm. |
+| POST | `/api/admin/review/questions/{question_id}/activate` | Bật câu (chỉ câu đã duyệt, phiên bản mới nhất). |
+| POST | `/api/admin/review/questions/{question_id}/deactivate` | Tắt câu. |
+| DELETE | `/api/admin/review/questions/{question_id}` | Xóa câu: chưa ai làm → xóa thật; đã có trong bài làm → chỉ tắt (giữ lịch sử bài cũ đúng). |
+| GET | `/api/admin/review/questions/{question_id}/suggested-code` | Mã gợi ý cho câu AI soạn. |
+| POST | `/api/admin/review/questions/{question_id}/approve` | Duyệt câu AI soạn (Chờ duyệt → Đã duyệt, bật; tự cấp mã nếu chưa có). |
+| POST | `/api/admin/review/questions/{question_id}/reject` | Từ chối câu AI soạn. |
 
 Các endpoint cũ **đã bỏ** *(T11)*:
 - `GET /api/skills/{skill_id}/review` → thay bằng `GET /api/courses/{course_id}/review`.
@@ -245,17 +266,17 @@ Các endpoint cũ **đã bỏ** *(T11)*:
 
 ### Quy trình ôn tập
 
-1. Kiểm tra khóa học có bài ôn tập: tổng số câu `is_active` của các kỹ năng khóa dạy ≥ 20. *(D04)*
+1. Kiểm tra khóa học có bài ôn tập: mọi kỹ năng của khóa có câu trắc nghiệm đang bật, và ngân hàng đủ câu cho từng mức độ của khung 15 câu; thiếu → `no_question_bank`. *(D04, sửa 11/11)*
 2. Bắt đầu: người dùng phải đang theo dõi khóa ở `ongoing` hoặc `completed` (ôn lại). Mỗi khóa tối đa một bài đang dở; bắt đầu lại thì trả bài dở đó. *(D03, D10)*
-3. Server chọn 20 câu (chia đều giữa các kỹ năng, ngẫu nhiên) và lưu sẵn danh sách câu của lần làm bài. *(T14)*
-4. Trả nội dung câu hỏi và các lựa chọn, **không** để lộ đáp án đúng hay giải thích trước khi nộp. *(T15)*
-5. Chấm đúng 20 câu đã lưu; câu bỏ trống tính là sai. *(T16)*
-6. Lưu điểm phần trăm và kết quả đạt (`≥ REVIEW_PASS_PERCENT`, nhóm chốt 60%). *(D02)*
+3. Server ráp đề 15 câu theo khung (trắc nghiệm chia đều giữa các kỹ năng, 3 tự luận ưu tiên 3 kỹ năng khác nhau), ưu tiên câu gắn với đoạn tri thức RAG tìm được, tránh mọi phiên bản của câu lượt trước; chỉ lấy câu **đã duyệt, đang bật** (câu AI soạn mới vào ngân hàng ở trạng thái Chờ duyệt). Lưu sẵn danh sách câu của lần làm bài. *(T14)*
+4. Trả nội dung câu hỏi và các lựa chọn, **không** để lộ đáp án đúng, barem hay giải thích trước khi nộp. *(T15)*
+5. Chấm đúng 15 câu đã lưu; câu bỏ trống 0 điểm. Trắc nghiệm theo đáp án; tự luận do AI chấm từng ý theo barem (Đạt / Chưa đạt), AI lỗi → chấm từ khóa. *(T16)*
+6. Lưu điểm thang 10 và kết quả đạt (`≥ REVIEW_PASS_SCORE`, mặc định 6). *(D02)*
 7. Nếu đạt: đánh dấu khóa học `completed` (ôn lại không đổi trạng thái) và cập nhật kỹ năng `known` cho mọi kỹ năng của khóa — cùng một transaction với bước 5–6. *(T13)*
-8. Sau khi lưu thành công: trả kết quả ngay, rồi gửi email kết quả chạy nền (lỗi gửi không ảnh hưởng kết quả). *(T29)*
+8. Sau khi lưu thành công: trả kết quả ngay (hoặc `grading` nếu quá 20 giây), rồi gửi email kết quả chạy nền (lỗi gửi không ảnh hưởng kết quả). *(T29)*
 9. Cung cấp kết quả qua lịch sử ôn tập.
 
-Chính sách: làm lại **không giới hạn** *(D03)*; điểm đạt **60%** *(D02)*.
+Chính sách: làm lại **không giới hạn** *(D03)*; điểm đạt **6/10** *(D02, đổi từ 60% khi chuyển sang thang 10)*.
 
 ---
 
