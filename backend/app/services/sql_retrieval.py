@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, case
 
 from app.models import (
     Courses,
@@ -11,7 +11,16 @@ from app.models import (
 
 
 # ==========================================
-# 1. Chuyển SQLAlchemy Model thành Dictionary
+# 0. GIỚI HẠN DỮ LIỆU
+# ==========================================
+
+MAX_SKILLS = 5
+MAX_COURSES = 5
+MAX_RELATED_SKILLS = 5
+
+
+# ==========================================
+# 1. CHUYỂN MODEL THÀNH DICTIONARY
 # ==========================================
 
 def skill_to_dict(skill: Skills) -> dict:
@@ -39,14 +48,15 @@ def course_to_dict(course: Courses) -> dict:
 
 
 # ==========================================
-# 2. Tìm Skill
+# 2. TÌM MỘT SKILL
 # ==========================================
 
 def find_skill(db: Session, skill_name: str):
+
     if not skill_name:
         return None
 
-    # Ưu tiên tìm chính xác tên Skill
+    # Ưu tiên tên Skill chính xác
     skill = db.execute(
         select(Skills).where(
             Skills.skill.ilike(skill_name),
@@ -57,24 +67,94 @@ def find_skill(db: Session, skill_name: str):
     if skill:
         return skill
 
-    # Nếu không có, tìm gần đúng
-    return db.execute(
-        select(Skills).where(
+    # Tìm gần đúng
+    skill = db.execute(
+        select(Skills)
+        .where(
             Skills.skill.ilike(f"%{skill_name}%"),
             Skills.is_active.is_(True),
-        ).order_by(Skills.skill)
+        )
+        .order_by(Skills.skill)
+        .limit(1)
     ).unique().scalars().first()
+
+    if skill:
+        return skill
+
+    # Hỗ trợ tìm kiếm khi tên có phần chú thích trong ngoặc (ví dụ: "Web Accessibility (a11y)")
+    if "(" in skill_name and ")" in skill_name:
+        base_name = re.sub(r"\(.*?\)", "", skill_name).strip()
+        inside_match = re.search(r"\((.*?)\)", skill_name)
+        inside_name = inside_match.group(1).strip() if inside_match else ""
+
+        for candidate in [base_name, inside_name]:
+            if not candidate:
+                continue
+            cand_skill = db.execute(
+                select(Skills)
+                .where(
+                    or_(
+                        Skills.skill.ilike(candidate),
+                        Skills.skill.ilike(f"%{candidate}%"),
+                    ),
+                    Skills.is_active.is_(True),
+                )
+                .order_by(Skills.skill)
+                .limit(1)
+            ).unique().scalars().first()
+            if cand_skill:
+                return cand_skill
+
+    return None
 
 
 # ==========================================
-# 3. Tìm Course
+# 3. TÌM NHIỀU SKILL THEO CHỦ ĐỀ
+# ==========================================
+
+def search_skills(
+    db: Session,
+    keyword: str,
+    limit: int = MAX_SKILLS,
+) -> list:
+
+    if not keyword:
+        return []
+
+    limit = max(1, min(limit, MAX_SKILLS))
+
+    # Ưu tiên tên Skill khớp chính xác,
+    # sau đó mới đến tên Skill chứa từ khóa.
+    exact_match = case(
+        (Skills.skill.ilike(keyword), 0),
+        else_=1,
+    )
+
+    skills = db.execute(
+        select(Skills)
+        .where(
+            Skills.skill.ilike(f"%{keyword}%"),
+            Skills.is_active.is_(True),
+        )
+        .order_by(
+            exact_match,
+            Skills.skill,
+        )
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [skill_to_dict(skill) for skill in skills]
+
+
+# ==========================================
+# 4. TÌM COURSE
 # ==========================================
 
 def find_course(db: Session, course_name: str):
+
     if not course_name:
         return None
 
-    # Ưu tiên tìm chính xác tên Course
     course = db.execute(
         select(Courses).where(
             Courses.title.ilike(course_name)
@@ -84,37 +164,59 @@ def find_course(db: Session, course_name: str):
     if course:
         return course
 
-    # Nếu không có, tìm gần đúng
     return db.execute(
-        select(Courses).where(
+        select(Courses)
+        .where(
             Courses.title.ilike(f"%{course_name}%")
-        ).order_by(Courses.title)
+        )
+        .order_by(Courses.title)
+        .limit(1)
     ).unique().scalars().first()
 
 
 # ==========================================
-# 4. Tìm Course theo Skill
+# 5. TÌM COURSE THEO SKILL
 # ==========================================
 
-def get_courses_by_skill(db: Session, skill_id: int) -> list:
+def get_courses_by_skill(
+    db: Session,
+    skill_id: int,
+    limit: int = MAX_COURSES,
+) -> list:
+
+    limit = max(1, min(limit, MAX_COURSES))
+
     courses = db.execute(
         select(Courses)
         .join(
             CourseSkill,
             Courses.course_id == CourseSkill.course_id,
         )
-        .where(CourseSkill.skill_id == skill_id)
-        .order_by(Courses.title)
+        .where(
+            CourseSkill.skill_id == skill_id
+        )
+        .order_by(
+            Courses.rating.desc().nullslast(),
+            Courses.title,
+        )
+        .limit(limit)
     ).unique().scalars().all()
 
     return [course_to_dict(course) for course in courses]
 
 
 # ==========================================
-# 5. Tìm Skill theo Course
+# 6. TÌM SKILL THEO COURSE
 # ==========================================
 
-def get_skills_by_course(db: Session, course_id: int) -> list:
+def get_skills_by_course(
+    db: Session,
+    course_id: int,
+    limit: int = MAX_SKILLS,
+) -> list:
+
+    limit = max(1, min(limit, MAX_SKILLS))
+
     skills = db.execute(
         select(Skills)
         .join(
@@ -126,29 +228,40 @@ def get_skills_by_course(db: Session, course_id: int) -> list:
             Skills.is_active.is_(True),
         )
         .order_by(Skills.skill)
+        .limit(limit)
     ).unique().scalars().all()
 
     return [skill_to_dict(skill) for skill in skills]
 
 
 # ==========================================
-# 6. Tìm Skill liên quan
+# 7. TÌM SKILL LIÊN QUAN
 # ==========================================
 
-def get_related_skills(db: Session, skill_id: int) -> list:
+def get_related_skills(
+    db: Session,
+    skill_id: int,
+    limit: int = MAX_RELATED_SKILLS,
+) -> list:
+
+    limit = max(1, min(limit, MAX_RELATED_SKILLS))
+
     relations = db.execute(
-        select(SkillRelation).where(
+        select(SkillRelation)
+        .where(
             or_(
                 SkillRelation.from_skill_id == skill_id,
                 SkillRelation.to_skill_id == skill_id,
             )
         )
+        .limit(limit * 2)
     ).unique().scalars().all()
 
     results = []
     seen = set()
 
     for relation in relations:
+
         if relation.from_skill_id == skill_id:
             related_skill_id = relation.to_skill_id
             direction = "outgoing"
@@ -156,20 +269,22 @@ def get_related_skills(db: Session, skill_id: int) -> list:
             related_skill_id = relation.from_skill_id
             direction = "incoming"
 
-        related_skill = db.get(Skills, related_skill_id)
+        related_skill = db.execute(
+            select(Skills).where(
+                Skills.skill_id == related_skill_id,
+                Skills.is_active.is_(True),
+            )
+        ).scalars().first()
 
-        if related_skill is None or not related_skill.is_active:
+        if related_skill is None:
             continue
 
-        # Quan hệ related có tính hai chiều,
-        # nên tránh hiển thị cùng một Skill hai lần.
         if relation.relation_type == "related":
             unique_key = (
                 related_skill_id,
                 relation.relation_type,
             )
         else:
-            # Giữ nguyên chiều của prerequisite và extension.
             unique_key = (
                 related_skill_id,
                 relation.relation_type,
@@ -187,21 +302,40 @@ def get_related_skills(db: Session, skill_id: int) -> list:
             "direction": direction,
         })
 
+        if len(results) >= limit:
+            break
+
     return results
 
 
 # ==========================================
-# 7. Tìm nhiều Course theo từ khóa
+# 8. TÌM NHIỀU COURSE THEO TỪ KHÓA
 # ==========================================
 
-def search_courses(db: Session, keyword: str, limit: int = 10) -> list:
+def search_courses(
+    db: Session,
+    keyword: str,
+    limit: int = MAX_COURSES,
+) -> list:
+
     if not keyword:
         return []
 
+    limit = max(1, min(limit, MAX_COURSES))
+
+    clean_kw = re.sub(r"\(.*?\)", "", keyword).strip() or keyword
+
     courses = db.execute(
         select(Courses)
-        .where(Courses.title.ilike(f"%{keyword}%"))
-        .order_by(Courses.rating.desc().nullslast())
+        .where(
+            or_(
+                Courses.title.ilike(f"%{keyword}%"),
+                Courses.title.ilike(f"%{clean_kw}%"),
+            )
+        )
+        .order_by(
+            Courses.rating.desc().nullslast()
+        )
         .limit(limit)
     ).unique().scalars().all()
 
@@ -209,11 +343,14 @@ def search_courses(db: Session, keyword: str, limit: int = 10) -> list:
 
 
 # ==========================================
-# 8. SQL Retrieval chính
+# 9. SQL RETRIEVAL CHÍNH
 # ==========================================
 
+def retrieve_for_query(
+    db: Session,
+    route_result: dict,
+) -> dict:
 
-def retrieve_for_query(db: Session, route_result: dict) -> dict:
     intent = route_result.get("intent")
     entity_type = route_result.get("entity_type")
     entity_name = route_result.get("entity_name")
@@ -231,39 +368,59 @@ def retrieve_for_query(db: Session, route_result: dict) -> dict:
     }
 
     # ======================================
-    # 1. COURSE SEARCH THEO SKILL
+    # 1. TÌM NHIỀU SKILL THEO CHỦ ĐỀ
+    # ======================================
+
+    if intent == "skill_search":
+
+        skills = search_skills(
+            db,
+            entity_name,
+            limit=MAX_SKILLS,
+        )
+
+        result["skills"] = skills
+        result["found"] = len(skills) > 0
+
+        return result
+
+    # ======================================
+    # 2. TÌM COURSE THEO SKILL
     # ======================================
 
     if intent == "course_search":
-
-        # Người dùng tìm khóa học theo chủ đề Skill.
-        # Ví dụ: Cho tôi những khóa học của Python.
 
         if entity_type == "skill":
 
             skill = find_skill(db, entity_name)
 
-            if skill is None:
+            if skill is not None:
+                result["found"] = True
+                result["skill"] = skill_to_dict(skill)
+
+                result["courses"] = get_courses_by_skill(
+                    db,
+                    skill.skill_id,
+                )
+
+                result["related_skills"] = get_related_skills(
+                    db,
+                    skill.skill_id,
+                )
+
                 return result
 
-            result["found"] = True
-            result["skill"] = skill_to_dict(skill)
-
-            courses = get_courses_by_skill(
+            # Fallback: Nếu không tìm thấy trong bảng Skills, tìm trực tiếp qua tiêu đề/mô tả khóa học
+            courses = search_courses(
                 db,
-                skill.skill_id,
+                entity_name,
             )
 
-            result["courses"] = courses
-
-            result["related_skills"] = get_related_skills(
-                db,
-                skill.skill_id,
-            )
+            if courses:
+                result["courses"] = courses
+                result["found"] = True
 
             return result
-
-        # Người dùng tìm khóa học theo tên Course.
 
         if entity_type == "course":
 
@@ -280,7 +437,7 @@ def retrieve_for_query(db: Session, route_result: dict) -> dict:
         return result
 
     # ======================================
-    # 2. TÌM SKILL
+    # 3. TÌM MỘT SKILL CỤ THỂ
     # ======================================
 
     if entity_type == "skill":
@@ -306,7 +463,7 @@ def retrieve_for_query(db: Session, route_result: dict) -> dict:
         return result
 
     # ======================================
-    # 3. TÌM COURSE VÀ SKILL LIÊN QUAN
+    # 4. TÌM COURSE VÀ SKILL LIÊN QUAN
     # ======================================
 
     if entity_type == "course":
@@ -330,9 +487,17 @@ def retrieve_for_query(db: Session, route_result: dict) -> dict:
 
         for skill in skills:
 
+            remaining = MAX_RELATED_SKILLS - len(
+                result["related_skills"]
+            )
+
+            if remaining <= 0:
+                break
+
             related_list = get_related_skills(
                 db,
                 skill["skill_id"],
+                limit=remaining,
             )
 
             for item in related_list:
@@ -355,7 +520,9 @@ def retrieve_for_query(db: Session, route_result: dict) -> dict:
                     **item,
                 })
 
+                if len(result["related_skills"]) >= MAX_RELATED_SKILLS:
+                    break
+
         return result
 
     return result
-

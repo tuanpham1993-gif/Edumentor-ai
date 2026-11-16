@@ -1,0 +1,45 @@
+.tutorContainer {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 130px);
+  min-height: 580px;
+  background: var(--bg-deep, #0b0a09);
+  border: 1px solid var(--line, #221f1c);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  position: relative;
+  z-index: 10;
+}
+
+.chatMainArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg, #100e0c);
+  min-width: 0;
+  position: relative;
+}
+
+.inputAreaWrapper {
+  padding: 12px 24px 20px;
+  background: linear-gradient(180deg, transparent 0%, var(--bg, #100e0c) 30%);
+  flex-shrink: 0;
+}
+
+.inputInner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .tutorContainer {
+    height: calc(100vh - 90px);
+    border-radius: 0;
+    border: none;
+  }
+
+  .inputAreaWrapper {
+    padding: 10px 12px 14px;
+  }
+}

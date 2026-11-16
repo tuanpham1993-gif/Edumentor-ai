@@ -1,0 +1,154 @@
+.messageRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.userRow {
+  justify-content: flex-end;
+}
+
+.assistantRow {
+  justify-content: flex-start;
+}
+
+.avatarCol {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.bubbleCol {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+  min-width: 60px;
+}
+
+.bubble {
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  position: relative;
+  word-break: break-word;
+}
+
+/* User Message Bubble */
+.userBubble {
+  background: var(--card-inner, #1c1d20);
+  color: var(--text, #f3efe8);
+  border: 1px solid var(--card-border, #2c2b29);
+  border-top-right-radius: 4px;
+}
+
+/* Assistant Message Bubble */
+.assistantBubble {
+  background: var(--card, #16171a);
+  color: var(--text, #f3efe8);
+  border: 1px solid var(--card-border, #2c2b29);
+  border-top-left-radius: 4px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+.formattedBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.paragraph {
+  margin: 0;
+  color: var(--text, #f3efe8);
+}
+
+.spacer {
+  height: 6px;
+}
+
+.heading3 {
+  margin: 8px 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent, #f5a524);
+}
+
+.heading4 {
+  margin: 6px 0 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-hover, #ffc35c);
+}
+
+.listItem {
+  margin-left: 20px;
+  list-style-type: disc;
+  color: var(--text-soft, #c9c2b7);
+}
+
+.inlineCode {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  background: var(--surface-sunk, #131417);
+  color: var(--accent-soft-fg, #f5c46d);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--card-border, #2c2b29);
+}
+
+/* Khối Code Block */
+.codeBlockWrapper {
+  margin: 8px 0;
+  border-radius: 10px;
+  background: var(--code-bg, #0f1012);
+  border: 1px solid var(--card-border, #2c2b29);
+  overflow: hidden;
+}
+
+.codeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--line, #221f1c);
+}
+
+.codeLang {
+  font-size: 12px;
+  font-family: monospace;
+  text-transform: lowercase;
+  color: var(--text-dim, #8f897f);
+}
+
+.copyBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #a39d93);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.copyBtn:hover {
+  background: var(--hover, #1a1b1e);
+  color: var(--accent, #f5a524);
+}
+
+.preCode {
+  margin: 0;
+  padding: 12px 16px;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .bubbleCol {
+    max-width: 90%;
+  }
+}
