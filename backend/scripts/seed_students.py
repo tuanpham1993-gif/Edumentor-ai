@@ -100,8 +100,30 @@ def generate_students(count: int) -> list[dict]:
     return students
 
 
+def apply_real_accounts(students: list[dict], real_email: str, count: int, password_format: str) -> list[dict]:
+    """N học viên ĐẦU dùng email thật dạng "địa chỉ cộng" + mật khẩu riêng (16/11, dùng khi demo / báo cáo).
+
+    Cột email của users là duy nhất → không thể 10 tài khoản cùng một email. Gmail (và đa số dịch vụ) giao thư gửi
+    tới `ten+hv01@gmail.com` về hộp thư `ten@gmail.com` → 10 tài khoản khác nhau, thư về CHUNG một hộp thư thật.
+    Họ tên, hồ sơ giữ nguyên như dữ liệu sinh ra. Mật khẩu: password_format.format(n=STT), vd "Tuan{n:03d}@".
+    Email / mật khẩu thật CHỈ truyền qua dòng lệnh — không ghi vào code hay repo."""
+    local, sep, domain = real_email.strip().partition("@")
+    if not (local and sep and domain) or "+" in local:
+        raise ValueError("Email thật phải dạng ten@mien và chưa có dấu '+'")
+    if not 1 <= count <= len(students):
+        raise ValueError(f"Số tài khoản thật phải từ 1 đến {len(students)}")
+    width = max(2, len(str(count)))
+    out = [dict(s) for s in students]
+    for n, s in enumerate(out[:count], start=1):
+        s["email"] = f"{local}+hv{n:0{width}d}@{domain}".lower()
+        s["password"] = password_format.format(n=n)
+        validate_password(s["password"])
+    return out
+
+
 def seed_students(db: Session, students: list[dict], password: str) -> tuple[int, int]:
-    """Thêm học viên chưa có vào DB. Trả về (số tạo mới, số bỏ qua vì email đã tồn tại)."""
+    """Thêm học viên chưa có vào DB. Trả về (số tạo mới, số bỏ qua vì email đã tồn tại).
+    Học viên có khóa "password" riêng (tài khoản thật — apply_real_accounts) băm riêng; còn lại dùng mật khẩu chung."""
     validate_password(password)  # mật khẩu demo cũng phải đúng quy tắc, nếu không sẽ không đăng nhập được
     hashed = hash_password(password)  # băm MỘT lần, dùng chung
 
@@ -115,7 +137,13 @@ def seed_students(db: Session, students: list[dict], password: str) -> tuple[int
     for s in students:
         if s["email"] in existing:
             continue
-        user = Users(email=s["email"], full_name=s["full_name"], hashed_password=hashed, role="student")
+        own = s.get("password")
+        user = Users(
+            email=s["email"],
+            full_name=s["full_name"],
+            hashed_password=hash_password(own) if own else hashed,
+            role="student",
+        )
         user.profile = UserProfile(
             gender=s["gender"], date_of_birth=s["date_of_birth"], hometown=s["hometown"], phone=s["phone"]
         )
@@ -139,12 +167,27 @@ def write_csv(path: Path, students: list[dict]) -> None:
             )
 
 
+def write_credentials(path: Path, students: list[dict], shared_password: str) -> None:
+    """File ghi chú ĐĂNG NHẬP (có mật khẩu) cho nhóm khi demo / báo cáo. Chứa mật khẩu → lưu NGOÀI repo."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.writer(f)
+        writer.writerow(["stt", "loai", "email", "full_name", "password"])
+        for i, s in enumerate(students, start=1):
+            kind = "that (thu ve hop thu that)" if s.get("password") else "ao (example.com, khong nhan thu)"
+            writer.writerow([i, kind, s["email"], s["full_name"], s.get("password") or shared_password])
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Tạo học viên mẫu cho EduMentor AI")
     parser.add_argument("--count", type=int, default=DEFAULT_COUNT, help="Số học viên (mặc định 1500)")
     parser.add_argument("--password", default=DEFAULT_PASSWORD, help="Mật khẩu demo chung")
     parser.add_argument("--csv", type=Path, help="Đường dẫn file CSV xuất danh sách email")
     parser.add_argument("--csv-only", action="store_true", help="Chỉ xuất CSV, không ghi vào DB")
+    parser.add_argument("--real-email", help="Email thật: N học viên đầu dùng ten+hv01@…, ten+hv02@… (thư về hộp thật)")
+    parser.add_argument("--real-count", type=int, default=10, help="Số tài khoản thật (mặc định 10)")
+    parser.add_argument("--real-password-format", help='Mẫu mật khẩu riêng của tài khoản thật, vd "Tuan{n:03d}@"')
+    parser.add_argument("--credentials", type=Path, help="Xuất file ghi chú đăng nhập (CÓ mật khẩu) — để ngoài repo")
     args = parser.parse_args()
 
     if args.count < 1:
@@ -152,6 +195,19 @@ def main() -> int:
         return 1
 
     students = generate_students(args.count)
+    if args.real_email:
+        if not args.real_password_format:
+            print("Có --real-email thì phải có --real-password-format")
+            return 1
+        try:
+            students = apply_real_accounts(students, args.real_email, args.real_count, args.real_password_format)
+        except (ValueError, KeyError, IndexError) as error:
+            print(f"Tài khoản thật không hợp lệ: {error}")
+            return 1
+        print(f"{args.real_count} học viên đầu dùng email thật dạng {students[0]['email']} … (mật khẩu riêng)")
+    if args.credentials:
+        write_credentials(args.credentials, students, args.password)
+        print(f"Đã xuất file đăng nhập (có mật khẩu) ra {args.credentials}")
 
     if args.csv:
         write_csv(args.csv, students)

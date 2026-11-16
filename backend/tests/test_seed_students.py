@@ -54,3 +54,48 @@ def test_seed_rejects_weak_password(db_session):
     with pytest.raises(ValueError):
         script.seed_students(db_session, script.generate_students(1), "yeu")
     assert db_session.query(Users).count() == 0
+
+
+# ─────────────── 16/11: N tài khoản thật (địa chỉ cộng) + mật khẩu riêng ───────────────
+# Dùng email GIẢ "demo@gmail.com" — email / mật khẩu thật chỉ truyền qua dòng lệnh, không vào repo.
+
+
+def test_real_accounts_use_plus_addresses_and_own_passwords():
+    base = script.generate_students(15)
+    students = script.apply_real_accounts(base, "Demo@Gmail.com", 10, "Demo{n:03d}@")
+    assert [s["email"] for s in students[:3]] == ["demo+hv01@gmail.com", "demo+hv02@gmail.com", "demo+hv03@gmail.com"]
+    assert students[9]["email"] == "demo+hv10@gmail.com" and students[9]["password"] == "Demo010@"
+    assert [s["full_name"] for s in students] == [s["full_name"] for s in base]  # họ tên, hồ sơ giữ nguyên
+    assert students[10] == base[10] and "password" not in students[10]  # từ người thứ 11: tài khoản ảo như cũ
+    assert "password" not in base[0]  # không sửa danh sách gốc
+
+
+@pytest.mark.parametrize(
+    "email, count, fmt",
+    [("khong-co-a-cong", 10, "Demo{n:03d}@"), ("a+b@gmail.com", 10, "Demo{n:03d}@"), ("demo@gmail.com", 0, "Demo{n:03d}@"),
+     ("demo@gmail.com", 99, "Demo{n:03d}@"), ("demo@gmail.com", 10, "yeu{n}")],
+)  # fmt: skip
+def test_real_accounts_reject_bad_input(email, count, fmt):
+    with pytest.raises(ValueError):
+        script.apply_real_accounts(script.generate_students(15), email, count, fmt)
+
+
+def test_seed_real_accounts_login_with_own_password(db_session):
+    students = script.apply_real_accounts(script.generate_students(12), "demo@gmail.com", 10, "Demo{n:03d}@")
+    created, _ = script.seed_students(db_session, students, PASSWORD)
+    assert created == 12
+    real = db_session.query(Users).filter_by(email="demo+hv07@gmail.com").one()
+    assert verify_password("Demo007@", real.hashed_password) and not verify_password(PASSWORD, real.hashed_password)
+    fake = db_session.query(Users).filter_by(email=students[11]["email"]).one()
+    assert verify_password(PASSWORD, fake.hashed_password)
+
+
+def test_credentials_file_lists_every_account_with_its_password(tmp_path):
+    import csv
+
+    students = script.apply_real_accounts(script.generate_students(12), "demo@gmail.com", 10, "Demo{n:03d}@")
+    path = tmp_path / "dang_nhap.csv"
+    script.write_credentials(path, students, PASSWORD)
+    rows = list(csv.DictReader(path.open(encoding="utf-8-sig")))
+    assert len(rows) == 12 and rows[0]["email"] == "demo+hv01@gmail.com" and rows[0]["password"] == "Demo001@"
+    assert rows[11]["password"] == PASSWORD and rows[11]["loai"].startswith("ao")
