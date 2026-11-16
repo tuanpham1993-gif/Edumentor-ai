@@ -179,6 +179,115 @@ def test_update_admin_course(client: TestClient, admin_headers):
     assert updated_data["level"] == "intermediate"
 
 
+def test_update_admin_course_null_title_returns_422(client: TestClient, admin_headers):
+    """PATCH /api/admin/courses/{course_id}: Báo lỗi 422 khi title là null hoặc rỗng, cho phép partial update."""
+    res = client.post(
+        "/api/admin/courses",
+        json={"title": "Test Course", "level": "beginner", "url": "https://test-null-title.com", "description": "Desc"},
+        headers=admin_headers,
+    )
+    course_id = res.json()["course_id"]
+
+    # 1. Gửi title=null -> Phải trả về 422 (không được để lọt lỗi 500 DB NotNullViolation)
+    patch_null = client.patch(
+        f"/api/admin/courses/{course_id}",
+        json={"title": None},
+        headers=admin_headers,
+    )
+    assert patch_null.status_code == 422
+
+    # 2. Gửi title="" hoặc whitespace -> Phải trả về 422
+    patch_empty = client.patch(
+        f"/api/admin/courses/{course_id}",
+        json={"title": "   "},
+        headers=admin_headers,
+    )
+    assert patch_empty.status_code == 422
+
+    # 3. Partial update không gửi title -> 200, title giữ nguyên
+    patch_partial = client.patch(
+        f"/api/admin/courses/{course_id}",
+        json={"organization": "Coursera Updated"},
+        headers=admin_headers,
+    )
+    assert patch_partial.status_code == 200
+    assert patch_partial.json()["title"] == "Test Course"
+    assert patch_partial.json()["organization"] == "Coursera Updated"
+
+    # 4. Reset nullable field (ví dụ description=None) -> 200 thành công
+    patch_clear = client.patch(
+        f"/api/admin/courses/{course_id}",
+        json={"description": None},
+        headers=admin_headers,
+    )
+    assert patch_clear.status_code == 200
+    assert patch_clear.json()["description"] is None
+
+
+def test_admin_course_url_handling(client: TestClient, admin_headers):
+    """Kiểm tra toàn diện xử lý cột url: hợp lệ, không hợp lệ (422), reset về null, và trùng URL (409)."""
+    # 1. Tạo 2 khóa học: 1 có URL, 1 không có URL (url=None)
+    res1 = client.post(
+        "/api/admin/courses",
+        json={"title": "Course With URL", "url": "https://alpha.com/course1"},
+        headers=admin_headers,
+    )
+    assert res1.status_code == 201
+    c1_id = res1.json()["course_id"]
+
+    res2 = client.post(
+        "/api/admin/courses",
+        json={"title": "Course Without URL", "url": None},
+        headers=admin_headers,
+    )
+    assert res2.status_code == 201
+    c2_id = res2.json()["course_id"]
+    assert res2.json()["url"] is None
+
+    # 2. Gửi URL không hợp lệ (không bắt đầu bằng http:// hoặc https://) -> 422
+    invalid_url_res = client.patch(
+        f"/api/admin/courses/{c1_id}",
+        json={"url": "ftp://invalid-url.com"},
+        headers=admin_headers,
+    )
+    assert invalid_url_res.status_code == 422
+
+    # 3. Gửi chuỗi rỗng / khoảng trắng -> Tự động chuyển thành None
+    empty_url_res = client.patch(
+        f"/api/admin/courses/{c1_id}",
+        json={"url": "   "},
+        headers=admin_headers,
+    )
+    assert empty_url_res.status_code == 200
+    assert empty_url_res.json()["url"] is None
+
+    # 4. Cả c1 và c2 lúc này đều có url=None. Reset url của c1 về None một lần nữa -> Phải 200, KHÔNG ĐƯỢC 409 hoặc 500
+    null_url_res = client.patch(
+        f"/api/admin/courses/{c1_id}",
+        json={"url": None},
+        headers=admin_headers,
+    )
+    assert null_url_res.status_code == 200
+    assert null_url_res.json()["url"] is None
+
+    # 5. Gán URL mới hợp lệ cho c1
+    set_url_res = client.patch(
+        f"/api/admin/courses/{c1_id}",
+        json={"url": "https://alpha.com/course1-new"},
+        headers=admin_headers,
+    )
+    assert set_url_res.status_code == 200
+    assert set_url_res.json()["url"] == "https://alpha.com/course1-new"
+
+    # 6. Cố tình gán URL của c1 cho c2 -> Phải báo 409 Conflict
+    dup_res = client.patch(
+        f"/api/admin/courses/{c2_id}",
+        json={"url": "https://alpha.com/course1-new"},
+        headers=admin_headers,
+    )
+    assert dup_res.status_code == 409
+
+
 def test_delete_admin_course(client: TestClient, admin_headers):
     """DELETE /api/admin/courses/{course_id}: Xóa khóa học."""
     res = client.post(
