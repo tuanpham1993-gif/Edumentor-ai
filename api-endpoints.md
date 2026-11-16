@@ -249,7 +249,7 @@ qua pipeline 9 khối, dự phòng chấm từ khóa. *(Cập nhật 16/11/2026 
 |---|---|---|
 | GET | `/api/admin/review/questions` | Danh sách câu (lọc theo khóa, kỹ năng, loại, mức độ, nguồn, trạng thái bật / duyệt, tìm kiếm; phân trang). |
 | GET | `/api/admin/review/questions/{question_id}` | Chi tiết câu + lịch sử phiên bản. |
-| POST | `/api/admin/review/questions` | Thêm câu (trắc nghiệm hoặc tự luận có barem). |
+| POST | `/api/admin/review/questions` | Thêm câu (trắc nghiệm hoặc tự luận có barem) — phiên bản 1, đã duyệt, bật. Không gửi mã → tự cấp mã gợi ý (như lúc Duyệt); kỹ năng chưa có mã → `Q-<id>`. |
 | PATCH | `/api/admin/review/questions/{question_id}` | Sửa câu: câu đã có bài làm → tạo phiên bản mới (bài cũ giữ bản cũ); "sửa nhỏ" chỉ cho trường không ảnh hưởng chấm. |
 | POST | `/api/admin/review/questions/{question_id}/activate` | Bật câu (chỉ câu đã duyệt, phiên bản mới nhất). |
 | POST | `/api/admin/review/questions/{question_id}/deactivate` | Tắt câu. |
@@ -257,6 +257,7 @@ qua pipeline 9 khối, dự phòng chấm từ khóa. *(Cập nhật 16/11/2026 
 | GET | `/api/admin/review/questions/{question_id}/suggested-code` | Mã gợi ý cho câu AI soạn. |
 | POST | `/api/admin/review/questions/{question_id}/approve` | Duyệt câu AI soạn (Chờ duyệt → Đã duyệt, bật; tự cấp mã nếu chưa có). |
 | POST | `/api/admin/review/questions/{question_id}/reject` | Từ chối câu AI soạn. |
+| GET | `/api/admin/review/skills/{skill_id}/suggested-code?type=mcq\|essay` | Mã gợi ý cho câu sắp thêm (vd `COND-TN-15`); `null` = kỹ năng chưa có mã. |
 | GET | `/api/admin/review/skills/{skill_id}/chunks` | Đoạn tri thức của kỹ năng (mã, tiêu đề) — ô chọn khi sửa / thêm câu. |
 | GET | `/api/admin/review/readiness` | Mức sẵn sàng ôn tập: mọi khóa đã có câu hỏi (tóm tắt: ôn được chưa + lý do, số câu đang bật / mục tiêu, TN / TL, chờ duyệt) + số khóa chưa có câu. `?course_id=` → 1 khóa kèm bảng từng kỹ năng theo mức. "Ôn được" tính bằng đúng hàm ráp đề của học viên. |
 

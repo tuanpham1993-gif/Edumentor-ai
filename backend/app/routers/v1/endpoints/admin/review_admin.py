@@ -13,6 +13,7 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     POST   /api/admin/review/questions/{id}/approve    — duyệt câu AI soạn + bật (QT6); không gửi mã → tự cấp mã gợi ý
     GET    /api/admin/review/questions/{id}/suggested-code — mã gợi ý điền sẵn khi duyệt (vd VAR-TN-15)
     POST   /api/admin/review/questions/{id}/reject     — từ chối câu AI soạn (ẩn, không xóa)
+    GET    /api/admin/review/skills/{skill_id}/suggested-code?type= — mã gợi ý cho câu sắp thêm (7.6 P3)
     GET    /api/admin/review/skills/{skill_id}/chunks  — đoạn tri thức của kỹ năng (ô chọn khi sửa câu, 7.6)
     GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
 
@@ -262,3 +263,20 @@ def list_skill_chunks(skill_id: int, _: Users = Depends(require_admin), db: Sess
     if not repo.skill_exists(db, skill_id):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.")
     return repo.chunks_for_skill(db, skill_id)
+
+
+@router.get(
+    "/skills/{skill_id}/suggested-code",
+    response_model=SuggestedCodeOut,
+    summary="[Admin] Mã gợi ý cho câu sắp thêm của kỹ năng",
+)
+def skill_suggested_code(
+    skill_id: int,
+    type: QuestionType,
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    try:
+        return service.suggest_code_for_skill(db, skill_id, type)
+    except service.InvalidReferenceError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.") from None

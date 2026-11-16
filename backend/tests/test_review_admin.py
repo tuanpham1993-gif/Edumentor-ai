@@ -490,3 +490,36 @@ def test_skill_chunks(client, seeded, admin_headers, student_headers, db_session
     assert len(chunks) == 3 and q.chunk_id in [c["chunk_id"] for c in chunks]
     assert set(chunks[0]) == {"chunk_id", "code", "title"}  # không trả nội dung / vector
     assert client.get("/api/admin/review/skills/999999/chunks", headers=admin_headers).status_code == 404
+
+
+# ─────────────── thêm câu: mã gợi ý + tự cấp mã (7.6 P3, 16/11) ───────────────
+
+
+def test_create_without_code_gets_suggested_code(client, seeded, admin_headers, student_headers, db_session):
+    q = by_code(db_session, "312-PY-TN-01")
+    url = f"/api/admin/review/skills/{q.skill_id}/suggested-code"
+    assert client.get(url, params={"type": "mcq"}, headers=student_headers).status_code == 403
+    suggested = client.get(url, params={"type": "mcq"}, headers=admin_headers).json()["code"]
+    assert suggested == "PY-TN-15"  # 14 câu TN có mã 312-PY-TN-01..14 → bỏ tiền tố khóa (QT9)
+    assert client.get(url, params={"type": "essay"}, headers=admin_headers).json()["code"] == "PY-TL-07"
+
+    created = client.post(URL, json=mcq_body(db_session), headers=admin_headers)
+    assert created.status_code == 201, created.text
+    assert created.json()["code"] == suggested
+    # lần sau gợi ý số kế tiếp
+    assert client.get(url, params={"type": "mcq"}, headers=admin_headers).json()["code"] == "PY-TN-16"
+
+
+def test_create_without_code_skill_has_no_codes(client, seeded, admin_headers, db_session):
+    q = by_code(db_session, "312-PY-TN-01")
+    body = mcq_body(db_session)  # dựng trước: mcq_body tra câu theo mã
+    db_session.query(ReviewQuestion).filter(ReviewQuestion.skill_id == q.skill_id).update({"code": None})
+    db_session.commit()
+    created = client.post(URL, json=body, headers=admin_headers).json()
+    assert created["code"] == f"Q-{created['question_id']}"
+
+
+def test_skill_suggested_code_unknown_skill(client, seeded, admin_headers):
+    url = "/api/admin/review/skills/999999/suggested-code"
+    assert client.get(url, params={"type": "mcq"}, headers=admin_headers).status_code == 404
+    assert client.get(url, params={"type": "bad"}, headers=admin_headers).status_code == 422

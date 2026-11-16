@@ -1,4 +1,7 @@
-// Sửa câu hỏi ôn tập có phiên bản — 7.6 P2 (module 09 · Tuấn · 16/11/2026).
+// Thêm / sửa câu hỏi ôn tập — 7.6 P2 sửa có phiên bản, P3 thêm câu (module 09 · Tuấn · 16/11/2026).
+//
+// Thêm (detail không có question_id — dùng blankQuestion): chọn loại TN / TL, mã điền sẵn mã gợi ý (để trống →
+// backend tự cấp như lúc Duyệt), gửi đủ trường → câu phiên bản 1, đã duyệt, bật ngay.
 //
 // Quy tắc nằm ở backend (review_bank_service.update_question), form chỉ gửi TRƯỜNG ĐÃ ĐỔI:
 //   - Câu chưa ai làm / đang chờ duyệt → sửa tại chỗ (nút "Lưu").
@@ -24,8 +27,29 @@ const LEVELS = {
 };
 const RUBRIC_SIZE = { easy: [2, 3], advanced: [4, 5] }; // khớp validator backend (chốt 09/11)
 
+// Câu trống cho form "Thêm câu hỏi" — barem mặc định 3 ý 4 + 3 + 3 (câu dễ cần 2–3 ý, tổng 10)
+export function blankQuestion(type, skillId, skillName) {
+  return {
+    type,
+    skill_id: skillId,
+    skill_name: skillName,
+    chunk_id: null,
+    level: type === 'mcq' ? 'recognize' : 'easy',
+    content: '',
+    options: ['', '', '', ''],
+    correct_index: 0,
+    rubric: [4, 3, 3].map((max_points) => ({ text: '', max_points, main_keywords: [], sub_keywords: [] })),
+    explanation: '',
+    exclusion_group: '',
+    used_count: 0,
+    version: 0,
+    review_status: 'approved',
+  };
+}
+
 function toForm(d) {
   return {
+    type: d.type,
     skill_id: d.skill_id,
     chunk_id: d.chunk_id ?? '',
     level: d.level,
@@ -75,6 +99,17 @@ function changedFields(detail, form) {
     delete out.correct_index;
   }
   return out;
+}
+
+// Thêm câu: gửi đủ trường theo loại (TN không có barem, TL không có phương án)
+function createBody(form, code) {
+  const body = { ...normalize(form), type: form.type, code: code.trim() || null };
+  if (form.type === 'mcq') delete body.rubric;
+  else {
+    delete body.options;
+    delete body.correct_index;
+  }
+  return body;
 }
 
 function KeywordInput({ label, value, onChange, tone }) {
@@ -191,7 +226,9 @@ function RubricEditor({ rubric, level, onChange }) {
 }
 
 export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
+  const creating = !detail.question_id;
   const [form, setForm] = useState(() => toForm(detail));
+  const [code, setCode] = useState('');
   const [chunks, setChunks] = useState([]);
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
@@ -210,6 +247,33 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
     return list;
   }, [skills, detail.skill_id, detail.skill_name]);
 
+  // Thêm câu: mã gợi ý theo kỹ năng + loại (đổi kỹ năng / loại → gợi ý lại)
+  useEffect(() => {
+    if (!creating) return undefined;
+    let alive = true;
+    reviewAdminApi
+      .getSkillSuggestedCode(form.skill_id, form.type)
+      .then((suggested) => alive && setCode(suggested || ''))
+      .catch(() => alive && setCode(''));
+    return () => {
+      alive = false;
+    };
+  }, [creating, form.skill_id, form.type]);
+
+  // đổi loại câu khi thêm → làm lại phần riêng của loại (mức, phương án / barem), giữ đề + kỹ năng
+  function switchType(type) {
+    if (type === form.type) return;
+    const blank = toForm(blankQuestion(type, form.skill_id));
+    setForm((f) => ({
+      ...f,
+      type,
+      level: blank.level,
+      options: blank.options,
+      correct_index: blank.correct_index,
+      rubric: blank.rubric,
+    }));
+  }
+
   useEffect(() => {
     let alive = true;
     reviewAdminApi
@@ -220,6 +284,29 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
       alive = false;
     };
   }, [form.skill_id]);
+
+  function showError(err) {
+    const detailBody = err?.response?.data?.detail;
+    if (err?.response?.status === 422 && detailBody?.errors) {
+      setError(detailBody.message || 'Câu hỏi không hợp lệ');
+      setErrorList(detailBody.errors);
+    } else {
+      setError(parseApiError(err).message);
+    }
+  }
+
+  async function create() {
+    setBusy(true);
+    setError('');
+    setErrorList([]);
+    try {
+      const q = await reviewAdminApi.createQuestion(createBody(form, code));
+      onSaved(q, `Đã thêm câu ${q.code} — đang bật, có thể vào đề ôn tập.`);
+    } catch (err) {
+      showError(err);
+      setBusy(false);
+    }
+  }
 
   async function save(minor) {
     const changes = changedFields(detail, form);
@@ -245,13 +332,7 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
           : `Đã lưu${minor ? ' (sửa nhỏ, không tạo phiên bản)' : ''}.`,
       );
     } catch (err) {
-      const detailBody = err?.response?.data?.detail;
-      if (err?.response?.status === 422 && detailBody?.errors) {
-        setError(detailBody.message || 'Câu hỏi không hợp lệ');
-        setErrorList(detailBody.errors);
-      } else {
-        setError(parseApiError(err).message);
-      }
+      showError(err);
       setBusy(false);
     }
   }
@@ -259,10 +340,32 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
   return (
     <form className={styles.editor} onSubmit={(e) => e.preventDefault()}>
       <div className={styles.editorHead}>
-        <b>Sửa câu {detail.type === 'mcq' ? 'trắc nghiệm' : 'tự luận'}</b>
-        <span className="small muted">
-          {detail.code || 'chưa có mã'} · v{detail.version} · {detail.used_count} bài làm
-        </span>
+        <b>
+          {creating ? 'Thêm câu hỏi' : 'Sửa câu'} {form.type === 'mcq' ? 'trắc nghiệm' : 'tự luận'}
+        </b>
+        {creating ? (
+          <div className={styles.seg} role="radiogroup" aria-label="Loại câu">
+            {[
+              ['mcq', 'Trắc nghiệm'],
+              ['essay', 'Tự luận'],
+            ].map(([value, text]) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={form.type === value}
+                className={form.type === value ? styles.segOn : ''}
+                onClick={() => switchType(value)}
+              >
+                {text}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <span className="small muted">
+            {detail.code || 'chưa có mã'} · v{detail.version} · {detail.used_count} bài làm
+          </span>
+        )}
       </div>
 
       <div className={styles.editorGrid}>
@@ -295,7 +398,7 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
         <div className={styles.field}>
           <span className="small muted">Mức độ</span>
           <div className={styles.seg} role="radiogroup" aria-label="Mức độ">
-            {LEVELS[detail.type].map((lv) => (
+            {LEVELS[form.type].map((lv) => (
               <button
                 key={lv.value}
                 type="button"
@@ -309,6 +412,20 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
             ))}
           </div>
         </div>
+        {creating && (
+          <label className={styles.field}>
+            <span className="small muted">Mã câu (không bắt buộc)</span>
+            <span className="input">
+              <input
+                value={code}
+                maxLength={50}
+                placeholder="để trống → tự cấp"
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </span>
+            <span className="small muted">Điền sẵn mã gợi ý theo kỹ năng; sửa được.</span>
+          </label>
+        )}
         <label className={styles.field}>
           <span className="small muted">Nhóm loại trừ (không bắt buộc)</span>
           <span className="input">
@@ -333,14 +450,14 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
         />
       </label>
 
-      {detail.type === 'mcq' ? (
+      {form.type === 'mcq' ? (
         <div className={styles.field}>
           <span className="small muted">Phương án · chọn đáp án đúng</span>
           {form.options.map((opt, i) => (
             <div key={OPTION_LETTERS[i]} className={`${styles.optionEdit} ${form.correct_index === i ? styles.correct : ''}`}>
               <input
                 type="radio"
-                name={`correct-${detail.question_id}`}
+                name={`correct-${detail.question_id ?? 'new'}`}
                 checked={form.correct_index === i}
                 onChange={() => set({ correct_index: i })}
                 aria-label={`Đáp án đúng là ${OPTION_LETTERS[i]}`}
@@ -359,7 +476,7 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
       )}
 
       <label className={styles.field}>
-        <span className="small muted">{detail.type === 'mcq' ? 'Giải thích' : 'Đáp án mẫu'}</span>
+        <span className="small muted">{form.type === 'mcq' ? 'Giải thích' : 'Đáp án mẫu'}</span>
         <textarea
           className={styles.textarea}
           rows={3}
@@ -403,7 +520,11 @@ export default function QuestionEditor({ detail, skills, onSaved, onCancel }) {
       )}
 
       <div className={styles.buttons}>
-        {used ? (
+        {creating ? (
+          <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={create}>
+            Thêm câu
+          </button>
+        ) : used ? (
           <>
             <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => save(false)}>
               Lưu phiên bản mới

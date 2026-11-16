@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import * as reviewAdminApi from '../../../api/reviewAdmin.api.js';
 import { parseApiError } from '../../../utils/errors.js';
+import QuestionEditor, { blankQuestion } from '../components/QuestionEditor.jsx';
 import QuestionRow from '../components/QuestionRow.jsx';
 import ReadinessPanel from '../components/ReadinessPanel.jsx';
 import { LEVEL_FILTERS, STATUS_FILTERS, TYPE_FILTERS } from '../reviewAdminFormat.js';
@@ -38,6 +39,8 @@ export default function AdminReviewQuestionsPage() {
   const [counts, setCounts] = useState({ active: null, pending: null });
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const [newQuestion, setNewQuestion] = useState(null); // P3: câu trống đang soạn trong form "Thêm câu hỏi"
+  const [reloadKey, setReloadKey] = useState(0); // tăng → tải lại bảng (sau khi thêm câu)
 
   const loadCounts = useCallback(async () => {
     try {
@@ -100,7 +103,7 @@ export default function AdminReviewQuestionsPage() {
     return () => {
       alive = false;
     };
-  }, [filters, page]);
+  }, [filters, page, reloadKey]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -130,6 +133,21 @@ export default function AdminReviewQuestionsPage() {
   const pages = data ? Math.max(1, Math.ceil(data.total / PAGE_SIZE)) : 1;
   const skills = courseDetail?.skills || [];
 
+  // Thêm câu: kỹ năng mặc định = kỹ năng đang lọc, không thì kỹ năng đầu của khóa đang chọn
+  function startCreate() {
+    const skill = skills.find((s) => String(s.skill_id) === filters.skill) || skills[0];
+    setNotice('');
+    setNewQuestion(blankQuestion('mcq', skill.skill_id, skill.skill));
+  }
+
+  function handleCreated(_question, message) {
+    setNewQuestion(null);
+    setNotice(message);
+    setReloadKey((k) => k + 1);
+    loadCounts();
+    loadSummary();
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.head}>
@@ -141,11 +159,22 @@ export default function AdminReviewQuestionsPage() {
             {counts.pending ? ` · ${counts.pending} câu AI soạn chờ duyệt` : ''}
           </p>
         </div>
-        {counts.pending > 0 && filters.status !== 'pending' && (
-          <button type="button" className="btn btn-soft btn-sm" onClick={() => setFilter('status', 'pending')}>
-            Xem {counts.pending} câu chờ duyệt
+        <div className={styles.buttons}>
+          {counts.pending > 0 && filters.status !== 'pending' && (
+            <button type="button" className="btn btn-soft btn-sm" onClick={() => setFilter('status', 'pending')}>
+              Xem {counts.pending} câu chờ duyệt
+            </button>
+          )}
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            disabled={!skills.length || newQuestion !== null}
+            title={skills.length ? undefined : 'Chọn khóa học trước để chọn kỹ năng'}
+            onClick={startCreate}
+          >
+            + Thêm câu hỏi
           </button>
-        )}
+        </div>
       </header>
 
       <ReadinessPanel
@@ -229,6 +258,17 @@ export default function AdminReviewQuestionsPage() {
           />
         </span>
       </div>
+
+      {newQuestion && (
+        <div className={`card ${styles.readyDetail}`}>
+          <QuestionEditor
+            detail={newQuestion}
+            skills={skills}
+            onSaved={handleCreated}
+            onCancel={() => setNewQuestion(null)}
+          />
+        </div>
+      )}
 
       {notice && (
         <div className="alert alert-ok" role="status">

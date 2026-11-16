@@ -59,3 +59,15 @@ export async function getSkillChunks(skillId) {
   const response = await client.get(`/admin/review/skills/${skillId}/chunks`);
   return response.data;
 }
+
+// POST /admin/review/questions → QuestionDetail (201; phiên bản 1, đã duyệt, bật). Không gửi mã → tự cấp mã gợi ý.
+export async function createQuestion(body) {
+  const response = await client.post('/admin/review/questions', body);
+  return response.data;
+}
+
+// GET /admin/review/skills/{skill_id}/suggested-code?type=mcq|essay → mã gợi ý cho câu sắp thêm (null = tự nhập)
+export async function getSkillSuggestedCode(skillId, type) {
+  const response = await client.get(`/admin/review/skills/${skillId}/suggested-code`, { params: { type } });
+  return response.data.code;
+}

@@ -96,14 +96,25 @@ def suggest_code(db: Session, question_id: int) -> dict:
     return {"code": _suggested_code(db, _get(db, question_id))}
 
 
+def suggest_code_for_skill(db: Session, skill_id: int, type: str) -> dict:
+    """Mã gợi ý cho câu SẮP THÊM (7.6 P3 — form "Thêm câu hỏi" điền sẵn). None = kỹ năng chưa có mã nào."""
+    if not repo.skill_exists(db, skill_id):
+        raise InvalidReferenceError("Kỹ năng không tồn tại")
+    return {"code": _suggest(db, skill_id, type)}
+
+
 def _suggested_code(db: Session, question) -> str | None:
+    return _suggest(db, question.skill_id, question.type)
+
+
+def _suggest(db: Session, skill_id: int, type: str) -> str | None:
     """Lấy viết tắt kỹ năng từ các mã ĐÃ CÓ của kỹ năng đó (DB chưa lưu viết tắt — chỉ có trong data/review/*.json),
     số = lớn nhất cùng loại + 1, bỏ tiền tố khóa (QT9). Vd kỹ năng đã có 312-VAR-TN-01..14 → "VAR-TN-15"."""
-    parsed = [m.groups() for m in map(CODE_PATTERN.match, repo.codes_for_skill(db, question.skill_id)) if m]
+    parsed = [m.groups() for m in map(CODE_PATTERN.match, repo.codes_for_skill(db, skill_id)) if m]
     if not parsed:
         return None
     abbr = Counter(a for a, _, _ in parsed).most_common(1)[0][0]
-    tag = TYPE_TAG[question.type]
+    tag = TYPE_TAG[type]
     number = max((int(n) for a, t, n in parsed if a == abbr and t == tag), default=0) + 1
     code = f"{abbr}-{tag}-{number:02d}"
     while repo.get_question_by_code(db, code) is not None:  # phòng mã đã bị dùng ở kỹ năng khác
@@ -113,8 +124,10 @@ def _suggested_code(db: Session, question) -> str | None:
 
 
 def _auto_code(db: Session, question) -> str:
-    """Mã tự cấp khi admin bấm Duyệt mà không nhập: mã gợi ý; kỹ năng chưa có mã nào → "AI-<question_id>"."""
-    return _suggested_code(db, question) or f"AI-{question.question_id}"
+    """Mã tự cấp khi admin bấm Duyệt / Thêm câu mà không nhập: mã gợi ý; kỹ năng chưa có mã nào →
+    "AI-<question_id>" (câu AI) hoặc "Q-<question_id>" (câu admin thêm)."""
+    prefix = "AI" if question.source == "ai" else "Q"
+    return _suggested_code(db, question) or f"{prefix}-{question.question_id}"
 
 
 # ─────────────── ghi (mỗi hàm commit một lần) ───────────────
@@ -124,7 +137,15 @@ def create(db: Session, body: QuestionCreate, admin_id: int) -> dict:
     data = body.model_dump()
     _check_code_free(db, data["code"])
     _check_refs(db, data["skill_id"], data["chunk_id"])
-    return _commit(db, lambda: bank.create_question(db, data, user_id=admin_id))
+
+    def action():
+        question = bank.create_question(db, data, user_id=admin_id)
+        if not question.code:  # 7.6 P3 (16/11): như lúc Duyệt — để trống mã → tự cấp mã gợi ý
+            question.code = _auto_code(db, question)
+            db.flush()
+        return question
+
+    return _commit(db, action)
 
 
 def update(db: Session, question_id: int, body: QuestionUpdate, admin_id: int) -> dict:
