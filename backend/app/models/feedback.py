@@ -32,14 +32,14 @@ class Feedback(Base):
     # Khóa học được phản hồi
     course_id = Column(
         Integer,
-        ForeignKey("course.course_id", ondelete="CASCADE"),
+        ForeignKey("courses.course_id", ondelete="CASCADE"),
         nullable=True
     )
 
     # Kỹ năng được phản hồi
     skill_id = Column(
         Integer,
-        ForeignKey("skill.skill_id", ondelete="RESTRICT"),
+        ForeignKey("skills.skill_id", ondelete="RESTRICT"),
         nullable=True
     )
 
