@@ -71,3 +71,21 @@ export async function getSkillSuggestedCode(skillId, type) {
   const response = await client.get(`/admin/review/skills/${skillId}/suggested-code`, { params: { type } });
   return response.data.code;
 }
+
+// ─── Bài cần xem lại (17/11/2026) ───
+// GET /admin/review/flags → { items, total, page, size, open_total, resolved_total, reason_counts }
+//   params: status ('open' | 'resolved' | 'all'), reason, course_id, page, size
+export async function listFlags(params = {}) {
+  const response = await client.get('/admin/review/flags', { params });
+  return response.data;
+}
+
+// POST /admin/review/flags/{attempt_id}/{position}/resolve — body { labels: ['full'|'none', ...], note }
+//   → { item, score_changed, passed_changed, completed_course }
+export async function resolveFlag(attemptId, position, labels, note) {
+  const response = await client.post(`/admin/review/flags/${attemptId}/${position}/resolve`, {
+    labels,
+    note: note || null,
+  });
+  return response.data;
+}

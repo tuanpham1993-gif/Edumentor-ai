@@ -16,16 +16,19 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     GET    /api/admin/review/skills/{skill_id}/suggested-code?type= — mã gợi ý cho câu sắp thêm (7.6 P3)
     GET    /api/admin/review/skills/{skill_id}/chunks  — đoạn tri thức của kỹ năng (ô chọn khi sửa câu, 7.6)
     GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
+    GET    /api/admin/review/flags                     — bài cần xem lại: câu tự luận bị gắn cờ (17/11)
+    POST   /api/admin/review/flags/{attempt_id}/{position}/resolve — admin chấm lại từng ý (Đạt / Không đạt)
 
 Lỗi: không thấy câu 404 · nội dung câu sai 422 (kèm danh sách lỗi) · mã trùng / sửa nhỏ sai / không bật được /
 không duyệt được 409 · kỹ năng / đoạn tri thức sai 400.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.dependencies import require_admin
+from app.core.email import send_review_result_email
 from app.models.user import Users
 from app.repositories import review_repository as repo
 from app.schemas.review_admin import (
@@ -33,6 +36,10 @@ from app.schemas.review_admin import (
     ChunkOut,
     DeleteResultOut,
     EditResultOut,
+    FlagPageOut,
+    FlagReason,
+    FlagResolveOut,
+    FlagResolveRequest,
     QuestionCreate,
     QuestionDetail,
     QuestionLevel,
@@ -45,6 +52,7 @@ from app.schemas.review_admin import (
 )
 from app.services import review_admin_service as service
 from app.services import review_bank_service as bank
+from app.services import review_flag_service as flags
 from app.services import review_readiness_service as readiness_service
 
 router = APIRouter()
@@ -280,3 +288,55 @@ def skill_suggested_code(
         return service.suggest_code_for_skill(db, skill_id, type)
     except service.InvalidReferenceError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.") from None
+
+
+# ─────────────── Bài cần xem lại (17/11/2026) ───────────────
+
+
+@router.get("/flags", response_model=FlagPageOut, summary="[Admin] Câu tự luận cần xem lại")
+def list_flags(
+    status_: str = Query("open", alias="status", pattern="^(open|resolved|all)$"),
+    reason: FlagReason | None = None,
+    course_id: int | None = None,
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return flags.list_flags(db, status=status_, reason=reason, course_id=course_id, page=page, size=size)
+
+
+@router.post(
+    "/flags/{attempt_id}/{position}/resolve",
+    response_model=FlagResolveOut,
+    summary="[Admin] Chấm lại một câu tự luận: Đạt / Không đạt từng ý",
+)
+def resolve_flag(
+    attempt_id: int,
+    position: int,
+    body: FlagResolveRequest,
+    background_tasks: BackgroundTasks,
+    admin: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    try:
+        result = flags.resolve(db, attempt_id, position, body.labels, admin, body.note)
+    except flags.FlagNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy câu tự luận này.") from None
+    except flags.FlagConflictError as err:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(err)) from None
+    except flags.FlagInvalidError as err:
+        raise HTTPException(422, str(err)) from None
+    if result["notify_email"]:  # đổi sang Đạt → email kết quả, dùng chung mẫu khi nộp bài (Tuấn chốt 17/11)
+        item = result["item"]
+        background_tasks.add_task(
+            send_review_result_email,
+            item["user_email"],
+            item["user_name"],
+            item["course_title"],
+            item["attempt_score"],
+            item["attempt_passed"],
+            result["completed_course"],
+            attempt_id,
+        )
+    return result

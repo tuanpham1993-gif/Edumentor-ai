@@ -47,6 +47,7 @@ export default function ResultQuestion({ question: q, showExplanation, onToggle 
         <span className={styles.badges}>
           {gradedBy && <span className={`chip ${gradedBy.chip}`}>{gradedBy.text}</span>}
           {q.needs_review && <span className="chip chip-accent">Đang xem lại</span>}
+          {q.reviewed && <span className="chip chip-ok">Giáo viên đã xem lại</span>}
           <span className={`chip ${v.chip}`}>{v.text}</span>
         </span>
       </header>

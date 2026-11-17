@@ -5,6 +5,7 @@
 // (bật / tắt, xem đáp án / barem, lịch sử phiên bản) · duyệt / từ chối câu AI soạn (7.5c: câu AI chỉ vào đề sau khi duyệt).
 // P2 (16/11): sửa câu ngay trong dòng — lưu phiên bản mới / sửa nhỏ (QuestionEditor). Đợt sau: thêm câu (P3), chấm thử (P4).
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import * as reviewAdminApi from '../../../api/reviewAdmin.api.js';
 import { parseApiError } from '../../../utils/errors.js';
@@ -44,11 +45,12 @@ export default function AdminReviewQuestionsPage() {
 
   const loadCounts = useCallback(async () => {
     try {
-      const [active, pending] = await Promise.all([
+      const [active, pending, flags] = await Promise.all([
         reviewAdminApi.listQuestions({ is_active: true, size: 1 }),
         reviewAdminApi.listQuestions({ review_status: 'pending', size: 1 }),
+        reviewAdminApi.listFlags({ status: 'open', size: 1 }).catch(() => null),
       ]);
-      setCounts({ active: active.total, pending: pending.total });
+      setCounts({ active: active.total, pending: pending.total, flags: flags?.open_total ?? 0 });
     } catch {
       // chỉ là số trên tiêu đề — lỗi thật sẽ hiện ở bảng
     }
@@ -160,6 +162,9 @@ export default function AdminReviewQuestionsPage() {
           </p>
         </div>
         <div className={styles.buttons}>
+          <Link to="/admin/review-flags" className={`btn btn-sm ${counts.flags ? 'btn-soft' : ''}`}>
+            Bài cần xem lại{counts.flags ? ` (${counts.flags})` : ''}
+          </Link>
           {counts.pending > 0 && filters.status !== 'pending' && (
             <button type="button" className="btn btn-soft btn-sm" onClick={() => setFilter('status', 'pending')}>
               Xem {counts.pending} câu chờ duyệt

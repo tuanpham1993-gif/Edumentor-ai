@@ -62,6 +62,33 @@ def notify(
     return notification
 
 
+def renotify(
+    db: Session,
+    user_id: int,
+    type_: str,
+    title: str,
+    *,
+    body: str | None = None,
+    link: str | None = None,
+    source_id: int,
+) -> Notification:
+    """Như notify, nhưng nếu đã có thông báo cùng (loại, source_id) thì CẬP NHẬT nó: nội dung mới, đặt lại
+    "chưa đọc", đưa lên đầu danh sách (17/11 — admin chấm lại bài ôn tập, điểm đổi). Chỉ flush."""
+    existing = repo.get_for_source(db, user_id, type_, source_id)
+    if existing is None:
+        return notify(db, user_id, type_, title, body=body, link=link, source_id=source_id)
+    if link is not None and not link.startswith("/"):
+        raise ValueError("link phải là đường dẫn nội bộ, bắt đầu bằng '/'")
+    existing.title = title[:200]
+    existing.body = body
+    existing.link = link
+    existing.is_read = False
+    existing.read_at = None
+    existing.created_at = datetime.now(UTC)
+    db.flush()
+    return existing
+
+
 def _item(n: Notification) -> dict:
     return {
         "notification_id": n.notification_id,
@@ -74,9 +101,7 @@ def _item(n: Notification) -> dict:
     }
 
 
-def list_notifications(
-    db: Session, user_id: int, *, unread_only: bool = False, page: int = 1, size: int = 20
-) -> dict:
+def list_notifications(db: Session, user_id: int, *, unread_only: bool = False, page: int = 1, size: int = 20) -> dict:
     items = repo.list_for_user(db, user_id, unread_only=unread_only, offset=(page - 1) * size, limit=size)
     return {
         "items": [_item(n) for n in items],

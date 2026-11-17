@@ -13,6 +13,7 @@ from app.models.review_attempt import ReviewAnswer, ReviewAttempt
 from app.models.review_question import ReviewQuestion
 from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.skill import Skills
+from app.models.user import Users
 
 # ─────────────── Khóa học, kỹ năng (chỉ đọc) ───────────────
 
@@ -225,6 +226,36 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     if not ids:
         return {}
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
+
+
+def graded_attempts(db: Session, course_id: int | None = None) -> list[ReviewAttempt]:
+    """Mọi lượt ĐÃ CHẤM (mới nộp trước), kèm câu trả lời + câu hỏi — trang "Bài cần xem lại" (17/11).
+    Cờ nằm trong trace JSON nên lọc ở service; số lượt ôn tập của đồ án nhỏ (vài trăm) nên đọc hết được."""
+    stmt = (
+        select(ReviewAttempt)
+        .where(ReviewAttempt.status == "graded")
+        .options(selectinload(ReviewAttempt.answers).selectinload(ReviewAnswer.question))
+        .order_by(ReviewAttempt.submitted_at.desc(), ReviewAttempt.attempt_id.desc())
+    )
+    if course_id is not None:
+        stmt = stmt.where(ReviewAttempt.course_id == course_id)
+    return list(db.scalars(stmt))
+
+
+def user_names(db: Session, user_ids) -> dict[int, tuple[str, str]]:
+    """{user_id: (họ tên, email)} — chỉ dùng cho trang admin."""
+    ids = list(set(user_ids))
+    if not ids:
+        return {}
+    rows = db.execute(select(Users.user_id, Users.full_name, Users.email).where(Users.user_id.in_(ids))).all()
+    return {uid: (name, email) for uid, name, email in rows}
+
+
+def course_titles(db: Session, course_ids) -> dict[int, str]:
+    ids = list(set(course_ids))
+    if not ids:
+        return {}
+    return dict(db.execute(select(Courses.course_id, Courses.title).where(Courses.course_id.in_(ids))).all())
 
 
 def list_history(

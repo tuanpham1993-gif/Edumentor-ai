@@ -136,6 +136,7 @@ class ResultQuestionOut(BaseModel):
     # B11 (16/11) — chỉ câu tự luận có bài làm; None / False với trắc nghiệm, bài bỏ trống, lượt chấm trước B6
     graded_by: Literal["ai", "keyword"] | None = None  # keyword: AI_MODE=mock hoặc Gemini lỗi → chấm từ khóa dự phòng
     needs_review: bool = False  # D8/D10: điểm AI và từ khóa vẫn lệch sau khi chấm lại → điểm tính tạm, đang xem lại
+    reviewed: bool = False  # 17/11: giáo viên đã xem lại / chấm lại câu này (trang admin "Bài cần xem lại")
     feedback: str | None = None  # nhận xét chung của AI (B7)
 
 

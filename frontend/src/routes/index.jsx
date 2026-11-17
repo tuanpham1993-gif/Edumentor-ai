@@ -40,6 +40,7 @@ import AdminHistoricalPage from '../features/admin/pages/AdminHistoricalPage.jsx
 import AdminFeedbackPage from '../features/admin/pages/AdminFeedbackPage.jsx';
 import AdminUserPathsPage from '../features/admin/pages/AdminUserPathsPage.jsx';
 import AdminReviewQuestionsPage from '../features/review-admin/pages/AdminReviewQuestionsPage.jsx'; // Tuấn · duyệt câu AI
+import AdminReviewFlagsPage from '../features/review-admin/pages/AdminReviewFlagsPage.jsx'; // Tuấn · bài cần xem lại
 import TutorPage from '../features/tutor/pages/TutorPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
@@ -119,6 +120,7 @@ export default function AppRoutes() {
           <Route path="/admin/feedback" element={<AdminFeedbackPage />} />
           <Route path="/admin/user-paths" element={<AdminUserPathsPage />} />
           <Route path="/admin/questions" element={<AdminReviewQuestionsPage />} />{/* Tuấn: duyệt câu AI (7.5c) */}
+          <Route path="/admin/review-flags" element={<AdminReviewFlagsPage />} />{/* Tuấn: bài cần xem lại (17/11) */}
         </Route>
       </Route>
 

@@ -178,3 +178,76 @@ class ReadinessOut(BaseModel):
     structure: dict[str, int]  # khung đề: {"recognize": 6, "understand": 6, "easy": 2, "advanced": 1}
     courses: list[CourseReadinessOut]  # ôn được trước, rồi khóa nhiều câu hơn
     courses_without_questions: int  # thẻ "Khóa khác · N khóa · chưa có câu hỏi"
+
+
+# ─────────────── Bài cần xem lại (17/11/2026) ───────────────
+
+FlagReason = Literal["needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback"]
+ItemLabel = Literal["full", "none"]
+
+
+class FlagRubricOut(BaseModel):
+    text: str
+    max_points: float
+    result: str  # full | none (partial: bài chấm trước 15/11)
+    points: float
+    evidence: str | None
+    reason: str | None
+
+
+class FlagReviewOut(BaseModel):
+    by: int
+    by_name: str
+    at: str
+    before: list[str]
+    after: list[str]
+    note: str | None
+    score_before: float | None
+    score_after: float
+
+
+class FlagItemOut(BaseModel):
+    attempt_id: int
+    position: int
+    user_id: int
+    user_name: str
+    user_email: str
+    course_id: int
+    course_title: str
+    submitted_at: datetime | None
+    attempt_score: float | None
+    attempt_passed: bool | None
+    question_id: int
+    question_code: str | None
+    level: str
+    content: str
+    model_answer: str | None
+    text_answer: str | None
+    max_points: float
+    points: float
+    feedback: str | None
+    reasons: list[FlagReason]
+    rubric: list[FlagRubricOut]
+    review: FlagReviewOut | None  # None = chưa xem lại
+
+
+class FlagPageOut(BaseModel):
+    items: list[FlagItemOut]
+    total: int
+    page: int
+    size: int
+    open_total: int  # tổng câu đang chờ xem lại (không theo bộ lọc)
+    resolved_total: int
+    reason_counts: dict[str, int]  # số câu đang chờ theo từng lý do
+
+
+class FlagResolveRequest(BaseModel):
+    labels: list[ItemLabel] = Field(min_length=1, max_length=10)  # mỗi ý barem một nhãn, đúng thứ tự
+    note: str | None = Field(default=None, max_length=500)
+
+
+class FlagResolveOut(BaseModel):
+    item: FlagItemOut
+    score_changed: bool
+    passed_changed: bool
+    completed_course: bool  # đổi sang đạt → khóa vừa Hoàn thành

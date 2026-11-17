@@ -1,0 +1,66 @@
+/* Bài cần xem lại — /admin/review-flags (module 09 · Tuấn · 17/11/2026). Dùng token chung (tokens.css). */
+.page { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.title { margin: 0 0 4px; font-size: 22px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 14px; align-items: center; }
+.filters :global(.select) { max-width: 280px; }
+
+.seg { display: inline-flex; border: 1px solid var(--input-border); border-radius: var(--r-md); overflow: hidden; flex: none; }
+.seg button {
+  padding: 7px 12px;
+  border: 0;
+  background: var(--input);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.seg button + button { border-left: 1px solid var(--input-border); }
+.seg .segOn { background: var(--accent-tint); color: var(--accent); font-weight: 700; }
+
+.card { display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; min-width: 0; }
+.cardHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.question { margin: 0; font-size: 15.5px; line-height: 1.5; white-space: pre-wrap; }
+
+.answer {
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--card-inner);
+  border: 1px solid var(--line);
+}
+.answer p { margin: 4px 0 0; white-space: pre-wrap; line-height: 1.55; overflow-wrap: anywhere; }
+
+.tableWrap { overflow-x: auto; }
+.tableWrap :global(.table) td { vertical-align: top; }
+.tableWrap :global(.table) th.num,
+.tableWrap :global(.table) td.num { text-align: right; white-space: nowrap; }
+.evidence { display: block; margin-top: 4px; color: var(--text-muted); font-style: italic; }
+
+.actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.actions :global(.input) { flex: 1; min-width: 200px; }
+.reviewed { padding: 10px 14px; border-radius: var(--r-md); background: var(--ok-bg); font-size: 13.5px; }
+
+.empty { padding: 28px; text-align: center; color: var(--text-muted); }
+.pager { display: flex; justify-content: center; align-items: center; gap: 12px; }
+
+@media (max-width: 640px) {
+  .head { flex-direction: column; }
+  .chips { justify-content: flex-start; }
+}
+
+/* Hộp xác nhận khi chấm lại làm đổi kết quả Đạt / Chưa đạt của lượt (17/11) */
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--accent);
+  background: var(--accent-tint);
+}
+.confirm p { margin: 0; line-height: 1.5; }
+.confirmButtons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
