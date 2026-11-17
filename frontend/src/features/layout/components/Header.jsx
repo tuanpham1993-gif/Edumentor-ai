@@ -11,16 +11,13 @@ import { useAuth } from '../../../hooks/useAuth.js';
 import { BrandLogo } from '../../common/components/icons.jsx';
 import styles from '../styles/Header.module.css';
 import { ADMIN_NAV, MAIN_NAV, activeNavItem } from '../nav.js';
-<<<<<<< HEAD
 import { useEffect, useState } from 'react';
 import MakeLearningPathPage from '../../learning_path/pages/MakeLearningPathPage.jsx';
 
 // Avatar sáng khi đang ở Hồ sơ / Cài đặt tài khoản (không sáng ở /me/courses, /me/learning-paths…)
 const PROFILE_PATHS = ['/me', '/me/edit', '/me/password', '/me/skills'];
-=======
 import NotificationBell from './NotificationBell.jsx';
 import UserMenu from './UserMenu.jsx';
->>>>>>> origin/tuan/future-auth
 
 export default function Header() {
   const { user } = useAuth();
