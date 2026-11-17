@@ -343,6 +343,109 @@ def search_courses(
 
 
 # ==========================================
+# 8.1. TÌM COURSE THEO TỔ CHỨC / TRƯỜNG ĐẠI HỌC
+# ==========================================
+
+def get_courses_by_organization(
+    db: Session,
+    org_name: str,
+    limit: int = MAX_COURSES,
+) -> list:
+
+    if not org_name:
+        return []
+
+    limit = max(1, min(limit, MAX_COURSES))
+
+    courses = db.execute(
+        select(Courses)
+        .where(Courses.organization.ilike(f"%{org_name}%"))
+        .order_by(Courses.rating.desc().nullslast())
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [course_to_dict(course) for course in courses]
+
+
+# ==========================================
+# 8.2. TÌM COURSE THEO GIẢNG VIÊN
+# ==========================================
+
+def get_courses_by_instructor(
+    db: Session,
+    instructor_name: str,
+    limit: int = MAX_COURSES,
+) -> list:
+
+    if not instructor_name:
+        return []
+
+    limit = max(1, min(limit, MAX_COURSES))
+
+    courses = db.execute(
+        select(Courses)
+        .where(Courses.instructor.ilike(f"%{instructor_name}%"))
+        .order_by(Courses.rating.desc().nullslast())
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [course_to_dict(course) for course in courses]
+
+
+# ==========================================
+# 8.3. TÌM COURSE THEO ĐÁNH GIÁ (RATING)
+# ==========================================
+
+def get_courses_by_rating(
+    db: Session,
+    min_rating: float = 4.8,
+    limit: int = MAX_COURSES,
+) -> list:
+
+    limit = max(1, min(limit, MAX_COURSES))
+
+    courses = db.execute(
+        select(Courses)
+        .where(Courses.rating >= min_rating)
+        .order_by(
+            Courses.rating.desc(),
+            Courses.num_reviews.desc().nullslast(),
+        )
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [course_to_dict(course) for course in courses]
+
+
+# ==========================================
+# 8.4. TÌM COURSE THEO CẤP ĐỘ (LEVEL)
+# ==========================================
+
+def get_courses_by_level(
+    db: Session,
+    level: str,
+    limit: int = MAX_COURSES,
+) -> list:
+
+    if not level:
+        return []
+
+    limit = max(1, min(limit, MAX_COURSES))
+
+    courses = db.execute(
+        select(Courses)
+        .where(Courses.level.ilike(f"%{level}%"))
+        .order_by(
+            Courses.rating.desc().nullslast(),
+            Courses.num_reviews.desc().nullslast(),
+        )
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [course_to_dict(course) for course in courses]
+
+
+# ==========================================
 # 9. SQL RETRIEVAL CHÍNH
 # ==========================================
 
@@ -373,6 +476,15 @@ def retrieve_for_query(
 
     if intent == "skill_search":
 
+        skill = find_skill(db, entity_name) if entity_name else None
+
+        if skill is not None:
+            result["skill"] = skill_to_dict(skill)
+            result["related_skills"] = get_related_skills(
+                db,
+                skill.skill_id,
+            )
+
         skills = search_skills(
             db,
             entity_name,
@@ -380,15 +492,62 @@ def retrieve_for_query(
         )
 
         result["skills"] = skills
-        result["found"] = len(skills) > 0
+        result["found"] = bool(
+            result["skill"] or result["skills"] or result["related_skills"]
+        )
 
         return result
 
     # ======================================
-    # 2. TÌM COURSE THEO SKILL
+    # 2. TÌM COURSE
     # ======================================
 
     if intent == "course_search":
+
+        if entity_type == "organization":
+
+            courses = get_courses_by_organization(
+                db,
+                entity_name,
+            )
+            result["courses"] = courses
+            result["found"] = len(courses) > 0
+            return result
+
+        if entity_type == "instructor":
+
+            courses = get_courses_by_instructor(
+                db,
+                entity_name,
+            )
+            result["courses"] = courses
+            result["found"] = len(courses) > 0
+            return result
+
+        if entity_type == "rating":
+
+            try:
+                min_r = float(entity_name) if entity_name else 4.8
+            except (ValueError, TypeError):
+                min_r = 4.8
+
+            courses = get_courses_by_rating(
+                db,
+                min_rating=min_r,
+            )
+            result["courses"] = courses
+            result["found"] = len(courses) > 0
+            return result
+
+        if entity_type == "level":
+
+            courses = get_courses_by_level(
+                db,
+                entity_name,
+            )
+            result["courses"] = courses
+            result["found"] = len(courses) > 0
+            return result
 
         if entity_type == "skill":
 
