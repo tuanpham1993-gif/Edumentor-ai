@@ -66,3 +66,30 @@ export async function getFeaturedCoursesByLevels() {
 
   return Promise.all(requests);
 }
+
+/**
+ * Tìm kiếm danh sách kỹ năng cho bộ lọc hoặc gợi ý.
+ * Endpoint: GET /api/skills
+ *
+ * @param {Object} [params]
+ * @param {string} [params.keyword] - Từ khóa tìm kiếm kỹ năng
+ * @param {number} [params.skip=0] - Số bản ghi bỏ qua
+ * @param {number} [params.limit=30] - Số kỹ năng tối đa (1-50)
+ * @returns {Promise<{total: number, skip: number, limit: number, data: Array<{skill_id: number, skill: string, is_active: boolean}>}>}
+ */
+export async function getSkills(params = {}) {
+  const response = await client.get('/skills', { params });
+  return response.data;
+}
+
+/**
+ * Lấy thông tin chi tiết một kỹ năng theo skill_id.
+ * Endpoint: GET /api/skills/{skill_id}
+ *
+ * @param {number|string} skillId
+ * @returns {Promise<{skill_id: number, skill: string, is_active: boolean}>}
+ */
+export async function getSkillDetail(skillId) {
+  const response = await client.get(`/skills/${skillId}`);
+  return response.data;
+}

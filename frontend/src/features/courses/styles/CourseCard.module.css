@@ -254,9 +254,19 @@
   border-radius: 999px;
   background: var(--info-bg, rgba(46, 144, 250, 0.12));
   color: var(--info-fg, #53b1fd);
+  border: 1px solid transparent;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--d-fast) var(--e-std);
+}
+
+.skill:hover {
+  background: var(--accent-soft-bg);
+  color: var(--accent);
+  border-color: var(--accent-soft-border);
+  transform: translateY(-1px);
 }
 
 .meta {

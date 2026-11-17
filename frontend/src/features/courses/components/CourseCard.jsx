@@ -36,6 +36,7 @@ export default function CourseCard({
   isCompleted = false,
   onToggleBookmark,
   onSelectCourse,
+  onSelectSkill,
 }) {
   if (!course) return null;
 
@@ -137,7 +138,17 @@ export default function CourseCard({
         <div className={styles.skills}>
           {skills_info && skills_info.length > 0 ? (
             skills_info.slice(0, 3).map((item) => (
-              <span key={item.skill_id} className={styles.skill} title={item.skill}>
+              <span
+                key={item.skill_id}
+                className={styles.skill}
+                title={`Lọc theo kỹ năng: ${item.skill}`}
+                onClick={(e) => {
+                  if (onSelectSkill) {
+                    e.stopPropagation();
+                    onSelectSkill(item);
+                  }
+                }}
+              >
                 {item.skill}
               </span>
             ))

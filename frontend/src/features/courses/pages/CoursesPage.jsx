@@ -1,8 +1,9 @@
 // Trang Danh mục khóa học (/courses) dành cho học viên
 // Tuân thủ toàn diện thiết kế Mockup và quy chuẩn dự án EduMentor AI.
 import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-import { getCourses } from '../../../api/courses.api.js';
+import { getCourses, getSkillDetail } from '../../../api/courses.api.js';
 import {
   addBookmark,
   getMyBookmarks,
@@ -25,9 +26,13 @@ export default function CoursesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // URL search params
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // Bộ lọc
   const [search, setSearch] = useState('');
   const [level, setLevel] = useState('');
+  const [selectedSkill, setSelectedSkill] = useState(null);
   const [sortBy, setSortBy] = useState('rating');
   const [page, setPage] = useState(1);
 
@@ -79,6 +84,38 @@ export default function CoursesPage() {
     fetchUserTracking();
   }, [fetchUserTracking]);
 
+  // 1.1 Khôi phục kỹ năng từ URL khi mở trang (nếu có ?skill_id=...)
+  useEffect(() => {
+    const urlSkillId = searchParams.get('skill_id');
+    if (urlSkillId && (!selectedSkill || selectedSkill.skill_id !== Number(urlSkillId))) {
+      getSkillDetail(urlSkillId)
+        .then((res) => {
+          if (res) setSelectedSkill({ skill_id: res.skill_id, skill: res.skill });
+        })
+        .catch(() => {
+          // Bỏ qua nếu mã kỹ năng không hợp lệ
+        });
+    } else if (!urlSkillId && selectedSkill) {
+      setSelectedSkill(null);
+    }
+  }, [searchParams]);
+
+  // Xử lý đổi kỹ năng và đồng bộ lên URL
+  const handleSkillChange = useCallback(
+    (skill) => {
+      setSelectedSkill(skill);
+      setPage(1);
+      const newParams = new URLSearchParams(searchParams);
+      if (skill?.skill_id) {
+        newParams.set('skill_id', String(skill.skill_id));
+      } else {
+        newParams.delete('skill_id');
+      }
+      setSearchParams(newParams, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
+
   // 2. Tải danh sách khóa học theo bộ lọc
   const fetchCourses = useCallback(async () => {
     setLoading(true);
@@ -86,6 +123,7 @@ export default function CoursesPage() {
     try {
       const res = await getCourses({
         search: search.trim() || undefined,
+        skill_id: selectedSkill?.skill_id || undefined,
         level: level || undefined,
         sort_by: sortBy || undefined,
         page,
@@ -102,7 +140,7 @@ export default function CoursesPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, level, sortBy, page]);
+  }, [search, selectedSkill, level, sortBy, page]);
 
   useEffect(() => {
     fetchCourses();
@@ -246,10 +284,31 @@ export default function CoursesPage() {
         <CourseFilters
           level={level}
           onLevelChange={handleLevelChange}
+          selectedSkill={selectedSkill}
+          onSkillChange={handleSkillChange}
           sortBy={sortBy}
           onSortByChange={handleSortByChange}
           total={total}
         />
+
+        {/* Thanh chip hiển thị kỹ năng đang lọc nếu có */}
+        {selectedSkill && (
+          <div className={styles.activeFilterBar}>
+            <span className={styles.activeFilterLabel}>Đang lọc theo kỹ năng:</span>
+            <span className={styles.activeSkillChip}>
+              {selectedSkill.skill}
+              <button
+                type="button"
+                className={styles.clearSkillChipBtn}
+                onClick={() => handleSkillChange(null)}
+                title="Bỏ lọc kỹ năng này"
+                aria-label="Bỏ lọc kỹ năng này"
+              >
+                ×
+              </button>
+            </span>
+          </div>
+        )}
 
         {/* Trạng thái 1: Đang tải (Skeletons) */}
         {loading ? (
@@ -281,13 +340,14 @@ export default function CoursesPage() {
             <p>
               Hãy thử tìm kiếm với từ khóa khác hoặc bỏ các bộ lọc cấp độ để xem thêm nhiều khóa học.
             </p>
-            {(search || level) && (
+            {(search || level || selectedSkill) && (
               <button
                 type="button"
                 className="btn btn-sm"
                 onClick={() => {
                   setSearch('');
                   setLevel('');
+                  handleSkillChange(null);
                   setPage(1);
                 }}
               >
@@ -308,6 +368,7 @@ export default function CoursesPage() {
                   isCompleted={completedIds.has(course.course_id)}
                   onToggleBookmark={handleToggleBookmark}
                   onSelectCourse={setSelectedCourse}
+                  onSelectSkill={handleSkillChange}
                 />
               ))}
             </div>
@@ -356,6 +417,10 @@ export default function CoursesPage() {
           isOngoing={ongoingIds.has(selectedCourse.course_id)}
           isCompleted={completedIds.has(selectedCourse.course_id)}
           onToggleBookmark={handleToggleBookmark}
+          onSelectSkill={(skill) => {
+            setSelectedCourse(null);
+            handleSkillChange(skill);
+          }}
           onJoinCourse={(courseId) => {
             // Khi đã tham gia học: thêm vào ongoingIds và xóa khỏi bookmarkIds
             setOngoingIds((prev) => new Set(prev).add(courseId));
