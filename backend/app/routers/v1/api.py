@@ -1,3 +1,4 @@
+
 """
 Tập hợp tất cả các Sub-router của API v1 thành một Router thống nhất.
 """
@@ -19,8 +20,12 @@ from app.routers.v1.endpoints import (
     notifications,
     review,
     skill_service,
+    feedback,  # Feedback dành cho User
 )
 from app.routers.v1.endpoints.admin import review_admin
+
+# Feedback dành cho Admin
+from app.routers.v1.endpoints.admin import feedback as admin_feedback
 
 # Chatbot Tutor của Tâm
 from app.routers.v1.chat_tutor import (
@@ -30,8 +35,6 @@ from app.routers.v1.chat_tutor import (
 
 # Tạm comment để tránh tải SentenceTransformer khi chạy server hoặc pytest
 # from app.routers.v1.endpoints import recommendation_service
-
-
 api_router = APIRouter()
 
 # 1. Kiểm tra sức khỏe hệ thống
@@ -45,6 +48,11 @@ api_router.include_router(
 api_router.include_router(auth.router, tags=["Auth"], prefix="/auth")
 api_router.include_router(me.router, tags=["Me"], prefix="/me")
 
+# 3. Lộ trình, kỹ năng, gợi ý (Hòa)
+api_router.include_router(learning_path_service.router, tags=["learning path endpoint"], prefix="/learning-paths") # api/learning-paths
+api_router.include_router(learning_path_node_service.router, tags=["learning path node endpoint"], prefix="/learning-paths-nodes")
+api_router.include_router(skill_service.router, tags=["skill endpoint"], prefix="/skills")
+api_router.include_router(recommendation_service.router, tags=["learning path generation"], prefix="/learning-paths-generation")
 # Thông báo
 api_router.include_router(
     notifications.router,
@@ -84,32 +92,6 @@ api_router.include_router(
     prefix="/admin/review",
 )
 
-# 4. Lộ trình và kỹ năng
-api_router.include_router(
-    learning_path_service.router,
-    tags=["learning path endpoint"],
-    prefix="/learning-paths",
-)
-
-api_router.include_router(
-    learning_path_node_service.router,
-    tags=["learning path node endpoint"],
-    prefix="/learning-paths-nodes",
-)
-
-api_router.include_router(
-    skill_service.router,
-    tags=["skill endpoint"],
-    prefix="/skills",
-)
-
-# Tạm thời chưa bật recommendation service
-api_router.include_router(
-    recommendation_service.router,
-    tags=["learning path generation"],
-    prefix="/learning-paths-generation",
-)
-
 # 5. Chatbot gia sư của Tâm
 
 # Chatbot dành cho người đã đăng nhập
@@ -122,7 +104,19 @@ api_router.include_router(
     public_chat_router,
 )
 
-# 6. Quản trị Admin
+# 6. Feedback
+
+# Feedback dành cho User đã đăng nhập
+api_router.include_router(
+    feedback.router,
+)
+
+# Feedback dành cho Admin
+api_router.include_router(
+    admin_feedback.router,
+)
+
+# 7. Quản trị Admin
 api_router.include_router(
     admin_router,
     prefix="/admin",

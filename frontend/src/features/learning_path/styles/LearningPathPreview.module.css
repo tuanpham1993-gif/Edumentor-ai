@@ -1,0 +1,182 @@
+
+.previewContainer {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 32px auto;
+  padding: 28px;
+
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-xl);
+
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  box-shadow: 0 12px 36px rgba(var(--shadow-rgb), 0.15);
+}
+
+.previewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrowPreview {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.titlePreview {
+  margin: 7px 0 0;
+  color: var(--text);
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.skillCount {
+  padding: 7px 12px;
+
+  border: 1px solid var(--accent-soft-border);
+  border-radius: var(--r-pill);
+
+  background: var(--accent-soft-bg);
+  color: var(--accent-soft-fg);
+
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.goalInformation {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  padding: 16px;
+
+  background: var(--surface-sunk);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+}
+
+.goalLabel {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.originalQuery {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.goalType {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.reviewMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding: 14px 16px;
+
+  background: var(--accent-soft-bg);
+  border: 1px solid var(--accent-soft-border);
+  border-radius: var(--r-lg);
+}
+
+.reviewMessage strong {
+  color: var(--accent-soft-fg);
+  font-size: 14px;
+}
+
+.reviewMessage span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.previewFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.cancelButtonPreview,
+.confirmButtonPreview {
+  min-width: 120px;
+  padding: 10px 18px;
+
+  border-radius: var(--r-md);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition:
+    background var(--d-fast) var(--e-std),
+    border-color var(--d-fast) var(--e-std),
+    opacity var(--d-fast) var(--e-std);
+}
+
+.cancelButtonPreview {
+  background: var(--card-inner);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+}
+
+.cancelButtonPreview:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.confirmButtonPreview {
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 1px solid var(--accent);
+}
+
+.confirmButtonPreview:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.cancelButtonPreview:disabled,
+.confirmButtonPreview:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .previewContainer {
+    padding: 16px;
+  }
+
+  .previewHeader {
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 19px;
+  }
+
+  .previewFooter {
+    flex-direction: column-reverse;
+  }
+
+  .cancelButtonPreview,
+  .confirmButtonPreview {
+    width: 100%;
+  }
+}

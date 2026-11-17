@@ -6,10 +6,12 @@ from app.schemas.learning_path import (LearningPathNodeInsert,
     LearningPathNodeUpdate, LearningPathNodeResponse
 )
 from app.services import learning_path_node_service as node_service
-
+from app.core.dependencies import get_current_user
+from app.models.user import Users
 router = APIRouter()
 
-@router.get("/{path_id}/nodes/{skill_id}", summary="Get node detail, add user authentication general for student and admin")
+@router.get("/{path_id}/nodes/{skill_id}", 
+            summary="Get node detail, add user authentication general for student and admin")
 def get_learning_path_node_detail(
     path_id: int, skill_id: int, db: Session = Depends(get_db)
 ):
@@ -28,9 +30,10 @@ def get_learning_path_node_recommendation(
              summary="Add a new node to a learning path")
 def add_learning_path_node(
     record_id: int, request: LearningPathNodeInsert,
-    student_id: int = Query(...), db: Session = Depends(get_db),
+    current_user: Users = Depends(get_current_user), db: Session = Depends(get_db),
 ):
     try:
+        student_id = current_user.user_id
         return node_service.add_learning_path_node(
             db=db, path_id=record_id,
             student_id=student_id,
@@ -49,9 +52,10 @@ def add_learning_path_node(
               summary="Update a learning path node")
 def update_learning_path_node(
     record_id: int, skill_id: int, request: LearningPathNodeUpdate,
-    student_id: int = Query(...), db: Session = Depends(get_db)
+    current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)
 ):
     try:
+        student_id = current_user.user_id
         return node_service.update_learning_path_node(
             db=db, path_id=record_id,
             student_id=student_id, skill_id=skill_id,
@@ -68,10 +72,11 @@ def update_learning_path_node(
                summary="Delete a node from a learning path")
 def delete_learning_path_node(
     record_id: int, skill_id: int,
-    student_id: int = Query(...),
+    current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     try:
+        student_id = current_user.user_id
         node_service.delete_learning_path_node(
             db=db, path_id=record_id,
             student_id=student_id, skill_id=skill_id,

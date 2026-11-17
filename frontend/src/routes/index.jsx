@@ -40,10 +40,16 @@ import AdminHistoricalPage from '../features/admin/pages/AdminHistoricalPage.jsx
 import AdminFeedbackPage from '../features/admin/pages/AdminFeedbackPage.jsx';
 import AdminUserPathsPage from '../features/admin/pages/AdminUserPathsPage.jsx';
 import AdminReviewQuestionsPage from '../features/review-admin/pages/AdminReviewQuestionsPage.jsx'; // Tuấn · duyệt câu AI
+import TutorPage from '../features/tutor/pages/TutorPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
-
+import MyLearningPathsPage from '../features/learning_path/pages/MyLearningPathPage.jsx';
+import LearningPathPreviewPage from '../features/learning_path/pages/LearningPathPreviewPage.jsx';
+import LearningPathDetailPage from '../features/learning_path/pages/LearningPathDetailPage.jsx';
+function AdminHomePlaceholder() {
+  return <p className="muted">Trang quản trị (Khôi / Tâm / Hòa) — đang phát triển.</p>;
+}
 
 export default function AppRoutes() {
   return (
@@ -79,16 +85,24 @@ export default function AppRoutes() {
           <Route path="/courses" element={<CoursesPage />} />
           {/* Khóa học của tôi — module Tâm */}
           <Route path="/me/courses" element={<MyCoursesPage />} />
+          {/* AI Tutor — Tâm */}
+          <Route path="/tutor" element={<TutorPage />} />
           {/* Trang của nhóm khác / module 09 chưa làm → "Tạm thời chưa khả dụng" (08/11).
               Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
               (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}
-          {MAIN_NAV.map((item) => (
-            <Route
-              key={item.to}
-              path={item.to}
-              element={<ComingSoon feature={item.text} backTo="/me" />}
-            />
-          ))}
+          {/*<Route path="/me/learning-paths" element={<ComingSoon feature={item.text} backTo="/me"/>}*/}
+          <Route path="/me/make-learning-path-generate" element={<LearningPathPreviewPage/>}/>
+          <Route path="/me/my-learning-path" element={<MyLearningPathsPage/>}/> 
+          <Route path="/me/my-learning-path/details/:recordId" element={<LearningPathDetailPage/>}/>   
+           {MAIN_NAV
+            .filter((item) => item.to !== "/me/my-learning-path")
+            .map((item) => (
+              <Route
+                key={item.to}
+                path={item.to}
+                element={<ComingSoon feature={item.text} backTo="/me" />}
+              />
+            ))}
           <Route path="/me/skills" element={<SkillsPage />} />
           <Route path="/me/skills/browse" element={<SkillBrowsePage />} />
         </Route>

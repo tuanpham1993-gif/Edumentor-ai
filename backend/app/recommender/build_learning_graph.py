@@ -43,18 +43,24 @@ def get_path_templates(db: Session):
         for template in templates
     ]
 
-def build_learning_graph_basic(db: Session, skill_input):
+def build_learning_graph_basic(db: Session, skill_input, all_type = False):
     visited_skill = createVisited(db, skill_input) #expaneded till root
     node_freq_to_skills = {}
     edges_list = set()
     #this step need to be adjust to database later
 
     if visited_skill:
-        statement = select(SkillRelation).where(
-            SkillRelation.from_skill_id.in_(visited_skill),
-            SkillRelation.to_skill_id.in_(visited_skill),
-            SkillRelation.relation_type == "prerequisite"
-        )
+        if(all_type):
+            statement = select(SkillRelation).where(
+                SkillRelation.from_skill_id.in_(visited_skill),
+                SkillRelation.to_skill_id.in_(visited_skill),
+            )
+        else:
+            statement = select(SkillRelation).where(
+                SkillRelation.from_skill_id.in_(visited_skill),
+                SkillRelation.to_skill_id.in_(visited_skill),
+                SkillRelation.relation_type == "prerequisite"
+            )
 
         relations = db.execute(statement).scalars().all()
 
@@ -241,7 +247,7 @@ def build_learning_path_pipeline(
             skill_id = each["skill_id"]
             # Expand prerequisites of every template skill
             _, _, skill_set, _, edges = (
-                build_learning_graph_basic(db,skill_id)
+                build_learning_graph_basic(db=db, skill_input=skill_id, all_type=True)
             )
 
             visited_skill.update(skill_set)
@@ -250,7 +256,6 @@ def build_learning_path_pipeline(
     # ======================================================
     # 3.1 Collaborating filtering
     # ======================================================
-    global model
     historical_candidate = historical_record_retrieval_pipeline(
           db=db,
           current_query=user_query,
@@ -259,7 +264,7 @@ def build_learning_path_pipeline(
           threshold=0.7
       )
     for each in historical_candidate:
-      _, _, skill_set, _, edges = (build_learning_graph_basic(db, each["skill_id"]))
+      _, _, skill_set, _, edges = (build_learning_graph_basic(db, each["skill_id"]), True)
       visited_skill.update(skill_set)
       edges_list.update(edges)
     #complete retrieve student records and add to basic historical path

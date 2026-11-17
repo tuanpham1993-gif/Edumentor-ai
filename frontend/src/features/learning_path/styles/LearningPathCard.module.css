@@ -1,0 +1,191 @@
+
+.cardLearningPath {
+    width: 100%;
+    max-width: 365px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    padding: 22px 24px 20px;
+
+    background: var(--card);
+    color: var(--text);
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-xl);
+
+    transition:
+        border-color var(--d-base) var(--e-std),
+        transform var(--d-base) var(--e-std),
+        box-shadow var(--d-base) var(--e-std);
+}
+
+.cardLearningPath:hover {
+    border-color: var(--outline);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--shadow-rgb), 0.2);
+}
+
+/* ---------- Header ---------- */
+
+.cardHeaderLearningPath {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.titleLearningPath {
+    min-width: 0;
+    margin: 0;
+
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Status ---------- */
+
+.statusLearningPath {
+    flex-shrink: 0;
+
+    padding: 4px 10px;
+
+    border: 1px solid transparent;
+    border-radius: var(--r-pill);
+
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ongoing {
+    background: var(--info-bg);
+    color: var(--info-fg);
+    border-color: var(--info-border);
+}
+
+.notStarted {
+    background: var(--chip-bg);
+    color: var(--text-muted);
+    border-color: var(--outline);
+}
+
+.completed {
+    background: var(--ok-bg);
+    color: var(--ok-fg);
+    border-color: var(--ok-border);
+}
+
+.abandoned {
+    background: var(--danger-bg);
+    color: var(--danger-fg);
+    border-color: var(--danger-border);
+}
+
+/* ---------- Goal information ---------- */
+
+.goalInfoLearningPath {
+    margin: -4px 0 0;
+
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ---------- Progress ---------- */
+
+.progressInfoLearningPath {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.progressTrackLearningPath {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    background: var(--track);
+    border-radius: var(--r-pill);
+}
+
+.progressFillLearningPath {
+    height: 100%;
+    background: var(--accent);
+    border-radius: var(--r-pill);
+    transition: width var(--d-emph) var(--ease-out);
+}
+
+.cardFooterLearningPath {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* ---------- Button ---------- */
+
+.viewButtonLearningPath {
+    width: 100%;
+    min-height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 2px;
+    padding: 8px 14px;
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-md);
+
+    background: transparent;
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background var(--d-fast),
+        border-color var(--d-fast),
+        color var(--d-fast);
+}
+
+.viewButtonLearningPath:hover {
+    background: var(--hover);
+    border-color: var(--outline);
+}
+
+.viewButtonLearningPath:active {
+    transform: scale(0.98);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+    .cardLearningPath {
+        max-width: none;
+        padding: 18px;
+    }
+
+    .titleLearningPath {
+        font-size: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cardLearningPath,
+    .progressFillLearningPath,
+    .viewButtonLearningPath {
+        transition: none;
+    }
+}

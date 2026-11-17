@@ -38,6 +38,7 @@ export function AuthProvider({ children }) {
     }
     try {
       const me = await meApi.getMe();
+      console.log(me)
       setUser(me);
       setStatus('authenticated');
     } catch (err) {

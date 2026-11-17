@@ -25,15 +25,15 @@ DOCUMENT_PATH = (
 )
 
 # Embedding model: MiniLM, maximum 128 tokens.
-MAX_EMBED_TOKENS = embedding_model_tutor._model.max_seq_length
+MAX_EMBED_TOKENS = embedding_model_tutor._model.max_seq_length 
 
 EMBEDDING_TOKENIZER = (
-    embedding_model_tutor._model._first_module().tokenizer
+    embedding_model_tutor._model._first_module().tokenizer #đoạn này dùng để truy cập tokenizer của mô hình nhúng MiniLM
 )
 
-CHUNK_SIZE = 100
-CHUNK_OVERLAP = 15
-TOKEN_RESERVE = 8
+CHUNK_SIZE = 100 #Mỗi chunk chứa tối đa 100 token, có thể điều chỉnh nếu cần.
+CHUNK_OVERLAP = 15# Mỗi chunk chồng lấn 15 token với chunk trước đó, để giữ ngữ cảnh.
+TOKEN_RESERVE = 8# Số token dự phòng cho các token đặc biệt và tiền tố, để tránh vượt quá giới hạn của mô hình nhúng.
 
 EXPECTED_FAQ_QUESTIONS = 10
 
@@ -44,7 +44,7 @@ EXCLUDED_SECTIONS = {11}
 # 2. SECTION METADATA
 # ==========================================
 
-SECTION_CONFIG = {
+SECTION_CONFIG = { #gắn metadata cho từng section, bao gồm category, description và tags để mô tả nội dung và mục đích của từng section trong tài liệu SYSTEM_EN.md
     1: {
         "category": "system_overview",
         "description": (
@@ -147,16 +147,16 @@ def count_embedding_tokens(text: str) -> int:
 
     tokens = EMBEDDING_TOKENIZER.encode(
         text,
-        add_special_tokens=True,
+        add_special_tokens=True,# thêm các token đặc biệt như [CLS] và [SEP] vào đầu và cuối chuỗi, để phù hợp với cách mô hình nhúng MiniLM xử lý văn bản.
     )
 
-    return len(tokens)
+    return len(tokens) #trả về độ dài của danh sách token, tức là số lượng token trong văn bản đã được mã hóa.
 
 
 def split_text_by_token_limit(
     text: str,
     prefix: str,
-):
+):#2 tham số 1 cái là văn bản cần chia nhỏ, 1 cái là tiền tố (prefix) để giữ ngữ cảnh cho mỗi chunk. Hàm này chia văn bản thành các chunk sao cho mỗi chunk cộng với prefix không vượt quá giới hạn token của mô hình nhúng.
     """
     Split text while preserving the prefix.
 
@@ -164,13 +164,13 @@ def split_text_by_token_limit(
     the embedding model's maximum token limit.
     """
 
-    prefix_tokens = count_embedding_tokens(prefix)
+    prefix_tokens = count_embedding_tokens(prefix) #đếm số lượng token trong prefix, để biết bao nhiêu token đã được sử dụng cho tiền tố. không được vượt quá giới hạn token của mô hình nhúng
 
     available_tokens = (
         MAX_EMBED_TOKENS
         - prefix_tokens
         - TOKEN_RESERVE
-    )
+    )# CÔNG THỨC tính toán số lượng token còn lại cho văn bản chính, bằng cách lấy giới hạn token tối đa của mô hình nhúng trừ đi số token đã sử dụng cho prefix và số token dự phòng. Nếu số lượng token còn lại nhỏ hơn 20, hàm sẽ ném ra lỗi ValueError, vì không đủ token để tạo chunk hợp lệ.
 
     if available_tokens < 20:
         raise ValueError(
@@ -204,7 +204,7 @@ def split_text_by_token_limit(
 # 4. CREATE DOCUMENT
 # ==========================================
 
-def create_document(
+def create_document( #hàm tạo tài liệu cho llma
     text: str,
     metadata: dict,
 ) -> Document:
@@ -215,7 +215,7 @@ def create_document(
     from embedding text and LLM metadata.
     """
 
-    token_count = count_embedding_tokens(text)
+    token_count = count_embedding_tokens(text) #đếm token của 
 
     if token_count > MAX_EMBED_TOKENS:
         raise ValueError(
@@ -229,7 +229,7 @@ def create_document(
         metadata=metadata,
         excluded_embed_metadata_keys=list(metadata.keys()),
         excluded_llm_metadata_keys=list(metadata.keys()),
-    )
+    ) 
 
 
 # ==========================================

@@ -1,0 +1,243 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: var(--card, #141312);
+  border: 1px solid var(--card-border, #2c2b29);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(245, 165, 36, 0.2);
+  overflow: hidden;
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: var(--card-inner, #1c1d20);
+  border-bottom: 1px solid var(--line, #2a2926);
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.keyIcon {
+  font-size: 20px;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text, #f3efe8);
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #8f897f);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  background: var(--hover, rgba(255, 255, 255, 0.08));
+  color: var(--text, #f3efe8);
+}
+
+.modalBody {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.desc {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-dim, #b8b2a8);
+  line-height: 1.5;
+}
+
+.statusCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.statusCustom {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.statusDefault {
+  background: rgba(245, 165, 36, 0.1);
+  border: 1px solid rgba(245, 165, 36, 0.25);
+  color: #fbbf24;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text, #f3efe8);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 42px 12px 14px;
+  background: var(--card-inner, #1c1d20);
+  border: 1px solid var(--card-border, #33312e);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--text, #f3efe8);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: monospace;
+}
+
+.input:focus {
+  border-color: var(--accent, #f5a524);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.18);
+}
+
+.toggleEyeBtn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 16px;
+  color: var(--text-muted, #8f897f);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-muted, #8f897f);
+  line-height: 1.4;
+}
+
+.link {
+  color: var(--accent, #f5a524);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.modalFooter {
+  padding: 14px 22px;
+  background: var(--card-inner, #1c1d20);
+  border-top: 1px solid var(--line, #2a2926);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.btnPrimary {
+  background: var(--accent, #f5a524);
+  color: #121110;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnPrimary:hover {
+  background: var(--accent-hover, #ffb84d);
+  transform: translateY(-1px);
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--text-muted, #8f897f);
+  border: 1px solid var(--card-border, #33312e);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnSecondary:hover {
+  background: var(--hover, rgba(255, 255, 255, 0.05));
+  color: var(--text, #f3efe8);
+}
+
+.btnDanger {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnDanger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}

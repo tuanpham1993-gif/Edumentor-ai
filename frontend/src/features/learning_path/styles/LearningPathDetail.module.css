@@ -1,0 +1,236 @@
+.detailContainer {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  color: var(--text);
+  animation: page-in var(--d-slow) var(--e-in) both;
+}
+
+/* ---------- Page header ---------- */
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.detailTitle {
+  min-width: 200px;
+  flex: 1;
+}
+
+.detailTitle h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.detailTitle p {
+  margin: 7px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ---------- Main content ---------- */
+
+.detailContent {
+  display: grid;
+  grid-template-columns: minmax(0, 65fr) minmax(280px, 35fr);
+  gap: 20px;
+  align-items: stretch;
+  min-height: 650px;
+}
+
+.graphSection {
+  min-width: 0;
+  min-height: 650px;
+  overflow: hidden;
+
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-xl);
+
+  background: var(--card);
+}
+
+.courseSection {
+  min-width: 0;
+  min-height: 650px;
+  overflow: hidden;
+
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-xl);
+
+  background: var(--card);
+}
+
+/* ---------- Empty state ---------- */
+
+.emptyMessage {
+  margin: 40px auto;
+  max-width: 500px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ---------- Course placeholder ---------- */
+
+.coursePlaceholder {
+  min-height: 400px;
+  height: 100%;
+
+  padding: 32px 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.placeholderIcon {
+  width: 56px;
+  height: 56px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: var(--r-lg);
+  background: var(--accent-soft-bg);
+  color: var(--accent-soft-fg);
+
+  font-size: 26px;
+  margin-bottom: 18px;
+}
+
+.coursePlaceholder h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 19px;
+}
+
+.coursePlaceholder p {
+  max-width: 260px;
+  margin: 10px 0 0;
+
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1050px) {
+  .detailContent {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .graphSection {
+    min-height: 600px;
+  }
+
+  .courseSection {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 720px) {
+  .detailContainer {
+    padding: 24px 16px 48px;
+  }
+
+  .detailTitle h1 {
+    font-size: 23px;
+  }
+
+  .detailContent {
+    gap: 14px;
+  }
+
+  .graphSection {
+    min-height: 480px;
+  }
+}
+
+.graphCanvasDetail {
+  width: 100%;
+  height: 100%;
+  min-height: 650px;
+
+  background: var(--surface-sunk);
+}
+
+/* Empty graph state */
+
+.emptyGraphDetail {
+  min-height: 400px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* React Flow background */
+.graphCanvasDetail :global(.react-flow__background) {
+  background: var(--surface-sunk);
+}
+
+/* React Flow controls */
+
+.graphCanvasDetail :global(.react-flow__controls) {
+  overflow: hidden;
+
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+
+  box-shadow: 0 4px 12px rgba(var(--shadow-rgb), 0.2);
+}
+
+.graphCanvasDetail :global(.react-flow__controls-button) {
+  width: 30px;
+  height: 30px;
+
+  border-bottom: 1px solid var(--card-border);
+
+  background: var(--card);
+  fill: var(--text);
+}
+
+.graphCanvasDetail :global(.react-flow__controls-button:hover) {
+  background: var(--hover);
+}
+
+.graphCanvasDetail :global(.react-flow__controls-button svg) {
+  fill: var(--text);
+}
+
+/* React Flow attribution */
+
+.graphCanvasDetail :global(.react-flow__attribution) {
+  background: var(--card);
+  color: var(--text-dim);
+}
+
+@media (max-width: 720px) {
+  .graphCanvasDetail {
+    min-height: 480px;
+  }
+}

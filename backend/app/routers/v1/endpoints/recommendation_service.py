@@ -11,12 +11,12 @@ from app.schemas.learning_path_generation import (
 from app.schemas.skill_extraction import(
     SkillExtractionRequest, SkillExtractionResponse
 )
-
+from app.models.user import Users
 from app.services import recommendation_service
 from app.schemas.learning_path import LearningPathResponse
 from app.services import learning_path_service as path_service
-from app.core.dependencies import get_llm_client, get_llm_client_base
-from app.services.skill_extraction_service import generate_skill_result, rearrange_learning_path
+from app.core.dependencies import get_llm_client, get_current_user
+from app.services.skill_extraction_service import generate_skill_result
 import httpx
 import logging
 from starlette.concurrency import run_in_threadpool
@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 @router.post("/learning_path_generate", 
-             response_model=SkillExtractionResponse)
+             response_model=SkillExtractionResponse,
+             description="For testing purpose")
 async def generate_learning_path_async(
     request: SkillExtractionRequest,
     client: httpx.AsyncClient = Depends(get_llm_client)
@@ -54,12 +55,10 @@ async def generate_learning_path_async(
 async def generate_learning_path(
     request: LearningPathGenerateRequest, 
     db: Session = Depends(get_db),
-    client: httpx.AsyncClient = Depends(get_llm_client),
-    base_client: httpx.AsyncClient = Depends(get_llm_client_base)):
+    client: httpx.AsyncClient = Depends(get_llm_client)):
     try:
         result = await generate_skill_result(
-            request.original_query,
-            client
+            request.original_query, client
         )
 
         goal_type = result["goal_type"]
@@ -123,9 +122,9 @@ async def generate_learning_path(
 )
 def confirm_learning_path(
     request: LearningPathConfirmRequest,
-    student_id: int = Query(...,description="Temporary student ID until authentication is implemented",),
+    current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db)):
-
+    
     if not request.confirmed:
         return LearningPathRejectedResponse(
             confirmed=False,
@@ -143,6 +142,7 @@ def confirm_learning_path(
     # --------------------------------------------------
 
     try:
+        student_id = current_user.user_id
         nodes = [
             {
                 "skill_id": node.skill_id,

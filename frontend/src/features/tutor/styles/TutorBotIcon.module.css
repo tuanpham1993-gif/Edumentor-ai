@@ -1,0 +1,33 @@
+.botIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  user-select: none;
+}
+
+.botIconWrapper:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 6px var(--lamp-glow, rgba(245, 165, 36, 0.4)));
+}
+
+.botSvg {
+  display: block;
+}
+
+.eyeBlink {
+  transform-origin: center;
+  animation: blink 4s infinite ease-in-out;
+}
+
+@keyframes blink {
+  0%, 94%, 100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}

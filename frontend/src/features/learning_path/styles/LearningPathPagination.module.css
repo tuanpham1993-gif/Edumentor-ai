@@ -1,0 +1,56 @@
+
+.paginationLearningPaths {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 12px;
+}
+
+.pageButtonLearningPaths {
+    min-height: 36px;
+    padding: 0 14px;
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-md);
+
+    background: transparent;
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background var(--d-fast),
+        border-color var(--d-fast),
+        color var(--d-fast);
+}
+
+.pageButtonLearningPaths:hover:not(:disabled) {
+    background: var(--hover);
+    border-color: var(--outline);
+}
+
+.pageButtonLearningPaths:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pageInfoLearningPaths {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .paginationLearningPaths {
+        gap: 10px;
+    }
+
+    .pageButtonLearningPaths {
+        padding: 0 10px;
+    }
+}
