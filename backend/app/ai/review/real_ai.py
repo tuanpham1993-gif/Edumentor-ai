@@ -21,6 +21,7 @@ Dữ liệu gửi đi CHỈ gồm: đề, barem, bài làm (chấm) / đoạn tr
 
 import json
 import random
+import time
 
 import httpx
 
@@ -44,6 +45,12 @@ API_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:gener
 RESULT_POINTS = GRADE_RESULTS  # full = đủ điểm ý, none = 0
 
 GRADE_RETRIES = 1  # kết quả sai khung → gọi lại tối đa 1 lần (docs/Review-AI-Grading.md B7)
+# 17/11: Gemini quá tải (503) một lần là rơi về chấm từ khóa — chạy thật gặp ngay ở lượt 63.
+# Lỗi TẠM THỜI phía Google (5xx) / rớt kết nối → gọi lại sau 1 s rồi 2 s. KHÔNG gọi lại 429 (hết hạn mức,
+# gọi nữa chỉ phí lượt) và quá thời gian chờ (đã tiêu hết ngân sách chờ chấm).
+TRANSIENT_STATUS = {500, 502, 503, 504}
+TRANSIENT_DELAYS = (1.0, 2.0)
+_sleep = time.sleep  # test thay bằng hàm không chờ
 
 
 def review_llm() -> tuple[str, str]:
@@ -82,6 +89,23 @@ class RealAI(ReviewAI):
 
     # ─────────────── gọi Gemini ───────────────
 
+    def _post(self, url: str, key: str, body: dict, timeout: float) -> httpx.Response:
+        """Gửi 1 request; lỗi tạm thời (5xx, rớt kết nối) → gọi lại theo TRANSIENT_DELAYS."""
+        for delay in (*TRANSIENT_DELAYS, None):
+            try:
+                with httpx.Client(timeout=timeout, transport=self._transport) as client:
+                    response = client.post(url, headers={"x-goog-api-key": key}, json=body)
+            except httpx.TimeoutException as err:  # chậm quá → không gọi lại
+                raise AIUnavailableError(f"Gọi Gemini lỗi: {type(err).__name__}") from None
+            except httpx.HTTPError as err:  # mất mạng / rớt kết nối
+                if delay is None:
+                    raise AIUnavailableError(f"Gọi Gemini lỗi: {type(err).__name__}") from None
+            else:
+                if response.status_code not in TRANSIENT_STATUS or delay is None:
+                    return response
+            _sleep(delay)
+        raise AssertionError("unreachable")  # pragma: no cover
+
     def _call(
         self,
         system_prompt: str,
@@ -100,11 +124,7 @@ class RealAI(ReviewAI):
             "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
             "generationConfig": config,
         }
-        try:
-            with httpx.Client(timeout=timeout or self.timeout, transport=self._transport) as client:
-                response = client.post(API_URL.format(model=model), headers={"x-goog-api-key": key}, json=body)
-        except httpx.HTTPError as err:  # mất mạng, quá thời gian chờ
-            raise AIUnavailableError(f"Gọi Gemini lỗi: {type(err).__name__}") from None
+        response = self._post(API_URL.format(model=model), key, body, timeout or self.timeout)
         if response.status_code != 200:
             try:
                 status = response.json().get("error", {}).get("status", "")

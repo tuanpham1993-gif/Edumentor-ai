@@ -15,7 +15,12 @@ QUESTION = {
     "content": "Phân biệt break và continue.",
     "rubric": [
         {"text": "break thoát vòng lặp", "max_points": 5, "main_keywords": ["thoát"], "sub_keywords": ["break"]},
-        {"text": "continue sang lần lặp kế", "max_points": 5, "main_keywords": ["bỏ qua"], "sub_keywords": ["continue"]},
+        {
+            "text": "continue sang lần lặp kế",
+            "max_points": 5,
+            "main_keywords": ["bỏ qua"],
+            "sub_keywords": ["continue"],
+        },
     ],
     "explanation": "Đáp án mẫu: break thoát hẳn; continue bỏ qua lần hiện tại.",
 }
@@ -46,10 +51,15 @@ def fake_gemini(payload=None, *, status=200, raw_text=None, seen=None):
 
 def test_grade_by_meaning_and_points_computed_by_code():
     seen = []
-    ai = RealAI(transport=fake_gemini([
-        {"item": 1, "result": "full", "evidence": "break thì dừng luôn vòng lặp."},
-        {"item": 2, "result": "none", "evidence": None},
-    ], seen=seen))
+    ai = RealAI(
+        transport=fake_gemini(
+            [
+                {"item": 1, "result": "full", "evidence": "break thì dừng luôn vòng lặp."},
+                {"item": 2, "result": "none", "evidence": None},
+            ],
+            seen=seen,
+        )
+    )
 
     results = ai.grade_essay(QUESTION, ANSWER)
 
@@ -63,10 +73,14 @@ def test_grade_by_meaning_and_points_computed_by_code():
 
 def test_evidence_is_kept_for_the_verifier():
     """B8 (15/11): RealAI không tự bỏ câu trích nữa — khối 5 Verifier của pipeline kiểm (so sau chuẩn hóa)."""
-    ai = RealAI(transport=fake_gemini([
-        {"item": 1, "result": "full", "evidence": "  câu này không có trong bài "},
-        {"item": 2, "result": "none", "evidence": None},
-    ]))
+    ai = RealAI(
+        transport=fake_gemini(
+            [
+                {"item": 1, "result": "full", "evidence": "  câu này không có trong bài "},
+                {"item": 2, "result": "none", "evidence": None},
+            ]
+        )
+    )
     assert [r["evidence"] for r in ai.grade_essay(QUESTION, ANSWER)] == ["câu này không có trong bài", None]
 
 
@@ -78,7 +92,10 @@ def test_empty_answer_not_sent_to_ai():
 
 def test_json_inside_code_fence_is_accepted():
     text = '```json\n[{"item":1,"result":"none","evidence":null},{"item":2,"result":"full","evidence":null}]\n```'
-    assert [r["result"] for r in RealAI(transport=fake_gemini(raw_text=text)).grade_essay(QUESTION, ANSWER)] == ["none", "full"]
+    assert [r["result"] for r in RealAI(transport=fake_gemini(raw_text=text)).grade_essay(QUESTION, ANSWER)] == [
+        "none",
+        "full",
+    ]
 
 
 @pytest.mark.parametrize(
@@ -103,16 +120,84 @@ def test_network_timeout_raises_unavailable():
         RealAI(transport=httpx.MockTransport(handler)).grade_essay(QUESTION, ANSWER)
 
 
+GOOD = [
+    {"item": 1, "result": "full", "evidence": "break thì dừng luôn vòng lặp."},
+    {"item": 2, "result": "none", "evidence": None},
+]
+
+
+def flaky_gemini(failures, seen):
+    """Lần gọi đầu lần lượt trả/ném theo `failures` (mã HTTP hoặc exception), sau đó trả kết quả tốt."""
+    queue = list(failures)
+    good = fake_gemini(GOOD)
+
+    def handler(request):
+        seen.append(request)
+        if queue:
+            failure = queue.pop(0)
+            if isinstance(failure, Exception):
+                raise failure
+            return httpx.Response(failure, json={"error": {"status": "UNAVAILABLE"}})
+        return good.handle_request(request)
+
+    return httpx.MockTransport(handler)
+
+
+@pytest.fixture
+def no_wait(monkeypatch):
+    waits = []
+    monkeypatch.setattr("app.ai.review.real_ai._sleep", waits.append)
+    return waits
+
+
+def test_transient_errors_are_retried(no_wait):
+    """17/11: Gemini 503 / rớt kết nối một lần → gọi lại sau 1 s, 2 s rồi chấm bằng AI bình thường."""
+    seen = []
+    failures = [503, httpx.ConnectError("rớt mạng")]
+    results = RealAI(transport=flaky_gemini(failures, seen)).grade_essay(QUESTION, ANSWER)
+
+    assert [r["result"] for r in results] == ["full", "none"]
+    assert len(seen) == 3 and no_wait == [1.0, 2.0]
+
+
+def test_transient_errors_give_up_after_retries(no_wait):
+    seen = []
+    with pytest.raises(AIUnavailableError, match="503"):
+        RealAI(transport=flaky_gemini([503, 502, 503], seen)).grade_essay(QUESTION, ANSWER)
+    assert len(seen) == 3  # 1 lần + 2 lần gọi lại, không hơn
+
+
+@pytest.mark.parametrize("failure", [429, httpx.ReadTimeout("chậm quá")])
+def test_quota_and_timeout_are_not_retried(no_wait, failure):
+    seen = []
+    with pytest.raises(AIUnavailableError):
+        RealAI(transport=flaky_gemini([failure], seen)).grade_essay(QUESTION, ANSWER)
+    assert len(seen) == 1 and no_wait == []
+
+
 def request_with(n_candidates):
     candidates = [
-        {"question_id": i, "chunk_id": 1, "type": "mcq", "level": "recognize", "content": f"Câu {i}",
-         "options": ["a", "b", "c", "d"], "correct_index": 0, "explanation": ""}
+        {
+            "question_id": i,
+            "chunk_id": 1,
+            "type": "mcq",
+            "level": "recognize",
+            "content": f"Câu {i}",
+            "options": ["a", "b", "c", "d"],
+            "correct_index": 0,
+            "explanation": "",
+        }
         for i in range(n_candidates)
     ]
     return GenerationRequest(
-        course_title="Python", skill_id=1, skill_name="Python", need={"recognize": 2},
+        course_title="Python",
+        skill_id=1,
+        skill_name="Python",
+        need={"recognize": 2},
         chunks=[RetrievedChunk(chunk_id=9, code="K1", title="t", content="nội dung")],
-        candidates=candidates, system_prompt="sys", prompt="user",
+        candidates=candidates,
+        system_prompt="sys",
+        prompt="user",
     )
 
 
@@ -125,7 +210,16 @@ def test_full_bank_does_not_call_ai():
 
 
 def test_small_bank_asks_ai_and_fills_chunk_id():
-    new = [{"type": "mcq", "level": "recognize", "content": "Mới?", "options": ["1", "2", "3", "4"], "correct_index": 1, "explanation": "x"}]
+    new = [
+        {
+            "type": "mcq",
+            "level": "recognize",
+            "content": "Mới?",
+            "options": ["1", "2", "3", "4"],
+            "correct_index": 1,
+            "explanation": "x",
+        }
+    ]
     seen = []
     out = RealAI(transport=fake_gemini(new, seen=seen)).generate_questions(request_with(3), random.Random(0))
     assert len(seen) == 1 and out[0]["chunk_id"] == 9 and "question_id" not in out[0]
@@ -144,14 +238,14 @@ def test_review_model_overrides_chatbot_model():
     """12/11: chatbot (Tâm) dùng LLM_MODEL, Ôn tập đặt REVIEW_LLM_MODEL riêng → gọi đúng model của Ôn tập."""
     seen = []
     settings.REVIEW_LLM_MODEL = "gemini-review"  # fixture gemini_settings tự trả lại sau test
-    RealAI(transport=fake_gemini([{"item": 1, "result": "full"}, {"item": 2, "result": "full"}], seen=seen)).grade_essay(
-        QUESTION, ANSWER
-    )
+    RealAI(
+        transport=fake_gemini([{"item": 1, "result": "full"}, {"item": 2, "result": "full"}], seen=seen)
+    ).grade_essay(QUESTION, ANSWER)
     assert "/models/gemini-review:generateContent" in str(seen[0].url)
 
     settings.REVIEW_LLM_MODEL = ""
     seen.clear()
-    RealAI(transport=fake_gemini([{"item": 1, "result": "full"}, {"item": 2, "result": "full"}], seen=seen)).grade_essay(
-        QUESTION, ANSWER
-    )
+    RealAI(
+        transport=fake_gemini([{"item": 1, "result": "full"}, {"item": 2, "result": "full"}], seen=seen)
+    ).grade_essay(QUESTION, ANSWER)
     assert "/models/gemini-test:generateContent" in str(seen[0].url)  # để trống → dùng LLM_MODEL chung

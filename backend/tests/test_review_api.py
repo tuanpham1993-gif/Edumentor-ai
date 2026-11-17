@@ -450,7 +450,7 @@ def test_real_ai_does_not_generate_when_active_plus_pending_reach_target(monkeyp
                         ("REVIEW_LLM_MODEL", "")):  # fmt: skip
         monkeypatch.setattr(settings, name, value)  # không phụ thuộc .env trên máy
     calls = []
-    transport = httpx.MockTransport(lambda request: calls.append(request) or httpx.Response(500))
+    transport = httpx.MockTransport(lambda request: calls.append(request) or httpx.Response(400))
     candidates = [
         {"question_id": i, "chunk_id": None, "type": "mcq", "level": "recognize", "content": f"Q{i}",
          "options": ["a", "b", "c", "d"], "correct_index": 0, "explanation": ""}
@@ -460,7 +460,7 @@ def test_real_ai_does_not_generate_when_active_plus_pending_reach_target(monkeyp
                                 candidates=candidates, pending_count=5)  # fmt: skip
     picked = RealAI(transport=transport).generate_questions(request, random.Random(0))
     assert calls == [] and len(picked) == 2 and all("question_id" in q for q in picked)
-    request.pending_count = 4  # 15 + 4 < 20 → mới gọi Gemini (ở đây trả 500 → lỗi, đúng là đã gọi)
+    request.pending_count = 4  # 15 + 4 < 20 → mới gọi Gemini (ở đây trả 400 → lỗi, đúng là đã gọi)
     with pytest.raises(AIUnavailableError):
         RealAI(transport=transport).generate_questions(request, random.Random(0))
     assert len(calls) == 1
