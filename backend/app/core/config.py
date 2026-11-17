@@ -61,6 +61,8 @@ class Settings(BaseSettings):
     LLM_URL_BASE: str = "http://localhost:8082"     # Hòa: llama.cpp (docker-compose llama-base)
     LLM_URL_ADAPTER: str = "http://localhost:8081"  # Hòa: llama.cpp + LoRA (llama-adapter)
 
+    #LLM_URL_BASE: http://llama-base:8080
+    #LLM_URL_ADAPTER: http://llama-adapter:8080
     SYSTEM_PROMPT: str = """
     You are EduMentor AI, an intelligent learning-path skill
     extraction assistant.
