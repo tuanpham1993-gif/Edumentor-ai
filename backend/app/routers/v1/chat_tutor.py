@@ -2,7 +2,7 @@
 import logging
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -106,6 +106,7 @@ def send_message(
     data: ChatMessageCreate,
     db: Session = Depends(get_db),
     current_user: Users = Depends(get_current_user),
+    x_gemini_api_key: str | None = Header(None, alias="X-Gemini-API-Key"),
 ):
     # Kiểm tra phiên chat có thuộc người đăng nhập không.
     get_owned_session(
@@ -114,12 +115,15 @@ def send_message(
         user_id=current_user.user_id,
     )
 
+    custom_key = x_gemini_api_key or data.api_key
+
     try:
         response_data = process_chat_message(
             db=db,
             session_id=session_id,
             user_content=data.content,
             allow_sql_retrieval=True,
+            custom_api_key=custom_key,
         )
 
         return {
@@ -287,6 +291,7 @@ def delete_session(
 def ask_public(
     data: ChatMessageCreate,
     db: Session = Depends(get_db),
+    x_gemini_api_key: str | None = Header(None, alias="X-Gemini-API-Key"),
 ):
     """
     Khách chưa đăng nhập vẫn có thể hỏi AI.
@@ -298,12 +303,15 @@ def ask_public(
     - Vẫn có thể sử dụng RAG/Qdrant.
     """
 
+    custom_key = x_gemini_api_key or data.api_key
+
     try:
         response_data = process_chat_message(
             db=db,
             session_id=None,
             user_content=data.content,
             allow_sql_retrieval=False,
+            custom_api_key=custom_key,
         )
 
         return {

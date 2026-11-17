@@ -31,6 +31,7 @@ ALLOWED_ENTITY_TYPES = {
     "instructor",
     "rating",
     "level",
+    "popular",
     "none",
 }
 
@@ -99,6 +100,17 @@ GENERIC_ENTITIES = {
     "nhung ky nang",
     "none",
     "null",
+    "duoc hoc nhieu nhat",
+    "hoc nhieu nhat",
+    "nhieu nguoi hoc nhat",
+    "pho bien nhat",
+    "noi bat nhat",
+    "noi bat",
+    "pho bien",
+    "hot nhat",
+    "top",
+    "hay nhat",
+    "tot nhat",
 }
 
 COMMON_TECH_SKILLS = [
@@ -546,6 +558,28 @@ def extract_skill_search_entity(user_message: str) -> dict:
             "entity_name": None,
         }
 
+    # 1.1. Tiêu chí Kỹ năng nổi bật / Được học nhiều nhất (Popular skills)
+    popular_skill_markers = [
+        "duoc hoc nhieu nhat", "hoc nhieu nhat", "nhieu nguoi hoc nhat",
+        "pho bien nhat", "noi bat nhat", "noi bat", "hot nhat", "pho bien",
+        "hang dau", "tieu bieu", "quan trong nhat", "hay nhat", "tot nhat"
+    ]
+    if any(re.search(r"\b" + re.escape(p) + r"\b", text) for p in popular_skill_markers):
+        matched_skill = None
+        for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
+            if re.search(r"\b" + re.escape(skill) + r"\b", text):
+                matched_skill = skill
+                break
+        if matched_skill:
+            return {
+                "entity_type": "skill",
+                "entity_name": normalize_entity_name(matched_skill),
+            }
+        return {
+            "entity_type": "popular",
+            "entity_name": "popular",
+        }
+
     # 2. Khớp các mẫu câu ngữ pháp trích xuất đầy đủ tên kỹ năng
     patterns = [
         # "Có skill nào liên quan đến/về SQL cần học không?"
@@ -817,6 +851,29 @@ def extract_course_search_entity(user_message: str) -> dict:
                 "entity_type": "skill",
                 "entity_name": None,
             }
+
+    # 1.1. Tiêu chí Được học nhiều nhất / Nổi bật / Phổ biến (Popular / Most Enrolled)
+    popular_course_markers = [
+        "duoc hoc nhieu nhat", "hoc nhieu nhat", "nhieu nguoi hoc nhat",
+        "pho bien nhat", "noi bat nhat", "hot nhat", "hang dau",
+        "top khoa hoc", "khoa hoc noi bat", "khoa hoc pho bien", "khoa hoc hot",
+        "noi bat", "pho bien"
+    ]
+    if any(re.search(r"\b" + re.escape(p) + r"\b", text) for p in popular_course_markers):
+        matched_skill = None
+        for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
+            if re.search(r"\b" + re.escape(skill) + r"\b", text):
+                matched_skill = skill
+                break
+        if matched_skill:
+            return {
+                "entity_type": "skill",
+                "entity_name": normalize_entity_name(matched_skill),
+            }
+        return {
+            "entity_type": "popular",
+            "entity_name": "popular",
+        }
 
     # 2. Tiêu chí Đánh giá / Rating (5 sao, đánh giá cao nhất,...)
     if re.search(
@@ -1464,6 +1521,12 @@ def classify_by_rules(user_message: str) -> dict | None:
             r"(?:skill|skills|ky nang)"
             r".*(?:nao|danh sach|liet ke)"
         ),
+        (
+            r"(?:skill|skills|ky nang).*(?:noi bat|duoc hoc nhieu|pho bien|hot nhat|tieu bieu|quan trong)"
+        ),
+        (
+            r"(?:noi bat|duoc hoc nhieu|pho bien|hot nhat).*(?:skill|skills|ky nang)"
+        ),
     ]
 
     if any(
@@ -1550,6 +1613,12 @@ def classify_by_rules(user_message: str) -> dict | None:
         ),
         (
             r"(?:tim|search|find|danh sach|liet ke|cho toi|cho minh)\s+.*?(?:khoa hoc|courses?).*?(?:beginner|co ban|nang cao|trung cap|5\s*sao)"
+        ),
+        (
+            r"(?:khoa hoc|courses?).*?(?:duoc hoc nhieu|hoc nhieu nhat|nhieu nguoi hoc|pho bien|noi bat|hot nhat)"
+        ),
+        (
+            r"(?:duoc hoc nhieu|hoc nhieu nhat|nhieu nguoi hoc|pho bien|noi bat|hot nhat).*?(?:khoa hoc|courses?)"
         ),
     ]
 
@@ -1998,12 +2067,15 @@ def _route_single_query(user_message: str) -> dict:
     if intent in {
         "skill_question",
         "skill_review",
-        "skill_search",
     }:
         entity_type = "skill"
 
+    elif intent == "skill_search":
+        if entity_type != "popular":
+            entity_type = "skill"
+
     elif intent == "course_search":
-        if entity_type not in {"organization", "instructor", "rating", "level"}:
+        if entity_type not in {"organization", "instructor", "rating", "level", "popular"}:
             entity_type = "skill"
 
     elif intent in {

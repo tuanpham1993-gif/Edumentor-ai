@@ -1,5 +1,27 @@
 import client from './client.js';
 
+export const API_KEY_STORAGE_KEY = 'edumentor_gemini_api_key';
+
+export function getStoredApiKey() {
+  try {
+    return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+export function setStoredApiKey(key) {
+  try {
+    if (key && key.trim()) {
+      localStorage.setItem(API_KEY_STORAGE_KEY, key.trim());
+    } else {
+      localStorage.removeItem(API_KEY_STORAGE_KEY);
+    }
+  } catch (err) {
+    console.error('Không thể lưu API Key vào localStorage:', err);
+  }
+}
+
 /**
  * 1. Tạo phiên chat mới
  * @param {string} topic - Tiêu đề hoặc chủ đề của phiên
@@ -39,11 +61,19 @@ export async function getChatMessages(sessionId) {
  * 5. Gửi tin nhắn trong phiên chat (nhận về câu trả lời và gợi ý)
  * @param {string} sessionId
  * @param {string} content
+ * @param {string} [apiKey] - Gemini API Key tùy chọn của người dùng
  */
-export async function sendChatMessage(sessionId, content) {
-  const response = await client.post(`/chat/sessions/${sessionId}/messages`, {
-    content,
-  });
+export async function sendChatMessage(sessionId, content, apiKey = null) {
+  const customKey = apiKey || getStoredApiKey();
+  const headers = customKey ? { 'X-Gemini-API-Key': customKey } : {};
+  const response = await client.post(
+    `/chat/sessions/${sessionId}/messages`,
+    {
+      content,
+      api_key: customKey || undefined,
+    },
+    { headers }
+  );
   return response.data;
 }
 
@@ -59,8 +89,18 @@ export async function deleteChatSession(sessionId) {
 /**
  * 7. Chat công khai dành cho khách (không lưu phiên, không cần đăng nhập)
  * @param {string} content
+ * @param {string} [apiKey] - Gemini API Key tùy chọn của người dùng
  */
-export async function askPublicTutor(content) {
-  const response = await client.post('/chat/ask', { content });
+export async function askPublicTutor(content, apiKey = null) {
+  const customKey = apiKey || getStoredApiKey();
+  const headers = customKey ? { 'X-Gemini-API-Key': customKey } : {};
+  const response = await client.post(
+    '/chat/ask',
+    {
+      content,
+      api_key: customKey || undefined,
+    },
+    { headers }
+  );
   return response.data;
 }

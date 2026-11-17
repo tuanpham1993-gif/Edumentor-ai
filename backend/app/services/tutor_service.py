@@ -874,6 +874,7 @@ def process_chat_message(
     session_id: UUID | None,
     user_content: str,
     allow_sql_retrieval: bool = True,
+    custom_api_key: str | None = None,
 ) -> dict:
     """
     Xử lý tin nhắn chatbot.
@@ -1157,7 +1158,7 @@ INSTRUCTIONS
     # STEP 7. CALL GEMINI
     # ======================================
 
-    ai_text = generate_text(prompt)
+    ai_text = generate_text(prompt, api_key=custom_api_key)
 
     print("\n========== GEMINI RAW RESPONSE ==========")
     print(repr(ai_text))

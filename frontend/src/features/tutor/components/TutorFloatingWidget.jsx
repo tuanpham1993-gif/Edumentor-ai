@@ -4,6 +4,7 @@ import { useAuth } from '../../../hooks/useAuth.js';
 import * as tutorApi from '../../../api/tutor.api.js';
 import TutorBotIcon from './TutorBotIcon.jsx';
 import TutorMessageItem from './TutorMessageItem.jsx';
+import ApiKeyModal from './ApiKeyModal.jsx';
 import styles from '../styles/TutorFloatingWidget.module.css';
 
 const DEFAULT_WELCOME_MESSAGE = {
@@ -44,8 +45,14 @@ export default function TutorFloatingWidget() {
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
+  const [hasCustomKey, setHasCustomKey] = useState(false);
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    setHasCustomKey(Boolean(tutorApi.getStoredApiKey()));
+  }, []);
 
   // Tự động cuộn xuống đáy khi có tin nhắn mới
   useEffect(() => {
@@ -189,6 +196,22 @@ export default function TutorFloatingWidget() {
             </div>
 
             <div className={styles.headerActions}>
+              {/* Nút cài đặt API Key cá nhân */}
+              <button
+                type="button"
+                className={styles.headerBtn}
+                onClick={() => setIsKeyModalOpen(true)}
+                title={
+                  hasCustomKey
+                    ? 'API Key cá nhân đang kích hoạt (Bấm để đổi/xóa)'
+                    : 'Nhập Gemini API Key của bạn'
+                }
+                aria-label="Cài đặt API Key cá nhân"
+                style={hasCustomKey ? { color: '#4ade80' } : {}}
+              >
+                <span style={{ fontSize: '13px' }}>🔑</span>
+              </button>
+
               {/* Nút phóng to toàn màn hình */}
               <button
                 type="button"
@@ -289,6 +312,12 @@ export default function TutorFloatingWidget() {
           </form>
         </aside>
       )}
+
+      <ApiKeyModal
+        isOpen={isKeyModalOpen}
+        onClose={() => setIsKeyModalOpen(false)}
+        onKeyChanged={(hasKey) => setHasCustomKey(hasKey)}
+      />
     </>
   );
 }

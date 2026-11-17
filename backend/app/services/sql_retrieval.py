@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, or_, case
+from sqlalchemy import select, or_, case, func
 
 from app.models import (
     Courses,
@@ -446,6 +446,58 @@ def get_courses_by_level(
 
 
 # ==========================================
+# 8.5. TÌM COURSE ĐƯỢC HỌC NHIỀU NHẤT / NỔI BẬT (POPULAR)
+# ==========================================
+
+def get_popular_courses(
+    db: Session,
+    limit: int = MAX_COURSES,
+) -> list:
+
+    limit = max(1, min(limit, MAX_COURSES))
+
+    courses = db.execute(
+        select(Courses)
+        .order_by(
+            Courses.num_enrolled.desc().nullslast(),
+            Courses.rating.desc().nullslast(),
+        )
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [course_to_dict(course) for course in courses]
+
+
+# ==========================================
+# 8.6. TÌM SKILL NỔI BẬT / PHỔ BIẾN (POPULAR SKILLS)
+# ==========================================
+
+def get_popular_skills(
+    db: Session,
+    limit: int = MAX_SKILLS,
+) -> list:
+
+    limit = max(1, min(limit, MAX_SKILLS))
+
+    skills = db.execute(
+        select(Skills)
+        .join(
+            CourseSkill,
+            Skills.skill_id == CourseSkill.skill_id,
+        )
+        .where(Skills.is_active.is_(True))
+        .group_by(Skills.skill_id)
+        .order_by(
+            func.count(CourseSkill.course_id).desc(),
+            Skills.skill,
+        )
+        .limit(limit)
+    ).unique().scalars().all()
+
+    return [skill_to_dict(s) for s in skills]
+
+
+# ==========================================
 # 9. SQL RETRIEVAL CHÍNH
 # ==========================================
 
@@ -476,6 +528,16 @@ def retrieve_for_query(
 
     if intent == "skill_search":
 
+        if entity_type == "popular":
+
+            skills = get_popular_skills(
+                db,
+                limit=MAX_SKILLS,
+            )
+            result["skills"] = skills
+            result["found"] = len(skills) > 0
+            return result
+
         skill = find_skill(db, entity_name) if entity_name else None
 
         if skill is not None:
@@ -503,6 +565,16 @@ def retrieve_for_query(
     # ======================================
 
     if intent == "course_search":
+
+        if entity_type == "popular":
+
+            courses = get_popular_courses(
+                db,
+                limit=MAX_COURSES,
+            )
+            result["courses"] = courses
+            result["found"] = len(courses) > 0
+            return result
 
         if entity_type == "organization":
 
