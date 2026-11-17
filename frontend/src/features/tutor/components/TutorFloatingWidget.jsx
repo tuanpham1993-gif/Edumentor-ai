@@ -47,11 +47,6 @@ export default function TutorFloatingWidget() {
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // Khi đang ở chính trang /tutor toàn màn hình thì ẩn widget nổi này để tránh trùng lặp
-  if (location.pathname === '/tutor') {
-    return null;
-  }
-
   // Tự động cuộn xuống đáy khi có tin nhắn mới
   useEffect(() => {
     if (isOpen) {
@@ -156,6 +151,11 @@ export default function TutorFloatingWidget() {
       navigate('/login');
     }
   };
+
+  // Khi đang ở chính trang /tutor toàn màn hình thì ẩn widget nổi này để tránh trùng lặp
+  if (location.pathname === '/tutor') {
+    return null;
+  }
 
   return (
     <>
