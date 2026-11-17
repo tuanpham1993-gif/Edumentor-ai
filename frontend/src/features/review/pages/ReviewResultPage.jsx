@@ -4,6 +4,8 @@
 //   - Đạt lần đầu: báo khóa Hoàn thành + kỹ năng "Đã biết" (B1). Kết quả cũng được gửi email.
 //   - Chi tiết từng câu (lọc "Câu sai / bỏ trống", ẩn / hiện tất cả giải thích).
 // Vừa nộp xong: trang nhận kết quả qua state (khỏi gọi API lại); mở từ Lịch sử: gọi GET /me/review-history/{id}.
+// T1 (12/11): status "grading" (AI chấm quá 20 giây) → khối "Đang chấm", tự hỏi lại mỗi 5 giây tới khi có điểm.
+//   Người học rời trang được: chấm xong có thông báo trên chuông + email.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
@@ -15,6 +17,33 @@ import { formatDateTime } from '../../../utils/formatters.js';
 import ResultQuestion from '../components/ResultQuestion.jsx';
 import { formatScore } from '../reviewFormat.js';
 import styles from '../styles/ReviewResultPage.module.css';
+
+const POLL_MS = 5000;
+
+function GradingPanel({ result }) {
+  return (
+    <section className={`card ${styles.summary}`} role="status" aria-live="polite">
+      <p className="muted">Kết quả ôn tập · {result.course_title}</p>
+      <div className={styles.gradingSpinner} aria-hidden="true" />
+      <h1 className={styles.gradingTitle}>Đang chấm bài của bạn…</h1>
+      <p className="muted">
+        Bài đã được nộp lúc {formatDateTime(result.submitted_at)}. AI đang chấm phần tự luận lâu hơn bình thường.
+      </p>
+      <ul className={styles.facts}>
+        <li>Bạn có thể rời trang — khi chấm xong sẽ có thông báo trên chuông 🔔 và email.</li>
+        <li>Trang này tự cập nhật khi có điểm.</li>
+      </ul>
+      <div className={styles.actions}>
+        <Link to="/me/review-history" className="btn">
+          Lịch sử ôn tập
+        </Link>
+        <Link to={`/courses/${result.course_id}/review`} className="btn">
+          Trang ôn tập của khóa
+        </Link>
+      </div>
+    </section>
+  );
+}
 
 function isMiss(q) {
   return q.type === 'mcq' ? !q.is_correct : q.points < q.max_points;
@@ -62,6 +91,21 @@ export default function ReviewResultPage() {
     if (!result) load();
   }, [result, load]);
 
+  // Đang chấm → hỏi lại định kỳ; lỗi mạng tạm thời thì bỏ qua, lần sau hỏi tiếp.
+  const grading = result?.status === 'grading';
+  useEffect(() => {
+    if (!grading) return undefined;
+    const timer = setInterval(async () => {
+      try {
+        const next = await reviewApi.getResult(attemptId);
+        if (next.status !== 'grading') setResult(next);
+      } catch {
+        /* thử lại ở lần hỏi sau */
+      }
+    }, POLL_MS);
+    return () => clearInterval(timer);
+  }, [grading, attemptId]);
+
   const skills = useMemo(
     () => (result ? [...new Map(result.questions.map((q) => [q.skill_id, q.skill])).values()] : []),
     [result],
@@ -98,6 +142,10 @@ export default function ReviewResultPage() {
 
   if (!result) {
     return <div className="skeleton" style={{ height: 420 }} aria-busy="true" />;
+  }
+
+  if (grading) {
+    return <GradingPanel result={result} />;
   }
 
   const mcq = result.questions.filter((q) => q.type === 'mcq');

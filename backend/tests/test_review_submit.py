@@ -98,8 +98,9 @@ def test_pass_threshold_is_6(client, bank_312, student_headers, db_session, corr
     assert result["score"] == correct * 0.5 and result["passed"] is passed
 
 
-def test_meeting_example_essay_scores_7_of_10(client, bank_312, student_headers, db_session):
-    """Câu nâng cao list/tuple (2đ) với bài làm mẫu → 7/10 × 2 = 1,4đ, bằng chứng từng ý (mục 5 tài liệu họp)."""
+def test_meeting_example_essay_scores_8_of_10(client, bank_312, student_headers, db_session):
+    """Câu nâng cao list/tuple (2đ) với bài làm mẫu gửi thầy → 8/10 × 2 = 1,6đ (12/11: trước 7/10 = 1,4đ — tách vế QT12
+    + barem cú pháp 3a / 3b; xem test_keyword_grader.test_meeting_example_scores_8_of_10)."""
     attempt = None
     for _ in range(30):  # đề ngẫu nhiên — làm lại tới khi đề có câu list/tuple
         attempt_id = start(client, student_headers)["attempt_id"]
@@ -116,8 +117,8 @@ def test_meeting_example_essay_scores_7_of_10(client, bank_312, student_headers,
     result = submit(client, student_headers, attempt_id)
 
     q = result["questions"][position - 1]
-    assert q["points"] == 1.4 and q["max_points"] == 2
-    assert [r["result"] for r in q["rubric"]] == ["full", "full", "partial", "none"]
+    assert q["points"] == 1.6 and q["max_points"] == 2
+    assert [r["result"] for r in q["rubric"]] == ["full", "full", "full", "full", "none"]
     assert q["rubric"][0]["evidence"] == "List thì sửa được còn tuple thì không sửa được."
     assert q["text_answer"] == LIST_TUPLE_ANSWER and q["explanation"].startswith("Đáp án mẫu")
 
@@ -156,17 +157,15 @@ def test_removed_skill_comes_back_on_first_pass(client, bank_312, student_header
     assert row.status == "known" and row.source == "review"
 
 
-def test_second_pass_only_records_history(client, bank_312, student_headers, db_session, monkeypatch):
-    """B2: đạt lần 2 (khóa đã Hoàn thành) → không đánh dấu Hoàn thành lại, không cập nhật kỹ năng."""
-    completed = []
-    monkeypatch.setattr(course_gateway, "mark_course_completed", lambda db, u, c: completed.append(c))
+def test_second_pass_only_records_history(client, bank_312, student_headers, db_session):
+    """B2: đạt lần 2 (khóa đã Hoàn thành — user_courses thật của Khôi) → không Hoàn thành lại, không cập nhật kỹ năng."""
     first = pass_once(client, student_headers, db_session)
+    assert course_gateway.get_enrollment_status(db_session, user_of(db_session).user_id, 312) == course_gateway.COMPLETED
     client.patch("/api/me/skills", headers=student_headers, json={"remove": [SKILL_IDS[0]]})  # tự gỡ sau khi đạt
 
     second = pass_once(client, student_headers, db_session)
 
     assert first["completed_course"] is True and second["completed_course"] is False
-    assert completed == [312]  # chỉ gọi đúng MỘT lần
     assert db_session.query(UserSkill).filter_by(skill_id=SKILL_IDS[0]).count() == 0  # không thêm lại
 
 
@@ -228,6 +227,35 @@ def test_essay_falls_back_to_keyword_grading(client, bank_312, student_headers, 
     assert result["essay_score"] == 4  # vẫn chấm đúng bằng từ khóa
     grading = db_session.get(ReviewAttempt, attempt_id).trace["grading"]
     assert grading["ai"] == ai.name and len(grading["keyword_fallback"]) == 3
+    # B6: trace từng khối pipeline — khối 4 lỗi → nhánh dự phòng từ khóa
+    for essay in grading["essays"]:
+        names = [n["node"] for n in essay["nodes"]]
+        assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "4b_keyword_fallback", "7_aggregate", "8_trace"]
+        assert essay["nodes"][names.index("4_llm_grade")]["status"] == "error"
+        assert essay["nodes"][-1]["output"]["graded_by"] == "keyword"
+
+
+def test_grading_trace_has_every_pipeline_node_per_essay(client, bank_312, student_headers, db_session):
+    """B6: mỗi câu tự luận có trace {node, status, ms, attempts, output, error}; bài trống dừng ở khối 0."""
+    attempt_id = start(client, student_headers)["attempt_id"]
+    essays = [a for a in answers_of(db_session, attempt_id) if a.question.type == "essay"]
+    text = essays[0].question.explanation.removeprefix("Đáp án mẫu: ")
+    client.patch(f"/api/review-attempts/{attempt_id}/answers", headers=student_headers,
+                 json={"answers": [{"position": essays[0].position, "text_answer": text}]})  # fmt: skip
+
+    submit(client, student_headers, attempt_id)
+
+    traced = {e["position"]: e["nodes"] for e in db_session.get(ReviewAttempt, attempt_id).trace["grading"]["essays"]}
+    assert set(traced) == {a.position for a in essays}
+    done = traced[essays[0].position]
+    names = [n["node"] for n in done]
+    assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "5_verify", "6_cross_check", "7_aggregate", "8_trace"]
+    assert all(n["status"] == "ok" and n["ms"] >= 0 for n in done)
+    assert done[names.index("4_llm_grade")]["output"]["source"] == "parallel"
+    assert done[names.index("7_aggregate")]["output"]["score_10"] == 10
+    grading = db_session.get(ReviewAttempt, attempt_id).trace["grading"]
+    assert grading["needs_review"] == [] and all("flags" in e for e in grading["essays"])
+    assert [n["node"] for n in traced[essays[1].position]] == ["0_input"]  # bỏ trống → không gọi AI
 
 
 # ─────────────── Nộp lại, quyền ───────────────

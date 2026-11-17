@@ -56,6 +56,16 @@
 }
 .address svg { margin-top: 3px; }
 .address > span { display: flex; flex-direction: column; }
+/* Bản đồ nhỏ nhúng (16/11) — viền + bo góc như thẻ; hơi tối đi ở theme tối cho đỡ chói */
+.map {
+  width: 100%;
+  max-width: 260px;
+  height: 140px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md, 10px);
+  background: var(--card-inner);
+}
+:global(:root:not([data-theme='light'])) .map { filter: brightness(0.85) contrast(1.05); } /* tối = mặc định */
 
 .bottom {
   max-width: 1200px;

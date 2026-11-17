@@ -1,5 +1,4 @@
 
-
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -14,11 +13,14 @@ import os
 
 import logging
 from app.routers.v1.api import api_router
+from app.services.review_rag_service import warm_up_in_background
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # 1. Khởi tạo database
     init_db()
+    warm_up_in_background()  # Tuấn 12/11: nạp sẵn mô hình embedding (ôn tập) ở luồng nền
     app.state.llm_client = httpx.AsyncClient(
         base_url=settings.LLM_URL_ADAPTER,
         timeout=180.0
@@ -48,6 +50,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_STR}/openapi.json",
     lifespan=lifespan,
 )
+
 
 app.add_middleware(
     CORSMiddleware,

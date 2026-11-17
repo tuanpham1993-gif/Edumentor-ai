@@ -1,0 +1,88 @@
+/* Trang Giao diện + Thông báo qua email — theo thiết kế Tuấn gửi 11/11. */
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.head h2 { margin: 0; }
+.badge {
+  flex: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--text-soft);
+}
+.status {
+  flex: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--text-soft);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.rowText { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.rowText strong { font-size: 15px; }
+.rowText span { font-size: 13.5px; color: var(--text-muted); }
+.rowControl { flex: none; }
+
+/* Nhóm nút chọn một: Tối | Sáng | Theo hệ thống */
+.segmented {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+}
+.segment {
+  border: 0;
+  border-radius: 9px;
+  padding: 7px 16px;
+  background: transparent;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--d-fast), color var(--d-fast);
+}
+.segment:hover { background: var(--hover); color: var(--text); }
+.segmentOn,
+.segmentOn:hover { background: var(--accent); color: var(--on-accent); }
+
+/* Công tắc bật / tắt */
+.switch {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--track, var(--card-inner));
+  cursor: pointer;
+  transition: background var(--d-base), border-color var(--d-base);
+}
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform var(--d-base) var(--e-spring), background var(--d-base);
+}
+.switchOn { background: var(--accent); border-color: var(--accent); }
+.switchOn .knob { transform: translateX(20px); background: var(--on-accent); }
+.switch:disabled { opacity: 0.6; cursor: wait; }
+
+@media (max-width: 640px) {
+  .row { flex-direction: column; align-items: flex-start; }
+}

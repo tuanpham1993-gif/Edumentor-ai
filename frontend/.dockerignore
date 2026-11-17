@@ -1,0 +1,7 @@
+# Bỏ khi build image frontend
+node_modules
+dist
+.env
+.env.*
+Dockerfile
+.dockerignore

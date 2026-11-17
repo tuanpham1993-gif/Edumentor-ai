@@ -14,7 +14,7 @@ from app.ai.review.mock_ai import pick_from_bank
 from app.ai.review.validator import generated_errors, question_errors
 from app.core.config import settings
 from app.models import KnowledgeChunk, Skills
-from app.services import rag_service
+from app.services import review_rag_service
 
 
 def mcq(qid, level="recognize", chunk_id=None):
@@ -84,7 +84,11 @@ def test_mock_ai_uses_retrieved_chunks():
 def test_get_review_ai_by_mode(monkeypatch):
     assert get_review_ai().name == "mock"
 
+    # AI_MODE=real nhưng thiếu khóa → AI "không dùng được" (service tự dùng dự phòng).
+    # Đặt khóa rỗng để test KHÔNG phụ thuộc .env trên máy (máy có khóa thật sẽ ra RealAI — xem test_real_ai.py).
     monkeypatch.setattr(settings, "AI_MODE", "real")
+    monkeypatch.setattr(settings, "LLM_API_KEY", "")
+    monkeypatch.setattr(settings, "REVIEW_LLM_API_KEY", "")
     with pytest.raises(AIUnavailableError):
         get_review_ai().generate_questions(None, random.Random(0))
 
@@ -99,20 +103,20 @@ def test_generation_prompt_contains_context_and_counts():
         course_title="Python Basics", skill_name="Iteration", chunks=chunks, need={"recognize": 2, "easy": 0}
     )
 
-    assert "Kỹ năng cần ôn: Iteration" in prompt
-    assert "[Đoạn 1] Vòng lặp for" in prompt and "for duyệt dãy" in prompt
-    assert "2 câu trắc nghiệm mức Nhận biết" in prompt
-    assert "tự luận DỄ" not in prompt  # mức độ cần 0 câu thì không yêu cầu
+    assert "Skill to review: Iteration" in prompt
+    assert "[Passage 1] Vòng lặp for" in prompt and "for duyệt dãy" in prompt
+    assert "2 multiple-choice questions at the Recognize level" in prompt
+    assert "EASY short-answer" not in prompt  # mức độ cần 0 câu thì không yêu cầu
 
 
 # ─────────────── RAG ───────────────
 
 
 def test_cosine():
-    assert rag_service.cosine([1, 0], [1, 0]) == pytest.approx(1)
-    assert rag_service.cosine([1, 0], [0, 1]) == pytest.approx(0)
+    assert review_rag_service.cosine([1, 0], [1, 0]) == pytest.approx(1)
+    assert review_rag_service.cosine([1, 0], [0, 1]) == pytest.approx(0)
     with pytest.raises(ValueError):
-        rag_service.cosine([1, 0], [1, 0, 0])
+        review_rag_service.cosine([1, 0], [1, 0, 0])
 
 
 @pytest.fixture()
@@ -130,7 +134,7 @@ def chunks(db_session):
 
 
 def test_retrieve_ranks_by_cosine(db_session, chunks):
-    result = rag_service.retrieve_chunks(db_session, 400, "vòng lặp for", top_k=2, embedder=lambda _: [1.0, 0.0])
+    result = review_rag_service.retrieve_chunks(db_session, 400, "vòng lặp for", top_k=2, embedder=lambda _: [1.0, 0.0])
 
     assert [c.code for c in result] == ["K2", "K3"]
     assert result[0].score == pytest.approx(1.0)
@@ -144,15 +148,15 @@ def test_retrieve_without_embeddings_skips_model(db_session, chunks):
     def must_not_be_called(_):
         raise AssertionError("không được nạp mô hình khi đoạn chưa có vector")
 
-    result = rag_service.retrieve_chunks(db_session, 400, "x", embedder=must_not_be_called)
+    result = review_rag_service.retrieve_chunks(db_session, 400, "x", embedder=must_not_be_called)
 
     assert [c.code for c in result] == ["K1", "K2", "K3"]  # theo thứ tự tạo
     assert all(c.score is None for c in result)
 
 
 def test_retrieve_when_model_unavailable_or_wrong_dimension(db_session, chunks):
-    no_model = rag_service.retrieve_chunks(db_session, 400, "x", embedder=lambda _: None)
-    wrong_dim = rag_service.retrieve_chunks(db_session, 400, "x", embedder=lambda _: [1.0, 0.0, 0.0])
+    no_model = review_rag_service.retrieve_chunks(db_session, 400, "x", embedder=lambda _: None)
+    wrong_dim = review_rag_service.retrieve_chunks(db_session, 400, "x", embedder=lambda _: [1.0, 0.0, 0.0])
 
     for result in (no_model, wrong_dim):
         assert [c.code for c in result] == ["K1", "K2", "K3"]

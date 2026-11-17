@@ -1,40 +1,77 @@
-#shared test configuration and fixtures.import pytest
+import sys
+from pathlib import Path
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-from fastapi.testclient import TestClient
-from app.core.database import Base, get_db
-import pytest
-
 from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
+# Đảm bảo thư mục backend nằm trong sys.path để pytest tìm thấy package 'app'
+backend_dir = Path(__file__).resolve().parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
+# Mock kết nối Qdrant khi chạy test cục bộ / CI không có server Qdrant
+try:
+    from unittest.mock import MagicMock
+    import llama_index.vector_stores.qdrant.base as qb
+
+    qb.QdrantVectorStore._collection_exists = MagicMock(return_value=True)
+except Exception:
+    pass
+
+from app.core.database import Base, get_db
 from app.routers.v1.api import api_router
 from app.core.config import settings
 
+# Tạo FastAPI app riêng cho test để không kích hoạt lifespan kết nối PostgreSQL thật
 app = FastAPI()
 app.include_router(api_router, prefix=settings.API_STR)
 
-SQLALCHEMY_DATABASE_URL = "sqlite://"
-test_engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}, poolclass=StaticPool)
-#check_same_thread: allows the connection to be used across different threads. This matters because TestClient may execute requests in a different thread
-#StaticPool: reuses the same connection so the in-memory database remains available across sessions.
+# SQLite in-memory engine cho testing
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+
+test_engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
+
+
+@pytest.fixture(autouse=True)
+def _no_real_email_or_ai(monkeypatch):
+    """Test KHÔNG BAO GIỜ gửi email thật / gọi AI thật, kể cả khi .env đã cấu hình Gmail, AI_MODE=real (Tuấn 12/11).
+
+    SMTP_HOST rỗng → core/email in thư ra terminal thay vì gửi (tránh Gmail bị khóa vì gửi hàng loạt khi chạy test).
+    AI_MODE=mock → không tốn lượt Gemini; test nào cần chế độ khác tự monkeypatch lại.
+    """
+    monkeypatch.setattr(settings, "SMTP_HOST", "")
+    monkeypatch.setattr(settings, "AI_MODE", "mock")
+
 
 @pytest.fixture()
 def db_session():
-    import app.models
+    import app.models  # Đảm bảo nạp đầy đủ metadata của tất cả models
+
     Base.metadata.create_all(bind=test_engine)
     db = TestSessionLocal()
-
     try:
         yield db
     finally:
         db.close()
         Base.metadata.drop_all(bind=test_engine)
 
+
 @pytest.fixture()
 def client(db_session):
     def override_get_db():
-        yield db_session
+        try:
+            yield db_session
+        finally:
+            pass
+
     app.dependency_overrides[get_db] = override_get_db
     try:
         with TestClient(app) as test_client:
@@ -48,17 +85,22 @@ def sample_learning_path(db_session):
     from app.models.learning_path import LearningPath, LearningPathNode
     from app.models.skill import Skills
 
-    # Create skills.
-    python_skill = Skills(skill_id=101, skill="Python",is_active=True,)
-    fastapi_skill = Skills(skill_id=102,skill="FastAPI",is_active=True,)
+    # Create skills
+    python_skill = Skills(skill_id=101, skill="Python", is_active=True)
+    fastapi_skill = Skills(skill_id=102, skill="FastAPI", is_active=True)
 
-    # Create a learning path.
-    learning_path = LearningPath(student_id=10, original_query="Become a Backend Developer", goal_type="career", status="ongoing")
+    # Create a learning path
+    learning_path = LearningPath(
+        student_id=10,
+        original_query="Become a Backend Developer",
+        goal_type="career",
+        status="ongoing",
+    )
 
-    db_session.add_all([python_skill, fastapi_skill, learning_path,])
+    db_session.add_all([python_skill, fastapi_skill, learning_path])
     db_session.flush()
 
-    # Add Python as a node in the learning path.
+    # Add nodes in the learning path
     python_node = LearningPathNode(
         path_id=learning_path.record_id,
         skill_id=python_skill.skill_id,
@@ -79,7 +121,6 @@ def sample_learning_path(db_session):
         display_order=2000,
     )
 
-    
     db_session.add_all([python_node, api_node])
     db_session.commit()
 
@@ -103,7 +144,9 @@ TEST_PASSWORD = "Test@1234"
 
 
 def _login_headers(client, email, password=TEST_PASSWORD):
-    response = client.post("/api/auth/login", json={"email": email, "password": password})
+    response = client.post(
+        "/api/auth/login", json={"email": email, "password": password}
+    )
     assert response.status_code == 200, response.text
     return {"Authorization": f"Bearer {response.json()['access_token']}"}
 
@@ -113,7 +156,9 @@ def admin_headers(client, db_session):
     """Header Bearer của một tài khoản admin (tạo bằng scripts.create_admin)."""
     from scripts.create_admin import create_admin
 
-    create_admin(db_session, email=ADMIN_EMAIL, full_name="Admin Test", password=TEST_PASSWORD)
+    create_admin(
+        db_session, email=ADMIN_EMAIL, full_name="Admin Test", password=TEST_PASSWORD
+    )
     return _login_headers(client, ADMIN_EMAIL)
 
 

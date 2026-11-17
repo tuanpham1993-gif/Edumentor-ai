@@ -13,7 +13,15 @@ Lượt làm bài của người khác → 404 như lượt không tồn tại (
     GET   /api/admin/review-attempts/{attempt_id}/trace — vết RAG + prompt (chỉ admin — A4) (GĐ3)
 """
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+    Query,
+    Response,
+    status,
+)
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -28,7 +36,7 @@ from app.schemas.review import (
     ReviewInfoOut,
     SaveAnswersRequest,
 )
-from app.services import review_service
+from app.services import course_gateway, review_service
 
 router = APIRouter()
 
@@ -123,15 +131,27 @@ def save_review_answers(
 def submit_review(
     attempt_id: int,
     background_tasks: BackgroundTasks,
+    response: Response,
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     try:
-        result = review_service.submit_attempt(db, current_user, attempt_id)
+        result = review_service.submit_attempt(
+            db, current_user, attempt_id, schedule=background_tasks.add_task
+        )
     except review_service.AttemptNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
     except review_service.AttemptLockedError:
         raise HTTPException(status.HTTP_409_CONFLICT, "Bài này đã được nộp.") from None
+    except course_gateway.EnrollmentChangedError:
+        # L1: khóa vừa đổi trạng thái (vd bỏ khóa) đúng lúc chấm → đã hủy lần nộp, bài vẫn đang làm
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Trạng thái khóa học vừa thay đổi. Vui lòng nộp lại bài."
+        ) from None
+    if result["status"] == "grading":
+        # T1: AI chấm quá thời gian → 202 "Đang chấm"; chấm nốt ở nền, xong thì có chuông + email.
+        response.status_code = status.HTTP_202_ACCEPTED
+        return result
     # Email gửi SAU khi trả kết quả (kết quả đã lưu xong) — lỗi gửi không ảnh hưởng bài làm.
     background_tasks.add_task(
         send_review_result_email,

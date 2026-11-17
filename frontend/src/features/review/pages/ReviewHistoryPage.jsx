@@ -152,11 +152,17 @@ export default function ReviewHistoryPage() {
                         {item.course_title}
                         {item.completed_course && <span className="chip chip-accent">Hoàn thành khóa</span>}
                       </td>
-                      <td className={styles.score}>{formatScore(item.score)}/10</td>
+                      <td className={styles.score}>
+                        {item.status === 'grading' ? '—' : `${formatScore(item.score)}/10`}
+                      </td>
                       <td>
-                        <span className={`chip ${item.passed ? 'chip-ok' : 'chip-danger'}`}>
-                          {item.passed ? 'Đạt' : 'Chưa đạt'}
-                        </span>
+                        {item.status === 'grading' ? (
+                          <span className="chip">Đang chấm</span>
+                        ) : (
+                          <span className={`chip ${item.passed ? 'chip-ok' : 'chip-danger'}`}>
+                            {item.passed ? 'Đạt' : 'Chưa đạt'}
+                          </span>
+                        )}
                       </td>
                       <td className={styles.actions}>
                         <Link to={`/review/${item.attempt_id}/result`} className="btn btn-sm">

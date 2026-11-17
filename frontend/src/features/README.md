@@ -50,4 +50,4 @@ nên **không bao giờ trùng** với class của tính năng khác.
 
 Khi bắt đầu trang của mình, tạo thư mục mới theo cùng mẫu, ví dụ `features/courses/`, `features/tutor/`,
 `features/learning-path/`, `features/review/` (Tuấn · 09), `features/admin/`.
-Các file khung rỗng cũ trong `src/components/*` và `src/pages/*` vẫn để nguyên — chuyển sang `features/` khi làm thật.
+Thư mục khung rỗng cũ `src/components/` và `src/pages/` (toàn file 0 dòng, không ai import) đã xóa 12/11/2026 — mọi trang mới đặt trong `features/`.

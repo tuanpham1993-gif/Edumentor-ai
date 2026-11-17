@@ -11,6 +11,7 @@ from app.models.course_skill import CourseSkill
 from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_attempt import ReviewAnswer, ReviewAttempt
 from app.models.review_question import ReviewQuestion
+from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.skill import Skills
 
 # ─────────────── Khóa học, kỹ năng (chỉ đọc) ───────────────
@@ -29,6 +30,22 @@ def course_skills(db: Session, course_id: int) -> list[tuple[int, str]]:
         .order_by(Skills.skill_id)
     )
     return [(r.skill_id, r.skill) for r in rows]
+
+
+def course_skills_many(db: Session, course_ids: list[int]) -> dict[int, list[tuple[int, str]]]:
+    """Như course_skills nhưng cho nhiều khóa trong 1 truy vấn (7.4: ~200 khóa dùng chung kỹ năng)."""
+    out: dict[int, list[tuple[int, str]]] = {cid: [] for cid in course_ids}
+    if not course_ids:
+        return out
+    rows = db.execute(
+        select(CourseSkill.course_id, Skills.skill_id, Skills.skill)
+        .join(Skills, Skills.skill_id == CourseSkill.skill_id)
+        .where(CourseSkill.course_id.in_(course_ids), Skills.is_active.is_(True))
+        .order_by(CourseSkill.course_id, Skills.skill_id)
+    )
+    for r in rows:
+        out[r.course_id].append((r.skill_id, r.skill))
+    return out
 
 
 # ─────────────── Ngân hàng câu hỏi, đoạn tri thức ───────────────
@@ -56,13 +73,51 @@ def bank_questions(db: Session, skill_id: int) -> list[ReviewQuestion]:
     )
 
 
+def pending_count(db: Session, skill_id: int) -> int:
+    """Số câu của kỹ năng đang CHỜ DUYỆT (AI soạn — QT6-A, 7.5c). Tính vào ngưỡng "ngân hàng đủ câu" để mỗi lượt
+    làm bài không bắt AI soạn thêm một loạt câu chờ duyệt trùng nhau."""
+    return db.scalar(
+        select(func.count())
+        .select_from(ReviewQuestion)
+        .join(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.skill_id == skill_id, ReviewQuestionMeta.review_status == "pending")
+    )
+
+
+def pending_counts(db: Session, skill_ids: list[int]) -> dict[int, int]:
+    """{skill_id: số câu CHỜ DUYỆT} — một truy vấn cho cả khóa (7.4 mức sẵn sàng)."""
+    if not skill_ids:
+        return {}
+    rows = db.execute(
+        select(ReviewQuestion.skill_id, func.count())
+        .join(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.skill_id.in_(skill_ids), ReviewQuestionMeta.review_status == "pending")
+        .group_by(ReviewQuestion.skill_id)
+    )
+    return {skill_id: n for skill_id, n in rows}
+
+
+def courses_with_questions(db: Session) -> list[tuple[int, str]]:
+    """[(course_id, title)] các khóa có ít nhất một kỹ năng ĐANG BẬT đã có câu trong ngân hàng (mọi trạng thái)."""
+    has_question = select(ReviewQuestion.question_id).where(ReviewQuestion.skill_id == CourseSkill.skill_id).exists()
+    rows = db.execute(
+        select(Courses.course_id, Courses.title)
+        .join(CourseSkill, CourseSkill.course_id == Courses.course_id)
+        .join(Skills, Skills.skill_id == CourseSkill.skill_id)
+        .where(Skills.is_active.is_(True), has_question)
+        .distinct()
+        .order_by(Courses.course_id)
+    )
+    return [(r.course_id, r.title) for r in rows]
+
+
+def count_courses(db: Session) -> int:
+    return db.scalar(select(func.count()).select_from(Courses))
+
+
 def chunks_for_skill(db: Session, skill_id: int) -> list[KnowledgeChunk]:
     return list(
-        db.scalars(
-            select(KnowledgeChunk)
-            .where(KnowledgeChunk.skill_id == skill_id)
-            .order_by(KnowledgeChunk.chunk_id)
-        )
+        db.scalars(select(KnowledgeChunk).where(KnowledgeChunk.skill_id == skill_id).order_by(KnowledgeChunk.chunk_id))
     )
 
 
@@ -86,6 +141,19 @@ def get_attempt(db: Session, attempt_id: int, *, for_update: bool = False) -> Re
     return db.scalar(stmt)
 
 
+def stuck_grading_ids(db: Session, user_id: int, submitted_before) -> list[int]:
+    """Lượt 'grading' nộp TRƯỚC mốc thời gian — luồng chấm nền đã mất (server khởi động lại / lỗi) (T1)."""
+    return list(
+        db.scalars(
+            select(ReviewAttempt.attempt_id).where(
+                ReviewAttempt.user_id == user_id,
+                ReviewAttempt.status == "grading",
+                ReviewAttempt.submitted_at < submitted_before,
+            )
+        )
+    )
+
+
 def get_in_progress(db: Session, user_id: int, course_id: int) -> ReviewAttempt | None:
     return db.scalar(
         select(ReviewAttempt).where(
@@ -103,6 +171,28 @@ def list_attempts(db: Session, user_id: int, course_id: int) -> list[ReviewAttem
             select(ReviewAttempt)
             .where(ReviewAttempt.user_id == user_id, ReviewAttempt.course_id == course_id)
             .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
+        )
+    )
+
+
+def family_questions(db: Session, question_ids: list[int]) -> list[ReviewQuestion]:
+    """MỌI phiên bản cùng họ với các câu đã cho (7.5a, 16/11). Họ = review_question_meta.family_id; câu chưa có meta
+    (nạp trước 13/11) là họ của chính nó. Vd lượt trước làm câu v1, admin sửa thành v2 → trả cả v1 lẫn v2."""
+    if not question_ids:
+        return []
+    family = func.coalesce(ReviewQuestionMeta.family_id, ReviewQuestion.question_id)
+    families = (
+        select(family)
+        .select_from(ReviewQuestion)
+        .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.question_id.in_(question_ids))
+    )
+    return list(
+        db.scalars(
+            select(ReviewQuestion)
+            .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+            .where(family.in_(families))
+            .order_by(ReviewQuestion.question_id)
         )
     )
 
@@ -137,20 +227,6 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
 
 
-def has_first_pass(db: Session, user_id: int, course_id: int) -> bool:
-    """Người dùng đã có lượt ĐẠT ĐẦU TIÊN của khóa chưa (B1 chỉ áp dụng một lần)."""
-    return (
-        db.scalar(
-            select(ReviewAttempt.attempt_id).where(
-                ReviewAttempt.user_id == user_id,
-                ReviewAttempt.course_id == course_id,
-                ReviewAttempt.is_first_pass.is_(True),
-            )
-        )
-        is not None
-    )
-
-
 def list_history(
     db: Session,
     user_id: int,
@@ -176,3 +252,144 @@ def list_history(
         .limit(limit)
     ).all()
     return [(attempt, title) for attempt, title in rows], total
+
+
+# ─────────────── Quản trị ngân hàng câu hỏi (GĐ7 · 13/11) ───────────────
+
+
+def get_question(db: Session, question_id: int, *, for_update: bool = False) -> ReviewQuestion | None:
+    stmt = select(ReviewQuestion).where(ReviewQuestion.question_id == question_id)
+    if for_update:
+        stmt = stmt.with_for_update().execution_options(populate_existing=True)
+    return db.scalar(stmt)
+
+
+def get_question_by_code(db: Session, code: str) -> ReviewQuestion | None:
+    return db.scalar(select(ReviewQuestion).where(ReviewQuestion.code == code))
+
+
+def used_count(db: Session, question_id: int) -> int:
+    """Số bài làm (lượt) đã có câu này — > 0 thì sửa nội dung phải tạo phiên bản mới."""
+    return db.scalar(select(func.count()).select_from(ReviewAnswer).where(ReviewAnswer.question_id == question_id))
+
+
+def get_meta(db: Session, question_id: int) -> ReviewQuestionMeta | None:
+    return db.get(ReviewQuestionMeta, question_id)
+
+
+def codes_for_skill(db: Session, skill_id: int) -> list[str]:
+    """Mọi mã câu (kể cả phiên bản cũ "~v1") của một kỹ năng — để gợi ý mã khi duyệt."""
+    return list(
+        db.scalars(
+            select(ReviewQuestion.code).where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.code.is_not(None))
+        )
+    )
+
+
+def skill_exists(db: Session, skill_id: int) -> bool:
+    return db.scalar(select(func.count()).select_from(Skills).where(Skills.skill_id == skill_id)) > 0
+
+
+def chunk_skill_id(db: Session, chunk_id: int) -> int | None:
+    """Kỹ năng của đoạn tri thức (None = đoạn không tồn tại)."""
+    return db.scalar(select(KnowledgeChunk.skill_id).where(KnowledgeChunk.chunk_id == chunk_id))
+
+
+def list_questions(
+    db: Session,
+    *,
+    skill_ids: list[int] | None = None,
+    type: str | None = None,
+    level: str | None = None,
+    source: str | None = None,
+    is_active: bool | None = None,
+    review_status: str | None = None,
+    q: str | None = None,
+    latest_only: bool = True,
+    offset: int = 0,
+    limit: int = 20,
+) -> tuple[list, int]:
+    """Danh sách câu hỏi cho trang quản trị + tổng số dòng khớp bộ lọc.
+
+    Mỗi dòng: (ReviewQuestion, version, family_id, review_status, used_count, skill_name).
+    - Câu chưa có meta (nạp trước 13/11) → coi như phiên bản 1, họ = chính nó, đã duyệt (OUTER JOIN + COALESCE).
+    - used_count đếm bằng subquery GROUP BY — một truy vấn cho cả trang (không N+1).
+    - latest_only: chỉ phiên bản mới nhất của mỗi họ (bản cũ xem ở "Lịch sử phiên bản" của trang chi tiết).
+    - skill_ids=[] (vd khóa không có kỹ năng) → không có dòng nào.
+    """
+    used = select(ReviewAnswer.question_id, func.count().label("n")).group_by(ReviewAnswer.question_id).subquery()
+    latest = (
+        select(
+            ReviewQuestionMeta.family_id,
+            func.max(ReviewQuestionMeta.version).label("max_version"),
+        )
+        .group_by(ReviewQuestionMeta.family_id)
+        .subquery()
+    )
+    version = func.coalesce(ReviewQuestionMeta.version, 1)
+    family = func.coalesce(ReviewQuestionMeta.family_id, ReviewQuestion.question_id)
+    status = func.coalesce(ReviewQuestionMeta.review_status, "approved")
+
+    conditions = []
+    if skill_ids is not None:
+        conditions.append(ReviewQuestion.skill_id.in_(skill_ids))
+    if type is not None:
+        conditions.append(ReviewQuestion.type == type)
+    if level is not None:
+        conditions.append(ReviewQuestion.level == level)
+    if source is not None:
+        conditions.append(ReviewQuestion.source == source)
+    if is_active is not None:
+        conditions.append(ReviewQuestion.is_active.is_(is_active))
+    if review_status is not None:
+        conditions.append(status == review_status)
+    if q:
+        text = q.strip().lower()
+        conditions.append(
+            func.lower(ReviewQuestion.content).contains(text, autoescape=True)
+            | func.lower(func.coalesce(ReviewQuestion.code, "")).contains(text, autoescape=True)
+        )
+    if latest_only:
+        conditions.append(
+            ReviewQuestionMeta.question_id.is_(None) | (ReviewQuestionMeta.version == latest.c.max_version)
+        )
+
+    def _from(stmt):
+        stmt = stmt.outerjoin(
+            ReviewQuestionMeta,
+            ReviewQuestionMeta.question_id == ReviewQuestion.question_id,
+        )
+        if latest_only:
+            stmt = stmt.outerjoin(latest, latest.c.family_id == ReviewQuestionMeta.family_id)
+        return stmt.where(*conditions)
+
+    total = db.scalar(_from(select(func.count()).select_from(ReviewQuestion)))
+    rows = db.execute(
+        _from(
+            select(
+                ReviewQuestion,
+                version.label("version"),
+                family.label("family_id"),
+                status.label("review_status"),
+                func.coalesce(used.c.n, 0).label("used_count"),
+                Skills.skill.label("skill_name"),
+            ).select_from(ReviewQuestion)
+        )
+        .outerjoin(used, used.c.question_id == ReviewQuestion.question_id)
+        .outerjoin(Skills, Skills.skill_id == ReviewQuestion.skill_id)
+        .order_by(ReviewQuestion.question_id.desc())
+        .offset(offset)
+        .limit(limit)
+    ).all()
+    return rows, total
+
+
+def family_metas(db: Session, family_id: int) -> list[ReviewQuestionMeta]:
+    """Mọi phiên bản của một họ câu hỏi, mới nhất trước."""
+    return list(
+        db.scalars(
+            select(ReviewQuestionMeta)
+            .where(ReviewQuestionMeta.family_id == family_id)
+            .order_by(ReviewQuestionMeta.version.desc())
+        )
+    )

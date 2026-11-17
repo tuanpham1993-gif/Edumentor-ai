@@ -36,6 +36,24 @@ def send_email(to: str, subject: str, body: str) -> None:
         logger.exception("Gửi email tới %s thất bại", to)
 
 
+def send_welcome_email(to: str, full_name: str) -> None:
+    """Email chào mừng khi đăng ký thành công (Tuấn · 12/11/2026). Router gửi SAU khi tài khoản đã lưu;
+    gửi lỗi chỉ ghi log, không làm hỏng việc đăng ký."""
+    body = (
+        f"Xin chào {full_name},\n\n"
+        "Chào mừng bạn đến với EduMentor AI — nền tảng cố vấn học tập cá nhân hóa!\n\n"
+        f"Tài khoản của bạn đã được tạo với email: {to}\n\n"
+        "Bắt đầu thế nào?\n"
+        "  1. Thêm các kỹ năng bạn đã biết vào hồ sơ để nhận gợi ý phù hợp.\n"
+        "  2. Chọn lộ trình học theo mục tiêu nghề nghiệp.\n"
+        "  3. Học xong khóa, làm bài ôn tập 15 câu để ghi nhận kỹ năng.\n\n"
+        f"Đăng nhập: {settings.FRONTEND_URL}/login\n\n"
+        "Nếu bạn không đăng ký tài khoản này, hãy bỏ qua email.\n"
+        "— EduMentor AI"
+    )
+    send_email(to, "Chào mừng bạn đến với EduMentor AI", body)
+
+
 def send_password_reset_email(to: str, token: str) -> None:
     link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
     minutes = settings.RESET_TOKEN_EXPIRE_MINUTES

@@ -4,6 +4,7 @@
 //   icon     : 'tool' | 'server' | 'search'
 //   tone     : 'accent' (mặc định) | 'danger'
 //   code     : dòng mã nhỏ phía dưới, vd "Mã: 501 · Chưa hỗ trợ" (không bắt buộc)
+//   codeLarge: true → dòng mã cỡ 32px, đậm, cùng màu tiêu đề, nằm NGAY DƯỚI tiêu đề (trang 404)
 //   fullPage : true → căn giữa cả màn hình (trang không có Header)
 import styles from '../styles/StatusPanel.module.css';
 
@@ -48,6 +49,7 @@ export default function StatusPanel({
   tone = 'accent',
   title,
   code,
+  codeLarge = false,
   actions,
   fullPage = false,
   children,
@@ -56,9 +58,11 @@ export default function StatusPanel({
     <div className={styles.panel} role="status">
       <span className={`${styles.icon} ${tone === 'danger' ? styles.danger : ''}`}>{ICONS[icon]}</span>
       <h2>{title}</h2>
+      {/* codeLarge: mã nằm ngay dưới tiêu đề (trang 404); mặc định: dòng nhỏ ở cuối */}
+      {code && codeLarge && <span className={`${styles.code} ${styles.codeLarge}`}>{code}</span>}
       {children && <p>{children}</p>}
       {actions && <div className={styles.actions}>{actions}</div>}
-      {code && <span className={styles.code}>{code}</span>}
+      {code && !codeLarge && <span className={styles.code}>{code}</span>}
     </div>
   );
 

@@ -111,17 +111,19 @@ def generated_errors(questions, need: dict[str, int]) -> list[str]:
     return errors
 
 
-GRADE_RESULTS = {"full": 1.0, "partial": 0.5, "none": 0.0}  # phần điểm của ý (A10: đạt / ½ / 0)
+# Phần điểm của ý. 15/11 (Hòa, Tuấn chốt): mỗi ý chỉ ĐẠT (đủ điểm) hoặc KHÔNG ĐẠT (0) — bỏ mức ½ (partial).
+# Bài cũ trong lịch sử có thể còn "partial" (schemas/review.py vẫn nhận để hiển thị), nhưng không chấm ra nữa.
+GRADE_RESULTS = {"full": 1.0, "none": 0.0}
 
 
 def grading_errors(results, rubric: list[dict]) -> list[str]:
-    """Kiểm kết quả chấm MỘT câu tự luận: đủ một kết quả cho mỗi ý, điểm khớp quy tắc đạt / ½ / 0."""
+    """Kiểm kết quả chấm MỘT câu tự luận: đủ một kết quả cho mỗi ý, điểm khớp quy tắc đạt / 0."""
     if not isinstance(results, list) or len(results) != len(rubric):
         return [f"Kết quả chấm phải có đúng {len(rubric)} ý"]
     errors = []
     for i, (result, item) in enumerate(zip(results, rubric, strict=True), start=1):
         if not isinstance(result, dict) or result.get("result") not in GRADE_RESULTS:
-            errors.append(f"Ý {i}: result phải là full / partial / none")
+            errors.append(f"Ý {i}: result phải là full / none")
             continue
         expected = GRADE_RESULTS[result["result"]] * float(item["max_points"])
         points = result.get("points")

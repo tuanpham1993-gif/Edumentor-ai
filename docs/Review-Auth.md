@@ -117,7 +117,11 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 - [x] **7.1 `POST /api/me/avatar`** + `utils/files.py` — kiểm tra loại file, dung lượng; lưu file, cập nhật `avatar_url` — dự kiến 14/11 · thực tế 07/11 → 07/11 ✔ Claude đã review — 9 test (Claude viết); tổng 62 passed; A1–A7 qua trên app thật (mở được ảnh qua /uploads). Claude sửa: giới hạn 2→5 MB theo Q8, thông báo 413 ghi cứng, import lặp, thiếu .gitignore
   - Quyết định Q8 (07/11): PNG + JPEG · tối đa 5 MB (413) · sai định dạng 415 · lưu `backend/uploads/avatars/` · sau này chuyển lên đám mây.
-- [ ] **7.2 `GET /api/me/summary`** — khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo — dự kiến 14/11 · thực tế __/__
+- [x] **7.2 `GET /api/me/summary`** — khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo — dự kiến 14/11 · thực tế 12/11 🤖
+  - Trả `{courses_in_progress, courses_completed, known_skills, active_paths}`. Khóa học đếm qua `course_gateway.count_courses` → `list_my_courses` của Khôi (bảng `user_courses`, không đọc thẳng); kỹ năng = `user_skills` 'known'.
+  - `active_paths = null` (frontend hiện "—"): `learning_paths` của Hòa còn nhận `student_id` tạm từ query (id học viên mẫu, không phải `users.user_id`) → đếm theo tài khoản sẽ sai. Hòa đổi sang `user_id` thì chỉ sửa 1 dòng trong `user_service.summary`.
+  - Frontend: trang Hồ sơ lấy cả 4 ô từ API này (trước: chỉ ô kỹ năng, 3 ô "—"); lỗi API → các ô "—", trang vẫn dùng được.
+  - ✅ Test: `tests/test_me_summary.py` 3 test (cần đăng nhập · người mới toàn 0 · chỉ đếm dòng của mình, đúng trạng thái — bookmarked / abandoned / learning không tính). Trình duyệt: tham gia khóa 312 → Hồ sơ hiện 1 · 0 · 0 · — (4/4 PASS).
   - ⚠️ Cần bảng của module khác (khóa học của tôi, lộ trình). Nếu chưa có: trả `known_skills` thật, các số còn lại chờ gộp.
 - [ ] **7.3 Test + nhờ Claude review GĐ7** — dự kiến 14/11 · thực tế __/__
 
@@ -134,7 +138,88 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 
 ---
 
-## Checklist 13 endpoint
+## Giai đoạn 9 — Chuông thông báo + menu tài khoản (11/11)
+
+> Tuấn chốt 11/11: chuông đặt **trước** avatar · khung thông báo kiểu Facebook, 2 tab **Tất cả / Chưa đọc** · logo → `/courses` (trang của Khôi; chưa xong thì hiện "Tạm thời chưa khả dụng", Khôi làm xong tự chuyển tới) · rê chuột vào avatar → menu sổ xuống · công tắc **Giao diện giữ trong trang Hồ sơ / Cài đặt**, không đưa vào menu.
+
+- [x] **9.1 Bảng `notifications`** (`models/notification.py`) — thực tế 11/11 🤖
+  - Cột: `notification_id`, `user_id` (FK users, **xóa tài khoản → xóa thông báo**), `type`, `title` (≤ 200), `body`, `link`, `is_read`, `read_at`, `created_at`, `source_id`.
+  - Ràng buộc: `type` thuộc danh sách `TYPES`; `link` phải bắt đầu bằng `/` (chặn link ra ngoài); **UNIQUE (user_id, type, source_id)** khi có `source_id` → một đối tượng chỉ sinh 1 thông báo mỗi loại.
+  - Index `(user_id, is_read, created_at)` cho truy vấn chuông (~60 giây/lần).
+  - Không lưu: mật khẩu, token, link đặt lại mật khẩu, nội dung bài làm; `title`/`body` là chữ thuần.
+  - Giữ tối đa **100** thông báo / người và không quá **90 ngày** — dọn ngay khi tạo thông báo mới.
+- [x] **9.2 `services/notification_service.py`** — `notify()` **chỉ flush** (gọi trong transaction của module khác), `list_notifications`, `unread_count`, `mark_read`, `mark_all_read` — thực tế 11/11 🤖
+- [x] **9.3 API** (`routers/v1/endpoints/notifications.py`, prefix `/api/me/notifications`) — thực tế 11/11 🤖
+  - `GET ?unread_only=&page=&size=` (danh sách + `unread_count`) · `GET /unread-count` · `PATCH /{id}/read` · `POST /read-all`. Thông báo của người khác → 404; chưa đăng nhập → 401.
+- [x] **9.4 Bốn loại thông báo ban đầu** (gắn vào đúng chỗ, cùng commit với thao tác gốc) — thực tế 11/11 🤖
+
+  | `type` | Khi nào | Nội dung | Bấm vào |
+  |---|---|---|---|
+  | `welcome` | Đăng ký (`auth_service.register`) | "Chào mừng bạn đến với EduMentor AI" | `/me/skills` |
+  | `password_changed` | Đổi mật khẩu (`user_service`) / đặt lại mật khẩu (`auth_service`) | "Mật khẩu của bạn vừa được thay đổi / đặt lại" + "Nếu không phải bạn…" | `/me/password` |
+  | `review_graded` | Nộp bài ôn tập (`review_service.submit_attempt`) | "Kết quả ôn tập: 8/10 — Đạt" + tên khóa | `/review/{id}/result` |
+  | `course_completed` | Đạt ôn tập lần đầu | "Chúc mừng! Bạn đã hoàn thành khóa …" | `/me/skills` |
+
+- [x] **9.5 Frontend** — thực tế 11/11 🤖
+  - `NotificationBell.jsx`: chuông + số chưa đọc (99+), hỏi lại mỗi 60 giây (chỉ khi tab đang mở) và khi quay lại tab; khung 2 tab, "Đánh dấu đã đọc tất cả", chấm vàng = chưa đọc, "5 phút trước" (`utils/formatters.timeAgo`); bấm thông báo → đánh dấu đã đọc + mở link; Esc / bấm ra ngoài để đóng; điện thoại: khung trải ngang màn hình.
+  - `UserMenu.jsx`: rê chuột → sổ xuống (rời chuột chờ 150ms mới đóng); bấm / chạm / Enter cũng mở; Esc đóng. Mục: Hồ sơ của tôi · Cài đặt tài khoản · Kỹ năng của tôi · Lịch sử ôn tập · (admin) Quản trị · Đăng xuất (hộp xác nhận sẵn có).
+  - `Header.jsx`: logo → `/courses`; chuông trước avatar.
+- [x] **9.6 Kiểm thử** — thực tế 11/11 🤖
+  - Backend `tests/test_notifications.py` **14 test** (4 sự kiện, đổi mật khẩu sai không tạo, chống trùng, chặn loại lạ + link ngoài, 2 tab, phân trang, đọc 1 / đọc hết, không xem/sửa được của người khác, giữ 100 + 90 ngày). Toàn bộ **499 passed**.
+  - Chrome thật (`scratchpad/shots/bell_menu.mjs`) **11/11**: số trên chuông, chuông trước avatar, 2 tab, bấm thông báo → mở link + giảm số, đọc hết, Esc, menu rê chuột (không có "Giao diện"), rời chuột đóng, bấm mục menu, logo → `/courses`, điện thoại 375px không tràn. Đã dọn dữ liệu thử.
+  - Sửa trong lúc kiểm: máy có chuột, rê vào (menu mở) rồi **bấm** avatar thì menu bị đóng ngay → giờ bấm giữ menu mở.
+- [x] **9.8 Đổi menu avatar + 2 trang cài đặt mới** (Tuấn gửi thiết kế 11/11) — thực tế 12/11 🤖
+  - Menu avatar: **bỏ** "Kỹ năng của tôi", "Lịch sử ôn tập" → **thay bằng** "Giao diện", "Thông báo qua email". Menu còn: Hồ sơ của tôi · Cài đặt tài khoản · Giao diện · Thông báo qua email · (admin) Quản trị · Đăng xuất. (Kỹ năng vẫn vào từ Hồ sơ / Cài đặt; Lịch sử ôn tập vẫn ở menu "Ôn tập".)
+  - Cột trái Cài đặt: thêm "Giao diện", "Thông báo qua email"; **bỏ công tắc giao diện nhỏ** (đã có trang riêng). Công tắc Tối / Sáng trên trang Hồ sơ **giữ nguyên**.
+  - **Trang Giao diện** `/me/appearance` (`AppearancePage.jsx`) — nhãn "Lưu trên trình duyệt" (localStorage, `utils/theme.js`):
+    - Chế độ màu **Tối / Sáng / Theo hệ thống** — "Theo hệ thống" tự đổi khi Windows / điện thoại đổi sáng ↔ tối.
+    - Cỡ chữ **Nhỏ / Vừa / Lớn** (0.9 / 1 / 1.18) — chỉ phóng **nội dung câu hỏi ôn tập** (đề, phương án, bài làm, đáp án) qua biến CSS `--reading-scale`; giao diện giữ nguyên. Trang bài học (nhóm khác) dùng: `font-size: calc(15px * var(--reading-scale, 1))`.
+    - Giảm chuyển động (công tắc) — dùng sẵn `styles/reduced-motion.css`.
+  - **Trang Thông báo qua email** `/me/email-notifications` (`EmailNotificationsPage.jsx`) — bấm là **lưu ngay lên máy chủ**, lỗi thì trả công tắc về như cũ:
+    - Bảng mới **`email_preferences`** (1 dòng / người; chưa có dòng = mặc định): `review_reminder` (bật), `course_suggestions` (tắt), `feedback_replies` (bật). Bảng **riêng** vì `create_all()` không thêm cột vào bảng `users` đã có.
+    - API `GET` / `PATCH /api/me/email-preferences` (khóa lạ → 422). Hàm `email_preference_service.wants_email(db, user_id, key)` cho nơi gửi email hỏi trước.
+    - Email **bảo mật** (quên / đổi mật khẩu) và email **kết quả ôn tập** luôn gửi, không có công tắc.
+    - ⚠️ **Mới là TÙY CHỌN — 3 loại email này CHƯA được gửi:** nhắc ôn tập đến hạn cần quy tắc "đến hạn" (module 09 bước 5.6, đang chờ bàn) + gửi định kỳ tối đa 1 email/tuần; khóa gợi ý mới → Khôi / Hòa; phản hồi góp ý → module góp ý (`models/feedback.py` còn TODO).
+  - Kiểm: backend `tests/test_email_preferences.py` 5 test, toàn bộ backend xanh; Chrome thật `scratchpad/shots/prefs.mjs` **8/8** (menu, Theo hệ thống tự đổi, Sáng + F5, cỡ chữ câu hỏi 21px → 24.8px còn menu giữ 14px, giảm chuyển động, email mặc định, bật → F5 vẫn giữ + DB đúng); chạy lại chuông/menu 11/11, K1–K15 18/18.
+- [x] **9.9 Chỉnh nút Đăng xuất** (Tuấn 12/11) — bỏ nút Đăng xuất trên thẻ đầu trang **Hồ sơ** (chỉ còn Chỉnh sửa hồ sơ + Đổi mật khẩu); trong **menu avatar**, Đăng xuất thành nút riêng ở cuối, **nằm giữa**, viền đỏ. Đăng xuất còn ở: menu avatar + cột trái Cài đặt. Kiểm lại: K1–K15 18/18, chuông/menu 11/11, giao diện/email 8/8.
+- [x] **9.10 Bỏ công tắc Giao diện trên trang Hồ sơ + thêm thông tin cá nhân** (Tuấn 12/11) — thực tế 12/11 🤖
+  - Trang Hồ sơ: bỏ công tắc Tối / Sáng (đã có trang **Giao diện** trong menu avatar).
+  - Trang Sửa hồ sơ thêm: **Ngày tháng năm sinh** (1900 → hôm nay) · **Giới tính** Nam / Nữ (bấm lại để bỏ chọn) · **Quê quán** (≤ 100 ký tự) · **Số CCCD** (12 số) · **Số điện thoại** (10 số, bắt đầu 0; nhận cả "+84", dấu cách, dấu chấm). Email, Vai trò, Ngày tham gia vẫn chỉ xem.
+  - Bảng mới **`user_profiles`** (1 dòng / người, xóa tài khoản → xóa theo). Bảng riêng vì `create_all()` không thêm cột vào `users`.
+  - **CCCD bảo mật:** lưu **mã hóa** (Fernet, khóa suy từ `SECRET_KEY` — `core/security.encrypt_pii`) + **bản che** `345*********` (chỉ lộ 3 số đầu) + **dấu vân tay HMAC** (UNIQUE → một CCCD không dùng cho 2 tài khoản, 409). API **không bao giờ trả số đầy đủ**; ô CCCD để trống = giữ số cũ. ⚠️ Đổi `SECRET_KEY` → CCCD cũ không giải mã được (người dùng nhập lại); triển khai thật nên dùng khóa riêng `PII_ENCRYPTION_KEY`. Thêm `cryptography>=42.0` vào `requirements.txt` (máy đã có sẵn).
+  - API: `GET /api/me` thêm `date_of_birth`, `gender`, `hometown`, `phone`, `citizen_id_masked`; `PATCH /api/me` nhận thêm các trường trên + `citizen_id` (chỉ ghi) — **không gửi = giữ nguyên, null = xóa**.
+  - Kiểm: backend `tests/test_me_profile.py` **16 test** (lưu đủ, mã hóa trong DB, không lộ số, giữ / xóa từng trường, +84, 7 kiểu dữ liệu sai, CCCD trùng 409, không đổi được email / role); toàn bộ **518 passed**. Chrome thật `scratchpad/shots/profile_info.mjs` **5/5** (không còn công tắc ở Hồ sơ, đủ ô, báo lỗi, lưu + F5 giữ, API / DB không chứa số CCCD đầy đủ); K1–K15 vẫn 18/18.
+- [x] **9.11 "Cài đặt tài khoản" → Đổi mật khẩu** (Tuấn 12/11) — mục "Cài đặt tài khoản" trong menu avatar mở thẳng `/me/password`; **bỏ nút Đổi mật khẩu** trên thẻ đầu trang Hồ sơ (chỉ còn Chỉnh sửa hồ sơ). Kiểm: chuông/menu 11/11 (M3 → `/me/password`), thông tin cá nhân 5/5, K1–K15 18/18.
+- [x] **9.12 Sửa lỗi hộp thoại Đăng xuất bị kẹt ở mép trên** (Tuấn báo 12/11) — mở từ menu avatar thì hộp nằm TRONG header; header có `backdrop-filter` nên `position: fixed` bị tính theo header → hộp bị cắt ở trên. Sửa: `LogoutDialog` render qua **portal ra `<body>`** → luôn giữa màn hình dù mở từ đâu. Kiểm Chrome (`logout_dialog.mjs`) 5/5: giữa màn hình ở 1280px và 375px, mở từ menu avatar và từ menu trái Cài đặt, Hủy thì vẫn đăng nhập; K1–K15 18/18.
+- [x] **9.13 Email chào mừng khi đăng ký + gửi email thật** (Tuấn 12/11) — thực tế 12/11 🤖
+  - `core/email.send_welcome_email`; router `/auth/register` gửi bằng `BackgroundTasks` **sau** khi tài khoản đã lưu (gửi lỗi chỉ ghi log). Trang Đăng nhập sau khi đăng ký báo: "Đăng ký thành công! Chúng tôi đã gửi email chào mừng tới <email>…".
+  - Gmail SMTP đã cấu hình (12/11, gửi từ phamthanht009@gmail.com, mật khẩu ứng dụng) — đã gửi thật thư quên mật khẩu, kết quả ôn tập (mẫu), chào mừng tới phamthanht009@gmail.com. Người nhận lấy tự động từ `users.email`.
+  - **`tests/conftest.py`** thêm fixture tự động: test **không bao giờ gửi email thật / gọi Gemini thật** (SMTP_HOST rỗng, AI_MODE=mock) — tránh Gmail bị khóa khi chạy hàng trăm test.
+  - Test `tests/test_welcome_email.py` (4); toàn bộ **534 passed**.
+  - ⚠️ Script kiểm trên Chrome (`k_tests.mjs`) đăng ký tài khoản tạm `@example.com` → server thật sẽ gửi thư chào mừng tới địa chỉ không tồn tại → thư trả về (bounce) hộp thư gửi. Không hại, nhưng nên biết.
+- [ ] **9.14 Ngôn ngữ bản dịch (trang Giao diện)** — ý tưởng Tuấn 12/11 · **Tuấn chốt QT15a–d = A (12/11)**, chưa code
+  - Lựa chọn trong trang Giao diện: "Ngôn ngữ bản dịch". Câu mô tả: *"Mô tả khóa học và lời giải thích sau khi nộp bài ôn tập có nút dịch sang ngôn ngữ này. Đề ôn tập và bài làm luôn bằng tiếng Anh. Tên kỹ năng giữ nguyên."*
+  - **QT15a-A — Phạm vi**: dịch **mô tả khóa học** + **lời giải thích ở trang kết quả ôn tập (sau khi nộp)**. Không dịch: tên kỹ năng, đề + bài làm khi đang ôn tập.
+    - *Tùy chọn làm sau nếu còn thời gian (QT15a-C):* gắn cùng nút dịch vào **đề bài ở trang kết quả** — rẻ (chỉ thêm nút), không ảnh hưởng công bằng vì bài đã nộp.
+  - **QT15b-A — Dịch khi bấm**: nút "Dịch" nhỏ cạnh từng đoạn, bấm lại xem bản gốc; không tự dịch cả trang.
+  - **QT15c-A — Ngôn ngữ**: Tiếng Việt · Không dịch (giữ tiếng Anh).
+  - **QT15d-A — Kỹ thuật:**
+    - Dịch bằng Gemini (dùng chung khóa). Bảng mới `content_translations`, **khóa = sha256(nội dung gốc chuẩn hóa) + ngôn ngữ + phiên bản bảng thuật ngữ** → nội dung đổi (admin sửa mô tả, phiên bản câu mới) hoặc bảng thuật ngữ đổi thì bản dịch cũ tự hết hiệu lực; cùng nội dung chỉ dịch 1 lần cho mọi người.
+    - **Code và từ khóa Python trong code luôn giữ nguyên văn** (thay bằng ký hiệu giữ chỗ `⟦0⟧`… trước khi gửi, nhận về kiểm đủ ký hiệu rồi trả lại; thiếu → bỏ bản dịch, hiện bản gốc + "Chưa dịch được").
+    - **Tên kỹ năng chỉ giữ chỗ khi đứng riêng** (chip, tiêu đề); nằm trong câu văn thì dựa vào **bảng thuật ngữ trong prompt** — vì nhiều tên kỹ năng là từ thường ("Communication", "Leadership"), giữ chỗ cứng sẽ làm câu dịch lủng củng.
+    - Chia việc: Tuấn làm API dịch + component `<TranslateButton>` dùng chung + nút ở trang kết quả ôn tập; Khôi gắn nút vào trang chi tiết khóa học. Lựa chọn ngôn ngữ lưu như các cài đặt Giao diện khác (trình duyệt trước, đồng bộ tài khoản sau).
+    - Gemini lỗi → giữ bản gốc, báo "Chưa dịch được, thử lại sau"; không làm hỏng trang.
+- [ ] **9.7 Tuấn xem lại — đã đủ ý chưa?** (Claude liệt kê điểm có thể bổ sung)
+  - [ ] Ai gửi 3 loại email ở 9.8 và khi nào (nhắc ôn tập cần chốt quy tắc "đến hạn" — 5.6 module 09).
+  - [ ] Trang **"Xem tất cả thông báo"** riêng (`/me/notifications`) — hiện chỉ có khung trên chuông, xem được 20 thông báo mới nhất mỗi tab.
+  - [ ] Xóa từng thông báo / menu "…" trên mỗi thông báo (Facebook có) — hiện chưa có.
+  - [ ] Thông báo **đẩy ngay** (websocket) — hiện hỏi lại mỗi 60 giây.
+  - [ ] Âm thanh / hiệu ứng khi có thông báo mới.
+  - [ ] Loại thông báo của nhóm khác: Khôi (`course_recommended`?), Hòa (`path_updated`?), Tâm (`tutor_reply`?) — thêm vào `TYPES` rồi gọi `notification_service.notify()` (ví dụ ở đầu file service).
+  - [ ] Khi có **RealAI** chấm lâu (trạng thái `grading`): thông báo "Kết quả ôn tập" lúc chấm xong là lối báo chính → làm cùng 5.1 (module 09).
+  - [ ] Báo nhóm: header giờ có chuông + menu avatar; logo trỏ `/courses` (Khôi).
+
+## Checklist endpoint (13 ban đầu + 6 thêm 11–12/11)
 
 | Method | Endpoint | GĐ | Code | Test | Review |
 |---|---|---|---|---|---|
@@ -148,9 +233,18 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | PATCH | `/api/me` | 3 | [x] | [x] | [x] |
 | POST | `/api/me/avatar` | 7 | [x] | [x] | [x] |
 | POST | `/api/me/change-password` | 3 | [x] | [x] | [x] |
-| GET | `/api/me/summary` | 7 | [ ] | [ ] | [ ] |
-| GET | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
-| PATCH | `/api/me/skills` | 4 | [ ] | [ ] | [ ] |
+| GET | `/api/me/summary` | 7 | [x] | [x] | [x] |
+| GET | `/api/me/skills` | 4 | [x] | [x] | [ ] |
+| PATCH | `/api/me/skills` | 4 | [x] | [x] | [ ] |
+| PATCH | `/api/me` + ngày sinh, giới tính, quê quán, SĐT, CCCD (12/11) | 9.10 | [x] | [x] | [ ] |
+| GET | `/api/me/notifications?unread_only=&page=&size=` (11/11) | 9.3 | [x] | [x] | [ ] |
+| GET | `/api/me/notifications/unread-count` (11/11) | 9.3 | [x] | [x] | [ ] |
+| PATCH | `/api/me/notifications/{id}/read` (11/11) | 9.3 | [x] | [x] | [ ] |
+| POST | `/api/me/notifications/read-all` (11/11) | 9.3 | [x] | [x] | [ ] |
+| GET | `/api/me/email-preferences` (12/11) | 9.8 | [x] | [x] | [ ] |
+| PATCH | `/api/me/email-preferences` (12/11) | 9.8 | [x] | [x] | [ ] |
+
+> Cột Review = Tuấn tự đọc lại + thử trên Swagger (Claude đã review khi viết).
 
 ## Câu hỏi cần chốt (BA chưa nói rõ)
 
@@ -166,7 +260,7 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | Q6 | Link đặt lại mật khẩu sống bao lâu? Gửi email bằng SMTP nào? | 5 | **Đề xuất (chờ nhóm xác nhận):** 30 phút (`RESET_TOKEN_EXPIRE_MINUTES`); dev in link ra terminal, khi có SMTP thật dùng `smtplib` (không thêm thư viện) | 06/11 |
 | Q7 | Refresh token sống bao lâu, có xoay vòng không, gửi qua body hay cookie? | 6 | **Đề xuất (chờ nhóm xác nhận):** 7 ngày (`REFRESH_TOKEN_EXPIRE_DAYS`); có xoay vòng (mỗi refresh token dùng 1 lần); gửi trong JSON body | 06/11 |
 | Q8 | Ảnh đại diện: định dạng, dung lượng tối đa, lưu ở đâu? | 7 | **Tuấn chốt:** định dạng **PNG + JPEG** (khớp `accept` màn demo; kiểm tra chữ ký byte đầu file, không tin content_type; không nhận SVG/GIF/HEIC); tối đa **5 MB** (`AVATAR_MAX_BYTES`); lưu **thư mục server** `backend/uploads/avatars/` (không commit; Docker cần volume) — **mở rộng sau lên dịch vụ đám mây** (Cloudinary/S3…): chỉ viết lại `utils/files.py`, cột `avatar_url` chứa được URL đầy đủ. Thu nhỏ ảnh phía frontend: chưa chốt | 07/11 |
-| Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | | |
+| Q9 | `/me/summary` đếm "đang học", "lộ trình đang theo" từ bảng nào? | 7 | Khóa học: `user_courses` của Khôi (`ongoing` / `completed`, qua `course_gateway`). Lộ trình: `learning_paths` của Hòa `ongoing` — **chờ Hòa đổi `student_id` → `user_id`**, tạm trả `null` | 12/11 |
 | Q10 | Đổi mật khẩu xong có hủy các phiên đăng nhập khác không? (access token cũ vẫn sống tối đa 30 phút; refresh token ở GĐ6) | 6 | **Đề xuất (chờ nhóm xác nhận):** có — đổi/đặt lại mật khẩu thì thu hồi mọi refresh token của user | 06/11 |
 
 ## Nhật ký
@@ -177,4 +271,6 @@ Thứ tự được chọn để mỗi giai đoạn chạy và test được nga
 | 05/11 | Xong GĐ0; viết model `Users` (1.1), bật `SECRET_KEY` (1.2); bảng `users` đã tạo trong DB | Lỡ viết model vào `skill.py` của Hòa → đã chuyển sang `user.py` và `git restore` lại `skill.py` |
 | 05/11 | Xong GĐ1 (security, dependencies); GĐ2: register/login + `GET /me`; tự chạy trên Swagger: đăng ký → đăng nhập → Authorize → `/me` ra 200 | Đăng nhập 401 vì chưa đăng ký; đăng ký 422 vì `password` và `confirm_password` lệch dấu `!` — validator chặn đúng |
 | 07/11 | GĐ6 refresh/logout; GĐ7.1 avatar; merge nhánh Hòa (datajson); GĐ8.1–8.3 | **Rà bảo mật:** B1 ✅ không response nào có hashed_password/token_hash · B2 ⚠️ `.env` từng bị commit (9372a94, 30/10, đã xóa ở d40509d) — chỉ chứa giá trị dev/mẫu, SECRET_KEY hiện tại KHÔNG bị lộ · B3 ✅ SECRET_KEY 86 ký tự · B4 ⚠️ email.py in link chứa token khi chưa cấu hình SMTP (chỉ chấp nhận khi dev) · B5 ✅ JWT khóa HS256 · B6 ⚠️ `SQL_ECHO=True` in cả GIÁ TRỊ tham số (email, bản băm) ra log → đặt SQL_ECHO=False khi không debug, hoặc báo Hòa thêm `hide_parameters=True` trong database.py. **Hạn chế đã biết:** chưa giới hạn số lần đăng nhập sai (brute force); access token sống tới 30 phút sau đổi mật khẩu; refresh token qua JSON body |
+| 11/11 | Module 01 khớp ảnh demo (câu chào Đăng ký, "Ôn tập gần đây" dữ liệu thật, icon / mũi tên, nhãn Ảnh đại diện); trang 404 "404 · Not Found" lớn, đậm. **GĐ9:** bảng `notifications` + API 4 endpoint + chuông (2 tab Tất cả / Chưa đọc) + menu avatar + logo → `/courses`; 4 loại thông báo gắn vào đăng ký / đổi & đặt lại mật khẩu / nộp ôn tập. Kiểm Chrome thật: chuông/menu 11/11, K1–K15 18/18 | Lỗi tìm thấy khi kiểm: rê chuột mở menu rồi bấm avatar → menu đóng ngay → sửa (bấm giữ mở). Footer: Tuấn để sau |
+| 12/11 | Menu avatar bỏ Kỹ năng / Lịch sử ôn tập → thêm **Giao diện** (Tối / Sáng / Theo hệ thống, cỡ chữ, giảm chuyển động — lưu trên trình duyệt) + **Thông báo qua email** (bảng `email_preferences`, 3 công tắc). Đăng xuất: nút riêng ở giữa menu, bỏ khỏi Hồ sơ. Hồ sơ bỏ công tắc giao diện + nút Đổi mật khẩu ("Cài đặt tài khoản" → `/me/password`). **Thông tin cá nhân:** bảng `user_profiles` (ngày sinh, giới tính, quê quán, SĐT, CCCD mã hóa + che `345*********`). Backend **518 passed**; Chrome: giao diện/email 8/8, thông tin cá nhân 5/5. Commit + push: d10af24, 3c7e4c1, 8509907, 038da8a | 3 loại email mới là TÙY CHỌN, chưa có nơi gửi. CCCD: khóa suy từ `SECRET_KEY` (đổi khóa → mất CCCD cũ). Chờ Tuấn xem 9.7 |
 | | | |

@@ -1,0 +1,11 @@
+# Bỏ khi build image backend (build nhanh hơn, không đưa bí mật / file tạm vào image)
+.venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+.env
+uploads/
+app/ai/models/
+Dockerfile
+.dockerignore

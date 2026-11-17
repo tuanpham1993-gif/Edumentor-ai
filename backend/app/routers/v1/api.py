@@ -1,36 +1,106 @@
 """
 Tập hợp tất cả các Sub-router của API v1 thành một Router thống nhất.
-
-Thứ tự khai báo dưới đây cũng chính là thứ tự các nhóm hiển thị trên Swagger UI,
-nên hãy xếp theo đúng trình tự bài giảng để sinh viên dễ theo dõi.
 """
 
 from fastapi import APIRouter
 
+from app.routers.admin import admin_router
+
 from app.routers.v1.endpoints import (
     auth,
+    course_tracking,
+    courses,
     health,
     learning_path_node_service,
     learning_path_service,
+    email_preferences,
     recommendation_service,
     me,
+    notifications,
     review,
     skill_service,
 )
+from app.routers.v1.endpoints.admin import review_admin
 
+# Chatbot Tutor của Tâm
+from app.routers.v1.chat_tutor import (
+    router as chat_tutor_router,
+    public_router as public_chat_router,
+)
+
+# Tạm comment để tránh tải SentenceTransformer khi chạy server hoặc pytest
+# from app.routers.v1.endpoints import recommendation_service
 api_router = APIRouter()
 
 # 1. Kiểm tra sức khỏe hệ thống
-api_router.include_router(health.router, tags=["System Health"], prefix="/health")
+api_router.include_router(
+    health.router,
+    tags=["System Health"],
+    prefix="/health",
+)
 
-# 2. Tài khoản & hồ sơ (Tuấn)
+# 2. Tài khoản và hồ sơ
 api_router.include_router(auth.router, tags=["Auth"], prefix="/auth")
 api_router.include_router(me.router, tags=["Me"], prefix="/me")
-# Ôn tập (Tuấn, module 09) — không prefix: router tự khai đường dẫn /courses/... và /review-attempts/...
-api_router.include_router(review.router, tags=["Review (Ôn tập)"])
 
 # 3. Lộ trình, kỹ năng, gợi ý (Hòa)
 api_router.include_router(learning_path_service.router, tags=["learning path endpoint"], prefix="/learning-paths") # api/learning-paths
 api_router.include_router(learning_path_node_service.router, tags=["learning path node endpoint"], prefix="/learning-paths-nodes")
 api_router.include_router(skill_service.router, tags=["skill endpoint"], prefix="/skills")
 api_router.include_router(recommendation_service.router, tags=["learning path generation"], prefix="/learning-paths-generation")
+# Thông báo
+api_router.include_router(
+    notifications.router,
+    tags=["Notifications (Thông báo)"],
+    prefix="/me/notifications",
+)
+
+# Tùy chọn nhận email
+api_router.include_router(
+    email_preferences.router,
+    tags=["Me"],
+    prefix="/me/email-preferences",
+)
+
+# 3. Khóa học và ôn tập
+api_router.include_router(
+    courses.router,
+    tags=["Course Catalog"],
+    prefix="/courses",
+)
+
+api_router.include_router(
+    course_tracking.router,
+    tags=["Course Tracking"],
+)
+
+# Ôn tập (Tuấn, module 09) — không prefix: router tự khai đường dẫn /courses/... và /review-attempts/...
+api_router.include_router(
+    review.router,
+    tags=["Review (Ôn tập)"],
+)
+
+# Quản trị ngân hàng câu hỏi ôn tập (Tuấn, GĐ7 · 13/11) — tách khỏi router admin của Khôi
+api_router.include_router(
+    review_admin.router,
+    tags=["Admin Review (Quản trị ôn tập)"],
+    prefix="/admin/review",
+)
+
+# 5. Chatbot gia sư của Tâm
+
+# Chatbot dành cho người đã đăng nhập
+api_router.include_router(
+    chat_tutor_router,
+)
+
+# Chatbot dành cho khách chưa đăng nhập
+api_router.include_router(
+    public_chat_router,
+)
+
+# 6. Quản trị Admin
+api_router.include_router(
+    admin_router,
+    prefix="/admin",
+)

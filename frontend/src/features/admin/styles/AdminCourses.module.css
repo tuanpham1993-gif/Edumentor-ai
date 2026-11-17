@@ -1,0 +1,476 @@
+/* Quản trị khóa học (FĐ Admin · F11) */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.head h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text, #ede8e3);
+}
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: var(--accent, #f5a524);
+  color: #141211;
+  font-weight: 600;
+  font-size: 14.5px;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--d-fast, 0.15s), background var(--d-base, 0.2s), box-shadow var(--d-base, 0.2s);
+  box-shadow: 0 4px 14px rgba(245, 165, 36, 0.25);
+}
+
+.addBtn:hover {
+  background: #ffb84d;
+  transform: translateY(-1px);
+}
+
+.addBtn:active {
+  transform: scale(0.98);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 24px;
+  align-items: start;
+  transition: grid-template-columns var(--d-slow, 0.3s) var(--e-std);
+}
+
+.splitClosed {
+  grid-template-columns: minmax(0, 1fr) 0px;
+  gap: 0;
+}
+
+.tableStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--card, #1c1815);
+  border: 1px solid var(--line, #2b2622);
+  color: var(--text, #ede8e3);
+}
+
+.searchBar svg {
+  color: var(--text-muted, #8a8070);
+  flex: none;
+}
+
+.searchInput {
+  flex: 1;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.tableWrap {
+  border-radius: 12px;
+  background: var(--card, #1c1815);
+  border: 1px solid var(--line, #2b2622);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.table th {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted, #8a8070);
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 1px solid var(--line, #2b2622);
+  letter-spacing: 0.3px;
+}
+
+.table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line, #2b2622);
+  color: var(--text, #ede8e3);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rowEditing td {
+  background: rgba(245, 165, 36, 0.08) !important;
+}
+
+.rowEditing td:first-child {
+  box-shadow: inset 3px 0 0 var(--accent, #f5a524);
+}
+
+.courseTitle {
+  font-weight: 600;
+  color: var(--text, #ede8e3);
+  font-size: 14.5px;
+}
+
+.titleBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text, #ede8e3);
+  cursor: pointer;
+  transition: color var(--d-fast, 0.15s);
+  display: block;
+  line-height: 1.35;
+}
+
+.titleBtn:hover {
+  color: var(--accent, #f5a524);
+  text-decoration: underline;
+}
+
+.platform {
+  font-size: 12.5px;
+  color: var(--text-muted, #8a8070);
+  margin-top: 2px;
+}
+
+.platformMuted {
+  font-size: 12px;
+  color: var(--text-muted, #8a8070);
+  margin-top: 2px;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.rating {
+  color: var(--accent, #f5a524);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ratingEmpty {
+  color: var(--text-muted, #8a8070);
+  font-size: 12.5px;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.mutedText {
+  color: var(--text-muted, #8a8070);
+  font-size: 12.5px;
+  font-style: italic;
+}
+
+.skillsText {
+  color: var(--text-soft, #a89f91);
+  font-size: 13.5px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.iconBtn {
+  border: none;
+  background: none;
+  color: var(--text-soft, #a89f91);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  transition: background var(--d-fast, 0.15s), color var(--d-fast, 0.15s);
+}
+
+.iconBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text, #ede8e3);
+}
+
+.deleteBtn {
+  color: var(--danger-fg, #ef4444);
+}
+
+.deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+/* Drawer bên phải thêm / sửa khóa học */
+.drawer {
+  padding: 22px 24px;
+  border-radius: 12px;
+  background: var(--card, #1c1815);
+  border: 1px solid rgba(245, 165, 36, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 105px);
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.drawerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-right: -6px;
+  flex: 1;
+}
+
+.drawerBody::-webkit-scrollbar {
+  width: 5px;
+}
+.drawerBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+.drawerBody::-webkit-scrollbar-thumb {
+  background: var(--line, #3a342d);
+  border-radius: 999px;
+}
+.drawerBody::-webkit-scrollbar-thumb:hover {
+  background: var(--accent, #f5a524);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  margin-bottom: -2px;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent, #f5a524);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sectionLine {
+  flex: 1;
+  height: 1px;
+  background: var(--line, #2b2622);
+}
+
+.imageRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.thumbBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--surface-sunk, #141211);
+  border: 1px solid var(--line, #3a342d);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted, #8a8070);
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.helperText {
+  font-size: 11.5px;
+  color: var(--text-muted, #8a8070);
+  margin-top: -2px;
+}
+
+.drawerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawerHeader h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text, #ede8e3);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-size: 13px;
+  color: var(--text-muted, #8a8070);
+  font-weight: 500;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: var(--surface-sunk, #141211);
+  border: 1px solid var(--line, #3a342d);
+  color: var(--text, #ede8e3);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--d-base, 0.2s);
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  border-color: var(--accent, #f5a524);
+}
+
+.formTextarea {
+  min-height: 74px;
+  resize: vertical;
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.skillChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(245, 165, 36, 0.14);
+  color: var(--accent, #f5a524);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.chipRemove {
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.chipRemove:hover {
+  opacity: 1;
+  color: var(--danger-fg, #ef4444);
+}
+
+.drawerFooter {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.cancelBtn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid var(--line, #3a342d);
+  color: var(--text-soft, #a89f91);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  color: var(--text, #ede8e3);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.saveBtn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: var(--accent, #f5a524);
+  color: #141211;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.saveBtn:hover {
+  background: #ffb84d;
+}
+
+.paginationWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.totalBadge {
+  font-size: 13.5px;
+  color: var(--text-muted, #8a8070);
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+@media (max-width: 1050px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .drawer {
+    position: static;
+  }
+}

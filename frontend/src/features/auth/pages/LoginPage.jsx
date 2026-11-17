@@ -37,7 +37,13 @@ export default function LoginPage() {
 
   // Thông báo khi được chuyển tới đây
   let notice = null;
-  if (state.registered) notice = { ok: true, text: 'Đăng ký thành công. Đăng nhập để bắt đầu.' };
+  if (state.registered) {
+    // 12/11: backend gửi email chào mừng tới địa chỉ vừa đăng ký
+    notice = {
+      ok: true,
+      text: `Đăng ký thành công! Chúng tôi đã gửi email chào mừng tới ${state.email ?? 'email của bạn'}. Đăng nhập để bắt đầu.`,
+    };
+  }
   else if (state.passwordChanged) notice = { ok: true, text: state.message };
   else if (state.expired) {
     notice = { ok: false, text: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.' };

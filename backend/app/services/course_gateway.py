@@ -1,34 +1,48 @@
-"""Cổng nối module 09 (Ôn tập) với module Khóa học của Khôi (Tuấn · GĐ2, 09/11/2026; đính chính 11/11).
+"""Cổng nối module 09 (Ôn tập) với module Theo dõi khóa học của Khôi (`user_courses`)
+(Tuấn · GĐ2, 09/11/2026; nối hàm thật của Khôi 12/11).
 
-Module 09 KHÔNG đọc/ghi thẳng bảng đăng ký khóa học của Khôi — chỉ đi qua 2 hàm dưới đây
-(đặc tả đã gửi Khôi: BA-nhom/Gui-Khoi-On-tap-09-va-Khoa-hoc.md, chốt 6a).
-
-Khôi trả lời 11/11 (Q12): bảng `student_courses`, cột `status`, giá trị
-'bookmarked' | 'ongoing' | 'completed' | 'abandoned'; 2 hàm thật sẽ nằm trong
-`services/course_tracking_service.py` (hẹn trước 12/11). 'bookmarked' = mới lưu khóa, CHƯA đăng ký
-→ module 09 coi như chưa tham gia (không cho ôn).
-
-⚠️ TẠM THỜI LÀ HÀM GIẢ: nhánh hiện tại chưa có bảng đăng ký khóa học (models/user_course.py rỗng).
-   - get_enrollment_status: coi như MỌI người dùng đang học mọi khóa → ôn tập được để code / demo.
-   - mark_course_completed: không làm gì.
-   Khi Khôi có hàm thật: CHỈ sửa file này (gọi sang course_tracking_service),
-   phần còn lại của module 09 giữ nguyên. Test giả lập các trạng thái bằng monkeypatch.
+Module 09 KHÔNG đọc/ghi thẳng bảng `user_courses` — chỉ đi qua 2 hàm dưới đây (đặc tả 6a:
+BA-nhom/Gui-Khoi-On-tap-09-va-Khoa-hoc.md), gọi sang `course_tracking_service` của Khôi:
+  - get_enrollment_status: 'ongoing' | 'completed' | 'abandoned'; 'bookmarked' (mới lưu, chưa tham gia)
+    hoặc chưa có bản ghi → None (không cho ôn).
+  - mark_course_completed: 'ongoing' → 'completed' + completed_at, CHỈ flush — module 09 commit/rollback
+    chung trong transaction nộp bài (B1). Hàm của Khôi im lặng khi khóa không 'ongoing' → cổng tự đọc lại,
+    chưa 'completed' thì báo EnrollmentChangedError (lỗi L1 — bỏ khóa đúng lúc đang chấm).
 """
 
 from sqlalchemy.orm import Session
 
-# Giá trị trạng thái đúng như bảng student_courses của Khôi (Q12, 11/11)
+from app.services import course_tracking_service
+
+# Giá trị trạng thái đúng như cột user_courses.status của Khôi
 IN_PROGRESS = "ongoing"  # đang học
 COMPLETED = "completed"  # đã hoàn thành (chỉ do module 09 đặt khi đạt ôn tập — B1)
 ABANDONED = "abandoned"  # đã bỏ khóa
-BOOKMARKED = "bookmarked"  # mới lưu khóa, chưa đăng ký → không được ôn
+BOOKMARKED = "bookmarked"  # mới lưu khóa, chưa tham gia → không được ôn
+
+_ENROLLED = (IN_PROGRESS, COMPLETED, ABANDONED)
+
+
+class EnrollmentChangedError(Exception):
+    """Trạng thái khóa vừa đổi giữa lúc chấm (vd người học bấm "Bỏ khóa") → không chuyển Hoàn thành được.
+    review_service rollback cả lần nộp; router trả 409 để người học nộp lại."""
+
+
+def count_courses(db: Session, user, status: str) -> int:
+    """Số khóa của người dùng ở một trạng thái (ongoing / completed …) — cho ô thống kê trang Hồ sơ (7.2).
+    Dùng `list_my_courses` của Khôi (đã có `total`), lấy 1 dòng để chỉ đọc tổng."""
+    return course_tracking_service.list_my_courses(db, user, status_filter=status, page_size=1)["total"]
 
 
 def get_enrollment_status(db: Session, user_id: int, course_id: int) -> str | None:
-    """Trạng thái đăng ký khóa của người dùng; None = chưa đăng ký."""
-    return IN_PROGRESS  # TODO(Khôi): thay bằng course_tracking_service.get_enrollment_status
+    """Trạng thái tham gia khóa của người dùng; None = chưa tham gia (kể cả mới bookmarked)."""
+    raw_status = course_tracking_service.get_tracking_status_value(db, user_id, course_id)
+    return raw_status if raw_status in _ENROLLED else None
 
 
 def mark_course_completed(db: Session, user_id: int, course_id: int) -> None:
     """Chuyển khóa sang Hoàn thành — CHỈ flush, module 09 commit chung (GĐ3)."""
-    # TODO(Khôi): thay bằng course_tracking_service.mark_course_completed — hiện chưa làm gì
+    course_tracking_service.mark_course_completed_in_tx(db, user_id, course_id)
+    status = course_tracking_service.get_tracking_status_value(db, user_id, course_id)
+    if status != COMPLETED:
+        raise EnrollmentChangedError(f"Khóa {course_id} đang '{status}', không chuyển Hoàn thành được")

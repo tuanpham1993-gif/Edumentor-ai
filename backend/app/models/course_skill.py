@@ -6,4 +6,3 @@ class CourseSkill(Base):
     
     course_id = Column(Integer, ForeignKey("courses.course_id"), primary_key=True)
     skill_id = Column(Integer, ForeignKey("skills.skill_id"), primary_key=True)
-

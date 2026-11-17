@@ -1,8 +1,9 @@
 // Hộp thoại "Đăng xuất?" (module 01 · Tuấn · FĐ5, 07/11/2026).
-// Dùng ở trang Hồ sơ và menu Cài đặt tài khoản.
+// Dùng ở menu avatar (header) và menu trái Cài đặt tài khoản.
 //   - Esc / bấm nền mờ / "Hủy" → đóng. Mở ra con trỏ đặt sẵn ở "Hủy" (an toàn hơn).
 //   - "Đăng xuất" → POST /auth/logout (thu hồi phiên trên server) → /login.
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -32,7 +33,9 @@ export default function LogoutDialog({ open, onClose }) {
     navigate('/login', { replace: true });
   }
 
-  return (
+  // Portal ra <body> (12/11): mở từ menu avatar trong header — header có backdrop-filter nên
+  // position: fixed bên trong bị tính theo header (hộp bị kẹt / cắt ở mép trên). Ra <body> → luôn giữa màn hình.
+  return createPortal(
     <div
       className={styles.backdrop}
       onMouseDown={(event) => {
@@ -68,6 +71,7 @@ export default function LogoutDialog({ open, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

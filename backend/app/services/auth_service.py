@@ -25,6 +25,7 @@ from app.core.security import (
 )
 from app.models.user import Users
 from app.repositories import token_repository, user_repository
+from app.services import notification_service
 
 
 class EmailAlreadyExistsError(Exception):
@@ -46,6 +47,10 @@ def register(db: Session, *, email: str, full_name: str, password: str) -> Users
             email=email,
             full_name=full_name,
             hashed_password=hash_password(password),  # chỉ lưu bản băm
+        )
+        notification_service.notify(  # chuông: chào mừng (11/11)
+            db, user.user_id, "welcome", "Chào mừng bạn đến với EduMentor AI",
+            body="Thêm các kỹ năng bạn đã biết để nhận gợi ý lộ trình phù hợp.", link="/me/skills",
         )
         db.commit()
     except IntegrityError:
@@ -155,6 +160,10 @@ def reset_password(db: Session, *, token: str, new_password: str) -> None:
         db, user.user_id, now
     )  # vô hiệu link khác
     token_repository.revoke_all_refresh_tokens(db, user.user_id, now)
+    notification_service.notify(  # chuông: cảnh báo bảo mật (11/11)
+        db, user.user_id, "password_changed", "Mật khẩu của bạn vừa được đặt lại",
+        body="Nếu không phải bạn thực hiện, hãy đổi mật khẩu ngay.", link="/me/password",
+    )
 
     db.commit()
 

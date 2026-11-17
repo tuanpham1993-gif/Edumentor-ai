@@ -95,6 +95,21 @@ def test_not_enough_questions(missing):
         plan_exam(SKILLS, available, random.Random(0))
 
 
+def test_skill_without_mcq_blocks_the_whole_course():
+    """A1 (sửa 11/11): 1 kỹ năng của khóa chưa có câu TN → chưa ra đề, dù các kỹ năng khác thừa câu.
+
+    Trước khi sửa: kỹ năng thiếu câu bị BỎ QUA → khóa nhiều kỹ năng ra đề toàn câu của 1 kỹ năng,
+    đạt thì Hoàn thành + "Đã biết" cả kỹ năng chưa hỏi (ngân hàng 312 lên 100 câu → 197 khóa bị ảnh hưởng).
+    """
+    rich = {(1, "recognize"): 7, (1, "understand"): 7, (1, "easy"): 4, (1, "advanced"): 2}
+    assert plan_exam([1], rich, random.Random(0))  # 1 kỹ năng đủ câu → ra đề được
+
+    with pytest.raises(NotEnoughQuestionsError, match="chưa có câu trắc nghiệm"):
+        plan_exam([1, 2], rich, random.Random(0))  # thêm kỹ năng 2 chưa có câu nào
+    with pytest.raises(NotEnoughQuestionsError):
+        plan_exam([1, 2], {**rich, (2, "easy"): 3}, random.Random(0))  # chỉ có TL, không có TN
+
+
 def test_one_skill_course_still_works():
     available = {(1, "recognize"): 6, (1, "understand"): 6, (1, "easy"): 2, (1, "advanced"): 1}
 

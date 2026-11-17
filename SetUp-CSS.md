@@ -124,7 +124,7 @@ Trước khi đẩy code: `npm run build` không lỗi + mở thử ở chế đ
   `foundation/` (tokens, base) · `components/` (buttons, forms, surfaces, tables, sau này modal, pagination…) · `layout/` · `motion/` (animations, reduced-motion). `main.jsx` vẫn chỉ import `styles/index.css`.
 - [ ] 39 chỗ `style={{…}}` trong code của Tuấn chuyển thành class.
 - [ ] Gom keyframe lặp (`rise`, `breathe`…) — chưa làm vì các bản có thời gian/biên độ khác nhau.
-- [ ] File khung rỗng cũ trong `src/components/*`, `src/pages/*` (course, review, tutor, admin…) — **chủ tính năng tự chuyển** sang `features/` khi bắt đầu làm.
+- [x] File khung rỗng cũ trong `src/components/*`, `src/pages/*` — đã xóa 12/11/2026 (toàn file 0 dòng, không nhánh nào dùng). Trang mới đặt trong `features/<tính năng>/`.
 
 ## 8. Lịch sử thay đổi
 

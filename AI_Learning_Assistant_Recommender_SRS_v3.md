@@ -43,7 +43,7 @@ EduMentor AI giải quyết ba bài toán:
 
 1. **Gợi ý lộ trình và khóa học (Hybrid Recommender):** Phân tích mục tiêu nghề nghiệp viết bằng ngôn ngữ tự nhiên, kết hợp mô hình ngôn ngữ lớn, đồ thị kỹ năng, kỹ năng hiện có của học viên và lộ trình của học viên tương tự để tạo lộ trình học tập dạng đồ thị kỹ năng, rồi gợi ý khóa học cho từng kỹ năng.
 2. **Trợ lý Gia sư AI (Stateful Chatbot):** Nhớ ngữ cảnh hội thoại nhiều lượt theo phiên, giải thích code mẫu, phân tích lỗi và giao câu hỏi củng cố.
-3. **Ôn tập theo khóa học:** Bài 20 câu trắc nghiệm từ ngân hàng câu hỏi theo các kỹ năng của khóa học; đạt bài thì khóa học được ghi nhận hoàn thành và kỹ năng được cập nhật.
+3. **Ôn tập theo khóa học:** Bài 15 câu (12 trắc nghiệm, 3 tự luận) từ ngân hàng câu hỏi theo các kỹ năng của khóa học; câu tự luận do AI chấm từng ý theo barem; đạt bài thì khóa học được ghi nhận hoàn thành và kỹ năng được cập nhật.
 
 EduMentor AI không lưu nội dung khóa học và không đăng ký hay thanh toán thay người dùng trên nền tảng bên ngoài.
 
@@ -58,7 +58,7 @@ EduMentor AI không lưu nội dung khóa học và không đăng ký hay thanh 
 | Session Memory Manager | Lưu lịch sử hội thoại theo phiên trong cơ sở dữ liệu; khi trả lời chỉ nạp các tin nhắn gần nhất (cửa sổ trượt, mặc định 6 tin) để không vượt giới hạn token. |
 | Hybrid Recommender Engine | Tầng 1: lọc khóa học ứng viên theo ánh xạ khóa học và kỹ năng do Admin quản lý, kết hợp cấp độ. Tầng 2: LLM diễn giải mục tiêu; backend ánh xạ kỹ năng, mở rộng quan hệ tiên quyết, tham khảo mẫu lộ trình và lộ trình lịch sử (collaborative filtering), xếp hạng khóa học theo độ phù hợp, điểm và số lượt đánh giá. |
 | AI Inference & Tutoring Service | Mô hình ngôn ngữ lớn với system prompt riêng cho AI Consultant, AI Tutor và AI tư vấn khóa học. |
-| Review Engine | Lấy 20 câu trắc nghiệm từ ngân hàng câu hỏi, lưu bài làm dở, chấm theo đáp án lưu sẵn (đạt từ 60%), cập nhật khóa học và kỹ năng, gửi email kết quả. |
+| Review Engine | Ráp đề 15 câu (trắc nghiệm và tự luận) từ ngân hàng câu hỏi (có RAG), lưu bài làm dở; chấm trắc nghiệm theo đáp án lưu sẵn, tự luận bằng AI (Gemini) theo barem qua pipeline 9 khối, dự phòng chấm từ khóa; đạt từ 6/10; cập nhật khóa học và kỹ năng, gửi email kết quả. |
 | Database Layer (PostgreSQL) | Người dùng, kỹ năng, khóa học, lộ trình, theo dõi khóa học, phiên chat, câu hỏi và bài ôn tập, phản hồi, dữ liệu lộ trình lịch sử. |
 | Email Service | Gửi liên kết đặt lại mật khẩu và email kết quả ôn tập. |
 
@@ -90,13 +90,13 @@ Khi Khách bấm một chức năng cần đăng nhập, hệ thống chuyển t
 | FR-08 | Quản lý lộ trình | Lộ trình của tôi lọc theo Đang theo, Hoàn thành, Đã từ bỏ; chi tiết lộ trình với đồ thị, đổi tên, từ bỏ; thêm, xóa kỹ năng (vai trò Tiên quyết, Tùy chọn, Mở rộng) và kết nối. | Học viên |
 | FR-09 | Gợi ý khóa học theo kỹ năng | Chọn một kỹ năng trong lộ trình để xem khóa học gợi ý, sắp xếp theo điểm hoặc số lượt đánh giá; lưu hoặc tham gia ngay. | Học viên |
 | FR-10 | AI Tutor | Tạo, chọn, xóa phiên chat; hội thoại nhiều lượt nhớ ngữ cảnh theo phiên; giải thích code, phân tích lỗi; trả về khối mã và câu hỏi trắc nghiệm củng cố; báo lỗi có nút Gửi lại. | Học viên |
-| FR-11 | Ôn tập theo khóa học | 20 câu trắc nghiệm (4 lựa chọn) chia đều theo kỹ năng của khóa; cần đã tham gia khóa và đủ 20 câu; tạm rời và làm tiếp; câu bỏ trống tính sai; đạt từ 60%; làm lại không giới hạn; đạt thì khóa thành Hoàn thành và kỹ năng thành Đã biết; gửi email kết quả. | Học viên |
-| FR-12 | Lịch sử ôn tập | Lọc theo khóa học và kết quả, phân trang; chi tiết từng câu, lọc câu sai; giải thích ẩn mặc định, có Xem giải thích và Hiện tất cả. | Học viên |
+| FR-11 | Ôn tập theo khóa học | 15 câu: 12 trắc nghiệm (4 lựa chọn, 0,5 điểm) chia đều theo kỹ năng và 3 tự luận (2 Dễ 1 điểm, 1 Nâng cao 2 điểm), thang 10; cần đã tham gia khóa và ngân hàng đủ câu ráp đề; tạm rời và làm tiếp; câu bỏ trống 0 điểm; tự luận do AI chấm từng ý theo barem (Đạt / Chưa đạt), quá 20 giây chuyển Đang chấm; đạt từ 6/10; làm lại không giới hạn; đạt thì khóa thành Hoàn thành và kỹ năng thành Đã biết; gửi email kết quả. | Học viên |
+| FR-12 | Lịch sử ôn tập | Lọc theo khóa học và kết quả, phân trang; chi tiết từng câu, lọc câu sai; giải thích ẩn mặc định, có Xem giải thích và Hiện tất cả; câu tự luận hiện kết quả và lý do từng ý, câu trích tô sáng trong bài làm, nhận xét, đáp án mẫu. | Học viên |
 | FR-13 | Liên hệ và phản hồi | Gửi phản hồi về một khóa học hoặc hệ thống, chọn loại phản hồi, nội dung tối đa 1000 ký tự, tự gắn tài khoản; xem thông tin liên hệ của khóa học và EduMentor. Khách chỉ xem, form bị khóa. | Học viên, Khách (chỉ xem) |
 | FR-14 | Bong bóng hỗ trợ và AI tư vấn khóa học | Bong bóng góc phải dưới: GitHub, Zalo, Liên hệ, AI tư vấn khóa học. Không hiển thị ở AI tư vấn lộ trình, AI Tutor, màn làm bài và trang quản trị. AI chỉ gợi ý khóa học trong danh mục. | Khách, Học viên |
 | FR-15 | Quản trị khóa học | Tìm, thêm, sửa, xóa khóa học; liên kết kỹ năng sau khi lưu khóa học. | Admin |
 | FR-16 | Quản trị kỹ năng và quan hệ | Tìm, thêm, xóa kỹ năng (không trùng tên, không xóa kỹ năng đang dùng); bấm kỹ năng mở sơ đồ quan hệ Học trước/Mở ra; tạo, đổi loại, xóa quan hệ. | Admin |
-| FR-17 | Quản trị câu hỏi ôn tập | Thêm, sửa, xóa câu hỏi trắc nghiệm theo kỹ năng: nội dung, 4 lựa chọn, đáp án, giải thích. | Admin |
+| FR-17 | Quản trị câu hỏi ôn tập | Thêm, sửa, xóa câu hỏi trắc nghiệm và tự luận theo kỹ năng: nội dung, 4 lựa chọn và đáp án (trắc nghiệm), barem và đáp án mẫu (tự luận), giải thích; sửa câu đã có người làm tạo phiên bản mới; duyệt câu do AI soạn trước khi đưa vào đề. | Admin |
 | FR-18 | Mẫu lộ trình | Tạo mẫu; sửa tên và mục tiêu phù hợp; thêm kỹ năng và kết nối; ngừng dùng; lưu thay đổi. | Admin |
 | FR-19 | Dữ liệu lịch sử | Kéo thả file nhập dữ liệu lộ trình lịch sử, đánh dấu dữ liệu tổng hợp, xem kết quả nhập và danh sách bản ghi. | Admin |
 | FR-20 | Quản trị phản hồi | Thẻ số liệu, tab theo đối tượng, tìm kiếm, lọc loại và thời gian, sắp xếp, ngăn chi tiết, trả lời qua email. Không có trạng thái xử lý. | Admin |
@@ -140,14 +140,14 @@ Mọi endpoint bắt đầu bằng `/api/`. Chi tiết request, response và quy
 3. Trong chi tiết lộ trình, chọn một kỹ năng để xem khóa học gợi ý; lưu hoặc tham gia khóa học.
 4. Tham gia khóa học: trạng thái Đang học, mở trang khóa học bên ngoài, kỹ năng của khóa thành Đang học.
 5. Trong lúc học, hỏi AI Tutor theo từng phiên.
-6. Làm bài ôn tập của khóa: đạt từ 60% thì khóa thành Hoàn thành, kỹ năng thành Đã biết, nhận email kết quả.
+6. Làm bài ôn tập của khóa: đạt từ 6/10 thì khóa thành Hoàn thành, kỹ năng thành Đã biết, nhận email kết quả.
 7. Xem lịch sử ôn tập, gửi phản hồi qua trang Liên hệ khi cần.
 
 ### 6.3. Luồng Admin
 
 1. Quản lý kỹ năng và quan hệ kỹ năng.
 2. Quản lý khóa học và liên kết khóa học với kỹ năng.
-3. Nhập câu hỏi ôn tập cho từng kỹ năng (tối thiểu đủ 20 câu cho mỗi khóa).
+3. Nhập câu hỏi ôn tập (trắc nghiệm và tự luận có barem) cho từng kỹ năng, đủ để ráp đề 15 câu của mỗi khóa.
 4. Tạo mẫu lộ trình cho mục tiêu phổ biến; nhập dữ liệu lộ trình lịch sử.
 5. Xem phản hồi của học viên và trả lời qua email.
 6. Xem lộ trình người dùng để theo dõi mục tiêu phổ biến (chỉ đọc).
@@ -171,8 +171,8 @@ Mọi endpoint bắt đầu bằng `/api/`. Chi tiết request, response và quy
 | BaseLearningPath (+ node, cạnh) | Mẫu lộ trình do Admin quản lý |
 | HistoricalLearningPath, HistoricalImport | Dữ liệu lộ trình lịch sử và các lần nhập |
 | ChatSession, ChatMessage | Phiên AI Tutor và tin nhắn |
-| ReviewQuestion | Kỹ năng, nội dung, 4 lựa chọn, đáp án đúng, giải thích |
-| ReviewAttempt, ReviewAnswer | Lần làm bài (khóa học, trạng thái làm dở/đã nộp, điểm, đạt hay không, thời điểm nộp) và câu trả lời từng câu |
+| ReviewQuestion | Kỹ năng, loại (trắc nghiệm / tự luận), mức độ, nội dung, 4 lựa chọn và đáp án đúng (trắc nghiệm), barem từng ý (tự luận), giải thích hoặc đáp án mẫu; phiên bản và trạng thái duyệt (bảng phụ ReviewQuestionMeta) |
+| ReviewAttempt, ReviewAnswer | Lần làm bài (khóa học, trạng thái làm dở / đang chấm / đã chấm, điểm, đạt hay không, thời điểm nộp, nhật ký chấm) và câu trả lời từng câu (lựa chọn hoặc bài viết, điểm, kết quả từng ý của barem) |
 | Feedback | Người gửi, đối tượng (khóa học hoặc hệ thống), khóa học, loại phản hồi, nội dung, thời gian |
 
 Sơ đồ ERD chi tiết và các ràng buộc khóa ngoại được vẽ lại theo bảng trên trước khi viết migration.

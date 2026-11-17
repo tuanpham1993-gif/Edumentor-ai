@@ -72,7 +72,7 @@ Người dùng có thể:
 - Khám phá các kỹ năng trong lộ trình và xem các khóa học được đề xuất. 
 - Lưu khóa học để xem sau (bookmark) hoặc cập nhật trạng thái khóa học thành đang học (ongoing), đã hoàn thành (completed) hoặc đã từ bỏ (abandon). 
 - Tương tác với AI Tutor để đặt câu hỏi, hiểu các khái niệm và nhận hỗ trợ lập trình. 
-- Làm bài ôn tập 20 câu trắc nghiệm theo từng khóa học đang học, tạm rời và làm tiếp bài dở, xem kết quả, đáp án và lịch sử ôn tập. 
+- Làm bài ôn tập 15 câu (trắc nghiệm và tự luận) theo từng khóa học đang học, tạm rời và làm tiếp bài dở, xem kết quả, đáp án, nhận xét chấm tự luận và lịch sử ôn tập. 
 - Gửi phản hồi về một khóa học hoặc về hệ thống qua trang Liên hệ. 
 - Hỏi AI tư vấn khóa học qua bong bóng hỗ trợ. 
 - Xem và quản lý hồ sơ kỹ năng cùng lịch sử học tập cá nhân.
@@ -164,7 +164,7 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 | UC-06 | Explore Skills and Courses | Guest, User | Xem danh mục khóa học (tìm, lọc cấp độ, sắp xếp); học viên xem chi tiết khóa học và khóa học gợi ý cho từng kỹ năng trong lộ trình. |
 | UC-07 | Track Learning Progress | User | Lưu khóa học, tham gia khóa học, ngừng theo dõi và xem Khóa học của tôi theo 4 trạng thái. |
 | UC-08 | Interact with AI Tutor | User | Đặt câu hỏi, yêu cầu giải thích, hỗ trợ. |
-| UC-09 | Review a Course | User | Làm bài ôn tập 20 câu trắc nghiệm của một khóa học đang học, tạm rời và làm tiếp, nhận kết quả. |
+| UC-09 | Review a Course | User | Làm bài ôn tập 15 câu (12 trắc nghiệm, 3 tự luận) của một khóa học đang học, tạm rời và làm tiếp, nhận kết quả và nhận xét chấm tự luận. |
 | UC-10 | View Review History | User | Xem kết quả đánh giá kỹ năng trong quá khứ. |
 | UC-11 | Manage Skill Catalogue | Admin | Thêm, xem, cập nhật và quản lý danh mục kỹ năng. |
 | UC-12 | Manage Skill Relationships | Admin | Quản lý các mối quan hệ giữa kỹ năng, bao gồm quan hệ tiên quyết và quan hệ mở rộng. |
@@ -311,26 +311,28 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 **Preconditions:**
 - Người dùng đã đăng nhập.
 - Người dùng đã tham gia khóa học (trạng thái Đang học).
-- Các kỹ năng của khóa học có đủ tối thiểu 20 câu hỏi trong ngân hàng câu hỏi.
+- Ngân hàng câu hỏi của khóa đủ để ráp một đề: mọi kỹ năng của khóa có câu trắc nghiệm, và đủ câu cho từng mức độ của khung đề.
 
 **Main Flow:**
 1. Người dùng mở Khóa học của tôi hoặc Chi tiết khóa học và chọn Làm bài ôn tập.
-2. Hệ thống hiển thị màn Bắt đầu ôn tập: kỹ năng khóa học dạy, 20 câu chia đều theo kỹ năng, điểm đạt từ 60%, làm lại không giới hạn và các lần làm trước.
+2. Hệ thống hiển thị màn Bắt đầu ôn tập: kỹ năng khóa học dạy, cấu trúc đề (15 câu: 12 trắc nghiệm, 3 tự luận; thang 10), điểm đạt từ 6/10, làm lại không giới hạn và các lần làm trước.
 3. Người dùng chọn Bắt đầu ôn tập. Nếu có bài đang làm dở, hệ thống mở lại bài đó (nút Tiếp tục bài đang làm).
-4. Người dùng trả lời từng câu (4 lựa chọn), chuyển câu trước/sau, xem bảng 20 câu đã trả lời và chưa trả lời.
+4. Người dùng trả lời từng câu: câu trắc nghiệm chọn 1 trong 4 lựa chọn, câu tự luận viết câu trả lời; chuyển câu trước/sau, xem bảng 15 câu đã trả lời và chưa trả lời.
 5. Người dùng có thể chọn Tạm rời, làm tiếp sau; câu trả lời đã chọn được lưu lại.
 6. Người dùng chọn Nộp bài. Nếu còn câu chưa trả lời, hệ thống báo số câu còn trống và nhắc rằng câu bỏ trống tính là sai.
-7. Hệ thống chấm điểm theo đáp án lưu sẵn, lưu kết quả và hiển thị màn Kết quả (số câu đúng, phần trăm, Đạt hoặc Chưa đạt).
+7. Hệ thống chấm điểm: câu trắc nghiệm so với đáp án lưu sẵn; câu tự luận do AI chấm từng ý theo barem (Đạt / Chưa đạt từng ý). Hệ thống lưu kết quả và hiển thị màn Kết quả (điểm thang 10, điểm trắc nghiệm, điểm tự luận, Đạt hoặc Chưa đạt).
 8. Nếu đạt, khóa học chuyển sang Hoàn thành và các kỹ năng của khóa được ghi nhận Đã biết trong hồ sơ.
 9. Hệ thống gửi email kết quả cho người dùng.
 
 **Alternative Flow:**
 - Người dùng chưa tham gia khóa học: hệ thống hiển thị thông báo và nút Tham gia khóa học.
-- Khóa học chưa đủ 20 câu hỏi: hệ thống báo "Bài ôn tập chưa sẵn sàng".
+- Ngân hàng câu hỏi chưa đủ để ráp đề: hệ thống báo "Chưa có đề ôn tập cho khóa học này."
+- AI chấm tự luận quá 20 giây: bài chuyển trạng thái Đang chấm, hệ thống chấm tiếp ở nền và gửi email khi có kết quả.
+- AI không dùng được (lỗi, hết lượt): câu tự luận được chấm tự động theo từ khóa để người dùng vẫn có điểm.
 - Mỗi khóa học chỉ có tối đa một bài đang làm dở cho mỗi người dùng.
 
 **Postconditions:**
-- Kết quả được lưu vào Lịch sử ôn tập; người dùng xem lại chi tiết từng câu, lọc câu sai và mở giải thích (ẩn mặc định).
+- Kết quả được lưu vào Lịch sử ôn tập; người dùng xem lại chi tiết từng câu, lọc câu sai và mở giải thích (ẩn mặc định). Câu tự luận hiển thị kết quả từng ý của barem, lý do, câu trích làm căn cứ (tô sáng trong bài làm), nhận xét chung và đáp án mẫu.
 - Việc ôn tập là tự nguyện và không chặn người dùng tiếp tục học.
 
 ## 5.4. Quy trình quản trị hệ thống (Administrative Workflow)
@@ -481,20 +483,30 @@ Hệ thống phải cho phép AI Tutor tạo bài tập củng cố liên quan �
 
 **FR-24 — Tạo bài ôn tập theo khóa học**
 
-Hệ thống phải cho phép người dùng làm bài ôn tập cho một khóa học đang học. Mỗi bài gồm 20 câu trắc nghiệm lấy từ ngân hàng câu hỏi của các kỹ năng khóa học dạy, chia đều giữa các kỹ năng. Người dùng được làm lại không giới hạn; mỗi khóa có tối đa một bài đang làm dở.
+Hệ thống phải cho phép người dùng làm bài ôn tập cho một khóa học đang học. Mỗi bài gồm 15 câu lấy từ ngân hàng câu hỏi của các kỹ năng khóa học dạy: 6 câu trắc nghiệm mức Nhận biết, 6 câu trắc nghiệm mức Thông hiểu, 2 câu tự luận mức Dễ và 1 câu tự luận mức Nâng cao. Câu trắc nghiệm chia đều giữa các kỹ năng (mỗi kỹ năng ít nhất 1 câu); 3 câu tự luận ưu tiên 3 kỹ năng khác nhau. Hệ thống ưu tiên câu gắn với tài liệu tri thức liên quan (RAG) và tránh câu của lần làm trước, kể cả phiên bản đã sửa của câu đó. Người dùng được làm lại không giới hạn; mỗi khóa có tối đa một bài đang làm dở.
 
 **FR-25 — Dạng câu hỏi**
 
-Phiên bản này chỉ hỗ trợ câu hỏi trắc nghiệm một đáp án đúng, mỗi câu có đúng 4 lựa chọn và một phần giải thích. Câu hỏi mở và câu hỏi viết code nằm ngoài phạm vi.
+Hệ thống hỗ trợ hai dạng câu hỏi:
+
+- **Trắc nghiệm** một đáp án đúng, đúng 4 lựa chọn, kèm phần giải thích.
+- **Tự luận** trả lời ngắn (có thể viết bằng lời hoặc code), kèm barem gồm 2–5 ý, mỗi ý có số điểm (tổng 10), và đáp án mẫu.
+
+Câu hỏi yêu cầu chạy code để chấm nằm ngoài phạm vi.
 
 
 **FR-26 — Chấm điểm**
 
-Hệ thống phải chấm điểm bằng cách so sánh lựa chọn của người dùng với đáp án được lưu trữ. Câu bỏ trống tính là sai. Bài đạt khi tỷ lệ đúng từ 60% trở lên; ngưỡng này là cấu hình của hệ thống và giao diện phải lấy từ API, không ghi cứng.
+Điểm bài tính trên thang 10: mỗi câu trắc nghiệm 0,5 điểm, câu tự luận Dễ 1 điểm, câu tự luận Nâng cao 2 điểm. Câu bỏ trống được 0 điểm.
+
+- **Trắc nghiệm:** so sánh lựa chọn của người dùng với đáp án lưu trữ (không dùng AI).
+- **Tự luận:** AI chấm **từng ý của barem** theo nghĩa, mỗi ý chỉ Đạt (trọn điểm ý) hoặc Chưa đạt (0). Điểm do hệ thống cộng từ kết quả từng ý, không lấy điểm do AI tự đưa ra. Ý chấm Đạt phải có câu trích có thật trong bài làm làm căn cứ. Khi AI không dùng được, hệ thống chấm theo từ khóa để người dùng vẫn có điểm. Khi điểm AI lệch xa cách chấm từ khóa sau khi chấm lại, câu được đánh dấu "đang xem lại" và điểm tạm tính.
+
+Bài đạt khi điểm từ 6/10 trở lên; ngưỡng này là cấu hình của hệ thống và giao diện phải lấy từ API, không ghi cứng.
 
 **FR-27 — Cung cấp kết quả và phản hồi**
 
-Sau khi nộp bài, hệ thống phải hiển thị số câu đúng, phần trăm, kết quả Đạt hoặc Chưa đạt, cho phép xem đáp án và làm lại. Hệ thống gửi email kết quả cho người dùng.
+Sau khi nộp bài, hệ thống phải hiển thị điểm (thang 10), điểm trắc nghiệm, điểm tự luận, kết quả Đạt hoặc Chưa đạt, cho phép xem đáp án và làm lại. Với câu tự luận, hệ thống hiển thị kết quả và lý do từng ý của barem, câu trích làm căn cứ được tô sáng trong bài làm, nhận xét chung, đáp án mẫu, và cho biết câu được chấm bởi AI hay chấm tự động theo từ khóa. Nếu chấm quá 20 giây, bài hiển thị trạng thái Đang chấm và cập nhật khi có kết quả. Hệ thống gửi email kết quả cho người dùng.
 
 **FR-28 — Lưu và xem lịch sử ôn tập**
 
@@ -616,7 +628,7 @@ Admin xem chỉ đọc danh sách người dùng cùng số lộ trình, các m�
 
 **FR-54 — Quản lý ngân hàng câu hỏi**
 
-Admin thêm, sửa, xóa câu hỏi trắc nghiệm cho từng kỹ năng: nội dung, 4 lựa chọn, đáp án đúng và giải thích. Bài ôn tập của một khóa chỉ sẵn sàng khi các kỹ năng của khóa có đủ tối thiểu 20 câu.
+Admin quản lý câu hỏi trắc nghiệm và tự luận cho từng kỹ năng: nội dung, 4 lựa chọn và đáp án đúng (trắc nghiệm), barem và đáp án mẫu (tự luận), giải thích. Sửa câu đã có người làm sẽ tạo phiên bản mới, bài làm cũ vẫn giữ phiên bản cũ. Câu do AI soạn vào ngân hàng ở trạng thái Chờ duyệt và chỉ được đưa vào đề sau khi Admin duyệt. Bài ôn tập của một khóa chỉ sẵn sàng khi ngân hàng đủ câu để ráp đề (FR-24).
 
 ## 6.13. Bong bóng hỗ trợ (Support Bubble)
 
@@ -818,7 +830,7 @@ Các thành phần AI được phân chia nhiệm vụ cụ thể nhằm giảm 
 - **Skill Graph:** Biểu diễn mối quan hệ giữa các kỹ năng và hỗ trợ xây dựng lộ trình.
 - **Recommendation System:** Xếp hạng khóa học theo mức độ liên quan với kỹ năng và mục tiêu người dùng.
 - **AI Tutor:** Hỗ trợ giải thích kiến thức, giải đáp câu hỏi và gỡ lỗi lập trình.
-- **Course Review:** Lấy 20 câu trắc nghiệm từ ngân hàng câu hỏi theo kỹ năng của khóa học, chấm theo đáp án và lưu kết quả.
+- **Course Review:** Ráp đề 15 câu (trắc nghiệm và tự luận) từ ngân hàng câu hỏi theo kỹ năng của khóa học (có RAG), chấm trắc nghiệm theo đáp án và tự luận bằng AI theo barem (pipeline 9 khối, dự phòng chấm từ khóa), lưu kết quả.
 - **Course Advisor:** AI trả lời câu hỏi chọn khóa học trong bong bóng hỗ trợ, chỉ gợi ý khóa học có trong danh mục.
 
 ## 8.2. AI Consultant — Phân tích mục tiêu và trích xuất kỹ năng
@@ -1071,17 +1083,17 @@ AI Tutor có thể sử dụng một mô hình ngôn ngữ được triển khai
 
 ## 8.6. Course Review — Ôn tập theo khóa học
 
-Bài ôn tập lấy câu hỏi từ ngân hàng câu hỏi trắc nghiệm do Admin quản lý, không dùng mô hình AI để sinh câu hỏi hay chấm điểm trong phiên bản này.
+Bài ôn tập lấy câu hỏi từ ngân hàng câu hỏi (trắc nghiệm và tự luận) do Admin quản lý. Mô hình ngôn ngữ (Gemini) được dùng để **chấm câu tự luận theo barem**; câu do AI soạn chỉ vào đề sau khi Admin duyệt.
 
 Quy trình:
 
 1. Người dùng chọn Làm bài ôn tập cho một khóa học đang học.
-2. Hệ thống lấy ngẫu nhiên 20 câu từ các kỹ năng của khóa, chia đều giữa các kỹ năng.
+2. Hệ thống ráp đề 15 câu theo khung cố định (12 trắc nghiệm, 3 tự luận), dùng RAG để ưu tiên câu gắn với tài liệu tri thức liên quan tới từng kỹ năng, tránh câu của lần làm trước.
 3. Người dùng trả lời, có thể tạm rời và làm tiếp.
-4. Hệ thống chấm bằng quy tắc lập trình theo đáp án lưu sẵn; đạt từ 60%.
+4. Hệ thống chấm: trắc nghiệm theo đáp án lưu sẵn; tự luận qua pipeline 9 khối (tiền xử lý NLP → kiểm tra đầu vào → ngữ cảnh → LLM chấm có cấu trúc → kiểm tra câu trích → đối chiếu → tổng hợp → nhật ký), dự phòng chấm từ khóa khi AI lỗi. Đạt từ 6/10.
 5. Kết quả được lưu vào lịch sử; nếu đạt, khóa học thành Hoàn thành và kỹ năng thành Đã biết.
 
-Việc ôn tập là tự nguyện, không phải điều kiện để tiếp tục học và không ảnh hưởng tới thứ hạng khóa học. Dùng RAG hoặc mô hình AI để sinh thêm câu hỏi là hướng mở rộng sau này.
+Việc ôn tập là tự nguyện, không phải điều kiện để tiếp tục học và không ảnh hưởng tới thứ hạng khóa học. Chi tiết thiết kế và cách đánh giá độ chính xác: `docs/ai-grading/BAO_CAO_AI_CHAM_BAI.md`.
 
 ## 8.7. Đánh giá và kiểm soát chất lượng AI/ML
 
@@ -1090,7 +1102,7 @@ Các thành phần AI/ML cần được đánh giá riêng theo nhiệm vụ:
 - **AI Consultant:** Sử dụng Precision, Recall, F1-score và tỷ lệ đầu ra hợp lệ để đánh giá khả năng trích xuất kỹ năng.
 - **Recommendation System:** Sử dụng Precision@K hoặc NDCG@K khi có dữ liệu đánh giá phù hợp, đồng thời so sánh với baseline.
 - **AI Tutor:** Kiểm thử mức độ liên quan, tính chính xác và khả năng duy trì ngữ cảnh hội thoại.
-- **Skill Review:** Kiểm tra tính phù hợp của câu hỏi và độ chính xác của cơ chế chấm điểm.
+- **Course Review (chấm tự luận):** So điểm AI với điểm người chấm trên bộ bài chuẩn: MAE, RMSE, QWK, tỉ lệ khớp từng ý, Precision / Recall / F1 theo nhãn Đạt / Chưa đạt; so sánh với baseline chấm từ khóa bằng paired bootstrap.
 
 Tập kiểm thử cần được tách biệt với dữ liệu huấn luyện. Các chỉ số mục tiêu cụ thể sẽ được xác định sau khi có dữ liệu đánh giá và kết quả baseline.
 
@@ -1240,11 +1252,11 @@ Các câu hỏi trong bài ôn tập phải thuộc các kỹ năng mà khóa h�
 
 **BR-28 — Ưu tiên chấm điểm xác định đối với câu hỏi trắc nghiệm**
 
-Đối với câu hỏi trắc nghiệm có đáp án xác định, hệ thống phải so sánh câu trả lời của người dùng với đáp án được lưu trữ để xác định tính đúng sai. Mô hình ngôn ngữ không được tự ý thay thế kết quả đối chiếu này.
+Đối với câu hỏi trắc nghiệm có đáp án xác định, hệ thống phải so sánh câu trả lời của người dùng với đáp án được lưu trữ để xác định tính đúng sai. Mô hình ngôn ngữ không được tự ý thay thế kết quả đối chiếu này. Đối với câu tự luận, mô hình ngôn ngữ chỉ quyết định Đạt / Chưa đạt cho từng ý của barem kèm căn cứ; điểm do hệ thống tính từ kết quả từng ý.
 
 **BR-29 — Kết quả ôn tập cập nhật khóa học và kỹ năng**
 
-Khi bài ôn tập đạt từ 60%, trong cùng một giao dịch hệ thống chuyển khóa học sang Hoàn thành và ghi nhận các kỹ năng của khóa ở trạng thái Đã biết. Bài chưa đạt không thay đổi trạng thái khóa học.
+Khi bài ôn tập đạt từ 6/10 điểm trở lên, trong cùng một giao dịch hệ thống chuyển khóa học sang Hoàn thành và ghi nhận các kỹ năng của khóa ở trạng thái Đã biết. Bài chưa đạt không thay đổi trạng thái khóa học.
 
 **BR-30 — Kết quả phải đi kèm phản hồi phù hợp**
 
@@ -1487,7 +1499,7 @@ Chức năng tạo lộ trình và chức năng gia sư có thể cùng sử d�
 
 ## 10.10. Hệ thống ôn tập theo khóa học
 
-Mỗi bài ôn tập thuộc một khóa học, gồm 20 câu trắc nghiệm lấy từ các kỹ năng của khóa, chia đều giữa các kỹ năng.
+Mỗi bài ôn tập thuộc một khóa học, gồm 15 câu (12 trắc nghiệm, 3 tự luận) lấy từ các kỹ năng của khóa; câu trắc nghiệm chia đều giữa các kỹ năng.
 
 | Method | Endpoint | Mô tả |
 |---|---|---|
@@ -1502,9 +1514,9 @@ Mỗi bài ôn tập thuộc một khóa học, gồm 20 câu trắc nghiệm l�
 ### Quy trình nộp bài
 
 1. Kiểm tra bài thuộc người dùng hiện tại và chưa nộp.
-2. Chấm từng câu theo đáp án lưu sẵn; câu bỏ trống tính là sai.
-3. Tính phần trăm đúng và so với ngưỡng đạt (mặc định 60%, đọc từ cấu hình).
-4. Lưu kết quả và thời điểm nộp.
+2. Chấm từng câu: trắc nghiệm theo đáp án lưu sẵn; tự luận gửi AI chấm song song theo barem (chờ tối đa 20 giây, quá thì bài chuyển Đang chấm và chấm tiếp ở nền; AI lỗi thì chấm theo từ khóa). Câu bỏ trống được 0 điểm.
+3. Cộng điểm thang 10 và so với ngưỡng đạt (mặc định 6/10, đọc từ cấu hình).
+4. Lưu kết quả, kết quả từng ý của câu tự luận, nhật ký chấm và thời điểm nộp.
 5. Nếu đạt: chuyển khóa học sang `completed` và ghi nhận kỹ năng của khóa ở trạng thái `known`, trong cùng một giao dịch.
 6. Gửi email kết quả cho người dùng.
 
@@ -1677,7 +1689,7 @@ Tiêu chí nghiệm thu xác định điều kiện để đánh giá EduMentor 
 - Ngữ cảnh giữa các phiên được tách biệt; lỗi dịch vụ AI được xử lý phù hợp.
 
 **AC-07 — Ôn tập theo khóa học**
-- Bài ôn tập có 20 câu chia đều theo kỹ năng của khóa; chấm theo đáp án lưu sẵn; đạt từ 60%.
+- Bài ôn tập có 15 câu (12 trắc nghiệm, 3 tự luận) theo kỹ năng của khóa; trắc nghiệm chấm theo đáp án lưu sẵn, tự luận do AI chấm từng ý theo barem; đạt từ 6/10.
 - Bài làm dở được lưu và mở lại đúng; mỗi khóa có tối đa một bài dở.
 - Đạt bài thì khóa học thành Hoàn thành và kỹ năng thành Đã biết.
 - Kết quả, phản hồi và lịch sử đánh giá được lưu chính xác.

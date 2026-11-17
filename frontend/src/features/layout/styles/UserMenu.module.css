@@ -1,0 +1,116 @@
+/* Menu avatar trên header (module 01 · Tuấn · 11/11/2026). */
+.wrap { position: relative; }
+/* Cầu nối vô hình giữa nút và menu: rê chuột xuống menu không bị đóng */
+.wrap::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 6px 2px 2px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.trigger:hover,
+.trigger:focus-visible,
+.trigger[aria-expanded='true'] { background: var(--hover); }
+.active { color: var(--accent); }
+
+.avatar,
+.avatarLg {
+  position: relative;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--avatar-bg);
+  color: var(--text);
+  font-weight: 700;
+  border: 2px solid var(--accent);
+}
+.avatar { width: 36px; height: 36px; font-size: 13px; transition: transform var(--d-base) var(--e-spring); }
+.avatarLg { width: 48px; height: 48px; font-size: 16px; }
+.avatar img,
+.avatarLg img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.trigger:hover .avatar { transform: scale(1.06); }
+/* Vòng sáng quanh avatar xoay chậm (giữ như header cũ) */
+.avatar::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: rgba(255, 196, 92, 0.8);
+  border-right-color: rgba(255, 196, 92, 0.25);
+  animation: spin 4s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.chevron { color: var(--text-muted); transition: transform var(--d-base); }
+.chevronUp { transform: rotate(180deg); }
+
+.menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  padding: 8px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  box-shadow: 0 18px 48px -12px rgba(var(--shadow-rgb, 0, 0, 0), 0.45);
+  z-index: 60;
+  animation: drop var(--d-base) var(--e-in) both;
+}
+@keyframes drop { 0% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+
+.who { display: flex; gap: 12px; align-items: center; padding: 8px 8px 10px; }
+.whoText { min-width: 0; display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--text-muted); }
+.whoText strong { color: var(--text); font-size: 15px; }
+.whoText > span:first-of-type { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sep { height: 1px; margin: 6px 4px; background: var(--line); }
+
+.item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+.item:hover,
+.item:focus-visible { background: var(--accent-soft-bg); color: var(--text); }
+.item svg { color: var(--text-muted); }
+.item:hover svg { color: var(--accent); }
+.itemActive { color: var(--accent); font-weight: 600; }
+.itemActive svg { color: var(--accent); }
+.danger,
+.danger svg { color: var(--danger-fg); }
+.danger:hover { background: var(--danger-bg); color: var(--danger-fg); }
+.danger:hover svg { color: var(--danger-fg); }
+/* Đăng xuất: nút riêng ở cuối menu, nằm giữa (Tuấn chỉnh 12/11) */
+.logout {
+  justify-content: center;
+  margin-top: 2px;
+  border: 1px solid var(--danger-border);
+  font-weight: 600;
+}
+
+/* Laptop nhỏ: ẩn tên, chỉ còn avatar */
+@media (max-width: 1100px) {
+  .name { display: none; }
+}

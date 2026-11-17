@@ -118,9 +118,22 @@
 - [x] **7.0g Đồng bộ nền + chuyển động** — thực tế 08/11 — Claude viết (theo yêu cầu): Đăng nhập / Đăng ký dùng nền liền + quầng sáng như trang chủ, khung 1200px thẳng hàng header (màn rộng), sửa màu ô khi trình duyệt tự điền (autofill); trang đã đăng nhập: `PageBackdrop` (quầng sáng thở, vầng sáng trôi, hạt bụi), header khung 1200px + vệt sáng chạy + vòng sáng avatar, Hồ sơ: khối trượt lên lần lượt, viền sáng chạy quanh thẻ hồ sơ, ô thống kê nhấp nháy chờ dữ liệu, khối "Đang cập nhật" icon lơ lửng + vệt sáng lướt
 - [x] **7.0h Sắp xếp lại CSS / thư mục (phương án A)** — thực tế 08/11 — Claude làm (theo yêu cầu): `src/styles/` (CSS dùng chung tách 9 file) + `src/features/<tính năng>/{pages,components,styles}`; giao diện kiểm chứng giống hệt (xem `SetUp-CSS.md` §7); hướng dẫn `frontend/src/features/README.md`
 - [ ] **7.1 Kiểm thử thủ công theo bảng dưới**, so với ảnh demo — dự kiến 13/11 · thực tế __/__ — 11/11 🤖 chạy **K1–K15 + W1, W8, W10 = 18/18 đạt** trên Chrome thật, không lỗi JS. 👤 Còn: Tuấn **so giao diện với ảnh demo** (ảnh chụp từng bước trong `scratchpad/shots/k/`)
+  - 11/11 🤖 **So 13 màn với ảnh demo** (khổ 1440, ảnh ghép demo | app thật: `scratchpad/shots/ui/cmp/`). Khác biệt **có chủ đích** (đã quyết trước): header khách + nền hiệu ứng + Footer; bỏ dòng "tài khoản demo / mật khẩu demo"; 6 quy tắc mật khẩu; ảnh tối đa 5 MB (Q8); thêm kỹ năng qua trang Khám phá; hộp Đăng xuất 2 nút ngang, con trỏ ở Hủy; nút Back dạng icon.
+  - ✅ **11/11 Tuấn quyết + Claude sửa** (1) theo demo, (2) nối dữ liệu thật, (3) thêm hết, (4) **để sau**. Đã làm: `AuthLayout` thêm `variant="register"` (câu chào riêng, không danh sách tính năng); `RecentReviews.jsx` (3 lượt mới nhất từ `GET /me/review-history?size=3`: khóa · ngày · Đạt/Chưa đạt · điểm /10, bấm → trang kết quả, "Xem tất cả" → Lịch sử); icon Bút chì / Khóa / Đăng xuất trên 3 nút Hồ sơ (`PencilIcon`, `LogoutIcon` mới trong `icons.jsx`); mũi tên → trên "Gửi yêu cầu", 2 nút "Lưu thay đổi"; nhãn "Ảnh đại diện". Kiểm: ảnh ghép `scratchpad/shots/ui2/cmp/`, build OK, K1–K15 chạy lại 18/18. **Còn (4) Footer — để sau.** Chi tiết lệch ban đầu: (1) Trang **Đăng ký** dùng lại câu chào của Đăng nhập — demo: "Bắt đầu hành trình học tập của bạn." + "Tạo tài khoản học viên miễn phí để lưu khóa học, theo dõi lộ trình và ghi nhận kỹ năng."; (2) Hồ sơ → khối **"Ôn tập gần đây"** còn "Đang cập nhật" — module 09 đã có dữ liệu (`GET /me/review-history?size=3`), hiện điểm **/10** thay cho "85% · 17/20 câu" của demo; (3) thiếu icon trên nút Chỉnh sửa hồ sơ / Đổi mật khẩu / Đăng xuất (Hồ sơ), mũi tên → trên "Gửi yêu cầu", "Lưu thay đổi", nhãn "Ảnh đại diện" (Sửa hồ sơ); (4) Footer: liên hệ / địa chỉ còn chữ giữ chỗ ("Cập nhật tên trường / đơn vị") — cần Tuấn cung cấp.
+  - Chờ module khác: "Khóa học của tôi" + 3 ô thống kê (Khôi, Hòa — bước 6.2/7.2); nút chat nổi (Tâm).
 - [x] **7.2 Giao diện hẹp (điện thoại)**, chế độ Sáng, trạng thái đang tải / lỗi mạng — dự kiến 13/11 · thực tế 08/11 — Claude kiểm bằng Chrome headless ở 375 / 768 / 1280 px (8 trang): **không trang nào tràn ngang**; sửa: menu Cài đặt trên điện thoại bị che mục (cuộn ngang ẩn) → xuống dòng; Đổi mật khẩu trên điện thoại: quy tắc nằm dưới nút Lưu → đưa lên ngay dưới ô nhập; thống kê Hồ sơ 1 → 2 cột; Header thêm `-webkit-backdrop-filter` (Safari < 18); font dự phòng có dấu tiếng Việt khi không tải được Google Fonts; reset `img max-width`, `text-size-adjust`. Còn chờ: Tuấn thử trên điện thoại thật + Firefox / Safari (nếu có)
 - [x] **7.3 `npm run build`** không lỗi — dự kiến 13/11 · thực tế 11/11 🤖 (sửa chữ "Ôn tập 20 câu" → **15 câu** theo quyết định 09/11 ở trang Đăng nhập / Đăng ký và trang chủ)
 - [ ] **7.4 Commit, báo nhóm phần nền dùng chung** (`client.js`, `authStore`, route, layout) — dự kiến 13/11 · thực tế __/__
+
+## FĐ8 — Header mới + trang cài đặt (11–12/11) — chi tiết ở `Review-Auth.md` GĐ9 (9.1–9.11)
+
+- [x] **8.1 Chuông thông báo** `layout/components/NotificationBell.jsx` — số chưa đọc (99+), khung 2 tab Tất cả / Chưa đọc, đọc 1 / đọc hết, hỏi lại 60 giây; điện thoại trải ngang — thực tế 11/11 🤖
+- [x] **8.2 Menu avatar** `layout/components/UserMenu.jsx` — rê chuột / bấm / bàn phím; mục: Hồ sơ của tôi · Cài đặt tài khoản (→ `/me/password`) · Giao diện · Thông báo qua email · (admin) Quản trị · Đăng xuất (nút riêng ở giữa). Logo → `/courses` — thực tế 11–12/11 🤖
+- [x] **8.3 Trang Giao diện** `/me/appearance` — Tối / Sáng / Theo hệ thống, cỡ chữ (`--reading-scale`, chỉ nội dung câu hỏi ôn tập), giảm chuyển động; lưu localStorage (`utils/theme.js`) — thực tế 12/11 🤖
+- [x] **8.4 Trang Thông báo qua email** `/me/email-notifications` — 3 công tắc lưu ngay lên máy chủ — thực tế 12/11 🤖
+- [x] **8.5 Trang Sửa hồ sơ** thêm ngày sinh, giới tính, quê quán, SĐT, CCCD (chỉ hiện bản che) — thực tế 12/11 🤖
+- [x] **8.6 Trang Hồ sơ gọn lại** — chỉ còn nút Chỉnh sửa hồ sơ (bỏ công tắc giao diện, Đổi mật khẩu, Đăng xuất); "Ôn tập gần đây" dữ liệu thật — thực tế 11–12/11 🤖
+- Kiểm thử Chrome thật (script trong scratchpad): `bell_menu.mjs` 11/11 · `prefs.mjs` 8/8 · `profile_info.mjs` 5/5 · `k_tests.mjs` (K1–K15) 18/18. K12 nay đổi giao diện ở trang Giao diện.
 
 ---
 
@@ -162,4 +175,6 @@
 | Ngày | Đã làm | Vướng mắc |
 |---|---|---|
 | 07/11 | Lập kế hoạch frontend module 01 | — |
+| 11/11 | K1–K15 chạy trên Chrome thật 18/18; so 13 màn với ảnh demo, sửa theo quyết định Tuấn (Footer để sau); chuông + menu avatar (FĐ8) | Trang Đăng nhập / Đăng ký có màn "kéo dây đèn" — script kiểm phải bật đèn trước |
+| 12/11 | Trang Giao diện, Thông báo qua email, thông tin cá nhân; Hồ sơ chỉ còn nút Chỉnh sửa hồ sơ | — |
 | | | |

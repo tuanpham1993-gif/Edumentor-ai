@@ -1,13 +1,13 @@
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parents[3]
 
-class Settings(BaseSettings):
 
+class Settings(BaseSettings):
     PROJECT_NAME: str = "Edumentor AI Project 2"
     API_STR: str = "/api"
-    DESCRIPTION: str = """"""
+    DESCRIPTION: str = ""
 
     VERSION: str
     DATABASE_URL: str
@@ -34,13 +34,21 @@ class Settings(BaseSettings):
     AI_MODE: str = "mock"                 # "mock" (giai đoạn 1, 0 đồng) | "real" (giai đoạn 2, cần LLM_API_KEY)
     REVIEW_PASS_SCORE: float = 6.0        # Đạt khi điểm (thang 10) ≥ giá trị này
     REVIEW_GRADING_TIMEOUT: int = 20      # giây chờ chấm khi nộp; quá → trạng thái "grading" (T1)
+    REVIEW_GRADING_MAX_WAIT: int = 120    # giây tối đa chờ AI chấm (tính từ lúc nộp); quá → chấm từ khóa (T1)
     REVIEW_BANK_TARGET_PER_SKILL: int = 20  # AI ngừng sinh thêm khi kỹ năng đủ số câu này (ngân hàng bước 3)
+    # B9 (15/11): chấm tự luận kèm đoạn tri thức của kỹ năng (Model B). False = Model A (đề + barem + đáp án mẫu).
+    # Chỉ bật khi đo trên bộ bài chuẩn thấy B tốt hơn A (docs/Review-AI-Grading.md B9, B10).
+    REVIEW_GRADING_RAG: bool = False
     # Mô hình embedding cho RAG — ĐA NGÔN NGỮ (tài liệu tri thức viết tiếng Việt). Đổi mô hình → chạy lại
     # scripts/build_embeddings.py --all (vector cũ và mới không so được với nhau).
     REVIEW_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     # Khóa LLM dùng chung với chatbot (Tâm). Để trống: server vẫn chạy, AI_MODE=real sẽ báo thiếu khóa.
     LLM_API_KEY: str = ""
     LLM_MODEL: str = ""
+    # Ôn tập (Tuấn) dùng model / khóa RIÊNG nếu đặt (12/11: chatbot dùng gemini-3.6-flash, chấm bài dùng
+    # gemini-3.5-flash-lite — nhanh hơn, ít lỗi 503 hơn, chấm đúng bài viết tự nhiên). Để trống → dùng LLM_*.
+    REVIEW_LLM_API_KEY: str = ""
+    REVIEW_LLM_MODEL: str = ""
 
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:8000",
@@ -48,10 +56,10 @@ class Settings(BaseSettings):
         "http://localhost:5500",
         "http://127.0.0.1:5500",
         "http://127.0.0.1:5171",
-        "http://localhost:5171",   
+        "http://localhost:5171",
     ]
-    LLM_URL_BASE: str
-    LLM_URL_ADAPTER: str
+    LLM_URL_BASE: str = "http://localhost:8082"     # Hòa: llama.cpp (docker-compose llama-base)
+    LLM_URL_ADAPTER: str = "http://localhost:8081"  # Hòa: llama.cpp + LoRA (llama-adapter)
 
     SYSTEM_PROMPT: str = """
     You are EduMentor AI, an intelligent learning-path skill
@@ -251,10 +259,10 @@ class Settings(BaseSettings):
     """
 
 
-    QDRANT_URL: str
+    QDRANT_URL: str = "http://localhost:6335"       # Qdrant (docker-compose, cổng 6335)
 
     model_config = SettingsConfigDict(
-        env_file= BASE_DIR / ".env",
+        env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -262,10 +270,12 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-"""
-FastAPI location	Database host	Port
-Your computer	localhost	5433
-Another container on the Compose network	postgres	5432
 
-khi dockerized thì thay đổi @localhost sang @postgres. service name trong docker compose.yaml file
+"""
+FastAPI location       Database host       Port
+Your computer          localhost            5433
+Another container      postgres             5432
+
+Khi chạy trong Docker, đổi localhost thành postgres
+(theo service name trong docker-compose.yaml).
 """

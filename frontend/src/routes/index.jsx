@@ -6,7 +6,7 @@
 //   AdminRoute     — phải là admin
 //   PageLayout     — thêm Header cho các trang bên trong
 // Nhóm khác thêm route của mình vào đúng nhóm bảo vệ (vd /courses, /tutor vào ProtectedRoute).
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import ComingSoon from '../features/common/components/ComingSoon.jsx';
 import PageLayout from '../features/layout/components/PageLayout.jsx';
@@ -19,7 +19,9 @@ import ResetExpiredPage from '../features/auth/pages/ResetExpiredPage.jsx';
 import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage.jsx';
 import HomePage from '../features/home/pages/HomePage.jsx';
 import NotFoundPage from '../features/common/pages/NotFoundPage.jsx';
+import AppearancePage from '../features/profile/pages/AppearancePage.jsx';
 import ChangePasswordPage from '../features/profile/pages/ChangePasswordPage.jsx';
+import EmailNotificationsPage from '../features/profile/pages/EmailNotificationsPage.jsx';
 import EditProfilePage from '../features/profile/pages/EditProfilePage.jsx';
 import ProfilePage from '../features/profile/pages/ProfilePage.jsx';
 import SkillBrowsePage from '../features/profile/pages/SkillBrowsePage.jsx';
@@ -28,6 +30,16 @@ import ReviewHistoryPage from '../features/review/pages/ReviewHistoryPage.jsx';
 import ReviewQuizPage from '../features/review/pages/ReviewQuizPage.jsx';
 import ReviewResultPage from '../features/review/pages/ReviewResultPage.jsx';
 import ReviewStartPage from '../features/review/pages/ReviewStartPage.jsx';
+import CoursesPage from '../features/courses/pages/CoursesPage.jsx';
+import MyCoursesPage from '../features/courses/pages/MyCoursesPage.jsx';
+import AdminLayout from '../features/admin/components/AdminLayout.jsx';
+import AdminCoursesPage from '../features/admin/pages/AdminCoursesPage.jsx';
+import AdminSkillsPage from '../features/admin/pages/AdminSkillsPage.jsx';
+import AdminBasePathsPage from '../features/admin/pages/AdminBasePathsPage.jsx';
+import AdminHistoricalPage from '../features/admin/pages/AdminHistoricalPage.jsx';
+import AdminFeedbackPage from '../features/admin/pages/AdminFeedbackPage.jsx';
+import AdminUserPathsPage from '../features/admin/pages/AdminUserPathsPage.jsx';
+import AdminReviewQuestionsPage from '../features/review-admin/pages/AdminReviewQuestionsPage.jsx'; // Tuấn · duyệt câu AI
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
@@ -60,11 +72,18 @@ export default function AppRoutes() {
           <Route path="/me" element={<ProfilePage />} />
           <Route path="/me/edit" element={<EditProfilePage />} />
           <Route path="/me/password" element={<ChangePasswordPage />} />
+          {/* Cài đặt: Giao diện + Thông báo qua email (11/11) */}
+          <Route path="/me/appearance" element={<AppearancePage />} />
+          <Route path="/me/email-notifications" element={<EmailNotificationsPage />} />
           {/* Ôn tập — module 09 (Tuấn, GĐ4 09/11) */}
           <Route path="/me/review-history" element={<ReviewHistoryPage />} />
           <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
           <Route path="/review/:attemptId" element={<ReviewQuizPage />} />
           <Route path="/review/:attemptId/result" element={<ReviewResultPage />} />
+          {/* Khóa học — module Khôi */}
+          <Route path="/courses" element={<CoursesPage />} />
+          {/* Khóa học của tôi — module Tâm */}
+          <Route path="/me/courses" element={<MyCoursesPage />} />
           {/* Trang của nhóm khác / module 09 chưa làm → "Tạm thời chưa khả dụng" (08/11).
               Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
               (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}
@@ -88,8 +107,15 @@ export default function AppRoutes() {
 
       {/* Quản trị */}
       <Route element={<AdminRoute />}>
-        <Route element={<PageLayout />}>
-          <Route path="/admin" element={<AdminHomePlaceholder />} />
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<Navigate to="/admin/courses" replace />} />
+          <Route path="/admin/courses" element={<AdminCoursesPage />} />
+          <Route path="/admin/skills" element={<AdminSkillsPage />} />
+          <Route path="/admin/base-paths" element={<AdminBasePathsPage />} />
+          <Route path="/admin/historical" element={<AdminHistoricalPage />} />
+          <Route path="/admin/feedback" element={<AdminFeedbackPage />} />
+          <Route path="/admin/user-paths" element={<AdminUserPathsPage />} />
+          <Route path="/admin/questions" element={<AdminReviewQuestionsPage />} />{/* Tuấn: duyệt câu AI (7.5c) */}
         </Route>
       </Route>
 

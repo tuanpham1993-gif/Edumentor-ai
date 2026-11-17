@@ -7,7 +7,7 @@ pick_from_bank() cũng là "ngân hàng dự phòng" (A6) khi AI lỗi: bốc kh
 
 import random
 
-from app.ai.review import keyword_grader
+from app.ai.review import keyword_grading
 from app.ai.review.base import GenerationRequest, ReviewAI
 
 
@@ -52,4 +52,4 @@ class MockAI(ReviewAI):
         )
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:
-        return keyword_grader.grade_essay(question["rubric"], answer, question.get("content"))
+        return keyword_grading.grade_essay(question["rubric"], answer, question.get("content"))
