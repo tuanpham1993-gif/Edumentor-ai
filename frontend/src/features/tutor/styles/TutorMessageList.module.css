@@ -1,0 +1,93 @@
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px 16px;
+  position: relative;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.emptyWelcome {
+  margin: auto;
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 480px;
+}
+
+.welcomeTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text, #f3efe8);
+  margin: 0;
+}
+
+.welcomeDesc {
+  font-size: 14px;
+  color: var(--text-muted, #a39d93);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Thinking Indicator */
+.thinkingRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.thinkingBubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--card, #16171a);
+  border: 1px solid var(--card-border, #2c2b29);
+  padding: 12px 18px;
+  border-radius: 16px;
+  border-top-left-radius: 4px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent, #f5a524);
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .scrollArea {
+    padding: 16px 12px;
+  }
+}

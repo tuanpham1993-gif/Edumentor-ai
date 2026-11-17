@@ -1,3 +1,4 @@
+
 """
 Tập hợp tất cả các Sub-router của API v1 thành một Router thống nhất.
 """
@@ -19,8 +20,12 @@ from app.routers.v1.endpoints import (
     notifications,
     review,
     skill_service,
+    feedback,  # Feedback dành cho User
 )
 from app.routers.v1.endpoints.admin import review_admin
+
+# Feedback dành cho Admin
+from app.routers.v1.endpoints.admin import feedback as admin_feedback
 
 # Chatbot Tutor của Tâm
 from app.routers.v1.chat_tutor import (
@@ -99,7 +104,19 @@ api_router.include_router(
     public_chat_router,
 )
 
-# 6. Quản trị Admin
+# 6. Feedback
+
+# Feedback dành cho User đã đăng nhập
+api_router.include_router(
+    feedback.router,
+)
+
+# Feedback dành cho Admin
+api_router.include_router(
+    admin_feedback.router,
+)
+
+# 7. Quản trị Admin
 api_router.include_router(
     admin_router,
     prefix="/admin",

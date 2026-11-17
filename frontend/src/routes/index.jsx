@@ -40,6 +40,7 @@ import AdminHistoricalPage from '../features/admin/pages/AdminHistoricalPage.jsx
 import AdminFeedbackPage from '../features/admin/pages/AdminFeedbackPage.jsx';
 import AdminUserPathsPage from '../features/admin/pages/AdminUserPathsPage.jsx';
 import AdminReviewQuestionsPage from '../features/review-admin/pages/AdminReviewQuestionsPage.jsx'; // Tuấn · duyệt câu AI
+import TutorPage from '../features/tutor/pages/TutorPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
@@ -80,10 +81,15 @@ export default function AppRoutes() {
           <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
           <Route path="/review/:attemptId" element={<ReviewQuizPage />} />
           <Route path="/review/:attemptId/result" element={<ReviewResultPage />} />
+<<<<<<< HEAD
           {/* Khóa học — module Khôi */}
           <Route path="/courses" element={<CoursesPage />} />
           {/* Khóa học của tôi — module Tâm */}
           <Route path="/me/courses" element={<MyCoursesPage />} />
+=======
+          {/* AI Tutor — Tâm */}
+          <Route path="/tutor" element={<TutorPage />} />
+>>>>>>> origin/tam/feath-chatbot-fontend
           {/* Trang của nhóm khác / module 09 chưa làm → "Tạm thời chưa khả dụng" (08/11).
               Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
               (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}

@@ -73,9 +73,16 @@ ROUTE_KEYWORDS = {
         "chatbot",
     ],
     "/ai-learning-path": [
+        "ai lo trinh",
+        "lo trinh ai",
+        "ai learning path",
         "learning path",
         "lo trinh hoc tap",
         "lo trinh hoc",
+        "lo trinh",
+        "roadmap",
+        "so do lo trinh",
+        "tu van lo trinh",
     ],
     "/ai-quiz-practice": [
         "quiz practice",
@@ -798,6 +805,18 @@ Quy tắc bắt buộc:
 9. Giữ nguyên cấu trúc JSON của SYSTEM PROMPT.
    Đặt câu trả lời trong answer và các câu hỏi gợi ý
    trong suggestions.
+
+10. LIÊN KẾT & HƯỚNG DẪN SANG TÍNH NĂNG AI LỘ TRÌNH:
+    - Trong phần câu trả lời (answer), hãy giới thiệu và nhắc người học truy cập tính năng AI Lộ trình của hệ thống:
+      Đường dẫn trực tiếp: `http://localhost:5173/ai-learning-path` (hoặc nhấn vào tab "Lộ trình" trên thanh Navbar).
+    - Hướng dẫn người học bấm nút "+ Tạo lộ trình mới với AI" (+ Create New Path with AI) để trò chuyện với AI Consultant và sinh đồ thị kỹ năng cá nhân hóa trực quan.
+
+11. BẮT BUỘC GỢI Ý (SUGGESTIONS) CHUYỂN SANG AI LỘ TRÌNH:
+    Trong mảng suggestions, bắt buộc phải có ít nhất 1 gợi ý giúp người học tiếp tục kết nối với tính năng AI Lộ trình, ví dụ:
+    {
+      "label": "Tạo lộ trình AI",
+      "prompt": "Hướng dẫn tôi cách tạo lộ trình mới trên trang AI Lộ trình của EduMentor"
+    }
 """
 
 
@@ -957,6 +976,21 @@ def process_chat_message(
     # ======================================
 
     route_result = route_query(user_content)
+
+    # Kế thừa ngữ cảnh (Entity) nếu câu hỏi dạng tiếp nối (ví dụ: 'còn khóa học nào nữa không')
+    if route_result.get("entity_name") is None and history:
+        for prev_message in reversed(history):
+            if prev_message.role == "user" and prev_message.content:
+                try:
+                    prev_route = route_query(prev_message.content)
+                    if prev_route.get("entity_name"):
+                        route_result["entity_name"] = prev_route["entity_name"]
+                        if route_result.get("entity_type") in ("none", None):
+                            route_result["entity_type"] = prev_route.get("entity_type", "skill")
+                        route_result["source"] = "conversation_context"
+                        break
+                except Exception:
+                    pass
 
     print("\n========== QUERY ROUTER ==========")
 

@@ -1,4 +1,3 @@
-
 # Model tài khoản của Tuấn
 from app.models.user import Users
 from app.models.auth_token import PasswordResetToken, RefreshToken
@@ -28,6 +27,9 @@ from app.models.review_attempt import ReviewAttempt, ReviewAnswer
 # Model chatbot Tutor của Tâm
 from app.models.chat_session import ChatSession
 from app.models.chat_message import ChatMessage
+
+# Model Feedback của Tâm
+from app.models.feedback import Feedback
 
 
 __all__ = [
@@ -60,4 +62,7 @@ __all__ = [
     # Chatbot Tutor
     "ChatSession",
     "ChatMessage",
+
+    # Feedback
+    "Feedback",
 ]
