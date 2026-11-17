@@ -988,6 +988,10 @@ def process_chat_message(
                         if route_result.get("entity_type") in ("none", None):
                             route_result["entity_type"] = prev_route.get("entity_type", "skill")
                         route_result["source"] = "conversation_context"
+                        if route_result.get("sub_queries"):
+                            route_result["sub_queries"][0]["entity_name"] = route_result["entity_name"]
+                            route_result["sub_queries"][0]["entity_type"] = route_result["entity_type"]
+                            route_result["sub_queries"][0]["source"] = "conversation_context"
                         break
                 except Exception:
                     pass

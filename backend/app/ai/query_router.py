@@ -24,7 +24,15 @@ ALLOWED_INTENTS = {
     "general_question",
 }
 
-ALLOWED_ENTITY_TYPES = {"skill", "course", "none"}
+ALLOWED_ENTITY_TYPES = {
+    "skill",
+    "course",
+    "organization",
+    "instructor",
+    "rating",
+    "level",
+    "none",
+}
 
 ENTITY_REQUIRED_INTENTS = {
     "skill_question",
@@ -124,7 +132,7 @@ COMMON_TECH_SKILLS = [
     "regex", "regular expression", "vong lap", "for loop", "while loop",
     "ham", "function", "bien", "variable", "mang", "array",
     "linked list", "danh sach lien ket", "stack", "queue", "hang doi",
-    "tree", "binary tree", "cay nhi phan", "graph", "do thi",
+    "tree", "binary tree", "cay nhi phan", "graph",
     "bubble sort", "quick sort", "merge sort", "binary search",
     "tim kiem nhi phan", "bfs", "dfs", "dynamic programming", "quy hoach dong"
 ]
@@ -525,14 +533,20 @@ def extract_skill_search_entity(user_message: str) -> dict:
 
     text = normalize_text(user_message)
 
-    # Ưu tiên: nếu câu hỏi nhắc đến một kỹ năng / công nghệ đã biết
-    for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
-        if re.search(r"\b" + re.escape(skill) + r"\b", text):
-            return {
-                "entity_type": "skill",
-                "entity_name": normalize_entity_name(skill),
-            }
+    # 1. Kiểm tra câu hỏi tiếp nối / đại từ tham chiếu (anaphoric)
+    anaphoric_markers = [
+        "skill do", "ky nang do", "khoa hoc do", "mon do", "chu de do",
+        "skill nay", "ky nang nay", "khoa hoc nay", "mon nay", "chu de nay",
+        "do thi sao", "cai do", "no thi sao", "ve no", "den no", "ve chung", "den chung",
+        "nao nua", "nua khong", "con nua", "con khac", "gi nua", "gi khac",
+    ]
+    if any(re.search(r"\b" + re.escape(m) + r"\b", text) for m in anaphoric_markers):
+        return {
+            "entity_type": "skill",
+            "entity_name": None,
+        }
 
+    # 2. Khớp các mẫu câu ngữ pháp trích xuất đầy đủ tên kỹ năng
     patterns = [
         # "Có skill nào liên quan đến/về SQL cần học không?"
         # Dừng trước các cụm diễn đạt yêu cầu phía sau Entity.
@@ -578,7 +592,6 @@ def extract_skill_search_entity(user_message: str) -> dict:
     ]
 
     for pattern in patterns:
-
         match = re.search(
             pattern,
             text,
@@ -588,12 +601,26 @@ def extract_skill_search_entity(user_message: str) -> dict:
         if not match:
             continue
 
-        entity_name = finalize_entity(match.group(1))
+        raw_match = match.group(1)
+        # Giữ nguyên hoa/thường nếu user_message khớp độ dài
+        start, end = match.span(1)
+        if len(user_message) == len(text):
+            raw_match = user_message[start:end]
+
+        entity_name = finalize_entity(raw_match)
 
         if entity_name:
             return {
                 "entity_type": "skill",
                 "entity_name": entity_name,
+            }
+
+    # 3. Fallback: nếu câu hỏi nhắc đến một kỹ năng / công nghệ đã biết
+    for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
+        if re.search(r"\b" + re.escape(skill) + r"\b", text):
+            return {
+                "entity_type": "skill",
+                "entity_name": normalize_entity_name(skill),
             }
 
     return {
@@ -756,24 +783,114 @@ def extract_learning_path_entity(user_message: str) -> dict:
 
 def extract_course_search_entity(user_message: str) -> dict:
     """
-    Tìm chủ đề Skill mà người dùng muốn tìm Course.
+    Tìm chủ đề Skill hoặc tiêu chí (tổ chức, giảng viên, rating, cấp độ)
+    mà người dùng muốn tìm Course.
 
     Ví dụ:
-    - Python có những khóa học nào? -> Python
-    - Tìm khóa học về SQL -> SQL
-    - Cho tôi khóa học liên quan đến React -> React
+    - Python có những khóa học nào? -> skill: Python
+    - Khóa học của University of Alberta -> organization: University of Alberta
+    - Khóa học của giảng viên Martha White -> instructor: Martha White
+    - Khóa học 5 sao / đánh giá cao nhất -> rating: 5
+    - Khóa học cấp độ cơ bản / beginner -> level: beginner
     """
 
     text = normalize_text(user_message)
 
-    # Ưu tiên: nếu câu hỏi nhắc đến một kỹ năng / công nghệ đã biết
-    for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
-        if re.search(r"\b" + re.escape(skill) + r"\b", text):
+    # 1. Kiểm tra câu hỏi tiếp nối / đại từ tham chiếu (anaphoric)
+    is_course_by_instructor = bool(
+        re.search(r"\bkhoa hoc do\s+(?:day|giang day|huong dan)\b", text)
+        or re.search(r"\bkhoa hoc do\s+[a-z\s]+?\s+(?:day|giang day)\b", text)
+    )
+    anaphoric_markers = [
+        "khoa hoc do thi sao", "ve khoa hoc do", "mon hoc do", "mon do", "course do",
+        "khoa hoc nay", "mon nay", "course nay",
+        "skill do", "ky nang do", "chu de do",
+        "cai do", "do thi sao", "no thi sao", "ve no", "den no",
+        "nao nua", "nua khong", "con nua", "con khac", "gi nua", "gi khac",
+    ]
+    if not is_course_by_instructor:
+        if (
+            any(re.search(r"\b" + re.escape(m) + r"\b", text) for m in anaphoric_markers)
+            or re.search(r"\bkhoa hoc do\b(?:\s+(?:thi|co|la|nhu the nao|gom|chua|[?.!]))?", text)
+        ):
             return {
                 "entity_type": "skill",
-                "entity_name": normalize_entity_name(skill),
+                "entity_name": None,
             }
 
+    # 2. Tiêu chí Đánh giá / Rating (5 sao, đánh giá cao nhất,...)
+    if re.search(
+        r"(?:5\s*sao|danh gia cao nhat|danh gia tot nhat|rating cao|top rating|diem cao nhat|rating 5)",
+        text,
+    ):
+        return {
+            "entity_type": "rating",
+            "entity_name": "5",
+        }
+
+    m_rating = re.search(r"(?:khoa hoc|courses?).*?([3-5](?:\.[0-9])?)\s*sao", text)
+    if m_rating:
+        return {
+            "entity_type": "rating",
+            "entity_name": m_rating.group(1),
+        }
+
+    # 3. Tiêu chí Cấp độ / Level
+    level_patterns = [
+        (r"(?:cap do|trinh do|level)\s+(?:la\s+)?(?:co ban|moi bat dau|so cap|beginner)", "beginner"),
+        (r"(?:cho|danh cho)\s+(?:nguoi\s+)?(?:moi\s+bat\s+dau|moi\s+hoc|chua\s+biet\s+gi)", "beginner"),
+        (r"\b(?:beginner|co ban|moi bat dau)\b.*?(?:khoa hoc|courses?)", "beginner"),
+        (r"(?:khoa hoc|courses?).*?\b(?:beginner)\b", "beginner"),
+        (r"(?:cap do|trinh do|level)\s+(?:la\s+)?(?:trung cap|trung binh|intermediate)", "intermediate"),
+        (r"(?:khoa hoc|courses?).*?\b(?:intermediate|trung cap)\b", "intermediate"),
+        (r"(?:cap do|trinh do|level)\s+(?:la\s+)?(?:nang cao|chuyen sau|advanced)", "advanced"),
+        (r"(?:khoa hoc|courses?).*?\b(?:advanced|nang cao|chuyen sau)\b", "advanced"),
+    ]
+    for lp, lvl in level_patterns:
+        if re.search(lp, text, flags=re.IGNORECASE):
+            return {
+                "entity_type": "level",
+                "entity_name": lvl,
+            }
+
+    # 4. Tiêu chí Giảng viên (Instructor)
+    instructor_patterns = [
+        r"(?:khoa hoc|courses?).*?(?:cua|do|boi)?\s*(?:giang vien|giao vien|thay|co|instructor)\s+(.+?)(?=\s+(?:day|giang day|trong he thong|tren he thong|cho toi|co khong)\b|[?.!]*$)",
+        r"(?:giang vien|giao vien|thay|co|instructor)\s+(.+?)\s+(?:co\s+)?(?:nhung\s+|cac\s+)?(?:khoa hoc|courses?)",
+        r"(?:khoa hoc|courses?).*?(?:do|boi)\s+(.+?)\s+(?:day|giang day)",
+        r"(?:giang vien|giao vien|thay|co|instructor)\s+([a-zA-Z0-9\s.'-]+?)(?=\s+(?:day|giang day|trong he thong|tren he thong|cho toi|co khong)\b|[?.!]*$)",
+    ]
+    for ip in instructor_patterns:
+        m = re.search(ip, text, flags=re.IGNORECASE)
+        if m:
+            s, e = m.span(1)
+            raw_val = user_message[s:e] if len(user_message) == len(text) else m.group(1)
+            clean_name = clean_entity_name(raw_val.strip())
+            if clean_name and not is_generic_entity(clean_name):
+                return {
+                    "entity_type": "instructor",
+                    "entity_name": clean_name,
+                }
+
+    # 5. Tiêu chí Tổ chức / Trường đại học (Organization)
+    org_patterns = [
+        r"(?:khoa hoc|courses?).*?(?:cua|tu|thuoc)\s+(?:to chuc|truong dai hoc|truong|dai hoc|vien|doi tac)?\s*(.+?)(?=\s+(?:trong he thong|tren he thong|cho toi|co khong)\b|[?.!]*$)",
+        r"(?:to chuc|truong dai hoc|truong|dai hoc|vien|doi tac)\s+(.+?)\s+(?:co\s+)?(?:nhung\s+|cac\s+)?(?:khoa hoc|courses?)",
+        r"(?:to chuc|truong dai hoc|truong|dai hoc|vien|doi tac)\s+([a-zA-Z0-9\s.'-]+?)(?=\s+(?:trong he thong|tren he thong|cho toi|co khong)\b|[?.!]*$)",
+    ]
+    for op in org_patterns:
+        m = re.search(op, text, flags=re.IGNORECASE)
+        if m:
+            s, e = m.span(1)
+            raw_val = user_message[s:e] if len(user_message) == len(text) else m.group(1)
+            clean_name = clean_entity_name(raw_val.strip())
+            if clean_name and not is_generic_entity(clean_name):
+                return {
+                    "entity_type": "organization",
+                    "entity_name": clean_name,
+                }
+
+    # 6. Mẫu câu ngữ pháp tìm khóa học theo Kỹ năng / Chủ đề
     patterns = [
         # các khóa học có kỹ năng HTML / chứa kỹ năng Python
         (
@@ -830,7 +947,6 @@ def extract_course_search_entity(user_message: str) -> dict:
     ]
 
     for pattern in patterns:
-
         match = re.search(
             pattern,
             text,
@@ -840,12 +956,25 @@ def extract_course_search_entity(user_message: str) -> dict:
         if not match:
             continue
 
-        entity_name = finalize_entity(match.group(1))
+        raw_match = match.group(1)
+        start, end = match.span(1)
+        if len(user_message) == len(text):
+            raw_match = user_message[start:end]
+
+        entity_name = finalize_entity(raw_match)
 
         if entity_name:
             return {
                 "entity_type": "skill",
                 "entity_name": entity_name,
+            }
+
+    # 7. Fallback: nếu câu hỏi nhắc đến một kỹ năng / công nghệ đã biết
+    for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
+        if re.search(r"\b" + re.escape(skill) + r"\b", text):
+            return {
+                "entity_type": "skill",
+                "entity_name": normalize_entity_name(skill),
             }
 
     return {
@@ -1403,6 +1532,25 @@ def classify_by_rules(user_message: str) -> dict | None:
         (
             r"(?:khoa hoc|courses?).*(?:trong he thong|cho toi xem|cho minh xem)"
         ),
+        # Tìm theo tổ chức / giảng viên / rating / level
+        (
+            r"(?:khoa hoc|courses?).*?(?:5\s*sao|danh gia cao|danh gia tot|rating cao|top rating)"
+        ),
+        (
+            r"(?:5\s*sao|danh gia cao nhat|danh gia tot nhat).*?(?:khoa hoc|courses?)"
+        ),
+        (
+            r"(?:khoa hoc|courses?).*?(?:giang vien|giao vien|thay|co|instructor)"
+        ),
+        (
+            r"(?:khoa hoc|courses?).*?(?:to chuc|truong dai hoc|truong|dai hoc|vien|doi tac)"
+        ),
+        (
+            r"(?:khoa hoc|courses?).*?(?:cap do|trinh do|level|beginner|intermediate|advanced|co ban|nang cao|trung cap)"
+        ),
+        (
+            r"(?:tim|search|find|danh sach|liet ke|cho toi|cho minh)\s+.*?(?:khoa hoc|courses?).*?(?:beginner|co ban|nang cao|trung cap|5\s*sao)"
+        ),
     ]
 
     has_tech_skill = any(
@@ -1412,8 +1560,8 @@ def classify_by_rules(user_message: str) -> dict | None:
     is_course_question_specific = any(
         kw in text
         for kw in [
-            "thoi luong", "giang vien", "hoc phi", "de cuong", "bai hoc",
-            "bao nhieu bai", "may bai", "chuong trinh hoc", "danh gia", "review"
+            "thoi luong", "hoc phi", "de cuong", "bai hoc",
+            "bao nhieu bai", "may bai", "chuong trinh hoc"
         ]
     )
 
@@ -1428,8 +1576,8 @@ def classify_by_rules(user_message: str) -> dict | None:
 
         return {
             "intent": "course_search",
-            "entity_type": "skill",
-            "entity_name": entity["entity_name"],
+            "entity_type": entity.get("entity_type", "skill"),
+            "entity_name": entity.get("entity_name"),
         }
 
     # --------------------------------------
@@ -1855,7 +2003,8 @@ def _route_single_query(user_message: str) -> dict:
         entity_type = "skill"
 
     elif intent == "course_search":
-        entity_type = "skill"
+        if entity_type not in {"organization", "instructor", "rating", "level"}:
+            entity_type = "skill"
 
     elif intent in {
         "course_question",
