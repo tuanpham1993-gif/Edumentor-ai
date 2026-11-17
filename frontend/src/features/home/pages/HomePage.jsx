@@ -13,7 +13,6 @@ import PublicHeader from '../../layout/components/PublicHeader.jsx';
 import HomeIcon from '../components/HomeIcon.jsx';
 import styles from '../styles/HomePage.module.css';
 import {
-  FEATURED_COURSES,
   FEATURES,
   HERO_POINTS,
   NEWS,
@@ -21,6 +20,7 @@ import {
   STEPS,
 } from '../homeContent.js';
 import QuickStartCard from '../components/QuickStartCard.jsx';
+import FeaturedCourses from '../components/FeaturedCourses.jsx';
 
 const STEP_LABEL = { done: 'Hoàn thành', current: 'Đang học', todo: 'Chưa bắt đầu' };
 
@@ -208,28 +208,7 @@ export default function HomePage() {
               Xem tất cả khóa học <ArrowIcon />
             </Link>
           </div>
-          <div className={styles.courses}>
-            {FEATURED_COURSES.map((course, index) => (
-              <article
-                key={course.title}
-                className={`card ${styles.courseCard}`}
-                data-reveal
-                style={{ transitionDelay: `${index * 80}ms` }}
-              >
-                <div className={styles.courseThumb}>
-                  <HomeIcon name="book" size={34} />
-                </div>
-                <div className={styles.courseBody}>
-                  <span className={`chip chip-${course.tone}`}>{course.level}</span>
-                  <h3>{course.title}</h3>
-                  <p>{course.text}</p>
-                  <Link to="/courses" className={styles.courseLink}>
-                    Xem khóa học <ArrowIcon />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+          <FeaturedCourses />
         </div>
       </section>
 

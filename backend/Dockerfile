@@ -23,7 +23,13 @@ RUN pip install --index-url https://download.pytorch.org/whl/cpu torch
 COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 
-# 3) Code
+# 3) Dữ liệu NLTK cho khối 1 tiền xử lý NLP + chấm từ khóa tiếng Anh (app/ai/review/text_pipeline.py — 16/11).
+#    Code không tự tải lúc chạy (thiếu → LookupError) → tải sẵn vào image. /usr/local/share/nltk_data nằm trong
+#    danh sách đường dẫn mặc định NLTK tự tìm, không cần đặt NLTK_DATA. Đặt trước COPY code để sửa code không tải lại.
+RUN python -m nltk.downloader -d /usr/local/share/nltk_data \
+        punkt_tab stopwords wordnet averaged_perceptron_tagger_eng
+
+# 4) Code
 COPY . /app/backend/
 
 EXPOSE 8000

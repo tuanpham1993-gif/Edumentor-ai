@@ -13,7 +13,9 @@ class CourseRepository:
     def get_by_id(self, course_id: int) -> Optional[Courses]:
         return self.db.get(Courses, course_id)
 
-    def get_by_url(self, url: str) -> Optional[Courses]:
+    def get_by_url(self, url: Optional[str]) -> Optional[Courses]:
+        if not url:
+            return None
         stmt = select(Courses).where(Courses.url == url)
         return self.db.execute(stmt).scalars().unique().one_or_none()
 
@@ -60,15 +62,16 @@ class CourseRepository:
 
     def update(self, course: Courses, update_data: dict) -> Courses:
         for key, value in update_data.items():
-            if value is not None and hasattr(course, key):
+            if hasattr(course, key):
                 setattr(course, key, value)
         self.db.commit()
         self.db.refresh(course)
         return course
 
     def delete(self, course: Courses) -> None:
-        # Xóa các ràng buộc trong CourseSkill trước
-        self.db.execute(delete(CourseSkill).where(CourseSkill.course_id == course.course_id))
+        # Xóa các liên kết trong secondary table qua ORM
+        course.skills_info = []
+        self.db.flush()
         self.db.delete(course)
         self.db.commit()
 

@@ -46,5 +46,8 @@ scipy
 scikit-learn
 torch
 
+# Tiền xử lý NLP — khối 1 pipeline chấm tự luận (Tuấn)
+nltk
+
 # Chatbot Tutor (Tâm) — app/ai/client.py dùng `from google import genai` (thêm khi gộp 13/11)
 google-genai

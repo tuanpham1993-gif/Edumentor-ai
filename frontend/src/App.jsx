@@ -4,12 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 
 import AppRoutes from './routes/index.jsx';
 import { AuthProvider } from './store/authStore.js';
+import TutorFloatingWidget from './features/tutor/components/TutorFloatingWidget.jsx';
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <AppRoutes />
+        <TutorFloatingWidget />
       </AuthProvider>
     </BrowserRouter>
   );

@@ -227,6 +227,35 @@ def test_essay_falls_back_to_keyword_grading(client, bank_312, student_headers, 
     assert result["essay_score"] == 4  # vẫn chấm đúng bằng từ khóa
     grading = db_session.get(ReviewAttempt, attempt_id).trace["grading"]
     assert grading["ai"] == ai.name and len(grading["keyword_fallback"]) == 3
+    # B6: trace từng khối pipeline — khối 4 lỗi → nhánh dự phòng từ khóa
+    for essay in grading["essays"]:
+        names = [n["node"] for n in essay["nodes"]]
+        assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "4b_keyword_fallback", "7_aggregate", "8_trace"]
+        assert essay["nodes"][names.index("4_llm_grade")]["status"] == "error"
+        assert essay["nodes"][-1]["output"]["graded_by"] == "keyword"
+
+
+def test_grading_trace_has_every_pipeline_node_per_essay(client, bank_312, student_headers, db_session):
+    """B6: mỗi câu tự luận có trace {node, status, ms, attempts, output, error}; bài trống dừng ở khối 0."""
+    attempt_id = start(client, student_headers)["attempt_id"]
+    essays = [a for a in answers_of(db_session, attempt_id) if a.question.type == "essay"]
+    text = essays[0].question.explanation.removeprefix("Đáp án mẫu: ")
+    client.patch(f"/api/review-attempts/{attempt_id}/answers", headers=student_headers,
+                 json={"answers": [{"position": essays[0].position, "text_answer": text}]})  # fmt: skip
+
+    submit(client, student_headers, attempt_id)
+
+    traced = {e["position"]: e["nodes"] for e in db_session.get(ReviewAttempt, attempt_id).trace["grading"]["essays"]}
+    assert set(traced) == {a.position for a in essays}
+    done = traced[essays[0].position]
+    names = [n["node"] for n in done]
+    assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "5_verify", "6_cross_check", "7_aggregate", "8_trace"]
+    assert all(n["status"] == "ok" and n["ms"] >= 0 for n in done)
+    assert done[names.index("4_llm_grade")]["output"]["source"] == "parallel"
+    assert done[names.index("7_aggregate")]["output"]["score_10"] == 10
+    grading = db_session.get(ReviewAttempt, attempt_id).trace["grading"]
+    assert grading["needs_review"] == [] and all("flags" in e for e in grading["essays"])
+    assert [n["node"] for n in traced[essays[1].position]] == ["0_input"]  # bỏ trống → không gọi AI
 
 
 # ─────────────── Nộp lại, quyền ───────────────

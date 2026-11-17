@@ -111,9 +111,10 @@ class SaveAnswersRequest(BaseModel):
 class RubricResultOut(BaseModel):
     text: str
     max_points: float
-    result: Literal["full", "partial", "none"]
+    result: Literal["full", "partial", "none"]  # partial: chỉ còn ở bài chấm trước 15/11 (lịch sử)
     points: float
     evidence: str | None  # câu trích từ bài làm làm bằng chứng
+    reason: str | None = None  # B11: lý do AI chấm ý này (B7); None khi chấm từ khóa / bài chấm trước 15/11
 
 
 class ResultQuestionOut(BaseModel):
@@ -132,6 +133,10 @@ class ResultQuestionOut(BaseModel):
     is_correct: bool | None
     text_answer: str | None
     rubric: list[RubricResultOut] | None
+    # B11 (16/11) — chỉ câu tự luận có bài làm; None / False với trắc nghiệm, bài bỏ trống, lượt chấm trước B6
+    graded_by: Literal["ai", "keyword"] | None = None  # keyword: AI_MODE=mock hoặc Gemini lỗi → chấm từ khóa dự phòng
+    needs_review: bool = False  # D8/D10: điểm AI và từ khóa vẫn lệch sau khi chấm lại → điểm tính tạm, đang xem lại
+    feedback: str | None = None  # nhận xét chung của AI (B7)
 
 
 class AttemptResultOut(BaseModel):

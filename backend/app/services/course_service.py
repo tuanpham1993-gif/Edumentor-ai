@@ -88,12 +88,13 @@ class CourseService:
 
         update_dict = data.model_dump(exclude_unset=True)
 
-        if "url" in update_dict and update_dict["url"] != course.url:
-            existing = self.course_repo.get_by_url(update_dict["url"])
+        new_url = update_dict.get("url")
+        if new_url and new_url != course.url:
+            existing = self.course_repo.get_by_url(new_url)
             if existing:
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
-                    detail=f"URL khóa học '{update_dict['url']}' đã được sử dụng.",
+                    detail=f"URL khóa học '{new_url}' đã được sử dụng.",
                 )
 
         updated_course = self.course_repo.update(course, update_dict)

@@ -24,6 +24,7 @@ from app.repositories import review_repository
 logger = logging.getLogger(__name__)
 
 TOP_K = 3  # số đoạn đưa vào ngữ cảnh cho mỗi kỹ năng
+GRADING_TOP_K = 2  # B9: số đoạn kèm theo khi CHẤM một câu tự luận (Model B)
 
 Embedder = Callable[[str], list[float] | None]
 
@@ -61,6 +62,19 @@ def _try_load():
         return None
 
 
+def warm_up_nlp() -> bool:
+    """Nạp sẵn dữ liệu NLTK của khối 1 tiền xử lý / chấm từ khóa (B12, 16/11): NLTK chỉ đọc dữ liệu từ đĩa ở lần gọi
+    ĐẦU TIÊN → lần nộp bài đầu sau khi khởi động chậm thêm ~8 s (đo trên Docker). Lỗi chỉ ghi log, không chặn."""
+    try:
+        from app.ai.review.text_pipeline import preprocess
+
+        preprocess("Warm up: tuples cannot be changed while loops repeat.")
+        return True
+    except Exception as err:  # noqa: BLE001 — thiếu dữ liệu NLTK: chấm từ khóa sẽ báo lỗi rõ khi dùng tới
+        logger.warning("Ôn tập: không nạp sẵn được dữ liệu NLTK (%s)", err)
+        return False
+
+
 def warm_up_in_background() -> None:
     """Nạp sẵn mô hình embedding ở LUỒNG NỀN lúc bật server (12/11).
 
@@ -72,6 +86,7 @@ def warm_up_in_background() -> None:
         return
 
     def _work() -> None:
+        warm_up_nlp()  # nhanh (vài giây) → làm trước mô hình embedding
         model = _load_model()
         if model is not None:
             model.encode("khởi động", normalize_embeddings=True)  # lần encode đầu cũng chậm → làm luôn
@@ -119,3 +134,50 @@ def retrieve_chunks(
     # Đoạn chưa có vector xếp cuối; còn lại theo cosine giảm dần.
     results.sort(key=lambda r: (r.score is None, -(r.score or 0)))
     return results[:top_k]
+
+
+# ─────────────── B9 (15/11): RAG khi CHẤM tự luận (Model B) ───────────────
+
+
+def grading_query(question: dict) -> str:
+    """Câu truy vấn khi chấm = đề + nội dung các ý barem. KHÔNG dùng bài làm: bài sai / lạc đề không được kéo
+    theo tài liệu sai, và người học không thể "điều khiển" tài liệu đưa cho AI chấm."""
+    return "\n".join([question.get("content") or ""] + [r.get("text", "") for r in question.get("rubric") or []])
+
+
+def rank_for_grading(
+    chunks: list[tuple[RetrievedChunk, list[float] | None]],
+    linked_chunk_id: int | None,
+    query: str,
+    *,
+    top_k: int = GRADING_TOP_K,
+    embedder: Embedder | None = None,
+) -> list[RetrievedChunk]:
+    """Hàm THUẦN (không DB) — server và scripts/eval_grading dùng chung để Model B đo được đúng như khi chạy thật.
+    chunks: các đoạn CÙNG kỹ năng kèm vector (có thể None). Đoạn gắn với câu hỏi (nguồn soạn câu) đứng đầu;
+    còn lại xếp theo cosine với câu truy vấn; không có vector / mô hình → theo thứ tự đầu vào."""
+    linked = [c for c, _ in chunks if c.chunk_id == linked_chunk_id]
+    others = [(c, v) for c, v in chunks if c.chunk_id != linked_chunk_id]
+    if others and any(v for _, v in others):
+        query_vector = (embedder or embed_query)(query)
+        if query_vector is not None:
+            try:
+                for c, v in others:
+                    c.score = round(cosine(query_vector, v), 4) if v else None
+            except ValueError as err:
+                logger.warning("RAG chấm bài: %s", err)
+                for c, _ in others:
+                    c.score = None
+            others.sort(key=lambda cv: (cv[0].score is None, -(cv[0].score or 0)))
+    return (linked + [c for c, _ in others])[:top_k]
+
+
+def retrieve_for_grading(
+    db: Session, skill_id: int, linked_chunk_id: int | None, question: dict, *, embedder: Embedder | None = None
+) -> list[RetrievedChunk]:
+    """Đoạn tri thức kèm theo khi chấm MỘT câu tự luận — lọc đúng kỹ năng của câu hỏi."""
+    rows = review_repository.chunks_for_skill(db, skill_id)
+    chunks = [
+        (RetrievedChunk(chunk_id=c.chunk_id, code=c.code, title=c.title, content=c.content), c.embedding) for c in rows
+    ]
+    return rank_for_grading(chunks, linked_chunk_id, grading_query(question), embedder=embedder)

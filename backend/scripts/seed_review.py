@@ -4,6 +4,8 @@ Chạy (trong thư mục backend):
     python -m scripts.seed_review                                   # mặc định data/review/course_312.json
     python -m scripts.seed_review --file data/review/course_37.json
     python -m scripts.seed_review --apply-changes                   # áp thay đổi của file vào câu ĐÃ có
+    # Chuyển sang ngân hàng tiếng Anh (D1, 13/11) — nạp bản tiếng Anh + ngừng dùng bản tiếng Việt, cùng 1 giao dịch:
+    python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/course_312.json
 
 - KIỂM TRA TRƯỚC, GHI SAU: dữ liệu sai ở đâu → in TẤT CẢ lỗi, không ghi gì vào DB.
 - QT4 (chốt 12/11): DATABASE là nơi lưu chính (admin sửa trên trang quản trị). Seed mặc định CHỈ THÊM câu chưa có
@@ -165,6 +167,30 @@ def seed_bank(db: Session, data: dict, *, apply_changes: bool = False) -> dict:
     return counts
 
 
+def retire_bank(db: Session, old: dict) -> dict:
+    """Ngừng dùng một ngân hàng cũ (vd bản tiếng Việt khi chuyển sang tiếng Anh — D1, 13/11):
+    - câu hỏi có mã trong file cũ → TẮT (không xóa: bài làm cũ vẫn trỏ tới, lịch sử vẫn xem đúng);
+    - đoạn tri thức có mã trong file cũ → XÓA (bảng không có cột bật / tắt; giữ lại thì RAG lấy lẫn hai ngôn ngữ).
+      Câu hỏi đang trỏ tới đoạn đó → chunk_id = NULL trước (không phụ thuộc DB có bật ON DELETE SET NULL hay không).
+    Chỉ flush — main() commit chung với seed_bank của ngân hàng mới."""
+    codes = [q["code"] for q in old.get("questions", [])]
+    deactivated = (
+        db.query(ReviewQuestion)
+        .filter(ReviewQuestion.code.in_(codes), ReviewQuestion.is_active.is_(True))
+        .update({ReviewQuestion.is_active: False}, synchronize_session=False)
+    )
+    chunks = db.query(KnowledgeChunk).filter(KnowledgeChunk.code.in_([c["code"] for c in old.get("chunks", [])])).all()
+    chunk_ids = [c.chunk_id for c in chunks]
+    if chunk_ids:
+        db.query(ReviewQuestion).filter(ReviewQuestion.chunk_id.in_(chunk_ids)).update(
+            {ReviewQuestion.chunk_id: None}, synchronize_session=False
+        )
+    for c in chunks:
+        db.delete(c)
+    db.flush()
+    return {"questions_deactivated": deactivated, "chunks_deleted": len(chunks)}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Nạp ngân hàng câu hỏi ôn tập từ JSON")
     parser.add_argument("--file", default=str(DEFAULT_FILE))
@@ -172,6 +198,11 @@ def main() -> int:
         "--apply-changes",
         action="store_true",
         help="áp thay đổi của file vào câu đã có (câu đã có bài làm → phiên bản mới)",
+    )
+    parser.add_argument(
+        "--retire",
+        metavar="FILE_CU",
+        help="sau khi nạp --file, ngừng dùng ngân hàng cũ: tắt câu hỏi + xóa đoạn tri thức có mã trong FILE_CU",
     )
     args = parser.parse_args()
 
@@ -193,6 +224,7 @@ def main() -> int:
                 print("-", e)
             return 1
         counts = seed_bank(db, data, apply_changes=args.apply_changes)
+        retired = retire_bank(db, load_bank(args.retire)) if args.retire else None
         db.commit()
     except Exception:
         db.rollback()
@@ -212,6 +244,11 @@ def main() -> int:
             + ", ".join(counts["questions_differ"])
         )
         print("Muốn áp thay đổi của file: chạy lại với --apply-changes (câu đã có bài làm → phiên bản mới).")
+    if retired is not None:
+        print(
+            f"Ngừng dùng {args.retire}: tắt {retired['questions_deactivated']} câu hỏi, "
+            f"xóa {retired['chunks_deleted']} đoạn tri thức. Nhớ chạy: python -m scripts.build_embeddings"
+        )
     return 0
 
 

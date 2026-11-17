@@ -1,0 +1,80 @@
+.toolbarLearningPath {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toolbarButton {
+  height: 36px;
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border: 1px solid var(--outline);
+  border-radius: var(--r-md);
+
+  background: var(--card);
+  color: var(--text-soft);
+
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background var(--d-fast),
+    border-color var(--d-fast),
+    color var(--d-fast),
+    transform var(--d-instant);
+}
+
+.toolbarButton:hover:not(:disabled) {
+  background: var(--hover);
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+
+.toolbarButton:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.toolbarButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.addButton {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.addButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--on-accent);
+}
+
+.removeButton {
+  color: var(--danger-fg);
+  border-color: var(--danger-border);
+}
+
+.removeButton:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: var(--danger-icon);
+  color: var(--danger-fg);
+}
+
+@media (max-width: 720px) {
+  .toolbarLearningPath {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

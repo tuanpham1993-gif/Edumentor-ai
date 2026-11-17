@@ -169,6 +169,8 @@ def seed_data(dbSession) -> None:
                     print(f"Loaded {len(edges)} learning path edges")
                 db.commit()
             return
+        
+    
     except Exception:
         db.rollback()
         raise Exception

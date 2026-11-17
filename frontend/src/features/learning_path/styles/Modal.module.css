@@ -1,0 +1,193 @@
+.closeButtonModal:disabled,
+.textareaModal:disabled,
+.cancelButtonModal:disabled,
+.createButtonModal:disabled{
+    cursor: not-allowed;
+}
+
+.closeButtonModal:disabled,
+.cancelButtonModal:disabled{
+    opacity: 0.4;
+}
+
+.closeButtonModal {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--hover);
+  color: var(--text-muted);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--d-fast), color var(--d-fast);
+}
+
+.closeButtonModal:hover {
+  background: var(--danger-bg);
+  color: var(--danger-fg);
+}
+
+.closeButtonModal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loadingMessage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    
+    border: 1px solid var(--accent-soft-border);
+    border-radius: var(--r-md);
+
+    background: var(--accent-soft-bg);
+    color: var(--accent-soft-fg);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.hourglass{
+    display: inline-block;
+    font-size: 22px;
+    animation: hourglassTurning 1.4s var(--e-std) infinite;
+}
+
+@keyframes hourglassTurning{
+    0% {transform: rotate(0deg);}
+    25%{transform: rotate(90deg);}
+    50%{transform: rotate(180deg);}
+    75%{transform: rotate(270deg);}
+    100%{transform: rotate(360deg);}
+}
+
+.errorMessage {
+    margin: 0;
+
+    padding: 12px;
+
+    border: 1px solid var(--danger-border);
+    border-radius: var(--r-md);
+
+    background: var(--danger-bg);
+    color: var(--danger-fg);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hourglass {
+        animation: none;
+    }
+}
+
+.backdropModal{
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    background-color: var(--scrim-strong);
+    backdrop-filter: blur(5px);
+}
+
+.modal{
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh-40px);
+    overflow-y: auto;
+    background: var(--card);
+    color: var(--text);
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-xl);
+    box-shadow: 0 20px 60px rgba(var(--shadow-rgb), 0.45);
+    animation: modalEnter var(--d-slow) var(--e-spring)
+}
+
+.headerModal{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+.headerModal h2{
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.bodyModal{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+}
+
+.descriptionModal {
+  margin: 0 0 8px;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.labelModal{
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+
+  padding: 14px 16px;
+
+  border: 1px solid var(--input-border);
+  border-radius: var(--r-md);
+
+  background: var(--input);
+  color: var(--text);
+
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+
+  outline: none;
+
+  transition:
+    border-color var(--d-fast),
+    box-shadow var(--d-fast);
+}
+
+.textarea::placeholder {
+  color: var(--text-dim);
+}
+
+.textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.footerModal{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px 22px;
+    border-top: 1px solid var(--line);
+}

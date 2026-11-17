@@ -64,7 +64,9 @@ def calculate_skill_scores(matched_paths: list[dict]):
 
     for path in matched_paths:
         weight = path["weight"]
-        unique_skill_ids = {node["skill_id"] for node in path["nodes"] if node["node_role"] != "prerequisite"}
+        unique_skill_ids = {node["skill_id"] for node in path["nodes"]
+                             if node["node_role"] != "prerequisite"
+                             }
 
         for skill_id in unique_skill_ids:
             skill_weighted_frequency[skill_id] = (skill_weighted_frequency.get(skill_id, 0) + weight)

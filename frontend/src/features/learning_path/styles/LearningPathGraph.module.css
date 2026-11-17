@@ -1,0 +1,111 @@
+
+
+.graphCanvas {
+  width: 100%;
+  height: 620px;
+
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+
+  overflow: hidden;
+
+  background: var(--surface-sunk);
+}
+
+.emptyGraph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 250px;
+
+  color: var(--text-muted);
+  background: var(--surface-sunk);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+}
+
+.graphCanvas :global(.react-flow__controls) {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow: none;
+}
+
+.graphCanvas :global(.react-flow__controls-button) {
+  background: var(--card);
+  border-bottom: 1px solid var(--card-border);
+  fill: var(--text);
+}
+
+.graphCanvas :global(.react-flow__controls-button:hover) {
+  background: var(--hover);
+}
+
+/* Background dots */
+.graphCanvas :global(.react-flow__background pattern circle) {
+  fill: var(--text-dim);
+}
+
+
+.edgePath {
+  fill: none;
+  stroke-width: 2;
+  transition: opacity var(--d-fast) var(--e-std);
+}
+
+.prerequisiteEdge {
+  stroke: var(--edge);
+}
+
+.relatedEdge {
+  stroke: var(--info-fg);
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+
+.extensionEdge {
+  stroke: var(--accent);
+  stroke-dasharray: 7 5;
+}
+
+.edgeInteraction {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 18;
+  pointer-events: stroke;
+  cursor: help;
+}
+
+.edgeTooltip {
+  position: absolute;
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  max-width: 220px;
+  padding: 10px 12px;
+
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+
+  background: var(--card);
+  color: var(--text);
+
+  box-shadow: 0 6px 20px rgba(var(--shadow-rgb), 0.25);
+
+  font-size: 12px;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.edgeTooltip strong {
+  text-transform: capitalize;
+  color: var(--accent);
+}
+
+.edgeTooltip span {
+  color: var(--text-muted);
+  line-height: 1.5;
+}

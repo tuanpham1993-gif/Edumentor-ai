@@ -48,25 +48,26 @@ def test_grade_by_meaning_and_points_computed_by_code():
     seen = []
     ai = RealAI(transport=fake_gemini([
         {"item": 1, "result": "full", "evidence": "break thì dừng luôn vòng lặp."},
-        {"item": 2, "result": "partial", "evidence": "continue thì nhảy sang vòng sau."},
+        {"item": 2, "result": "none", "evidence": None},
     ], seen=seen))
 
     results = ai.grade_essay(QUESTION, ANSWER)
 
-    assert [r["result"] for r in results] == ["full", "partial"]
-    assert [r["points"] for r in results] == [5.0, 2.5]  # điểm do code tính, không lấy từ AI
+    assert [r["result"] for r in results] == ["full", "none"]
+    assert [r["points"] for r in results] == [5.0, 0.0]  # điểm do code tính, không lấy từ AI
     body = json.loads(seen[0].content)
     assert seen[0].headers["x-goog-api-key"] == "test-key" and "gemini-test" in str(seen[0].url)
     assert ANSWER in body["contents"][0]["parts"][0]["text"]  # gửi bài làm…
     assert "@" not in body["contents"][0]["parts"][0]["text"]  # …không gửi email / thông tin cá nhân
 
 
-def test_made_up_evidence_is_dropped():
+def test_evidence_is_kept_for_the_verifier():
+    """B8 (15/11): RealAI không tự bỏ câu trích nữa — khối 5 Verifier của pipeline kiểm (so sau chuẩn hóa)."""
     ai = RealAI(transport=fake_gemini([
-        {"item": 1, "result": "full", "evidence": "câu này không có trong bài"},
+        {"item": 1, "result": "full", "evidence": "  câu này không có trong bài "},
         {"item": 2, "result": "none", "evidence": None},
     ]))
-    assert [r["evidence"] for r in ai.grade_essay(QUESTION, ANSWER)] == [None, None]
+    assert [r["evidence"] for r in ai.grade_essay(QUESTION, ANSWER)] == ["câu này không có trong bài", None]
 
 
 def test_empty_answer_not_sent_to_ai():

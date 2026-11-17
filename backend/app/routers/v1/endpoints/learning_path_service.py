@@ -8,7 +8,8 @@ from app.schemas.learning_path import (
 )
 from app.services import learning_path_service as path_service
 from app.services import learning_path_node_service as node_service
-
+from app.core.dependencies import get_current_user, require_admin
+from app.models.user import Users
 router = APIRouter()
 
 @router.post("", response_model=LearningPathResponse, status_code=status.HTTP_201_CREATED, summary="Create a brand new learning path")
@@ -30,7 +31,7 @@ def create_learning_path(
 @router.get("", response_model=LearningPathListResponse, 
             summary="List learning paths with path query")
 def list_learning_paths(
-    student_id: int | None = Query(default=None, description="Temporary student filter; omit to list all paths"),
+    current_user: Users = Depends(get_current_user),
     keyword: str | None = Query(default=None),
     goal_type: Literal["career", "project"] | None = Query(default=None),
     path_status: Literal["completed", "ongoing", "abandoned"] | None = Query(default=None,alias="status",),
@@ -38,6 +39,7 @@ def list_learning_paths(
     limit: int = Query(default=10, ge=1, le=50),
     db: Session = Depends(get_db),
 ):
+    student_id = current_user.user_id
     total, items = path_service.list_learning_path(
         db=db, skip=skip, limit=limit,
         student_id=student_id, keyword=keyword,
