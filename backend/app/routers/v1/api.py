@@ -12,14 +12,11 @@ from app.routers.v1.endpoints import (
     health,
     learning_path_node_service,
     learning_path_service,
+    recommendation_service,
     me,
     review,
     skill_service,
 )
-
-# TẠM NGẮT: recommendation_service cần sentence-transformers (+ PyTorch ~1–2 GB) chưa cài.
-# Bật khi đã `pip install -r requirements.txt`:
-# from app.routers.v1.endpoints import recommendation_service
 
 api_router = APIRouter()
 
@@ -33,7 +30,7 @@ api_router.include_router(me.router, tags=["Me"], prefix="/me")
 api_router.include_router(review.router, tags=["Review (Ôn tập)"])
 
 # 3. Lộ trình, kỹ năng, gợi ý (Hòa)
-api_router.include_router(learning_path_service.router, tags=["learning path endpoint"], prefix="/learning-paths")
+api_router.include_router(learning_path_service.router, tags=["learning path endpoint"], prefix="/learning-paths") # api/learning-paths
 api_router.include_router(learning_path_node_service.router, tags=["learning path node endpoint"], prefix="/learning-paths-nodes")
 api_router.include_router(skill_service.router, tags=["skill endpoint"], prefix="/skills")
-# api_router.include_router(recommendation_service.router, tags=["learning path generation"], prefix="/learning-paths-generation")
+api_router.include_router(recommendation_service.router, tags=["learning path generation"], prefix="/learning-paths-generation")

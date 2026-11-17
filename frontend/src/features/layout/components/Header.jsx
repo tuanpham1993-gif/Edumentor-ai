@@ -9,6 +9,8 @@ import { initials } from '../../../utils/formatters.js';
 import { BrandLogo } from '../../common/components/icons.jsx';
 import styles from '../styles/Header.module.css';
 import { ADMIN_NAV, MAIN_NAV, activeNavItem } from '../nav.js';
+import { useEffect, useState } from 'react';
+import MakeLearningPathPage from '../../learning_path/pages/MakeLearningPathPage.jsx';
 
 // Avatar sáng khi đang ở Hồ sơ / Cài đặt tài khoản (không sáng ở /me/courses, /me/learning-paths…)
 const PROFILE_PATHS = ['/me', '/me/edit', '/me/password', '/me/skills'];
@@ -19,8 +21,9 @@ export default function Header() {
   const onProfile = PROFILE_PATHS.includes(pathname);
   const items = user?.role === 'admin' ? [...MAIN_NAV, ADMIN_NAV] : MAIN_NAV;
   const active = activeNavItem(items, pathname); // mục đang mở (xét cả `match` trong nav.js)
-
+  const [isLearningPathModalOpen, setLearningPathModal] = useState(false)
   return (
+    <>
     <header className={styles.header}>
       {/* inner: khung 1200px giữa màn → thẳng hàng nội dung trang & header khách */}
       <div className={styles.inner}>
@@ -59,5 +62,6 @@ export default function Header() {
       )}
       </div>
     </header>
+    </>
   );
 }

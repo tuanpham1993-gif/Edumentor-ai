@@ -1,0 +1,238 @@
+
+.pageLearningPaths {
+    min-height: calc(100vh - 60px);
+    background: var(--bg);
+    color: var(--text);
+}
+
+.containerLearningPaths {
+    width: 100%;
+    max-width: 1200px;
+
+    margin: 0 auto;
+    padding: 36px 24px 72px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ---------- Page heading ---------- */
+
+.headerLearningPaths {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px 24px;
+}
+
+.headerLearningPaths h1 {
+    margin: 0;
+
+    color: var(--text);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.headerLearningPaths p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.createButtonLearningPaths {
+    flex-shrink: 0;
+}
+
+/* ---------- Filters ---------- */
+
+.filtersLearningPaths {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filterLearningPaths,
+.activeFilterLearningPaths {
+    min-height: 36px;
+    padding: 0 16px;
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-pill);
+
+    background: transparent;
+    color: var(--text-muted);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition:
+        background var(--d-fast),
+        color var(--d-fast),
+        border-color var(--d-fast);
+}
+
+.filterLearningPaths:hover {
+    border-color: var(--outline);
+    background: var(--hover);
+    color: var(--text);
+}
+
+.activeFilterLearningPaths {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+}
+
+.activeFilterLearningPaths:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+/* ---------- Card grid ---------- */
+
+.gridLearningPaths {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fill, minmax(min(100%, 340px), 365px));
+
+    align-items: start;
+    gap: 20px;
+}
+
+/* ---------- Empty state ---------- */
+
+.emptyLearningPaths {
+    min-height: 360px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+    border: 1px dashed var(--outline);
+    border-radius: var(--r-xl);
+    background: var(--surface-sunk);
+}
+
+.emptyIconLearningPaths {
+    width: 64px;
+    height: 64px;
+
+    display: grid;
+    place-items: center;
+
+    margin-bottom: 20px;
+
+    border-radius: 50%;
+    border: 1px solid var(--accent-soft-border);
+
+    background: var(--accent-soft-bg);
+    color: var(--accent);
+
+    font-size: 30px;
+}
+
+.emptyLearningPaths h2 {
+    margin: 0 0 10px;
+
+    color: var(--text);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.emptyLearningPaths p {
+    max-width: 420px;
+    margin: 0 0 24px;
+
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ---------- Loading / error / no results ---------- */
+
+.messageLearningPaths,
+.noResultsLearningPaths {
+    padding: 36px 20px;
+
+    text-align: center;
+    color: var(--text-muted);
+
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-lg);
+
+    background: var(--card);
+}
+
+.errorLearningPaths {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    padding: 18px;
+
+    border: 1px solid var(--danger-border);
+    border-radius: var(--r-lg);
+
+    background: var(--danger-bg);
+    color: var(--danger-fg);
+}
+
+.errorLearningPaths p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+    .containerLearningPaths {
+        padding: 24px 16px 56px;
+        gap: 20px;
+    }
+
+    .headerLearningPaths {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .headerLearningPaths h1 {
+        font-size: 24px;
+    }
+
+    .createButtonLearningPaths {
+        width: 100%;
+    }
+
+    .filtersLearningPaths {
+        gap: 8px;
+    }
+
+    .filterLearningPaths,
+    .activeFilterLearningPaths {
+        padding: 0 12px;
+        font-size: 12px;
+    }
+
+    .gridLearningPaths {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .filterLearningPaths,
+    .activeFilterLearningPaths {
+        transition: none;
+    }
+}

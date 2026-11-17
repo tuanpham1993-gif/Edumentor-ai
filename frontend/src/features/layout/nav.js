@@ -6,7 +6,6 @@
 //          mục có `to` là tiền tố (vd /courses/312/review thuộc "Ôn tập", không phải "Khóa học").
 export const MAIN_NAV = [
   { to: '/courses', text: 'Khóa học', owner: 'Khôi' },
-  { to: '/me/learning-paths', text: 'Lộ trình', owner: 'Hòa' },
   { to: '/me/courses', text: 'Khóa học của tôi', owner: 'Tâm' },
   {
     to: '/me/review-history',
@@ -16,6 +15,7 @@ export const MAIN_NAV = [
   },
   { to: '/tutor', text: 'AI Tutor', owner: 'Tâm' },
   { to: '/contact', text: 'Liên hệ', owner: 'Tâm' },
+  { to: '/me/my-learning-path', text: 'My learning path'},
 ];
 
 export const ADMIN_NAV = { to: '/admin', text: 'Quản trị' };
