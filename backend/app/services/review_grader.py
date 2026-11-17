@@ -50,6 +50,8 @@ def _question_dict(answer: ReviewAnswer) -> dict:
     question = {"content": q.content, "rubric": q.rubric, "explanation": q.explanation}
     if settings.REVIEW_GRADING_RAG and q.type == "essay":
         question["context_chunks"] = _grading_chunks(answer, question)
+    if settings.REVIEW_GRADING_FEWSHOT and q.type == "essay":
+        question["few_shot"] = True  # 17/11: kèm ví dụ chấm mẫu (prompt grade-en-v2+fs)
     return question
 
 

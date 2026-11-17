@@ -39,6 +39,7 @@ Ghi chú: demo3 dùng OpenAI; dự án giữ **Gemini** (D3). Học **cách làm
 | QT10 | **Gemini là bộ chấm chính**; chấm từ khóa (1) chấm thay khi Gemini lỗi, (2) đối chiếu — lệch **> 3** điểm (thang 10 của câu) thì gắn cờ |
 | QT12 | Chấm từ khóa tách vế ở `. ! ? ;` và "but / whereas / however", không tách ở "and" |
 | QT13 | Bài tự luận phải viết tiếng Anh (nhắc tại ô trả lời, xác nhận khi nộp) |
+| 17/11 | **Chạy thật Gemini (B7 + B11)**: 2 lượt, 0 lỗi JSON, trang kết quả hiện đủ lý do / câu trích; sửa **gọi lại khi Gemini 503** (`5a41ec9`). **Trang "Bài cần xem lại"** cho admin (human-in-the-loop, `67baa6b`). **Ví dụ chấm mẫu (few-shot)** vào prompt: 9 ví dụ chỉ từ câu **dev**, bật bằng `REVIEW_GRADING_FEWSHOT` (mặc định tắt), phiên bản `grade-en-v2+fs`; thử 1 bài CS-TL-05 chỉ nêu hiện tượng: v2 cho ý 2 Đạt (sai), v2+fs cho Không đạt (đúng), là câu dev nên chưa kết luận | 20/11 chạy A/B `gemini` vs `gemini-fs` trên **test**; tốt hơn thì bật cờ |
 | 16/11 | **B13 phần chữ xong**: chương báo cáo AI chấm bài (chờ số liệu B10) + sửa phần ôn tập trong BA, SRS, api-endpoints (.md) cho khớp code (15 câu, tự luận AI chấm, 6/10) | Tuấn duyệt báo cáo; 19/11 màn duyệt câu AI; 20/11 chấm chung |
 | 16/11 | **B12 xong** trên Docker + Gemini thật: nộp có điểm 1,9 s (10,2 s lần đầu), chấm đúng / sai / trống hợp lý, Gemini lỗi → từ khóa; phát hiện thiếu mô hình embedding trong container + khởi động nguội chậm | Đã sửa cả 2 phát hiện (mô hình embedding trong volume; nạp sẵn NLTK → lần nộp đầu 2,1 s); tiếp B13 |
 | 16/11 | GĐ7 **7.5c + 7.5a xong**; **Dockerfile tải dữ liệu NLTK** (build lại image, chạy thử trong container); **B11 code xong** (lý do, nhận xét, tô sáng câu trích, nhãn cách chấm, đang xem lại); 818 test xanh | Tuấn xem giao diện; khởi động lại container backend; B12 |
@@ -182,6 +183,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
   - 👤 Còn: khi có `gold.csv` → chạy `keyword`, `pipeline`, `pipeline-rag` → `compare` A / B (bootstrap) → phân tích bài lệch → ghi `EXPERIMENT_LOG.md` → chốt bật / tắt cờ. Ngân hàng nhỏ (15 đoạn, 3 đoạn / kỹ năng) nên RAG gần như tra cứu cố định — kết quả A ≈ B là kết quả hợp lệ, ghi trung thực.
 - [ ] **B10 Chạy test** — dự kiến 20/11 · thực tế __/__ 👤
   - Chạy **một lần** cho từ khóa, A, B; bootstrap; độ trễ.
+  - 17/11 thêm cấu hình **A + ví dụ chấm mẫu**: `--method gemini-fs` (chỉ khối 4) / `pipeline-fs` (đủ 9 khối). So `gemini` vs `gemini-fs` bằng `compare` (bootstrap). Ví dụ chỉ lấy từ câu dev (`FEWSHOT_SOURCE_CODES`, có test chống rò rỉ sang câu test).
   - ✅ Bảng kết quả + nhật ký chạy.
 - [~] **B11 Giao diện kết quả** — dự kiến 21/11 · code xong 16/11 🤖 · 👤 còn: xem trên trình duyệt với một lượt chấm bằng Gemini
   - ✅ Backend: API kết quả (`result_view`, `/me/review-history/{id}`) trả thêm `rubric[].reason`, và với câu tự luận có bài làm: `graded_by` (`ai` | `keyword` — `AI_MODE=mock` hoặc Gemini lỗi đều là `keyword`, không ghi "Chấm bởi AI" sai sự thật), `needs_review`, `feedback`. Cờ nội bộ (chèn lệnh, quá dài…) KHÔNG trả cho người học. Lượt chấm trước B6 vẫn xem được (giá trị mặc định). 7 test; kiểm ngược: ghi mock là "ai" → test trượt.

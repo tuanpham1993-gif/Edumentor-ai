@@ -39,6 +39,9 @@ class Settings(BaseSettings):
     # B9 (15/11): chấm tự luận kèm đoạn tri thức của kỹ năng (Model B). False = Model A (đề + barem + đáp án mẫu).
     # Chỉ bật khi đo trên bộ bài chuẩn thấy B tốt hơn A (docs/Review-AI-Grading.md B9, B10).
     REVIEW_GRADING_RAG: bool = False
+    # 17/11: kèm ví dụ chấm mẫu (few-shot, lấy từ câu DEV của bộ bài chuẩn) vào prompt chấm tiếng Anh.
+    # Bật khi đo A/B trên bộ bài chuẩn (eval_grading: gemini vs gemini-fs) thấy tốt hơn.
+    REVIEW_GRADING_FEWSHOT: bool = False
     # Mô hình embedding cho RAG — ĐA NGÔN NGỮ (tài liệu tri thức viết tiếng Việt). Đổi mô hình → chạy lại
     # scripts/build_embeddings.py --all (vector cũ và mới không so được với nhau).
     REVIEW_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

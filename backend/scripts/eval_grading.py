@@ -29,7 +29,7 @@ from pathlib import Path
 
 from sklearn.metrics import cohen_kappa_score
 
-from app.ai.prompts.review_grading import PROMPT_VERSION_EN, RAG_SUFFIX
+from app.ai.prompts.review_grading import FEWSHOT_SUFFIX, PROMPT_VERSION_EN, RAG_SUFFIX
 from app.ai.review import keyword_grading
 from scripts.gold_sheets import (
     BACKEND,
@@ -116,6 +116,17 @@ METHODS: dict[str, tuple[Callable[[dict, str], list[str]], str, str]] = {
     "gemini-rag": (_gemini_rag, "REVIEW_LLM_MODEL", PROMPT_VERSION_EN + RAG_SUFFIX),  # Model B, chỉ khối 4
     "pipeline": (_pipeline, "REVIEW_LLM_MODEL", PROMPT_VERSION_EN),  # Model A, đủ 9 khối
     "pipeline-rag": (lambda q, t: _pipeline(q, t, rag=True), "REVIEW_LLM_MODEL", PROMPT_VERSION_EN + RAG_SUFFIX),
+    # 17/11: + ví dụ chấm mẫu (few-shot) — so với "gemini" / "pipeline" để biết ví dụ có giúp không
+    "gemini-fs": (
+        lambda q, t: _gemini({**q, "few_shot": True}, t),
+        "REVIEW_LLM_MODEL",
+        PROMPT_VERSION_EN + FEWSHOT_SUFFIX,
+    ),
+    "pipeline-fs": (
+        lambda q, t: _pipeline({**q, "few_shot": True}, t),
+        "REVIEW_LLM_MODEL",
+        PROMPT_VERSION_EN + FEWSHOT_SUFFIX,
+    ),
 }
 
 
