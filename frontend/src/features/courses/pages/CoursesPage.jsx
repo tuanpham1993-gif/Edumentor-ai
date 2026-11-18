@@ -291,25 +291,6 @@ export default function CoursesPage() {
           total={total}
         />
 
-        {/* Thanh chip hiển thị kỹ năng đang lọc nếu có */}
-        {selectedSkill && (
-          <div className={styles.activeFilterBar}>
-            <span className={styles.activeFilterLabel}>Đang lọc theo kỹ năng:</span>
-            <span className={styles.activeSkillChip}>
-              {selectedSkill.skill}
-              <button
-                type="button"
-                className={styles.clearSkillChipBtn}
-                onClick={() => handleSkillChange(null)}
-                title="Bỏ lọc kỹ năng này"
-                aria-label="Bỏ lọc kỹ năng này"
-              >
-                ×
-              </button>
-            </span>
-          </div>
-        )}
-
         {/* Trạng thái 1: Đang tải (Skeletons) */}
         {loading ? (
           <div className={styles.grid}>
