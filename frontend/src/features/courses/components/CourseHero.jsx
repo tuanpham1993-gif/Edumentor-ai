@@ -53,7 +53,7 @@ export default function CourseHero({ searchValue = '', onSearchChange }) {
   // Debounce 300ms khi gõ tìm kiếm để không spam API
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (localSearch !== searchValue) {
+      if (localSearch.trim() !== searchValue.trim()) {
         onSearchChange?.(localSearch);
       }
     }, 300);

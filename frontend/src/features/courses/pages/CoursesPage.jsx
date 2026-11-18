@@ -1,6 +1,6 @@
 // Trang Danh mục khóa học (/courses) dành cho học viên
 // Tuân thủ toàn diện thiết kế Mockup và quy chuẩn dự án EduMentor AI.
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { getCourses, getSkillDetail } from '../../../api/courses.api.js';
@@ -10,15 +10,24 @@ import {
   getMyCourses,
   removeBookmark,
 } from '../../../api/courseTracking.api.js';
+import { useAuth } from '../../../hooks/useAuth.js';
+import { parseApiError } from '../../../utils/errors.js';
 import CourseCard from '../components/CourseCard.jsx';
 import CourseDetailModal from '../components/CourseDetailModal.jsx';
 import CourseFilters from '../components/CourseFilters.jsx';
 import CourseHero from '../components/CourseHero.jsx';
 import CourseToast from '../components/CourseToast.jsx';
-import { useAuth } from '../../../hooks/useAuth.js';
 import styles from '../styles/CoursesPage.module.css';
 
 const PAGE_SIZE = 12;
+const VALID_LEVELS = new Set(['beginner', 'intermediate', 'advanced']);
+const DEFAULT_SORT_BY = 'num_reviews';
+
+function parsePositiveInt(raw) {
+  if (!raw) return null;
+  const num = Number(raw);
+  return Number.isInteger(num) && num > 0 ? num : null;
+}
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
@@ -26,15 +35,18 @@ export default function CoursesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // URL search params
+  // URL search params làm Single Source of Truth cho toàn bộ bộ lọc
   const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get('search') || '';
+  const rawLevel = searchParams.get('level') || '';
+  const level = VALID_LEVELS.has(rawLevel) ? rawLevel : '';
+  const skillId = parsePositiveInt(searchParams.get('skill_id'));
+  const sortBy = searchParams.get('sort_by') === 'rating' ? 'rating' : DEFAULT_SORT_BY;
+  const page = parsePositiveInt(searchParams.get('page')) || 1;
 
-  // Bộ lọc
-  const [search, setSearch] = useState('');
-  const [level, setLevel] = useState('');
+  // Metadata kỹ năng đang chọn (chỉ dùng để hiển thị tên + course_count trên SkillSelect)
   const [selectedSkill, setSelectedSkill] = useState(null);
-  const [sortBy, setSortBy] = useState('num_reviews');
-  const [page, setPage] = useState(1);
+  const coursesReqIdRef = useRef(0);
 
   // Xác thực người dùng
   const { status: authStatus } = useAuth();
@@ -84,63 +96,113 @@ export default function CoursesPage() {
     fetchUserTracking();
   }, [fetchUserTracking]);
 
-  // 1.1 Khôi phục kỹ năng từ URL khi mở trang (nếu có ?skill_id=...)
+  // 1.1 Khôi phục tên kỹ năng hiển thị trên SkillSelect khi URL có ?skill_id=...
+  // Chạy song song và tách khỏi fetchCourses để không gọi thừa API hay nháy danh sách lúc F5.
   useEffect(() => {
-    const urlSkillId = searchParams.get('skill_id');
-    if (urlSkillId && (!selectedSkill || selectedSkill.skill_id !== Number(urlSkillId))) {
-      getSkillDetail(urlSkillId)
-        .then((res) => {
-          if (res) setSelectedSkill({ skill_id: res.skill_id, skill: res.skill });
-        })
-        .catch(() => {
-          // Bỏ qua nếu mã kỹ năng không hợp lệ
-        });
-    } else if (!urlSkillId && selectedSkill) {
+    if (!skillId) {
       setSelectedSkill(null);
+      return undefined;
     }
-  }, [searchParams]);
+
+    if (selectedSkill?.skill_id === skillId) {
+      return undefined;
+    }
+
+    let active = true;
+    getSkillDetail(skillId)
+      .then((res) => {
+        if (active && res) {
+          setSelectedSkill({ skill_id: res.skill_id, skill: res.skill });
+        }
+      })
+      .catch(() => {
+        if (active) setSelectedSkill(null);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [skillId, selectedSkill?.skill_id]);
+
+  // Helper cập nhật đồng nhất các bộ lọc lên URL (bỏ giá trị mặc định để URL gọn)
+  const updateQueryParams = useCallback(
+    (changes, { resetPage = true, replace = false } = {}) => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+
+          if (Object.prototype.hasOwnProperty.call(changes, 'search')) {
+            const val = (changes.search || '').trim();
+            if (val) next.set('search', val);
+            else next.delete('search');
+          }
+          if (Object.prototype.hasOwnProperty.call(changes, 'level')) {
+            if (VALID_LEVELS.has(changes.level)) next.set('level', changes.level);
+            else next.delete('level');
+          }
+          if (Object.prototype.hasOwnProperty.call(changes, 'skill_id')) {
+            if (changes.skill_id) next.set('skill_id', String(changes.skill_id));
+            else next.delete('skill_id');
+          }
+          if (Object.prototype.hasOwnProperty.call(changes, 'sort_by')) {
+            if (changes.sort_by === 'rating') next.set('sort_by', 'rating');
+            else next.delete('sort_by');
+          }
+          if (resetPage) {
+            next.delete('page');
+          } else if (Object.prototype.hasOwnProperty.call(changes, 'page')) {
+            const nextPage = Math.max(1, Number(changes.page) || 1);
+            if (nextPage > 1) next.set('page', String(nextPage));
+            else next.delete('page');
+          }
+
+          return next;
+        },
+        { replace }
+      );
+    },
+    [setSearchParams]
+  );
 
   // Xử lý đổi kỹ năng và đồng bộ lên URL
   const handleSkillChange = useCallback(
     (skill) => {
-      setSelectedSkill(skill);
-      setPage(1);
-      const newParams = new URLSearchParams(searchParams);
-      if (skill?.skill_id) {
-        newParams.set('skill_id', String(skill.skill_id));
-      } else {
-        newParams.delete('skill_id');
-      }
-      setSearchParams(newParams, { replace: true });
+      setSelectedSkill(skill || null);
+      updateQueryParams({ skill_id: skill?.skill_id || null }, { resetPage: true, replace: false });
     },
-    [searchParams, setSearchParams]
+    [updateQueryParams]
   );
 
-  // 2. Tải danh sách khóa học theo bộ lọc
+  // 2. Tải danh sách khóa học theo bộ lọc (đọc trực tiếp từ URL params, chống race-condition)
   const fetchCourses = useCallback(async () => {
+    const reqId = ++coursesReqIdRef.current;
     setLoading(true);
     setError(null);
     try {
       const res = await getCourses({
         search: search.trim() || undefined,
-        skill_id: selectedSkill?.skill_id || undefined,
+        skill_id: skillId || undefined,
         level: level || undefined,
-        sort_by: sortBy || 'num_reviews',
+        sort_by: sortBy,
         page,
         page_size: PAGE_SIZE,
       });
 
+      if (reqId !== coursesReqIdRef.current) return;
       setCourses(res.data || []);
       setTotal(res.total || 0);
     } catch (err) {
-      const msg = err?.response?.data?.error?.message || err?.message || 'Không thể tải danh sách khóa học.';
-      setError(msg);
+      if (reqId !== coursesReqIdRef.current) return;
+      const parsed = parseApiError(err);
+      setError(parsed.message || 'Không thể tải danh sách khóa học.');
       setCourses([]);
       setTotal(0);
     } finally {
-      setLoading(false);
+      if (reqId === coursesReqIdRef.current) {
+        setLoading(false);
+      }
     }
-  }, [search, selectedSkill, level, sortBy, page]);
+  }, [search, skillId, level, sortBy, page]);
 
   useEffect(() => {
     fetchCourses();
@@ -255,21 +317,40 @@ export default function CoursesPage() {
     }
   }
 
-  // Khi đổi bộ lọc thì reset về trang 1
-  function handleSearchChange(newSearch) {
-    setSearch(newSearch);
-    setPage(1);
-  }
+  // Khi đổi bộ lọc thì cập nhật URL & tự động reset về trang 1
+  const handleSearchChange = useCallback(
+    (newSearch) => {
+      updateQueryParams({ search: newSearch }, { resetPage: true, replace: true });
+    },
+    [updateQueryParams]
+  );
 
-  function handleLevelChange(newLevel) {
-    setLevel(newLevel);
-    setPage(1);
-  }
+  const handleLevelChange = useCallback(
+    (newLevel) => {
+      updateQueryParams({ level: newLevel }, { resetPage: true, replace: false });
+    },
+    [updateQueryParams]
+  );
 
-  function handleSortByChange(newSortBy) {
-    setSortBy(newSortBy);
-    setPage(1);
-  }
+  const handleSortByChange = useCallback(
+    (newSortBy) => {
+      updateQueryParams({ sort_by: newSortBy }, { resetPage: true, replace: false });
+    },
+    [updateQueryParams]
+  );
+
+  const handlePageChange = useCallback(
+    (nextPage) => {
+      updateQueryParams({ page: nextPage }, { resetPage: false, replace: false });
+      window.scrollTo({ top: 350, behavior: 'smooth' });
+    },
+    [updateQueryParams]
+  );
+
+  const handleResetFilters = useCallback(() => {
+    setSelectedSkill(null);
+    setSearchParams({}, { replace: false });
+  }, [setSearchParams]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
 
@@ -321,17 +402,11 @@ export default function CoursesPage() {
             <p>
               Hãy thử tìm kiếm với từ khóa khác hoặc bỏ các bộ lọc cấp độ để xem thêm nhiều khóa học.
             </p>
-            {(search || level || selectedSkill) && (
+            {(search || level || skillId || sortBy !== DEFAULT_SORT_BY || page > 1) && (
               <button
                 type="button"
                 className="btn btn-sm"
-                onClick={() => {
-                  setSearch('');
-                  setLevel('');
-                  handleSkillChange(null);
-                  setSortBy('num_reviews');
-                  setPage(1);
-                }}
+                onClick={handleResetFilters}
               >
                 Đặt lại bộ lọc
               </button>
@@ -362,10 +437,7 @@ export default function CoursesPage() {
                   type="button"
                   className={styles.pageBtn}
                   disabled={page <= 1}
-                  onClick={() => {
-                    setPage((p) => Math.max(1, p - 1));
-                    window.scrollTo({ top: 350, behavior: 'smooth' });
-                  }}
+                  onClick={() => handlePageChange(Math.max(1, page - 1))}
                   aria-label="Trang trước"
                 >
                   ←
@@ -377,10 +449,7 @@ export default function CoursesPage() {
                   type="button"
                   className={styles.pageBtn}
                   disabled={page >= totalPages}
-                  onClick={() => {
-                    setPage((p) => Math.min(totalPages, p + 1));
-                    window.scrollTo({ top: 350, behavior: 'smooth' });
-                  }}
+                  onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
                   aria-label="Trang sau"
                 >
                   →
