@@ -33,7 +33,7 @@ export default function CoursesPage() {
   const [search, setSearch] = useState('');
   const [level, setLevel] = useState('');
   const [selectedSkill, setSelectedSkill] = useState(null);
-  const [sortBy, setSortBy] = useState('rating');
+  const [sortBy, setSortBy] = useState('num_reviews');
   const [page, setPage] = useState(1);
 
   // Xác thực người dùng
@@ -125,7 +125,7 @@ export default function CoursesPage() {
         search: search.trim() || undefined,
         skill_id: selectedSkill?.skill_id || undefined,
         level: level || undefined,
-        sort_by: sortBy || undefined,
+        sort_by: sortBy || 'num_reviews',
         page,
         page_size: PAGE_SIZE,
       });
@@ -348,6 +348,7 @@ export default function CoursesPage() {
                   setSearch('');
                   setLevel('');
                   handleSkillChange(null);
+                  setSortBy('num_reviews');
                   setPage(1);
                 }}
               >
