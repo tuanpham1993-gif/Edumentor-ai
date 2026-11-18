@@ -330,6 +330,9 @@ def clean_entity_name(entity_name: str) -> str:
         r"\s+de\s+tham\s+khao$",
         r"\s+de\s+toi\s+hoc$",
         r"\s+de\s+hoc$",
+        r"\s+co\s+gi\s+hay\s+khong$",
+        r"\s+hay\s+khong$",
+        r"\s+co\s+gi\s+hay$",
         r"\s+duoc\s+khong$",
         r"\s+duoc\s+ko$",
         r"\s+nao\s+khong$",
@@ -673,12 +676,12 @@ def extract_course_review_entity(user_message: str) -> dict:
 
     patterns = [
         (
-            r"(?:khoa hoc|course|courses)"
+            r"(?:khoa hoc|khoa|course|courses)"
             r"\s+(?:ve\s+)?(.+?)[?.!]*$"
         ),
         (
             r"(?:on tap|kiem tra|lam bai|quiz|review)"
-            r"\s+(?:khoa hoc|course)\s+(.+?)[?.!]*$"
+            r"\s+(?:khoa hoc|khoa|course)\s+(.+?)[?.!]*$"
         ),
     ]
 
@@ -1496,6 +1499,31 @@ def classify_by_rules(user_message: str) -> dict | None:
             "intent": "skill_review",
             "entity_type": "skill",
             "entity_name": entity.get("entity_name"),
+        }
+
+    # --------------------------------------
+    # 4.5 SKILLS ASSOCIATED WITH A COURSE
+    # --------------------------------------
+
+    course_skill_patterns = [
+        r"(?:skill|skills|ky nang).*?"
+        r"(?:trong|cua)\s+(?:he thong\s+)?"
+        r"(?:khoa hoc|khoa|course|courses)\b",
+        r"(?:skill|skills|ky nang).*?"
+        r"lien quan(?:\s+den|\s+toi|\s+ve)?\s+"
+        r"(?:khoa hoc|khoa|course|courses)\b",
+    ]
+
+    if any(
+        re.search(pattern, text, flags=re.IGNORECASE)
+        for pattern in course_skill_patterns
+    ):
+        entity = extract_course_review_entity(user_message)
+
+        return {
+        "intent": "course_question",
+        "entity_type": "course",
+        "entity_name": entity["entity_name"],
         }
 
     # --------------------------------------
