@@ -1,15 +1,25 @@
 // Component Thanh bộ lọc và sắp xếp khóa học
 import styles from '../styles/CoursesPage.module.css';
+import SkillSelect from './SkillSelect.jsx';
 
 export default function CourseFilters({
   level = '',
   onLevelChange,
-  sortBy = 'rating',
+  selectedSkill = null,
+  onSkillChange,
+  hasSearch = false,
+  sortBy = 'num_reviews',
   onSortByChange,
   total = 0,
 }) {
   return (
     <div className={styles.filterRow}>
+      {/* Bộ lọc kỹ năng */}
+      <div className={styles.filterField}>
+        <span>Kỹ năng</span>
+        <SkillSelect selectedSkill={selectedSkill} onSkillChange={onSkillChange} />
+      </div>
+
       {/* Bộ lọc cấp độ */}
       <label className={styles.filterField}>
         <span>Cấp độ</span>
@@ -25,8 +35,9 @@ export default function CourseFilters({
       <label className={styles.filterField}>
         <span>Sắp xếp</span>
         <select value={sortBy} onChange={(e) => onSortByChange?.(e.target.value)}>
-          <option value="rating">Đánh giá cao nhất</option>
+          {hasSearch && <option value="relevance">Phù hợp nhất</option>}
           <option value="num_reviews">Nhiều lượt đánh giá nhất</option>
+          <option value="rating">Đánh giá cao nhất</option>
         </select>
       </label>
 

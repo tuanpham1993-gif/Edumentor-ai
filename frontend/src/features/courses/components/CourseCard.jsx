@@ -23,6 +23,49 @@ function BookmarkRibbonIcon({ filled = false }) {
   );
 }
 
+/** Icon Giảng viên nhỏ gọn (chỉ hiện khi tìm kiếm khớp theo giảng viên) */
+function InstructorIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width={13}
+      height={13}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
+    </svg>
+  );
+}
+
+function matchesField(text, tokens) {
+  if (!text || !tokens.length) return false;
+  const lower = text.toLowerCase();
+  const words = lower.split(/[\s,/()[\]:;—–\-.]+/).filter(Boolean);
+  return tokens.some((tok) => {
+    if (tok.length <= 2) {
+      return words.some((word) => word === tok);
+    }
+    return lower.includes(tok);
+  });
+}
+
+function getSearchMatchTier(course, searchQuery) {
+  if (!searchQuery || !searchQuery.trim()) return null;
+  const tokens = [...new Set(searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean))];
+  if (!tokens.length) return null;
+
+  if (matchesField(course.title, tokens)) return 'title';
+  if (matchesField(course.organization, tokens)) return 'organization';
+  if (matchesField(course.instructor, tokens)) return 'instructor';
+  return 'description';
+}
+
 const LEVEL_MAP = {
   beginner: 'Cơ bản',
   intermediate: 'Trung cấp',
@@ -34,13 +77,27 @@ export default function CourseCard({
   isBookmarked = false,
   isOngoing = false,
   isCompleted = false,
+  searchQuery = '',
   onToggleBookmark,
   onSelectCourse,
+  onSelectSkill,
 }) {
   if (!course) return null;
 
-  const { course_id, title, level, organization, rating, num_reviews, skills_info, image } = course;
+  const {
+    course_id,
+    title,
+    level,
+    organization,
+    instructor,
+    rating,
+    num_reviews,
+    skills_info,
+    image,
+  } = course;
   const [imgError, setImgError] = useState(false);
+
+  const matchTier = getSearchMatchTier(course, searchQuery);
 
   const monogram = getCourseMonogram(title);
   const palette = getCoursePalette(course_id, title);
@@ -101,7 +158,12 @@ export default function CourseCard({
 
         {/* Thanh platform & nút bookmark / badge trạng thái phía trên */}
         <div className={styles.mediaTop}>
-          <span className={styles.platform} title={platform}>
+          <span
+            className={`${styles.platform} ${
+              matchTier === 'organization' ? styles.platformMatched : ''
+            }`}
+            title={platform}
+          >
             {platform}
           </span>
           {isOngoing ? (
@@ -133,11 +195,32 @@ export default function CourseCard({
         </h3>
         <span className={styles.level}>{levelText}</span>
 
+        {/* Ngữ cảnh khớp khi tìm theo giảng viên hoặc mô tả (giữ chip kỹ năng nguyên bản) */}
+        {matchTier === 'instructor' && instructor && (
+          <span className={styles.matchContext} title={`Giảng viên: ${instructor}`}>
+            <InstructorIcon />
+            <span className={styles.matchContextText}>Giảng viên: {instructor}</span>
+          </span>
+        )}
+        {matchTier === 'description' && (
+          <span className={styles.matchContextMuted}>Khớp trong mô tả</span>
+        )}
+
         {/* Kỹ năng liên quan */}
         <div className={styles.skills}>
           {skills_info && skills_info.length > 0 ? (
             skills_info.slice(0, 3).map((item) => (
-              <span key={item.skill_id} className={styles.skill} title={item.skill}>
+              <span
+                key={item.skill_id}
+                className={styles.skill}
+                title={`Lọc theo kỹ năng: ${item.skill}`}
+                onClick={(e) => {
+                  if (onSelectSkill) {
+                    e.stopPropagation();
+                    onSelectSkill(item);
+                  }
+                }}
+              >
                 {item.skill}
               </span>
             ))

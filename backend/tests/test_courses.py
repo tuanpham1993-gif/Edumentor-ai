@@ -182,3 +182,105 @@ def test_get_courses_validation_errors(client):
     assert client.get("/api/courses?sort_by=views").status_code == 422
     # 5. course_id không phải số nguyên
     assert client.get("/api/courses/abc").status_code == 422
+
+
+def test_search_multiword_across_fields(client, sample_data):
+    """Tách từ multi-word: 'python meta' khớp course 3 (title có Python, organization là Meta)."""
+    response = client.get("/api/courses?search=python+meta&sort_by=relevance")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 1
+    assert data["data"][0]["course_id"] == 3
+
+
+def test_search_4_tier_priority_title_org_instructor_desc(client, db_session):
+    """Kiểm tra đúng thứ tự ưu tiên 4 tầng: title > organization > instructor > description."""
+    c_desc = Courses(
+        course_id=101,
+        title="Cloud Systems Overview",
+        instructor="Alice",
+        organization="CloudCo",
+        description="Includes a chapter about Kubernetes deployments",
+        level="beginner",
+        rating=4.9,
+        num_reviews=9000,
+    )
+    c_inst = Courses(
+        course_id=102,
+        title="DevOps Operations",
+        instructor="Kubernetes Team",
+        organization="OpsOrg",
+        description="General devops practices",
+        level="intermediate",
+        rating=4.8,
+        num_reviews=5000,
+    )
+    c_org = Courses(
+        course_id=103,
+        title="Container Orchestration Lab",
+        instructor="Bob",
+        organization="Kubernetes Academy",
+        description="Hands-on orchestration",
+        level="intermediate",
+        rating=4.7,
+        num_reviews=2000,
+    )
+    c_title = Courses(
+        course_id=104,
+        title="Kubernetes Mastery for Production",
+        instructor="Carol",
+        organization="DevSchool",
+        description="Learn production deployments",
+        level="advanced",
+        rating=4.5,
+        num_reviews=100,
+    )
+    db_session.add_all([c_desc, c_inst, c_org, c_title])
+    db_session.commit()
+
+    response = client.get("/api/courses?search=kubernetes&sort_by=relevance")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 4
+    ordered_ids = [item["course_id"] for item in data["data"]]
+    assert ordered_ids == [104, 103, 102, 101]
+
+
+def test_search_short_token_word_boundary_andrew_ng(client, db_session):
+    """Token ngắn 2 ký tự ('ng' trong 'Andrew Ng') chỉ khớp nguyên từ, không khớp đuôi '-ing'."""
+    c_real = Courses(
+        course_id=201,
+        title="Deep Learning Specialization",
+        instructor="Andrew Ng",
+        organization="DeepLearning.AI",
+        description="Build neural networks",
+        level="intermediate",
+        rating=4.9,
+        num_reviews=5000,
+    )
+    c_false = Courses(
+        course_id=202,
+        title="Java Programming Fundamentals",
+        instructor="Andrew D. Hilton",
+        organization="Duke University",
+        description="Learn Java programming and engineering",
+        level="beginner",
+        rating=4.7,
+        num_reviews=8000,
+    )
+    db_session.add_all([c_real, c_false])
+    db_session.commit()
+
+    response = client.get("/api/courses?search=Andrew+Ng&sort_by=relevance")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 1
+    assert data["data"][0]["course_id"] == 201
+
+
+def test_sort_by_relevance_without_search_falls_back_to_num_reviews(client, sample_data):
+    """sort_by=relevance khi không có search phải fallback an toàn sang num_reviews giảm dần."""
+    response = client.get("/api/courses?sort_by=relevance")
+    assert response.status_code == 200
+    ids = [item["course_id"] for item in response.json()["data"]]
+    assert ids == [2, 1, 3]

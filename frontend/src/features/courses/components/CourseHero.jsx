@@ -23,6 +23,25 @@ function SearchIcon() {
   );
 }
 
+function ClearIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width={16}
+      height={16}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
 export default function CourseHero({ searchValue = '', onSearchChange }) {
   const [localSearch, setLocalSearch] = useState(searchValue);
 
@@ -34,7 +53,7 @@ export default function CourseHero({ searchValue = '', onSearchChange }) {
   // Debounce 300ms khi gõ tìm kiếm để không spam API
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (localSearch !== searchValue) {
+      if (localSearch.trim() !== searchValue.trim()) {
         onSearchChange?.(localSearch);
       }
     }, 300);
@@ -98,7 +117,7 @@ export default function CourseHero({ searchValue = '', onSearchChange }) {
               }}
               aria-label="Xóa tìm kiếm"
             >
-              ×
+              <ClearIcon />
             </button>
           )}
         </label>
