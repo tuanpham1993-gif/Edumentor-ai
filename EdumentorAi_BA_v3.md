@@ -193,9 +193,8 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 **Main Flow:**
 1. Người dùng mở AI Consultant.
 2. Người dùng nhập mục tiêu nghề nghiệp hoặc mục tiêu học tập.
-3. Người dùng cung cấp thêm thông tin nếu hệ thống yêu cầu làm rõ mục tiêu.
-4. Người dùng gửi yêu cầu.
-5. Hệ thống tiếp nhận và chuyển yêu cầu sang quy trình phân tích mục tiêu.
+3. Người dùng gửi yêu cầu.
+4. Hệ thống tiếp nhận và chuyển yêu cầu sang quy trình phân tích mục tiêu.
 
 **Alternative Flow:**
 - Nếu thông tin chưa đủ rõ ràng, hệ thống yêu cầu người dùng cung cấp thêm thông tin.

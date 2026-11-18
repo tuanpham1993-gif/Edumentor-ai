@@ -24,10 +24,10 @@ class Settings(BaseSettings):
     AVATAR_MAX_BYTES: int = 5 * 1024 * 1024   # 5 MB (Q8, chốt 07/11)
 
     # Email — để trống hoặc "smtp.example.com" thì chỉ IN link ra terminal (chế độ dev)
-    SMTP_HOST: str = ""
-    SMTP_PORT: int = 587
-    SMTP_USER: str = ""
-    SMTP_PASSWORD: str = ""
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASSWORD: str
     FRONTEND_URL: str = "http://localhost:5173"
 
     # Ôn tập — module 09 (Tuấn, chốt 09/11). Đổi trong .env, KHÔNG ghi cứng trong code.
@@ -50,19 +50,8 @@ class Settings(BaseSettings):
     REVIEW_LLM_API_KEY: str = ""
     REVIEW_LLM_MODEL: str = ""
 
-    ALLOWED_ORIGINS: list[str] = [
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://127.0.0.1:5171",
-        "http://localhost:5171",
-    ]
-    LLM_URL_BASE: str = "http://localhost:8082"     # Hòa: llama.cpp (docker-compose llama-base)
-    LLM_URL_ADAPTER: str = "http://localhost:8081"  # Hòa: llama.cpp + LoRA (llama-adapter)
-
-    #LLM_URL_BASE: http://llama-base:8080
-    #LLM_URL_ADAPTER: http://llama-adapter:8080
+    ALLOWED_ORIGINS: list[str]
+    LLM_URL_ADAPTER: str  # Hòa: llama.cpp + LoRA (llama-adapter)
     SYSTEM_PROMPT: str = """
     You are EduMentor AI, an intelligent learning-path skill
     extraction assistant.
@@ -179,90 +168,7 @@ class Settings(BaseSettings):
     - Do not include explanations outside the JSON.
     - Do not add properties outside the specified schema.
     """
-
-    
-    SYSTEM_PROMPT_LEARNING_PATH: str = """
-    You are an expert learning-path designer.
-
-    Your task is to reorganize an existing learning path according to
-    the user's original learning goal.
-
-    You will receive an existing graph containing:
-    - original_query
-    - goal_type
-    - nodes
-    - edges
-    - layer
-
-    Do not extract, generate, delete, or rename skills.
-
-    ## 1. Node roles
-
-    Reassess the node_role of every existing node.
-
-    Use only these values:
-
-    - prerequisite: Foundational knowledge important for learning subsequent skills.
-    - related: Supporting skills relevant to the learning goal.
-    - extension: Optional or advanced skills that extend the learner's capabilities.
-
-    ## 2. Display order
-
-    Arrange all existing nodes into a logical learning sequence.
-
-    Consider:
-    - Foundational knowledge should come first.
-    - Skills needed for the main learning goal should receive higher priority.
-    - Supporting and optional skills should generally come later.
-    - Existing prerequisite edges must not be contradicted.
-
-    Assign display_order in increments of 1000:
-    1000, 2000, 3000, and so on.
-
-    Every node must have a unique display_order.
-
-    ## 3. Layers
-
-    Reorganize the layer grouping to reflect the final learning sequence.
-
-    Each skill_id must appear exactly once.
-    Do not invent skills or remove existing skills.
-
-    ## 4. Restrictions
-
-    - Do not modify original_query or goal_type.
-    - Do not modify skill_id or skill_name.
-    - Do not modify path_id, added_by, is_target, or is_required.
-    - Do not create, delete, or modify edges.
-    - Do not invent prerequisite relationships.
-    - Do not change the number of nodes.
-
-    ## Output
-
-    Return valid JSON only, using this structure:
-
-    {
-    "nodes": [
-        {
-        "skill_id": 1,
-        "node_role": "prerequisite",
-        "display_order": 1000
-        }
-    ],
-    "layer": {
-        "0": [1],
-        "1": [2]
-    }
-    }
-
-    Return every existing node in the nodes array.
-    Return no additional properties.
-    Do not include Markdown or explanations.
-    """
-
-
-    QDRANT_URL: str = "http://localhost:6335"       # Qdrant (docker-compose, cổng 6335)
-
+    QDRANT_URL: str      # Qdrant (docker-compose, cổng 6335)
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
