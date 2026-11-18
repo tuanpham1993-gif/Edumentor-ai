@@ -27,8 +27,8 @@ def get_courses(
     level: Literal["beginner", "intermediate", "advanced"] | None = Query(
         default=None, description="Lọc theo độ khó (beginner, intermediate, advanced)"
     ),
-    sort_by: Literal["rating", "num_reviews"] | None = Query(
-        default=None, description="Sắp xếp theo 'rating' hoặc 'num_reviews'"
+    sort_by: Literal["relevance", "rating", "num_reviews"] | None = Query(
+        default=None, description="Sắp xếp theo 'relevance', 'rating' hoặc 'num_reviews'"
     ),
 ):
     total, items = course_service.list_courses(

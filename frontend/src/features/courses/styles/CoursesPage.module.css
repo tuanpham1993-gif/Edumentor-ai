@@ -141,18 +141,40 @@
   color: var(--text-dim);
 }
 
+/* Ẩn nút 'x' xóa tìm kiếm mặc định của trình duyệt để tránh trùng với nút tùy chỉnh */
+.search input::-webkit-search-cancel-button,
+.search input::-webkit-search-decoration,
+.search input::-webkit-search-results-button,
+.search input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.search input::-ms-clear,
+.search input::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .clearSearchBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   color: var(--text-muted);
-  font-size: 20px;
   cursor: pointer;
-  padding: 0 4px;
+  padding: 4px;
+  border-radius: var(--r-pill);
   line-height: 1;
+  transition: color var(--d-fast), background-color var(--d-fast);
 }
 
 .clearSearchBtn:hover {
   color: var(--text);
+  background-color: var(--hover);
 }
 
 /* ---------- 2. Nội dung chính & Bộ lọc ---------- */

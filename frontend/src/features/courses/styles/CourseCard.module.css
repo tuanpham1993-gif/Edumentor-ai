@@ -4,6 +4,7 @@
   --mx: 50%;
   --my: 0%;
   position: relative;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -150,6 +151,13 @@
   white-space: nowrap;
 }
 
+.platformMatched {
+  background: var(--accent-soft-bg);
+  border-color: var(--accent-soft-border);
+  color: var(--accent-soft-fg);
+  font-weight: 600;
+}
+
 .saveBtn {
   width: 40px;
   height: 40px;
@@ -218,6 +226,7 @@
 /* Thân nội dung thẻ */
 .body {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -242,21 +251,64 @@
   color: var(--text-muted);
 }
 
+/* Dòng ngữ cảnh khớp tìm kiếm (giảng viên / mô tả) */
+.matchContext {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--accent-soft-fg);
+}
+
+.matchContext svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.matchContextText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matchContextMuted {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
 .skills {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  min-width: 0;
+  max-width: 100%;
   min-height: 28px;
 }
 
 .skill {
+  max-width: 100%;
   padding: 3px 10px;
   border-radius: 999px;
   background: var(--info-bg, rgba(46, 144, 250, 0.12));
   color: var(--info-fg, #53b1fd);
+  border: 1px solid transparent;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all var(--d-fast) var(--e-std);
+}
+
+.skill:hover {
+  background: var(--accent-soft-bg);
+  color: var(--accent);
+  border-color: var(--accent-soft-border);
+  transform: translateY(-1px);
 }
 
 .meta {
