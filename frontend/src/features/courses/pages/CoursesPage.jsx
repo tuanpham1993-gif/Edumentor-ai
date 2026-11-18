@@ -38,10 +38,18 @@ export default function CoursesPage() {
   // URL search params làm Single Source of Truth cho toàn bộ bộ lọc
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get('search') || '';
+  const hasSearch = Boolean(search.trim());
   const rawLevel = searchParams.get('level') || '';
   const level = VALID_LEVELS.has(rawLevel) ? rawLevel : '';
   const skillId = parsePositiveInt(searchParams.get('skill_id'));
-  const sortBy = searchParams.get('sort_by') === 'rating' ? 'rating' : DEFAULT_SORT_BY;
+  const rawSort = searchParams.get('sort_by');
+  const sortBy = hasSearch
+    ? rawSort === 'rating' || rawSort === 'num_reviews' || rawSort === 'relevance'
+      ? rawSort
+      : 'relevance'
+    : rawSort === 'rating'
+      ? 'rating'
+      : DEFAULT_SORT_BY;
   const page = parsePositiveInt(searchParams.get('page')) || 1;
 
   // Metadata kỹ năng đang chọn (chỉ dùng để hiển thị tên + course_count trên SkillSelect)
@@ -132,9 +140,22 @@ export default function CoursesPage() {
           const next = new URLSearchParams(prev);
 
           if (Object.prototype.hasOwnProperty.call(changes, 'search')) {
+            const prevHasSearch = Boolean((prev.get('search') || '').trim());
             const val = (changes.search || '').trim();
-            if (val) next.set('search', val);
-            else next.delete('search');
+            if (val) {
+              next.set('search', val);
+              // Khi mới bắt đầu tìm kiếm (từ rỗng → có từ khóa) → chuyển sang mặc định 'Phù hợp nhất'
+              if (!prevHasSearch && !Object.prototype.hasOwnProperty.call(changes, 'sort_by')) {
+                next.delete('sort_by');
+              }
+            } else {
+              next.delete('search');
+              // Xóa trắng từ khóa → dọn 'relevance' / 'num_reviews' về mặc định sạch
+              const curSort = next.get('sort_by');
+              if (curSort === 'relevance' || curSort === DEFAULT_SORT_BY) {
+                next.delete('sort_by');
+              }
+            }
           }
           if (Object.prototype.hasOwnProperty.call(changes, 'level')) {
             if (VALID_LEVELS.has(changes.level)) next.set('level', changes.level);
@@ -145,8 +166,18 @@ export default function CoursesPage() {
             else next.delete('skill_id');
           }
           if (Object.prototype.hasOwnProperty.call(changes, 'sort_by')) {
-            if (changes.sort_by === 'rating') next.set('sort_by', 'rating');
-            else next.delete('sort_by');
+            const nextHasSearch = Boolean((next.get('search') || '').trim());
+            if (nextHasSearch) {
+              if (changes.sort_by === 'rating' || changes.sort_by === 'num_reviews') {
+                next.set('sort_by', changes.sort_by);
+              } else {
+                next.delete('sort_by');
+              }
+            } else if (changes.sort_by === 'rating') {
+              next.set('sort_by', 'rating');
+            } else {
+              next.delete('sort_by');
+            }
           }
           if (resetPage) {
             next.delete('page');
@@ -367,6 +398,7 @@ export default function CoursesPage() {
           onLevelChange={handleLevelChange}
           selectedSkill={selectedSkill}
           onSkillChange={handleSkillChange}
+          hasSearch={hasSearch}
           sortBy={sortBy}
           onSortByChange={handleSortByChange}
           total={total}
@@ -423,6 +455,7 @@ export default function CoursesPage() {
                   isBookmarked={bookmarkedIds.has(course.course_id)}
                   isOngoing={ongoingIds.has(course.course_id)}
                   isCompleted={completedIds.has(course.course_id)}
+                  searchQuery={search}
                   onToggleBookmark={handleToggleBookmark}
                   onSelectCourse={setSelectedCourse}
                   onSelectSkill={handleSkillChange}

@@ -7,6 +7,7 @@ export default function CourseFilters({
   onLevelChange,
   selectedSkill = null,
   onSkillChange,
+  hasSearch = false,
   sortBy = 'num_reviews',
   onSortByChange,
   total = 0,
@@ -34,6 +35,7 @@ export default function CourseFilters({
       <label className={styles.filterField}>
         <span>Sắp xếp</span>
         <select value={sortBy} onChange={(e) => onSortByChange?.(e.target.value)}>
+          {hasSearch && <option value="relevance">Phù hợp nhất</option>}
           <option value="num_reviews">Nhiều lượt đánh giá nhất</option>
           <option value="rating">Đánh giá cao nhất</option>
         </select>

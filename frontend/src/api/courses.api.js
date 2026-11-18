@@ -13,7 +13,7 @@ import { browseSkillCatalog } from './me.api.js';
  * @param {string} [params.search] - Từ khóa tìm kiếm
  * @param {number} [params.skill_id] - Mã kỹ năng cần lọc
  * @param {'beginner'|'intermediate'|'advanced'} [params.level] - Cấp độ khóa học
- * @param {'rating'|'num_reviews'} [params.sort_by] - Tiêu chí sắp xếp
+ * @param {'relevance'|'rating'|'num_reviews'} [params.sort_by] - Tiêu chí sắp xếp ('relevance' khi có từ khóa, 'num_reviews' mặc định)
  * @returns {Promise<{total: number, page: number, page_size: number, data: Array}>}
  */
 export async function getCourses(params = {}) {
