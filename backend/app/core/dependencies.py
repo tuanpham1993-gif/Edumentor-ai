@@ -23,9 +23,6 @@ bearer_scheme = HTTPBearer(auto_error=False)
 def get_llm_client(request: Request) -> httpx.AsyncClient:
     return request.app.state.llm_client
 
-def get_llm_client_base(request: Request) -> httpx.AsyncClient:
-    return request.app.state.llm_client_base
-
 def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
     db: Session = Depends(get_db),
