@@ -1,7 +1,7 @@
 # Chương: AI chấm bài tự luận theo barem
 
 > Module 09 (Ôn tập & đánh giá) · người thực hiện: Tuấn · bản nháp 16/11/2026
-> Chỗ đánh dấu **⟨B10⟩** sẽ điền số liệu sau khi chạy đánh giá trên bộ bài chuẩn (dự kiến 21/11).
+> Số liệu đánh giá (B10) đã điền ngày 18/11/2026, chạy trên phần **test** của bộ bài chuẩn, prompt `grade-en-v3`.
 
 ## 1. Bài toán
 
@@ -163,10 +163,14 @@ Bài bổ sung cần có vì bài thật thu được ít và lệch về một 
 - Người chấm là thành viên nhóm **không làm phần AI**. Người làm AI không chấm (vì biết trước loại của bài bổ sung).
 - Chấm **mù**: phiếu dùng mã bài ẩn danh, không lộ bài nào là bài thật hay bài bổ sung, thứ tự bài xáo trộn, không
   có điểm AI.
-- Chấm theo **hướng dẫn chấm** (`RATER_GUIDELINE.md`): 2 mức, 11 quy tắc chung, 3 quy ước riêng cho các ý barem dễ
-  hiểu khác nhau, ví dụ mẫu cho từng loại ý.
-- Tiến độ: 30/60 bài đã chấm (chấm thử); 30 bài còn lại chấm chung ngày 20/11. ⟨B10: số người chấm cuối cùng; độ
-  đồng thuận nếu có ý được hai người chấm⟩
+- Chấm theo **hướng dẫn chấm** (`RATER_GUIDELINE.md`): 2 mức, 12 quy tắc chung, các quy ước riêng cho những ý barem
+  dễ hiểu khác nhau, ví dụ mẫu cho từng loại ý.
+- **Hai người chấm độc lập cả 60 bài** (Hòa, Tâm), mỗi người một phiếu xáo thứ tự riêng.
+- **Độ đồng thuận giữa hai người**: trùng nhãn **90,7%** (185/204 ý), **Cohen's kappa 0,81** (mức "gần như hoàn toàn"),
+  QWK theo tổng điểm bài 0,87. Theo phần: dev 93%, test 89%; theo nguồn: bài thật 87%, bài bổ sung 93%.
+- **Phân xử**: 19 ý lệch do Tuấn quyết theo hướng dẫn chấm (16 ý có quy tắc / ví dụ rõ; 3 ý chốt thêm quy ước).
+  Sau phân xử, hướng dẫn chấm lên v2.2 (quy tắc 7 "không chép / diễn đạt lại đề", 9 "sai ngay trong phần nói về ý",
+  12 "ý nhiều phần phải đủ"). Bộ bài chuẩn cuối: 204 ý, 109 Đạt / 95 Không đạt; dev 96 ý, test 108 ý.
 
 ### 6.3 Chỉ số
 
@@ -181,21 +185,69 @@ Bài bổ sung cần có vì bài thật thu được ít và lệch về một 
 | Precision / Recall / F1 theo nhãn | TP / FP / FN cho từng nhãn Đạt / Không đạt (theo bài học demo2) | |
 | Độ trễ | p95 thời gian chấm | ≤ 20 giây |
 
-So sánh **4 cách chấm** trên cùng bộ bài: chấm từ khóa; Model A và Model B chỉ khối LLM; Model A và Model B đủ 9
-khối (cái người học thật sự nhận). So hai cách bằng **paired bootstrap** (1.000 lần, khoảng tin cậy 95%); chỉ kết
-luận "B tốt hơn A" khi khoảng tin cậy không chứa 0.
+So sánh **5 cách chấm** trên cùng bộ bài: chấm từ khóa; Model A (Gemini, chỉ khối LLM); Model A + ví dụ chấm mẫu
+(few-shot, ví dụ chỉ lấy từ câu dev); Model B (Gemini + RAG, chỉ khối LLM); pipeline đủ 9 khối với Model A (cái người
+học thật sự nhận). So hai cách bằng **paired bootstrap** (1.000 lần, khoảng tin cậy 95%); chỉ kết luận "B tốt hơn A"
+khi khoảng tin cậy không chứa 0. Prompt chỉ được chỉnh trên dev; phần test chạy một lần cho mỗi cách.
 
 ## 7. Kết quả
 
-### 7.1 Bảng kết quả ⟨B10⟩
+### 7.1 Bảng kết quả (phần test: 30 bài, 108 ý · 18/11/2026 · `gemini-3.5-flash-lite`, prompt `grade-en-v3`)
 
 | Cách chấm | MAE | RMSE | QWK | Khớp từng ý | Lệch ≤ 1 | Bài sai bị chấm cao | F1 (Đạt) | p95 |
 |---|---|---|---|---|---|---|---|---|
-| Chấm từ khóa | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
-| Model A (Gemini) | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
-| Model B (Gemini + RAG) | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ | ⟨⟩ |
+| Mục tiêu | ≤ 1,0 | ≤ 1,5 | ≥ 0,70 | ≥ 80% | ≥ 85% | 0 | | ≤ 20 s |
+| Chấm từ khóa | 2,00 | 3,26 | 0,61 | 80,6% | 50,0% | 0 | 0,81 | 0,05 s |
+| Model A (Gemini) | 0,80 | 2,37 | 0,78 | 92,6% | 86,7% | 2 | 0,93 | 23,6 s |
+| Model A + ví dụ chấm mẫu | 0,73 | 2,03 | 0,85 | 93,5% | 83,3% | 2 | 0,94 | 20,4 s |
+| Model B (Gemini + RAG) | **0,33** | 1,21 | 0,95 | **96,3%** | **90,0%** | 1 | **0,97** | 34,6 s |
+| **Pipeline 9 khối (Model A)** | 0,50 | **1,17** | **0,95** | 94,4% | 80,0% | **0** | 0,95 | 48,9 s |
 
-⟨B10: so sánh A / B bằng bootstrap; ma trận nhầm; 5–10 bài lệch nhất và nguyên nhân⟩
+- Model A có 5 ý lỗi (một bài, Gemini trả 503 cả sau khi gọi lại); khi đo riêng khối LLM thì không chấm dự phòng nên
+  5 ý này tính là sai. Pipeline gặp lỗi thì tự chấm bằng từ khóa nên không có ý lỗi.
+- Độ trễ đo trong một buổi Gemini quá tải (nhiều lần 503, phải gọi lại); pipeline còn tính cả lần chấm lại của khối
+  Đối chiếu. Khi vận hành, quá 20 giây thì bài chuyển "Đang chấm" và chấm nốt ở nền, người học không phải chờ.
+- **Độ lệch trung bình** (AI − người, thang 10): từ khóa −0,73 (chấm chặt); Model A +0,27; A + ví dụ +0,47;
+  Model B +0,33; **pipeline +0,03** (gần như không thiên lệch).
+
+**Ma trận nhầm của pipeline 9 khối** (dòng = người, cột = AI):
+
+| | AI: Đạt | AI: Không đạt |
+|---|---|---|
+| Người: Đạt | 55 | 3 |
+| Người: Không đạt | 3 | 47 |
+
+**So sánh từng cặp (paired bootstrap, 1.000 lần, CI 95%)**:
+
+| So sánh | Chênh lệch MAE | Chênh lệch khớp từng ý | Kết luận |
+|---|---|---|---|
+| Model A − từ khóa | −1,20 [−2,47; +0,10] | +12,0% [0,0%; +23,5%] | Chưa kết luận được (cận dưới đúng bằng 0) |
+| A + ví dụ − A | −0,07 [−0,73; +0,40] | +0,9% [−4,0%; +7,8%] | Chưa kết luận được |
+| Model B − A | −0,47 [−1,27; +0,13] | +3,7% [−1,9%; +11,0%] | Chưa kết luận được |
+| Model B − (A + ví dụ) | −0,40 [−1,00; 0,00] | +2,8% [0,0%; +7,3%] | Chưa kết luận được |
+
+**Nhận xét:**
+1. Chấm theo nghĩa (Gemini) **đạt mọi mục tiêu chính** mà chấm từ khóa không đạt (MAE, QWK, F1). Riêng "lệch ≤ 1
+   điểm" của pipeline là 80%, dưới mục tiêu 85%: một ý 2–4 điểm (thang 10) chấm khác là đã lệch quá 1 điểm.
+2. **Pipeline đủ 9 khối an toàn hơn LLM chấm một mình**: Gemini một mình có 2 bài sai bị chấm cao; qua Verifier và
+   khối Đối chiếu còn 0, độ lệch trung bình còn +0,03.
+3. **RAG và ví dụ chấm mẫu có xu hướng tốt hơn nhưng chưa có ý nghĩa thống kê** với 30 bài test (mọi khoảng tin cậy
+   chứa 0). Theo nguyên tắc đặt trước khi đo, hệ thống **giữ cấu hình Model A** (`REVIEW_GRADING_RAG`,
+   `REVIEW_GRADING_FEWSHOT` tắt) cho tới khi có bộ test lớn hơn.
+
+**Các ý pipeline chấm khác người (6/108):**
+
+| Bài | Ý | Người | AI | Nguyên nhân |
+|---|---|---|---|---|
+| R0002 | CS-TL-03 ý 1 (lỗi cú pháp) | Không đạt | Đạt | Định nghĩa đúng nhưng ví dụ sai khái niệm; **hai người chấm cũng lệch**, Tuấn phân xử |
+| R0007, T028 | CS-TL-03 ý 3 (ví dụ) | Không đạt | Đạt | Quy ước riêng "phải đủ hai ví dụ" — **cố ý không đưa vào prompt** để không rò rỉ câu test; hai người chấm cũng lệch |
+| T025 | CS-TL-03 ý 3 | Đạt | Không đạt | AI chấm chặt hơn người |
+| T030 | ITER-TL-05 ý 3 (in thông báo sau vòng lặp) | Đạt | Không đạt | AI áp quy tắc "không diễn đạt lại đề" quá rộng |
+| T038 | COND-TL-06 ý 3 (vì sao dùng or) | Đạt | Không đạt | Bài nêu rõ "only 1 condition needs to be true"; AI chấm sai |
+
+Ba trên sáu ý AI sai nằm đúng ở các ý mà **chính hai người chấm cũng không thống nhất**: lỗi của AI tập trung ở ý mơ
+hồ, không rải rác. Ba ý còn lại AI chấm **chặt hơn** người (không chấm rộng tay). Các trường hợp này được trang
+"Kết Quả - AI Chấm" đưa cho giáo viên xem lại (cờ lệch chấm từ khóa / sát ngưỡng đạt).
 
 ### 7.2 Quan sát trên bài thật (định tính, trước khi có số liệu)
 
@@ -209,16 +261,20 @@ Trên 20 bài thật, bộ chấm từ khóa mắc đúng hai kiểu lỗi mà c
 | "it dont give ticket discount" (age = 30) | Không đạt | Đạt |
 
 Trên cùng loại bài, Gemini (qua kiểm thử toàn luồng) chấm đúng bài đúng, bài lạc đề và đưa lý do bám theo barem.
-⟨B10: thay bằng số liệu trên toàn bộ gold set⟩
+Số liệu định lượng trên phần test ở mục 7.1: chấm từ khóa khớp người 80,6%, pipeline Gemini 94,4%.
 
 ## 8. Hạn chế
 
-- **Mẫu nhỏ**: 60 bài, trong đó 20 bài thật; khoảng tin cậy sẽ rộng, kết luận chỉ mang tính sơ bộ.
+- **Mẫu nhỏ**: 60 bài (test 30 bài), trong đó 20 bài thật; khoảng tin cậy rộng nên chưa kết luận được RAG hay ví dụ
+  chấm mẫu có tốt hơn hay không (mục 7.1).
 - **Bài bổ sung có chủ đích** không phản ánh đúng phân bố bài thật (cố ý có nhiều bài khó).
-- **Người chấm**: chủ yếu một người, chưa đủ để đo độ đồng thuận giữa hai người (kappa) trên toàn bộ.
+- **Người chấm**: hai người (kappa 0,81) — đủ tin cậy cho bộ bài này, nhưng vẫn là thành viên nhóm, chưa phải giảng
+  viên độc lập.
+- **Độ trễ** đo trong buổi Gemini quá tải: p95 vượt mục tiêu 20 giây; hệ thống đã có chấm nền khi quá giờ.
 - **RAG nhỏ**: mỗi kỹ năng chỉ 3 đoạn tri thức, RAG gần như tra cứu cố định; A ≈ B là kết quả có thể xảy ra.
 - **Đối chiếu dựa vào chấm từ khóa** (yếu) nên có thể gắn cờ "cần xem lại" nhiều hơn cần thiết.
-- Ba quy ước riêng đã chốt mới có trong hướng dẫn chấm, chưa ghi vào nội dung ý của barem, nên AI chưa "biết".
+- Quy tắc chung của hướng dẫn chấm đã có trong prompt (`grade-en-v3`), nhưng **quy ước riêng từng câu** chưa ghi vào
+  nội dung ý của barem, nên AI chưa "biết" (một nửa số ý AI sai rơi vào đây).
 - Phụ thuộc dịch vụ ngoài (Gemini): có dự phòng chấm từ khóa nhưng chất lượng thấp hơn.
 
 ## 9. Hướng phát triển
@@ -234,9 +290,11 @@ Trên cùng loại bài, Gemini (qua kiểm thử toàn luồng) chấm đúng b
 
 Các hướng khác:
 
-- Mở rộng bộ bài chuẩn (nhiều người chấm, đo kappa), thêm khóa học khác.
-- Ghi 3 quy ước riêng vào barem để AI và người chấm cùng chuẩn.
-- Trang quản trị ngân hàng câu hỏi (duyệt câu AI soạn, sửa có phiên bản, chấm thử).
+- Mở rộng bộ bài chuẩn (trên 100 bài test) để so RAG / ví dụ chấm mẫu có ý nghĩa thống kê, thêm khóa học khác.
+- Ghi các quy ước riêng vào nội dung ý của barem để AI và người chấm cùng chuẩn.
+- Dùng các bài giáo viên đã chấm lại trên trang "Kết Quả - AI Chấm" làm dữ liệu cải thiện prompt / fine-tune.
+- Kiểm tra theo kỹ năng từ node lộ trình, AI soạn đề và barem có cổng kiểm tra tự động, mở rộng ra 5.893 kỹ năng
+  (thiết kế ở `docs/guide.md`).
 - Thay bộ chấm từ khóa ở khối Đối chiếu bằng một tín hiệu tốt hơn (vd chấm lại bằng mô hình thứ hai).
 - Kho vector (pgvector) khi tài liệu tri thức lớn.
 

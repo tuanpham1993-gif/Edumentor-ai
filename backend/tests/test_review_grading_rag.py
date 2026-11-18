@@ -75,7 +75,7 @@ def test_prompt_adds_course_notes_and_rag_version_only_with_chunks():
     }
     _, user, version = grading_prompt(q, "lists change")
     assert "COURSE NOTES" in user and "[Note 1] Lists and tuples\nA tuple is immutable." in user
-    assert "grade against the RUBRIC" in user and version == "grade-en-v2+rag"
+    assert "grade against the RUBRIC" in user and version == "grade-en-v3+rag"
     assert user.index("COURSE NOTES") < user.index("STUDENT ANSWER")  # bài làm vẫn là phần cuối, sau tài liệu
 
 

@@ -72,7 +72,7 @@ export default function AdminReviewFlagsPage() {
     <div className={styles.page}>
       <header className={styles.head}>
         <div>
-          <h1 className={styles.title}>Bài cần xem lại</h1>
+          <h1 className={styles.title}>Kết Quả - AI Chấm</h1>
           <p className="muted small" style={{ margin: 0 }}>
             Câu tự luận AI chấm chưa chắc chắn — chọn Đạt / Không đạt từng ý. Đổi sang Đạt thì khóa học tự Hoàn
             thành và học viên được báo qua chuông + email.

@@ -11,7 +11,7 @@ const ADMIN_NAV_LINKS = [
   { to: '/admin/feedback', label: 'Phản hồi' },
   { to: '/admin/user-paths', label: 'Lộ trình người dùng' },
   { to: '/admin/questions', label: 'Câu hỏi ôn tập' }, // Tuấn · module 09 (16/11, Tuấn duyệt thêm)
-  { to: '/admin/review-flags', label: 'Bài cần xem lại' }, // Tuấn · module 09 (17/11, Tuấn duyệt thêm)
+  { to: '/admin/review-flags', label: 'Kết Quả - AI Chấm' }, // Tuấn · module 09 (17/11, Tuấn duyệt thêm)
 ];
 
 export default function AdminSidebar() {

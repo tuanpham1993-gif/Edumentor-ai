@@ -163,7 +163,7 @@ export default function AdminReviewQuestionsPage() {
         </div>
         <div className={styles.buttons}>
           <Link to="/admin/review-flags" className={`btn btn-sm ${counts.flags ? 'btn-soft' : ''}`}>
-            Bài cần xem lại{counts.flags ? ` (${counts.flags})` : ''}
+            Kết Quả - AI Chấm{counts.flags ? ` (${counts.flags})` : ''}
           </Link>
           {counts.pending > 0 && filters.status !== 'pending' && (
             <button type="button" className="btn btn-soft btn-sm" onClick={() => setFilter('status', 'pending')}>

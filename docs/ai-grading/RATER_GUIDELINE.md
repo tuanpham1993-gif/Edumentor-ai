@@ -1,6 +1,6 @@
 # Hướng dẫn chấm bài tự luận: bộ bài chuẩn EduMentor AI
 
-> Phiên bản 2.1 · 16/11/2026 · phụ trách: Tuấn (module 09) · người chấm: **Hòa, Tâm, Khôi**
+> Phiên bản 2.2 · 18/11/2026 · phụ trách: Tuấn (module 09) · người chấm: **Hòa, Tâm**
 > Nhật ký thay đổi ở cuối trang. Đọc hết một lượt trước khi chấm (khoảng 10 phút).
 > Bản rút gọn kèm ví dụ: [HUONG_DAN_CHAM_HOA.md](HUONG_DAN_CHAM_HOA.md).
 
@@ -61,9 +61,17 @@ Phân vân thì chọn **`none`** và ghi lý do vào Ghi chú.
    không biết đang nói về cái nào thì `none`.
 5. **Nói ngược hoặc gán nhầm thì `none`.** "A list cannot be changed, a tuple can" là `none` cho cả hai ý.
 6. **Tự mâu thuẫn thì `none`.** Bài vừa nêu ý vừa nói điều ngược lại thì ý đó `none`.
-7. **Chép lại đề không được điểm.** Những chữ chỉ lặp lại từ đề thì không tính.
+7. **Chép lại đề không được điểm.** Những chữ chỉ lặp lại từ đề thì không tính. **Phải nêu rõ ý chính của
+   barem bằng nội dung của chính người học** mới được điểm ý đó (chốt 18/11). Bài chỉ diễn đạt lại yêu cầu của đề
+   rồi thêm một từ khóa (vd đề "hỏi mật khẩu đến khi nhập đúng", bài viết "Use a while loop to ask for the password
+   until it is correct") thì các ý về **điều kiện lặp** và **nhập lại trong vòng lặp** đều `none`: phần "until it
+   is correct" là chữ của đề, không cho thấy người học biết đặt điều kiện hay đặt `input()` ở đâu.
 8. **Ví dụ nào đúng cũng được.** Ví dụ trong ngoặc ở barem chỉ là gợi ý, không phải đáp án duy nhất.
 9. **Câu sai ở chỗ khác không làm mất điểm các ý khác**, trừ khi mâu thuẫn trực tiếp với ý đó (quy tắc 6).
+   Ngược lại, chỗ sai nằm **ngay trong phần nói về ý đang chấm** (vd định nghĩa đúng nhưng ví dụ kèm theo sai khái
+   niệm) thì ý đó `none` — là "sai một phần" (chốt 18/11).
+12. **Ý gồm nhiều phần thì phải đủ các phần.** Barem ghi "A; B" hoặc "A và B" mà bài chỉ nêu A thì `none`
+    (chốt 18/11, cùng tinh thần "đúng và đủ" ở mục 3).
 10. **Chỉ liệt kê từ khóa** ("mutable immutable [] ()") mà không nói gì về cái gì thì `none`.
     Một câu ngắn nhưng có nghĩa ("list mutable, tuple not") vẫn được. Bài dài mà không nêu rõ ý
     cũng là `none`: đừng lục tìm từ khóa trong một đoạn lan man.
@@ -76,6 +84,9 @@ Phân vân thì chọn **`none`** và ghi lý do vào Ghi chú.
 | CS-TL-03 | 3: ví dụ hợp lý | Đề yêu cầu ví dụ **mỗi** loại lỗi: đủ hai ví dụ (một lỗi cú pháp, một lỗi logic) là `full`; chỉ một ví dụ là `none` |
 | COND-TL-06 | 3: dùng or vì… | Chỉ cần giải thích **"chỉ cần một điều kiện đúng"** là `full`; phần trong ngoặc ("and needs both…") không bắt buộc |
 | VAR-TL-02 | 2: không khoảng trắng / ký tự đặc biệt, không trùng từ khóa | Nêu đủ cả hai điều là `full`; chỉ một trong hai là `none` |
+| VAR-TL-02 | 4: dynamic typing | Phải đủ **cả hai** phần: không cần khai báo kiểu **và** kiểu theo giá trị gán lúc chạy. Chỉ "không cần khai báo kiểu" là `none` (chốt 18/11) |
+| CS-TL-03 | 1: lỗi cú pháp | Nói "sai ngữ pháp / sai quy tắc" nhưng lấy ví dụ không phải lỗi cú pháp (vd "dùng biến chưa khai báo" là lỗi khi chạy) là `none` (quy tắc 9, chốt 18/11) |
+| ITER-TL-05 | 1, 2: điều kiện lặp, nhập lại trong vòng lặp | Chỉ viết "dùng while để hỏi mật khẩu đến khi đúng" (diễn đạt lại đề) là `none` cả hai ý (quy tắc 7, chốt 18/11) |
 
 Quy tắc 9 cũng có nghĩa **mỗi lỗi chỉ trừ một lần**. Ví dụ bài viết `while pw == 'abc123'` thì ý "điều kiện while" là `none`,
 còn ý "in thông báo sau vòng lặp" vẫn chấm theo việc bài có `print` sau vòng lặp hay không.
@@ -150,3 +161,4 @@ Tuấn không chấm, vì Tuấn là người làm AI và biết trước loại
 | 1.1 | 15/11/2026 | Thêm mục 4b (ba quy ước riêng từng câu, mỗi lỗi chỉ trừ một lần). Bản rút gọn tiếng Việt cho Hòa: `HUONG_DAN_CHAM_HOA.md`. |
 | 2.0 | 15/11/2026 | **Chỉ còn hai nhãn** (`full` / `none`, không có nửa điểm) theo đề xuất của Hòa; cả hệ thống đổi theo (prompt grade-en-v2). |
 | 2.1 | 16/11/2026 | **Chuyển sang tiếng Việt.** Cập nhật quy trình cho đúng thực tế: phiếu `.xlsx`, 60 bài chia cả nhóm, chấm thử rồi chấm chung (thay cho "2 người chấm 120 bài + vòng hiệu chỉnh"). Ví dụ CS-TL-03 sửa theo quy ước mục 4b. **Quy tắc chấm không đổi.** |
+| 2.2 | 18/11/2026 | Sau khi phân xử 19 ý Hòa và Tâm chấm lệch (trùng 90,7%, kappa 0,81): **quy tắc 7** làm rõ: không chép lại đề, phải nêu rõ ý chính của barem mới được điểm. **Quy tắc 9** thêm: sai ngay trong phần nói về ý đó là `none`. Thêm **quy tắc 12**: ý nhiều phần phải đủ các phần. Mục 4b thêm 3 quy ước (VAR-TL-02 ý 4, CS-TL-03 ý 1, ITER-TL-05 ý 1–2). |
