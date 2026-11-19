@@ -15,9 +15,10 @@ router = APIRouter()
 @router.post("", response_model=LearningPathResponse, status_code=status.HTTP_201_CREATED, summary="Create a brand new learning path")
 def create_learning_path(
     request: LearningPathCreate,
-    student_id: int = Query(..., description="Temporary student ID until authentication is implemented"),
+    current_user: Users = Depends(require_admin),
     db: Session = Depends(get_db)):
     try:
+        student_id = current_user.user_id
         return path_service.create_learning_path(
             db=db, student_id=student_id,
             original_query=request.original_query,
@@ -57,7 +58,10 @@ def get_learning_path_statistics(student_id: int = Query(...), db: Session = Dep
 
 @router.get("/{record_id}", response_model=LearningPathResponse, 
             summary="Get a learning path from student id + record id or from record_id only")
-def get_learning_path(record_id: int, student_id: int | None = Query(default=None), db: Session = Depends(get_db)):
+def get_learning_path(record_id: int, 
+                      current_user: Users = Depends(get_current_user),
+                      db: Session = Depends(get_db)):
+    student_id = current_user.user_id
     learning_path = path_service.get_learning_path(
         db=db, record_id=record_id,
         student_id=student_id,

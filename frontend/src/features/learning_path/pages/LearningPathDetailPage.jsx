@@ -1,69 +1,179 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+
 import LearningPathGraphForDetail from "../components/LearningPathGraphForDetail.jsx";
 import LearningPathToolBar from "../components/LearningPathToolBar";
 import CourseRecommendation from "../components/CourseRecommendation";
-import styles from '../styles/LearningPathDetail.module.css';
-import { useLocation, useParams } from "react-router-dom";
 
-export default function LearningPathDetailPage(){
-    const location = useLocation()
-    const {recordId} = useParams()
-    const learningPath = location.state?.learningPath;
-    //console.log(learningPath)
-    const [selectedSkill, setSelectedSkill] = useState(null)
-    if(!learningPath){
+import { getLearningPathById } from "../../../api/learningPaths.api.js";
+import styles from "../styles/LearningPathDetail.module.css";
+
+export default function LearningPathDetailPage() {
+    const location = useLocation();
+    const { recordId } = useParams();
+
+    // Initial data passed from the previous page.
+    const initialLearningPath = location.state?.learningPath ?? null;
+
+    // React state: the source of truth for this page.
+    const [learningPath, setLearningPath] = useState(initialLearningPath);
+
+    const [selectedSkill, setSelectedSkill] = useState(null);
+    const [isLoading, setIsLoading] = useState(!initialLearningPath);
+    const [error, setError] = useState("");
+
+    // Fetch data if the user opens the detail page directly
+    // or refreshes the browser without navigation state.
+    useEffect(() => {
+        if (initialLearningPath) return;
+
+        let isMounted = true;
+
+        async function loadLearningPath() {
+            try {
+                setIsLoading(true);
+
+                const response = await getLearningPathById(recordId);
+
+                if (isMounted) {
+                    setLearningPath(response.data);
+                }
+            } catch (err) {
+                if (isMounted) {
+                    setError("Unable to load this learning path.");
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        }
+
+        loadLearningPath();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [recordId, initialLearningPath]);
+
+    // Called when the user clicks a skill in React Flow.
+    function handleSelectedSkill(skill) {
+        setSelectedSkill(skill);
+    }
+
+    // Refresh the learning path after a successful mutation.
+    async function refreshLearningPath() {
+        try {
+            setError("");
+
+            const response = await getLearningPathById(recordId);
+            const updatedLearningPath = response.data;
+
+            // This triggers React to render the updated graph and toolbar.
+            setLearningPath(updatedLearningPath);
+
+            // If the selected skill was deleted, clear the selection.
+            if (selectedSkill) {
+                const selectedId =
+                    selectedSkill.skillId ??
+                    selectedSkill.skill_id ??
+                    selectedSkill.id;
+
+                const stillExists = updatedLearningPath.nodes.some(
+                    (node) => node.skill_id === Number(selectedId)
+                );
+
+                if (!stillExists) {
+                    setSelectedSkill(null);
+                }
+            }
+
+            return updatedLearningPath;
+
+        } catch (err) {
+            console.error("Failed to refresh learning path:", err);
+            setError("Unable to refresh your learning path.");
+            throw err;
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <main className={styles.detailContainer}>
+                <p>Loading learning path...</p>
+            </main>
+        );
+    }
+
+    if (!learningPath) {
         return (
             <main className={styles.detailContainer}>
                 <p className={styles.LearningPathEmptyMessage}>
-                    Learning path data is unavailable.
-                    Please return to My Learning Paths and open it again.   
+                    {error || "Learning path data is unavailable."}
+                    Please return to My Learning Paths and open it again.
                 </p>
             </main>
-        )
+        );
     }
-    function handleSelectedSkill(skill){
-        setSelectedSkill(skill)
-    }
+
     return (
         <main className={styles.detailContainer}>
-            {/*Header section*/}
+            {/* Header section */}
             <header className={styles.detailHeader}>
                 <div className={styles.detailTitle}>
-                    <h1>{learningPath.original_query}</h1> 
-                    <p>Manage your learning path and explore related courses.</p>
+                    <h1>{learningPath.original_query}</h1>
+                    <p>
+                        Manage your learning path and explore related courses.
+                    </p>
                 </div>
-                <LearningPathToolBar 
-                    recordId={Number(recordId)}
-                    selectedSkill={selectedSkill}/>
+
+                <LearningPathToolBar
+                    recordId={learningPath.record_id}
+                    selectedSkill={selectedSkill}
+                    nodes={learningPath.nodes}
+                    edges={learningPath.edges}
+                    onRefresh={refreshLearningPath}
+                />
             </header>
 
-            {/*Body section*/}
+            {error && (
+                <p role="alert" className={styles.errorMessage}>
+                    {error}
+                </p>
+            )}
+
+            {/* Body section */}
             <section className={styles.detailContent}>
                 <div className={styles.graphSection}>
-                    {/*Fix later.......................................*/}
                     <LearningPathGraphForDetail
                         learningPath={learningPath}
-                        onSelectSkill={handleSelectedSkill}/>
+                        onSelectSkill={handleSelectedSkill}
+                    />
                 </div>
 
                 <aside className={styles.courseSection}>
-                    {selectedSkill?(
+                    {selectedSkill ? (
                         <CourseRecommendation
                             skill={selectedSkill}
-                            learningPathId={Number(recordId)}/>
-                    ):(
-                    <div className={styles.coursePlaceholder}>
-                         <div className={styles.placeholderIcon}>
-                            <span>↖</span>
+                            learningPathId={Number(recordId)}
+                        />
+                    ) : (
+                        <div className={styles.coursePlaceholder}>
+                            <div className={styles.placeholderIcon}>
+                                <span>↖</span>
+                            </div>
+
+                            <h2>Select a skill</h2>
+
+                            <p>
+                                Click on any skill in your learning graph
+                                to discover recommended courses.
+                            </p>
                         </div>
-                        <h2>Select a skill</h2>
-                        <p>
-                            Click on any skill in your learning graph
-                            to discover recommended courses.
-                        </p>
-                    </div>)}
+                    )}
                 </aside>
             </section>
         </main>
-    )
+    );
 }

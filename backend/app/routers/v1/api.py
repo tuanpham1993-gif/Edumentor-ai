@@ -16,6 +16,7 @@ from app.routers.v1.endpoints import (
     learning_path_service,
     email_preferences,
     recommendation_service,
+    learning_path_edge_service,
     me,
     notifications,
     review,
@@ -53,6 +54,7 @@ api_router.include_router(learning_path_service.router, tags=["learning path end
 api_router.include_router(learning_path_node_service.router, tags=["learning path node endpoint"], prefix="/learning-paths-nodes")
 api_router.include_router(skill_service.router, tags=["skill endpoint"], prefix="/skills")
 api_router.include_router(recommendation_service.router, tags=["learning path generation"], prefix="/learning-paths-generation")
+api_router.include_router(learning_path_edge_service.router, tags=["learning path edges crud"], prefix="/learning-path-edges")
 # Thông báo
 api_router.include_router(
     notifications.router,

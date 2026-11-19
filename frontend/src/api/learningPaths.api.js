@@ -74,3 +74,47 @@ export async function getMyLearningPaths({
 
 return response.data;
 }
+export async function getLearningPathById(recordId) {
+  return await client.get(`/learning-paths/${recordId}`);
+}
+
+export async function addLearningPathNode(recordId, payload) {
+  return await client.post(
+    `/learning-paths-nodes/${recordId}/nodes`,
+    payload
+  );
+}
+
+export async function updateLearningPathNode(recordId, skillId, payload) {
+  await client.patch(
+    `/learning-paths-nodes/${recordId}/nodes/${skillId}`,
+    payload
+  );
+}
+
+export async function deleteLearningPathNode(recordId, skillId) {
+  await client.delete(
+    `/learning-paths-nodes/${recordId}/nodes/${skillId}`
+  );
+}
+
+export async function addLearningPathEdge(recordId, payload) {
+  await client.post(
+    `/learning-path-edges/add?record_id=${recordId}`,
+    payload
+  );
+}
+
+export async function updateLearningPathEdge(recordId, payload) {
+  await client.patch(
+    `/learning-path-edges/update?record_id=${recordId}`,
+    payload
+  );
+}
+
+export async function deleteLearningPathEdge(recordId, payload) {
+  await client.delete(
+    `/learning-path-edges/remove?record_id=${recordId}`,
+    { data: payload }
+  );
+}
