@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     RESET_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    # 19/11: giới hạn số lần đăng nhập / đăng ký / quên mật khẩu (app/core/rate_limit.py). Tắt khi chạy thử tải.
+    RATE_LIMIT_ENABLED: bool = True
 
     UPLOAD_DIR: str = "uploads"               # tính từ thư mục backend/
     AVATAR_MAX_BYTES: int = 5 * 1024 * 1024   # 5 MB (Q8, chốt 07/11)

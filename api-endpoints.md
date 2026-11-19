@@ -43,6 +43,7 @@
 
 - Endpoint "Người dùng" yêu cầu header `Authorization: Bearer <access_token>`; access token là JWT ký HS256, hết hạn sau 30 phút. *(D-AUTH-01, D-AUTH-02)*
 - Access token hết hạn → frontend gọi `POST /api/auth/refresh`; làm mới thất bại → yêu cầu đăng nhập lại. *(D-AUTH-02, D-AUTH-03)*
+- Giới hạn tần suất (19/11): `login` sai mật khẩu 5 lần / 15 phút theo email (và 30 lần / 15 phút theo IP), `register` 5 / giờ / IP, `forgot-password` 3 / 15 phút / email + 10 / giờ / IP, `reset-password` 10 / 15 phút / IP → **429** `{detail: "...thử lại sau N phút."}` kèm header `Retry-After` (giây).
 - Chính sách mật khẩu (`register`, `reset-password`, `change-password`): 8 ký tự – 128 byte UTF-8, có chữ hoa, chữ thường, chữ số, ký tự đặc biệt, không khoảng trắng. *(D-AUTH-05; tập ký tự đặc biệt: ND-46; `confirm_password`: ND-47)*
 
 ### Quy tắc cập nhật kỹ năng người dùng

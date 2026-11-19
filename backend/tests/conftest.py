@@ -49,6 +49,11 @@ def _no_real_email_or_ai(monkeypatch):
     """
     monkeypatch.setattr(settings, "SMTP_HOST", "")
     monkeypatch.setattr(settings, "AI_MODE", "mock")
+    # 19/11: bộ đếm giới hạn tần suất (đăng nhập, quên mật khẩu…) dùng chung trong tiến trình → xóa trước mỗi test
+    from app.core import rate_limit
+
+    for limiter in rate_limit.ALL_LIMITERS:
+        limiter.clear()
 
 
 @pytest.fixture()

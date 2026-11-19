@@ -1,9 +1,11 @@
 // Sửa hồ sơ (module 01 · Tuấn · FĐ5, 07/11/2026) — theo màn demo EditProfile.
 //   - Ảnh đại diện: bấm vào ảnh → chọn file → tải lên NGAY (POST /me/avatar).
 //       Kiểm tra trước trên trình duyệt: PNG / JPEG, ≤ 5 MB (Q8). Server vẫn kiểm lại (413 / 415).
-//   - Họ và tên + thông tin cá nhân (12/11): ngày sinh, giới tính, quê quán, số điện thoại, CCCD → PATCH /me
-//     (chỉ gửi trường đã đổi). Email, Vai trò, Ngày tham gia chỉ để xem.
-//   - CCCD: chỉ hiện bản che (vd 345*********) — để trống = giữ số cũ; gõ 12 số mới = thay. Server mã hóa khi lưu.
+//   - Họ và tên + thông tin cá nhân (12/11): ngày sinh, giới tính, số điện thoại → PATCH /me (chỉ gửi trường đã đổi).
+//     Email chỉ để xem.
+//   - 19/11 (Tuấn): mỗi trường một dòng "nhãn: ô nhập", xếp một cột dọc; bỏ ô Quê quán, Số CCCD (giao diện —
+//     dữ liệu cũ trong DB giữ nguyên), bỏ Vai trò / Ngày tham gia (đã có trên thẻ đầu trang Hồ sơ).
+//     Giới tính đã lưu → chỉ hiện lựa chọn đó + nút "Đổi"; bấm Đổi mới hiện cả Nam / Nữ.
 //   - Lưu xong cập nhật user trong authStore → Header & trang Hồ sơ đổi theo ngay.
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,12 +17,16 @@ import TextField from '../../common/components/TextField.jsx';
 import SettingsLayout from '../components/SettingsLayout.jsx';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { parseApiError } from '../../../utils/errors.js';
-import { formatDate, initials, roleLabel } from '../../../utils/formatters.js';
+import { initials } from '../../../utils/formatters.js';
 import { validateFullName } from '../../../utils/validators.js';
 import styles from '../styles/Settings.module.css';
 
 const AVATAR_TYPES = ['image/png', 'image/jpeg'];
 const AVATAR_MAX_MB = 5; // khớp AVATAR_MAX_BYTES của backend
+const GENDERS = [
+  { value: 'male', text: 'Nam' },
+  { value: 'female', text: 'Nữ' },
+];
 
 function CameraIcon() {
   return (
@@ -46,11 +52,10 @@ export default function EditProfilePage() {
   const initial = {
     date_of_birth: user.date_of_birth ?? '',
     gender: user.gender ?? '',
-    hometown: user.hometown ?? '',
     phone: user.phone ?? '',
   };
   const [details, setDetails] = useState(initial);
-  const [citizenId, setCitizenId] = useState(''); // để trống = giữ số cũ
+  const [editingGender, setEditingGender] = useState(!initial.gender); // chưa lưu giới tính → hiện cả Nam / Nữ
   const [fieldErrors, setFieldErrors] = useState({});
   const setDetail = (key, value) => {
     setDetails((d) => ({ ...d, [key]: value }));
@@ -62,7 +67,6 @@ export default function EditProfilePage() {
       .filter((key) => details[key].trim() !== initial[key])
       .map((key) => [key, details[key].trim() || null]),
   );
-  if (citizenId.trim()) changedDetails.citizen_id = citizenId.replace(/\s/g, '');
 
   const changed = fullName.trim() !== user.full_name || Object.keys(changedDetails).length > 0;
 
@@ -107,7 +111,6 @@ export default function EditProfilePage() {
     const errors = {};
     const phone = details.phone.replace(/[\s.\-()]/g, '').replace(/^\+84/, '0');
     if (phone && !/^0\d{9}$/.test(phone)) errors.phone = 'Số điện thoại phải gồm 10 chữ số, bắt đầu bằng 0.';
-    if (citizenId && !/^\d{12}$/.test(citizenId)) errors.citizen_id = 'Số CCCD phải gồm đúng 12 chữ số.';
     setFieldErrors(errors);
     if (error || Object.keys(errors).length > 0 || !changed) return;
 
@@ -119,16 +122,14 @@ export default function EditProfilePage() {
       setDetails({
         date_of_birth: updated.date_of_birth ?? '',
         gender: updated.gender ?? '',
-        hometown: updated.hometown ?? '',
         phone: updated.phone ?? '',
       });
-      setCitizenId('');
+      setEditingGender(!updated.gender); // đã lưu giới tính → chỉ hiện lựa chọn đã lưu
       setNotice({ ok: true, text: 'Đã lưu thay đổi.' });
     } catch (err) {
       const { status, message, fieldErrors: apiErrors } = parseApiError(err);
       if (status === 422 && apiErrors.full_name) setNameError(apiErrors.full_name);
       else if (status === 422 && Object.keys(apiErrors).length > 0) setFieldErrors(apiErrors);
-      else if (status === 409) setFieldErrors({ citizen_id: err?.response?.data?.detail ?? message });
       else setNotice({ ok: false, text: message });
     } finally {
       setSaving(false);
@@ -181,7 +182,7 @@ export default function EditProfilePage() {
       </div>
 
       <form className="stack" style={{ gap: 16 }} noValidate onSubmit={handleSubmit}>
-        <div className={styles.two}>
+        <div className={styles.rows}>
           <TextField
             id="full_name"
             label="Họ và tên"
@@ -196,7 +197,7 @@ export default function EditProfilePage() {
           />
           <TextField
             id="date_of_birth"
-            label="Ngày tháng năm sinh"
+            label="Ngày sinh"
             type="date"
             min="1900-01-01"
             max={new Date().toISOString().slice(0, 10)}
@@ -204,55 +205,25 @@ export default function EditProfilePage() {
             onChange={(event) => setDetail('date_of_birth', event.target.value)}
             error={fieldErrors.date_of_birth}
           />
-          <div className="stack" style={{ gap: 6 }}>
+          <div className={styles.row}>
             <span className="field">Giới tính</span>
-            <Segmented
-              label="Giới tính"
-              value={details.gender}
-              options={[
-                { value: 'male', text: 'Nam' },
-                { value: 'female', text: 'Nữ' },
-              ]}
-              onChange={(value) => setDetail('gender', details.gender === value ? '' : value)}
-            />
+            <span className={styles.genderBox}>
+              <Segmented
+                label="Giới tính"
+                value={details.gender}
+                options={GENDERS.filter((g) => editingGender || g.value === details.gender)}
+                onChange={(value) => {
+                  if (!editingGender) return; // đang chỉ hiện lựa chọn đã lưu
+                  setDetail('gender', details.gender === value ? '' : value);
+                }}
+              />
+              {!editingGender && (
+                <button type="button" className={styles.linkBtn} onClick={() => setEditingGender(true)}>
+                  Đổi
+                </button>
+              )}
+            </span>
           </div>
-          <TextField
-            id="email"
-            label="Email"
-            value={user.email}
-            readOnly
-            below={<span className="small muted">Email là tên đăng nhập, không thể thay đổi.</span>}
-          />
-          <TextField
-            id="hometown"
-            label="Quê quán"
-            maxLength={100}
-            placeholder="vd Đồng Nai"
-            value={details.hometown}
-            onChange={(event) => setDetail('hometown', event.target.value)}
-            error={fieldErrors.hometown}
-          />
-          <TextField
-            id="citizen_id"
-            label="Số CCCD"
-            inputMode="numeric"
-            maxLength={12}
-            autoComplete="off"
-            placeholder={user.citizen_id_masked ?? 'Nhập 12 chữ số'}
-            value={citizenId}
-            onChange={(event) => {
-              setCitizenId(event.target.value.replace(/\D/g, ''));
-              if (fieldErrors.citizen_id) setFieldErrors((e) => ({ ...e, citizen_id: '' }));
-            }}
-            error={fieldErrors.citizen_id}
-            below={
-              <span className="small muted">
-                {user.citizen_id_masked
-                  ? `Đang lưu: ${user.citizen_id_masked} (đã ẩn). Để trống nếu không đổi.`
-                  : 'Số CCCD được mã hóa khi lưu, chỉ hiển thị 3 số đầu.'}
-              </span>
-            }
-          />
           <TextField
             id="phone"
             label="Số điện thoại"
@@ -265,8 +236,13 @@ export default function EditProfilePage() {
             onChange={(event) => setDetail('phone', event.target.value)}
             error={fieldErrors.phone}
           />
-          <TextField id="role" label="Vai trò" value={roleLabel(user.role)} readOnly />
-          <TextField id="joined" label="Ngày tham gia" value={formatDate(user.created_at)} readOnly />
+          <TextField
+            id="email"
+            label="Email"
+            value={user.email}
+            readOnly
+            below={<span className="small muted">Email là tên đăng nhập, không thể thay đổi.</span>}
+          />
         </div>
 
         <div className={styles.buttons}>
