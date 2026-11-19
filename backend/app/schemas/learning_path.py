@@ -47,6 +47,12 @@ class LearningPathEdgeBase(BaseModel):
 
 class LearningPathEdgeCreate(LearningPathEdgeBase): pass
 
+class LearningPathEdgeUpdate(LearningPathEdgeBase): pass
+
+class LearningPathEdgeRemove(BaseModel):
+    from_skill_id: int
+    to_skill_id: int
+
 class LearningPathEdgeResponse(LearningPathEdgeBase):
     path_id: int
     from_skill: SkillSummary
