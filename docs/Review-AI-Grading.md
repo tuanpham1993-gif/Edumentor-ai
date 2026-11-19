@@ -1,4 +1,4 @@
-# Review-AI-Grading — Kế hoạch AI chấm bài tự luận theo barem (module 09)
+  # Review-AI-Grading — Kế hoạch AI chấm bài tự luận theo barem (module 09)
 
 > Người thực hiện: **Tuấn** · Người hướng dẫn / review: **Claude** · Bắt đầu: **14/11/2026** · Hạn nộp: **25/11/2026**
 > Nhánh làm việc: `tuan/future-auth` (xong thì gộp vào `review/featrure`, không qua `develop`).
@@ -204,6 +204,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
 - [~] **B13 Báo cáo và tài liệu** — dự kiến 23–24/11 · phần không cần số liệu xong 16/11 🤖 · 👤 còn: điền số liệu B10 (chỗ ⟨B10⟩), Tuấn duyệt văn phong, người giữ bản Word cập nhật BA / SRS .docx theo bản .md
   - ✅ Chương báo cáo `docs/ai-grading/BAO_CAO_AI_CHAM_BAI.md`: bài toán, phạm vi / dữ liệu, kiến trúc pipeline 9 khối, chi tiết khối (NLP, LLM có cấu trúc, RAG A / B, chấm từ khóa), vận hành + kiểm thử (868 test, kết quả B12), phương pháp đánh giá (gold set, quy trình chấm mù, chỉ số), kết quả (bảng chờ B10 + quan sát định tính trên bài thật), hạn chế, hướng phát triển (fine-tune: khi nào, dữ liệu, QLoRA, cách chứng minh), phụ lục vị trí mã nguồn.
   - ✅ Sửa phần ôn tập (module 09) trong 3 file .md cho khớp code — trước ghi "20 câu trắc nghiệm, chấm theo đáp án, đạt 60%": **BA** (mục tiêu, UC-09, FR-24–28, FR-54, BR-28, BR-29, kiến trúc, 8.6, 8.7, mô hình dữ liệu, quy trình nộp bài), **SRS** (mục tiêu, Review Engine, FR-11, FR-12, FR-17, luồng, dữ liệu), **api-endpoints** §10 (thêm `PATCH .../answers`, trace admin, 10 API quản trị `/api/admin/review`, trường kết quả B11, quy trình 15 câu, 6/10). Bản .docx / .pdf trong `docs/Features` chưa đổi.
+  - ✅ 19/11: BA / SRS (.md) thêm hồ sơ một cột (ngày sinh, giới tính, SĐT), giới hạn đăng nhập sai (FR-02, NFR-04, AC-01, 429), trang Kết Quả - AI Chấm (UC-22, FR-57, SRS FR-22, 2 API flags), kết quả B10 (8.7). Danh sách thay đổi cho bản Word: `docs/Thay-doi-BA-SRS-19-11.md`
 - [ ] **B14 Nộp** — 25/11
 
 **Thứ tự và phụ thuộc:** B1 → B3 · B2 → B4 → B5 · B1 + B6 → B7 → B8 → B9 (cần B4, B5) → B10 → B11 → B12 → B13. B2, B4, B5 làm song song với B1, B3, B6.

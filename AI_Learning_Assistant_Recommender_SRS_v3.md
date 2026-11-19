@@ -80,9 +80,9 @@ Khi Khách bấm một chức năng cần đăng nhập, hệ thống chuyển t
 
 | Mã | Chức năng | Mô tả nghiệp vụ | Vai trò |
 |---|---|---|---|
-| FR-01 | Xác thực | Đăng ký (họ tên, email, mật khẩu, xác nhận), đăng nhập cấp JWT, làm mới phiên bằng refresh token, đăng xuất thu hồi refresh token. Màn đăng nhập và đăng ký có hiệu ứng dây kéo đèn: mở trang thì đèn tắt và form ẩn, kéo dây thì form hiện. | Khách, Học viên |
+| FR-01 | Xác thực | Đăng ký (họ tên, email, mật khẩu, xác nhận), đăng nhập cấp JWT, làm mới phiên bằng refresh token, đăng xuất thu hồi refresh token. Đăng nhập sai 5 lần / 15 phút thì email bị khóa tạm 15 phút; đăng ký, quên và đặt lại mật khẩu cũng giới hạn số lần (mã 429). Màn đăng nhập và đăng ký có hiệu ứng dây kéo đèn: mở trang thì đèn tắt và form ẩn, kéo dây thì form hiện. | Khách, Học viên |
 | FR-02 | Quên và đặt lại mật khẩu | Nhập email nhận liên kết; luôn báo "đã gửi" chung; liên kết có hạn và dùng một lần; liên kết hết hạn có màn riêng. Quy tắc mật khẩu giống nhau cho đăng ký, đặt lại, đổi. | Khách |
-| FR-03 | Hồ sơ học viên | Xem hồ sơ và thống kê (khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo); sửa họ tên; đổi ảnh đại diện bằng tải file; email chỉ đọc; đổi mật khẩu; chọn giao diện Tối/Sáng. | Học viên |
+| FR-03 | Hồ sơ học viên | Xem hồ sơ và thống kê (khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo); sửa thông tin cá nhân (họ tên, ngày sinh, giới tính Nam / Nữ, số điện thoại); đổi ảnh đại diện bằng tải file; email chỉ đọc; đổi mật khẩu; chọn giao diện Tối/Sáng. | Học viên |
 | FR-04 | Kỹ năng của tôi | Thêm kỹ năng từ danh mục, đổi trạng thái Đã biết/Đang học, xóa, hoàn tác, lưu một lần. | Học viên |
 | FR-05 | Danh mục khóa học | Tìm theo từ khóa, lọc cấp độ, sắp xếp theo điểm hoặc số lượt đánh giá; chi tiết khóa học với kỹ năng và trạng thái theo dõi. | Khách (danh mục), Học viên |
 | FR-06 | Theo dõi khóa học | Lưu khóa học, tham gia (ghi nhận Đang học và mở trang ngoài), ngừng theo dõi, bỏ lưu; Khóa học của tôi theo 4 trạng thái Đã lưu, Đang học, Đã hoàn thành, Đã bỏ. Hoàn thành chỉ có được khi đạt bài ôn tập. | Học viên |
@@ -90,7 +90,7 @@ Khi Khách bấm một chức năng cần đăng nhập, hệ thống chuyển t
 | FR-08 | Quản lý lộ trình | Lộ trình của tôi lọc theo Đang theo, Hoàn thành, Đã từ bỏ; chi tiết lộ trình với đồ thị, đổi tên, từ bỏ; thêm, xóa kỹ năng (vai trò Tiên quyết, Tùy chọn, Mở rộng) và kết nối. | Học viên |
 | FR-09 | Gợi ý khóa học theo kỹ năng | Chọn một kỹ năng trong lộ trình để xem khóa học gợi ý, sắp xếp theo điểm hoặc số lượt đánh giá; lưu hoặc tham gia ngay. | Học viên |
 | FR-10 | AI Tutor | Tạo, chọn, xóa phiên chat; hội thoại nhiều lượt nhớ ngữ cảnh theo phiên; giải thích code, phân tích lỗi; trả về khối mã và câu hỏi trắc nghiệm củng cố; báo lỗi có nút Gửi lại. | Học viên |
-| FR-11 | Ôn tập theo khóa học | 15 câu: 12 trắc nghiệm (4 lựa chọn, 0,5 điểm) chia đều theo kỹ năng và 3 tự luận (2 Dễ 1 điểm, 1 Nâng cao 2 điểm), thang 10; cần đã tham gia khóa và ngân hàng đủ câu ráp đề; tạm rời và làm tiếp; câu bỏ trống 0 điểm; tự luận do AI chấm từng ý theo barem (Đạt / Chưa đạt), quá 20 giây chuyển Đang chấm; đạt từ 6/10; làm lại không giới hạn; đạt thì khóa thành Hoàn thành và kỹ năng thành Đã biết; gửi email kết quả. | Học viên |
+| FR-11 | Ôn tập theo khóa học | 15 câu: 12 trắc nghiệm (4 lựa chọn, 0,5 điểm) chia đều theo kỹ năng và 3 tự luận (2 Dễ 1 điểm, 1 Nâng cao 2 điểm), thang 10; cần đã tham gia khóa và ngân hàng đủ câu ráp đề; tạm rời và làm tiếp; câu bỏ trống 0 điểm; tự luận do AI chấm từng ý theo barem (Đạt / Chưa đạt), quá 20 giây chuyển Đang chấm; đạt từ 6/10; làm lại không giới hạn; đạt thì khóa thành Hoàn thành và kỹ năng thành Đã biết; gửi email kết quả; câu tự luận bị gắn cờ được Admin xem lại (FR-22). | Học viên |
 | FR-12 | Lịch sử ôn tập | Lọc theo khóa học và kết quả, phân trang; chi tiết từng câu, lọc câu sai; giải thích ẩn mặc định, có Xem giải thích và Hiện tất cả; câu tự luận hiện kết quả và lý do từng ý, câu trích tô sáng trong bài làm, nhận xét, đáp án mẫu. | Học viên |
 | FR-13 | Liên hệ và phản hồi | Gửi phản hồi về một khóa học hoặc hệ thống, chọn loại phản hồi, nội dung tối đa 1000 ký tự, tự gắn tài khoản; xem thông tin liên hệ của khóa học và EduMentor. Khách chỉ xem, form bị khóa. | Học viên, Khách (chỉ xem) |
 | FR-14 | Bong bóng hỗ trợ và AI tư vấn khóa học | Bong bóng góc phải dưới: GitHub, Zalo, Liên hệ, AI tư vấn khóa học. Không hiển thị ở AI tư vấn lộ trình, AI Tutor, màn làm bài và trang quản trị. AI chỉ gợi ý khóa học trong danh mục. | Khách, Học viên |
@@ -101,6 +101,7 @@ Khi Khách bấm một chức năng cần đăng nhập, hệ thống chuyển t
 | FR-19 | Dữ liệu lịch sử | Kéo thả file nhập dữ liệu lộ trình lịch sử, đánh dấu dữ liệu tổng hợp, xem kết quả nhập và danh sách bản ghi. | Admin |
 | FR-20 | Quản trị phản hồi | Thẻ số liệu, tab theo đối tượng, tìm kiếm, lọc loại và thời gian, sắp xếp, ngăn chi tiết, trả lời qua email. Không có trạng thái xử lý. | Admin |
 | FR-21 | Lộ trình người dùng | Xem chỉ đọc danh sách người dùng, mục tiêu phổ biến, lộ trình và tiến độ kỹ năng của từng người, đồ thị chỉ xem. | Admin |
+| FR-22 | Kết Quả - AI Chấm | Danh sách câu tự luận AI chấm bị gắn cờ (lệch chấm từ khóa, sát ngưỡng đạt, có câu ra lệnh cho AI, thiếu câu trích, chấm dự phòng); lọc theo trạng thái, lý do, khóa học; chấm lại từng ý Đạt / Không đạt, hệ thống tính lại điểm và kết quả, hỏi xác nhận khi kết quả bài đổi, không kéo lùi tiến độ, gửi lại thông báo kết quả. | Admin |
 
 ---
 
@@ -119,7 +120,9 @@ Mọi endpoint bắt đầu bằng `/api/`. Chi tiết request, response và quy
 | Ôn tập | `GET /courses/{id}/review`, `POST /courses/{id}/review-attempts`, `GET /review-attempts/{id}`, `PATCH /review-attempts/{id}/answers`, `POST /review-attempts/{id}/submit`, `GET /me/review-history`, `GET /me/review-history/{id}` | Học viên |
 | Phản hồi | `POST /feedback` | Học viên |
 | AI tư vấn khóa học | `POST /chat/course-advisor` | Công khai |
-| Quản trị | `/admin/courses`, `/admin/skills`, `/admin/skill-relations`, `/admin/course-skill-relations`, `/admin/questions`, `/admin/base-learning-paths`, `/admin/historical-learning-paths`, `/admin/feedback`, `/admin/users`, `/admin/users/{id}/learning-paths`, `/admin/learning-path-goals` | Admin |
+| Quản trị | `/admin/courses`, `/admin/skills`, `/admin/skill-relations`, `/admin/course-skill-relations`, `/admin/questions`, `/admin/base-learning-paths`, `/admin/historical-learning-paths`, `/admin/feedback`, `/admin/users`, `/admin/users/{id}/learning-paths`, `/admin/learning-path-goals`, `/admin/review/flags` | Admin |
+
+Các API đăng ký, đăng nhập, quên và đặt lại mật khẩu có giới hạn tần suất; vượt giới hạn trả `429` kèm `Retry-After`.
 
 ---
 
@@ -151,6 +154,7 @@ Mọi endpoint bắt đầu bằng `/api/`. Chi tiết request, response và quy
 4. Tạo mẫu lộ trình cho mục tiêu phổ biến; nhập dữ liệu lộ trình lịch sử.
 5. Xem phản hồi của học viên và trả lời qua email.
 6. Xem lộ trình người dùng để theo dõi mục tiêu phổ biến (chỉ đọc).
+7. Xem lại câu tự luận AI chấm bị gắn cờ và chấm lại khi cần (Kết Quả - AI Chấm).
 
 ---
 
@@ -159,6 +163,7 @@ Mọi endpoint bắt đầu bằng `/api/`. Chi tiết request, response và quy
 | Bảng | Nội dung chính |
 |---|---|
 | User | Họ tên, email (duy nhất), mật khẩu đã băm, vai trò (`student`, `admin`), ảnh đại diện, ngày tham gia |
+| UserProfile | Thông tin cá nhân không bắt buộc (một-một với User): ngày sinh, giới tính, số điện thoại |
 | RefreshToken | Bản băm refresh token, hạn dùng, thời điểm thu hồi, người dùng |
 | PasswordResetToken | Bản băm token đặt lại mật khẩu, hạn dùng, đã dùng chưa |
 | Skill | Tên kỹ năng (duy nhất), mô tả, đang dùng |

@@ -1,4 +1,4 @@
-# BUSINESS ANALYSIS DOCUMENT
+    # BUSINESS ANALYSIS DOCUMENT
 ## Dự án EduMentor AI
 
 Phiên bản 3.0 (05/11/2026). Thiết kế giao diện demo (bộ `docs/EduMentor-UI-design/ui-design`) là chuẩn; tài liệu này được viết lại để khớp với demo.
@@ -89,6 +89,7 @@ Quản trị viên có thể:
 - Xem, tìm kiếm và lọc phản hồi của học viên theo đối tượng (khóa học hoặc hệ thống), loại và thời gian; trả lời người gửi qua email. 
 - Xem (chỉ đọc) lộ trình học tập và tiến độ kỹ năng của từng người dùng, cùng các mục tiêu lộ trình phổ biến. 
 - Quản lý ngân hàng câu hỏi ôn tập của từng kỹ năng. 
+- Xem lại câu tự luận do AI chấm bị gắn cờ (trang Kết Quả - AI Chấm) và chấm lại từng ý khi cần. 
 
 
 Quyền quản trị phải được giới hạn cho các tài khoản được cấp phép. Người dùng thông thường không được phép chỉnh sửa dữ liệu dùng chung của hệ thống hoặc lộ trình riêng của người dùng khác.
@@ -157,7 +158,7 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 | Use Case ID | Use Case Name | Actor | Description |
 |---|---|---|---|
 | UC-01 | Register and Log In | Guest | Đăng ký tài khoản và đăng nhập hệ thống. |
-| UC-02 | Manage Profile | User | Xem hồ sơ và thống kê học tập, sửa họ tên, đổi ảnh đại diện, đổi mật khẩu, quản lý kỹ năng (Đã biết, Đang học), chọn giao diện Tối/Sáng. |
+| UC-02 | Manage Profile | User | Xem hồ sơ và thống kê học tập, sửa thông tin cá nhân (họ tên, ngày sinh, giới tính, số điện thoại), đổi ảnh đại diện, đổi mật khẩu, quản lý kỹ năng (Đã biết, Đang học), chọn giao diện Tối/Sáng. |
 | UC-03 | Submit Learning Goal | User | Nhập mục tiêu nghề nghiệp hoặc mục tiêu học tập thông qua AI Consultant. |
 | UC-04 | Generate Learning Path | User | Yêu cầu hệ thống phân tích mục tiêu và tạo lộ trình học tập cá nhân hóa. |
 | UC-05 | View and Manage Learning Paths | User | Xem lại, lựa chọn và quản lý các lộ trình học tập đã lưu. |
@@ -177,6 +178,7 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 | UC-19 | View User Learning Paths | Admin | Xem chỉ đọc lộ trình, tiến độ kỹ năng của người dùng và các mục tiêu phổ biến. |
 | UC-20 | Ask Course Advisor | Guest, User | Hỏi AI tư vấn khóa học qua bong bóng hỗ trợ. |
 | UC-21 | Manage Review Questions | Admin | Thêm, sửa, xóa câu hỏi trắc nghiệm của từng kỹ năng. |
+| UC-22 | Review AI-Graded Essays | Admin | Xem câu tự luận AI chấm bị gắn cờ cần xem lại, chấm lại từng ý (Đạt / Không đạt); điểm và kết quả bài được tính lại. |
 
 *Lưu ý: Danh sách trên là danh sách Use Case dự kiến. Các Use Case sẽ được xác nhận và điều chỉnh theo phạm vi triển khai thực tế của dự án.*
 
@@ -329,6 +331,7 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 - Ngân hàng câu hỏi chưa đủ để ráp đề: hệ thống báo "Chưa có đề ôn tập cho khóa học này."
 - AI chấm tự luận quá 20 giây: bài chuyển trạng thái Đang chấm, hệ thống chấm tiếp ở nền và gửi email khi có kết quả.
 - AI không dùng được (lỗi, hết lượt): câu tự luận được chấm tự động theo từ khóa để người dùng vẫn có điểm.
+- Câu tự luận bị gắn cờ cần xem lại: điểm tạm tính; Admin chấm lại trên trang Kết Quả - AI Chấm (UC-22), nếu điểm đổi thì người dùng nhận lại thông báo kết quả.
 - Mỗi khóa học chỉ có tối đa một bài đang làm dở cho mỗi người dùng.
 
 **Postconditions:**
@@ -345,6 +348,7 @@ Quy trình quản trị gồm các hoạt động chính:
 2. **Quản lý quan hệ giữa kỹ năng:** Thiết lập, cập nhật và kiểm tra các mối quan hệ giữa những kỹ năng nhằm hỗ trợ việc xây dựng cấu trúc lộ trình.
 3. **Quản lý khóa học:** Cập nhật thông tin khóa học, liên kết bên ngoài và kỹ năng liên quan.
 4. **Quản lý lộ trình mẫu:** Tạo và cập nhật cấu trúc lộ trình nền phục vụ hoạt động quản lý và tham khảo.
+5. **Xem lại kết quả AI chấm:** Kiểm tra các câu tự luận bị gắn cờ và chấm lại khi AI chấm chưa đúng.
 
 Hệ thống cần kiểm tra dữ liệu trước khi lưu các thay đổi có thể ảnh hưởng đến hoạt động đề xuất. Chỉ tài khoản được cấp quyền Admin mới được phép thực hiện các thao tác quản trị dữ liệu dùng chung.
 
@@ -370,11 +374,11 @@ Hệ thống phải cho phép người dùng tạo tài khoản bằng các thô
 
 **FR-02 — Đăng nhập và đăng xuất**
 
-Hệ thống phải cho phép người dùng đăng nhập bằng thông tin xác thực hợp lệ và đăng xuất khỏi phiên làm việc hiện tại.
+Hệ thống phải cho phép người dùng đăng nhập bằng thông tin xác thực hợp lệ và đăng xuất khỏi phiên làm việc hiện tại. Đăng nhập sai 5 lần trong 15 phút với cùng một email thì email đó bị khóa tạm 15 phút (đăng nhập đúng thì bộ đếm về 0); hệ thống đếm như nhau cho email có và không có tài khoản để không lộ email nào đã đăng ký.
 
 **FR-03 — Quản lý hồ sơ cá nhân**
 
-Hệ thống phải cho phép người dùng xem hồ sơ (họ tên, email, vai trò, ngày tham gia, ảnh đại diện) và thống kê học tập (khóa đang học, khóa đã hoàn thành, kỹ năng đã biết, lộ trình đang theo đuổi). Người dùng được sửa họ tên và đổi ảnh đại diện bằng cách bấm vào ảnh để tải file lên. Email chỉ đọc, không được đổi.
+Hệ thống phải cho phép người dùng xem hồ sơ (họ tên, email, vai trò, ngày tham gia, ảnh đại diện) và thống kê học tập (khóa đang học, khóa đã hoàn thành, kỹ năng đã biết, lộ trình đang theo đuổi). Người dùng được sửa thông tin cá nhân trên một form một cột: họ và tên (bắt buộc), ngày sinh, giới tính (Nam / Nữ), số điện thoại (10 chữ số, bắt đầu bằng 0); các trường ngoài họ tên không bắt buộc. Người dùng đổi ảnh đại diện bằng cách bấm vào ảnh để tải file lên. Email chỉ đọc, không được đổi.
 
 
 **FR-04 — Quản lý kỹ năng hiện có**
@@ -500,13 +504,13 @@ Câu hỏi yêu cầu chạy code để chấm nằm ngoài phạm vi.
 Điểm bài tính trên thang 10: mỗi câu trắc nghiệm 0,5 điểm, câu tự luận Dễ 1 điểm, câu tự luận Nâng cao 2 điểm. Câu bỏ trống được 0 điểm.
 
 - **Trắc nghiệm:** so sánh lựa chọn của người dùng với đáp án lưu trữ (không dùng AI).
-- **Tự luận:** AI chấm **từng ý của barem** theo nghĩa, mỗi ý chỉ Đạt (trọn điểm ý) hoặc Chưa đạt (0). Điểm do hệ thống cộng từ kết quả từng ý, không lấy điểm do AI tự đưa ra. Ý chấm Đạt phải có câu trích có thật trong bài làm làm căn cứ. Khi AI không dùng được, hệ thống chấm theo từ khóa để người dùng vẫn có điểm. Khi điểm AI lệch xa cách chấm từ khóa sau khi chấm lại, câu được đánh dấu "đang xem lại" và điểm tạm tính.
+- **Tự luận:** AI chấm **từng ý của barem** theo nghĩa, mỗi ý chỉ Đạt (trọn điểm ý) hoặc Chưa đạt (0). Điểm do hệ thống cộng từ kết quả từng ý, không lấy điểm do AI tự đưa ra. Ý chấm Đạt phải có câu trích có thật trong bài làm làm căn cứ. Khi AI không dùng được, hệ thống chấm theo từ khóa để người dùng vẫn có điểm. Khi điểm AI lệch xa cách chấm từ khóa sau khi chấm lại, câu được đánh dấu "đang xem lại", điểm tạm tính cho tới khi Admin xem lại (FR-57).
 
 Bài đạt khi điểm từ 6/10 trở lên; ngưỡng này là cấu hình của hệ thống và giao diện phải lấy từ API, không ghi cứng.
 
 **FR-27 — Cung cấp kết quả và phản hồi**
 
-Sau khi nộp bài, hệ thống phải hiển thị điểm (thang 10), điểm trắc nghiệm, điểm tự luận, kết quả Đạt hoặc Chưa đạt, cho phép xem đáp án và làm lại. Với câu tự luận, hệ thống hiển thị kết quả và lý do từng ý của barem, câu trích làm căn cứ được tô sáng trong bài làm, nhận xét chung, đáp án mẫu, và cho biết câu được chấm bởi AI hay chấm tự động theo từ khóa. Nếu chấm quá 20 giây, bài hiển thị trạng thái Đang chấm và cập nhật khi có kết quả. Hệ thống gửi email kết quả cho người dùng.
+Sau khi nộp bài, hệ thống phải hiển thị điểm (thang 10), điểm trắc nghiệm, điểm tự luận, kết quả Đạt hoặc Chưa đạt, cho phép xem đáp án và làm lại. Với câu tự luận, hệ thống hiển thị kết quả và lý do từng ý của barem, câu trích làm căn cứ được tô sáng trong bài làm, nhận xét chung, đáp án mẫu, và cho biết câu được chấm bởi AI hay chấm tự động theo từ khóa. Nếu chấm quá 20 giây, bài hiển thị trạng thái Đang chấm và cập nhật khi có kết quả. Câu đã được giáo viên chấm lại hiển thị nhãn "Giáo viên đã xem lại". Hệ thống gửi email kết quả cho người dùng.
 
 **FR-28 — Lưu và xem lịch sử ôn tập**
 
@@ -630,6 +634,10 @@ Admin xem chỉ đọc danh sách người dùng cùng số lộ trình, các m�
 
 Admin quản lý câu hỏi trắc nghiệm và tự luận cho từng kỹ năng: nội dung, 4 lựa chọn và đáp án đúng (trắc nghiệm), barem và đáp án mẫu (tự luận), giải thích. Sửa câu đã có người làm sẽ tạo phiên bản mới, bài làm cũ vẫn giữ phiên bản cũ. Câu do AI soạn vào ngân hàng ở trạng thái Chờ duyệt và chỉ được đưa vào đề sau khi Admin duyệt. Bài ôn tập của một khóa chỉ sẵn sàng khi ngân hàng đủ câu để ráp đề (FR-24).
 
+**FR-57 — Xem lại kết quả AI chấm (Kết Quả - AI Chấm)**
+
+Admin xem danh sách câu tự luận do AI chấm cần xem lại, lọc theo trạng thái (chưa xem / đã xem), lý do và khóa học. Lý do gắn cờ: điểm AI lệch xa cách chấm từ khóa sau khi chấm lại; điểm cả bài sát ngưỡng đạt (±0,5); bài làm có câu ra lệnh cho AI; ý chấm Đạt nhưng thiếu câu trích; AI lỗi nên chấm theo từ khóa. Với mỗi câu, Admin thấy đề, barem, bài làm, kết quả và lý do AI từng ý, rồi chọn lại Đạt / Không đạt cho từng ý. Hệ thống tính lại điểm câu, điểm bài và kết quả Đạt / Chưa đạt trong một giao dịch, ghi lại người xem, thời điểm, kết quả trước và sau vào nhật ký chấm. Nếu kết quả bài đổi, hệ thống hỏi xác nhận trước khi lưu. Bài chuyển thành Đạt thì khóa học thành Hoàn thành và kỹ năng thành Đã biết; bài chuyển thành Chưa đạt thì **không kéo lùi** tiến độ đã ghi nhận. Khi điểm đổi, người học nhận lại thông báo kết quả (email nếu bài chuyển thành Đạt).
+
 ## 6.13. Bong bóng hỗ trợ (Support Bubble)
 
 **FR-55 — Bong bóng hỗ trợ**
@@ -662,7 +670,7 @@ Hệ thống phải sử dụng các phương pháp truy xuất dữ liệu phù
 
 **NFR-04 — Bảo mật xác thực**
 
-Thông tin xác thực của người dùng phải được bảo vệ bằng các phương pháp phù hợp. Mật khẩu không được lưu dưới dạng văn bản thuần (plaintext) mà phải được lưu dưới dạng băm an toàn.
+Thông tin xác thực của người dùng phải được bảo vệ bằng các phương pháp phù hợp. Mật khẩu không được lưu dưới dạng văn bản thuần (plaintext) mà phải được lưu dưới dạng băm an toàn. Hệ thống giới hạn số lần thử để chống dò mật khẩu và gửi thư hàng loạt: đăng nhập sai 5 lần / 15 phút mỗi email, 30 lần thử đăng nhập / 15 phút mỗi địa chỉ IP, 5 lần đăng ký / giờ mỗi IP, quên mật khẩu 3 lần / 15 phút mỗi email và 10 lần / giờ mỗi IP, đặt lại mật khẩu 10 lần / 15 phút mỗi IP. Vượt giới hạn trả mã 429 kèm thời gian chờ (Retry-After).
 
 **NFR-05 — Phân quyền truy cập**
 
@@ -1092,6 +1100,7 @@ Quy trình:
 3. Người dùng trả lời, có thể tạm rời và làm tiếp.
 4. Hệ thống chấm: trắc nghiệm theo đáp án lưu sẵn; tự luận qua pipeline 9 khối (tiền xử lý NLP → kiểm tra đầu vào → ngữ cảnh → LLM chấm có cấu trúc → kiểm tra câu trích → đối chiếu → tổng hợp → nhật ký), dự phòng chấm từ khóa khi AI lỗi. Đạt từ 6/10.
 5. Kết quả được lưu vào lịch sử; nếu đạt, khóa học thành Hoàn thành và kỹ năng thành Đã biết.
+6. Câu tự luận bị gắn cờ được đưa lên trang Kết Quả - AI Chấm để Admin xem lại và chấm lại nếu cần (FR-57).
 
 Việc ôn tập là tự nguyện, không phải điều kiện để tiếp tục học và không ảnh hưởng tới thứ hạng khóa học. Chi tiết thiết kế và cách đánh giá độ chính xác: `docs/ai-grading/BAO_CAO_AI_CHAM_BAI.md`.
 
@@ -1102,7 +1111,7 @@ Các thành phần AI/ML cần được đánh giá riêng theo nhiệm vụ:
 - **AI Consultant:** Sử dụng Precision, Recall, F1-score và tỷ lệ đầu ra hợp lệ để đánh giá khả năng trích xuất kỹ năng.
 - **Recommendation System:** Sử dụng Precision@K hoặc NDCG@K khi có dữ liệu đánh giá phù hợp, đồng thời so sánh với baseline.
 - **AI Tutor:** Kiểm thử mức độ liên quan, tính chính xác và khả năng duy trì ngữ cảnh hội thoại.
-- **Course Review (chấm tự luận):** So điểm AI với điểm người chấm trên bộ bài chuẩn: MAE, RMSE, QWK, tỉ lệ khớp từng ý, Precision / Recall / F1 theo nhãn Đạt / Chưa đạt; so sánh với baseline chấm từ khóa bằng paired bootstrap.
+- **Course Review (chấm tự luận):** So điểm AI với điểm người chấm trên bộ bài chuẩn: MAE, RMSE, QWK, tỉ lệ khớp từng ý, Precision / Recall / F1 theo nhãn Đạt / Chưa đạt; so sánh với baseline chấm từ khóa bằng paired bootstrap. Kết quả đo ngày 18/11/2026 trên phần test (30 bài, 108 ý): pipeline khớp người chấm 94,4% (chấm từ khóa 80,6%), QWK 0,95, không bài sai nào bị chấm Đạt; kappa với từng người chấm 0,81–0,85, cao hơn mức hai người chấm khớp nhau (0,77). Chưa đạt mục tiêu độ trễ và lệch ≤ 1 điểm; chi tiết và hạn chế trong `docs/ai-grading/BAO_CAO_AI_CHAM_BAI.md`.
 
 Tập kiểm thử cần được tách biệt với dữ liệu huấn luyện. Các chỉ số mục tiêu cụ thể sẽ được xác định sau khi có dữ liệu đánh giá và kết quả baseline.
 
@@ -1307,7 +1316,7 @@ Mọi thao tác quản trị phải được kiểm tra quyền ở phía máy c
 | POST | `/api/auth/forgot-password` | Gửi email liên kết đặt lại mật khẩu (công khai, luôn trả thông báo chung). |
 | POST | `/api/auth/reset-password` | Đặt mật khẩu mới bằng token trong liên kết. |
 | GET | `/api/me` | Lấy thông tin hồ sơ của người dùng đã xác thực. |
-| PATCH | `/api/me` | Cập nhật họ tên (email không đổi được). |
+| PATCH | `/api/me` | Cập nhật họ tên, ngày sinh, giới tính, số điện thoại (email không đổi được). |
 | POST | `/api/me/avatar` | Tải ảnh đại diện lên. |
 | POST | `/api/me/change-password` | Đổi mật khẩu. |
 | GET | `/api/me/summary` | Thống kê cho trang Hồ sơ: khóa đang học, đã hoàn thành, kỹ năng đã biết, lộ trình đang theo. |
@@ -1317,6 +1326,8 @@ Mọi thao tác quản trị phải được kiểm tra quyền ở phía máy c
 | GET | `/api/me/courses?status=ongoing` | Lấy danh sách khóa học người dùng đã tham gia và đang theo dõi. |
 | GET | `/api/me/courses?status=bookmarked` | Lấy danh sách khóa học đã lưu để học sau. |
 | GET | `/api/me/courses?status=completed` | Lấy danh sách khóa học được đánh dấu đã hoàn thành. |
+
+Các API `register`, `login`, `forgot-password`, `reset-password` có giới hạn tần suất (NFR-04); vượt giới hạn trả `429 Too Many Requests` kèm header `Retry-After` (số giây phải chờ).
 
 ### Quy tắc cập nhật kỹ năng người dùng
 
@@ -1511,6 +1522,13 @@ Mỗi bài ôn tập thuộc một khóa học, gồm 15 câu (12 trắc nghiệ
 | GET | `/api/me/review-history` | Lịch sử ôn tập, lọc theo `course_id` và `passed`, có phân trang. |
 | GET | `/api/me/review-history/{attempt_id}` | Chi tiết một lần làm: từng câu, đáp án đã chọn, đáp án đúng, giải thích. |
 
+API quản trị xem lại bài AI chấm (Admin, FR-57):
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/admin/review/flags` | Danh sách câu tự luận cần xem lại; lọc `status` (open / resolved / all), `reason`, `course_id`, có phân trang và số lượng theo từng lý do. |
+| POST | `/api/admin/review/flags/{attempt_id}/{position}/resolve` | Admin chọn lại Đạt / Không đạt cho từng ý (kèm ghi chú); trả điểm mới, kết quả bài có đổi không, khóa học có chuyển Hoàn thành không. |
+
 ### Quy trình nộp bài
 
 1. Kiểm tra bài thuộc người dùng hiện tại và chưa nộp.
@@ -1657,6 +1675,7 @@ Tiêu chí nghiệm thu xác định điều kiện để đánh giá EduMentor 
 - Refresh Token bị thu hồi không thể sử dụng để cấp token mới.
 - User chỉ truy cập dữ liệu cá nhân của mình; Admin mới được quản lý dữ liệu dùng chung.
 - Password cần được mã hóa trước khi lưu vào database.
+- Đăng nhập sai 5 lần trong 15 phút thì email bị khóa tạm (mã 429); đăng nhập đúng xóa bộ đếm.
 
 ## 11.3. Tạo và quản lý lộ trình học tập
 
@@ -1694,6 +1713,7 @@ Tiêu chí nghiệm thu xác định điều kiện để đánh giá EduMentor 
 - Đạt bài thì khóa học thành Hoàn thành và kỹ năng thành Đã biết.
 - Kết quả, phản hồi và lịch sử đánh giá được lưu chính xác.
 - Người dùng không bắt buộc phải làm bài đánh giá để tiếp tục học.
+- Admin chấm lại câu bị gắn cờ thì điểm và kết quả bài được tính lại đúng; đổi sang Chưa đạt không kéo lùi tiến độ.
 
 ## 11.6. Quản trị và dữ liệu lịch sử
 
@@ -1710,6 +1730,7 @@ Tiêu chí nghiệm thu xác định điều kiện để đánh giá EduMentor 
 **AC-10 — Chất lượng AI/ML**
 - Mô hình trích xuất kỹ năng được đánh giá trên tập kiểm thử độc lập bằng các chỉ số phù hợp như Precision, Recall và F1-score.
 - Hệ thống đề xuất được đánh giá bằng Precision@K hoặc NDCG@K khi có dữ liệu phù hợp, đồng thời so sánh với baseline.
+- AI chấm tự luận được so với người chấm trên bộ bài chuẩn (MAE, RMSE, QWK, khớp từng ý, kappa) và so với chấm từ khóa.
 - Kết quả đánh giá phải được ghi nhận; không tuyên bố mô hình vượt trội nếu chưa có bằng chứng.
 
 **AC-11 — Hiệu năng và xử lý lỗi**
@@ -1777,7 +1798,7 @@ Ma trận truy vết yêu cầu (RTM) giúp đảm bảo mỗi yêu cầu quan t
 | FR-12–FR-16, FR-13A | Truy xuất khóa học và đề xuất xếp hạng | Course Recommendation | AC-04 |
 | FR-17–FR-19 | Theo dõi tiến độ học tập | Learning Progress | AC-05 |
 | FR-20–FR-23 | Hội thoại và hỗ trợ học tập bằng AI | AI Tutor | AC-06 |
-| FR-24–FR-29, FR-54 | Ôn tập theo khóa học, bài làm dở, lịch sử, ngân hàng câu hỏi | Course Review | AC-07 |
+| FR-24–FR-29, FR-54, FR-57 | Ôn tập theo khóa học, bài làm dở, lịch sử, ngân hàng câu hỏi, xem lại kết quả AI chấm | Course Review | AC-07 |
 | FR-30–FR-35 | Quản lý dữ liệu dùng chung | Admin Management | AC-08 |
 | FR-36–FR-39 | Quản lý dữ liệu lịch sử và hỗ trợ AI/ML | Historical Data, ML Pipeline | AC-09, AC-10 |
 | FR-40–FR-43 | Kiểm soát truy cập, kiểm tra đầu vào và xử lý lỗi | Security, Validation, Error Handling | AC-01, AC-11 |
