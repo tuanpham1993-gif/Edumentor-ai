@@ -174,7 +174,7 @@ def list_courses(
     search: str | None = None,
     skill_id: int | None = None,
     level: str | None = None,
-    sort_by: Literal["rating", "num_reviews"] | None = None,
+    sort_by: Literal["relevance", "rating", "num_reviews"] | None = None,
 ) -> tuple[int, list[Courses]]:
     """Xử lý nghiệp vụ lấy danh sách khóa học kèm bộ lọc và phân trang."""
     return course_repository.list_courses(

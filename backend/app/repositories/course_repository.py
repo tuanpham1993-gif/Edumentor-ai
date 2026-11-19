@@ -1,9 +1,60 @@
+import re
 from typing import List, Literal, Optional, Tuple
-from sqlalchemy import delete, func, or_, select
+from sqlalchemy import and_, case, delete, func, or_, select
 from sqlalchemy.orm import Session, selectinload
 from app.models.course import Courses
 from app.models.course_skill import CourseSkill
 from app.models.skill import Skills
+
+
+MAX_SEARCH_TOKENS = 8
+
+
+def _escape_like(value: str) -> str:
+    """Escape ký tự wildcard của SQL LIKE (\\, %, _) để tránh khớp nhầm."""
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _tokenize_search(search: str) -> tuple[str, list[str]]:
+    """Chuẩn hóa cụm tìm kiếm và tách từ multi-word (khử trùng lặp, tối đa 8 từ)."""
+    phrase = " ".join(search.strip().split())
+    if not phrase:
+        return "", []
+    tokens: list[str] = []
+    seen: set[str] = set()
+    for part in phrase.split(" "):
+        low = part.lower()
+        if low and low not in seen:
+            seen.add(low)
+            tokens.append(part)
+            if len(tokens) >= MAX_SEARCH_TOKENS:
+                break
+    return phrase, tokens
+
+
+def _column_matches_token(col, tok: str, is_postgres: bool):
+    """Khớp token trên 1 cột văn bản.
+    - Token ngắn (1–2 ký tự, vd 'ng', 'ai', 'ml', 'r', 'go'): khớp nguyên từ (word boundary)
+      để tránh khớp nhầm vào đuôi '-ing' (vd 'Andrew Ng' khớp 'Programmi[ng]') hay 'AI' khớp 'Em[ai]l'.
+    - Token từ 3 ký tự trở lên: khớp chuỗi con không phân biệt hoa thường (ILIKE).
+    """
+    if len(tok) <= 2:
+        if is_postgres:
+            regex = rf"(^|[^[:alnum:]]){re.escape(tok)}([^[:alnum:]]|$)"
+            return col.op("~*")(regex)
+        esc = _escape_like(tok)
+        return or_(
+            col.ilike(esc, escape="\\"),
+            col.ilike(f"{esc} %", escape="\\"),
+            col.ilike(f"% {esc}", escape="\\"),
+            col.ilike(f"% {esc} %", escape="\\"),
+            col.ilike(f"%({esc})%", escape="\\"),
+            col.ilike(f"% {esc},%", escape="\\"),
+            col.ilike(f"%-{esc}%", escape="\\"),
+            col.ilike(f"%{esc}-%", escape="\\"),
+            col.ilike(f"%.{esc}%", escape="\\"),
+        )
+    return col.ilike(f"%{_escape_like(tok)}%", escape="\\")
 
 
 class CourseRepository:
@@ -138,22 +189,69 @@ def list_courses(
     search: str | None = None,
     skill_id: int | None = None,
     level: str | None = None,
-    sort_by: Literal["rating", "num_reviews"] | None = None,
+    sort_by: Literal["relevance", "rating", "num_reviews"] | None = None,
 ) -> tuple[int, list[Courses]]:
-    """Truy vấn danh sách khóa học kèm bộ lọc tìm kiếm, level, skill_id, sắp xếp và phân trang."""
+    """Truy vấn danh sách khóa học kèm tìm kiếm ưu tiên 4 tầng (title > organization > instructor > description)."""
     query = select(Courses)
+    relevance_score = None
 
-    # 1. Bộ lọc tìm kiếm từ khóa
+    # 1. Bộ lọc tìm kiếm từ khóa (multi-word AND trên 4 trường: title, organization, instructor, description)
     if search and search.strip():
-        term = f"%{search.strip()}%"
-        query = query.where(
-            or_(
-                Courses.title.ilike(term),
-                Courses.instructor.ilike(term),
-                Courses.organization.ilike(term),
-                Courses.description.ilike(term),
-            )
-        )
+        phrase, tokens = _tokenize_search(search)
+        if tokens:
+            is_postgres = db.bind is not None and db.bind.dialect.name == "postgresql"
+            token_filters = []
+            token_scores = []
+
+            for tok in tokens:
+                title_match = _column_matches_token(Courses.title, tok, is_postgres)
+                org_match = _column_matches_token(Courses.organization, tok, is_postgres)
+                instructor_match = _column_matches_token(Courses.instructor, tok, is_postgres)
+                desc_match = _column_matches_token(Courses.description, tok, is_postgres)
+
+                token_filters.append(or_(title_match, org_match, instructor_match, desc_match))
+
+                # Thang điểm 4 tầng thuần túy: title (100) > organization (50) > instructor (25) > description (10)
+                if sort_by == "relevance":
+                    token_scores.append(
+                        case(
+                            (title_match, 100),
+                            (org_match, 50),
+                            (instructor_match, 25),
+                            (desc_match, 10),
+                            else_=0,
+                        )
+                    )
+
+            query = query.where(and_(*token_filters))
+
+            if sort_by == "relevance":
+                escaped_phrase = _escape_like(phrase)
+                phrase_title_bonus = case(
+                    (Courses.title.ilike(f"{escaped_phrase}%", escape="\\"), 80),
+                    (Courses.title.ilike(f"%{escaped_phrase}%", escape="\\"), 60),
+                    else_=0,
+                )
+                phrase_org_bonus = case(
+                    (Courses.organization.ilike(f"%{escaped_phrase}%", escape="\\"), 40),
+                    else_=0,
+                )
+                phrase_instructor_bonus = case(
+                    (Courses.instructor.ilike(f"%{escaped_phrase}%", escape="\\"), 30),
+                    else_=0,
+                )
+                phrase_desc_bonus = case(
+                    (Courses.description.ilike(f"%{escaped_phrase}%", escape="\\"), 10),
+                    else_=0,
+                )
+                relevance_score = (
+                    phrase_title_bonus
+                    + phrase_org_bonus
+                    + phrase_instructor_bonus
+                    + phrase_desc_bonus
+                )
+                for score_expr in token_scores:
+                    relevance_score = relevance_score + score_expr
 
     # 2. Bộ lọc theo độ khó
     if level and level.strip():
@@ -170,13 +268,20 @@ def list_courses(
     total = db.scalar(count_query) or 0
 
     # 4. Sắp xếp
-    if sort_by == "rating":
+    if sort_by == "relevance" and relevance_score is not None:
+        query = query.order_by(
+            relevance_score.desc(),
+            Courses.num_reviews.desc().nullslast(),
+            Courses.rating.desc().nullslast(),
+            Courses.course_id.asc(),
+        )
+    elif sort_by == "rating":
         query = query.order_by(
             Courses.rating.desc().nullslast(),
             Courses.num_reviews.desc().nullslast(),
             Courses.course_id.asc(),
         )
-    elif sort_by == "num_reviews":
+    elif sort_by in ("num_reviews", "relevance"):
         query = query.order_by(
             Courses.num_reviews.desc().nullslast(),
             Courses.rating.desc().nullslast(),

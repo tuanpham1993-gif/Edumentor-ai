@@ -20,6 +20,7 @@ export default function CourseDetailModal({
   isCompleted = false,
   onToggleBookmark,
   onJoinCourse,
+  onSelectSkill,
   onClose,
 }) {
   const [detail, setDetail] = useState(course);
@@ -237,7 +238,13 @@ export default function CourseDetailModal({
               <h3 className={styles.sectionTitle}>Kỹ năng đào tạo</h3>
               <div className={styles.skillsList}>
                 {detail.skills_info.map((s) => (
-                  <span key={s.skill_id} className={styles.skillChip}>
+                  <span
+                    key={s.skill_id}
+                    className={styles.skillChip}
+                    style={{ cursor: onSelectSkill ? 'pointer' : 'default' }}
+                    title={onSelectSkill ? `Lọc khóa học theo kỹ năng: ${s.skill}` : s.skill}
+                    onClick={() => onSelectSkill?.(s)}
+                  >
                     {s.skill}
                   </span>
                 ))}

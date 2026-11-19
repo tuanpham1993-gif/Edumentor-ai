@@ -1,0 +1,384 @@
+/* CSS Module cho Searchable Combobox chọn Kỹ năng (Module 02 - Courses)
+   100% Design Tokens từ src/styles/tokens.css — tương thích Theme Tối & Sáng. */
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+/* Nút kích hoạt mở dropdown */
+.trigger {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px 0 14px;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color var(--d-fast) var(--e-std),
+    box-shadow var(--d-fast) var(--e-std),
+    background-color var(--d-fast) var(--e-std);
+  user-select: none;
+}
+
+.trigger:hover {
+  border-color: var(--outline);
+}
+
+.trigger:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft-bg);
+}
+
+.triggerActive {
+  border-color: var(--accent-soft-border);
+  background: var(--card);
+}
+
+.triggerOpen {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft-bg);
+}
+
+.triggerContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.placeholder {
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectedText {
+  color: var(--accent);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectedCount {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.triggerActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.clearBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--d-fast), background-color var(--d-fast);
+}
+
+.clearBtn:hover {
+  color: var(--text);
+  background-color: var(--hover);
+}
+
+.clearBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.chevronIcon {
+  color: var(--text-muted);
+  transition: transform var(--d-fast) var(--e-std);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Menu Dropdown Popup */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  width: 320px;
+  max-width: calc(100vw - 48px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), calc(0.35 * var(--shadow-k)));
+  z-index: 50;
+  overflow: hidden;
+  animation: enterPopup var(--d-fast) var(--e-out) both;
+}
+
+@keyframes enterPopup {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hộp tìm kiếm trong dropdown */
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--card-inner);
+}
+
+.searchIcon {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13.5px;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--text-dim);
+}
+
+.clearInputBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: color var(--d-fast), background-color var(--d-fast);
+}
+
+.clearInputBtn:hover {
+  color: var(--text);
+  background-color: var(--hover);
+}
+
+/* Danh sách kỹ năng */
+.optionsList {
+  max-height: 288px;
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--track-strong) transparent;
+}
+
+.optionsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.optionsList::-webkit-scrollbar-thumb {
+  background: var(--track-strong);
+  border-radius: var(--r-pill);
+}
+
+/* Nhãn phân nhóm ("Kỹ năng phổ biến nhất" / "Kết quả tìm kiếm") */
+.groupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 4px;
+  margin-top: 2px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.groupCount {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.optionItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 13.5px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--d-fast), color var(--d-fast);
+}
+
+.optionItem:hover,
+.optionItem:focus-visible,
+.optionHighlighted {
+  outline: none;
+  background: var(--hover);
+  color: var(--text);
+}
+
+.optionSelected {
+  background: var(--accent-soft-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.optionSelected:hover,
+.optionSelected.optionHighlighted {
+  background: var(--accent-soft-bg);
+  color: var(--accent-hover);
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.courseCount {
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  background: var(--chip-bg);
+}
+
+.optionSelected .courseCount {
+  color: var(--accent-soft-fg);
+  background: var(--accent-tint);
+}
+
+.checkIcon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Skeleton trạng thái đang tải */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 4px;
+}
+
+.skeletonRow {
+  height: 32px;
+  border-radius: var(--r-sm);
+}
+
+/* Trạng thái rỗng & lỗi */
+.statusMessage {
+  padding: 18px 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.45;
+}
+
+.errorBox {
+  margin: 6px 4px;
+  padding: 12px;
+  border-radius: var(--r-sm);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  color: var(--danger-fg);
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+/* Nút tải thêm kỹ năng */
+.loadMoreBtn {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 12px;
+  border: 1px dashed var(--card-border);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color var(--d-fast), border-color var(--d-fast);
+}
+
+.loadMoreBtn:hover:not(:disabled) {
+  background: var(--accent-soft-bg);
+  border-color: var(--accent-soft-border);
+}
+
+.loadMoreBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown {
+    animation: none;
+  }
+}
