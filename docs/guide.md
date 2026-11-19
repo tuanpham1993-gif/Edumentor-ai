@@ -17,6 +17,7 @@
 | Q8 | **Chỉ kỹ năng CNTT** được kiểm tra theo kỹ năng ở bản đầu. Node kỹ năng ngoài CNTT không hiện huy hiệu ôn tập (gọi API thì trả lý do `skill_not_supported`). Cách phân loại CNTT: xem mục 8 | ✅ Chốt |
 | Q9 | Làm trước 25/11, hay sau khi xong đánh giá AI chấm bài (B10)? | ❓ Chưa chốt |
 | Q10 | Giao diện theo **mẫu Ôn tập trên đồ thị** (Tuấn + Hòa thống nhất 17/11): [proposals/review-on-graph](EduMentor-UI-design/proposals/review-on-graph/README.md). Ba điểm lệch xử lý **theo guide**: thẻ ôn tập theo kỹ năng (không chọn khóa học), đạt từ 6/10. Chấm "đến hạn ôn" **để sau 25/11** | ✅ Chốt |
+| Q11 | Ôn tập **không giới hạn số lần**. Tối đa **5 kỹ năng làm dở** cùng lúc (giống ôn theo khóa: tối đa 5 khóa); đủ 5 thì phải nộp hoặc **Bỏ bài** dở mới bắt đầu kỹ năng mới, mở lại bài dở đã có vẫn được. Hai lần nộp cách nhau ≥ **2 phút** (chặn công cụ nộp tự động). Đã làm cho ôn theo khóa 19/11 (BA BR-35), áp cùng quy tắc khi làm ôn theo kỹ năng | ✅ Chốt 19/11 |
 
 ## 1. Luồng người học (tự động hoàn toàn)
 
@@ -244,6 +245,7 @@ review_answers.rubric_result · review_answers.points (code tính) · review_att
 
 | Ngày | Nội dung |
 |---|---|
+| 19/11/2026 | Chốt Q11: tối đa 5 bài làm dở (theo khóa, sau này theo kỹ năng), Bỏ bài dở, chờ 2 phút giữa 2 lần nộp |
 | 17/11/2026 | Thống nhất thiết kế: kiểm tra theo kỹ năng từ node lộ trình, người học làm ngay, AI soạn và kiểm tra khi thiếu câu, thang 60/40, barem Đạt / Không đạt, dùng bảng ngân hàng hiện có (+ D1–D7), cách mở rộng ra 5.893 kỹ năng. Rút gọn tài liệu, bỏ phần trùng lặp |
 | 17/11/2026 | Sau khi gộp `review/featrure`: trang lộ trình của Hòa đã có, nên bỏ ý nút tạm. Chốt dùng **Alembic** cho D1–D7 (Q7). Ghi bảng `feedback` mới (23 bảng). Lưu mẫu "Ôn tập trên đồ thị" vào `EduMentor-UI-design/proposals/review-on-graph` và ghi 3 điểm lệch với guide (Q10) |
 | 17/11/2026 | Chốt Q6 (giữ ôn tập theo khóa song song), Q8 (chỉ kỹ năng CNTT), Q10 (theo guide; "đến hạn ôn" để sau 25/11). Q9 (thời điểm) đề xuất làm sau 25/11, chờ Tuấn xác nhận |

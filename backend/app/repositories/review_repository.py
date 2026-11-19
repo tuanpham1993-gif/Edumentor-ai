@@ -165,6 +165,26 @@ def get_in_progress(db: Session, user_id: int, course_id: int) -> ReviewAttempt 
     )
 
 
+def list_in_progress(db: Session, user_id: int) -> list[ReviewAttempt]:
+    """Mọi lượt đang làm dở của người dùng (mọi khóa), cũ nhất trước — kèm câu trả lời để đếm số câu đã làm."""
+    return list(
+        db.scalars(
+            select(ReviewAttempt)
+            .where(ReviewAttempt.user_id == user_id, ReviewAttempt.status == "in_progress")
+            .options(selectinload(ReviewAttempt.answers))
+            .order_by(ReviewAttempt.started_at, ReviewAttempt.attempt_id)
+        )
+    )
+
+
+def count_in_progress(db: Session, user_id: int) -> int:
+    return db.scalar(
+        select(func.count())
+        .select_from(ReviewAttempt)
+        .where(ReviewAttempt.user_id == user_id, ReviewAttempt.status == "in_progress")
+    )
+
+
 def list_attempts(db: Session, user_id: int, course_id: int) -> list[ReviewAttempt]:
     """Mới nhất trước."""
     return list(

@@ -38,6 +38,10 @@ class Settings(BaseSettings):
     REVIEW_GRADING_TIMEOUT: int = 20      # giây chờ chấm khi nộp; quá → trạng thái "grading" (T1)
     REVIEW_GRADING_MAX_WAIT: int = 120    # giây tối đa chờ AI chấm (tính từ lúc nộp); quá → chấm từ khóa (T1)
     REVIEW_BANK_TARGET_PER_SKILL: int = 20  # AI ngừng sinh thêm khi kỹ năng đủ số câu này (ngân hàng bước 3)
+    # 19/11: ôn tập KHÔNG giới hạn số lần, chỉ chặn nộp dồn dập (công cụ tự động tốn lượt Gemini) và giới hạn
+    # số bài làm dở cùng lúc (theo khóa học; ôn theo kỹ năng sau này áp cùng quy tắc cho kỹ năng).
+    REVIEW_SUBMIT_COOLDOWN: int = 120  # giây tối thiểu giữa 2 lần nộp của một người
+    REVIEW_MAX_UNFINISHED: int = 5  # số bài làm dở tối đa; đủ → phải nộp hoặc bỏ bớt mới bắt đầu bài mới
     # B9 (15/11): chấm tự luận kèm đoạn tri thức của kỹ năng (Model B). False = Model A (đề + barem + đáp án mẫu).
     # Chỉ bật khi đo trên bộ bài chuẩn thấy B tốt hơn A (docs/Review-AI-Grading.md B9, B10).
     REVIEW_GRADING_RAG: bool = False

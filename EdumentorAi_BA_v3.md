@@ -331,7 +331,9 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 - AI chấm tự luận quá 20 giây: bài chuyển trạng thái Đang chấm, hệ thống chấm tiếp ở nền và gửi email khi có kết quả.
 - AI không dùng được (lỗi, hết lượt): câu tự luận được chấm tự động theo từ khóa để người dùng vẫn có điểm.
 - Câu tự luận bị gắn cờ cần xem lại: điểm tạm tính; Admin chấm lại trên trang Kết Quả - AI Chấm (UC-22), nếu điểm đổi thì người dùng nhận lại thông báo kết quả.
-- Mỗi khóa học chỉ có tối đa một bài đang làm dở cho mỗi người dùng.
+- Mỗi khóa học chỉ có tối đa một bài đang làm dở cho mỗi người dùng; tổng cộng tối đa 5 bài làm dở. Đủ 5 bài mà bắt đầu bài ở khóa khác: hệ thống báo "Bạn đang có 5 bài ôn tập làm dở. Hãy hoàn thành hoặc bỏ bớt một bài để bắt đầu bài mới." và liệt kê các bài dở với nút Tiếp tục / Bỏ bài (BR-35).
+- Người dùng chọn Bỏ bài: bài làm dở bị xóa, không có điểm, không vào lịch sử.
+- Nộp bài khi chưa đủ 2 phút kể từ lần nộp trước: hệ thống báo "Bạn vừa nộp bài, vui lòng chờ. Còn … để nộp lần sau."; bài vẫn giữ nguyên để nộp lại (BR-35).
 
 **Postconditions:**
 - Kết quả được lưu vào Lịch sử ôn tập; người dùng xem lại chi tiết từng câu, lọc câu sai và mở giải thích (ẩn mặc định). Câu tự luận hiển thị kết quả từng ý của barem, lý do, câu trích làm căn cứ (tô sáng trong bài làm), nhận xét chung và đáp án mẫu.
@@ -486,7 +488,7 @@ Hệ thống phải cho phép AI Tutor tạo bài tập củng cố liên quan �
 
 **FR-24 — Tạo bài ôn tập theo khóa học**
 
-Hệ thống phải cho phép người dùng làm bài ôn tập cho một khóa học đang học. Mỗi bài gồm 15 câu lấy từ ngân hàng câu hỏi của các kỹ năng khóa học dạy: 6 câu trắc nghiệm mức Nhận biết, 6 câu trắc nghiệm mức Thông hiểu, 2 câu tự luận mức Dễ và 1 câu tự luận mức Nâng cao. Câu trắc nghiệm chia đều giữa các kỹ năng (mỗi kỹ năng ít nhất 1 câu); 3 câu tự luận ưu tiên 3 kỹ năng khác nhau. Hệ thống ưu tiên câu gắn với tài liệu tri thức liên quan (RAG) và tránh câu của lần làm trước, kể cả phiên bản đã sửa của câu đó. Người dùng được làm lại không giới hạn; mỗi khóa có tối đa một bài đang làm dở.
+Hệ thống phải cho phép người dùng làm bài ôn tập cho một khóa học đang học. Mỗi bài gồm 15 câu lấy từ ngân hàng câu hỏi của các kỹ năng khóa học dạy: 6 câu trắc nghiệm mức Nhận biết, 6 câu trắc nghiệm mức Thông hiểu, 2 câu tự luận mức Dễ và 1 câu tự luận mức Nâng cao. Câu trắc nghiệm chia đều giữa các kỹ năng (mỗi kỹ năng ít nhất 1 câu); 3 câu tự luận ưu tiên 3 kỹ năng khác nhau. Hệ thống ưu tiên câu gắn với tài liệu tri thức liên quan (RAG) và tránh câu của lần làm trước, kể cả phiên bản đã sửa của câu đó. Người dùng được làm lại không giới hạn; mỗi khóa có tối đa một bài đang làm dở và tổng cộng tối đa 5 bài làm dở (BR-35).
 
 **FR-25 — Dạng câu hỏi**
 
@@ -517,7 +519,7 @@ Hệ thống phải lưu kết quả của các bài ôn tập đã nộp, liên
 
 **FR-29 — Lưu bài ôn tập làm dở**
 
-Hệ thống phải lưu câu trả lời của bài đang làm khi người dùng chọn Tạm rời, làm tiếp sau, và mở lại đúng bài đó khi người dùng quay lại. Hồ sơ người dùng hiển thị các lần ôn tập gần đây.
+Hệ thống phải lưu câu trả lời của bài đang làm khi người dùng chọn Tạm rời, làm tiếp sau, và mở lại đúng bài đó khi người dùng quay lại. Hồ sơ người dùng hiển thị các lần ôn tập gần đây. Người dùng có thể Bỏ bài làm dở: bài bị xóa hẳn, không có điểm, không vào lịch sử, không gọi AI chấm. Khi đã có 5 bài làm dở, người dùng phải nộp hoặc bỏ bớt một bài mới bắt đầu được bài ở khóa khác; mở lại bài dở đã có vẫn được.
 
 ## 6.7. Quản trị dữ liệu hệ thống (System Data Administration)
 
@@ -1274,6 +1276,10 @@ Sau khi hoàn thành bài đánh giá, người dùng cần nhận được đi�
 
 Lịch sử ôn tập chỉ gồm các bài đã nộp. Bài đang làm dở không được tính là kết quả.
 
+**BR-35 — Ôn tập không giới hạn số lần, nhưng giới hạn bài làm dở và nộp dồn dập**
+
+Người dùng được ôn tập không giới hạn số lần. Để bảo vệ lượt AI chấm dùng chung: (1) hai lần nộp bài của một người phải cách nhau ít nhất 2 phút — chặn công cụ nộp tự động, người học thật làm 15 câu mất vài phút nên không bị ảnh hưởng; lần nộp lỗi không tính; (2) mỗi người có tối đa 5 bài làm dở cùng lúc (tính theo khóa học; khi ôn tập theo kỹ năng trên đồ thị thì tính theo kỹ năng). Hai ngưỡng là cấu hình hệ thống (`REVIEW_SUBMIT_COOLDOWN`, `REVIEW_MAX_UNFINISHED`).
+
 ## 9.7. Quy tắc quản trị và kiểm soát dữ liệu (Administration and Data Governance Rules)
 
 **BR-32 — Chỉ Admin được quản lý dữ liệu nền dùng chung**
@@ -1517,6 +1523,7 @@ Mỗi bài ôn tập thuộc một khóa học, gồm 15 câu (12 trắc nghiệ
 | POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu bài mới, hoặc trả lại bài đang làm dở nếu đã có. |
 | GET | `/api/review-attempts/{attempt_id}` | Lấy câu hỏi và câu trả lời đã lưu của bài đang làm (không lộ đáp án). |
 | PATCH | `/api/review-attempts/{attempt_id}/answers` | Lưu câu trả lời khi Tạm rời, làm tiếp sau. |
+| DELETE | `/api/review-attempts/{attempt_id}` | Bỏ bài làm dở: xóa hẳn, không điểm, không vào lịch sử. Bài đã nộp → 409. |
 | POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài, chấm điểm, cập nhật khóa học và kỹ năng nếu đạt, gửi email kết quả. |
 | GET | `/api/me/review-history` | Lịch sử ôn tập, lọc theo `course_id` và `passed`, có phân trang. |
 | GET | `/api/me/review-history/{attempt_id}` | Chi tiết một lần làm: từng câu, đáp án đã chọn, đáp án đúng, giải thích. |
@@ -1530,7 +1537,7 @@ API quản trị xem lại bài AI chấm (Admin, FR-57):
 
 ### Quy trình nộp bài
 
-1. Kiểm tra bài thuộc người dùng hiện tại và chưa nộp.
+1. Kiểm tra bài thuộc người dùng hiện tại và chưa nộp; lần nộp trước của người này đã cách ít nhất 2 phút (chưa đủ → `429` kèm `Retry-After`, bài giữ nguyên).
 2. Chấm từng câu: trắc nghiệm theo đáp án lưu sẵn; tự luận gửi AI chấm song song theo barem (chờ tối đa 20 giây, quá thì bài chuyển Đang chấm và chấm tiếp ở nền; AI lỗi thì chấm theo từ khóa). Câu bỏ trống được 0 điểm.
 3. Cộng điểm thang 10 và so với ngưỡng đạt (mặc định 6/10, đọc từ cấu hình).
 4. Lưu kết quả, kết quả từng ý của câu tự luận, nhật ký chấm và thời điểm nộp.
@@ -1708,7 +1715,8 @@ Tiêu chí nghiệm thu xác định điều kiện để đánh giá EduMentor 
 
 **AC-07 — Ôn tập theo khóa học**
 - Bài ôn tập có 15 câu (12 trắc nghiệm, 3 tự luận) theo kỹ năng của khóa; trắc nghiệm chấm theo đáp án lưu sẵn, tự luận do AI chấm từng ý theo barem; đạt từ 6/10.
-- Bài làm dở được lưu và mở lại đúng; mỗi khóa có tối đa một bài dở.
+- Bài làm dở được lưu và mở lại đúng; mỗi khóa có tối đa một bài dở, tổng cộng tối đa 5 bài dở; bỏ bài dở thì bài bị xóa, không vào lịch sử.
+- Hai lần nộp cách nhau dưới 2 phút thì lần sau bị chặn với thông báo thời gian chờ.
 - Đạt bài thì khóa học thành Hoàn thành và kỹ năng thành Đã biết.
 - Kết quả, phản hồi và lịch sử đánh giá được lưu chính xác.
 - Người dùng không bắt buộc phải làm bài đánh giá để tiếp tục học.

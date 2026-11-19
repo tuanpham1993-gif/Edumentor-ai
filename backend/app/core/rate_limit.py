@@ -78,8 +78,20 @@ register_by_ip = RateLimiter(limit=5, window=60 * MINUTE)
 forgot_by_email = RateLimiter(limit=3, window=15 * MINUTE)  # chống spam email đặt lại cho một người
 forgot_by_ip = RateLimiter(limit=10, window=60 * MINUTE)
 reset_by_ip = RateLimiter(limit=10, window=15 * MINUTE)
+# 19/11 (module 09): ôn tập KHÔNG giới hạn số lần; chỉ bắt 2 lần nộp của một người cách nhau ≥ REVIEW_SUBMIT_COOLDOWN
+# giây — chặn công cụ nộp tự động làm cạn lượt Gemini (mỗi lần nộp chấm 3 câu tự luận). Người thật làm 15 câu mất
+# vài phút nên không chạm tới.
+review_submit_by_user = RateLimiter(limit=1, window=settings.REVIEW_SUBMIT_COOLDOWN)
 
-ALL_LIMITERS = (login_failures_by_email, login_by_ip, register_by_ip, forgot_by_email, forgot_by_ip, reset_by_ip)
+ALL_LIMITERS = (
+    login_failures_by_email,
+    login_by_ip,
+    register_by_ip,
+    forgot_by_email,
+    forgot_by_ip,
+    reset_by_ip,
+    review_submit_by_user,
+)
 
 
 def client_ip(request: Request) -> str:
@@ -111,3 +123,31 @@ def enforce(limiter: RateLimiter, key: str, *, count: bool = True) -> None:
         raise too_many(wait)
     if count:
         limiter.hit(key)
+
+
+def _mm_ss(seconds: float) -> str:
+    total = max(1, math.ceil(seconds))
+    minutes, secs = divmod(total, 60)
+    if minutes and secs:
+        return f"{minutes} phút {secs} giây"
+    return f"{minutes} phút" if minutes else f"{secs} giây"
+
+
+def check_review_submit(user_id: int) -> None:
+    """Vừa nộp bài chưa đủ REVIEW_SUBMIT_COOLDOWN giây → 429 "Bạn vừa nộp bài, vui lòng chờ…". Không đếm lần này."""
+    if not settings.RATE_LIMIT_ENABLED or settings.REVIEW_SUBMIT_COOLDOWN <= 0:
+        return
+    review_submit_by_user.window = settings.REVIEW_SUBMIT_COOLDOWN  # đọc lại cấu hình (test đổi được)
+    wait = review_submit_by_user.retry_after(str(user_id))
+    if wait > 0:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Bạn vừa nộp bài, vui lòng chờ. Còn {_mm_ss(wait)} để nộp lần sau.",
+            headers={"Retry-After": str(math.ceil(wait))},
+        )
+
+
+def record_review_submit(user_id: int) -> None:
+    """Gọi SAU khi nộp thành công (đã chấm / đang chấm) — nộp lỗi không tính."""
+    if settings.RATE_LIMIT_ENABLED and settings.REVIEW_SUBMIT_COOLDOWN > 0:
+        review_submit_by_user.hit(str(user_id))

@@ -33,7 +33,7 @@ class ReviewStructureOut(BaseModel):
 
 
 class ReviewBlockedOut(BaseModel):
-    """Lý do chưa thể ôn tập. code: not_enrolled | abandoned | no_question_bank."""
+    """Lý do chưa thể ôn tập. code: not_enrolled | abandoned | no_question_bank | too_many_unfinished."""
 
     code: str
     message: str
@@ -48,6 +48,17 @@ class AttemptSummaryOut(BaseModel):
     submitted_at: datetime | None
 
 
+class UnfinishedAttemptOut(BaseModel):
+    """Bài làm dở ở khóa khác (19/11) — hiện khi đủ số bài dở tối đa để người học Tiếp tục / Bỏ bớt."""
+
+    attempt_id: int
+    course_id: int
+    course_title: str
+    answered: int
+    total: int
+    started_at: datetime
+
+
 class ReviewInfoOut(BaseModel):
     course_id: int
     course_title: str
@@ -57,6 +68,7 @@ class ReviewInfoOut(BaseModel):
     can_start: bool
     blocked: ReviewBlockedOut | None
     in_progress_attempt_id: int | None
+    unfinished_attempts: list[UnfinishedAttemptOut] = []
     attempts: list[AttemptSummaryOut]
 
 

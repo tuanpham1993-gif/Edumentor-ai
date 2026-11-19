@@ -7,6 +7,7 @@ Lượt làm bài của người khác → 404 như lượt không tồn tại (
     POST  /api/courses/{course_id}/review-attempts   — bắt đầu (có lượt dở → trả lại lượt đó)
     GET   /api/review-attempts/{attempt_id}          — đề + câu trả lời đã lưu (KHÔNG có đáp án)
     PATCH /api/review-attempts/{attempt_id}/answers  — lưu câu trả lời (Tạm rời / làm tiếp)
+    DELETE /api/review-attempts/{attempt_id}         — bỏ bài làm dở: xóa hẳn, không điểm, không lịch sử (19/11)
     POST  /api/review-attempts/{attempt_id}/submit   — nộp bài: chấm + (đạt lần đầu) Hoàn thành khóa (GĐ3)
     GET   /api/me/review-history                     — lịch sử các lượt đã nộp, lọc + phân trang (GĐ3)
     GET   /api/me/review-history/{attempt_id}        — chi tiết lượt đã nộp: đáp án đúng, điểm từng ý (GĐ3)
@@ -24,6 +25,7 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 
+from app.core import rate_limit as rl
 from app.core.database import get_db
 from app.core.dependencies import get_current_user, require_admin
 from app.core.email import send_review_result_email
@@ -45,8 +47,9 @@ ATTEMPT_NOT_FOUND = "Không tìm thấy bài ôn tập."
 
 
 def _blocked(err: review_service.ReviewBlockedError) -> HTTPException:
-    # Chưa / đã bỏ khóa → 403 (không có quyền ôn); chưa có ngân hàng → 409 (trạng thái chưa sẵn sàng).
-    code = status.HTTP_409_CONFLICT if err.code == "no_question_bank" else status.HTTP_403_FORBIDDEN
+    # Chưa / đã bỏ khóa → 403 (không có quyền ôn); chưa có ngân hàng, đủ số bài dở → 409 (chưa sẵn sàng).
+    conflict = ("no_question_bank", "too_many_unfinished")
+    code = status.HTTP_409_CONFLICT if err.code in conflict else status.HTTP_403_FORBIDDEN
     return HTTPException(status_code=code, detail=err.message)
 
 
@@ -116,17 +119,34 @@ def save_review_answers(
     except review_service.AttemptNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
     except review_service.AttemptLockedError:
-        raise HTTPException(
-            status.HTTP_409_CONFLICT, "Bài đã nộp — không sửa câu trả lời được nữa."
-        ) from None
+        raise HTTPException(status.HTTP_409_CONFLICT, "Bài đã nộp — không sửa câu trả lời được nữa.") from None
     except review_service.InvalidAnswerError as err:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(err)) from None
+
+
+@router.delete(
+    "/review-attempts/{attempt_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Bỏ bài làm dở — xóa hẳn (không điểm, không vào lịch sử, không gọi AI)",
+)
+def abandon_review(
+    attempt_id: int,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        review_service.abandon_attempt(db, current_user, attempt_id)
+    except review_service.AttemptNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
+    except review_service.AttemptLockedError:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Bài đã nộp — không bỏ được.") from None
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post(
     "/review-attempts/{attempt_id}/submit",
     response_model=AttemptResultOut,
-    summary="Nộp bài — chấm điểm; đạt lần đầu thì khóa Hoàn thành + kỹ năng \"Đã biết\"",
+    summary='Nộp bài — chấm điểm; đạt lần đầu thì khóa Hoàn thành + kỹ năng "Đã biết"',
 )
 def submit_review(
     attempt_id: int,
@@ -135,10 +155,11 @@ def submit_review(
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # 19/11: ôn tập không giới hạn số lần, nhưng 2 lần nộp phải cách nhau ≥ REVIEW_SUBMIT_COOLDOWN giây (chặn công cụ
+    # nộp tự động tốn lượt Gemini). Chỉ ĐẾM lần nộp thành công — nộp lỗi (404, 409…) không chấm nên không tính.
+    rl.check_review_submit(current_user.user_id)
     try:
-        result = review_service.submit_attempt(
-            db, current_user, attempt_id, schedule=background_tasks.add_task
-        )
+        result = review_service.submit_attempt(db, current_user, attempt_id, schedule=background_tasks.add_task)
     except review_service.AttemptNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
     except review_service.AttemptLockedError:
@@ -148,6 +169,7 @@ def submit_review(
         raise HTTPException(
             status.HTTP_409_CONFLICT, "Trạng thái khóa học vừa thay đổi. Vui lòng nộp lại bài."
         ) from None
+    rl.record_review_submit(current_user.user_id)
     if result["status"] == "grading":
         # T1: AI chấm quá thời gian → 202 "Đang chấm"; chấm nốt ở nền, xong thì có chuông + email.
         response.status_code = status.HTTP_202_ACCEPTED
@@ -179,9 +201,7 @@ def read_review_history(
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return review_service.history_list(
-        db, current_user, course_id=course_id, passed=passed, page=page, size=size
-    )
+    return review_service.history_list(db, current_user, course_id=course_id, passed=passed, page=page, size=size)
 
 
 @router.get(

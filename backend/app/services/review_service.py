@@ -57,7 +57,13 @@ BLOCK_MESSAGES = {
     "not_enrolled": "Bạn chưa tham gia khóa học này. Hãy tham gia khóa học để ôn tập.",
     "abandoned": "Bạn đã bỏ khóa học này. Tham gia lại khóa học để ôn tập.",
     "no_question_bank": "Chưa có đề ôn tập cho khóa học này.",
+    # 19/11: đã đủ REVIEW_MAX_UNFINISHED bài làm dở (số thật điền lúc báo — xem block_message)
+    "too_many_unfinished": "Bạn đang có {n} bài ôn tập làm dở. Hãy hoàn thành hoặc bỏ bớt một bài để bắt đầu bài mới.",
 }
+
+
+def block_message(code: str) -> str:
+    return BLOCK_MESSAGES[code].format(n=settings.REVIEW_MAX_UNFINISHED)
 
 
 class ReviewError(Exception):
@@ -70,9 +76,9 @@ class CourseNotFoundError(ReviewError):
 
 class ReviewBlockedError(ReviewError):
     def __init__(self, code: str):
-        super().__init__(BLOCK_MESSAGES[code])
+        super().__init__(block_message(code))
         self.code = code
-        self.message = BLOCK_MESSAGES[code]
+        self.message = block_message(code)
 
 
 class AttemptNotFoundError(ReviewError):
@@ -135,6 +141,11 @@ def review_info(db: Session, user: Users, course_id: int) -> dict:
     in_progress = repo.get_in_progress(db, user.user_id, course_id)
 
     block = _enrollment_block(db, user, course_id)
+    unfinished = []
+    if block is None and in_progress is None:
+        unfinished = repo.list_in_progress(db, user.user_id)
+        if len(unfinished) >= settings.REVIEW_MAX_UNFINISHED:
+            block = "too_many_unfinished"
     if block is None and in_progress is None and not _has_question_bank(db, [s for s, _ in skills]):
         block = "no_question_bank"
 
@@ -145,8 +156,10 @@ def review_info(db: Session, user: Users, course_id: int) -> dict:
         "structure": _structure(),
         "pass_score": settings.REVIEW_PASS_SCORE,
         "can_start": block is None,
-        "blocked": {"code": block, "message": BLOCK_MESSAGES[block]} if block else None,
+        "blocked": {"code": block, "message": block_message(block)} if block else None,
         "in_progress_attempt_id": in_progress.attempt_id if in_progress else None,
+        # Đủ số bài dở → kèm danh sách để người học Tiếp tục / Bỏ bớt ngay trên màn Bắt đầu
+        "unfinished_attempts": _unfinished_view(db, unfinished) if block == "too_many_unfinished" else [],
         "attempts": [_summary(a) for a in repo.list_attempts(db, user.user_id, course_id)],
     }
 
@@ -227,6 +240,8 @@ def start_attempt(
     existing = repo.get_in_progress(db, user.user_id, course_id)
     if existing:
         return attempt_view(db, existing.attempt_id, resumed=True)
+    if repo.count_in_progress(db, user.user_id) >= settings.REVIEW_MAX_UNFINISHED:
+        raise ReviewBlockedError("too_many_unfinished")
 
     rng = rng or random.Random()
     ai = ai or get_review_ai()
@@ -340,6 +355,31 @@ def _owned_attempt(db: Session, user: Users, attempt_id: int, *, lock: bool = Fa
     if attempt is None or attempt.user_id != user.user_id:
         raise AttemptNotFoundError
     return attempt
+
+
+def _unfinished_view(db: Session, attempts: list[ReviewAttempt]) -> list[dict]:
+    titles = repo.course_titles(db, [a.course_id for a in attempts])
+    return [
+        {
+            "attempt_id": a.attempt_id,
+            "course_id": a.course_id,
+            "course_title": titles.get(a.course_id, ""),
+            "answered": sum(1 for x in a.answers if _is_answered(x)),
+            "total": len(a.answers),
+            "started_at": a.started_at,
+        }
+        for a in attempts
+    ]
+
+
+def abandon_attempt(db: Session, user: Users, attempt_id: int) -> None:
+    """Bỏ bài làm dở (19/11): XÓA hẳn lượt + câu trả lời — chưa chấm nên không có điểm, không vào lịch sử,
+    không gọi AI. Chỉ bỏ được lượt đang làm của chính mình; lượt đã nộp → AttemptLockedError (409)."""
+    attempt = _owned_attempt(db, user, attempt_id, lock=True)
+    if attempt.status != "in_progress":
+        raise AttemptLockedError
+    db.delete(attempt)
+    db.commit()
 
 
 def _is_answered(a: ReviewAnswer) -> bool:

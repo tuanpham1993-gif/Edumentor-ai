@@ -104,6 +104,21 @@
 }
 .blocked p { margin: 6px 0 0; }
 
+/* 19/11: đủ số bài làm dở → danh sách để Tiếp tục / Bỏ bớt; nút Bỏ bài hỏi lại tại chỗ */
+.unfinished { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.unfinished li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--r-md, 10px);
+  border: 1px solid var(--line);
+}
+.unfinishedTitle { font-weight: 600; font-size: 14px; }
+.unfinishedActions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.abandonConfirm { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.resumeRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
 }

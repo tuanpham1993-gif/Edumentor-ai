@@ -2,6 +2,7 @@
 //   - Cấu trúc đề (chốt 09/11): 15 câu = 12 trắc nghiệm + 3 tự luận, đạt ≥ 6/10, làm lại không giới hạn.
 //   - Có lượt đang làm dở → nút "Tiếp tục bài đang làm" (backend trả lại đúng lượt đó).
 //   - Chưa thể ôn (chưa tham gia / đã bỏ khóa / chưa có đề) → hiện lý do, ẩn nút Bắt đầu.
+//   - 19/11: đủ 5 bài làm dở (khóa khác) → danh sách bài dở với Tiếp tục / Bỏ bài; bài dở của khóa này có "Bỏ bài này".
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -9,9 +10,15 @@ import * as reviewApi from '../../../api/review.api.js';
 import StatusPanel from '../../common/components/StatusPanel.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
+import AbandonAttemptButton from '../components/AbandonAttemptButton.jsx';
 import TempJoinCourseButton from '../components/TempJoinCourseButton.jsx'; // TẠM — xóa khi Khôi có trang khóa học
 import { formatScore } from '../reviewFormat.js';
 import styles from '../styles/ReviewStartPage.module.css';
+
+const BLOCK_TITLES = {
+  no_question_bank: 'Bài ôn tập chưa sẵn sàng',
+  too_many_unfinished: 'Bạn đang có nhiều bài làm dở',
+};
 
 function CheckIcon() {
   return (
@@ -147,8 +154,9 @@ export default function ReviewStartPage() {
           </ul>
 
           {resumable && (
-            <div className={styles.resume}>
+            <div className={`${styles.resume} ${styles.resumeRow}`}>
               <span>Bạn có một bài đang làm dở — câu trả lời đã lưu vẫn còn.</span>
+              <AbandonAttemptButton attemptId={info.in_progress_attempt_id} onDone={load} label="Bỏ bài này" />
             </div>
           )}
 
@@ -204,10 +212,26 @@ export default function ReviewStartPage() {
             <section className={`card ${styles.panel}`} role="status">
               <h2>Khi chưa thể ôn tập</h2>
               <div className={styles.blocked}>
-                <strong>
-                  {info.blocked.code === 'no_question_bank' ? 'Bài ôn tập chưa sẵn sàng' : 'Bạn chưa thể ôn khóa này'}
-                </strong>
+                <strong>{BLOCK_TITLES[info.blocked.code] ?? 'Bạn chưa thể ôn khóa này'}</strong>
                 <p className="muted small">{info.blocked.message}</p>
+                {info.blocked.code === 'too_many_unfinished' && (
+                  <ul className={styles.unfinished}>
+                    {info.unfinished_attempts.map((a) => (
+                      <li key={a.attempt_id}>
+                        <span className={styles.unfinishedTitle}>{a.course_title}</span>
+                        <span className="muted small">
+                          Đã làm {a.answered}/{a.total} câu · bắt đầu {formatDateTime(a.started_at)}
+                        </span>
+                        <span className={styles.unfinishedActions}>
+                          <Link to={`/review/${a.attempt_id}`} className="btn btn-sm btn-primary">
+                            Tiếp tục
+                          </Link>
+                          <AbandonAttemptButton attemptId={a.attempt_id} onDone={load} />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {['not_enrolled', 'abandoned'].includes(info.blocked.code) && (
                   <TempJoinCourseButton courseId={courseId} rejoin={info.blocked.code === 'abandoned'} onJoined={load} />
                 )}

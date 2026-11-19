@@ -3,7 +3,8 @@
 import client from './client.js';
 
 // GET /courses/{id}/review → { course_title, skills, structure, pass_score, can_start, blocked,
-//                               in_progress_attempt_id, attempts }
+//                               in_progress_attempt_id, unfinished_attempts, attempts }
+// blocked.code = too_many_unfinished → unfinished_attempts liệt kê các bài dở để Tiếp tục / Bỏ bớt (19/11)
 export async function getReviewInfo(courseId) {
   const response = await client.get(`/courses/${courseId}/review`);
   return response.data;
@@ -28,7 +29,13 @@ export async function saveAnswers(attemptId, answers) {
   return response.data;
 }
 
-// POST /review-attempts/{id}/submit → kết quả chi tiết (AttemptResultOut)
+// DELETE /review-attempts/{id} → 204. Bỏ bài làm dở: xóa hẳn, không điểm, không vào lịch sử (19/11).
+export async function abandonAttempt(attemptId) {
+  await client.delete(`/review-attempts/${attemptId}`);
+}
+
+// POST /review-attempts/{id}/submit → kết quả chi tiết (AttemptResultOut).
+// 429 = vừa nộp chưa đủ 2 phút (chặn công cụ nộp tự động) — detail là câu báo sẵn cho người dùng.
 export async function submitAttempt(attemptId) {
   const response = await client.post(`/review-attempts/${attemptId}/submit`);
   return response.data;

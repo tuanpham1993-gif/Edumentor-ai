@@ -2,6 +2,7 @@
 
 Chạy:  python -m pytest tests/test_review_submit.py -v      (trong thư mục backend)
 """
+
 # ruff: noqa: F811 — fixture bank_312 import từ test_review_api; pytest truyền qua TÊN tham số
 
 import pytest
@@ -111,8 +112,11 @@ def test_meeting_example_essay_scores_8_of_10(client, bank_312, student_headers,
         submit(client, student_headers, attempt_id)
     assert attempt, "không ra được câu list/tuple sau 30 lượt"
     attempt_id, position = attempt
-    client.patch(f"/api/review-attempts/{attempt_id}/answers", headers=student_headers,
-                 json={"answers": [{"position": position, "text_answer": LIST_TUPLE_ANSWER}]})
+    client.patch(
+        f"/api/review-attempts/{attempt_id}/answers",
+        headers=student_headers,
+        json={"answers": [{"position": position, "text_answer": LIST_TUPLE_ANSWER}]},
+    )
 
     result = submit(client, student_headers, attempt_id)
 
@@ -147,8 +151,9 @@ def pass_once(client, headers, db_session):
 
 def test_removed_skill_comes_back_on_first_pass(client, bank_312, student_headers, db_session):
     """6b: người dùng tự gỡ một kỹ năng của khóa → đạt lần đầu → kỹ năng quay lại "Đã biết"."""
-    client.patch("/api/me/skills", headers=student_headers,
-                 json={"add": [{"skill_id": SKILL_IDS[0], "status": "learning"}]})
+    client.patch(
+        "/api/me/skills", headers=student_headers, json={"add": [{"skill_id": SKILL_IDS[0], "status": "learning"}]}
+    )
     client.patch("/api/me/skills", headers=student_headers, json={"remove": [SKILL_IDS[0]]})
 
     pass_once(client, student_headers, db_session)
@@ -160,7 +165,9 @@ def test_removed_skill_comes_back_on_first_pass(client, bank_312, student_header
 def test_second_pass_only_records_history(client, bank_312, student_headers, db_session):
     """B2: đạt lần 2 (khóa đã Hoàn thành — user_courses thật của Khôi) → không Hoàn thành lại, không cập nhật kỹ năng."""
     first = pass_once(client, student_headers, db_session)
-    assert course_gateway.get_enrollment_status(db_session, user_of(db_session).user_id, 312) == course_gateway.COMPLETED
+    assert (
+        course_gateway.get_enrollment_status(db_session, user_of(db_session).user_id, 312) == course_gateway.COMPLETED
+    )
     client.patch("/api/me/skills", headers=student_headers, json={"remove": [SKILL_IDS[0]]})  # tự gỡ sau khi đạt
 
     second = pass_once(client, student_headers, db_session)
@@ -230,7 +237,16 @@ def test_essay_falls_back_to_keyword_grading(client, bank_312, student_headers, 
     # B6: trace từng khối pipeline — khối 4 lỗi → nhánh dự phòng từ khóa
     for essay in grading["essays"]:
         names = [n["node"] for n in essay["nodes"]]
-        assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "4b_keyword_fallback", "7_aggregate", "8_trace"]
+        assert names == [
+            "0_input",
+            "1_preprocess",
+            "2_guard",
+            "3_context",
+            "4_llm_grade",
+            "4b_keyword_fallback",
+            "7_aggregate",
+            "8_trace",
+        ]
         assert essay["nodes"][names.index("4_llm_grade")]["status"] == "error"
         assert essay["nodes"][-1]["output"]["graded_by"] == "keyword"
 
@@ -249,7 +265,17 @@ def test_grading_trace_has_every_pipeline_node_per_essay(client, bank_312, stude
     assert set(traced) == {a.position for a in essays}
     done = traced[essays[0].position]
     names = [n["node"] for n in done]
-    assert names == ["0_input", "1_preprocess", "2_guard", "3_context", "4_llm_grade", "5_verify", "6_cross_check", "7_aggregate", "8_trace"]
+    assert names == [
+        "0_input",
+        "1_preprocess",
+        "2_guard",
+        "3_context",
+        "4_llm_grade",
+        "5_verify",
+        "6_cross_check",
+        "7_aggregate",
+        "8_trace",
+    ]
     assert all(n["status"] == "ok" and n["ms"] >= 0 for n in done)
     assert done[names.index("4_llm_grade")]["output"]["source"] == "parallel"
     assert done[names.index("7_aggregate")]["output"]["score_10"] == 10
@@ -331,3 +357,82 @@ def test_trace_admin_only(client, bank_312, student_headers, admin_headers, db_s
     trace = response.json()["trace"]
     assert trace["ai_mode"] == "mock" and len(trace["skills"]) == 5 and trace["grading"]["ai"] == "mock"
     assert client.get("/api/admin/review-attempts/99999/trace", headers=admin_headers).status_code == 404
+
+
+# ─────────────── Chặn nộp dồn dập, tối đa bài làm dở, bỏ bài dở (19/11) ───────────────
+# Ôn tập KHÔNG giới hạn số lần; chỉ: 2 lần nộp cách nhau ≥ REVIEW_SUBMIT_COOLDOWN; tối đa REVIEW_MAX_UNFINISHED
+# bài làm dở (theo khóa); bỏ bài dở = xóa hẳn.
+
+
+def test_submit_cooldown_between_two_submits(client, bank_312, student_headers, admin_headers, monkeypatch):
+    from app.core import rate_limit as rl
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "REVIEW_SUBMIT_COOLDOWN", 120)
+    now = [1000.0]
+    monkeypatch.setattr(rl.review_submit_by_user, "clock", lambda: now[0])
+
+    first = start(client, student_headers)["attempt_id"]
+    assert client.post(submit_url(first), headers=admin_headers).status_code == 404  # bài người khác — không tính
+    submit(client, student_headers, first)
+    assert client.post(submit_url(first), headers=student_headers).status_code == 429  # còn trong 2 phút
+
+    second = start(client, student_headers)["attempt_id"]  # bắt đầu bài mới vẫn được — chỉ chặn NỘP
+    now[0] += 35
+    blocked = client.post(submit_url(second), headers=student_headers)
+    assert blocked.status_code == 429
+    assert blocked.json()["detail"] == "Bạn vừa nộp bài, vui lòng chờ. Còn 1 phút 25 giây để nộp lần sau."
+    assert blocked.headers["Retry-After"] == "85"
+    assert client.get(f"/api/review-attempts/{second}", headers=student_headers).status_code == 200  # bài còn nguyên
+
+    now[0] += 86  # hết 2 phút
+    submit(client, student_headers, second)
+
+
+def test_max_unfinished_blocks_new_attempt_but_not_resume(client, bank_312, student_headers, monkeypatch):
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "REVIEW_MAX_UNFINISHED", 1)
+    attempt = start(client, student_headers)  # khóa 312: 1 bài dở = đủ ngưỡng
+
+    info = client.get("/api/courses/999/review", headers=student_headers).json()
+    assert info["can_start"] is False and info["blocked"]["code"] == "too_many_unfinished"
+    assert info["blocked"]["message"].startswith("Bạn đang có 1 bài ôn tập làm dở.")
+    [item] = info["unfinished_attempts"]
+    assert item["attempt_id"] == attempt["attempt_id"] and item["course_id"] == 312
+    assert item["course_title"] == "Python Basics: Selection and Iteration"
+    assert item["answered"] == 0 and item["total"] == 15
+
+    blocked = client.post("/api/courses/999/review-attempts", headers=student_headers)
+    assert blocked.status_code == 409 and "bỏ bớt một bài" in blocked.json()["detail"]
+
+    again = start(client, student_headers)  # mở lại bài dở của CHÍNH khóa 312 vẫn được
+    assert again["attempt_id"] == attempt["attempt_id"] and again["resumed"] is True
+    assert client.get("/api/courses/312/review", headers=student_headers).json()["can_start"] is True
+
+
+def test_abandon_unfinished_attempt(client, bank_312, student_headers, admin_headers, db_session, monkeypatch):
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "REVIEW_MAX_UNFINISHED", 1)
+    attempt_id = start(client, student_headers)["attempt_id"]
+    url = f"/api/review-attempts/{attempt_id}"
+
+    assert client.delete(url).status_code == 401
+    assert client.delete(url, headers=admin_headers).status_code == 404  # bài người khác — như không tồn tại
+    assert client.delete(url, headers=student_headers).status_code == 204
+    assert db_session.get(ReviewAttempt, attempt_id) is None
+    assert answers_of(db_session, attempt_id) == []
+    assert client.delete(url, headers=student_headers).status_code == 404
+
+    # Bớt được 1 bài dở → khóa khác hết bị chặn vì "đủ bài dở" (khóa 999 còn lý do riêng: chưa có đề)
+    assert (
+        client.get("/api/courses/999/review", headers=student_headers).json()["blocked"]["code"] == "no_question_bank"
+    )
+    # Không vào lịch sử
+    assert client.get("/api/me/review-history", headers=student_headers).json()["total"] == 0
+
+    submitted = start(client, student_headers)["attempt_id"]
+    submit(client, student_headers, submitted)
+    gone = client.delete(f"/api/review-attempts/{submitted}", headers=student_headers)
+    assert gone.status_code == 409 and gone.json()["detail"] == "Bài đã nộp — không bỏ được."

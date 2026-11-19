@@ -236,10 +236,11 @@ qua pipeline 9 khối, dự phòng chấm từ khóa. *(Cập nhật 16/11/2026 
 | Method | Endpoint | Mô tả | Quyền |
 |---|---|---|---|
 | GET | `/api/courses/{course_id}/review` | Thông tin ôn tập của khóa: kỹ năng, cấu trúc đề, điểm đạt, `can_start` + `blocked` (`not_enrolled` / `abandoned` / `no_question_bank`), bài đang làm dở, các lần làm trước. | Người dùng |
-| POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu một lần ôn tập: ráp đề 15 câu, lưu sẵn danh sách câu (không kèm đáp án, barem). Đã có bài dở → trả lại bài đó. | Người dùng |
+| POST | `/api/courses/{course_id}/review-attempts` | Bắt đầu một lần ôn tập: ráp đề 15 câu, lưu sẵn danh sách câu (không kèm đáp án, barem). Đã có bài dở → trả lại bài đó. Đã có **5 bài dở** (khóa khác) → `409` "Bạn đang có 5 bài ôn tập làm dở…"; `GET .../review` khi đó có `blocked.code = too_many_unfinished` và `unfinished_attempts` (attempt_id, course_title, answered/total). | Người dùng |
 | GET | `/api/review-attempts/{attempt_id}` | Trạng thái và câu hỏi của lần ôn tập (kèm câu trả lời đã lưu). Không phải chủ sở hữu → 404. | Người dùng |
 | PATCH | `/api/review-attempts/{attempt_id}/answers` | Lưu câu trả lời (lựa chọn trắc nghiệm / bài viết tự luận) — dùng cho Tạm rời, làm tiếp. | Người dùng |
-| POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài và chấm. Tự luận chấm song song, chờ tối đa 20 giây: xong → trả kết quả (`graded`); quá giờ → trả `grading`, chấm tiếp ở nền và gửi email khi xong. *(T13, T29)* | Người dùng |
+| DELETE | `/api/review-attempts/{attempt_id}` | Bỏ bài làm dở (19/11): xóa hẳn, không điểm, không vào lịch sử → `204`. Bài người khác → 404; đã nộp → 409. | Người dùng |
+| POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài và chấm. Tự luận chấm song song, chờ tối đa 20 giây: xong → trả kết quả (`graded`); quá giờ → trả `grading`, chấm tiếp ở nền và gửi email khi xong. *(T13, T29)* Lần nộp thành công trước của người này chưa đủ **2 phút** → `429` "Bạn vừa nộp bài, vui lòng chờ. Còn … để nộp lần sau." + `Retry-After` (19/11). | Người dùng |
 | GET | `/api/me/review-history` | Lịch sử ôn tập; lọc `?course_id=`, `?passed=true\|false`; phân trang. *(T17)* | Người dùng |
 | GET | `/api/me/review-history/{attempt_id}` | Kết quả chi tiết (chỉ sau khi nộp): đáp án đã chọn, đáp án đúng, giải thích; câu tự luận có `rubric[]` (kết quả, điểm, `reason`, `evidence` từng ý), `feedback`, `graded_by` (`ai` / `keyword`), `needs_review`. | Người dùng |
 | GET | `/api/admin/review-attempts/{attempt_id}/trace` | Nhật ký sinh đề + chấm (RAG, prompt, trace từng khối pipeline). | Admin |

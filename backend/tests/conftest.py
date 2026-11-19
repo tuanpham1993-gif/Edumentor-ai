@@ -54,6 +54,8 @@ def _no_real_email_or_ai(monkeypatch):
 
     for limiter in rate_limit.ALL_LIMITERS:
         limiter.clear()
+    # 19/11: nhiều test nộp bài ôn tập liên tiếp → tắt "chờ 2 phút giữa 2 lần nộp"; test riêng bật lại
+    monkeypatch.setattr(settings, "REVIEW_SUBMIT_COOLDOWN", 0)
 
 
 @pytest.fixture()
