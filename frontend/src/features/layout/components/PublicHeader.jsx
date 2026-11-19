@@ -1,5 +1,5 @@
 // Header cho KHÁCH (FĐ7, 08/11/2026) — dùng ở trang chủ, Đăng nhập, Đăng ký, Quên mật khẩu.
-//   logo · Trang chủ · Khóa học · Tính năng · Về chúng tôi · nút Đăng nhập / Đăng ký
+//   logo · Trang chủ · Tính năng · Lộ trình · Khóa học · nút Đăng nhập / Đăng ký
 //
 // Ở trang chủ ("/"): mục là neo #id, cuộn mượt tới phần tương ứng; phần đang xem tô vàng.
 // Ở trang khác: bấm mục → về trang chủ + cuộn tới phần đó (HomePage đọc location.hash).
@@ -10,11 +10,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { ArrowIcon, BrandLogo } from '../../common/components/icons.jsx';
 import styles from '../styles/PublicHeader.module.css';
 
+// 19/11 (G5): "Về chúng tôi" trỏ vào khối Lộ trình mẫu → đổi tên thành "Lộ trình";
+// xếp theo đúng thứ tự các khối khi cuộn trang chủ.
 export const SECTIONS = [
   { id: 'top', text: 'Trang chủ' },
-  { id: 'courses', text: 'Khóa học' },
   { id: 'features', text: 'Tính năng' },
-  { id: 'about', text: 'Về chúng tôi' },
+  { id: 'about', text: 'Lộ trình' },
+  { id: 'courses', text: 'Khóa học' },
 ];
 
 export default function PublicHeader() {

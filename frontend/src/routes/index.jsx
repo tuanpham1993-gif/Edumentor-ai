@@ -1,7 +1,8 @@
 // Khai báo toàn bộ route của app (module 01 · Tuấn · FĐ2, 07/11/2026).
 //
 // Cách đọc: <Route element={<Lớp bảo vệ />}> bọc các route con.
-//   PublicRoute    — chỉ cho khách (đã đăng nhập → về /me); "/" = trang chủ khách (08/11)
+//   PublicRoute    — chỉ cho khách (đã đăng nhập → học viên /me, admin /admin); "/" = trang chủ khách (08/11)
+//   OpenRoute      — ai cũng xem được: khách có header khách, đã đăng nhập có header học viên (19/11)
 //   ProtectedRoute — phải đăng nhập (khách → /login)
 //   AdminRoute     — phải là admin
 //   PageLayout     — thêm Header cho các trang bên trong
@@ -10,6 +11,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import ComingSoon from '../features/common/components/ComingSoon.jsx';
 import PageLayout from '../features/layout/components/PageLayout.jsx';
+import OpenRoute from './OpenRoute.jsx'; // eslint-disable-line no-unused-vars -- dùng khi Khôi chuyển /courses (G1)
 import { MAIN_NAV } from '../features/layout/nav.js';
 import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage.jsx';
 import ForgotSentPage from '../features/auth/pages/ForgotSentPage.jsx';
@@ -67,6 +69,14 @@ export default function AppRoutes() {
       {/* Link trong email: ai cũng mở được, kể cả đang đăng nhập → để NGOÀI mọi lớp bảo vệ */}
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/reset-expired" element={<ResetExpiredPage />} />
+
+      {/* Ai cũng xem được (19/11, G1 — BA UC-06 khách xem khóa học). Khôi: khi CoursesPage xử lý được khách
+          (nút Lưu / Tham gia → navigate('/login', { state: { from } })), CHUYỂN dòng /courses ở nhóm học viên
+          bên dưới lên đây, rồi bỏ comment:
+      <Route element={<OpenRoute />}>
+        <Route path="/courses" element={<CoursesPage />} />
+      </Route>
+      */}
 
       {/* Học viên (đã đăng nhập) */}
       <Route element={<ProtectedRoute />}>

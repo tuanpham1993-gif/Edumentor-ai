@@ -5,7 +5,7 @@
 //       · Viền đỏ 2 ô, xóa trắng ô mật khẩu + đặt sẵn con trỏ để gõ lại, rung form.
 //       · Sai từ 2 lần → tô sáng "Quên mật khẩu?".
 //   - Cảnh báo "Caps Lock đang bật" khi gõ mật khẩu.
-//   - Đúng → quay lại trang định vào (hoặc /me). Bỏ dòng "Tài khoản demo" của bản demo.
+//   - Đúng → quay lại trang định vào; không có thì học viên về /me, admin về /admin (19/11). Bỏ dòng "Tài khoản demo" của bản demo.
 import { useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ import { ArrowIcon, MailIcon } from '../../common/components/icons.jsx';
 import PasswordField from '../../common/components/PasswordField.jsx';
 import TextField from '../../common/components/TextField.jsx';
 import { useAuth } from '../../../hooks/useAuth.js';
+import { homePathFor } from '../../../routes/homePath.js';
 import { parseApiError } from '../../../utils/errors.js';
 import { validateEmail } from '../../../utils/validators.js';
 
@@ -66,8 +67,9 @@ export default function LoginPage() {
 
     setSubmitting(true);
     try {
-      await login(email.trim(), password);
-      navigate(state.from || '/me', { replace: true });
+      const user = await login(email.trim(), password);
+      // Có trang định vào → quay lại đó; không thì học viên về /me, admin về trang quản trị (19/11)
+      navigate(state.from || homePathFor(user), { replace: true });
     } catch (err) {
       const { status, message } = parseApiError(err);
       if (status === 401) {

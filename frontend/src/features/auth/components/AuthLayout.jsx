@@ -79,7 +79,7 @@ export default function AuthLayout({ children, cardClassName = '', onCardAnimati
 
   return (
     <>
-      {/* Header khách (logo + Trang chủ / Khóa học / Tính năng / Về chúng tôi) — 08/11 */}
+      {/* Header khách (logo + Trang chủ / Tính năng / Lộ trình / Khóa học) — 08/11 */}
       <PublicHeader />
       <div className={`${styles.split} ${lampOn ? '' : styles.splitOff}`}>
       <aside className={`${styles.hero} ${lampOn ? '' : styles.dark}`}>
