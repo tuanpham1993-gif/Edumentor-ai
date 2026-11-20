@@ -245,6 +245,7 @@ review_answers.rubric_result · review_answers.points (code tính) · review_att
 
 | Ngày | Nội dung |
 |---|---|
+| 20/11/2026 (tối) | Làm theo Hòa nhờ (`3d5580e`): màu node theo trạng thái + chú thích, bỏ ✓, tiếng Việt `learning_path`, gắn huy hiệu ôn tập (bước 5). Đồng hồ đếm ngược khi bị chặn nộp (`f279f2c`). Menu "Lộ trình". Ngân hàng đề khóa 1855 (60 câu) và 743 (100 câu) — khóa có người học mới ôn được; ghi hạn chế độ phủ đề + 3 hướng mở rộng vào báo cáo mục 8, 9 (liên quan mục 8 tài liệu này) |
 | 20/11/2026 | Phân công "Ôn tập trên đồ thị" (Tuấn: API `/me/review/skills` + `<SkillReviewBadge>` trước 25/11, thẻ ôn theo kỹ năng sau 25/11; Hòa: màu node, đầu trang, panel, khóa học gợi ý, chèn badge) — bảng ở `EduMentor-UI-design/proposals/review-on-graph/README.md` |
 | 19/11/2026 | Chốt Q11: tối đa 5 bài làm dở (theo khóa, sau này theo kỹ năng), Bỏ bài dở, chờ 2 phút giữa 2 lần nộp |
 | 17/11/2026 | Thống nhất thiết kế: kiểm tra theo kỹ năng từ node lộ trình, người học làm ngay, AI soạn và kiểm tra khi thiếu câu, thang 60/40, barem Đạt / Không đạt, dùng bảng ngân hàng hiện có (+ D1–D7), cách mở rộng ra 5.893 kỹ năng. Rút gọn tài liệu, bỏ phần trùng lặp |

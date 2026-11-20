@@ -70,3 +70,14 @@ Phạm vi: chỉ phần của Tuấn (module 01 tài khoản / hồ sơ, module 
 | # | Tài liệu | Vị trí | Loại | Câu mới |
 |---|---|---|---|---|
 | 1 | BA | 10.10 bảng API (sau dòng DELETE) | thêm | \| GET \| `/api/me/review/skills?skill_ids=1,2,3` \| Ôn tập trên đồ thị lộ trình: mỗi kỹ năng → các khóa đã tham gia ôn tập được, kèm lần làm gần nhất. \| |
+
+## Bổ sung 20/11 (tối) — đồng hồ chờ nộp, màu node và huy hiệu ôn tập trên lộ trình
+
+| # | Tài liệu | Vị trí | Loại | Câu cũ | Câu mới / phần thêm |
+|---|---|---|---|---|---|
+| 1 | BA | UC-09 — Alternative Flow (nộp khi chưa đủ 2 phút) | sửa | hệ thống báo "Bạn vừa nộp bài, vui lòng chờ. Còn … để nộp lần sau."; bài vẫn giữ nguyên để nộp lại (BR-35). | hệ thống báo "Bạn vừa nộp bài, vui lòng chờ." kèm đồng hồ đếm ngược thời gian còn lại (phút:giây) và khóa nút Nộp bài tới khi hết giờ rồi tự mở lại; bài vẫn giữ nguyên để nộp lại (BR-35). |
+| 2 | BA | FR-10 — Xem và quản lý lộ trình đã lưu (cuối đoạn) | thêm | — | Trong chi tiết lộ trình, mỗi kỹ năng trên đồ thị thể hiện trạng thái của người dùng bằng màu nền (Đã biết / Đang học / Chưa học, theo hồ sơ kỹ năng) và vai trò bằng viền (Mục tiêu / Mở rộng), kèm chú thích màu. Kỹ năng Đã biết / Đang học có huy hiệu Ôn tập: bấm vào thấy các khóa đã tham gia có thể ôn tập cho kỹ năng đó, điểm lần trước và nút Ôn tập; vào ôn tập từ huy hiệu thì màn ôn tập có nút quay lại lộ trình. |
+| 3 | SRS | 4. bảng FR — FR-08 (cuối ô mô tả) | thêm | thêm, xóa kỹ năng (vai trò Tiên quyết, Tùy chọn, Mở rộng) và kết nối. | thêm, xóa kỹ năng (vai trò Tiên quyết, Tùy chọn, Mở rộng) và kết nối; node tô màu theo trạng thái kỹ năng (Đã biết / Đang học / Chưa học), viền theo vai trò (Mục tiêu / Mở rộng), có chú thích; node Đã biết / Đang học có huy hiệu Ôn tập. |
+| 4 | SRS | 4. bảng FR — FR-11 | sửa | hai lần nộp cách nhau ít nhất 2 phút; | hai lần nộp cách nhau ít nhất 2 phút (hiện đồng hồ đếm ngược); |
+
+Không đổi yêu cầu: menu "My learning path" đổi tên thành "Lộ trình" (giao diện); ngân hàng đề khóa 1855, 743 (dữ liệu — BA 10.10 / FR-24 đã ghi khóa chỉ ôn được khi ngân hàng đủ câu ráp đề).

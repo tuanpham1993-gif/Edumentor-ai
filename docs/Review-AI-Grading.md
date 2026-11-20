@@ -216,6 +216,7 @@ Fine-tune · nạp PDF / DOCX · pgvector · rerank · so sánh Qwen cục bộ 
 
 | Ngày | Đã làm | Vướng mắc |
 |---|---|---|
+| 20/11 (tối) | Diễn tập demo qua API (Gemini thật, 9,8 s); kịch bản demo + phiếu bài mẫu riêng. Ngân hàng khóa 1855, 743 (không dùng cho đánh giá); script kiểm tra ngân hàng bắt từ khóa bị bộ chấm rút còn 1 chữ / rỗng. Báo cáo: mục 2 (phạm vi), 8 (độ phủ đề), 9 (3 hướng mở rộng) | Lần thử khóa 743 chấm 27 s → qua màn "Đang chấm"; hôm demo có thể chậm |
 | 13/11 | Khảo sát AI Grading; chốt D1 tiếng Anh, D2 fine-tune để sau, D12 hạn 25/11 | — |
 | 14/11 | Thầy đồng ý phiên bản 1 LLM + RAG + Prompt; yêu cầu thêm độ chính xác + pipeline kiểu n8n. Gom tài liệu pipeline Session 01. Lập file kế hoạch này | GĐ7 trùng lịch |
 | 14/11 | **B6 xong**: runner pipeline kiểu n8n + pipeline chấm một câu; trace từng khối lưu vào attempt; hành vi không đổi; 865 passed | Tiếp B7 (chấm có cấu trúc) |

@@ -333,7 +333,7 @@ EduMentor AI có ba tác nhân: **Guest** (Khách), **User** (Học viên) và *
 - Câu tự luận bị gắn cờ cần xem lại: điểm tạm tính; Admin chấm lại trên trang Kết Quả - AI Chấm (UC-22), nếu điểm đổi thì người dùng nhận lại thông báo kết quả.
 - Mỗi khóa học chỉ có tối đa một bài đang làm dở cho mỗi người dùng; tổng cộng tối đa 5 bài làm dở. Đủ 5 bài mà bắt đầu bài ở khóa khác: hệ thống báo "Bạn đang có 5 bài ôn tập làm dở. Hãy hoàn thành hoặc bỏ bớt một bài để bắt đầu bài mới." và liệt kê các bài dở với nút Tiếp tục / Bỏ bài (BR-35).
 - Người dùng chọn Bỏ bài: bài làm dở bị xóa, không có điểm, không vào lịch sử.
-- Nộp bài khi chưa đủ 2 phút kể từ lần nộp trước: hệ thống báo "Bạn vừa nộp bài, vui lòng chờ. Còn … để nộp lần sau."; bài vẫn giữ nguyên để nộp lại (BR-35).
+- Nộp bài khi chưa đủ 2 phút kể từ lần nộp trước: hệ thống báo "Bạn vừa nộp bài, vui lòng chờ." kèm đồng hồ đếm ngược thời gian còn lại (phút:giây) và khóa nút Nộp bài tới khi hết giờ rồi tự mở lại; bài vẫn giữ nguyên để nộp lại (BR-35).
 
 **Postconditions:**
 - Kết quả được lưu vào Lịch sử ôn tập; người dùng xem lại chi tiết từng câu, lọc câu sai và mở giải thích (ẩn mặc định). Câu tự luận hiển thị kết quả từng ý của barem, lý do, câu trích làm căn cứ (tô sáng trong bài làm), nhận xét chung và đáp án mẫu.
@@ -417,7 +417,7 @@ Hệ thống phải cho phép lưu lộ trình được tạo thành công và l
 
 **FR-10 — Xem và quản lý lộ trình đã lưu**
 
-Hệ thống phải cho phép người dùng xem danh sách lộ trình của mình, lựa chọn một lộ trình và xem thông tin chi tiết của lộ trình đó.
+Hệ thống phải cho phép người dùng xem danh sách lộ trình của mình, lựa chọn một lộ trình và xem thông tin chi tiết của lộ trình đó. Trong chi tiết lộ trình, mỗi kỹ năng trên đồ thị thể hiện trạng thái của người dùng bằng màu nền (Đã biết / Đang học / Chưa học, theo hồ sơ kỹ năng) và vai trò bằng viền (Mục tiêu / Mở rộng), kèm chú thích màu. Kỹ năng Đã biết / Đang học có huy hiệu Ôn tập: bấm vào thấy các khóa đã tham gia có thể ôn tập cho kỹ năng đó, điểm lần trước và nút Ôn tập; vào ôn tập từ huy hiệu thì màn ôn tập có nút quay lại lộ trình.
 
 **FR-11 — Hỗ trợ khám phá lộ trình linh hoạt**
 
