@@ -7,15 +7,15 @@
 export const MAIN_NAV = [
   { to: '/courses', text: 'Khóa học', owner: 'Khôi' },
   { to: '/me/courses', text: 'Khóa học của tôi', owner: 'Tâm' },
+  { to: '/me/my-learning-path', text: 'Lộ trình', owner: 'Hòa' }, // 20/11: đổi tên "My learning path", đưa lên sau Khóa học của tôi
+  { to: '/tutor', text: 'AI Tutor', owner: 'Tâm' },
   {
     to: '/me/review-history',
     text: 'Ôn tập',
     owner: 'Tuấn (09)',
     match: [/^\/review\//, /^\/courses\/[^/]+\/review/],
   },
-  { to: '/tutor', text: 'AI Tutor', owner: 'Tâm' },
   { to: '/contact', text: 'Liên hệ', owner: 'Tâm' },
-  { to: '/me/my-learning-path', text: 'My learning path'},
 ];
 
 export const ADMIN_NAV = { to: '/admin', text: 'Quản trị' };
