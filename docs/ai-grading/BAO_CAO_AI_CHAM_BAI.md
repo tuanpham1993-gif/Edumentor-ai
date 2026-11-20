@@ -27,7 +27,7 @@ trên bộ bài do người chấm. **Fine-tune để phát triển sau** khi c�
 | Hạng mục | Giá trị |
 |---|---|
 | Khóa học thử nghiệm | Khóa 312 "Python Basics: Selection and Iteration", 5 kỹ năng (PY, CS, ITER, VAR, COND) |
-| Ngân hàng câu hỏi | 100 câu tiếng Anh: 70 trắc nghiệm, 30 tự luận; 15 đoạn tri thức (3 đoạn / kỹ năng) |
+| Ngân hàng câu hỏi | 100 câu tiếng Anh: 70 trắc nghiệm, 30 tự luận; 15 đoạn tri thức (3 đoạn / kỹ năng). *Ngày 20/11 có thêm ngân hàng khóa 1855 (60 câu) và 743 (100 câu) để học viên ôn được — **không** dùng trong đánh giá ở báo cáo này* |
 | Cấu trúc một đề | 15 câu: 6 trắc nghiệm Nhận biết + 6 Thông hiểu (0,5 điểm / câu), 2 tự luận Dễ (1 điểm / câu), 1 tự luận Nâng cao (2 điểm). Tổng 10, đạt từ 6 |
 | Barem tự luận | Câu Dễ 2–3 ý, câu Nâng cao 4–5 ý; mỗi ý có điểm, tổng 10 (quy về điểm câu) |
 | Quy ước chấm mỗi ý | **Đạt** (trọn điểm ý) hoặc **Không đạt** (0). Không có nửa điểm (chốt 15/11) |
@@ -358,6 +358,12 @@ Số liệu định lượng trên phần test ở mục 7.1: chấm từ khóa 
 - Quy tắc chung của hướng dẫn chấm đã có trong prompt (`grade-en-v3`), nhưng **quy ước riêng từng câu** chưa ghi vào
   nội dung ý của barem, nên AI chưa "biết" (một nửa số ý AI sai rơi vào đây).
 - Phụ thuộc dịch vụ ngoài (Gemini): có dự phòng chấm từ khóa nhưng chất lượng thấp hơn.
+- **Độ phủ đề ôn tập còn thấp.** Một khóa chỉ ra được đề khi **mọi kỹ năng** của khóa đã có câu **đã duyệt** trong
+  ngân hàng (chốt 11/11), và câu AI soạn thêm chỉ vào trạng thái *Chờ duyệt* (QT6-A, 16/11) — nên ngân hàng phải có
+  sẵn một bộ khởi đầu do người soạn và duyệt (kèm đoạn tri thức để AI soạn theo RAG). Hệ thống có **5.893 kỹ năng /
+  4.509 khóa**; nếu mọi khóa đều cần 20 câu / kỹ năng thì khoảng 118.000 câu — không làm tay được. Bản v1 chỉ làm
+  ngân hàng cho **khóa có người học** (21/11/2026: 7 khóa có người học, 37 kỹ năng; đã có đề 3 khóa — 312, 1855,
+  743 — 13 kỹ năng). Khóa chưa có đề hiện thông báo "Chưa có đề ôn tập".
 
 ## 9. Hướng phát triển
 
@@ -377,6 +383,16 @@ Các hướng khác:
 - Dùng các bài giáo viên đã chấm lại trên trang "Kết Quả - AI Chấm" làm dữ liệu cải thiện prompt / fine-tune.
 - Kiểm tra theo kỹ năng từ node lộ trình, AI soạn đề và barem có cổng kiểm tra tự động, mở rộng ra 5.893 kỹ năng
   (thiết kế ở `docs/guide.md`).
+- **Mở rộng độ phủ đề ôn tập** (mục 8), ba hướng có thể kết hợp:
+  1. *Soạn đề theo nhu cầu*: học viên tham gia / bấm Ôn tập ở khóa chưa có đề → hệ thống tạo yêu cầu: AI viết đoạn
+     tri thức từ mô tả, đề cương khóa và soạn câu hỏi → admin duyệt trên trang quản trị; học viên thấy "Đề đang được
+     soạn". Giữ nguyên tắc có người duyệt, đổi lại phải chờ.
+  2. *Chế độ luyện tập với đề AI chưa duyệt*: câu AI soạn qua bộ kiểm tra tự động + một lượt AI thứ hai tự giải lại để
+     kiểm đáp án; bài **chỉ để luyện**, không chuyển khóa "Hoàn thành" và không ghi kỹ năng "Đã biết", có nhãn "Đề do
+     AI soạn, chưa duyệt" và nút "Báo câu sai". Dùng được ngay cho mọi khóa, chấp nhận có thể gặp câu sai.
+  3. *Ưu tiên theo số học viên*: làm trước cho khóa đông người học.
+
+  Đây là thay đổi thiết kế — cần cập nhật BA / SRS trước khi làm.
 - Thêm cờ **B — chấm 2 lần** (mục 7.3): chấm lần hai ở nền sau khi trả kết quả, ý nào hai lần khác nhau thì đưa
   giáo viên xem lại. Đo trên bộ test: A + B bắt 85% bài AI chấm sai; cái giá là gấp đôi lượt Gemini cho tự luận.
 - Thay bộ chấm từ khóa ở khối Đối chiếu bằng một tín hiệu tốt hơn (vd chấm lại bằng mô hình thứ hai).

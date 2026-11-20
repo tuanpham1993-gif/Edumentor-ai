@@ -80,6 +80,7 @@
 | AI bịa căn cứ? | Verifier: ý Đạt mà câu trích không có trong bài → hạ Không đạt + cờ |
 | AI chấm sai thì sao? | Cờ đưa giáo viên xem lại (~62% bài sai bị bắt); giáo viên chấm lại, điểm và thông báo cập nhật |
 | Kết quả có lạc quan quá không? | Có rò rỉ nhẹ (quy tắc chung rút từ phân xử, gồm câu test) và người phân xử là người làm AI — đã ghi rõ ở Hạn chế; hướng: bộ test mới + người phân xử độc lập |
+| Hệ thống có 5.893 kỹ năng — mỗi kỹ năng đều phải soạn đề sao? | Không. Đề chỉ ra khi mọi kỹ năng của khóa có câu **đã duyệt**; câu AI soạn thêm vào *Chờ duyệt* (để AI soạn sai đáp án không làm khóa "Hoàn thành" oan). Bản v1 làm ngân hàng cho **khóa có người học**: hiện 7 khóa / 37 kỹ năng, đã có đề 3 khóa (312, 1855, 743). Mở rộng: soạn đề theo nhu cầu + admin duyệt, hoặc chế độ luyện tập với đề AI chưa duyệt (không tính Hoàn thành) — báo cáo mục 8, 9 |
 | Tốn tiền / lượt AI? | Mỗi lần nộp ~3–6 lượt Gemini; chặn nộp dồn dập (2 phút), tối đa 5 bài dở |
 
 ## Diễn tập 20/11/2026 (qua API, Gemini thật, tài khoản học viên thử — không phải tài khoản demo)
@@ -87,7 +88,9 @@
 Mọi bước 2.1 → 3.4 chạy đúng: lưu và mở lại bài dở; nộp **9,8 s** (Gemini, không dự phòng); câu A 1/1;
 câu B 0,4/1 (ý thiếu Không đạt kèm lý do) + cờ "AI chấm chặt hơn từ khóa"; câu D **0/2** + cờ "câu ra lệnh cho AI";
 giáo viên chấm lại câu B → điểm bài 2,4 → 3,0, học viên thấy "Giáo viên đã xem lại"; nhật ký chấm mở được.
-Cờ của bài diễn tập đã đóng. **Chưa thử trên giao diện** (hộp xác nhận, tô sáng câu trích, chuông) → tự bấm 1 lượt ngày 24/11.
+Cờ của bài diễn tập đã đóng. Thử thêm 20/11 tối (khóa 1855, 743 vừa có đề): nộp **16 s** và **27 s** — lần 27 s đi
+qua màn "Đang chấm…" (quá 20 s) rồi tự có điểm → hôm demo Gemini chậm là chuyện có thể xảy ra, dùng phương án ở mục 5.
+**Chưa thử trên giao diện** (hộp xác nhận, tô sáng câu trích, chuông) → tự bấm 1 lượt ngày 24/11.
 
 ## 7. Không demo (chưa xong, nói nếu được hỏi)
 
