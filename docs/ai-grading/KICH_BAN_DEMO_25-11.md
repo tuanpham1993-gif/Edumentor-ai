@@ -91,5 +91,7 @@ Cờ của bài diễn tập đã đóng. **Chưa thử trên giao diện** (h�
 
 ## 7. Không demo (chưa xong, nói nếu được hỏi)
 
-- Ôn tập ngay trên đồ thị lộ trình: API + huy hiệu đã xong, chờ trang lộ trình gắn vào (proposals/review-on-graph).
+- Ôn tập ngay trên đồ thị lộ trình: **đã chạy** (20/11) — node tô màu theo trạng thái, huy hiệu ôn tập ở node Đã biết /
+  Đang học, nút "← Quay lại lộ trình". Có thể demo thêm nếu còn thời gian: tài khoản demo → Lộ trình của tôi → lộ trình
+  "I know basic SQL…" → huy hiệu ở node **Python Programming** (đừng bấm "Bắt đầu ôn tập" nếu không định nộp).
 - Ôn tập theo kỹ năng, "đến hạn ôn": sau 25/11 (`docs/guide.md`).

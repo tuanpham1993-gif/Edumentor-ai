@@ -34,32 +34,38 @@ Nguyên tắc: **mỗi người làm trong module của mình**. Tuấn làm th�
 | 1 | API `GET /api/me/review/skills?skill_ids=1,2,3`: mỗi kỹ năng → các khóa người học đã tham gia có dạy kỹ năng đó và đã có đề ôn tập, kèm lần làm gần nhất / bài đang làm dở | Tuấn | trước 25/11 | ✅ 20/11 |
 | 2 | Thành phần `<SkillReviewProvider>` + `<SkillReviewBadge>` (huy hiệu trên node → bảng nhỏ "Ôn tập <kỹ năng>": các khóa, điểm lần trước, nút Ôn tập → `/courses/{id}/review`) | Tuấn | trước 25/11 | ✅ 20/11 |
 | 2b | Nút **← Quay lại lộ trình** ở màn Bắt đầu ôn tập và màn Kết quả khi vào từ huy hiệu (nhớ lộ trình qua `reviewReturn.js`, sessionStorage; chỉ nhận đường dẫn `/me/my-learning-path/…`) | Tuấn | trước 25/11 | ✅ 20/11 |
-| 3 | Màu node theo trạng thái từ `GET /api/me/skills` (Đã biết / Đang học / Chưa học / Mục tiêu / Mở rộng) + chú thích màu; sửa dấu ✓ (đang hiện cho kỹ năng mục tiêu); bỏ `passed_test → is_target`; đầu trang (tên, chip trạng thái, "x/y kỹ năng đã biết · tạo ngày", đường dẫn); nút Đổi tên / Từ bỏ; panel phải (vai trò, thêm bởi, Học trước / Mở ra); chữ tiếng Việt; dọn file thử nghiệm | Hòa | | chờ Hòa |
+| 3a | Màu node theo trạng thái từ `GET /api/me/skills`: **nền** = Đã biết / Đang học / Chưa học, **viền** = Mục tiêu (cam đậm) / Mở rộng (nét đứt) + chú thích màu góc đồ thị; bỏ dấu ✓ trên node mục tiêu; chữ tiếng Việt toàn bộ `learning_path` (`roleLabels.js`: Tiên quyết / Liên quan / Mở rộng) | Tuấn (Hòa nhờ) | | ✅ 20/11 (`3d5580e`) |
+| 3b | Bỏ `passed_test → is_target` ở backend (Hòa: không dùng thì để nguyên); đầu trang (tên, chip trạng thái, "x/y kỹ năng đã biết", đường dẫn — **bỏ "tạo ngày"**); nút Đổi tên / Từ bỏ; panel phải (vai trò, thêm bởi, Học trước / Mở ra — Hòa: panel dùng để lọc khóa theo kỹ năng); dọn file thử nghiệm (`LearningPathMockData.js`, `LearningPathTest.js`) | Hòa | Hòa hoãn — đang xem lại tài liệu huấn luyện AI | chờ Hòa |
 | 4 | Khóa học gợi ý theo kỹ năng: API `/recommendation` + thẻ khóa (Tham gia học / Lưu dùng API của Khôi) | Hòa (+ Khôi) | | chờ Hòa |
-| 5 | Chèn `<SkillReviewProvider>` quanh đồ thị và `<SkillReviewBadge>` vào `SkillNode` (chỉ node Đã biết / Đang học) | Hòa chèn, Tuấn hỗ trợ | sau bước 2 + 3 | |
+| 5 | Chèn `<SkillReviewProvider>` quanh đồ thị và `<SkillReviewBadge>` vào `SkillNode` (chỉ node Đã biết / Đang học) | Tuấn (Hòa nhờ) | | ✅ 20/11 (`3d5580e`) |
 | 6 | `<SkillReviewCard>` "Ôn tập ngay" theo **kỹ năng** trong panel phải (guide G1–G6, Alembic) | Tuấn | sau 25/11 | |
 | 7 | Chấm "Đến hạn ôn" | Tuấn | sau 25/11 (Q10) | |
 
 Ngưỡng đạt dùng **6/10** của hệ thống (mẫu ghi 7/10 là bản cũ).
 
-### Cách gắn huy hiệu (bước 5 — Hòa)
+### Cách gắn huy hiệu (bước 5 — đã gắn 20/11)
 
 ```jsx
-// LearningPathDetailPage.jsx — bọc vùng đồ thị (gọi API 1 lần cho mọi node)
+// LearningPathGraphForDetail.jsx — bọc đồ thị (gọi API 1 lần cho mọi node)
 import { SkillReviewProvider } from '../../review/components/SkillReviewContext.jsx';
 
-<SkillReviewProvider skillIds={learningPath.nodes.map((n) => n.skill_id)}>
-  <LearningPathGraphForDetail ... />
+<SkillReviewProvider skillIds={(learningPath?.nodes ?? []).map((n) => n.skill_id)}>
+  <div className={styles.graphCanvasDetail}><ReactFlow ...>...</ReactFlow></div>
 </SkillReviewProvider>
 
-// SkillNode.jsx — đặt ở góc trên node; chỉ node Đã biết / Đang học (theo mẫu)
+// SkillNode.jsx — góc trên phải node (.reviewBadgeSlot); chỉ node Đã biết / Đang học
 import SkillReviewBadge from '../../review/components/SkillReviewBadge.jsx';
 
 {(data.status === 'known' || data.status === 'learning') && (
-  <SkillReviewBadge skillId={data.skillId} skillName={data.skillName} />
+  <span className={styles.reviewBadgeSlot}>
+    <SkillReviewBadge skillId={data.skillId} skillName={data.skillName} />
+  </span>
 )}
 ```
 
+- `data.status` (known | learning | không có) được gắn vào node trong `LearningPathGraphForDetail` từ `GET /api/me/skills`;
+  nạp lại khi lộ trình đổi → ôn tập đạt rồi quay lại trang, node tự sang "Đã biết".
+- Trang xem trước lộ trình (`LearningPath.jsx`) không có Provider / trạng thái → không hiện huy hiệu (lộ trình chưa lưu).
+
 - Huy hiệu tự ẩn khi kỹ năng chưa có khóa nào ôn được (chưa tham gia khóa, khóa chưa có đề).
 - Bấm huy hiệu không chọn / kéo node; bảng nhỏ vẽ ở lớp trên cùng nên không bị node khác che.
-- `data.status` là trạng thái kỹ năng của người học (bước 3, lấy từ `GET /api/me/skills`); tên trường tùy Hòa đặt.
