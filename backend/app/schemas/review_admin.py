@@ -182,7 +182,9 @@ class ReadinessOut(BaseModel):
 
 # ─────────────── Bài cần xem lại (17/11/2026) ───────────────
 
-FlagReason = Literal["needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback"]
+FlagReason = Literal[
+    "needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback", "ai_stricter"
+]
 ItemLabel = Literal["full", "none"]
 
 

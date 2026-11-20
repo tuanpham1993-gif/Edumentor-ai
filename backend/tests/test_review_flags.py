@@ -209,3 +209,22 @@ def test_renotify_updates_existing_notification(db_session, student_headers):
     assert again.title == "Mới" and again.is_read is False and again.read_at is None
     rows = db_session.query(Notification).filter_by(user_id=student.user_id, type="review_graded").count()
     assert rows == 1
+
+
+def test_ai_stricter_flag_is_listed(client, bank_312, student_headers, admin_headers, db_session):
+    """20/11: cờ ai_stricter của khối 6 hiện ở trang Kết Quả - AI Chấm và lọc được."""
+    attempt_id = graded_attempt(client, student_headers, db_session, mcq_correct=0)
+    position = essays(db_session, attempt_id)[0].position
+    attempt = db_session.get(ReviewAttempt, attempt_id)
+    trace = dict(attempt.trace)
+    grading = dict(trace["grading"])
+    grading["essays"] = [
+        {**e, "flags": ["ai_stricter"] if e["position"] == position else []} for e in grading["essays"]
+    ]
+    trace["grading"] = grading
+    attempt.trace = trace
+    db_session.commit()
+
+    page = client.get(FLAGS_URL, params={"reason": "ai_stricter"}, headers=admin_headers).json()
+    assert page["reason_counts"]["ai_stricter"] == 1
+    assert [(i["position"], i["reasons"]) for i in page["items"]] == [(position, ["ai_stricter"])]

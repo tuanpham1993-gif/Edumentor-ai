@@ -380,3 +380,43 @@ def test_parallel_result_is_not_reused_for_regrade():
     stingy = [{"result": "none", "points": 0.0, "evidence": None}] * 2
     ctx = grade_essay(ai, QUESTION, ANSWER, precomputed=(stingy, None, 10.0))
     assert ai.calls == 1 and ctx.regraded and not ctx.needs_review and ctx.score_10 == 10
+
+
+# ─────────────── Cờ ai_stricter (20/11) ───────────────
+# Đo trên B10: cờ cũ (lệch điểm > 3) bắt 1/6 bài AI chấm sai; thêm cờ "AI Không đạt mà từ khóa Đạt" bắt 3/6.
+
+QUESTION_4 = {
+    "content": "Name four things about Python lists.",
+    "rubric": [
+        {"text": f"point {k}", "max_points": 2.5, "main_keywords": [w], "sub_keywords": []}
+        for k, w in enumerate(["ordered", "mutable", "indexed", "brackets"], 1)
+    ],
+    "explanation": "Model answer: lists are ordered, mutable, indexed and use square brackets.",
+}
+ANSWER_4 = "Lists are ordered. Lists are mutable. Lists are indexed. Lists use square brackets."
+
+
+def test_ai_stricter_flag_when_ai_fails_an_item_keyword_passes():
+    ev = ["Lists are ordered.", "Lists are mutable.", "Lists are indexed.", None]
+    results = [{"result": "full", "points": 2.5, "evidence": e} for e in ev[:3]] + [
+        {"result": "none", "points": 0.0, "evidence": None}
+    ]
+    ai = FakeAI(results)
+    ctx = grade_essay(ai, QUESTION_4, ANSWER_4)
+    cc = node(ctx, "6_cross_check")["output"]
+    assert cc["gap"] == 2.5 and cc["ai_stricter_items"] == [4]  # lệch nhỏ → không chấm lại
+    assert ai.calls == 1 and not ctx.regraded and not ctx.needs_review
+    assert ctx.flags == ["ai_stricter"] and ctx.score_10 == 7.5  # chỉ gắn cờ, KHÔNG đổi điểm
+
+
+def test_no_ai_stricter_flag_when_ai_agrees_or_is_more_generous():
+    ctx = grade_essay(FakeAI(AI_OK), QUESTION, ANSWER)
+    assert "ai_stricter" not in ctx.flags and "ai_stricter_items" not in node(ctx, "6_cross_check")["output"]
+
+
+def test_big_gap_after_regrade_gets_both_flags():
+    stingy = [{"result": "none", "points": 0.0, "evidence": None}] * 2
+    ctx = grade_essay(FakeAI(stingy), QUESTION, ANSWER)
+    assert ctx.needs_review and set(ctx.flags) == {"needs_review", "ai_stricter"}
+    assert node(ctx, "6_cross_check", 0)["output"]["action"] == "regrade"  # lần đầu chưa gắn cờ, chấm lại trước
+    assert "ai_stricter_items" not in node(ctx, "6_cross_check", 0)["output"]

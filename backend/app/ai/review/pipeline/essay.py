@@ -9,6 +9,7 @@
       → 5_verify            ý "full" phải có câu trích THẬT trong bài (so sau chuẩn hóa) — không có → none + cờ
       → 6_cross_check       so điểm AI với điểm chấm từ khóa: lệch > CROSS_CHECK_GAP → chấm lại 1 lần (về 4)
                             → vẫn lệch → cờ needs_review (điểm vẫn tính tạm — D10)
+                            + ý AI Không đạt mà từ khóa Đạt → cờ ai_stricter (chỉ để xem lại, 20/11)
       → 7_aggregate → 8_trace
 
 Mỗi ý chỉ Đạt / Không đạt (15/11). Không đụng DB → khối 4 chạy được trong luồng song song (T1).
@@ -32,6 +33,7 @@ logger = logging.getLogger(__name__)
 MAX_ANSWER_CHARS = 3000  # bài dài hơn: cắt trước khi gửi AI (giới hạn chi phí, chống nhồi bài) + cờ "too_long"
 CROSS_CHECK_GAP = 3.0  # điểm AI và điểm từ khóa (thang 10) lệch hơn mức này → chấm lại
 EVIDENCE_NGRAM_MATCH = 0.8  # câu trích khớp ≥ 80% cụm 3 từ trong bài → coi là có thật (AI hay sửa dấu câu)
+AI_STRICTER = "ai_stricter"  # cờ: có ý AI chấm Không đạt mà chấm từ khóa chấm Đạt (khối 6, 20/11)
 
 _INJECTION = re.compile(
     r"ignore\s+(all\s+|the\s+|any\s+)?(previous|above|prior)\s+(instructions|rules)"
@@ -240,11 +242,22 @@ def node_cross_check(ctx: EssayContext) -> Step:
     kw_score = sum(r["points"] for r in kw)
     gap = abs(ai_score - kw_score)
     output = {"ai_score": ai_score, "keyword_score": kw_score, "gap": gap}
-    if gap <= CROSS_CHECK_GAP:
-        return Step(output=output)
-    if not ctx.regraded:
+    if gap > CROSS_CHECK_GAP and not ctx.regraded:
         ctx.regraded = True
         return Step(goto="4_llm_grade", output={**output, "action": "regrade"})
+    # 20/11 (cờ A): có ý AI chấm Không đạt mà chấm từ khóa chấm Đạt → đưa giáo viên xem lại (KHÔNG đổi điểm).
+    # Đo trên B10: cờ cũ bắt 1/6 bài AI chấm sai; thêm cờ này bắt 3/6, gắn cờ 11/30 bài. Có lợi cho học viên:
+    # AI chấm chặt (đánh trượt ý) thì có người xem lại.
+    stricter = [
+        i
+        for i, (a, k) in enumerate(zip(ctx.results, kw, strict=False), 1)
+        if a["result"] == "none" and k["result"] == "full"
+    ]
+    if stricter:
+        ctx.flag(AI_STRICTER)
+        output = {**output, "ai_stricter_items": stricter}
+    if gap <= CROSS_CHECK_GAP:
+        return Step(output=output)
     ctx.needs_review = True
     ctx.flag("needs_review")
     return Step(output={**output, "action": "needs_review"})

@@ -2,7 +2,8 @@
 
 > Module 09 (Ôn tập & đánh giá) · người thực hiện: Tuấn · bản nháp 16/11/2026
 > Số liệu đánh giá (B10) điền 18/11/2026, sửa theo góp ý review 19/11 (chạy lại bài lỗi mạng, so AI với từng người
-> chấm, kiểm cờ xem lại, nêu rõ rò rỉ và vai trò người phân xử). Chạy trên phần **test**, prompt `grade-en-v3`.
+> chấm, kiểm cờ xem lại, nêu rõ rò rỉ và vai trò người phân xử). 20/11: đo độ ổn định qua 3 lần chạy, thêm cờ
+"AI chấm chặt hơn từ khóa" và đánh giá các cờ (mục 7.3). Chạy trên phần **test**, prompt `grade-en-v3`.
 
 ## 1. Bài toán
 
@@ -52,6 +53,7 @@ xử lý rẽ nhánh, thử lại, và ghi nhật ký từng khối (tên khối
  → [4] LLM chấm có cấu trúc ──(lỗi / quá giờ)──→ [4b] Chấm từ khóa dự phòng ──→ [7]
  → [5] Verifier: ý "Đạt" phải có câu trích thật trong bài
  → [6] Đối chiếu với chấm từ khóa ──(lệch > 3 điểm)──→ chấm lại [4] một lần ──(vẫn lệch)──→ cờ "cần xem lại"
+                                    + có ý AI Không đạt mà từ khóa Đạt ──→ cờ "AI chấm chặt hơn từ khóa"
  → [7] Tổng hợp điểm (do code cộng, không để AI tự cộng)
  → [8] Ghi nhật ký
 ```
@@ -65,7 +67,7 @@ xử lý rẽ nhánh, thử lại, và ghi nhật ký từng khối (tên khối
 | 4 LLM chấm | Gemini trả JSON đúng khung (schema), kiểm lại bằng Pydantic | Sai khung → thử lại 1 lần; lỗi mạng / hết lượt → không thử lại, sang 4b |
 | 4b Dự phòng | Chấm bằng từ khóa khi AI lỗi hoặc quá giờ | Người học vẫn có điểm |
 | 5 Verifier | Ý "Đạt" mà không có câu trích có thật trong bài → Không đạt + cờ | Chặn AI "chấm rộng tay" không có căn cứ |
-| 6 Đối chiếu | So điểm AI với điểm chấm từ khóa | Chỉ là tín hiệu "nên xem lại", không dùng để sửa điểm |
+| 6 Đối chiếu | So điểm AI với điểm chấm từ khóa; so từng ý (20/11) | Chỉ là tín hiệu "nên xem lại", không dùng để sửa điểm. Hai cờ: lệch điểm > 3 sau khi chấm lại; có ý AI Không đạt mà từ khóa Đạt (mục 7.3) |
 | 7 Tổng hợp | Cộng điểm các ý → điểm câu thang 10 → quy về điểm câu | |
 | 8 Nhật ký | Lưu trace từng khối cùng điểm (một lần ghi DB) | Trace không chứa bài làm của người học |
 
@@ -124,7 +126,7 @@ Mỗi ý barem có từ khóa chính (nội dung ý) và từ khóa phụ (chủ
 bài quá ngắn, chặn "mượn" chủ thể của vế khác, bỏ từ khóa đứng sau phủ định.
 
 Bộ chấm này **không hiểu nghĩa**, nên chỉ dùng làm dự phòng khi AI lỗi và làm tín hiệu đối chiếu. Ví dụ thật
-trên bài người học (mục 7.3) cho thấy nó vừa cho điểm sai vừa bỏ sót.
+trên bài người học (mục 7.4) cho thấy nó vừa cho điểm sai vừa bỏ sót.
 
 ## 5. Vận hành và kiểm thử
 
@@ -278,15 +280,47 @@ Mọi cách chấm bằng Gemini khớp với **từng** người chấm ít nh�
 Ba trên sáu ý AI sai nằm đúng ở các ý mà **chính hai người chấm cũng không thống nhất**: lỗi của AI tập trung ở ý mơ
 hồ, không rải rác. Ba ý còn lại AI chấm **chặt hơn** người (không chấm rộng tay).
 
-**Các ý sai này có được đưa cho giáo viên xem lại không?** Chạy lại pipeline riêng cho 6 bài trong
-bảng trên (19/11): chỉ
-**2/6 bài bị gắn cờ "cần xem lại"** (R0002, T028 — lệch với chấm từ khóa); **4 bài lọt qua** (R0007, T025, T030,
-T038). Cờ "sát ngưỡng đạt" không đo được ở đây (cần điểm cả lượt 15 câu, bộ bài chuẩn chỉ có từng câu). Vậy cơ chế
-gắn cờ **chưa bắt được mọi lỗi** của AI. Cũng ở lần chạy lại, **3/6 ý cho kết quả khác lần đo B10** (T025, T030,
-T038 — lần này chấm đúng) dù nhiệt độ 0: Gemini **không hoàn toàn ổn định** giữa các lần gọi. Bảng 7.1 giữ số của lần đo B10 (lần chạy test
-chính thức); lần chạy lại này chỉ dùng để kiểm cờ và độ ổn định, không dùng để sửa kết quả.
+**Các ý sai này có được đưa cho giáo viên xem lại không?** Chạy lại pipeline riêng cho 6 bài trong bảng trên
+(19/11): với cờ lúc đó (chỉ "lệch điểm > 3") chỉ **2/6 bài bị gắn cờ**, 4 bài lọt qua. Cờ "sát ngưỡng đạt" không đo
+được ở đây (cần điểm cả lượt 15 câu, bộ bài chuẩn chỉ có từng câu). Từ đó nhóm đo kỹ hơn và cải thiện cờ (mục 7.3).
+Bảng 7.1 giữ số của lần đo B10 (lần chạy test chính thức); các lần chạy lại chỉ dùng để kiểm cờ và độ ổn định, không
+dùng để sửa kết quả.
 
-### 7.3 Quan sát trên bài thật (định tính, trước khi có số liệu)
+### 7.3 Độ ổn định và cờ "cần xem lại" (20/11)
+
+Chạy lại pipeline **thêm 2 lần** trên 30 bài test, **cùng cấu hình** B10 (cùng model, prompt `grade-en-v3`, không RAG,
+không ví dụ mẫu). Lần 3 có 3 bài Gemini lỗi tạm thời → gọi lại riêng 3 bài đó, kết quả cuối không còn bài lỗi.
+
+| Chỉ số | Kết quả |
+|---|---|
+| Khớp từng ý với bộ bài chuẩn — lần 1 (B10) / lần 2 / lần 3 | 94,4% / 98,1% / 93,5% (trung bình **95,3%**) |
+| Ý cho **cùng kết quả cả 3 lần** | **100/108 = 92,6%** |
+| Kappa giữa hai lần chạy (3 cặp) | 0,87 – 0,93 |
+| Bài có điểm câu khác nhau giữa các lần | 7/30 (chênh trung bình 0,7 điểm, lớn nhất 6 điểm, thang 10) |
+
+- Dù nhiệt độ 0, Gemini **không hoàn toàn ổn định**: 8/108 ý đổi kết quả giữa các lần. Mức khớp với chính nó
+  (kappa 0,87–0,93) vẫn **cao hơn** mức hai người chấm khớp nhau (0,77).
+- 8 ý đổi kết quả **tập trung ở vài câu**: 4 ý thuộc CS-TL-03 (ý 3 "nêu ví dụ" có quy ước riêng), 2 ý PY-TL-02,
+  ý 3 của ITER-TL-05 và COND-TL-06 — cũng là những chỗ hai người chấm từng lệch nhau. AI "phân vân" đúng ở ý mơ hồ.
+- Độ chính xác dao động 93,5–98,1% tùy lần; con số 94,4% ở bảng 7.1 là **một** lần đo trong khoảng này.
+
+**Cải thiện và đánh giá cờ.** Mỗi lần chạy lần lượt làm "lần chấm chính", một lần khác làm "lần chấm thứ hai" →
+90 lượt bài, 13 lượt AI chấm sai:
+
+| Cờ | Bắt được bài AI chấm sai | Số bài phải xem lại | Gắn cờ nhầm |
+|---|---|---|---|
+| Cũ: lệch điểm với chấm từ khóa > 3 | 1/6 (trên B10) | 7/30 | |
+| **A — cũ + có ý AI Không đạt mà từ khóa Đạt** (đã đưa vào hệ thống 20/11) | 8/13 = **62%** | 38% | 26 |
+| B — chấm 2 lần, có ý khác nhau | 8/13 = 62% | **16%** | **6** |
+| A + B | 11/13 = **85%** | 46% | 30 |
+| C — ý Đạt mà câu trích quá ngắn / giống đề | thấp | 53% | rất nhiều → **không dùng** |
+
+- Hệ thống dùng **A** (không tốn thêm lượt Gemini). A có lợi cho học viên: AI chấm chặt (đánh trượt ý) thì có người
+  xem lại. Bài lọt qua A là bài mà chấm từ khóa cũng sai giống AI.
+- **B** hiệu quả nhất (ít gắn cờ nhầm) và bắt đúng loại lỗi A bỏ sót, nhưng **tốn gấp đôi lượt Gemini** cho câu tự
+  luận → chưa đưa vào, ghi ở Hướng phát triển.
+
+### 7.4 Quan sát trên bài thật (định tính, trước khi có số liệu)
 
 Trên 20 bài thật, bộ chấm từ khóa mắc đúng hai kiểu lỗi mà chấm theo nghĩa phải khắc phục:
 
@@ -315,9 +349,10 @@ Số liệu định lượng trên phần test ở mục 7.1: chấm từ khóa 
 - **Người phân xử là người làm AI** (Tuấn), dựa trên phân tích do Claude soạn; Claude đã viết nháp và dịch bài bổ sung nên
   biết loại bài. Đã hạn chế bằng cách chỉ quyết theo quy tắc / ví dụ trong hướng dẫn chấm, không mở file nhãn gợi ý
   của AI, không xem kết quả AI chấm; nhưng về nguyên tắc nên có **người phân xử độc lập** (vd giảng viên).
-- **AI chưa ổn định giữa các lần gọi** (3/6 ý đổi kết quả khi chạy lại, mục 7.2) — nên đo thêm bằng cách chạy cùng
-  cấu hình nhiều lần.
-- **Cờ "cần xem lại" chỉ bắt 2/6 bài AI chấm sai** — cơ chế giáo viên xem lại hiện chỉ là lưới an toàn một phần.
+- **AI chưa hoàn toàn ổn định giữa các lần gọi**: qua 3 lần chạy, 92,6% ý giữ nguyên kết quả, độ chính xác dao
+  động 93,5–98,1% (mục 7.3). Học viên nộp lại cùng một bài có thể nhận điểm khác ở ý mơ hồ.
+- **Cờ "cần xem lại" bắt khoảng 62% bài AI chấm sai** (cờ A, mục 7.3), đổi lại giáo viên phải xem khoảng 38% bài —
+  giáo viên xem lại vẫn chỉ là lưới an toàn một phần.
 - **RAG nhỏ**: mỗi kỹ năng chỉ 3 đoạn tri thức, RAG gần như tra cứu cố định; A ≈ B là kết quả có thể xảy ra.
 - **Đối chiếu dựa vào chấm từ khóa** (yếu) nên có thể gắn cờ "cần xem lại" nhiều hơn cần thiết.
 - Quy tắc chung của hướng dẫn chấm đã có trong prompt (`grade-en-v3`), nhưng **quy ước riêng từng câu** chưa ghi vào
@@ -342,6 +377,8 @@ Các hướng khác:
 - Dùng các bài giáo viên đã chấm lại trên trang "Kết Quả - AI Chấm" làm dữ liệu cải thiện prompt / fine-tune.
 - Kiểm tra theo kỹ năng từ node lộ trình, AI soạn đề và barem có cổng kiểm tra tự động, mở rộng ra 5.893 kỹ năng
   (thiết kế ở `docs/guide.md`).
+- Thêm cờ **B — chấm 2 lần** (mục 7.3): chấm lần hai ở nền sau khi trả kết quả, ý nào hai lần khác nhau thì đưa
+  giáo viên xem lại. Đo trên bộ test: A + B bắt 85% bài AI chấm sai; cái giá là gấp đôi lượt Gemini cho tự luận.
 - Thay bộ chấm từ khóa ở khối Đối chiếu bằng một tín hiệu tốt hơn (vd chấm lại bằng mô hình thứ hai).
 - Kho vector (pgvector) khi tài liệu tri thức lớn.
 
