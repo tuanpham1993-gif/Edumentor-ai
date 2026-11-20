@@ -14,11 +14,11 @@ export default function LearningPathPreview({
       <header className={styles.previewHeader}>
         <div>
           <span className={styles.eyebrowPreview}>
-            GENERATED LEARNING PATH
+            LỘ TRÌNH ĐÃ TẠO
           </span>
 
           <h2 className={styles.titlePreview}>
-            Review your learning path
+            Xem lại lộ trình của bạn
           </h2>
         </div>
 
@@ -29,7 +29,7 @@ export default function LearningPathPreview({
 
       <div className={styles.goalInformation}>
         <span className={styles.goalLabel}>
-          Your original goal
+          Mục tiêu ban đầu
         </span>
 
         <p className={styles.originalQuery}>
@@ -42,8 +42,8 @@ export default function LearningPathPreview({
       </div>
 
       <div className={styles.reviewMessage}>
-        <strong>Here is your learning path review.</strong>
-        <span>You can adjust this later.</span>
+        <strong>Đây là lộ trình gợi ý cho bạn.</strong>
+        <span>Bạn có thể chỉnh sửa sau.</span>
       </div>
 
       <LearningPathGraph learningPath={learningPath} />
@@ -54,7 +54,7 @@ export default function LearningPathPreview({
           className={styles.cancelButtonPreview}
           onClick={onCancel}
           disabled={isConfirming}>
-          Cancel
+          Hủy
         </button>
 
         <button
@@ -63,7 +63,7 @@ export default function LearningPathPreview({
           onClick={onConfirm}
           disabled={isConfirming}
         >
-          {isConfirming ? 'Confirming...' : 'Confirm path'}
+          {isConfirming ? 'Đang lưu...' : 'Lưu lộ trình'}
         </button>
       </footer>
 

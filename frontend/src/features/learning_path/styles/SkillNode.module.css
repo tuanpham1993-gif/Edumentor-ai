@@ -60,20 +60,29 @@
     opacity: 0;
 }
 
-.completedMark {
-  flex-shrink: 0;
+/* 20/11 (Tuấn, Hòa nhờ) — nền = trạng thái học, viền = vai trò; khớp chú thích màu dưới đồ thị */
+.statusKnown {
+    background: var(--accent-tint-strong);
+    border-color: rgba(245, 165, 36, 0.55);
+}
 
-  width: 20px;
-  height: 20px;
+.statusLearning {
+    background: var(--info-bg);
+    border-color: var(--info-border);
+}
 
-  display: grid;
-  place-items: center;
+.roleTarget {
+    border: 2px solid var(--accent);
+}
 
-  border-radius: 50%;
+.roleExtension {
+    border-style: dashed;
+}
 
-  background: var(--ok-bg);
-  color: var(--ok-fg);
-
-  font-size: 13px;
-  font-weight: 800;
+/* Bước 5 review-on-graph (20/11) — huy hiệu ôn tập ở góc trên phải node */
+.reviewBadgeSlot {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    z-index: 2;
 }

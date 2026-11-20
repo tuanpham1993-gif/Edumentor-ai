@@ -10,10 +10,10 @@ import styles from '../styles/MyLearningPaths.module.css';
 const LIMIT = 10;
 
 const FILTERS = [
-  { value: 'all', label: 'All' },
-  { value: 'ongoing', label: 'In Progress' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'abandoned', label: 'Abandoned' },
+  { value: 'all', label: 'Tất cả' },
+  { value: 'ongoing', label: 'Đang theo' },
+  { value: 'completed', label: 'Hoàn thành' },
+  { value: 'abandoned', label: 'Đã bỏ' },
 ];
 
 export default function MyLearningPathsPage() {
@@ -40,7 +40,7 @@ export default function MyLearningPathsPage() {
     } 
     catch (err) {
       console.error('Failed to load learning paths:', err);
-      setError('Unable to load your learning paths. Please try again.');
+      setError('Không tải được danh sách lộ trình. Vui lòng thử lại.');
     } 
     finally {
       setIsLoading(false);
@@ -103,22 +103,22 @@ export default function MyLearningPathsPage() {
         {/* Page heading */}
         <header className={styles.headerLearningPaths}>
           <div>
-            <h1>My Learning Paths</h1>
-            <p>Learning paths saved from your AI consultations.</p>
+            <h1>Lộ trình của tôi</h1>
+            <p>Các lộ trình đã lưu từ những lần tư vấn với AI.</p>
           </div>
 
           <button type="button"
             className={`btn btn-primary btn-lg ${styles.createButtonLearningPaths}`}
             onClick={handleCreateOpen}>
             <span aria-hidden="true">＋</span>
-            Create New Path with AI
+            Tạo lộ trình mới với AI
           </button>
         </header>
 
         {/* Loading */}
         {isLoading && (
           <div className={styles.messageLearningPaths}>
-            Loading your learning paths...
+            Đang tải lộ trình...
           </div>
         )}
 
@@ -130,7 +130,7 @@ export default function MyLearningPathsPage() {
               type="button"
               className="btn btn-primary"
               onClick={loadLearningPaths}>
-              Try Again
+              Thử lại
             </button>
           </div>
         )}
@@ -141,16 +141,16 @@ export default function MyLearningPathsPage() {
             <div className={styles.emptyIconLearningPaths}>
               <span aria-hidden="true">✦</span>
             </div>
-            <h2>No Learning Paths Yet</h2>
+            <h2>Chưa có lộ trình nào</h2>
             <p>
-              You currently don't have any learning paths.
-              Provide your goal and make one with AI right away!
+              Bạn chưa có lộ trình học nào.
+              Nhập mục tiêu để AI tạo lộ trình cho bạn ngay!
             </p>
             <button
               type="button"
               className="btn btn-primary btn-lg"
               onClick={handleCreateOpen}>
-              ＋ Create Your First Learning Path
+              ＋ Tạo lộ trình đầu tiên
             </button>
           </section>
         )}
@@ -160,7 +160,7 @@ export default function MyLearningPathsPage() {
           <>
             <nav
               className={styles.filtersLearningPaths}
-              aria-label="Filter learning paths">
+              aria-label="Lọc lộ trình">
               {FILTERS.map((filter) => {
                 const count = filter.value === 'all' ? total : pageSummary[filter.value];
                 return (count > 0 && (
@@ -190,7 +190,7 @@ export default function MyLearningPathsPage() {
               </section>
             ) : (
               <div className={styles.noResultsLearningPaths}>
-                No learning paths found in this category.
+                Không có lộ trình nào ở mục này.
               </div>
             )}
 

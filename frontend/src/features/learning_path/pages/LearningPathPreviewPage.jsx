@@ -14,7 +14,7 @@ export default function LearningPathPreviewPage() {
     const learningPath = location.state?.learningPath;
     const {user, status} = useAuth()
     if (!learningPath) {
-        return <p>No learning path data found. Please generate one first.</p>;
+        return <p>Chưa có dữ liệu lộ trình. Hãy tạo lộ trình trước.</p>;
     }
     function handleCancel() {
         window.scrollTo({
@@ -27,7 +27,7 @@ export default function LearningPathPreviewPage() {
     async function handleConfirm() {
         if (!learningPath || isConfirming) return;
         if (status !== 'authenticated' || !user) {
-            setError('Please log in before saving your learning path.');
+            setError('Vui lòng đăng nhập trước khi lưu lộ trình.');
             return;
         }
         setIsConfirming(true);

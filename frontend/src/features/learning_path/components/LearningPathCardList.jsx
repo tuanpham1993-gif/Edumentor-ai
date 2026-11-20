@@ -4,19 +4,19 @@ import styles from '../styles/LearningPathCard.module.css';
 
 const STATUS_CONFIG = {
   ongoing: {
-    label: 'In Progress',
+    label: 'Đang theo',
     className: 'ongoing',
   },
   not_started: {
-    label: 'Not Started',
+    label: 'Chưa bắt đầu',
     className: 'notStarted',
   },
   completed: {
-    label: 'Completed',
+    label: 'Hoàn thành',
     className: 'completed',
   },
   abandoned: {
-    label: 'Abandoned',
+    label: 'Đã bỏ',
     className: 'abandoned',
   },
 };
@@ -44,14 +44,14 @@ export default function LearningPathCard({ learningPath }) {
       </div>
 
       <p className={styles.goalInfoLearningPath}>
-        Goal type: {goal_type === 'career' ? 'Career' : 'Project'}
+        Mục tiêu: {goal_type === 'career' ? 'Nghề nghiệp' : 'Dự án'}
         {' · '}
-        {totalSkills} skills
+        {totalSkills} kỹ năng
       </p>
 
       <div className={styles.progressInfoLearningPath}>
-        <span>Progress</span>
-        <span>{completedSkills}/{totalSkills} skills</span>
+        <span>Tiến độ</span>
+        <span>{completedSkills}/{totalSkills} kỹ năng</span>
       </div>
 
       <div className={styles.progressTrackLearningPath}
@@ -68,7 +68,7 @@ export default function LearningPathCard({ learningPath }) {
       </div>
 
       <button type="button" className={styles.viewButtonLearningPath} 
-      onClick={handleViewPath}> View Learning Path </button>
+      onClick={handleViewPath}> Xem lộ trình </button>
     </article>
   );
 }

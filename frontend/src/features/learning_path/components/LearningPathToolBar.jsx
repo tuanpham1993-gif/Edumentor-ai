@@ -28,12 +28,12 @@ export default function LearningPathToolbar({
   return (
     <div className={styles.toolbarLearningPath}>
       <div className={styles.toolbarTitleLearningPath}>
-        <h2>Learning Path Tools</h2>
+        <h2>Công cụ lộ trình</h2>
 
         <span>
           {selectedSkill
-            ? `Selected: ${selectedSkill.skillName}`
-            : 'Select a skill to manage it'}
+            ? `Đang chọn: ${selectedSkill.skillName}`
+            : 'Chọn một kỹ năng để chỉnh sửa'}
         </span>
       </div>
       
@@ -41,21 +41,21 @@ export default function LearningPathToolbar({
         <button type="button"
           className='btn btn-soft'
           onClick={() => openModal('add-node')}>
-          + Add node
+          + Thêm kỹ năng
         </button>
 
         <button type="button"
             className="btn btn-primary"
             disabled={!hasSelectedSkill}
             onClick={() => openModal('update-node')}>
-            Update node
+            Đổi vai trò
         </button>
         
         <button type="button"
           className="btn btn-danger"
           onClick={() => openModal('delete-node')}
           disabled={!hasSelectedSkill}>
-          Delete node
+          Xóa kỹ năng
         </button>
 
         <button
@@ -63,7 +63,7 @@ export default function LearningPathToolbar({
             className="btn btn-primary"
             disabled={!hasSelectedSkill}
             onClick={() => openModal('add-relationship')}>
-          Add relationship
+          Thêm quan hệ
         </button>
 
         <button
@@ -71,7 +71,7 @@ export default function LearningPathToolbar({
           className="btn btn-danger"
           disabled={!hasSelectedSkill}
           onClick={() => openModal('remove-relationship')}>
-          Remove relationship
+          Gỡ quan hệ
         </button>
       </div>
       {activeModal === 'add-node' && (

@@ -7,10 +7,10 @@ export default function CourseRecommendation({
     <section className={styles.recommendationContainer}>
       <header className={styles.recommendationHeader}>
         <span className={styles.sectionLabel}>
-          COURSE RECOMMENDATIONS
+          KHÓA HỌC GỢI Ý
         </span>
         <h2>{skill.skillName}</h2>
-        <p>Courses related to this skill.</p>
+        <p>Khóa học liên quan đến kỹ năng này.</p>
       </header>
 
       <div className={styles.recommendationContent}>
@@ -18,10 +18,10 @@ export default function CourseRecommendation({
 
         <div className={styles.emptyCourses}>
           <span className={styles.emptyIcon}>▤</span>
-          <h3>No courses loaded yet</h3>
+          <h3>Chưa có khóa học</h3>
           <p>
-            Recommended courses for {skill.skillName}
-            will appear here.
+            Khóa học gợi ý cho {skill.skillName}
+            sẽ hiện ở đây.
           </p>
         </div>
       </div>

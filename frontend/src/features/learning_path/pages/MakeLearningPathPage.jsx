@@ -21,7 +21,7 @@ export default function MakeLearningPathPage({onClose}) {
       navigate("/me/make-learning-path-generate", {state: {learningPath}})
     } 
     catch (err) {
-      setError('Unable to generate your learning path. Please try again.');
+      setError('Không tạo được lộ trình. Vui lòng thử lại.');
     } 
     finally { 
       setIsGenerating(false); 

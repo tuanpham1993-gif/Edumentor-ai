@@ -41,7 +41,7 @@ export default function LearningPathDetailPage() {
                 }
             } catch (err) {
                 if (isMounted) {
-                    setError("Unable to load this learning path.");
+                    setError("Không tải được lộ trình này.");
                 }
             } finally {
                 if (isMounted) {
@@ -93,7 +93,7 @@ export default function LearningPathDetailPage() {
 
         } catch (err) {
             console.error("Failed to refresh learning path:", err);
-            setError("Unable to refresh your learning path.");
+            setError("Không cập nhật được lộ trình.");
             throw err;
         }
     }
@@ -101,7 +101,7 @@ export default function LearningPathDetailPage() {
     if (isLoading) {
         return (
             <main className={styles.detailContainer}>
-                <p>Loading learning path...</p>
+                <p>Đang tải lộ trình...</p>
             </main>
         );
     }
@@ -110,8 +110,8 @@ export default function LearningPathDetailPage() {
         return (
             <main className={styles.detailContainer}>
                 <p className={styles.LearningPathEmptyMessage}>
-                    {error || "Learning path data is unavailable."}
-                    Please return to My Learning Paths and open it again.
+                    {error || "Không có dữ liệu lộ trình."}
+                     Hãy quay lại Lộ trình của tôi và mở lại.
                 </p>
             </main>
         );
@@ -124,7 +124,7 @@ export default function LearningPathDetailPage() {
                 <div className={styles.detailTitle}>
                     <h1>{learningPath.original_query}</h1>
                     <p>
-                        Manage your learning path and explore related courses.
+                        Quản lý lộ trình và khám phá khóa học liên quan.
                     </p>
                 </div>
 
@@ -164,11 +164,11 @@ export default function LearningPathDetailPage() {
                                 <span>↖</span>
                             </div>
 
-                            <h2>Select a skill</h2>
+                            <h2>Chọn một kỹ năng</h2>
 
                             <p>
-                                Click on any skill in your learning graph
-                                to discover recommended courses.
+                                Bấm vào một kỹ năng trên đồ thị
+                                để xem khóa học gợi ý.
                             </p>
                         </div>
                     )}

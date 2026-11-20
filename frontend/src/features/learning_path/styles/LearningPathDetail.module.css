@@ -234,3 +234,51 @@
     min-height: 480px;
   }
 }
+/* 20/11 (Tuấn, Hòa nhờ) — chú thích màu node, nổi ở góc dưới phải đồ thị (Controls ở góc dưới trái) */
+.graphLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  max-width: calc(100% - 80px);
+  padding: 8px 12px;
+
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.graphLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.legendSwatch {
+  width: 14px;
+  height: 14px;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-radius: 4px;
+}
+
+.legendKnown {
+  background: var(--accent-tint-strong);
+  border-color: rgba(245, 165, 36, 0.55);
+}
+
+.legendLearning {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+}
+
+.legendTarget {
+  border: 2px solid var(--accent);
+}
+
+.legendExtension {
+  border-style: dashed;
+}

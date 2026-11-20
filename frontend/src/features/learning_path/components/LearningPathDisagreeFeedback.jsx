@@ -19,7 +19,7 @@ export default function LearningPathFeedbackModal({ onClose }) {
         type="button"
         className={styles.closeFeedbackModal}
         onClick={onClose}
-        aria-label="Close feedback message"
+        aria-label="Đóng thông báo"
         >
         ×
         </button>
@@ -30,12 +30,12 @@ export default function LearningPathFeedbackModal({ onClose }) {
 
         <div className={styles.contentFeedbackModal}>
         <h2 id="feedback-title">
-            Let's improve it!
+            Cùng cải thiện nhé!
         </h2>
 
         <p>
-            Please provide us with more details next time
-            so we can generate a better learning path for you.
+            Lần sau hãy mô tả mục tiêu chi tiết hơn
+            để chúng tôi tạo lộ trình phù hợp hơn cho bạn.
         </p>
         </div>
 

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { roleLabel } from '../../roleLabels.js';
 
 import { addLearningPathEdge, updateLearningPathEdge, deleteLearningPathEdge } from '../../../../api/learningPaths.api';
 
@@ -55,7 +56,7 @@ export default function RelationshipModal({
     try {
       if (isRemoveMode) {
         if (!selectedEdge) {
-          setError('Please select a relationship.');
+          setError('Vui lòng chọn một quan hệ.');
           return;
         }
 
@@ -66,7 +67,7 @@ export default function RelationshipModal({
 
       } else {
         if (!otherSkillId) {
-          setError('Please select another skill.');
+          setError('Vui lòng chọn kỹ năng còn lại.');
           return;
         }
 
@@ -107,7 +108,7 @@ export default function RelationshipModal({
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-        'Unable to update this relationship.'
+        'Không cập nhật được quan hệ này.'
       );
     } finally {
       setLoading(false);
@@ -129,8 +130,8 @@ export default function RelationshipModal({
         <header className={styles.headerRelationshipModal}>
           <h2 id="relationship-title">
             {isRemoveMode
-              ? 'Remove relationship'
-              : 'Add or update relationship'}
+              ? 'Gỡ quan hệ'
+              : 'Thêm hoặc đổi quan hệ'}
           </h2>
 
           <button
@@ -138,7 +139,7 @@ export default function RelationshipModal({
             className={styles.closeRelationshipModal}
             onClick={onClose}
             disabled={loading}
-            aria-label="Close"
+            aria-label="Đóng"
           >
             ×
           </button>
@@ -148,12 +149,12 @@ export default function RelationshipModal({
           {isRemoveMode ? (
             <>
               <p>
-                Choose a relationship connected to{' '}
+                Chọn quan hệ nối với{' '}
                 <strong>{selectedSkill.skillName}</strong>.
               </p>
 
               {relatedEdges.length === 0 ? (
-                <p>This skill has no relationships to remove.</p>
+                <p>Kỹ năng này không có quan hệ nào để gỡ.</p>
               ) : (
                 <div className={styles.edgeListRelationshipModal}>
                   {relatedEdges.map((edge, index) => (
@@ -170,7 +171,7 @@ export default function RelationshipModal({
 
                       <span>
                         {edge.from_skill.skill} → {edge.to_skill.skill} 
-                        <small> ({edge.relation_type})</small>
+                        <small> ({roleLabel(edge.relation_type)})</small>
                       </span>
                     </label>
                   ))}
@@ -180,12 +181,12 @@ export default function RelationshipModal({
           ) : (
             <>
               <p>
-                Current Selected skill:{' '}
+                Kỹ năng đang chọn:{' '}
                 <strong>{selectedSkill.skillName}</strong>
               </p>
 
               <label htmlFor="other-skill">
-                You want connect to
+                Nối với kỹ năng
               </label>
 
               <select
@@ -195,7 +196,7 @@ export default function RelationshipModal({
                   setOtherSkillId(event.target.value)
                 }
               >
-                <option value="">Choose another skill</option>
+                <option value="">Chọn kỹ năng khác</option>
 
                 {otherNodes.map((node) => (
                   <option
@@ -208,7 +209,7 @@ export default function RelationshipModal({
               </select>
 
               <label htmlFor="edge-direction">
-                Relationship direction
+                Chiều quan hệ
               </label>
 
               <select
@@ -219,16 +220,16 @@ export default function RelationshipModal({
                 }
               >
                 <option value="selected-first">
-                  This selected skill → Other skill
+                  Kỹ năng đang chọn → Kỹ năng kia
                 </option>
 
                 <option value="other-first">
-                  Other skill → This selected skill
+                  Kỹ năng kia → Kỹ năng đang chọn
                 </option>
               </select>
 
               <label htmlFor="edge-relation-type">
-                Relationship type
+                Loại quan hệ
               </label>
 
               <select
@@ -240,7 +241,7 @@ export default function RelationshipModal({
               >
                 {RELATION_TYPES.map((type) => (
                   <option key={type} value={type}>
-                    {type}
+                    {roleLabel(type)}
                   </option>
                 ))}
               </select>
@@ -264,7 +265,7 @@ export default function RelationshipModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            Hủy
           </button>
 
           <button
@@ -281,10 +282,10 @@ export default function RelationshipModal({
             }
           >
             {loading
-              ? 'Processing...'
+              ? 'Đang xử lý...'
               : isRemoveMode
-                ? 'Remove relationship'
-                : 'Confirm'}
+                ? 'Gỡ quan hệ'
+                : 'Xác nhận'}
           </button>
         </footer>
       </section>

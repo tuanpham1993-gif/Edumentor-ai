@@ -18,12 +18,12 @@ export default function LearningPathPagination({
 
   return (
     <nav className={styles.paginationLearningPaths}
-        aria-label="Learning path pages">
+        aria-label="Trang lộ trình">
       <button type="button"
         className={styles.pageButtonLearningPaths}
         onClick={handlePrevious}
         disabled={currentPage === 1}>
-        Previous
+        Trước
       </button>
 
       <span className={styles.pageInfoLearningPaths}>
@@ -35,7 +35,7 @@ export default function LearningPathPagination({
         className={styles.pageButtonLearningPaths}
         onClick={handleNext}
         disabled={currentPage === totalPages}>
-        Next
+        Sau
       </button>
     </nav>
   );

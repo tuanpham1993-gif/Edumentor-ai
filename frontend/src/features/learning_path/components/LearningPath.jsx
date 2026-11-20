@@ -139,7 +139,7 @@ export default function LearningPathGraph({ learningPath }) {
   if (nodes.length === 0) {
     return (
       <div className={styles.emptyGraph}>
-        No learning path nodes were returned.
+        Lộ trình chưa có kỹ năng nào.
       </div>
     );
   }

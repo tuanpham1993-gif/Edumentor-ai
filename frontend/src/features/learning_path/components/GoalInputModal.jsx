@@ -43,14 +43,14 @@ export default function GoalInputModal({isOpen, makeItClose, onLoading, isLoadin
             onClick={(event)=>event.stopPropagation()}>
                 <header className={styles.headerModal}>
                     <h2 id="goal-modal-title">
-                        Create your learning path
+                        Tạo lộ trình học
                     </h2>
                     <button
                         type="button"
                         className={`${styles.closeButtonModal}`}
                         onClick={handleClose}
                         disabled={isLoading}
-                        aria-label="Close modal">
+                        aria-label="Đóng">
                         &times;
                     </button>
                 </header>
@@ -58,14 +58,14 @@ export default function GoalInputModal({isOpen, makeItClose, onLoading, isLoadin
                 <form onSubmit={handleSubmit}>
                     <div className={styles.bodyModal}>
                         <p className={styles.descriptionModal}>
-                            Tell us what you want to learn.
-                            We'll help you build a personalized learning path.
+                            Cho chúng tôi biết bạn muốn học gì.
+                            Chúng tôi sẽ giúp bạn xây dựng lộ trình phù hợp.
                         </p>
                         
                         
                         <textarea id="learning-goal"
                         className={styles.textareaModal}
-                        placeholder="For example: I want to become a backend developer..."
+                        placeholder="Ví dụ: Tôi muốn trở thành lập trình viên backend..."
                         value={goal}
                         onChange={(event)=>setGoal(event.target.value)}
                         rows={10} maxLength={2000}
@@ -84,7 +84,7 @@ export default function GoalInputModal({isOpen, makeItClose, onLoading, isLoadin
                         role="status"
                         aria-live="polite">
                             <span className={styles.hourglass} aria-hidden="true">⏳</span>
-                            <span>Generating your learning path...</span>
+                            <span>Đang tạo lộ trình...</span>
                         </div>
                     )}
 
@@ -98,7 +98,7 @@ export default function GoalInputModal({isOpen, makeItClose, onLoading, isLoadin
                         <button type="submit"
                         className="btn btn-primary createButtonModal"
                         disabled={!goal.trim() || isLoading}>
-                            {isLoading ? "Creating..." : "Create path"}
+                            {isLoading ? "Đang tạo..." : "Tạo lộ trình"}
                         </button>
                     </footer>
                 </form>

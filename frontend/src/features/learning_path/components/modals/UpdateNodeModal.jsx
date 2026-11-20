@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { roleLabel } from '../../roleLabels.js';
 import { updateLearningPathNode } from '../../../../api/learningPaths.api';
 
 import styles from '../../styles/UpdateNodeModal.module.css';
@@ -39,7 +40,7 @@ export default function UpdateNodeModal({
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-        'Unable to update this skill.'
+        'Không cập nhật được kỹ năng này.'
       );
     } finally {
       setLoading(false);
@@ -59,14 +60,14 @@ export default function UpdateNodeModal({
         onClick={(event) => event.stopPropagation()}
       >
         <header className={styles.headerUpdateNodeModal}>
-          <h2 id="update-node-title">Update skill role</h2>
+          <h2 id="update-node-title">Đổi vai trò kỹ năng</h2>
 
           <button
             type="button"
             className={styles.closeUpdateNodeModal}
             onClick={onClose}
             disabled={loading}
-            aria-label="Close"
+            aria-label="Đóng"
           >
             ×
           </button>
@@ -74,11 +75,11 @@ export default function UpdateNodeModal({
 
         <div className={styles.bodyUpdateNodeModal}>
           <p>
-            Selected skill: <strong>{selectedSkill.skillName}</strong>
+            Kỹ năng: <strong>{selectedSkill.skillName}</strong>
           </p>
 
           <label htmlFor="node-role">
-            Skill role
+            Vai trò
           </label>
 
           <select
@@ -89,7 +90,7 @@ export default function UpdateNodeModal({
           >
             {RELATION_TYPES.map((role) => (
               <option key={role} value={role}>
-                {role}
+                {roleLabel(role)}
               </option>
             ))}
           </select>
@@ -108,7 +109,7 @@ export default function UpdateNodeModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            Hủy
           </button>
 
           <button
@@ -117,7 +118,7 @@ export default function UpdateNodeModal({
             onClick={handleSubmit}
             disabled={loading}
           >
-            {loading ? 'Updating...' : 'Confirm'}
+            {loading ? 'Đang lưu...' : 'Xác nhận'}
           </button>
         </footer>
       </section>

@@ -27,7 +27,7 @@ export default function DeleteNodeModal({
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-        'Unable to delete this skill.'
+        'Không xóa được kỹ năng này.'
       );
     } finally {
       setLoading(false);
@@ -47,14 +47,14 @@ export default function DeleteNodeModal({
         onClick={(event) => event.stopPropagation()}
       >
         <header className={styles.headerDeleteNodeModal}>
-          <h2 id="delete-node-title">Delete skill?</h2>
+          <h2 id="delete-node-title">Xóa kỹ năng?</h2>
 
           <button
             type="button"
             className={styles.closeDeleteNodeModal}
             onClick={onClose}
             disabled={loading}
-            aria-label="Close"
+            aria-label="Đóng"
           >
             ×
           </button>
@@ -62,12 +62,12 @@ export default function DeleteNodeModal({
 
         <div className={styles.bodyDeleteNodeModal}>
           <p>
-            Are you sure you want to remove{' '}
-            <strong>{selectedSkill.skillName}</strong>?
+            Bạn chắc chắn muốn xóa{' '}
+            <strong>{selectedSkill.skillName}</strong> khỏi lộ trình?
           </p>
 
           <p>
-            Its relationships in this learning path will also be removed.
+            Các quan hệ của kỹ năng này trong lộ trình cũng bị xóa.
           </p>
 
           {error && (
@@ -84,7 +84,7 @@ export default function DeleteNodeModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            Hủy
           </button>
 
           <button
@@ -93,7 +93,7 @@ export default function DeleteNodeModal({
             onClick={handleDelete}
             disabled={loading}
           >
-            {loading ? 'Deleting...' : 'Delete skill'}
+            {loading ? 'Đang xóa...' : 'Xóa kỹ năng'}
           </button>
         </footer>
       </section>

@@ -4,10 +4,10 @@ import styles from "../../styles/AddNodeModal.module.css";
 import { getSkills } from '../../../../api/skill.api.js';
 import { addLearningPathNode } from '../../../../api/learningPaths.api';
 const RELATION_OPTIONS = [
-  { value: '', label: 'None' },
-  { value: 'prerequisite', label: 'Prerequisite' },
-  { value: 'related', label: 'Related' },
-  { value: 'extension', label: 'Extension' },
+  { value: '', label: 'Không có' },
+  { value: 'prerequisite', label: 'Tiên quyết' },
+  { value: 'related', label: 'Liên quan' },
+  { value: 'extension', label: 'Mở rộng' },
 ];
 
 const PAGE_SIZE = 50;
@@ -68,7 +68,7 @@ export default function AddNodeModal({
         setSkills(result.data);
         setTotalSkills(result.total);
       } catch (err) {
-        setError('Unable to load skills.');
+        setError('Không tải được danh sách kỹ năng.');
         if (!isMounted) return;
       } finally {
         if (isMounted) {
@@ -196,7 +196,7 @@ export default function AddNodeModal({
 
       setTotalSkills(result.total);
     } catch (err) {
-      setError('Unable to load more skills.');
+      setError('Không tải thêm được kỹ năng.');
     } finally {
       setLoadingMore(false);
     }
@@ -246,17 +246,17 @@ export default function AddNodeModal({
     event.preventDefault();
 
     if (!selectedSkill) {
-      setError('Please select a skill.');
+      setError('Vui lòng chọn một kỹ năng.');
       return;
     }
 
     if (!insertBeforeSkillId) {
-      setError('Please select an insertion position.');
+      setError('Vui lòng chọn vị trí chèn.');
       return;
     }
 
     if (!recordId) {
-      setError('Learning path ID is missing.');
+      setError('Thiếu mã lộ trình.');
       return;
     }
 
@@ -293,7 +293,7 @@ export default function AddNodeModal({
     } catch (err) {
       const message =
         err.response?.data?.detail ||
-        'Unable to add this skill to your learning path.';
+        'Không thêm được kỹ năng này vào lộ trình.';
 
       // Keep modal open so the user can fix the problem.
       setError(message);
@@ -320,7 +320,7 @@ export default function AddNodeModal({
     {/* Modal header */}
     <div className={styles.modalHeaderNodemodal}>
       <h2 id="addNodeTitle">
-        Add a new skill
+        Thêm kỹ năng mới
       </h2>
 
       <button
@@ -328,7 +328,7 @@ export default function AddNodeModal({
         className={styles.closeButtonNodemodal}
         onClick={onClose}
         disabled={loading}
-        aria-label="Close modal"
+        aria-label="Đóng"
       >
         &times;
       </button>
@@ -349,7 +349,7 @@ export default function AddNodeModal({
           htmlFor="skillSearch"
           className={styles.fieldLabelNodemodal}
         >
-          Choose a skill
+          Chọn kỹ năng
         </label>
 
         <div className={styles.skillSearchWrapperNodemodal}>
@@ -357,7 +357,7 @@ export default function AddNodeModal({
             id="skillSearch"
             type="text"
             className={styles.skillSearchInputNodemodal}
-            placeholder="Search or choose a skill..."
+            placeholder="Tìm hoặc chọn kỹ năng..."
             value={searchText}
             onFocus={() => setIsSkillDropdownOpen(true)}
             onClick={() => setIsSkillDropdownOpen(true)}
@@ -382,7 +382,7 @@ export default function AddNodeModal({
               setIsSkillDropdownOpen((previous) => !previous);
             }}
             disabled={loading}
-            aria-label="Toggle skill list"
+            aria-label="Mở / đóng danh sách kỹ năng"
           >
             <span className={isSkillDropdownOpen ? styles.arrowUpNodemodal : ''}>
               ▼
@@ -405,11 +405,11 @@ export default function AddNodeModal({
             className={styles.skillDropdownNodemodal}
             id="skill-options"
             role="listbox"
-            aria-label="Available skills"
+            aria-label="Kỹ năng có sẵn"
           >
             <div className={styles.dropdownHeadingNodemodal}>
               <span>
-                {searchText.trim() ? 'Search results' : 'Available skills'}
+                {searchText.trim() ? 'Kết quả tìm kiếm' : 'Kỹ năng có sẵn'}
               </span>
 
               <span className={styles.skillCountNodemodal}>
@@ -422,7 +422,7 @@ export default function AddNodeModal({
             <div className={styles.skillOptionsNodemodal}>
               {searching ? (
                 <p className={styles.dropdownMessageNodemodal}>
-                  Searching skills...
+                  Đang tìm kỹ năng...
                 </p>
               ) : displayedSkills.length > 0 ? (
                 displayedSkills.map((skill) => (
@@ -450,11 +450,11 @@ export default function AddNodeModal({
                 ))
               ) : searchText.trim() ? (
                 <p className={styles.dropdownMessageNodemodal}>
-                  Can't find your skill name.
+                  Không tìm thấy kỹ năng này.
                 </p>
               ) : (
                 <p className={styles.dropdownMessageNodemodal}>
-                  No skills available.
+                  Không có kỹ năng nào.
                 </p>
               )}
             </div>
@@ -468,7 +468,7 @@ export default function AddNodeModal({
                 disabled={loadingMore || loading}
               >
                 {loadingMore
-                  ? 'Loading skills...'
+                  ? 'Đang tải kỹ năng...'
                   : `Show next 50 skills (${skills.length}/${totalSkills})`}
               </button>
             )}
@@ -478,12 +478,12 @@ export default function AddNodeModal({
 
 
       {/* -------------------------------- */}
-      {/* Insert before */}
+      {/* Chèn trước */}
       {/* -------------------------------- */}
 
       <div className={styles.formGroupNodemodal}>
         <label htmlFor="insertBefore">
-          Insert before
+          Chèn trước
         </label>
 
         <select
@@ -493,7 +493,7 @@ export default function AddNodeModal({
           disabled={loading || orderedNodes.length === 0}
         >
           <option value="">
-            Select an existing node
+            Chọn một kỹ năng trong lộ trình
           </option>
 
           {orderedNodes.map((node) => {
@@ -509,7 +509,7 @@ export default function AddNodeModal({
                 key={skillId}
                 value={skillId}
               >
-                {skillName ?? `Skill ${skillId}`}
+                {skillName ?? `Kỹ năng ${skillId}`}
               </option>
             );
           })}
@@ -517,7 +517,7 @@ export default function AddNodeModal({
 
         {orderedNodes.length === 0 && (
           <p className={styles.helperTextNodemodal}>
-            No existing nodes are available.
+            Lộ trình chưa có kỹ năng nào.
           </p>
         )}
       </div>
@@ -528,7 +528,7 @@ export default function AddNodeModal({
 
       <div className={styles.formGroupNodemodal}>
         <label htmlFor="relationToCurrent">
-          Relationship with selected node
+          Quan hệ với kỹ năng đã chọn
         </label>
 
         <select
@@ -550,7 +550,7 @@ export default function AddNodeModal({
         </select>
 
         <p className={styles.helperTextNodemodal}>
-          Relationship between the new skill and the selected node.
+          Quan hệ giữa kỹ năng mới và kỹ năng đã chọn.
         </p>
       </div>
 
@@ -560,7 +560,7 @@ export default function AddNodeModal({
 
       <div className={styles.formGroupNodemodal}>
         <label htmlFor="relationToNext">
-          Relationship with next node
+          Quan hệ với kỹ năng kế tiếp
         </label>
 
         <select
@@ -583,7 +583,7 @@ export default function AddNodeModal({
 
         {nextNode ? (
           <p className={styles.helperTextNodemodal}>
-            Relationship between the new skill and{' '}
+            Quan hệ giữa kỹ năng mới và{' '}
             <strong>
               {typeof nextNode.skill === 'object'
                 ? nextNode.skill?.skill
@@ -592,12 +592,12 @@ export default function AddNodeModal({
           </p>
         ) : insertBeforeSkillId ? (
           <p className={styles.helperTextNodemodal}>
-            The selected node is the last node.
-            There is no next node.
+            Kỹ năng đã chọn là kỹ năng cuối.
+            Không có kỹ năng kế tiếp.
           </p>
         ) : (
           <p className={styles.helperTextNodemodal}>
-            Select an insertion position first.
+            Hãy chọn vị trí chèn trước.
           </p>
         )}
       </div>
@@ -626,7 +626,7 @@ export default function AddNodeModal({
           onClick={onClose}
           disabled={loading}
         >
-          Cancel
+          Hủy
         </button>
 
         <button
@@ -634,7 +634,7 @@ export default function AddNodeModal({
           className={styles.confirmButtonNodemodal}
           disabled={loading || !selectedSkill}
         >
-          {loading ? 'Adding...' : 'Confirm'}
+          {loading ? 'Đang thêm...' : 'Xác nhận'}
         </button>
       </div>
     </form>
