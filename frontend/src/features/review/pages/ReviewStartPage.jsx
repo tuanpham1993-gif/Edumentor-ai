@@ -2,6 +2,7 @@
 //   - Cấu trúc đề (chốt 09/11): 15 câu = 12 trắc nghiệm + 3 tự luận, đạt ≥ 6/10, làm lại không giới hạn.
 //   - Có lượt đang làm dở → nút "Tiếp tục bài đang làm" (backend trả lại đúng lượt đó).
 //   - Chưa thể ôn (chưa tham gia / đã bỏ khóa / chưa có đề) → hiện lý do, ẩn nút Bắt đầu.
+//   - 20/11: vào từ huy hiệu trên đồ thị lộ trình → nút "← Quay lại lộ trình" (reviewReturn.js).
 //   - 19/11: đủ 5 bài làm dở (khóa khác) → danh sách bài dở với Tiếp tục / Bỏ bài; bài dở của khóa này có "Bỏ bài này".
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -13,6 +14,7 @@ import { formatDateTime } from '../../../utils/formatters.js';
 import AbandonAttemptButton from '../components/AbandonAttemptButton.jsx';
 import TempJoinCourseButton from '../components/TempJoinCourseButton.jsx'; // TẠM — xóa khi Khôi có trang khóa học
 import { formatScore } from '../reviewFormat.js';
+import { attemptKey, courseKey, readReturn, saveReturn } from '../reviewReturn.js';
 import styles from '../styles/ReviewStartPage.module.css';
 
 const BLOCK_TITLES = {
@@ -35,6 +37,7 @@ export default function ReviewStartPage() {
   const [loadError, setLoadError] = useState(null); // { status, message }
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState('');
+  const returnTo = readReturn(courseKey(courseId)); // bấm "Ôn tập" từ huy hiệu trên đồ thị lộ trình
 
   const load = useCallback(async () => {
     setLoadError(null);
@@ -54,6 +57,8 @@ export default function ReviewStartPage() {
     setStartError('');
     try {
       const attempt = await reviewApi.startReview(courseId);
+      // 20/11: đến từ đồ thị lộ trình → chép địa chỉ lộ trình sang bài làm (màn Kết quả có nút quay lại)
+      if (returnTo) saveReturn(attemptKey(attempt.attempt_id), returnTo);
       navigate(`/review/${attempt.attempt_id}`, { state: { attempt } });
     } catch (error) {
       setStartError(parseApiError(error).message);
@@ -175,6 +180,11 @@ export default function ReviewStartPage() {
             <Link to="/me/review-history" className="btn btn-lg">
               Lịch sử ôn tập
             </Link>
+            {returnTo && (
+              <Link to={returnTo} className="btn btn-lg">
+                ← Quay lại lộ trình
+              </Link>
+            )}
           </div>
         </section>
 

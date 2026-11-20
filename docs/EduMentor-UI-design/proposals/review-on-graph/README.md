@@ -33,6 +33,7 @@ Nguyên tắc: **mỗi người làm trong module của mình**. Tuấn làm th�
 |---|---|---|---|---|
 | 1 | API `GET /api/me/review/skills?skill_ids=1,2,3`: mỗi kỹ năng → các khóa người học đã tham gia có dạy kỹ năng đó và đã có đề ôn tập, kèm lần làm gần nhất / bài đang làm dở | Tuấn | trước 25/11 | ✅ 20/11 |
 | 2 | Thành phần `<SkillReviewProvider>` + `<SkillReviewBadge>` (huy hiệu trên node → bảng nhỏ "Ôn tập <kỹ năng>": các khóa, điểm lần trước, nút Ôn tập → `/courses/{id}/review`) | Tuấn | trước 25/11 | ✅ 20/11 |
+| 2b | Nút **← Quay lại lộ trình** ở màn Bắt đầu ôn tập và màn Kết quả khi vào từ huy hiệu (nhớ lộ trình qua `reviewReturn.js`, sessionStorage; chỉ nhận đường dẫn `/me/my-learning-path/…`) | Tuấn | trước 25/11 | ✅ 20/11 |
 | 3 | Màu node theo trạng thái từ `GET /api/me/skills` (Đã biết / Đang học / Chưa học / Mục tiêu / Mở rộng) + chú thích màu; sửa dấu ✓ (đang hiện cho kỹ năng mục tiêu); bỏ `passed_test → is_target`; đầu trang (tên, chip trạng thái, "x/y kỹ năng đã biết · tạo ngày", đường dẫn); nút Đổi tên / Từ bỏ; panel phải (vai trò, thêm bởi, Học trước / Mở ra); chữ tiếng Việt; dọn file thử nghiệm | Hòa | | chờ Hòa |
 | 4 | Khóa học gợi ý theo kỹ năng: API `/recommendation` + thẻ khóa (Tham gia học / Lưu dùng API của Khôi) | Hòa (+ Khôi) | | chờ Hòa |
 | 5 | Chèn `<SkillReviewProvider>` quanh đồ thị và `<SkillReviewBadge>` vào `SkillNode` (chỉ node Đã biết / Đang học) | Hòa chèn, Tuấn hỗ trợ | sau bước 2 + 3 | |

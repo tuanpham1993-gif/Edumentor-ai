@@ -9,10 +9,11 @@
 //     Cuộn / thu phóng / đổi cỡ cửa sổ → đóng bảng (vị trí cũ không còn đúng).
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { timeAgo } from '../../../utils/formatters.js';
 import { formatScore } from '../reviewFormat.js';
+import { attemptKey, courseKey, saveReturn } from '../reviewReturn.js';
 import styles from '../styles/SkillReview.module.css';
 import { useSkillReview } from './SkillReviewContext.jsx';
 
@@ -49,6 +50,7 @@ function statusText(course) {
 
 export default function SkillReviewBadge({ skillId, skillName }) {
   const courses = useSkillReview(skillId);
+  const { pathname } = useLocation();
   const [pos, setPos] = useState(null); // null = đóng; { top, left } = đang mở
   const badgeRef = useRef(null);
   const popRef = useRef(null);
@@ -129,7 +131,12 @@ export default function SkillReviewBadge({ skillId, skillName }) {
                   <Link
                     to={c.in_progress_attempt_id ? `/review/${c.in_progress_attempt_id}` : `/courses/${c.course_id}/review`}
                     className="btn btn-sm btn-primary"
-                    onClick={close}
+                    onClick={() => {
+                      // nhớ lộ trình đang xem → màn Kết quả có nút "← Quay lại lộ trình"
+                      saveReturn(courseKey(c.course_id), pathname);
+                      if (c.in_progress_attempt_id) saveReturn(attemptKey(c.in_progress_attempt_id), pathname);
+                      close();
+                    }}
                   >
                     {c.in_progress_attempt_id ? 'Tiếp tục' : 'Ôn tập'}
                   </Link>

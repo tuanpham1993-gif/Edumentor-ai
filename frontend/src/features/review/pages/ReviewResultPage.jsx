@@ -16,11 +16,20 @@ import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
 import ResultQuestion from '../components/ResultQuestion.jsx';
 import { formatScore } from '../reviewFormat.js';
+import { attemptKey, readReturn } from '../reviewReturn.js';
 import styles from '../styles/ReviewResultPage.module.css';
 
 const POLL_MS = 5000;
 
-function GradingPanel({ result }) {
+function BackToPath({ to }) {
+  return to ? (
+    <Link to={to} className="btn">
+      ← Quay lại lộ trình
+    </Link>
+  ) : null;
+}
+
+function GradingPanel({ result, returnTo }) {
   return (
     <section className={`card ${styles.summary}`} role="status" aria-live="polite">
       <p className="muted">Kết quả ôn tập · {result.course_title}</p>
@@ -40,6 +49,7 @@ function GradingPanel({ result }) {
         <Link to={`/courses/${result.course_id}/review`} className="btn">
           Trang ôn tập của khóa
         </Link>
+        <BackToPath to={returnTo} />
       </div>
     </section>
   );
@@ -74,6 +84,7 @@ export default function ReviewResultPage() {
     return fromSubmit && String(fromSubmit.attempt_id) === attemptId ? fromSubmit : null;
   });
   const justSubmitted = Boolean(location.state?.result);
+  const returnTo = readReturn(attemptKey(attemptId)); // 20/11: vào từ huy hiệu trên đồ thị lộ trình
   const [loadError, setLoadError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState(() => new Set());
@@ -145,7 +156,7 @@ export default function ReviewResultPage() {
   }
 
   if (grading) {
-    return <GradingPanel result={result} />;
+    return <GradingPanel result={result} returnTo={returnTo} />;
   }
 
   const mcq = result.questions.filter((q) => q.type === 'mcq');
@@ -217,6 +228,7 @@ export default function ReviewResultPage() {
           <Link to="/me/review-history" className="btn">
             Lịch sử ôn tập
           </Link>
+          <BackToPath to={returnTo} />
         </div>
       </section>
 
