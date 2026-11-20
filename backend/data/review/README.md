@@ -3,6 +3,21 @@
 Mỗi khóa một file `course_<course_id>.json`. Nạp vào DB: `python -m scripts.seed_review --file data/review/course_<id>.json`
 (trong thư mục `backend`). Script **kiểm tra trước, ghi sau** — sai ở đâu in hết lỗi, không ghi gì.
 
+## Các khóa đã có ngân hàng
+
+| File | Khóa | Nội dung |
+|---|---|---|
+| `course_312_en.json` | 312 Python Basics: Selection and Iteration | 5 kỹ năng · 100 câu · 15 đoạn tri thức |
+| `course_1855_en.json` | 1855 Programming for Everybody (Getting Started with Python) — 20/11/2026 | 3 kỹ năng mới (Computer Programming, Python Syntax And Semantics, Basic Programming Language) · 60 câu · 9 đoạn tri thức; kỹ năng Python Programming dùng chung câu của khóa 312 |
+
+Sau khi pull, mỗi máy tự nạp (chỉ thêm câu chưa có, không đụng khóa khác):
+```
+python -m scripts.seed_review --file data/review/course_1855_en.json
+python -m scripts.build_embeddings
+```
+Kiểm tra từ khóa khi soạn: cụm từ khóa bị bộ chấm bỏ từ đệm (`keyword_grader_en._kw("which line")` → `('line',)`) —
+chọn cụm còn ≥ 2 từ có nghĩa, tránh từ khóa 1 chữ chung chung ("line", "for", "0", "back").
+
 ## ⚠️ Từ 14/11/2026: ngân hàng TIẾNG ANH (D1 — chốt 13/11)
 
 - File đang dùng: **`course_312_en.json`** (dịch từ `course_312.json`, giữ nguyên đáp án, mức, đoạn tri thức, điểm từng ý).

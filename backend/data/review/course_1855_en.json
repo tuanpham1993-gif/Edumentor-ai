@@ -1,0 +1,1578 @@
+{
+  "course_id": 1855,
+  "course_title": "Programming for Everybody (Getting Started with Python)",
+  "note": "English bank (20/11/2026, drafted by Claude, reviewed by Tuấn): 3 new skills x 20 questions = 60 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 9 knowledge chunks. Python Programming (skill 167) reuses the course 312 bank. Topics follow Python for Everybody ch. 1-5 and avoid repeating course 312 questions. Load with: python -m scripts.seed_review --file data/review/course_1855_en.json",
+  "skills": {
+    "CPROG": 26,
+    "SYN": 169,
+    "BPL": 3083
+  },
+  "chunks": [
+    {
+      "code": "CPROG-K01",
+      "skill": "CPROG",
+      "title": "Programs and computer hardware",
+      "content": "A program is a sequence of instructions, written by a programmer, that tells the computer how to solve a problem. The Central Processing Unit (CPU) executes these instructions one after another; it constantly asks 'what next?'. Main memory (RAM) stores the instructions and data that the CPU needs while a program is running. It is fast, but it is temporary: everything in main memory is lost when the power is turned off. Secondary memory, such as a hard disk, an SSD or a USB drive, stores files permanently, even without power, but it is much slower than main memory. Input devices (keyboard, mouse, microphone) let the user give data to the computer, and output devices (screen, speaker, printer) show the results."
+    },
+    {
+      "code": "CPROG-K02",
+      "skill": "CPROG",
+      "title": "Machine language, high-level languages, interpreters and compilers",
+      "content": "The CPU only understands machine language: instructions made of 0s and 1s. Machine language is very hard for people to write, so programmers use high-level languages such as Python, Java or C, which are easier to read and write. A high-level program (the source code) must be translated into machine language before the CPU can run it. An interpreter reads the source code and runs it one statement at a time, line by line. A compiler translates the whole program into machine code (an executable file) before it is run. Python is an interpreted language. You can use Python in interactive mode, where the >>> prompt waits for you to type one statement and shows the result immediately, or in script mode, where you save the code in a .py file and run the whole file, for example: python hello.py."
+    },
+    {
+      "code": "CPROG-K03",
+      "skill": "CPROG",
+      "title": "Errors and debugging",
+      "content": "A syntax error happens when the code breaks the grammar rules of Python, for example a missing colon after an if line, a missing closing parenthesis or wrong indentation. Python cannot run a program with a syntax error and reports the line where it found the problem. A logic error or semantic error (a mistake in meaning) is different: the code follows the rules and runs, but it does not do what the programmer intended, so the result is wrong. For example, avg = a + b / 2 runs, but it does not compute the average of a and b; the correct code is avg = (a + b) / 2. When a program stops with an error, Python prints a traceback: it shows the file name and line number where the error happened, and its last line names the type of error with a message, such as NameError or TypeError. Read the last line first. Good debugging habits are: read the code carefully, run small experiments, print the values of variables, and undo recent changes until the program works again."
+    },
+    {
+      "code": "SYN-K01",
+      "skill": "SYN",
+      "title": "Values, types, variable names and keywords",
+      "content": "Every value in Python has a type. 17 is an int (integer), 3.2 is a float (a number with a decimal point) and 'Hello' is a str (string). Quotes make a value a string, so '17' is a string, not a number. The function type() tells you the type of a value: type(3.2) gives <class 'float'>. A variable is a name that refers to a value; an assignment statement such as x = 5 evaluates the right side first, then stores the result in the variable. Variable names may contain letters, digits and the underscore (_); they cannot start with a digit, they cannot contain spaces, and they are case-sensitive (score and Score are different names). Reserved keywords such as if, for, while, def, class, True and None cannot be used as variable names."
+    },
+    {
+      "code": "SYN-K02",
+      "skill": "SYN",
+      "title": "Expressions, operators and operator precedence",
+      "content": "An expression combines values, variables and operators, and Python evaluates it to one value. The arithmetic operators are + (add), - (subtract), * (multiply), / (divide), // (floor division), % (remainder) and ** (exponent). In Python 3, / always gives a float: 7 / 2 is 3.5 and 10 / 5 is 2.0. // keeps only the whole part: 7 // 2 is 3. % gives the remainder: 7 % 2 is 1. When an expression has several operators, Python follows the order of operations: parentheses first, then exponent **, then multiplication and division (*, /, //, %), then addition and subtraction; operators with the same priority are evaluated from left to right. So 1 + 2 * 3 is 7, but (1 + 2) * 3 is 9. Some operators also work on strings: + joins (concatenates) two strings, 'Hello' + 'World' gives 'HelloWorld', and * repeats a string, 'ab' * 3 gives 'ababab'. Adding a string and a number, such as '5' + 5, causes a TypeError."
+    },
+    {
+      "code": "SYN-K03",
+      "skill": "SYN",
+      "title": "Type conversion, input() and try / except",
+      "content": "The functions int(), float() and str() convert values between types: int('32') gives 32, float('3.5') gives 3.5, float('3') gives 3.0, and str(42) gives '42'. int() on a float drops the decimal part: int(3.99) is 3. Converting text that is not a number, such as int('hello'), causes a ValueError. The input() function always returns a string, even when the user types digits, so you must convert it with int() or float() before doing arithmetic: age = int(input('Age: ')). To stop a program from crashing on bad input, put the code that might fail inside a try block and write an except block after it. If an error happens inside try, Python skips the rest of the try block and runs the except block instead, so the program does not crash and can continue."
+    },
+    {
+      "code": "BPL-K01",
+      "skill": "BPL",
+      "title": "The basic patterns of every program",
+      "content": "Almost every program is built from a few basic patterns. Input and output: get data from the user, a file or a sensor, and show results on the screen or save them. Sequential execution: statements run one after another, in the order they are written. Conditional execution: check a condition and run or skip some statements. Repeated execution: run some statements many times, usually with a loop. Reuse: write a set of instructions once, give it a name (a function), and use it many times in the program. Programming is the skill of combining these patterns to solve a problem."
+    },
+    {
+      "code": "BPL-K02",
+      "skill": "BPL",
+      "title": "Functions: built-in functions, def, parameters and return",
+      "content": "A function is a named sequence of statements that performs a task. Python has built-in functions: len('hello') gives 5, max('Hello world') gives 'w' (the largest character) and min('Hello world') gives ' ' (the space). You can define your own function with the keyword def, a name, parentheses with parameters, a colon and an indented body. Defining a function does not run it; the body runs only when the function is called, for example greet('Ana'). A parameter is the variable name written in the definition; an argument is the actual value passed when the function is called. The return statement ends the function and sends a value back to the caller: def add(a, b): return a + b, so add(2, 3) gives 5. A function with no return statement returns None. We write functions to avoid repeating code, to organize a program into parts, and to make it easier to read and debug."
+    },
+    {
+      "code": "BPL-K03",
+      "skill": "BPL",
+      "title": "Loop patterns: counting, summing, largest and smallest",
+      "content": "Many loops follow the same patterns. Counting: set count = 0 before the loop and add 1 inside the loop (count = count + 1); after the loop, count holds the number of items. Summing: set total = 0 before the loop and add each value (total = total + value). The average is total / count. Largest value: start with largest = None, because no value has been seen yet; inside the loop, if largest is None or value > largest, then largest = value. The smallest value works the same way with <. Starting with 0 instead of None can give a wrong answer, for example when all the numbers are negative (largest) or all positive (smallest). The break statement exits a loop immediately; continue skips to the next iteration."
+    }
+  ],
+  "questions": [
+    {
+      "code": "CPROG-TN-01",
+      "skill": "CPROG",
+      "chunk": "CPROG-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which part of the computer executes the instructions of a program?",
+      "options": [
+        "The CPU",
+        "Main memory",
+        "Secondary memory",
+        "The keyboard"
+      ],
+      "correct_index": 0,
+      "explanation": "The CPU (Central Processing Unit) executes the program's instructions one after another."
+    },
+    {
+      "code": "CPROG-TN-02",
+      "skill": "CPROG",
+      "chunk": "CPROG-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Where are files stored permanently, so they stay even when the power is turned off?",
+      "options": [
+        "Main memory (RAM)",
+        "The CPU",
+        "Secondary memory (disk, SSD, USB drive)",
+        "The screen"
+      ],
+      "correct_index": 2,
+      "explanation": "Secondary memory keeps files permanently; main memory is temporary."
+    },
+    {
+      "code": "CPROG-TN-03",
+      "skill": "CPROG",
+      "chunk": "CPROG-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What happens to the data in main memory when the computer is turned off?",
+      "options": [
+        "It is copied into the CPU",
+        "It is lost",
+        "It is saved automatically to the disk",
+        "It is sent to the printer"
+      ],
+      "correct_index": 1,
+      "explanation": "Main memory is temporary: its contents are lost when the power is off."
+    },
+    {
+      "code": "CPROG-TN-04",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which language does the CPU understand directly?",
+      "options": [
+        "Python",
+        "English",
+        "HTML",
+        "Machine language (0s and 1s)"
+      ],
+      "correct_index": 3,
+      "explanation": "The CPU only understands machine language; other languages must be translated first."
+    },
+    {
+      "code": "CPROG-TN-05",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does the Python interpreter do?",
+      "options": [
+        "It checks the spelling of English comments",
+        "It draws windows on the screen",
+        "It stores files on the disk permanently",
+        "It reads the source code and runs it one statement at a time"
+      ],
+      "correct_index": 3,
+      "explanation": "An interpreter reads the source code and runs it statement by statement."
+    },
+    {
+      "code": "CPROG-TN-06",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is a syntax error?",
+      "options": [
+        "The program runs but gives a wrong answer",
+        "The code breaks the grammar rules of Python, so it cannot run",
+        "The computer runs out of memory",
+        "The user types the wrong input"
+      ],
+      "correct_index": 1,
+      "explanation": "A syntax error breaks the grammar rules of the language; Python cannot run the program."
+    },
+    {
+      "code": "CPROG-TN-07",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In Python's interactive mode, what does the >>> prompt mean?",
+      "options": [
+        "Python is waiting for you to type a statement",
+        "The program has an error",
+        "The output is being saved to a file",
+        "Python is shutting down"
+      ],
+      "correct_index": 0,
+      "explanation": "The >>> prompt means Python is ready for the next statement and will show the result immediately."
+    },
+    {
+      "code": "CPROG-TN-08",
+      "skill": "CPROG",
+      "chunk": "CPROG-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A running program is working with a list of numbers. Where is this list kept while the program runs?",
+      "options": [
+        "Secondary memory",
+        "Main memory",
+        "An input device",
+        "An output device"
+      ],
+      "correct_index": 1,
+      "explanation": "While a program runs, its instructions and data are kept in main memory, which is fast."
+    },
+    {
+      "code": "CPROG-TN-09",
+      "skill": "CPROG",
+      "chunk": "CPROG-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which pair contains one input device and one output device?",
+      "options": [
+        "Screen and speaker",
+        "CPU and main memory",
+        "Hard disk and USB drive",
+        "Keyboard and screen"
+      ],
+      "correct_index": 3,
+      "explanation": "The keyboard is an input device and the screen is an output device."
+    },
+    {
+      "code": "CPROG-TN-10",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the main difference between a compiler and an interpreter?",
+      "options": [
+        "A compiler only works with Python; an interpreter only works with C",
+        "An interpreter translates the program into machine code once and saves it as a file",
+        "A compiler translates the whole program before it runs; an interpreter runs it one statement at a time",
+        "There is no difference; they are two names for the same tool"
+      ],
+      "correct_index": 2,
+      "explanation": "A compiler translates the whole program first; an interpreter translates and runs one statement at a time."
+    },
+    {
+      "code": "CPROG-TN-11",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why do programmers usually write in a high-level language such as Python?",
+      "options": [
+        "It is easier for people to read and write",
+        "The CPU can run it without any translation",
+        "Programs written in it never contain errors",
+        "It does not need a computer to run"
+      ],
+      "correct_index": 0,
+      "explanation": "High-level languages are easier for people; they still have to be translated for the CPU."
+    },
+    {
+      "code": "CPROG-TN-12",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "The line print('Hello' is missing its closing parenthesis. What happens?",
+      "options": [
+        "It prints Hello normally",
+        "Python reports a syntax error and does not run the program",
+        "It prints Hello, then a logic error appears",
+        "The CPU fixes the parenthesis automatically"
+      ],
+      "correct_index": 1,
+      "explanation": "A missing parenthesis breaks the grammar rules, so Python reports a syntax error."
+    },
+    {
+      "code": "CPROG-TN-13",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "To compute the average of a and b, a student writes avg = a + b / 2. The program runs without any error message, but the result is wrong. What kind of mistake is this?",
+      "options": [
+        "A syntax error: Python refuses to run it",
+        "A hardware error in the CPU",
+        "A mistake in meaning (logic / semantic error): the code runs but does not do what was intended",
+        "A typing error in the input"
+      ],
+      "correct_index": 2,
+      "explanation": "The code follows the rules and runs, but it does not compute the average: the correct code is (a + b) / 2."
+    },
+    {
+      "code": "CPROG-TN-14",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Python stops with a traceback. Which line should you read first to learn the type of error (for example NameError)?",
+      "options": [
+        "The first line",
+        "The last line",
+        "Any line; they all say the same",
+        "None; tracebacks do not show it"
+      ],
+      "correct_index": 1,
+      "explanation": "The last line of a traceback names the error type and gives a message."
+    },
+    {
+      "code": "CPROG-TL-01",
+      "skill": "CPROG",
+      "chunk": "CPROG-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What does the CPU do, and what is the difference between main memory and secondary memory?",
+      "rubric": [
+        {
+          "text": "The CPU executes (runs) the instructions of the program",
+          "max_points": 4,
+          "main_keywords": [
+            "execute",
+            "run",
+            "carry out",
+            "process"
+          ],
+          "sub_keywords": [
+            "cpu",
+            "processor"
+          ]
+        },
+        {
+          "text": "Main memory is fast but temporary: its data is lost when the power is off",
+          "max_points": 3,
+          "main_keywords": [
+            "temporary",
+            "lost",
+            "fast"
+          ],
+          "sub_keywords": [
+            "main memory",
+            "ram"
+          ]
+        },
+        {
+          "text": "Secondary memory stores files permanently but is slower",
+          "max_points": 3,
+          "main_keywords": [
+            "permanent",
+            "permanently",
+            "slower",
+            "slow"
+          ],
+          "sub_keywords": [
+            "secondary",
+            "disk",
+            "ssd",
+            "hard drive"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The CPU executes the instructions of the program. Main memory (RAM) is fast but temporary: its data is lost when the power is off. Secondary memory such as a disk or SSD stores files permanently, but it is slower."
+    },
+    {
+      "code": "CPROG-TL-02",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is the difference between an interpreter and a compiler?",
+      "rubric": [
+        {
+          "text": "An interpreter reads the source code and runs it one statement (line) at a time",
+          "max_points": 5,
+          "main_keywords": [
+            "one statement",
+            "line by line",
+            "statement by statement",
+            "one line"
+          ],
+          "sub_keywords": [
+            "interpreter"
+          ]
+        },
+        {
+          "text": "A compiler translates the whole program into machine code before it is run",
+          "max_points": 5,
+          "main_keywords": [
+            "whole program",
+            "entire program",
+            "machine code",
+            "executable"
+          ],
+          "sub_keywords": [
+            "compiler"
+          ]
+        }
+      ],
+      "explanation": "Model answer: An interpreter reads the source code and runs it line by line, one statement at a time. A compiler translates the whole program into machine code (an executable file) before it is run."
+    },
+    {
+      "code": "CPROG-TL-03",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is a syntax error? Give one example.",
+      "rubric": [
+        {
+          "text": "A syntax error breaks the grammar rules of Python, so the program cannot run",
+          "max_points": 6,
+          "main_keywords": [
+            "grammar",
+            "grammar rule",
+            "syntax rule",
+            "cannot run",
+            "can't run",
+            "won't run",
+            "not run"
+          ],
+          "sub_keywords": [
+            "syntax"
+          ]
+        },
+        {
+          "text": "A correct example (missing colon, missing parenthesis or quote, wrong indentation...)",
+          "max_points": 4,
+          "main_keywords": [
+            "colon",
+            "parenthesis",
+            "quote",
+            "indentation",
+            "bracket"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A syntax error happens when the code breaks the grammar rules of Python, so Python cannot run the program. For example, forgetting the colon at the end of an if line, or a missing closing parenthesis."
+    },
+    {
+      "code": "CPROG-TL-04",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "What information does a Python traceback give you, and which part should you read first?",
+      "rubric": [
+        {
+          "text": "It shows where the error happened (file name and line number)",
+          "max_points": 3,
+          "main_keywords": [
+            "line number",
+            "file name"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "It shows the type of error and a message (NameError, TypeError...)",
+          "max_points": 3,
+          "main_keywords": [
+            "type",
+            "kind",
+            "nameerror",
+            "typeerror",
+            "syntaxerror",
+            "valueerror",
+            "message"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Read the last line first, because it names the error",
+          "max_points": 4,
+          "main_keywords": [
+            "last line",
+            "bottom"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A traceback shows where the error happened: the file name and the line number. It also gives the type of the error and a message, for example NameError: name 'x' is not defined. You should read the last line first, because it names the error."
+    },
+    {
+      "code": "CPROG-TL-05",
+      "skill": "CPROG",
+      "chunk": "CPROG-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Explain the difference between a syntax error and a mistake in meaning (logic / semantic error). Give one example of each.",
+      "rubric": [
+        {
+          "text": "A syntax error breaks the grammar rules, so the program cannot run",
+          "max_points": 3,
+          "main_keywords": [
+            "grammar",
+            "grammar rule",
+            "syntax rule",
+            "cannot run",
+            "can't run",
+            "won't run",
+            "not run"
+          ],
+          "sub_keywords": [
+            "syntax"
+          ]
+        },
+        {
+          "text": "A correct example of a syntax error",
+          "max_points": 2,
+          "main_keywords": [
+            "colon",
+            "parenthesis",
+            "quote",
+            "indentation",
+            "bracket"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A logic / semantic error: the program runs but gives a wrong result (not what was intended)",
+          "max_points": 3,
+          "main_keywords": [
+            "wrong result",
+            "wrong answer",
+            "intended",
+            "runs"
+          ],
+          "sub_keywords": [
+            "logic",
+            "semantic",
+            "meaning"
+          ]
+        },
+        {
+          "text": "A correct example of a logic / semantic error",
+          "max_points": 2,
+          "main_keywords": [
+            "instead",
+            "wrong formula",
+            "wrong order",
+            "wrong operator",
+            "average"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A syntax error breaks the grammar rules of Python, so the program cannot run. For example, a missing colon after if x > 0. A logic error (semantic error) means the program runs but gives a wrong result that is not what you intended. For example, writing avg = a + b / 2 instead of avg = (a + b) / 2 to compute an average."
+    },
+    {
+      "code": "CPROG-TL-06",
+      "skill": "CPROG",
+      "chunk": "CPROG-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Describe what happens when you run a Python program, from the source file to the result on the screen. Use the words interpreter, machine language, CPU and main memory.",
+      "rubric": [
+        {
+          "text": "The source code is written in a high-level language and saved in a .py file",
+          "max_points": 2,
+          "main_keywords": [
+            "source",
+            "high-level",
+            "high level",
+            ".py"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The interpreter translates the statements into machine language",
+          "max_points": 3,
+          "main_keywords": [
+            "translate",
+            "convert"
+          ],
+          "sub_keywords": [
+            "interpreter"
+          ]
+        },
+        {
+          "text": "The CPU executes the machine-language instructions",
+          "max_points": 3,
+          "main_keywords": [
+            "cpu execute",
+            "cpu runs",
+            "executes the instructions",
+            "carries out"
+          ],
+          "sub_keywords": [
+            "cpu"
+          ]
+        },
+        {
+          "text": "While the program runs, its instructions and data are kept in main memory",
+          "max_points": 2,
+          "main_keywords": [
+            "main memory",
+            "ram"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The programmer writes the source code in a high-level language and saves it in a .py file. When we run it, the Python interpreter reads the code and translates each statement into machine language. The CPU executes these instructions one by one. While the program runs, the instructions and data are kept in main memory (RAM), and the result is shown on the screen."
+    },
+    {
+      "code": "SYN-TN-01",
+      "skill": "SYN",
+      "chunk": "SYN-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the type of the value 3.14?",
+      "options": [
+        "int",
+        "float",
+        "str",
+        "bool"
+      ],
+      "correct_index": 1,
+      "explanation": "A number with a decimal point is a float."
+    },
+    {
+      "code": "SYN-TN-02",
+      "skill": "SYN",
+      "chunk": "SYN-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does type('17') return?",
+      "options": [
+        "<class 'int'>",
+        "<class 'float'>",
+        "<class 'str'>",
+        "<class 'number'>"
+      ],
+      "correct_index": 2,
+      "explanation": "The quotes make '17' a string, so its type is str."
+    },
+    {
+      "code": "SYN-TN-03",
+      "skill": "SYN",
+      "chunk": "SYN-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these is a legal variable name in Python?",
+      "options": [
+        "2nd_score",
+        "my score",
+        "class",
+        "score_2"
+      ],
+      "correct_index": 3,
+      "explanation": "score_2 uses letters, an underscore and a digit, and does not start with a digit. class is a keyword."
+    },
+    {
+      "code": "SYN-TN-04",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the result of 7 // 2 in Python?",
+      "options": [
+        "3",
+        "3.5",
+        "1",
+        "4"
+      ],
+      "correct_index": 0,
+      "explanation": "// is floor division: it keeps only the whole part, so 7 // 2 is 3."
+    },
+    {
+      "code": "SYN-TN-05",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does the % operator compute?",
+      "options": [
+        "The remainder of a division",
+        "A percentage",
+        "A power (exponent)",
+        "The floor division"
+      ],
+      "correct_index": 0,
+      "explanation": "% gives the remainder: 7 % 2 is 1."
+    },
+    {
+      "code": "SYN-TN-06",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What type of value does input() always return?",
+      "options": [
+        "int",
+        "float",
+        "str (a string)",
+        "It depends on what the user types"
+      ],
+      "correct_index": 2,
+      "explanation": "input() always returns a string, even if the user types digits."
+    },
+    {
+      "code": "SYN-TN-07",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the result of 'ab' * 3?",
+      "options": [
+        "'ab3'",
+        "An error",
+        "'ab ab ab'",
+        "'ababab'"
+      ],
+      "correct_index": 3,
+      "explanation": "* repeats a string: 'ab' * 3 gives 'ababab'."
+    },
+    {
+      "code": "SYN-TN-08",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the value of 2 + 3 * 4?",
+      "options": [
+        "20",
+        "14",
+        "24",
+        "9"
+      ],
+      "correct_index": 1,
+      "explanation": "Multiplication comes before addition: 3 * 4 = 12, then 2 + 12 = 14."
+    },
+    {
+      "code": "SYN-TN-09",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "In Python 3, what is the value of 10 / 4?",
+      "options": [
+        "2",
+        "2.0",
+        "2.5",
+        "3"
+      ],
+      "correct_index": 2,
+      "explanation": "/ always gives a float: 10 / 4 is 2.5."
+    },
+    {
+      "code": "SYN-TN-10",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the value of 2 ** 3 + 1?",
+      "options": [
+        "7",
+        "9",
+        "16",
+        "64"
+      ],
+      "correct_index": 1,
+      "explanation": "The exponent comes first: 2 ** 3 = 8, then 8 + 1 = 9."
+    },
+    {
+      "code": "SYN-TN-11",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "x = input('Enter a number: ') — the user types 5. What happens on the next line, print(x + 1)?",
+      "options": [
+        "It prints 6",
+        "It prints 51",
+        "A TypeError, because x is a string and 1 is a number",
+        "It prints 5 1"
+      ],
+      "correct_index": 2,
+      "explanation": "input() returns the string '5'; adding a string and a number causes a TypeError. Use int(x) + 1."
+    },
+    {
+      "code": "SYN-TN-12",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does int(3.99) return?",
+      "options": [
+        "3",
+        "4",
+        "3.99",
+        "An error"
+      ],
+      "correct_index": 0,
+      "explanation": "int() drops the decimal part of a float; it does not round, so int(3.99) is 3."
+    },
+    {
+      "code": "SYN-TN-13",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the purpose of try and except?",
+      "options": [
+        "To make the program run faster",
+        "To repeat a block of code",
+        "To define a new function",
+        "To handle an error so the program does not crash"
+      ],
+      "correct_index": 3,
+      "explanation": "Code that might fail goes in try; if an error happens, the except block runs instead of crashing."
+    },
+    {
+      "code": "SYN-TN-14",
+      "skill": "SYN",
+      "chunk": "SYN-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why does the statement class = 10 cause an error?",
+      "options": [
+        "class is a reserved keyword and cannot be used as a variable name",
+        "Variable names must be in capitals",
+        "10 is not a valid value",
+        "Assignment must use == instead of ="
+      ],
+      "correct_index": 0,
+      "explanation": "Reserved keywords such as class, if and for cannot be variable names."
+    },
+    {
+      "code": "SYN-TL-01",
+      "skill": "SYN",
+      "chunk": "SYN-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What are the rules for a legal variable name in Python?",
+      "rubric": [
+        {
+          "text": "It may contain letters, digits and the underscore",
+          "max_points": 4,
+          "main_keywords": [
+            "letter",
+            "digit",
+            "underscore"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "It cannot start with a digit",
+          "max_points": 3,
+          "main_keywords": [
+            "not start",
+            "cannot start",
+            "can't start",
+            "must not start",
+            "not begin",
+            "cannot begin",
+            "start with a letter",
+            "start with a letter or underscore"
+          ],
+          "sub_keywords": [
+            "digit",
+            "number"
+          ]
+        },
+        {
+          "text": "It cannot be a reserved keyword (if, for, class...)",
+          "max_points": 3,
+          "main_keywords": [
+            "not reserved",
+            "not a keyword",
+            "cannot be a keyword",
+            "can't be a keyword",
+            "cannot use keyword",
+            "reserved word",
+            "reserved keyword"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: A variable name can contain letters, digits and the underscore. It cannot start with a digit. It cannot be a reserved keyword such as if, for or class."
+    },
+    {
+      "code": "SYN-TL-02",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain what the + and * operators do with strings. Give an example of each.",
+      "rubric": [
+        {
+          "text": "+ joins (concatenates) two strings, e.g. 'Hello' + 'World' gives 'HelloWorld'",
+          "max_points": 5,
+          "main_keywords": [
+            "join",
+            "concatenate",
+            "concatenation",
+            "combine"
+          ],
+          "sub_keywords": [
+            "+",
+            "plus"
+          ]
+        },
+        {
+          "text": "* repeats a string a number of times, e.g. 'ab' * 3 gives 'ababab'",
+          "max_points": 5,
+          "main_keywords": [
+            "repeat",
+            "times"
+          ],
+          "sub_keywords": [
+            "*",
+            "star",
+            "multiply"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The + operator joins (concatenates) two strings: 'Hello' + 'World' gives 'HelloWorld'. The * operator repeats a string a number of times: 'ab' * 3 gives 'ababab'."
+    },
+    {
+      "code": "SYN-TL-03",
+      "skill": "SYN",
+      "chunk": "SYN-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "In which order does Python evaluate the operators in an expression? Use 1 + 2 * 3 as an example.",
+      "rubric": [
+        {
+          "text": "Parentheses are evaluated first, then the exponent **",
+          "max_points": 3,
+          "main_keywords": [
+            "parenthesis",
+            "parentheses"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Multiplication and division come before addition and subtraction",
+          "max_points": 4,
+          "main_keywords": [
+            "before",
+            "higher",
+            "first"
+          ],
+          "sub_keywords": [
+            "multiplication",
+            "multiply",
+            "division"
+          ]
+        },
+        {
+          "text": "1 + 2 * 3 equals 7 (2 * 3 is calculated first)",
+          "max_points": 3,
+          "main_keywords": [
+            "= 7",
+            "is 7",
+            "equals 7",
+            "gives 7",
+            "result is 7",
+            "seven"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Python evaluates parentheses first, then the exponent **. Multiplication and division are done before addition and subtraction. So 1 + 2 * 3 is 7, because 2 * 3 is calculated first."
+    },
+    {
+      "code": "SYN-TL-04",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Why must you convert the result of input() before doing arithmetic with it, and how do you convert it?",
+      "rubric": [
+        {
+          "text": "input() always returns a string, even if the user types a number",
+          "max_points": 5,
+          "main_keywords": [
+            "string",
+            "str",
+            "text"
+          ],
+          "sub_keywords": [
+            "input"
+          ]
+        },
+        {
+          "text": "Convert it with int() or float() before calculating",
+          "max_points": 5,
+          "main_keywords": [
+            "int",
+            "float",
+            "convert"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The input() function always returns a string, even if the user types a number. You must convert it with int() or float() before doing arithmetic, for example age = int(input('Age: '))."
+    },
+    {
+      "code": "SYN-TL-05",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Explain how try and except work. Write a short example that converts user input to an integer without crashing when the user types text.",
+      "rubric": [
+        {
+          "text": "The code that might fail is put inside the try block",
+          "max_points": 3,
+          "main_keywords": [
+            "might fail",
+            "may fail",
+            "could fail",
+            "risky"
+          ],
+          "sub_keywords": [
+            "try"
+          ]
+        },
+        {
+          "text": "If an error happens, Python skips the rest of try and runs the except block",
+          "max_points": 3,
+          "main_keywords": [
+            "jumps to except",
+            "skips to except",
+            "except block runs",
+            "goes to except"
+          ],
+          "sub_keywords": [
+            "except"
+          ]
+        },
+        {
+          "text": "So the program does not crash and can continue",
+          "max_points": 2,
+          "main_keywords": [
+            "not crash",
+            "continue"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A correct example: int(input(...)) inside try, a message in except",
+          "max_points": 2,
+          "main_keywords": [
+            "int(input",
+            "int("
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The code that might fail goes inside the try block. If an error happens there, Python skips the rest of the try block and jumps to except, so the except block runs instead. The program does not crash and can continue. Example: try: n = int(input('Number: ')) except: print('Please type a whole number')."
+    },
+    {
+      "code": "SYN-TL-06",
+      "skill": "SYN",
+      "chunk": "SYN-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Explain what int(), float() and str() do. Give the result of int('42'), float('3') and str(7) + '1', and say what happens with int('hello').",
+      "rubric": [
+        {
+          "text": "int() converts a value to an integer: int('42') gives 42",
+          "max_points": 2,
+          "main_keywords": [
+            "42"
+          ],
+          "sub_keywords": [
+            "int"
+          ]
+        },
+        {
+          "text": "float() converts a value to a float: float('3') gives 3.0",
+          "max_points": 2,
+          "main_keywords": [
+            "3.0"
+          ],
+          "sub_keywords": [
+            "float"
+          ]
+        },
+        {
+          "text": "str() converts a value to a string: str(7) + '1' gives '71'",
+          "max_points": 3,
+          "main_keywords": [
+            "71"
+          ],
+          "sub_keywords": [
+            "str"
+          ]
+        },
+        {
+          "text": "int('hello') causes a ValueError, because the text is not a number",
+          "max_points": 3,
+          "main_keywords": [
+            "valueerror",
+            "error"
+          ],
+          "sub_keywords": [
+            "hello"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The int() function converts a value to an integer, so int('42') gives 42. The float() function converts a value to a float, so float('3') gives 3.0. The str() function converts a value to a string, so str(7) + '1' gives '71'. int('hello') causes a ValueError, because hello is not a number."
+    },
+    {
+      "code": "BPL-TN-01",
+      "skill": "BPL",
+      "chunk": "BPL-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which basic pattern runs some statements many times?",
+      "options": [
+        "Sequential execution",
+        "Conditional execution",
+        "Repeated execution",
+        "Reuse"
+      ],
+      "correct_index": 2,
+      "explanation": "Repeated execution runs statements many times, usually with a loop."
+    },
+    {
+      "code": "BPL-TN-02",
+      "skill": "BPL",
+      "chunk": "BPL-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does sequential execution mean?",
+      "options": [
+        "Statements run one after another, in order",
+        "The program chooses between two paths",
+        "Some statements are repeated",
+        "The program skips every second statement"
+      ],
+      "correct_index": 0,
+      "explanation": "In sequential execution, statements run in the order they are written."
+    },
+    {
+      "code": "BPL-TN-03",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does len('hello') return?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "'hello'"
+      ],
+      "correct_index": 1,
+      "explanation": "len() gives the number of characters: 'hello' has 5."
+    },
+    {
+      "code": "BPL-TN-04",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which keyword is used to define a function in Python?",
+      "options": [
+        "function",
+        "define",
+        "func",
+        "def"
+      ],
+      "correct_index": 3,
+      "explanation": "Functions are defined with def, e.g. def greet(name):"
+    },
+    {
+      "code": "BPL-TN-05",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does a function return if it has no return statement?",
+      "options": [
+        "0",
+        "An empty string",
+        "An error",
+        "None"
+      ],
+      "correct_index": 3,
+      "explanation": "A function with no return statement returns None."
+    },
+    {
+      "code": "BPL-TN-06",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In the counting pattern, what value should the counter have before the loop starts?",
+      "options": [
+        "1",
+        "None",
+        "The first item of the list",
+        "0"
+      ],
+      "correct_index": 3,
+      "explanation": "Start with count = 0, then add 1 for each item inside the loop."
+    },
+    {
+      "code": "BPL-TN-07",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does the break statement do inside a loop?",
+      "options": [
+        "It exits the loop immediately",
+        "It skips to the next iteration",
+        "It restarts the loop from the beginning",
+        "It pauses the program for one second"
+      ],
+      "correct_index": 0,
+      "explanation": "break exits the loop immediately; continue skips to the next iteration."
+    },
+    {
+      "code": "BPL-TN-08",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does max('Hello world') return?",
+      "options": [
+        "'H'",
+        "'w'",
+        "'o'",
+        "'world'"
+      ],
+      "correct_index": 1,
+      "explanation": "max() on a string gives the largest character; lowercase letters are larger than uppercase, so 'w'."
+    },
+    {
+      "code": "BPL-TN-09",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A file contains only these two lines:\n\ndef greet(name):\n    print('Hi', name)\n\nWhat is printed when the file is run?",
+      "options": [
+        "Hi",
+        "Hi name",
+        "Nothing: the function is defined but never called",
+        "An error"
+      ],
+      "correct_index": 2,
+      "explanation": "Defining a function does not run it; its body runs only when the function is called."
+    },
+    {
+      "code": "BPL-TN-10",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "def add(a, b):\n    return a + b\n\nx = add(2, 3)\n\nWhat is the value of x?",
+      "options": [
+        "5",
+        "None",
+        "'23'",
+        "add(2, 3)"
+      ],
+      "correct_index": 0,
+      "explanation": "add returns a + b, so x is 5."
+    },
+    {
+      "code": "BPL-TN-11",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "def show(n):\n    print(n * 2)\n\nr = show(4)\nprint(r)\n\nWhat does this program print?",
+      "options": [
+        "8, then 8",
+        "Only None",
+        "8, then None",
+        "An error"
+      ],
+      "correct_index": 2,
+      "explanation": "show prints 8 but has no return statement, so r is None."
+    },
+    {
+      "code": "BPL-TN-12",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "largest = None\nfor v in [3, 41, 12, 9]:\n    if largest is None or v > largest:\n        largest = v\nprint(largest)\n\nWhat is printed?",
+      "options": [
+        "3",
+        "9",
+        "None",
+        "41"
+      ],
+      "correct_index": 3,
+      "explanation": "The loop keeps the largest value seen so far, so it prints 41."
+    },
+    {
+      "code": "BPL-TN-13",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why does the largest-value pattern start with largest = None instead of largest = 0?",
+      "options": [
+        "None makes the loop run faster",
+        "If all the numbers are negative, starting with 0 would wrongly report 0 as the largest",
+        "Python does not allow a variable to start at 0",
+        "None is the only value that can be compared"
+      ],
+      "correct_index": 1,
+      "explanation": "None means 'no value seen yet'; 0 gives a wrong answer when every number is negative."
+    },
+    {
+      "code": "BPL-TN-14",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "count = 0\ntotal = 0\nfor v in [4, 6, 8]:\n    count = count + 1\n    total = total + v\n\nWhat is the value of total / count after the loop?",
+      "options": [
+        "18",
+        "3",
+        "6.0",
+        "0"
+      ],
+      "correct_index": 2,
+      "explanation": "total is 18 and count is 3; 18 / 3 is 6.0 (/ always gives a float)."
+    },
+    {
+      "code": "BPL-TL-01",
+      "skill": "BPL",
+      "chunk": "BPL-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is the reuse pattern in programming, and why is it useful?",
+      "rubric": [
+        {
+          "text": "Reuse: write instructions once (as a function) and use them many times",
+          "max_points": 5,
+          "main_keywords": [
+            "once",
+            "many times",
+            "function"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Useful because it avoids repeating code, so the program is shorter and easier to fix",
+          "max_points": 5,
+          "main_keywords": [
+            "repeat",
+            "repeating",
+            "shorter",
+            "easier"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Reuse means writing a set of instructions once, giving it a name as a function, and using it many times. It is useful because we avoid repeating the same code, so the program is shorter and easier to fix."
+    },
+    {
+      "code": "BPL-TL-02",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is the difference between a parameter and an argument?",
+      "rubric": [
+        {
+          "text": "A parameter is the variable name written in the function definition",
+          "max_points": 5,
+          "main_keywords": [
+            "definition",
+            "def",
+            "name"
+          ],
+          "sub_keywords": [
+            "parameter"
+          ]
+        },
+        {
+          "text": "An argument is the actual value passed when the function is called",
+          "max_points": 5,
+          "main_keywords": [
+            "value",
+            "pass",
+            "call"
+          ],
+          "sub_keywords": [
+            "argument"
+          ]
+        }
+      ],
+      "explanation": "Model answer: A parameter is a variable name written in the function definition, inside the parentheses after def. An argument is the actual value we pass to the function when we call it, for example 3 in square(3)."
+    },
+    {
+      "code": "BPL-TL-03",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "What does the return statement do? What does a function return if it has no return statement?",
+      "rubric": [
+        {
+          "text": "return ends the function and sends a value back to the caller",
+          "max_points": 6,
+          "main_keywords": [
+            "send back",
+            "sends back",
+            "give back",
+            "gives back",
+            "returns the result",
+            "return value"
+          ],
+          "sub_keywords": [
+            "return"
+          ]
+        },
+        {
+          "text": "A function with no return statement returns None",
+          "max_points": 4,
+          "main_keywords": [
+            "returns none",
+            "return none",
+            "is none",
+            "none is returned"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The return statement ends the function and sends back a value to the code that called it. A function with no return statement returns None."
+    },
+    {
+      "code": "BPL-TL-04",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Describe the counting pattern in a loop.",
+      "rubric": [
+        {
+          "text": "Set the counter to 0 before the loop",
+          "max_points": 4,
+          "main_keywords": [
+            "= 0",
+            "=0",
+            "zero",
+            "start at 0",
+            "starts at 0",
+            "set to 0"
+          ],
+          "sub_keywords": [
+            "count",
+            "counter"
+          ]
+        },
+        {
+          "text": "Add 1 to the counter each time inside the loop",
+          "max_points": 4,
+          "main_keywords": [
+            "add 1",
+            "+ 1",
+            "increase",
+            "+= 1"
+          ],
+          "sub_keywords": [
+            "count",
+            "counter"
+          ]
+        },
+        {
+          "text": "After the loop, the counter holds the number of items",
+          "max_points": 2,
+          "main_keywords": [
+            "after"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Set a counter to 0 before the loop: count = 0. Inside the loop, add 1 to the counter each time: count = count + 1. After the loop, the variable holds the number of items."
+    },
+    {
+      "code": "BPL-TL-05",
+      "skill": "BPL",
+      "chunk": "BPL-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Write a loop that finds the smallest number in a list called numbers, and explain why the variable starts as None.",
+      "rubric": [
+        {
+          "text": "Start with smallest = None",
+          "max_points": 2,
+          "main_keywords": [
+            "= none",
+            "smallest = none",
+            "is none"
+          ],
+          "sub_keywords": [
+            "smallest"
+          ]
+        },
+        {
+          "text": "Loop through each value of the list (for v in numbers)",
+          "max_points": 2,
+          "main_keywords": [
+            "for v in",
+            "for n in",
+            "for x in",
+            "for num in",
+            "for number in"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "If smallest is None or the value is smaller, store the value in smallest",
+          "max_points": 3,
+          "main_keywords": [
+            "< smallest",
+            "v < smallest",
+            "n < smallest",
+            "smaller than smallest",
+            "less than smallest"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "None means no value seen yet; starting with 0 would be wrong if all the numbers are positive",
+          "max_points": 3,
+          "main_keywords": [
+            "no value",
+            "yet",
+            "positive"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Start with smallest = None. Then loop with for v in numbers, and for each value: if smallest is None or v < smallest, set smallest = v. We start with None because no value has been seen yet; starting with 0 would give a wrong answer when all the numbers are positive."
+    },
+    {
+      "code": "BPL-TL-06",
+      "skill": "BPL",
+      "chunk": "BPL-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Explain why programmers write functions. Then describe how to define and call a function that returns the square of a number.",
+      "rubric": [
+        {
+          "text": "Functions let us reuse code instead of repeating it",
+          "max_points": 2,
+          "main_keywords": [
+            "reuse",
+            "repeat",
+            "repeating"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Functions organize a program into parts, so it is easier to read and debug",
+          "max_points": 2,
+          "main_keywords": [
+            "organize",
+            "debug",
+            "easier"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Define it with def, a name and a parameter, e.g. def square(n):",
+          "max_points": 2,
+          "main_keywords": [
+            "def"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Use return to send back the result, e.g. return n * n",
+          "max_points": 2,
+          "main_keywords": [
+            "return"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Call it with an argument, e.g. square(4) gives 16",
+          "max_points": 2,
+          "main_keywords": [
+            "call",
+            "16"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: We write functions so that we can reuse code instead of repeating it. Functions also organize a program into parts, which makes it easier to read and debug. Define it with def square(n): and an indented body. Inside, return n * n sends the result back. Then call it, for example square(4) gives 16."
+    }
+  ]
+}
