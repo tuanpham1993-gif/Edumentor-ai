@@ -138,7 +138,7 @@ def test_dispatcher_picks_by_language(monkeypatch):
 
 def test_vietnamese_bank_still_scores_10_through_dispatcher():
     """Bài tiếng Việt cũ (đang làm dở lúc chuyển ngôn ngữ) vẫn chấm bằng bộ tiếng Việt như trước."""
-    bank = json.loads((Path(__file__).parents[1] / "data/review/course_312.json").read_text(encoding="utf-8"))
+    bank = json.loads((Path(__file__).parents[1] / "data/review/archive/course_312.json").read_text(encoding="utf-8"))
     essay = next(q for q in bank["questions"] if q["type"] == "essay")
     sample = essay["explanation"].removeprefix("Đáp án mẫu:").strip()
     out = keyword_grading.grade_essay(essay["rubric"], sample, essay["content"])

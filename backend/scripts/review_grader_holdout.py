@@ -9,7 +9,7 @@ from app.ai.review.base import AIUnavailableError
 from app.ai.review.keyword_grader import grade_essay
 from app.ai.review.real_ai import RealAI, review_llm
 
-with open("data/review/course_312.json", encoding="utf-8") as f:
+with open("data/review/archive/course_312.json", encoding="utf-8") as f:
     bank = json.load(f)
 Q = {q["code"].removeprefix("312-"): q for q in bank["questions"]}
 

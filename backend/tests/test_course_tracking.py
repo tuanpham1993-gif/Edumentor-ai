@@ -629,7 +629,7 @@ def test_abandon_rollback_when_skill_cleanup_fails(
 
 @pytest.fixture()
 def bank_312_untracked(db_session):
-    bank = seed_review.load_bank(seed_review.DEFAULT_FILE)
+    bank = seed_review.load_bank(seed_review.VI_ARCHIVE_FILE)
     skill_ids = sorted(bank["skills"].values())
     db_session.add(
         Courses(

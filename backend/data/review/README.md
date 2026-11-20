@@ -9,7 +9,6 @@ Mỗi khóa một file `course_<course_id>.json`. Nạp vào DB: `python -m scri
 |---|---|---|
 | `course_312_en.json` | 312 Python Basics: Selection and Iteration | 5 kỹ năng · 100 câu · 15 đoạn tri thức |
 | `course_1855_en.json` | 1855 Programming for Everybody (Getting Started with Python) — 20/11/2026 | 3 kỹ năng mới (Computer Programming, Python Syntax And Semantics, Basic Programming Language) · 60 câu · 9 đoạn tri thức; kỹ năng Python Programming dùng chung câu của khóa 312 |
-
 | `course_743_en.json` | 743 Practice Exam for Certified Scrum Master (CSM) Certification — 20/11/2026 | 5 kỹ năng (agile, Scrum Master, CSM, Scrum Alliance, Certification) · 100 câu · 15 đoạn tri thức. Theo Scrum Guide 2020 + Agile Manifesto; số liệu kỳ thi CSM (50 câu, 60 phút, 37/50, 2 lần thi trong 90 ngày, khóa 16 giờ, gia hạn 2 năm = 20 SEU + 100 USD) đối chiếu scrumalliance.org ngày 20/11/2026 — **kiểm tra lại khi Scrum Alliance đổi quy định** |
 
 Sau khi pull, mỗi máy tự nạp (chỉ thêm câu chưa có, không đụng khóa khác):
@@ -24,10 +23,12 @@ chọn cụm còn ≥ 2 từ có nghĩa, tránh từ khóa 1 chữ chung chung (
 ## ⚠️ Từ 14/11/2026: ngân hàng TIẾNG ANH (D1 — chốt 13/11)
 
 - File đang dùng: **`course_312_en.json`** (dịch từ `course_312.json`, giữ nguyên đáp án, mức, đoạn tri thức, điểm từng ý).
-  `course_312.json` (tiếng Việt) giữ lại làm lịch sử — **không nạp mới**.
+  `course_312.json` (tiếng Việt) giữ lại làm lịch sử — **không nạp mới**; từ 21/11/2026 nằm ở
+  `archive/course_312.json` (dùng cho lệnh `--retire`, test bộ chấm tiếng Việt và `scripts/review_grader_holdout.py`).
+  `python -m scripts.seed_review` không kèm `--file` giờ nạp `course_312_en.json`.
 - Chuyển DB sang tiếng Anh (một giao dịch: nạp bản tiếng Anh + tắt câu tiếng Việt + xóa đoạn tri thức tiếng Việt):
   ```
-  python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/course_312.json
+  python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/archive/course_312.json
   python -m scripts.build_embeddings
   ```
 - **Mã mới theo QT9** (bỏ tiền tố khóa): `PY-TN-01`, `PY-TL-01`, `PY-K01` — không trùng mã tiếng Việt `312-PY-TN-01`.

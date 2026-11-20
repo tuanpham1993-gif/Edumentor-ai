@@ -12,7 +12,7 @@ import pytest
 from app.models import Courses, CourseSkill, KnowledgeChunk, ReviewQuestion, Skills
 from scripts import seed_review as script
 
-BANK = script.load_bank(script.DEFAULT_FILE)
+BANK = script.load_bank(script.VI_ARCHIVE_FILE)  # dữ liệu mẫu: bản tiếng Việt (mã 312-...) — đã lưu trữ 21/11
 
 
 @pytest.fixture()
@@ -182,7 +182,7 @@ def test_skill_not_in_course_is_rejected(db_session, course_312, bank):
 # ─────────────── Lệnh main() ───────────────
 
 
-def run_main(monkeypatch, db_session, path=script.DEFAULT_FILE):
+def run_main(monkeypatch, db_session, path=script.VI_ARCHIVE_FILE):
     monkeypatch.setattr(sys, "argv", ["seed_review", "--file", str(path)])
     monkeypatch.setattr(script, "SessionLocal", lambda: db_session)
     monkeypatch.setattr(script, "create_tables", lambda: None)

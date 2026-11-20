@@ -1,11 +1,11 @@
 """Nạp ngân hàng câu hỏi + tài liệu tri thức ôn tập từ file JSON (module 09 · Tuấn · GĐ1, 09/11/2026).
 
 Chạy (trong thư mục backend):
-    python -m scripts.seed_review                                   # mặc định data/review/course_312.json
+    python -m scripts.seed_review                                   # mặc định data/review/course_312_en.json
     python -m scripts.seed_review --file data/review/course_37.json
     python -m scripts.seed_review --apply-changes                   # áp thay đổi của file vào câu ĐÃ có
     # Chuyển sang ngân hàng tiếng Anh (D1, 13/11) — nạp bản tiếng Anh + ngừng dùng bản tiếng Việt, cùng 1 giao dịch:
-    python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/course_312.json
+    python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/archive/course_312.json
 
 - KIỂM TRA TRƯỚC, GHI SAU: dữ liệu sai ở đâu → in TẤT CẢ lỗi, không ghi gì vào DB.
 - QT4 (chốt 12/11): DATABASE là nơi lưu chính (admin sửa trên trang quản trị). Seed mặc định CHỈ THÊM câu chưa có
@@ -15,7 +15,7 @@ Chạy (trong thư mục backend):
 - Đoạn tri thức đổi nội dung → xóa embedding cũ (phải chạy lại scripts/build_embeddings.py).
 - Câu hỏi đang tắt (is_active=false) giữ nguyên trạng thái tắt — seed không tự bật lại.
 
-Định dạng file: xem data/review/course_312.json
+Định dạng file: xem data/review/course_312_en.json
     skills:    {"ITER": 400, ...}            — mã ngắn → skill_id (phải thuộc khóa course_id)
     chunks:    [{code, skill, title, content}]
     questions: [{code, skill, chunk, type, level, content, options, correct_index, rubric, explanation}]
@@ -35,7 +35,10 @@ from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_question import ReviewQuestion
 from app.services import review_bank_service
 
-DEFAULT_FILE = Path(__file__).resolve().parents[1] / "data" / "review" / "course_312.json"
+DEFAULT_FILE = Path(__file__).resolve().parents[1] / "data" / "review" / "course_312_en.json"
+# Bản tiếng Việt khóa 312 (ngừng nạp từ 14/11): lưu trữ cho lệnh --retire, test bộ chấm tiếng Việt và
+# scripts/review_grader_holdout.py — dọn 21/11/2026.
+VI_ARCHIVE_FILE = Path(__file__).resolve().parents[1] / "data" / "review" / "archive" / "course_312.json"
 
 
 def load_bank(path) -> dict:

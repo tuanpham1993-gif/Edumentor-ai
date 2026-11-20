@@ -86,7 +86,7 @@ Lõi module 09 làm **09 → 13/11** với khóa demo 312, `AI_MODE=mock`. Mở 
 | `routers/v1/endpoints/review.py` | Router | Các API (bảng dưới), kiểm tra đăng nhập / quyền | 2, 3 |
 | `scripts/build_embeddings.py` | Script (chạy tay) | Tính vector một lần rồi ghi DB (server không cần torch) | 2 |
 | `scripts/seed_review.py` | Script (chạy tay) | Nạp ngân hàng + tài liệu tri thức đã duyệt từ JSON; chạy lại không trùng | 1 |
-| `data/review/course_312.json` | Dữ liệu | Ngân hàng + tài liệu tri thức khóa 312 **đã duyệt** | 1 |
+| `data/review/course_312_en.json` | Dữ liệu | Ngân hàng + tài liệu tri thức khóa 312 **đã duyệt** (tiếng Anh; bản tiếng Việt cũ ở `data/review/archive/course_312.json`) | 1 |
 
 ---
 

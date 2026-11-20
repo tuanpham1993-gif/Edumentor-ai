@@ -1,6 +1,6 @@
 """Test API ôn tập GĐ2: thông tin, bắt đầu / làm tiếp, xem đề, lưu câu trả lời (module 09 · Tuấn · 09/11/2026).
 
-Dùng ngân hàng THẬT của khóa 312 (data/review/course_312.json) nạp vào DB test bằng scripts/seed_review.
+Dùng ngân hàng THẬT của khóa 312 (bản tiếng Việt, data/review/archive/course_312.json) nạp vào DB test.
 Chạy:  python -m pytest tests/test_review_api.py -v      (trong thư mục backend)
 """
 
@@ -25,7 +25,7 @@ from app.models import (
 from app.services import course_gateway, review_service
 from scripts import seed_review
 
-BANK = seed_review.load_bank(seed_review.DEFAULT_FILE)
+BANK = seed_review.load_bank(seed_review.VI_ARCHIVE_FILE)  # bản tiếng Việt (lưu trữ 21/11) — 10 file test dùng chung
 SKILL_IDS = sorted(BANK["skills"].values())
 INFO_URL = "/api/courses/312/review"
 START_URL = "/api/courses/312/review-attempts"
