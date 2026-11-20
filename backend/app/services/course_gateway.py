@@ -34,6 +34,27 @@ def count_courses(db: Session, user, status: str) -> int:
     return course_tracking_service.list_my_courses(db, user, status_filter=status, page_size=1)["total"]
 
 
+MAX_ENROLLED = 500  # trần số khóa đọc một lần (người học thật chỉ vài chục khóa)
+
+
+def enrolled_courses(db: Session, user) -> list[dict]:
+    """Các khóa người học ĐANG HỌC hoặc ĐÃ HOÀN THÀNH (được ôn tập), qua `list_my_courses` của Khôi
+    (20/11 — ôn tập trên đồ thị). Mỗi phần tử: {course_id, title, status, skill_ids (kỹ năng đang bật)}."""
+    out = []
+    for status in (IN_PROGRESS, COMPLETED):
+        page = course_tracking_service.list_my_courses(db, user, status_filter=status, page_size=MAX_ENROLLED)
+        for item in page["items"]:
+            out.append(
+                {
+                    "course_id": item["course_id"],
+                    "title": item["title"],
+                    "status": item["status"],
+                    "skill_ids": [s["skill_id"] for s in item["skills_info"] if s["is_active"]],
+                }
+            )
+    return out
+
+
 def get_enrollment_status(db: Session, user_id: int, course_id: int) -> str | None:
     """Trạng thái tham gia khóa của người dùng; None = chưa tham gia (kể cả mới bookmarked)."""
     raw_status = course_tracking_service.get_tracking_status_value(db, user_id, course_id)

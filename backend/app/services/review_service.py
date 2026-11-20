@@ -164,6 +164,56 @@ def review_info(db: Session, user: Users, course_id: int) -> dict:
     }
 
 
+# ─────────────── Ôn tập trên đồ thị lộ trình (20/11) ───────────────
+
+MAX_SKILLS_PER_REQUEST = 100  # một đồ thị lộ trình có vài chục node
+
+
+def skill_reviews(db: Session, user: Users, skill_ids: list[int]) -> dict:
+    """Mỗi kỹ năng → các khóa người học ĐANG HỌC / ĐÃ HOÀN THÀNH có dạy kỹ năng đó VÀ ôn tập được (đủ đề, hoặc
+    đang có bài dở / đã từng làm), kèm lần chấm gần nhất và bài đang làm dở. Dùng cho huy hiệu ôn tập trên node
+    (proposals/review-on-graph). Khóa chưa tham gia không hiện — ôn tập theo khóa cần tham gia trước.
+    Thứ tự khóa: đang làm dở → chưa ôn → đã ôn (cũ nhất trước, nên ôn lại trước)."""
+    wanted = list(dict.fromkeys(skill_ids))[:MAX_SKILLS_PER_REQUEST]
+    if not wanted:
+        return {"items": []}
+    recover_stuck_grading(db, user)
+    courses = [c for c in course_gateway.enrolled_courses(db, user) if set(c["skill_ids"]) & set(wanted)]
+    rows = []
+    for c in courses:
+        attempts = repo.list_attempts(db, user.user_id, c["course_id"])  # mới nhất trước
+        in_progress = next((a for a in attempts if a.status == "in_progress"), None)
+        last = next((a for a in attempts if a.status in ("graded", "grading")), None)
+        if in_progress is None and last is None and not _has_question_bank(db, c["skill_ids"]):
+            continue  # chưa có đề, chưa từng làm → không có gì để ôn
+        rows.append(
+            {
+                "skill_ids": c["skill_ids"],
+                "course": {
+                    "course_id": c["course_id"],
+                    "course_title": c["title"],
+                    "enrollment": c["status"],
+                    "in_progress_attempt_id": in_progress.attempt_id if in_progress else None,
+                    "last_attempt": _summary(last) if last else None,
+                },
+            }
+        )
+
+    def order(course: dict):
+        last = course["last_attempt"]
+        if course["in_progress_attempt_id"]:
+            return (0, "")
+        if last is None:
+            return (1, course["course_title"])
+        return (2, str(last["submitted_at"] or last["started_at"]))
+
+    items = []
+    for skill_id in wanted:
+        found = sorted((r["course"] for r in rows if skill_id in r["skill_ids"]), key=order)
+        items.append({"skill_id": skill_id, "courses": found})
+    return {"items": items}
+
+
 # ─────────────── Sinh đề ───────────────
 
 

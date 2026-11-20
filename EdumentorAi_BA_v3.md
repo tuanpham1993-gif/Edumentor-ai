@@ -1524,6 +1524,7 @@ Mỗi bài ôn tập thuộc một khóa học, gồm 15 câu (12 trắc nghiệ
 | GET | `/api/review-attempts/{attempt_id}` | Lấy câu hỏi và câu trả lời đã lưu của bài đang làm (không lộ đáp án). |
 | PATCH | `/api/review-attempts/{attempt_id}/answers` | Lưu câu trả lời khi Tạm rời, làm tiếp sau. |
 | DELETE | `/api/review-attempts/{attempt_id}` | Bỏ bài làm dở: xóa hẳn, không điểm, không vào lịch sử. Bài đã nộp → 409. |
+| GET | `/api/me/review/skills?skill_ids=1,2,3` | Ôn tập trên đồ thị lộ trình: mỗi kỹ năng → các khóa đã tham gia ôn tập được, kèm lần làm gần nhất. |
 | POST | `/api/review-attempts/{attempt_id}/submit` | Nộp bài, chấm điểm, cập nhật khóa học và kỹ năng nếu đạt, gửi email kết quả. |
 | GET | `/api/me/review-history` | Lịch sử ôn tập, lọc theo `course_id` và `passed`, có phân trang. |
 | GET | `/api/me/review-history/{attempt_id}` | Chi tiết một lần làm: từng câu, đáp án đã chọn, đáp án đúng, giải thích. |

@@ -64,3 +64,9 @@ Phạm vi: chỉ phần của Tuấn (module 01 tài khoản / hồ sơ, module 
 | 7 | BA | 11.5 AC-07 — bài làm dở | sửa | - Bài làm dở được lưu và mở lại đúng; mỗi khóa có tối đa một bài dở. | - Bài làm dở được lưu và mở lại đúng; mỗi khóa có tối đa một bài dở, tổng cộng tối đa 5 bài dở; bỏ bài dở thì bài bị xóa, không vào lịch sử. - Hai lần nộp cách nhau dưới 2 phút thì lần sau bị chặn với thông báo thời gian chờ. |
 | 8 | SRS | 4. bảng FR — FR-11 | sửa | tạm rời và làm tiếp; câu bỏ trống 0 điểm; | tạm rời và làm tiếp; tối đa 5 bài làm dở (đủ thì phải nộp hoặc Bỏ bài dở mới bắt đầu bài mới); hai lần nộp cách nhau ít nhất 2 phút; câu bỏ trống 0 điểm; |
 | 9 | SRS | 5. Tóm tắt API — nhóm Ôn tập | sửa | `PATCH /review-attempts/{id}/answers`, `POST /review-attempts/{id}/submit` | `PATCH /review-attempts/{id}/answers`, `DELETE /review-attempts/{id}`, `POST /review-attempts/{id}/submit` |
+
+## Bổ sung 20/11 — ôn tập trên đồ thị lộ trình
+
+| # | Tài liệu | Vị trí | Loại | Câu mới |
+|---|---|---|---|---|
+| 1 | BA | 10.10 bảng API (sau dòng DELETE) | thêm | \| GET \| `/api/me/review/skills?skill_ids=1,2,3` \| Ôn tập trên đồ thị lộ trình: mỗi kỹ năng → các khóa đã tham gia ôn tập được, kèm lần làm gần nhất. \| |

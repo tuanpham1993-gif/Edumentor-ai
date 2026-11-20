@@ -1,0 +1,102 @@
+/* Huy hiệu ôn tập trên node đồ thị lộ trình + bảng nhỏ (module 09 · Tuấn · 20/11/2026 — theo mẫu review-on-graph). */
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--accent-soft-border);
+  background: var(--card);
+  color: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb, 0, 0, 0), 0.25);
+  transition: transform var(--d-fast, 0.15s) var(--e-std, ease), background var(--d-fast, 0.15s);
+}
+.badge:hover,
+.badge[aria-expanded='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: scale(1.06);
+}
+.badge:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pop {
+  position: fixed; /* vẽ qua portal ra <body>, top / left tính từ vị trí huy hiệu */
+  z-index: 1000;
+  max-width: calc(100vw - 32px);
+  padding: 14px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--accent-soft-border);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb, 0, 0, 0), 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  cursor: default;
+}
+
+.popHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+.close {
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.close:hover { color: var(--text); }
+
+.popSub {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+}
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.course {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+.meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}

@@ -41,6 +41,13 @@ export async function submitAttempt(attemptId) {
   return response.data;
 }
 
+// GET /me/review/skills?skill_ids=1,2,3 → { items: [{ skill_id, courses: [{ course_id, course_title, enrollment,
+//   in_progress_attempt_id, last_attempt }] }] }. Ôn tập trên đồ thị lộ trình (20/11): khóa đã tham gia, ôn được.
+export async function getSkillReviews(skillIds) {
+  const response = await client.get('/me/review/skills', { params: { skill_ids: skillIds.join(',') } });
+  return response.data;
+}
+
 // GET /me/review-history?course_id=&passed=&page=&size= → { items, total, page, size }
 export async function getHistory({ courseId, passed, page = 1, size = 10 } = {}) {
   const params = { page, size };

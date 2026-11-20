@@ -174,6 +174,25 @@ class HistoryItemOut(AttemptSummaryOut):
     completed_course: bool
 
 
+class SkillReviewCourseOut(BaseModel):
+    """Một khóa ôn tập được cho kỹ năng (20/11 — huy hiệu ôn tập trên đồ thị lộ trình)."""
+
+    course_id: int
+    course_title: str
+    enrollment: Literal["ongoing", "completed"]
+    in_progress_attempt_id: int | None
+    last_attempt: AttemptSummaryOut | None  # lần nộp gần nhất (đã chấm / đang chấm); None = chưa ôn
+
+
+class SkillReviewOut(BaseModel):
+    skill_id: int
+    courses: list[SkillReviewCourseOut]  # rỗng = kỹ năng chưa có khóa nào để ôn → không hiện huy hiệu
+
+
+class SkillReviewsOut(BaseModel):
+    items: list[SkillReviewOut]  # đúng thứ tự skill_ids gửi lên (bỏ trùng)
+
+
 class HistoryPage(BaseModel):
     items: list[HistoryItemOut]
     total: int

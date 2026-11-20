@@ -9,6 +9,7 @@ Lượt làm bài của người khác → 404 như lượt không tồn tại (
     PATCH /api/review-attempts/{attempt_id}/answers  — lưu câu trả lời (Tạm rời / làm tiếp)
     DELETE /api/review-attempts/{attempt_id}         — bỏ bài làm dở: xóa hẳn, không điểm, không lịch sử (19/11)
     POST  /api/review-attempts/{attempt_id}/submit   — nộp bài: chấm + (đạt lần đầu) Hoàn thành khóa (GĐ3)
+    GET   /api/me/review/skills?skill_ids=1,2,3      — kỹ năng → khóa ôn tập được (huy hiệu trên đồ thị, 20/11)
     GET   /api/me/review-history                     — lịch sử các lượt đã nộp, lọc + phân trang (GĐ3)
     GET   /api/me/review-history/{attempt_id}        — chi tiết lượt đã nộp: đáp án đúng, điểm từng ý (GĐ3)
     GET   /api/admin/review-attempts/{attempt_id}/trace — vết RAG + prompt (chỉ admin — A4) (GĐ3)
@@ -37,6 +38,7 @@ from app.schemas.review import (
     HistoryPage,
     ReviewInfoOut,
     SaveAnswersRequest,
+    SkillReviewsOut,
 )
 from app.services import course_gateway, review_service
 
@@ -186,6 +188,29 @@ def submit_review(
         attempt_id,
     )
     return result
+
+
+@router.get(
+    "/me/review/skills",
+    response_model=SkillReviewsOut,
+    summary="Ôn tập trên đồ thị: mỗi kỹ năng → các khóa đã tham gia ôn tập được + lần làm gần nhất",
+)
+def read_skill_reviews(
+    skill_ids: str = Query(..., description="Danh sách skill_id cách nhau bởi dấu phẩy, vd 1,2,3 (tối đa 100)"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        ids = [int(x) for x in skill_ids.split(",") if x.strip()]
+    except ValueError:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT, "skill_ids phải là các số cách nhau bởi dấu phẩy."
+        ) from None
+    if len(ids) > review_service.MAX_SKILLS_PER_REQUEST:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT, f"Tối đa {review_service.MAX_SKILLS_PER_REQUEST} kỹ năng mỗi lần."
+        )
+    return review_service.skill_reviews(db, current_user, ids)
 
 
 @router.get(

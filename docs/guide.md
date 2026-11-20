@@ -245,6 +245,7 @@ review_answers.rubric_result · review_answers.points (code tính) · review_att
 
 | Ngày | Nội dung |
 |---|---|
+| 20/11/2026 | Phân công "Ôn tập trên đồ thị" (Tuấn: API `/me/review/skills` + `<SkillReviewBadge>` trước 25/11, thẻ ôn theo kỹ năng sau 25/11; Hòa: màu node, đầu trang, panel, khóa học gợi ý, chèn badge) — bảng ở `EduMentor-UI-design/proposals/review-on-graph/README.md` |
 | 19/11/2026 | Chốt Q11: tối đa 5 bài làm dở (theo khóa, sau này theo kỹ năng), Bỏ bài dở, chờ 2 phút giữa 2 lần nộp |
 | 17/11/2026 | Thống nhất thiết kế: kiểm tra theo kỹ năng từ node lộ trình, người học làm ngay, AI soạn và kiểm tra khi thiếu câu, thang 60/40, barem Đạt / Không đạt, dùng bảng ngân hàng hiện có (+ D1–D7), cách mở rộng ra 5.893 kỹ năng. Rút gọn tài liệu, bỏ phần trùng lặp |
 | 17/11/2026 | Sau khi gộp `review/featrure`: trang lộ trình của Hòa đã có, nên bỏ ý nút tạm. Chốt dùng **Alembic** cho D1–D7 (Q7). Ghi bảng `feedback` mới (23 bảng). Lưu mẫu "Ôn tập trên đồ thị" vào `EduMentor-UI-design/proposals/review-on-graph` và ghi 3 điểm lệch với guide (Q10) |
