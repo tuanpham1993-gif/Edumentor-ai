@@ -90,3 +90,18 @@ def send_review_result_email(
         lines.append("Bạn có thể ôn lại bất cứ lúc nào — mỗi lần là một đề mới.")
     lines.append(f"\nXem chi tiết từng câu: {link}")
     send_email(to, f"EduMentor AI — Kết quả ôn tập: {verdict} ({score:g}/10)", "\n".join(lines))
+
+
+def send_review_due_email(to: str, full_name: str, skills: list[str]) -> None:
+    """Email nhắc "Đến hạn ôn" (module 09 · 21/11, Q12): gom mọi kỹ năng đến hạn, tối đa 1 email / tuần — chỉ gửi
+    khi người dùng bật "Nhắc ôn tập" (email_preferences.review_reminder). Không chứa điểm hay nội dung bài làm."""
+    link = f"{settings.FRONTEND_URL}/me/courses"
+    lines = [
+        f"Xin chào {full_name},\n",
+        f"Bạn có {len(skills)} kỹ năng đã đến hạn ôn lại:",
+        *[f"  - {name}" for name in skills],
+        "\nÔn lại đúng lúc giúp bạn nhớ lâu hơn. Mỗi lần ôn là một đề mới, làm lại không giới hạn.",
+        f"Vào Khóa học của tôi để ôn tập: {link}",
+        "\nBạn có thể tắt email này trong Hồ sơ → Cài đặt email → Nhắc ôn tập.",
+    ]
+    send_email(to, f"EduMentor AI — {len(skills)} kỹ năng đến hạn ôn", "\n".join(lines))

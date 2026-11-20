@@ -184,9 +184,22 @@ class SkillReviewCourseOut(BaseModel):
     last_attempt: AttemptSummaryOut | None  # lần nộp gần nhất (đã chấm / đang chấm); None = chưa ôn
 
 
+class SkillDueOut(BaseModel):
+    """21/11 (Q12 guide.md) "Đến hạn ôn" — chỉ có với kỹ năng Đã biết đã từng ôn đạt."""
+
+    due: bool  # True = đã tới hạn ôn lại → chấm cam trên huy hiệu
+    due_at: datetime
+    last_reviewed_at: datetime  # lần ôn (đã chấm) gần nhất của kỹ năng, qua bất kỳ khóa nào
+    last_passed: bool
+    last_score: float | None
+    streak: int  # số lần đạt liên tiếp gần nhất
+    interval_days: int  # 7 / 30 / 90 (cấu hình REVIEW_DUE_INTERVALS)
+
+
 class SkillReviewOut(BaseModel):
     skill_id: int
     courses: list[SkillReviewCourseOut]  # rỗng = kỹ năng chưa có khóa nào để ôn → không hiện huy hiệu
+    due: SkillDueOut | None = None  # None = không xét (Đang học, tự khai chưa ôn, chưa từng đạt)
 
 
 class SkillReviewsOut(BaseModel):

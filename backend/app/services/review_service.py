@@ -44,6 +44,7 @@ from app.services import (
     exam_builder,
     notification_service,
     review_bank_service,
+    review_due_service,
     review_grader,
     review_rag_service,
     user_skill_service,
@@ -207,10 +208,11 @@ def skill_reviews(db: Session, user: Users, skill_ids: list[int]) -> dict:
             return (1, course["course_title"])
         return (2, str(last["submitted_at"] or last["started_at"]))
 
+    due = review_due_service.due_info(db, user.user_id, wanted)  # 21/11 (Q12): "Đến hạn ôn" theo kỹ năng
     items = []
     for skill_id in wanted:
         found = sorted((r["course"] for r in rows if skill_id in r["skill_ids"]), key=order)
-        items.append({"skill_id": skill_id, "courses": found})
+        items.append({"skill_id": skill_id, "courses": found, "due": due.get(skill_id)})
     return {"items": items}
 
 

@@ -14,6 +14,7 @@ from app.models.review_question import ReviewQuestion
 from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.skill import Skills
 from app.models.user import Users
+from app.models.user_skill import UserSkill
 
 # ─────────────── Khóa học, kỹ năng (chỉ đọc) ───────────────
 
@@ -246,6 +247,49 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     if not ids:
         return {}
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
+
+
+# ─────────────── "Đến hạn ôn" (21/11, Q12 guide.md) ───────────────
+
+
+def skill_review_history(db: Session, user_id: int, skill_ids) -> list[tuple[int, object, bool, object]]:
+    """Mỗi lượt ôn ĐÃ CHẤM của người học, tách theo từng kỹ năng của khóa (đạt bài khóa = đã ôn mọi kỹ năng
+    của khóa). Trả (skill_id, submitted_at, passed, score), cũ trước."""
+    ids = list(set(skill_ids))
+    if not ids:
+        return []
+    stmt = (
+        select(CourseSkill.skill_id, ReviewAttempt.submitted_at, ReviewAttempt.passed, ReviewAttempt.score)
+        .join(CourseSkill, CourseSkill.course_id == ReviewAttempt.course_id)
+        .where(
+            ReviewAttempt.user_id == user_id,
+            ReviewAttempt.status == "graded",
+            ReviewAttempt.passed.is_not(None),
+            ReviewAttempt.submitted_at.is_not(None),
+            CourseSkill.skill_id.in_(ids),
+        )
+        .order_by(ReviewAttempt.submitted_at, ReviewAttempt.attempt_id)
+    )
+    return [tuple(row) for row in db.execute(stmt).all()]
+
+
+def known_skill_ids(db: Session, user_id: int, skill_ids=None) -> set[int]:
+    """Kỹ năng người học đang để "Đã biết" (bảng user_skills, module 01)."""
+    stmt = select(UserSkill.skill_id).where(UserSkill.user_id == user_id, UserSkill.status == "known")
+    if skill_ids is not None:
+        stmt = stmt.where(UserSkill.skill_id.in_(list(set(skill_ids))))
+    return set(db.scalars(stmt))
+
+
+def users_with_passed_review(db: Session) -> list[int]:
+    """Người học từng có ít nhất một lượt ôn ĐẠT — chỉ những người này có thể có kỹ năng đến hạn ôn."""
+    stmt = (
+        select(ReviewAttempt.user_id)
+        .where(ReviewAttempt.status == "graded", ReviewAttempt.passed.is_(True))
+        .distinct()
+        .order_by(ReviewAttempt.user_id)
+    )
+    return list(db.scalars(stmt))
 
 
 def graded_attempts(db: Session, course_id: int | None = None) -> list[ReviewAttempt]:

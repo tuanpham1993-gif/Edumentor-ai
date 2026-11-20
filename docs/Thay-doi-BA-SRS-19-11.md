@@ -81,3 +81,10 @@ Phạm vi: chỉ phần của Tuấn (module 01 tài khoản / hồ sơ, module 
 | 4 | SRS | 4. bảng FR — FR-11 | sửa | hai lần nộp cách nhau ít nhất 2 phút; | hai lần nộp cách nhau ít nhất 2 phút (hiện đồng hồ đếm ngược); |
 
 Không đổi yêu cầu: menu "My learning path" đổi tên thành "Lộ trình" (giao diện); ngân hàng đề khóa 1855, 743 (dữ liệu — BA 10.10 / FR-24 đã ghi khóa chỉ ôn được khi ngân hàng đủ câu ráp đề).
+
+## Bổ sung 21/11 — Đến hạn ôn
+
+| # | Tài liệu | Vị trí | Loại | Câu cũ | Câu mới / phần thêm |
+|---|---|---|---|---|---|
+| 1 | BA | 9.6 — thêm BR-36 sau BR-35 | thêm | — | **BR-36 — Đến hạn ôn (nhắc ôn lại kỹ năng)** Kỹ năng Đã biết của người dùng mà đã từng ôn tập đạt ít nhất một lần được nhắc ôn lại theo khoảng giãn dần: đạt lần 1 → sau 7 ngày, đạt liên tiếp lần 2 → 30 ngày, từ lần 3 → 90 ngày; lần ôn gần nhất chưa đạt → 7 ngày tính từ lần đó. Đạt bài ôn tập của một khóa được tính là đã ôn mọi kỹ năng của khóa. Kỹ năng Đang học hoặc Đã biết do người dùng tự khai mà chưa ôn lần nào không được nhắc. Quá hạn chỉ nhắc, không đổi trạng thái Đã biết. Hệ thống nhắc bằng chấm cam trên huy hiệu Ôn tập ở đồ thị lộ trình, thông báo trên chuông (gom các kỹ năng đến hạn, tối đa một lần mỗi 24 giờ) và email (tối đa một lần mỗi tuần, chỉ khi người dùng bật "Nhắc ôn tập"); mỗi lần đến hạn của một kỹ năng chỉ nhắc một lần. Các khoảng nhắc là cấu hình hệ thống (`REVIEW_DUE_INTERVALS`). |
+| 2 | SRS | 4. bảng FR — FR-11 (cuối ô mô tả) | sửa | gửi email kết quả; câu tự luận bị gắn cờ được Admin xem lại (FR-22). | gửi email kết quả; câu tự luận bị gắn cờ được Admin xem lại (FR-22); kỹ năng Đã biết đã từng ôn đạt được nhắc ôn lại sau 7 → 30 → 90 ngày (chấm cam trên huy hiệu, chuông tối đa 1 lần/ngày, email tối đa 1 lần/tuần theo cài đặt Nhắc ôn tập). |

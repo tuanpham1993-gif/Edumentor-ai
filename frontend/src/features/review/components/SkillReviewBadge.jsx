@@ -11,11 +11,11 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 
-import { timeAgo } from '../../../utils/formatters.js';
+import { formatDate, timeAgo } from '../../../utils/formatters.js';
 import { formatScore } from '../reviewFormat.js';
 import { attemptKey, courseKey, saveReturn } from '../reviewReturn.js';
 import styles from '../styles/SkillReview.module.css';
-import { useSkillReview } from './SkillReviewContext.jsx';
+import { useSkillDue, useSkillReview } from './SkillReviewContext.jsx';
 
 const POP_WIDTH = 280;
 const GUTTER = 16;
@@ -48,8 +48,16 @@ function statusText(course) {
   return `${formatScore(last.score)}/10 · ${timeAgo(last.submitted_at ?? last.started_at)}`;
 }
 
+// 21/11 (Q12): dòng "đến hạn ôn" — lần ôn gần nhất của KỸ NĂNG (qua bất kỳ khóa nào) + hạn ôn lại.
+function dueText(due) {
+  const last = `Ôn gần nhất ${due.last_passed ? 'đạt' : 'chưa đạt'} ${formatScore(due.last_score)}/10 · ${timeAgo(due.last_reviewed_at)}`;
+  return due.due ? `${last} · đến hạn ôn` : `${last} · ôn lại từ ${formatDate(due.due_at)}`;
+}
+
 export default function SkillReviewBadge({ skillId, skillName }) {
   const courses = useSkillReview(skillId);
+  const due = useSkillDue(skillId);
+  const isDue = Boolean(due?.due);
   const { pathname } = useLocation();
   const [pos, setPos] = useState(null); // null = đóng; { top, left } = đang mở
   const badgeRef = useRef(null);
@@ -96,13 +104,14 @@ export default function SkillReviewBadge({ skillId, skillName }) {
       <button
         ref={badgeRef}
         type="button"
-        className={styles.badge}
-        aria-label={`Ôn tập ${skillName}`}
+        className={`${styles.badge} ${isDue ? styles.badgeDue : ''}`}
+        aria-label={isDue ? `Ôn tập ${skillName} — đến hạn ôn` : `Ôn tập ${skillName}`}
         aria-expanded={Boolean(pos)}
         aria-haspopup="dialog"
         onClick={toggle}
       >
         <ReviewIcon />
+        {isDue && <span className={styles.dueDot} aria-hidden="true" />}
       </button>
 
       {pos &&
@@ -120,6 +129,7 @@ export default function SkillReviewBadge({ skillId, skillName }) {
                 ×
               </button>
             </div>
+            {due && <p className={isDue ? styles.dueLine : styles.popSub}>{dueText(due)}</p>}
             <p className={styles.popSub}>{courses.length} khóa học có bài ôn tập cho kỹ năng này</p>
             <ul className={styles.list}>
               {courses.map((c) => (
@@ -129,7 +139,11 @@ export default function SkillReviewBadge({ skillId, skillName }) {
                     <span className={styles.meta}>{statusText(c)}</span>
                   </span>
                   <Link
-                    to={c.in_progress_attempt_id ? `/review/${c.in_progress_attempt_id}` : `/courses/${c.course_id}/review`}
+                    to={
+                      c.in_progress_attempt_id
+                        ? `/review/${c.in_progress_attempt_id}`
+                        : `/courses/${c.course_id}/review`
+                    }
                     className="btn btn-sm btn-primary"
                     onClick={() => {
                       // nhớ lộ trình đang xem → màn Kết quả có nút "← Quay lại lộ trình"

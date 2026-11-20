@@ -26,7 +26,7 @@ from sqlalchemy import (
 from app.core.database import Base
 
 # Chốt 11/11 (Tuấn). Module khác cần loại mới → thêm vào đây (CHECK tạo cùng bảng).
-TYPES = ("review_graded", "course_completed", "password_changed", "welcome")
+TYPES = ("review_graded", "course_completed", "password_changed", "welcome", "review_due")  # review_due: 21/11 (Q12)
 
 
 class Notification(Base):

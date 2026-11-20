@@ -23,7 +23,7 @@ export function SkillReviewProvider({ skillIds, children }) {
     reviewApi
       .getSkillReviews(key.split(','))
       .then((data) => {
-        if (active) setBySkill(Object.fromEntries(data.items.map((item) => [item.skill_id, item.courses])));
+        if (active) setBySkill(Object.fromEntries(data.items.map((item) => [item.skill_id, item])));
       })
       .catch(() => {
         if (active) setBySkill({});
@@ -41,5 +41,11 @@ export function SkillReviewProvider({ skillIds, children }) {
 /** Các khóa ôn tập được của một kỹ năng ([] = không có / chưa tải / ngoài Provider). */
 export function useSkillReview(skillId) {
   const context = useContext(SkillReviewContext);
-  return context?.bySkill[Number(skillId)] ?? [];
+  return context?.bySkill[Number(skillId)]?.courses ?? [];
+}
+
+/** 21/11 (Q12): "Đến hạn ôn" của kỹ năng — { due, due_at, last_reviewed_at, last_score, … } hoặc null (không xét). */
+export function useSkillDue(skillId) {
+  const context = useContext(SkillReviewContext);
+  return context?.bySkill[Number(skillId)]?.due ?? null;
 }

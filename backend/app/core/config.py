@@ -42,6 +42,15 @@ class Settings(BaseSettings):
     # số bài làm dở cùng lúc (theo khóa học; ôn theo kỹ năng sau này áp cùng quy tắc cho kỹ năng).
     REVIEW_SUBMIT_COOLDOWN: int = 120  # giây tối thiểu giữa 2 lần nộp của một người
     REVIEW_MAX_UNFINISHED: int = 5  # số bài làm dở tối đa; đủ → phải nộp hoặc bỏ bớt mới bắt đầu bài mới
+    # 21/11 (Q12 guide.md) "Đến hạn ôn": khoảng nhắc giãn dần theo số lần ĐẠT liên tiếp của kỹ năng (lần 1, 2, 3+);
+    # lần ôn gần nhất chưa đạt → dùng khoảng đầu. Chuông gom tối đa 1 lần / ngày, email tối đa 1 lần / tuần.
+    REVIEW_DUE_INTERVALS: list[int] = [7, 30, 90]  # ngày
+    REVIEW_DUE_EMAIL_EVERY_DAYS: int = 7
+    # Luồng nền gửi chuông + email nhắc đến hạn. MẶC ĐỊNH TẮT (Tuấn chốt 21/11): máy nào cấu hình Gmail mà bật sẽ
+    # gửi email thật. Muốn chạy thật → thêm REVIEW_DUE_JOB_ENABLED=true vào backend/.env. Chấm cam trên huy hiệu
+    # vẫn có khi tắt (tính ngay lúc gọi API).
+    REVIEW_DUE_JOB_ENABLED: bool = False
+    REVIEW_DUE_JOB_INTERVAL: int = 3600  # giây giữa 2 lần quét
     # B9 (15/11): chấm tự luận kèm đoạn tri thức của kỹ năng (Model B). False = Model A (đề + barem + đáp án mẫu).
     # Chỉ bật khi đo trên bộ bài chuẩn thấy B tốt hơn A (docs/Review-AI-Grading.md B9, B10).
     REVIEW_GRADING_RAG: bool = False

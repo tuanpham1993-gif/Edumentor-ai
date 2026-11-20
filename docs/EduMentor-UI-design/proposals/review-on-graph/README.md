@@ -23,7 +23,7 @@
 | Bấm huy hiệu → danh sách **các khóa học** có bài ôn tập cho kỹ năng; bài làm lưu **theo khóa học** | Bấm → kiểm tra **theo kỹ năng**: đề 15 câu của đúng kỹ năng đó; thiếu câu thì AI tự soạn |
 | "Cần đạt **7/10**" | Đạt từ **6/10** (trắc nghiệm 60%, tự luận 40%) |
 | API `GET /learning-paths/{id}/nodes/{skill_id}/reviews` | `POST /skills/{skill_id}/review-attempts?path={path_id}` |
-| Chấm cam "**đến hạn ôn**" (ôn lại sau N ngày) | Chưa có trong kế hoạch, cần chốt (Q10 trong guide) |
+| Chấm cam "**đến hạn ôn**" (ôn lại sau N ngày) | Đã chốt 21/11 (Q12 trong guide): nhắc giãn dần 7 → 30 → 90 ngày theo kỹ năng, chỉ kỹ năng Đã biết đã từng ôn đạt, không hạ trạng thái; nhắc trên huy hiệu + chuông + email |
 
 ## Phân công (chốt 20/11/2026 — Tuấn; đã nhắn Hòa)
 
@@ -39,7 +39,7 @@ Nguyên tắc: **mỗi người làm trong module của mình**. Tuấn làm th�
 | 4 | Khóa học gợi ý theo kỹ năng: API `/recommendation` + thẻ khóa (Tham gia học / Lưu dùng API của Khôi) | Hòa (+ Khôi) | | chờ Hòa |
 | 5 | Chèn `<SkillReviewProvider>` quanh đồ thị và `<SkillReviewBadge>` vào `SkillNode` (chỉ node Đã biết / Đang học) | Tuấn (Hòa nhờ) | | ✅ 20/11 (`3d5580e`) |
 | 6 | `<SkillReviewCard>` "Ôn tập ngay" theo **kỹ năng** trong panel phải (guide G1–G6, Alembic) | Tuấn | sau 25/11 | |
-| 7 | Chấm "Đến hạn ôn" | Tuấn | sau 25/11 (Q10) | |
+| 7 | Chấm "Đến hạn ôn" (quy tắc Q12 trong guide) | Tuấn | sau 25/11 | quy tắc đã chốt 21/11 |
 
 Ngưỡng đạt dùng **6/10** của hệ thống (mẫu ghi 7/10 là bản cũ).
 

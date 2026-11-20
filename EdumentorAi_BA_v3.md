@@ -1280,6 +1280,10 @@ Lịch sử ôn tập chỉ gồm các bài đã nộp. Bài đang làm dở kh�
 
 Người dùng được ôn tập không giới hạn số lần. Để bảo vệ lượt AI chấm dùng chung: (1) hai lần nộp bài của một người phải cách nhau ít nhất 2 phút — chặn công cụ nộp tự động, người học thật làm 15 câu mất vài phút nên không bị ảnh hưởng; lần nộp lỗi không tính; (2) mỗi người có tối đa 5 bài làm dở cùng lúc (tính theo khóa học; khi ôn tập theo kỹ năng trên đồ thị thì tính theo kỹ năng). Hai ngưỡng là cấu hình hệ thống (`REVIEW_SUBMIT_COOLDOWN`, `REVIEW_MAX_UNFINISHED`).
 
+**BR-36 — Đến hạn ôn (nhắc ôn lại kỹ năng)**
+
+Kỹ năng Đã biết của người dùng mà đã từng ôn tập đạt ít nhất một lần được nhắc ôn lại theo khoảng giãn dần: đạt lần 1 → sau 7 ngày, đạt liên tiếp lần 2 → 30 ngày, từ lần 3 → 90 ngày; lần ôn gần nhất chưa đạt → 7 ngày tính từ lần đó. Đạt bài ôn tập của một khóa được tính là đã ôn mọi kỹ năng của khóa. Kỹ năng Đang học hoặc Đã biết do người dùng tự khai mà chưa ôn lần nào không được nhắc. Quá hạn chỉ nhắc, không đổi trạng thái Đã biết. Hệ thống nhắc bằng chấm cam trên huy hiệu Ôn tập ở đồ thị lộ trình, thông báo trên chuông (gom các kỹ năng đến hạn, tối đa một lần mỗi 24 giờ) và email (tối đa một lần mỗi tuần, chỉ khi người dùng bật "Nhắc ôn tập"); mỗi lần đến hạn của một kỹ năng chỉ nhắc một lần. Các khoảng nhắc là cấu hình hệ thống (`REVIEW_DUE_INTERVALS`).
+
 ## 9.7. Quy tắc quản trị và kiểm soát dữ liệu (Administration and Data Governance Rules)
 
 **BR-32 — Chỉ Admin được quản lý dữ liệu nền dùng chung**
