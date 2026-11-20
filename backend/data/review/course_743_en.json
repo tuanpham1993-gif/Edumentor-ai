@@ -1,0 +1,2502 @@
+{
+  "course_id": 743,
+  "course_title": "Practice Exam for Certified Scrum Master (CSM) Certification",
+  "note": "English bank (20/11/2026, drafted by Claude, reviewed by Tuấn): 5 skills x 20 questions = 100 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 15 knowledge chunks. Content follows the Scrum Guide 2020 and the Agile Manifesto. Skills CSM / Scrum Alliance / Certification are mapped to the Scrum framework, empiricism + values + Scrum Alliance, and the CSM exam. CSM exam facts (50 questions, 60 minutes, 37 to pass, renewal every 2 years, SEUs) are 'as of 2026' and must be re-checked on scrumalliance.org. Load with: python -m scripts.seed_review --file data/review/course_743_en.json",
+  "skills": {
+    "AGILE": 173,
+    "SM": 1171,
+    "CSM": 1516,
+    "SA": 1517,
+    "CERT": 1518
+  },
+  "chunks": [
+    {
+      "code": "AGILE-K01",
+      "skill": "AGILE",
+      "title": "The four values of the Agile Manifesto",
+      "content": "The Manifesto for Agile Software Development was written in 2001 by seventeen software practitioners. It states four values: individuals and interactions over processes and tools; working software over comprehensive documentation; customer collaboration over contract negotiation; and responding to change over following a plan. The manifesto adds that while there is value in the items on the right, the items on the left are valued more. So agile teams still use processes, documents, contracts and plans, but people, working results, collaboration and the ability to change come first."
+    },
+    {
+      "code": "AGILE-K02",
+      "skill": "AGILE",
+      "title": "Key principles behind the Agile Manifesto",
+      "content": "The manifesto has twelve principles. The highest priority is to satisfy the customer through early and continuous delivery of valuable software. Changing requirements are welcome, even late in development. Working software is delivered frequently, from a couple of weeks to a couple of months, with a preference for the shorter timescale. Business people and developers must work together daily throughout the project. The most efficient and effective way to share information with and within a team is a face-to-face conversation. Working software is the primary measure of progress. Agile processes promote a sustainable pace: everyone should be able to keep a constant pace indefinitely, without long hours or overtime, because tired people make mistakes. Simplicity, the art of maximizing the amount of work not done, is essential. The best results come from self-organizing teams, and at regular intervals the team reflects on how to become more effective and adjusts its behavior."
+    },
+    {
+      "code": "AGILE-K03",
+      "skill": "AGILE",
+      "title": "Agile compared with Waterfall",
+      "content": "In a Waterfall project, the work moves through sequential phases: requirements, design, build, test and release. The requirements are fixed at the start, and each phase finishes before the next one begins, so testing and customer feedback come late, near the end. Changing requirements late in a Waterfall project is expensive and hard. Agile works iteratively and incrementally: the team works in short iterations, delivers a small working increment in each one, gets early feedback from the customer and adapts the plan. Agile is a better fit when requirements are uncertain or likely to change; Waterfall can work when the requirements are stable and well understood."
+    },
+    {
+      "code": "SM-K01",
+      "skill": "SM",
+      "title": "The Scrum Master: a true leader who serves",
+      "content": "The Scrum Master is accountable for establishing Scrum as defined in the Scrum Guide, by helping everyone understand Scrum theory and practice, both within the Scrum Team and the organization. The Scrum Master is also accountable for the Scrum Team's effectiveness. The Scrum Guide calls Scrum Masters true leaders who serve the Scrum Team and the larger organization. A Scrum Master is not a traditional project manager: the Developers are self-managing and decide who does what, when and how, so the Scrum Master leads by serving, coaching and helping others succeed, not by giving orders or assigning tasks."
+    },
+    {
+      "code": "SM-K02",
+      "skill": "SM",
+      "title": "How the Scrum Master serves the Scrum Team",
+      "content": "The Scrum Master serves the Scrum Team in several ways: coaching the team members in self-management and cross-functionality; helping the Scrum Team focus on creating high-value Increments that meet the Definition of Done; causing the removal of impediments to the Scrum Team's progress; and ensuring that all Scrum events take place and are positive, productive and kept within the timebox. For example, if the Daily Scrum keeps running longer than its 15-minute timebox, the Scrum Master helps the Developers keep it short and coaches them to discuss details after the Daily Scrum. If something outside the team blocks the work, such as a broken server owned by another department, the Scrum Master works with the people who can remove that impediment."
+    },
+    {
+      "code": "SM-K03",
+      "skill": "SM",
+      "title": "How the Scrum Master serves the Product Owner and the organization",
+      "content": "The Scrum Master serves the Product Owner by helping find techniques for effective Product Goal definition and Product Backlog management, helping the Scrum Team understand the need for clear and concise Product Backlog items, helping establish empirical product planning for a complex environment, and facilitating stakeholder collaboration as requested or needed. The Scrum Master serves the organization by leading, training and coaching it in its Scrum adoption; planning and advising Scrum implementations within the organization; helping employees and stakeholders understand and enact an empirical approach for complex work; and removing barriers between stakeholders and Scrum Teams. When stakeholders bring new requests in the middle of a Sprint, the Scrum Master helps them understand that new work goes to the Product Owner and the Product Backlog."
+    },
+    {
+      "code": "CSM-K01",
+      "skill": "CSM",
+      "title": "The Scrum Team and its accountabilities",
+      "content": "A Scrum Team consists of one Scrum Master, one Product Owner and Developers. It is usually 10 or fewer people, has no sub-teams or hierarchies, and is cross-functional and self-managing. The Product Owner is accountable for maximizing the value of the product resulting from the work of the Scrum Team, and for effective Product Backlog management: developing and communicating the Product Goal, creating and clearly communicating Product Backlog items, ordering them, and making sure the Product Backlog is transparent and understood. The Product Owner is one person, not a committee. The Developers are accountable for creating the plan for the Sprint (the Sprint Backlog), instilling quality by following the Definition of Done, adapting their plan each day toward the Sprint Goal, and holding each other accountable as professionals. In short: the Product Owner decides what to build and in which order; the Developers decide how to build it."
+    },
+    {
+      "code": "CSM-K02",
+      "skill": "CSM",
+      "title": "The five Scrum events and their timeboxes",
+      "content": "Scrum has five events. The Sprint is the container for all the other events; it has a fixed length of one month or less. Sprint Planning starts the Sprint and is timeboxed to a maximum of 8 hours for a one-month Sprint. The Daily Scrum is a 15-minute event for the Developers to inspect progress toward the Sprint Goal and adapt the Sprint Backlog. The Sprint Review, a maximum of 4 hours for a one-month Sprint, is where the Scrum Team presents the results of its work to key stakeholders, they inspect the outcome and discuss what to do next; the Product Backlog may be adjusted. The Sprint Retrospective, a maximum of 3 hours for a one-month Sprint, is where the team plans ways to increase quality and effectiveness. Shorter Sprints have shorter events. During the Sprint, no changes are made that would endanger the Sprint Goal, quality does not decrease, and scope may be clarified and renegotiated with the Product Owner as more is learned. Only the Product Owner can cancel a Sprint, and only if the Sprint Goal becomes obsolete."
+    },
+    {
+      "code": "CSM-K03",
+      "skill": "CSM",
+      "title": "The three Scrum artifacts and their commitments",
+      "content": "Scrum has three artifacts, and each one has a commitment. The Product Backlog is an ordered list of what is needed to improve the product; its commitment is the Product Goal. The Sprint Backlog is made of the Sprint Goal (why), the Product Backlog items selected for the Sprint (what) and an actionable plan for delivering the Increment (how); it is a plan by and for the Developers, and its commitment is the Sprint Goal. An Increment is a concrete stepping stone toward the Product Goal; its commitment is the Definition of Done, a formal description of the quality the Increment must meet. Work that does not meet the Definition of Done cannot be released or presented at the Sprint Review; it returns to the Product Backlog. If the organization has no Definition of Done, the Scrum Team must create one for the product."
+    },
+    {
+      "code": "SA-K01",
+      "skill": "SA",
+      "title": "Empiricism: transparency, inspection and adaptation",
+      "content": "Scrum is founded on empiricism and lean thinking. Empiricism says that knowledge comes from experience and that decisions are made based on what is observed. Lean thinking reduces waste and focuses on the essentials. Scrum has three pillars of empiricism. Transparency: the process and the work must be visible to those doing the work and those receiving it; inspection without transparency is misleading. Inspection: the Scrum artifacts and the progress toward agreed goals must be inspected frequently to detect problems. Adaptation: if something is off, the process or the product must be adjusted as soon as possible. The Scrum events give regular chances to inspect and adapt: for example, the Daily Scrum adapts the Sprint Backlog, and the Sprint Retrospective adapts how the team works. Short Sprints give frequent chances to inspect results and adapt."
+    },
+    {
+      "code": "SA-K02",
+      "skill": "SA",
+      "title": "The five Scrum values",
+      "content": "Successful use of Scrum depends on people living five values. Commitment: the Scrum Team commits to achieving its goals and to supporting each other. Focus: the team focuses on the work of the Sprint to make the best possible progress toward its goals. Openness: the Scrum Team and its stakeholders are open and honest about the work and the challenges. Respect: team members respect each other to be capable, independent people. Courage: team members have the courage to do the right thing and to work on tough problems. For example, a Developer who honestly tells the team that a task is harder than expected shows openness and courage."
+    },
+    {
+      "code": "SA-K03",
+      "skill": "SA",
+      "title": "Scrum Alliance and its certification path",
+      "content": "Scrum Alliance is a nonprofit membership organization that certifies Scrum practitioners and supports the Scrum community. Its best-known certification is the Certified ScrumMaster (CSM). The Scrum Master path at Scrum Alliance goes from CSM to A-CSM (Advanced Certified ScrumMaster) and then to CSP-SM (Certified Scrum Professional - ScrumMaster). Product Owners have a separate path that starts with CSPO. The official CSM course is taught by a Certified Scrum Trainer (CST). Scrum Alliance is a different organization from Scrum.org: Scrum.org offers the Professional Scrum Master (PSM) assessments instead. (Rules as of 2026; always check scrumalliance.org, because they can change.)"
+    },
+    {
+      "code": "CERT-K01",
+      "skill": "CERT",
+      "title": "Becoming a Certified ScrumMaster: eligibility and the test",
+      "content": "To earn the CSM, you first attend a live CSM course taught by a Certified Scrum Trainer (CST): 16 hours of training, usually spread over 2-3 days. After the course you have 90 days and two attempts to pass the online CSM test. As of 2026 the test has 50 multiple-choice questions, a time limit of 60 minutes, and you pass with 37 correct answers (74%). After passing, you accept the license agreement and receive the CSM certificate in your Scrum Alliance profile. Because exam rules such as the number of questions, the passing score and the number of attempts can change, always check them on the official site before the test. (Rules as of 2026; always check scrumalliance.org, because they can change.)"
+    },
+    {
+      "code": "CERT-K02",
+      "skill": "CERT",
+      "title": "Common traps in CSM exam questions",
+      "content": "Many CSM practice questions test small details of the Scrum Guide. Common traps: the Sprint is one month or less, never longer; the Daily Scrum is for the Developers and is not a status report to the Scrum Master; only the Product Owner can cancel a Sprint, and only if the Sprint Goal becomes obsolete; the Sprint Backlog belongs to the Developers; Product Backlog refinement is an ongoing activity, not a Scrum event, in which items are broken down into smaller items and given more detail; there are no special 'hardening' Sprints, because every Sprint should produce a usable Increment that meets the Definition of Done; if the organization has no Definition of Done, the Scrum Team must create one; and the Scrum Master is not a project manager who assigns tasks."
+    },
+    {
+      "code": "CERT-K03",
+      "skill": "CERT",
+      "title": "Keeping the certification and continuing to learn",
+      "content": "The CSM certification must be renewed every 2 years. To renew it, you earn Scrum Education Units (SEUs), one SEU per hour of continuing education such as courses, events or reading, and pay a renewal fee; for the CSM this is 20 SEUs and a 100 USD fee. After the CSM, a Scrum Master can continue with the A-CSM (Advanced Certified ScrumMaster) and then the CSP-SM (Certified Scrum Professional - ScrumMaster). A certificate shows that you learned Scrum and passed the test; it does not prove years of experience. Real skill comes from practice, reflection and continuous learning, in the same spirit of inspection and adaptation that Scrum teaches. (Rules as of 2026; always check scrumalliance.org, because they can change.)"
+    }
+  ],
+  "questions": [
+    {
+      "code": "AGILE-TN-01",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "When was the Agile Manifesto written?",
+      "options": [
+        "2001",
+        "1991",
+        "2010",
+        "2020"
+      ],
+      "correct_index": 0,
+      "explanation": "The Manifesto for Agile Software Development was written in 2001."
+    },
+    {
+      "code": "AGILE-TN-02",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these is one of the four values of the Agile Manifesto?",
+      "options": [
+        "Comprehensive documentation over working software",
+        "Working software over comprehensive documentation",
+        "Following a plan over responding to change",
+        "Contract negotiation over customer collaboration"
+      ],
+      "correct_index": 1,
+      "explanation": "The manifesto values working software over comprehensive documentation."
+    },
+    {
+      "code": "AGILE-TN-03",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In the Agile Manifesto, individuals and interactions are valued over what?",
+      "options": [
+        "Customer collaboration",
+        "Working software",
+        "Processes and tools",
+        "Responding to change"
+      ],
+      "correct_index": 2,
+      "explanation": "Individuals and interactions over processes and tools."
+    },
+    {
+      "code": "AGILE-TN-04",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "According to the agile principles, what is the primary measure of progress?",
+      "options": [
+        "The number of documents written",
+        "The hours the team worked",
+        "The lines of code",
+        "Working software"
+      ],
+      "correct_index": 3,
+      "explanation": "Working software is the primary measure of progress."
+    },
+    {
+      "code": "AGILE-TN-05",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "According to the agile principles, how often should working software be delivered?",
+      "options": [
+        "Frequently, preferring a shorter timescale",
+        "Once, at the end of the project",
+        "Once a year, after full testing",
+        "Only after all documentation is complete"
+      ],
+      "correct_index": 0,
+      "explanation": "Deliver working software frequently, from a couple of weeks to a couple of months, preferring shorter."
+    },
+    {
+      "code": "AGILE-TN-06",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How do the agile principles treat changing requirements?",
+      "options": [
+        "They are refused once the project starts",
+        "They are welcome, even late in development",
+        "They are accepted only with a new contract",
+        "They are moved to the next project"
+      ],
+      "correct_index": 1,
+      "explanation": "Agile processes welcome changing requirements, even late in development."
+    },
+    {
+      "code": "AGILE-TN-07",
+      "skill": "AGILE",
+      "chunk": "AGILE-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How is the work organized in a Waterfall project?",
+      "options": [
+        "In short iterations, each delivering a small increment",
+        "Without any planning at all",
+        "In sequential phases: requirements, design, build, test, release",
+        "By letting the customer write the code"
+      ],
+      "correct_index": 2,
+      "explanation": "Waterfall moves through sequential phases; each phase finishes before the next starts."
+    },
+    {
+      "code": "AGILE-TN-08",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does the Agile Manifesto mean by 'we value the items on the left more'?",
+      "options": [
+        "The items on the right must never be used",
+        "The items on the left and right are equally important",
+        "Only documentation and plans really matter",
+        "The items on the right still have value, but the items on the left matter more"
+      ],
+      "correct_index": 3,
+      "explanation": "Agile teams still use processes, documents, contracts and plans, but value the left side more."
+    },
+    {
+      "code": "AGILE-TN-09",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A team works 60-hour weeks for months to meet deadlines. Which agile principle does this break?",
+      "options": [
+        "Sustainable pace",
+        "Simplicity",
+        "Face-to-face conversation",
+        "Welcoming changing requirements"
+      ],
+      "correct_index": 0,
+      "explanation": "Agile promotes a sustainable pace that can be kept indefinitely, without long hours."
+    },
+    {
+      "code": "AGILE-TN-10",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does the principle of simplicity mean in agile?",
+      "options": [
+        "Writing the shortest possible code",
+        "Maximizing the amount of work not done",
+        "Using only one programming language",
+        "Skipping testing to save time"
+      ],
+      "correct_index": 1,
+      "explanation": "Simplicity is the art of maximizing the amount of work not done: build only what adds value."
+    },
+    {
+      "code": "AGILE-TN-11",
+      "skill": "AGILE",
+      "chunk": "AGILE-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "When is Agile usually a better fit than Waterfall?",
+      "options": [
+        "When the requirements are fixed and will never change",
+        "When no customer feedback is needed",
+        "When the requirements are uncertain or likely to change",
+        "When the team wants to test only at the end"
+      ],
+      "correct_index": 2,
+      "explanation": "Short iterations and early feedback let an agile team adapt to changing requirements."
+    },
+    {
+      "code": "AGILE-TN-12",
+      "skill": "AGILE",
+      "chunk": "AGILE-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why is a late change of requirements expensive in a Waterfall project?",
+      "options": [
+        "Waterfall projects do not allow any testing",
+        "Waterfall teams never talk to the customer",
+        "Changes are free in Waterfall",
+        "The design and build are already finished, so earlier phases must be redone"
+      ],
+      "correct_index": 3,
+      "explanation": "Each Waterfall phase builds on the previous one, so a late change means redoing finished work."
+    },
+    {
+      "code": "AGILE-TN-13",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "According to the agile principles, how often should business people and developers work together?",
+      "options": [
+        "Daily, throughout the project",
+        "Only at the start of the project",
+        "Only when there is a problem",
+        "Once per release"
+      ],
+      "correct_index": 0,
+      "explanation": "Business people and developers must work together daily throughout the project."
+    },
+    {
+      "code": "AGILE-TN-14",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A customer asks for a new feature in the middle of a project. Which agile value supports changing the plan?",
+      "options": [
+        "Processes and tools over individuals and interactions",
+        "Responding to change over following a plan",
+        "Contract negotiation over customer collaboration",
+        "Comprehensive documentation over working software"
+      ],
+      "correct_index": 1,
+      "explanation": "Agile values responding to change over following a plan."
+    },
+    {
+      "code": "AGILE-TL-01",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What does the Agile Manifesto mean by 'while there is value in the items on the right, we value the items on the left more'? Give one of the four values as an example.",
+      "rubric": [
+        {
+          "text": "The items on the right are still useful, but the items on the left matter more",
+          "max_points": 5,
+          "main_keywords": [
+            "still have value",
+            "still has value",
+            "still useful",
+            "still important",
+            "not useless"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A correct example of one of the four values",
+          "max_points": 5,
+          "main_keywords": [
+            "individuals and interactions",
+            "working software",
+            "customer collaboration",
+            "responding to change"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: It means the items on the right still have value, but agile teams care about the items on the left more. For example, working software over comprehensive documentation."
+    },
+    {
+      "code": "AGILE-TL-02",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Name two agile principles about collaboration and communication.",
+      "rubric": [
+        {
+          "text": "Business people and developers must work together daily",
+          "max_points": 5,
+          "main_keywords": [
+            "work together",
+            "daily"
+          ],
+          "sub_keywords": [
+            "business",
+            "customer"
+          ]
+        },
+        {
+          "text": "Face-to-face conversation is the most efficient way to share information",
+          "max_points": 5,
+          "main_keywords": [
+            "face-to-face",
+            "face to face",
+            "in person"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Business people and developers must work together daily throughout the project. The most efficient way to share information is a face-to-face conversation."
+    },
+    {
+      "code": "AGILE-TL-03",
+      "skill": "AGILE",
+      "chunk": "AGILE-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Give two differences between Agile and Waterfall.",
+      "rubric": [
+        {
+          "text": "Waterfall uses sequential phases; Agile works in short iterations with small increments",
+          "max_points": 5,
+          "main_keywords": [
+            "sequential",
+            "iteration",
+            "iterative",
+            "increment"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "In Waterfall testing and feedback come late; in Agile feedback comes early and often",
+          "max_points": 5,
+          "main_keywords": [
+            "feedback early",
+            "early feedback",
+            "come late",
+            "comes late",
+            "feedback late",
+            "testing late"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Waterfall does the work in sequential phases, while Agile works in short iterations and delivers small increments. In Waterfall, testing and customer feedback come late, at the end; in Agile, early feedback comes often."
+    },
+    {
+      "code": "AGILE-TL-04",
+      "skill": "AGILE",
+      "chunk": "AGILE-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "What does 'sustainable pace' mean in agile, and why is it important?",
+      "rubric": [
+        {
+          "text": "A constant pace that the team can keep indefinitely, without long hours or overtime",
+          "max_points": 5,
+          "main_keywords": [
+            "constant pace",
+            "indefinitely",
+            "overtime",
+            "long hours"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Important because tired people make mistakes: it avoids burnout and keeps quality",
+          "max_points": 5,
+          "main_keywords": [
+            "burnout",
+            "mistake",
+            "tired",
+            "keeps quality",
+            "quality high"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Sustainable pace means the team works at a constant pace that it can keep indefinitely, without long hours or overtime. It is important because tired people make mistakes, so it avoids burnout and keeps quality high."
+    },
+    {
+      "code": "AGILE-TL-05",
+      "skill": "AGILE",
+      "chunk": "AGILE-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "List the four values of the Agile Manifesto and explain one of them with an example.",
+      "rubric": [
+        {
+          "text": "Individuals and interactions over processes and tools",
+          "max_points": 2,
+          "main_keywords": [
+            "individuals and interactions"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Working software over comprehensive documentation",
+          "max_points": 2,
+          "main_keywords": [
+            "working software"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Customer collaboration over contract negotiation",
+          "max_points": 2,
+          "main_keywords": [
+            "customer collaboration"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Responding to change over following a plan",
+          "max_points": 2,
+          "main_keywords": [
+            "responding to change"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A sensible example explaining one value",
+          "max_points": 2,
+          "main_keywords": [
+            "new feature",
+            "change the plan",
+            "changes its plan",
+            "talk to the customer",
+            "demo"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Individuals and interactions over processes and tools. Working software over comprehensive documentation. Customer collaboration over contract negotiation. Responding to change over following a plan. For example, if the customer needs a new feature in the middle of the project, the team changes its plan instead of following the old plan."
+    },
+    {
+      "code": "AGILE-TL-06",
+      "skill": "AGILE",
+      "chunk": "AGILE-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Compare Agile and Waterfall for a project where the requirements are likely to change. Which would you choose, and why?",
+      "rubric": [
+        {
+          "text": "Waterfall fixes the requirements at the start and then follows the plan",
+          "max_points": 3,
+          "main_keywords": [
+            "start of the project",
+            "upfront",
+            "fixed requirements",
+            "requirements are fixed",
+            "fixes the requirements"
+          ],
+          "sub_keywords": [
+            "waterfall"
+          ]
+        },
+        {
+          "text": "Changing requirements late in Waterfall is expensive / hard",
+          "max_points": 2,
+          "main_keywords": [
+            "expensive",
+            "costly",
+            "hard to change",
+            "difficult to change"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Agile works in short iterations, so the team can adapt after each one",
+          "max_points": 3,
+          "main_keywords": [
+            "adapt",
+            "respond to change",
+            "short iteration"
+          ],
+          "sub_keywords": [
+            "agile"
+          ]
+        },
+        {
+          "text": "Choose Agile for this project",
+          "max_points": 2,
+          "main_keywords": [
+            "choose agile",
+            "prefer agile",
+            "agile is better",
+            "use agile"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Waterfall fixes the requirements at the start of the project and then follows the plan. Changing requirements late is expensive and hard in Waterfall. Agile works in short iterations, so the team can adapt and respond to change after each one. For this project I would choose Agile."
+    },
+    {
+      "code": "SM-TN-01",
+      "skill": "SM",
+      "chunk": "SM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the Scrum Master accountable for?",
+      "options": [
+        "Writing all the Product Backlog items",
+        "Assigning tasks to each Developer",
+        "The Scrum Team's effectiveness",
+        "Approving the project budget"
+      ],
+      "correct_index": 2,
+      "explanation": "The Scrum Master is accountable for establishing Scrum and for the Scrum Team's effectiveness."
+    },
+    {
+      "code": "SM-TN-02",
+      "skill": "SM",
+      "chunk": "SM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How does the Scrum Guide describe the Scrum Master?",
+      "options": [
+        "The project manager who controls the team",
+        "The technical architect of the team",
+        "A tester who checks every Increment",
+        "A true leader who serves the Scrum Team and the larger organization"
+      ],
+      "correct_index": 3,
+      "explanation": "Scrum Masters are true leaders who serve the Scrum Team and the larger organization."
+    },
+    {
+      "code": "SM-TN-03",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What should the Scrum Master do about impediments to the team's progress?",
+      "options": [
+        "Cause their removal",
+        "Ignore them until the Sprint Retrospective",
+        "Add them to the Product Backlog as features",
+        "Report them only to senior management"
+      ],
+      "correct_index": 0,
+      "explanation": "The Scrum Master causes the removal of impediments to the Scrum Team's progress."
+    },
+    {
+      "code": "SM-TN-04",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Who ensures that all Scrum events take place and are kept within the timebox?",
+      "options": [
+        "The Product Owner",
+        "The Scrum Master",
+        "The stakeholders",
+        "The most senior Developer"
+      ],
+      "correct_index": 1,
+      "explanation": "The Scrum Master ensures events take place and are positive, productive and kept within the timebox."
+    },
+    {
+      "code": "SM-TN-05",
+      "skill": "SM",
+      "chunk": "SM-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How does the Scrum Master serve the Product Owner?",
+      "options": [
+        "By deciding the order of the Product Backlog for them",
+        "By accepting or rejecting the Increment",
+        "By helping find techniques for Product Goal definition and Product Backlog management",
+        "By negotiating the contract with the customer"
+      ],
+      "correct_index": 2,
+      "explanation": "The Product Owner orders the backlog; the Scrum Master helps with techniques."
+    },
+    {
+      "code": "SM-TN-06",
+      "skill": "SM",
+      "chunk": "SM-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How does the Scrum Master serve the organization?",
+      "options": [
+        "By hiring and firing Developers",
+        "By writing the company budget",
+        "By approving every release",
+        "By leading, training and coaching it in its Scrum adoption"
+      ],
+      "correct_index": 3,
+      "explanation": "The Scrum Master leads, trains and coaches the organization in its Scrum adoption."
+    },
+    {
+      "code": "SM-TN-07",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In what does the Scrum Master coach the team members?",
+      "options": [
+        "Self-management and cross-functionality",
+        "Following orders from a manager",
+        "Working alone on separate tasks",
+        "Writing detailed documentation"
+      ],
+      "correct_index": 0,
+      "explanation": "The Scrum Master coaches the team members in self-management and cross-functionality."
+    },
+    {
+      "code": "SM-TN-08",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "The Developers ask the Scrum Master to decide who should do each task in the Sprint. What is the best response?",
+      "options": [
+        "Assign a task to each Developer",
+        "Coach the Developers to decide this themselves, because they are self-managing",
+        "Ask the Product Owner to assign the tasks",
+        "Cancel the Sprint until the problem is solved"
+      ],
+      "correct_index": 1,
+      "explanation": "The Developers are self-managing; the Scrum Master coaches rather than assigns."
+    },
+    {
+      "code": "SM-TN-09",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "The Daily Scrum always runs for 40 minutes. What should the Scrum Master do?",
+      "options": [
+        "Extend the timebox to one hour",
+        "Cancel the Daily Scrum",
+        "Help the Developers keep it within the 15-minute timebox",
+        "Run the meeting and ask each person for a status report"
+      ],
+      "correct_index": 2,
+      "explanation": "The Daily Scrum is timeboxed to 15 minutes; details can be discussed afterwards."
+    },
+    {
+      "code": "SM-TN-10",
+      "skill": "SM",
+      "chunk": "SM-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "How is a Scrum Master different from a traditional project manager?",
+      "options": [
+        "A Scrum Master writes the project plan and assigns tasks",
+        "A Scrum Master owns the budget and the contract",
+        "There is no difference; it is a new name for the same job",
+        "A Scrum Master serves and coaches a self-managing team instead of directing its work"
+      ],
+      "correct_index": 3,
+      "explanation": "The Scrum Master leads by serving; the Developers decide how to do their work."
+    },
+    {
+      "code": "SM-TN-11",
+      "skill": "SM",
+      "chunk": "SM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Stakeholders keep interrupting the Developers in the middle of the Sprint with new requests. What should the Scrum Master do?",
+      "options": [
+        "Help the stakeholders understand that new requests go to the Product Owner and the Product Backlog",
+        "Tell the Developers to accept every request immediately",
+        "Add the requests to the Sprint Backlog without asking anyone",
+        "Cancel the Sprint so the requests can be done"
+      ],
+      "correct_index": 0,
+      "explanation": "New work goes through the Product Owner; the Scrum Master protects the Sprint by facilitating this."
+    },
+    {
+      "code": "SM-TN-12",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "The team is blocked by a problem with another department that it cannot solve itself. What should the Scrum Master do?",
+      "options": [
+        "Tell the team to wait until the next Sprint",
+        "Work to remove the impediment, for example by talking to that department",
+        "Ignore it, because impediments are the team's problem",
+        "Remove the work from the Sprint Backlog without telling anyone"
+      ],
+      "correct_index": 1,
+      "explanation": "Causing the removal of impediments is part of how the Scrum Master serves the team."
+    },
+    {
+      "code": "SM-TN-13",
+      "skill": "SM",
+      "chunk": "SM-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why is the Scrum Master called a 'true leader who serves'?",
+      "options": [
+        "They are the most senior member of the team",
+        "They decide what the team builds",
+        "They lead by helping others succeed, not by giving orders",
+        "They approve every change to the plan"
+      ],
+      "correct_index": 2,
+      "explanation": "Servant leadership: leading through service, coaching and removing obstacles."
+    },
+    {
+      "code": "SM-TN-14",
+      "skill": "SM",
+      "chunk": "SM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An organization is new to Scrum and its managers still expect detailed yearly plans. How can the Scrum Master help?",
+      "options": [
+        "Ask managers to stop attending Sprint Reviews",
+        "Write a detailed plan for the whole year",
+        "Leave the problem to the Product Owner only",
+        "Help employees and stakeholders understand and enact an empirical approach"
+      ],
+      "correct_index": 3,
+      "explanation": "The Scrum Master helps the organization understand empiricism for complex work."
+    },
+    {
+      "code": "SM-TL-01",
+      "skill": "SM",
+      "chunk": "SM-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain how the Scrum Master helps the Scrum Team become more effective. Give two examples from real situations.",
+      "rubric": [
+        {
+          "text": "The Scrum Master establishes Scrum by helping everyone understand Scrum theory and practice",
+          "max_points": 4,
+          "main_keywords": [
+            "establish scrum",
+            "help everyone understand scrum",
+            "theory and practice"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Example: removing an impediment that blocks the team",
+          "max_points": 3,
+          "main_keywords": [
+            "impediment",
+            "blocker",
+            "obstacle"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Example: keeping a Scrum event productive and within its timebox",
+          "max_points": 3,
+          "main_keywords": [
+            "timebox",
+            "time box",
+            "15-minute",
+            "15 minute"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Scrum Master establishes Scrum by helping everyone understand Scrum theory and practice, so the team works better together. For example, when a broken test server blocks the Developers, the Scrum Master gets this impediment removed. Another example: when the Daily Scrum runs too long, the Scrum Master helps the team keep it within the 15-minute timebox."
+    },
+    {
+      "code": "SM-TL-02",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Name three ways the Scrum Master serves the Scrum Team.",
+      "rubric": [
+        {
+          "text": "Coaching the team in self-management and cross-functionality",
+          "max_points": 4,
+          "main_keywords": [
+            "self-management",
+            "self-managing",
+            "cross-functional",
+            "cross-functionality"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Causing the removal of impediments",
+          "max_points": 3,
+          "main_keywords": [
+            "impediment",
+            "obstacle",
+            "blocker"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Ensuring Scrum events take place and stay within the timebox",
+          "max_points": 3,
+          "main_keywords": [
+            "timebox",
+            "time box"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Scrum Master coaches the team members in self-management and cross-functionality. The Scrum Master causes the removal of impediments to the team's progress. The Scrum Master ensures that all Scrum events take place and are kept within the timebox."
+    },
+    {
+      "code": "SM-TL-03",
+      "skill": "SM",
+      "chunk": "SM-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "A Product Owner struggles to keep the Product Backlog clear. Describe three ways the Scrum Master can help.",
+      "rubric": [
+        {
+          "text": "Teach techniques for Product Goal definition and Product Backlog management",
+          "max_points": 4,
+          "main_keywords": [
+            "backlog management",
+            "technique",
+            "product goal definition"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Help the team understand the need for clear and concise Product Backlog items",
+          "max_points": 3,
+          "main_keywords": [
+            "clear and concise",
+            "concise"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Facilitate stakeholder collaboration (e.g. in refinement)",
+          "max_points": 3,
+          "main_keywords": [
+            "stakeholder collaboration",
+            "facilitate"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Scrum Master can teach the Product Owner techniques for Product Backlog management and for defining the Product Goal. The Scrum Master helps the team understand the need for clear and concise Product Backlog items. The Scrum Master can also facilitate stakeholder collaboration, for example in a refinement session."
+    },
+    {
+      "code": "SM-TL-04",
+      "skill": "SM",
+      "chunk": "SM-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Why is a Scrum Master not the team's manager?",
+      "rubric": [
+        {
+          "text": "The Developers are self-managing: they decide who does what and how",
+          "max_points": 5,
+          "main_keywords": [
+            "self-managing",
+            "self-management"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The Scrum Master serves and coaches instead of giving orders or assigning tasks",
+          "max_points": 5,
+          "main_keywords": [
+            "serve",
+            "coach",
+            "instead of giving orders"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Developers are self-managing: they decide who does what and how to do the work. The Scrum Master serves and coaches the team instead of giving orders or assigning tasks."
+    },
+    {
+      "code": "SM-TL-05",
+      "skill": "SM",
+      "chunk": "SM-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "During a Sprint, the Developers say that a broken database server owned by another department blocks their work, and the Daily Scrum keeps running over its timebox. Describe what a good Scrum Master would do.",
+      "rubric": [
+        {
+          "text": "Treat the server problem as an impediment and cause its removal",
+          "max_points": 3,
+          "main_keywords": [
+            "impediment",
+            "removal",
+            "remove"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Work with the people outside the team who can fix it",
+          "max_points": 2,
+          "main_keywords": [
+            "talk to the other department",
+            "contact",
+            "work with",
+            "escalate"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Help the Developers keep the Daily Scrum within its 15-minute timebox",
+          "max_points": 3,
+          "main_keywords": [
+            "15-minute",
+            "15 minute",
+            "fifteen minute",
+            "fifteen-minute"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Coach the Developers to discuss details after the Daily Scrum",
+          "max_points": 2,
+          "main_keywords": [
+            "after the daily scrum",
+            "after the meeting",
+            "coach"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The server problem is an impediment, so the Scrum Master works to cause its removal. For example, the Scrum Master can talk to the other department to get help. The Scrum Master helps the Developers keep the Daily Scrum within its 15-minute timebox. The Scrum Master coaches them to discuss details after the Daily Scrum, so the meeting stays short."
+    },
+    {
+      "code": "SM-TL-06",
+      "skill": "SM",
+      "chunk": "SM-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Describe how a Scrum Master serves the organization.",
+      "rubric": [
+        {
+          "text": "Leading, training and coaching the organization in its Scrum adoption",
+          "max_points": 3,
+          "main_keywords": [
+            "adoption",
+            "training",
+            "train"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Planning and advising Scrum implementations",
+          "max_points": 2,
+          "main_keywords": [
+            "implementation",
+            "advise",
+            "advising"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Helping employees and stakeholders understand an empirical approach",
+          "max_points": 3,
+          "main_keywords": [
+            "empirical",
+            "empiricism"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Removing barriers between stakeholders and Scrum Teams",
+          "max_points": 2,
+          "main_keywords": [
+            "barrier"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Scrum Master leads, trains and coaches the organization in its Scrum adoption. The Scrum Master plans and advises Scrum implementations within the organization. The Scrum Master helps employees and stakeholders understand and enact an empirical approach for complex work. The Scrum Master removes barriers between stakeholders and Scrum Teams."
+    },
+    {
+      "code": "CSM-TN-01",
+      "skill": "CSM",
+      "chunk": "CSM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What are the three accountabilities in a Scrum Team?",
+      "options": [
+        "Product Owner, Scrum Master and Developers",
+        "Project Manager, Tester and Developers",
+        "Product Owner, Team Lead and Architect",
+        "Scrum Master, Business Analyst and Testers"
+      ],
+      "correct_index": 0,
+      "explanation": "A Scrum Team has one Product Owner, one Scrum Master and Developers."
+    },
+    {
+      "code": "CSM-TN-02",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the maximum length of a Sprint?",
+      "options": [
+        "Two weeks",
+        "One month",
+        "Three months",
+        "Six weeks"
+      ],
+      "correct_index": 1,
+      "explanation": "A Sprint has a fixed length of one month or less."
+    },
+    {
+      "code": "CSM-TN-03",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the timebox of the Daily Scrum?",
+      "options": [
+        "5 minutes",
+        "30 minutes",
+        "15 minutes",
+        "One hour"
+      ],
+      "correct_index": 2,
+      "explanation": "The Daily Scrum is a 15-minute event for the Developers."
+    },
+    {
+      "code": "CSM-TN-04",
+      "skill": "CSM",
+      "chunk": "CSM-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the commitment for the Product Backlog?",
+      "options": [
+        "The Sprint Goal",
+        "The Definition of Done",
+        "The release plan",
+        "The Product Goal"
+      ],
+      "correct_index": 3,
+      "explanation": "Product Backlog → Product Goal; Sprint Backlog → Sprint Goal; Increment → Definition of Done."
+    },
+    {
+      "code": "CSM-TN-05",
+      "skill": "CSM",
+      "chunk": "CSM-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the commitment for the Increment?",
+      "options": [
+        "The Definition of Done",
+        "The Product Goal",
+        "The Sprint Goal",
+        "The burndown chart"
+      ],
+      "correct_index": 0,
+      "explanation": "The Increment's commitment is the Definition of Done."
+    },
+    {
+      "code": "CSM-TN-06",
+      "skill": "CSM",
+      "chunk": "CSM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Who is accountable for ordering the Product Backlog?",
+      "options": [
+        "The Scrum Master",
+        "The Product Owner",
+        "The Developers",
+        "The stakeholders"
+      ],
+      "correct_index": 1,
+      "explanation": "Ordering Product Backlog items is part of the Product Owner's backlog management."
+    },
+    {
+      "code": "CSM-TN-07",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which list contains exactly the five Scrum events?",
+      "options": [
+        "Sprint, Planning, Design, Testing, Release",
+        "Sprint Planning, Daily Scrum, Backlog Refinement, Sprint Review, Release Planning",
+        "Sprint, Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective",
+        "Kick-off, Daily Scrum, Demo, Retrospective, Closing"
+      ],
+      "correct_index": 2,
+      "explanation": "Backlog refinement is an ongoing activity, not an event; release planning is not a Scrum event."
+    },
+    {
+      "code": "CSM-TN-08",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Who can cancel a Sprint, and when?",
+      "options": [
+        "The Scrum Master, whenever the team is late",
+        "Any stakeholder who disagrees with the plan",
+        "The Developers, if they do not like the work",
+        "Only the Product Owner, if the Sprint Goal becomes obsolete"
+      ],
+      "correct_index": 3,
+      "explanation": "Only the Product Owner has the authority to cancel a Sprint."
+    },
+    {
+      "code": "CSM-TN-09",
+      "skill": "CSM",
+      "chunk": "CSM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Who owns the Sprint Backlog?",
+      "options": [
+        "The Developers: it is a plan by and for the Developers",
+        "The Product Owner",
+        "The Scrum Master",
+        "The stakeholders"
+      ],
+      "correct_index": 0,
+      "explanation": "The Sprint Backlog is a plan by and for the Developers."
+    },
+    {
+      "code": "CSM-TN-10",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "For a one-month Sprint, what is the maximum length of Sprint Planning?",
+      "options": [
+        "4 hours",
+        "8 hours",
+        "2 hours",
+        "2 days"
+      ],
+      "correct_index": 1,
+      "explanation": "Sprint Planning is timeboxed to 8 hours for a one-month Sprint."
+    },
+    {
+      "code": "CSM-TN-11",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which of these is allowed during a Sprint?",
+      "options": [
+        "Lowering quality to finish faster",
+        "Making changes that endanger the Sprint Goal",
+        "Clarifying and renegotiating scope with the Product Owner as more is learned",
+        "Changing the Sprint length every week"
+      ],
+      "correct_index": 2,
+      "explanation": "Scope may be clarified and renegotiated; quality and the Sprint Goal are protected."
+    },
+    {
+      "code": "CSM-TN-12",
+      "skill": "CSM",
+      "chunk": "CSM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does the Sprint Backlog consist of?",
+      "options": [
+        "Only the list of bugs",
+        "All items in the Product Backlog",
+        "The Definition of Done and the release date",
+        "The Sprint Goal, the selected Product Backlog items and a plan for delivering them"
+      ],
+      "correct_index": 3,
+      "explanation": "Sprint Backlog = Sprint Goal (why) + selected items (what) + actionable plan (how)."
+    },
+    {
+      "code": "CSM-TN-13",
+      "skill": "CSM",
+      "chunk": "CSM-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the usual size of a Scrum Team?",
+      "options": [
+        "10 or fewer people",
+        "Exactly 3 people",
+        "At least 20 people",
+        "Any size; it does not matter"
+      ],
+      "correct_index": 0,
+      "explanation": "A Scrum Team is small enough to stay nimble: typically 10 or fewer people."
+    },
+    {
+      "code": "CSM-TN-14",
+      "skill": "CSM",
+      "chunk": "CSM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "At the end of the Sprint, a Product Backlog item does not meet the Definition of Done. What happens to it?",
+      "options": [
+        "It is released with a warning",
+        "It is not part of the Increment and returns to the Product Backlog",
+        "The Sprint is extended until it is done",
+        "The Definition of Done is changed so that it passes"
+      ],
+      "correct_index": 1,
+      "explanation": "Work that does not meet the Definition of Done cannot be released or presented; it returns to the backlog."
+    },
+    {
+      "code": "CSM-TL-01",
+      "skill": "CSM",
+      "chunk": "CSM-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Name the three Scrum artifacts and the commitment of each one.",
+      "rubric": [
+        {
+          "text": "Product Backlog → Product Goal",
+          "max_points": 4,
+          "main_keywords": [
+            "product goal"
+          ],
+          "sub_keywords": [
+            "product backlog"
+          ]
+        },
+        {
+          "text": "Sprint Backlog → Sprint Goal",
+          "max_points": 3,
+          "main_keywords": [
+            "sprint goal"
+          ],
+          "sub_keywords": [
+            "sprint backlog"
+          ]
+        },
+        {
+          "text": "Increment → Definition of Done",
+          "max_points": 3,
+          "main_keywords": [
+            "definition of done"
+          ],
+          "sub_keywords": [
+            "increment"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The Product Backlog has the Product Goal as its commitment. The Sprint Backlog has the Sprint Goal. The Increment has the Definition of Done."
+    },
+    {
+      "code": "CSM-TL-02",
+      "skill": "CSM",
+      "chunk": "CSM-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is the Product Owner accountable for?",
+      "rubric": [
+        {
+          "text": "Maximizing the value of the product",
+          "max_points": 5,
+          "main_keywords": [
+            "maximize value",
+            "maximizing the value",
+            "value of the product"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Effective Product Backlog management (Product Goal, items, ordering)",
+          "max_points": 5,
+          "main_keywords": [
+            "product backlog management",
+            "ordering the product backlog",
+            "order the product backlog",
+            "product goal"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Product Owner is accountable for maximizing the value of the product resulting from the work of the Scrum Team. The Product Owner is also accountable for effective Product Backlog management, for example ordering the Product Backlog items."
+    },
+    {
+      "code": "CSM-TL-03",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is the purpose of the Daily Scrum, how long is it, and who takes part?",
+      "rubric": [
+        {
+          "text": "Inspect progress toward the Sprint Goal and adapt the Sprint Backlog",
+          "max_points": 4,
+          "main_keywords": [
+            "inspect",
+            "progress",
+            "adapt"
+          ],
+          "sub_keywords": [
+            "sprint goal",
+            "sprint backlog"
+          ]
+        },
+        {
+          "text": "It is timeboxed to 15 minutes",
+          "max_points": 3,
+          "main_keywords": [
+            "15 minute",
+            "15-minute",
+            "fifteen minute"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The Developers take part",
+          "max_points": 3,
+          "main_keywords": [
+            "developers"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The purpose of the Daily Scrum is to inspect progress toward the Sprint Goal and adapt the Sprint Backlog as necessary. It is timeboxed to 15 minutes. The Developers take part in it."
+    },
+    {
+      "code": "CSM-TL-04",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "What happens in the Sprint Review, and what is its maximum length for a one-month Sprint?",
+      "rubric": [
+        {
+          "text": "The Scrum Team presents its work to key stakeholders and they inspect the outcome",
+          "max_points": 4,
+          "main_keywords": [
+            "key stakeholders",
+            "present the results",
+            "presents the results",
+            "inspect the outcome"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "They discuss what to do next and the Product Backlog may be adjusted",
+          "max_points": 3,
+          "main_keywords": [
+            "adjust",
+            "adjusted"
+          ],
+          "sub_keywords": [
+            "product backlog"
+          ]
+        },
+        {
+          "text": "At most 4 hours for a one-month Sprint",
+          "max_points": 3,
+          "main_keywords": [
+            "4 hours",
+            "four hours",
+            "4-hour",
+            "four-hour"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: In the Sprint Review, the Scrum Team presents the results of its work to key stakeholders, and they inspect the outcome of the Sprint. Together they discuss what to do next, and the Product Backlog may be adjusted. For a one-month Sprint it lasts at most 4 hours."
+    },
+    {
+      "code": "CSM-TL-05",
+      "skill": "CSM",
+      "chunk": "CSM-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "List the five Scrum events with the maximum length of each one for a one-month Sprint.",
+      "rubric": [
+        {
+          "text": "Sprint: one month or less",
+          "max_points": 2,
+          "main_keywords": [
+            "one month",
+            "1 month",
+            "one-month"
+          ],
+          "sub_keywords": [
+            "sprint"
+          ]
+        },
+        {
+          "text": "Sprint Planning: at most 8 hours",
+          "max_points": 2,
+          "main_keywords": [
+            "8 hours",
+            "eight hours",
+            "8-hour",
+            "eight-hour"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Daily Scrum: 15 minutes",
+          "max_points": 2,
+          "main_keywords": [
+            "15 minute",
+            "15-minute",
+            "fifteen minute"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Sprint Review: at most 4 hours",
+          "max_points": 2,
+          "main_keywords": [
+            "4 hours",
+            "four hours",
+            "4-hour",
+            "four-hour"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Sprint Retrospective: at most 3 hours",
+          "max_points": 2,
+          "main_keywords": [
+            "3 hours",
+            "three hours",
+            "3-hour",
+            "three-hour"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Sprint lasts one month or less. Sprint Planning takes at most 8 hours. The Daily Scrum takes 15 minutes. The Sprint Review takes at most 4 hours. The Sprint Retrospective takes at most 3 hours."
+    },
+    {
+      "code": "CSM-TL-06",
+      "skill": "CSM",
+      "chunk": "CSM-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Describe the accountabilities of the Developers, and explain how they differ from those of the Product Owner.",
+      "rubric": [
+        {
+          "text": "The Developers create the plan for the Sprint (the Sprint Backlog)",
+          "max_points": 3,
+          "main_keywords": [
+            "sprint backlog",
+            "plan for the sprint"
+          ],
+          "sub_keywords": [
+            "developers"
+          ]
+        },
+        {
+          "text": "They instill quality by following the Definition of Done",
+          "max_points": 2,
+          "main_keywords": [
+            "definition of done",
+            "quality"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "They adapt their plan each day toward the Sprint Goal",
+          "max_points": 2,
+          "main_keywords": [
+            "every day",
+            "daily"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The Product Owner decides what to build (orders the backlog, maximizes value); the Developers decide how",
+          "max_points": 3,
+          "main_keywords": [
+            "order the product backlog",
+            "ordering the product backlog",
+            "maximize value",
+            "maximizing value"
+          ],
+          "sub_keywords": [
+            "product owner"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The Developers create the plan for the Sprint, the Sprint Backlog. They instill quality by following the Definition of Done. They adapt their plan every day toward the Sprint Goal. The Product Owner decides what to build by ordering the Product Backlog to maximize value, while the Developers decide how to do the work."
+    },
+    {
+      "code": "SA-TN-01",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What are the three pillars of empiricism in Scrum?",
+      "options": [
+        "Planning, execution and control",
+        "Speed, cost and scope",
+        "Transparency, inspection and adaptation",
+        "Design, build and test"
+      ],
+      "correct_index": 2,
+      "explanation": "Scrum's three pillars are transparency, inspection and adaptation."
+    },
+    {
+      "code": "SA-TN-02",
+      "skill": "SA",
+      "chunk": "SA-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What are the five Scrum values?",
+      "options": [
+        "Speed, quality, cost, scope and time",
+        "Honesty, loyalty, discipline, obedience and focus",
+        "Planning, testing, release, review and feedback",
+        "Commitment, focus, openness, respect and courage"
+      ],
+      "correct_index": 3,
+      "explanation": "The five Scrum values are commitment, focus, openness, respect and courage."
+    },
+    {
+      "code": "SA-TN-03",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "According to empiricism, where does knowledge come from?",
+      "options": [
+        "From experience and from decisions based on what is observed",
+        "From detailed plans made at the start",
+        "From the opinion of the most senior person",
+        "From long documents written before the work"
+      ],
+      "correct_index": 0,
+      "explanation": "Empiricism: knowledge comes from experience and decisions are based on observation."
+    },
+    {
+      "code": "SA-TN-04",
+      "skill": "SA",
+      "chunk": "SA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is Scrum Alliance?",
+      "options": [
+        "A software tool for managing backlogs",
+        "A nonprofit organization that offers Scrum certifications such as CSM",
+        "A government agency that controls software projects",
+        "A company that sells project management software"
+      ],
+      "correct_index": 1,
+      "explanation": "Scrum Alliance is a nonprofit membership organization that certifies Scrum practitioners."
+    },
+    {
+      "code": "SA-TN-05",
+      "skill": "SA",
+      "chunk": "SA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In Scrum Alliance's Scrum Master path, which certification comes after CSM?",
+      "options": [
+        "PMP",
+        "CSPO",
+        "A-CSM (Advanced Certified ScrumMaster)",
+        "ITIL Foundation"
+      ],
+      "correct_index": 2,
+      "explanation": "The path is CSM → A-CSM → CSP-SM. CSPO starts the Product Owner path."
+    },
+    {
+      "code": "SA-TN-06",
+      "skill": "SA",
+      "chunk": "SA-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which Scrum value means doing the right thing and working on tough problems?",
+      "options": [
+        "Focus",
+        "Respect",
+        "Openness",
+        "Courage"
+      ],
+      "correct_index": 3,
+      "explanation": "Courage: doing the right thing and working on tough problems."
+    },
+    {
+      "code": "SA-TN-07",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which pillar requires that the process and the work are visible to those doing and receiving the work?",
+      "options": [
+        "Transparency",
+        "Inspection",
+        "Adaptation",
+        "Commitment"
+      ],
+      "correct_index": 0,
+      "explanation": "Transparency makes the process and the work visible."
+    },
+    {
+      "code": "SA-TN-08",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "In the Sprint Retrospective, the team sees that testing is too slow and decides to automate its tests. Which pillars does this show?",
+      "options": [
+        "Transparency only",
+        "Inspection and adaptation",
+        "Commitment and focus",
+        "None; the Retrospective is not about the process"
+      ],
+      "correct_index": 1,
+      "explanation": "The team inspects how it works and adapts its process."
+    },
+    {
+      "code": "SA-TN-09",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why is transparency needed for inspection?",
+      "options": [
+        "Transparency makes meetings shorter",
+        "Inspection is only needed when transparency fails",
+        "Inspecting information that is not visible or not true leads to wrong decisions",
+        "Transparency removes the need to adapt"
+      ],
+      "correct_index": 2,
+      "explanation": "Inspection without transparency is misleading and wasteful."
+    },
+    {
+      "code": "SA-TN-10",
+      "skill": "SA",
+      "chunk": "SA-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A Developer honestly tells the team that a task is much harder than expected. Which Scrum values does this show?",
+      "options": [
+        "Focus and commitment",
+        "Respect only",
+        "None of the Scrum values",
+        "Openness and courage"
+      ],
+      "correct_index": 3,
+      "explanation": "Being open and honest about challenges shows openness and courage."
+    },
+    {
+      "code": "SA-TN-11",
+      "skill": "SA",
+      "chunk": "SA-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "The team works only on its Sprint Goal and avoids switching to unrelated tasks. Which value is this?",
+      "options": [
+        "Focus",
+        "Courage",
+        "Openness",
+        "Respect"
+      ],
+      "correct_index": 0,
+      "explanation": "Focus: concentrating on the work of the Sprint."
+    },
+    {
+      "code": "SA-TN-12",
+      "skill": "SA",
+      "chunk": "SA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What is the relationship between Scrum Alliance and Scrum.org?",
+      "options": [
+        "They are the same organization with two websites",
+        "They are different organizations: Scrum Alliance offers CSM, Scrum.org offers PSM",
+        "Scrum.org offers CSM and Scrum Alliance offers PSM",
+        "Only Scrum Alliance is allowed to teach Scrum"
+      ],
+      "correct_index": 1,
+      "explanation": "Scrum Alliance (CSM) and Scrum.org (PSM) are separate organizations."
+    },
+    {
+      "code": "SA-TN-13",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why does Scrum work in short Sprints instead of following one long plan?",
+      "options": [
+        "Short Sprints remove the need for any planning",
+        "They let the team skip testing",
+        "Short cycles give frequent chances to inspect results and adapt",
+        "They make documentation unnecessary"
+      ],
+      "correct_index": 2,
+      "explanation": "Each Sprint is a chance to inspect and adapt, which supports empiricism."
+    },
+    {
+      "code": "SA-TN-14",
+      "skill": "SA",
+      "chunk": "SA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Who teaches the official Scrum Alliance CSM course?",
+      "options": [
+        "Any Product Owner",
+        "The student's own manager",
+        "A Scrum.org Professional Scrum Trainer only",
+        "A Certified Scrum Trainer (CST)"
+      ],
+      "correct_index": 3,
+      "explanation": "The CSM course is taught by a Certified Scrum Trainer."
+    },
+    {
+      "code": "SA-TL-01",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Name and briefly explain the three pillars of empiricism in Scrum.",
+      "rubric": [
+        {
+          "text": "Transparency: the work and the process are visible",
+          "max_points": 3,
+          "main_keywords": [
+            "transparency",
+            "transparent",
+            "visible"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Inspection: progress and artifacts are checked often",
+          "max_points": 3,
+          "main_keywords": [
+            "inspection",
+            "inspect"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Adaptation: when something is off, the team adjusts quickly",
+          "max_points": 4,
+          "main_keywords": [
+            "adaptation",
+            "adapt",
+            "adjust"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The first pillar is transparency: the work and the process must be visible. The second is inspection: the team inspects its progress and artifacts often. The third is adaptation: when something is wrong, the team adjusts as soon as possible."
+    },
+    {
+      "code": "SA-TL-02",
+      "skill": "SA",
+      "chunk": "SA-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the Scrum values openness and respect.",
+      "rubric": [
+        {
+          "text": "Openness: the team and stakeholders are open and honest about the work and the challenges",
+          "max_points": 5,
+          "main_keywords": [
+            "honest",
+            "share problems",
+            "talk openly"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Respect: team members respect each other as capable, independent people",
+          "max_points": 5,
+          "main_keywords": [
+            "capable",
+            "independent",
+            "capable people",
+            "trust"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Openness means the Scrum Team and its stakeholders are open and honest about the work and the challenges. Respect means team members respect each other to be capable, independent people."
+    },
+    {
+      "code": "SA-TL-03",
+      "skill": "SA",
+      "chunk": "SA-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "What is Scrum Alliance, and what Scrum Master path does it offer?",
+      "rubric": [
+        {
+          "text": "A nonprofit membership organization that certifies Scrum practitioners",
+          "max_points": 5,
+          "main_keywords": [
+            "nonprofit",
+            "non-profit",
+            "membership"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The path CSM → A-CSM → CSP-SM",
+          "max_points": 5,
+          "main_keywords": [
+            "a-csm",
+            "csp-sm",
+            "advanced certified"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Scrum Alliance is a nonprofit membership organization that certifies Scrum practitioners. Its Scrum Master path goes from CSM to A-CSM (Advanced Certified ScrumMaster) and then to CSP-SM."
+    },
+    {
+      "code": "SA-TL-04",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain empiricism in Scrum, and give an example of adaptation.",
+      "rubric": [
+        {
+          "text": "Knowledge comes from experience; decisions are based on what is observed",
+          "max_points": 5,
+          "main_keywords": [
+            "from experience",
+            "observed",
+            "observation"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A sensible example of adapting (changing the plan, backlog or way of working after inspecting)",
+          "max_points": 5,
+          "main_keywords": [
+            "changes the order",
+            "change the order",
+            "reorder",
+            "adapt",
+            "change the plan",
+            "adjust the plan",
+            "improve"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Empiricism means knowledge comes from experience, and decisions are based on what is observed. For example, after the Sprint Review the Product Owner changes the order of the Product Backlog based on the stakeholders' feedback."
+    },
+    {
+      "code": "SA-TL-05",
+      "skill": "SA",
+      "chunk": "SA-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A new team member asks how the Scrum values change the way a team works day to day. Name the five values and describe how each one shows in the team's behavior.",
+      "rubric": [
+        {
+          "text": "Commitment: committing to the team's goals and supporting each other",
+          "max_points": 2,
+          "main_keywords": [
+            "commitment",
+            "commit"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Focus: focusing on the work of the Sprint",
+          "max_points": 2,
+          "main_keywords": [
+            "focus"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Openness: being open and honest about the work and challenges",
+          "max_points": 2,
+          "main_keywords": [
+            "openness",
+            "honest"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Respect: respecting each other as capable, independent people",
+          "max_points": 2,
+          "main_keywords": [
+            "respect"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Courage: doing the right thing and working on tough problems",
+          "max_points": 2,
+          "main_keywords": [
+            "courage"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Commitment means the team commits to its goals and supports each other. Focus means the team concentrates on the work of the Sprint. Openness means being honest about the work and the challenges. Respect means team members treat each other as capable, independent people. Courage means doing the right thing and working on tough problems."
+    },
+    {
+      "code": "SA-TL-06",
+      "skill": "SA",
+      "chunk": "SA-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Explain the three pillars of empiricism, and show how one Scrum event uses inspection and adaptation.",
+      "rubric": [
+        {
+          "text": "Transparency: the work and the artifacts are visible",
+          "max_points": 2,
+          "main_keywords": [
+            "transparency",
+            "transparent",
+            "visible"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Inspection: checking progress and artifacts often",
+          "max_points": 2,
+          "main_keywords": [
+            "inspection",
+            "inspect"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Adaptation: adjusting as soon as a problem is found",
+          "max_points": 2,
+          "main_keywords": [
+            "adaptation",
+            "adapt",
+            "adjust"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A Scrum event used correctly as an example of inspect-and-adapt",
+          "max_points": 4,
+          "main_keywords": [
+            "daily scrum",
+            "sprint review",
+            "sprint retrospective",
+            "retrospective",
+            "sprint planning"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Transparency means the work and the artifacts are visible to everyone. Inspection means checking progress and artifacts often. Adaptation means adjusting as soon as a problem is found. For example, in the Daily Scrum the Developers inspect progress toward the Sprint Goal and adapt the Sprint Backlog."
+    },
+    {
+      "code": "CERT-TN-01",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What must you do before taking the CSM test?",
+      "options": [
+        "Attend a CSM course taught by a Certified Scrum Trainer",
+        "Work as a Scrum Master for five years",
+        "Pass the PMP exam",
+        "Write a thesis about Scrum"
+      ],
+      "correct_index": 0,
+      "explanation": "The CSM requires attending a course with a Certified Scrum Trainer before the test."
+    },
+    {
+      "code": "CERT-TN-02",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "As of 2026, how many questions does the CSM test have?",
+      "options": [
+        "20",
+        "50",
+        "100",
+        "200"
+      ],
+      "correct_index": 1,
+      "explanation": "The CSM test has 50 multiple-choice questions (check the official site, rules can change)."
+    },
+    {
+      "code": "CERT-TN-03",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "As of 2026, what score do you need to pass the CSM test?",
+      "options": [
+        "25 correct answers out of 50 (50%)",
+        "45 correct answers out of 50 (90%)",
+        "37 correct answers out of 50 (74%)",
+        "50 correct answers out of 50"
+      ],
+      "correct_index": 2,
+      "explanation": "You pass with 37 of 50 correct (74%), as of 2026."
+    },
+    {
+      "code": "CERT-TN-04",
+      "skill": "CERT",
+      "chunk": "CERT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How often must the CSM certification be renewed?",
+      "options": [
+        "Every month",
+        "Every 10 years",
+        "Never; it lasts for life",
+        "Every 2 years"
+      ],
+      "correct_index": 3,
+      "explanation": "The CSM is renewed every 2 years."
+    },
+    {
+      "code": "CERT-TN-05",
+      "skill": "CERT",
+      "chunk": "CERT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What do you earn in order to renew the CSM?",
+      "options": [
+        "Scrum Education Units (SEUs)",
+        "Story points",
+        "Sprint credits",
+        "Exam tokens"
+      ],
+      "correct_index": 0,
+      "explanation": "Renewal requires Scrum Education Units and a fee."
+    },
+    {
+      "code": "CERT-TN-06",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which of these is NOT a Scrum event?",
+      "options": [
+        "Sprint Planning",
+        "Product Backlog refinement",
+        "Daily Scrum",
+        "Sprint Retrospective"
+      ],
+      "correct_index": 1,
+      "explanation": "Refinement is an ongoing activity, not one of the five Scrum events."
+    },
+    {
+      "code": "CERT-TN-07",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "As of 2026, what is the time limit of the CSM test?",
+      "options": [
+        "15 minutes",
+        "3 hours",
+        "60 minutes",
+        "There is no time limit"
+      ],
+      "correct_index": 2,
+      "explanation": "The CSM test has a 60-minute time limit."
+    },
+    {
+      "code": "CERT-TN-08",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A practice question asks who must attend the Daily Scrum. What is the correct answer?",
+      "options": [
+        "The whole company",
+        "The Product Owner and the stakeholders",
+        "Only the Scrum Master",
+        "The Developers"
+      ],
+      "correct_index": 3,
+      "explanation": "The Daily Scrum is an event for the Developers."
+    },
+    {
+      "code": "CERT-TN-09",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A practice question says that the Scrum Master can cancel the Sprint. Why is this wrong?",
+      "options": [
+        "Only the Product Owner has the authority to cancel a Sprint",
+        "Sprints can never be cancelled by anyone",
+        "Only the stakeholders can cancel a Sprint",
+        "The Developers vote to cancel a Sprint"
+      ],
+      "correct_index": 0,
+      "explanation": "Only the Product Owner can cancel a Sprint, if the Sprint Goal becomes obsolete."
+    },
+    {
+      "code": "CERT-TN-10",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A team says it needs a 'hardening Sprint' to fix quality before every release. What is the Scrum view?",
+      "options": [
+        "A hardening Sprint is a required Scrum event",
+        "Every Sprint should produce a usable Increment that meets the Definition of Done",
+        "Quality is checked only in the last Sprint",
+        "The Scrum Master decides when to run a hardening Sprint"
+      ],
+      "correct_index": 1,
+      "explanation": "Quality is built in every Sprint through the Definition of Done; there are no hardening Sprints in Scrum."
+    },
+    {
+      "code": "CERT-TN-11",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why should you check the official Scrum Alliance site before taking the CSM test?",
+      "options": [
+        "The exam questions are published there in advance",
+        "You must buy the Scrum Guide there",
+        "Exam rules such as the number of questions and the passing score can change over time",
+        "The site tells you which answers are correct"
+      ],
+      "correct_index": 2,
+      "explanation": "Exam details can change; always confirm the current rules."
+    },
+    {
+      "code": "CERT-TN-12",
+      "skill": "CERT",
+      "chunk": "CERT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "You earned your CSM in November 2026. By when must you renew it?",
+      "options": [
+        "By November 2027",
+        "By November 2036",
+        "It never needs to be renewed",
+        "By November 2028"
+      ],
+      "correct_index": 3,
+      "explanation": "The CSM is renewed every 2 years."
+    },
+    {
+      "code": "CERT-TN-13",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which statement about the Definition of Done is correct?",
+      "options": [
+        "If the organization has no Definition of Done, the Scrum Team must create one",
+        "The stakeholders write it after each release",
+        "Each Developer can use their own Definition of Done",
+        "The Definition of Done is optional in Scrum"
+      ],
+      "correct_index": 0,
+      "explanation": "If there is no organizational standard, the Scrum Team must create a Definition of Done for the product."
+    },
+    {
+      "code": "CERT-TN-14",
+      "skill": "CERT",
+      "chunk": "CERT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "What does a CSM certificate prove?",
+      "options": [
+        "That you have worked as a Scrum Master for many years",
+        "That you learned Scrum and passed the test; experience must still be built in practice",
+        "That you can manage any project without training",
+        "That your team will always deliver on time"
+      ],
+      "correct_index": 1,
+      "explanation": "A certificate shows knowledge, not years of experience."
+    },
+    {
+      "code": "CERT-TL-01",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Describe the steps to become a Certified ScrumMaster (CSM).",
+      "rubric": [
+        {
+          "text": "Attend a live CSM course taught by a Certified Scrum Trainer (CST)",
+          "max_points": 4,
+          "main_keywords": [
+            "certified scrum trainer",
+            "cst",
+            "csm course",
+            "live course"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Pass the online CSM test",
+          "max_points": 3,
+          "main_keywords": [
+            "pass the test",
+            "pass the exam",
+            "online test",
+            "csm test"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Receive the CSM certificate after passing",
+          "max_points": 3,
+          "main_keywords": [
+            "certificate",
+            "certified"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: First, attend a live CSM course taught by a Certified Scrum Trainer (CST). Then pass the online CSM test. After passing, you receive the CSM certificate in your Scrum Alliance profile."
+    },
+    {
+      "code": "CERT-TL-02",
+      "skill": "CERT",
+      "chunk": "CERT-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Describe the format of the CSM test as of 2026.",
+      "rubric": [
+        {
+          "text": "50 multiple-choice questions",
+          "max_points": 4,
+          "main_keywords": [
+            "50 multiple-choice",
+            "50 multiple choice",
+            "50 question",
+            "fifty question"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A time limit of 60 minutes",
+          "max_points": 3,
+          "main_keywords": [
+            "60 minute",
+            "60-minute",
+            "one hour",
+            "1 hour",
+            "sixty minute"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "You pass with 37 correct answers (74%)",
+          "max_points": 3,
+          "main_keywords": [
+            "37 correct",
+            "37 out of 50",
+            "74%",
+            "74 %",
+            "74 percent"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: As of 2026, the CSM test has 50 multiple-choice questions. The time limit is 60 minutes. You pass with 37 correct answers, which is 74%."
+    },
+    {
+      "code": "CERT-TL-03",
+      "skill": "CERT",
+      "chunk": "CERT-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "How do you keep your CSM certification active?",
+      "rubric": [
+        {
+          "text": "Renew it every 2 years",
+          "max_points": 5,
+          "main_keywords": [
+            "2 years",
+            "two years",
+            "every two"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Earn Scrum Education Units (SEUs) and pay a renewal fee",
+          "max_points": 5,
+          "main_keywords": [
+            "seu",
+            "scrum education unit",
+            "renewal fee"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: You must renew the CSM certification every 2 years. To renew, you earn Scrum Education Units (SEUs) and pay a renewal fee."
+    },
+    {
+      "code": "CERT-TL-04",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Is Product Backlog refinement a Scrum event? Explain.",
+      "rubric": [
+        {
+          "text": "No: refinement is an ongoing activity, not a Scrum event",
+          "max_points": 6,
+          "main_keywords": [
+            "not an event",
+            "not a scrum event",
+            "ongoing activity"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "In refinement, items are broken down into smaller items and given more detail",
+          "max_points": 4,
+          "main_keywords": [
+            "smaller items",
+            "more detail",
+            "add detail",
+            "adds detail"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: No, Product Backlog refinement is not a Scrum event; it is an ongoing activity. In refinement, the team breaks Product Backlog items down into smaller items and adds detail, such as a description, order and size."
+    },
+    {
+      "code": "CERT-TL-05",
+      "skill": "CERT",
+      "chunk": "CERT-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A practice exam states: 'The Daily Scrum is a status meeting where each Developer reports to the Scrum Master.' Explain why this is wrong, and describe the Daily Scrum correctly.",
+      "rubric": [
+        {
+          "text": "It is not a status report to the Scrum Master",
+          "max_points": 2,
+          "main_keywords": [
+            "not a status",
+            "not report",
+            "not a status meeting"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "It is for the Developers to inspect progress toward the Sprint Goal",
+          "max_points": 3,
+          "main_keywords": [
+            "inspect",
+            "progress"
+          ],
+          "sub_keywords": [
+            "sprint goal"
+          ]
+        },
+        {
+          "text": "They adapt the Sprint Backlog / their plan",
+          "max_points": 3,
+          "main_keywords": [
+            "adapt",
+            "adjust"
+          ],
+          "sub_keywords": [
+            "sprint backlog",
+            "plan"
+          ]
+        },
+        {
+          "text": "It is timeboxed to 15 minutes and the Developers choose how to run it",
+          "max_points": 2,
+          "main_keywords": [
+            "15 minute",
+            "15-minute",
+            "fifteen minute"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Daily Scrum is not a status meeting, and the Developers do not report to the Scrum Master. It is an event for the Developers to inspect progress toward the Sprint Goal. They adapt the Sprint Backlog and their plan for the next day. It is timeboxed to 15 minutes, and the Developers choose how to run it."
+    },
+    {
+      "code": "CERT-TL-06",
+      "skill": "CERT",
+      "chunk": "CERT-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Describe the Scrum Master certification path at Scrum Alliance after the CSM, how you keep it active, and why continuing to learn matters.",
+      "rubric": [
+        {
+          "text": "The next step is A-CSM (Advanced Certified ScrumMaster)",
+          "max_points": 3,
+          "main_keywords": [
+            "a-csm",
+            "advanced certified"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "After that comes CSP-SM (Certified Scrum Professional - ScrumMaster)",
+          "max_points": 3,
+          "main_keywords": [
+            "csp-sm",
+            "certified scrum professional"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Renew every 2 years by earning SEUs",
+          "max_points": 2,
+          "main_keywords": [
+            "seu",
+            "renew"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Learning matters because the certificate is only a start; skill comes from experience and practice",
+          "max_points": 2,
+          "main_keywords": [
+            "experience",
+            "practice"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: After the CSM, the next step is the A-CSM (Advanced Certified ScrumMaster). After that comes the CSP-SM (Certified Scrum Professional - ScrumMaster). You renew your certification every 2 years by earning SEUs. Continuing to learn matters because the CSM is only a start; real skill comes from experience and practice."
+    }
+  ]
+}

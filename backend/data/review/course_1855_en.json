@@ -302,7 +302,7 @@
           "main_keywords": [
             "execute",
             "run",
-            "carry out",
+            "carry out the instructions",
             "process"
           ],
           "sub_keywords": [
@@ -542,7 +542,7 @@
             "source",
             "high-level",
             "high level",
-            ".py"
+            "py file"
           ],
           "sub_keywords": []
         },
@@ -564,7 +564,7 @@
             "cpu execute",
             "cpu runs",
             "executes the instructions",
-            "carries out"
+            "carries out the instructions"
           ],
           "sub_keywords": [
             "cpu"
@@ -1320,9 +1320,9 @@
           "text": "Reuse: write instructions once (as a function) and use them many times",
           "max_points": 5,
           "main_keywords": [
-            "once",
             "many times",
-            "function"
+            "function",
+            "again and again"
           ],
           "sub_keywords": []
         },
