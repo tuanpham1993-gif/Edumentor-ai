@@ -203,3 +203,39 @@
   .grid { grid-template-columns: repeat(5, 1fr); }
   .topActions { width: 100%; justify-content: space-between; }
 }
+
+/* 20/11 — đồng hồ đếm ngược khi bị chặn nộp dồn dập (429) */
+.cooldown {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 12px 0 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--accent-soft-border);
+  border-radius: var(--r-lg);
+  background: var(--accent-soft-bg);
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.cooldownClock {
+  min-width: 3.2em;
+  color: var(--accent);
+  font-size: 28px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.cooldownBar {
+  grid-column: 1 / -1;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) calc(var(--ratio, 0) * 100%),
+    var(--card-border) calc(var(--ratio, 0) * 100%)
+  );
+  transition: background 1s linear;
+}

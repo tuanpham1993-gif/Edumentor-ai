@@ -13,6 +13,11 @@ import { parseApiError } from '../../../utils/errors.js';
 import { LEVEL_TEXT, OPTION_LETTERS, formatScore, isAnswered } from '../reviewFormat.js';
 import styles from '../styles/ReviewQuizPage.module.css';
 
+/** 83 → "1:23" (đồng hồ chờ nộp lại). */
+function formatClock(seconds) {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
 const ESSAY_SAVE_DELAY = 1000; // ms ngừng gõ thì lưu
 const MAX_ESSAY_CHARS = 5000; // khớp backend (schemas/review.py)
 
@@ -37,6 +42,23 @@ export default function ReviewQuizPage() {
   const [confirming, setConfirming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  // 20/11: đếm ngược khi bị chặn nộp dồn dập (429). waitUntil = mốc ms được nộp lại; 0 = không chờ.
+  const [waitUntil, setWaitUntil] = useState(0);
+  const [waitTotal, setWaitTotal] = useState(1);
+  const [now, setNow] = useState(() => Date.now());
+  const waitLeft = waitUntil > 0 ? Math.max(0, Math.ceil((waitUntil - now) / 1000)) : 0;
+
+  useEffect(() => {
+    if (!waitUntil) return undefined;
+    setNow(Date.now());
+    setWaitTotal(Math.max(1, Math.ceil((waitUntil - Date.now()) / 1000)));
+    const timer = setInterval(() => {
+      const current = Date.now();
+      setNow(current);
+      if (current >= waitUntil) clearInterval(timer);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [waitUntil]);
 
   const pending = useRef(new Map()); // position → payload chưa lưu
   const timer = useRef(null);
@@ -153,8 +175,10 @@ export default function ReviewQuizPage() {
   }
 
   async function submit() {
+    if (waitLeft > 0) return;
     setSubmitting(true);
     setSubmitError('');
+    setWaitUntil(0);
     const ok = await flush();
     if (!ok && pending.current.size) {
       setSubmitError('Chưa lưu được câu trả lời. Kiểm tra kết nối rồi bấm Nộp bài lại.');
@@ -168,6 +192,13 @@ export default function ReviewQuizPage() {
       const { status, message } = parseApiError(error);
       if (status === 409) {
         navigate(`/review/${attemptId}/result`, { replace: true });
+        return;
+      }
+      // 20/11: chặn nộp dồn dập (429) → đồng hồ đếm ngược theo header Retry-After thay cho câu "Lỗi 429: …".
+      const retryAfter = Number(error?.response?.headers?.['retry-after']);
+      if (status === 429 && retryAfter > 0) {
+        setWaitUntil(Date.now() + retryAfter * 1000);
+        setSubmitting(false);
         return;
       }
       setSubmitError(message);
@@ -384,12 +415,34 @@ export default function ReviewQuizPage() {
                 {submitError}
               </p>
             )}
+            {waitLeft > 0 && (
+              <div className={styles.cooldown} role="timer" aria-live="off">
+                <span className={styles.cooldownClock} aria-hidden="true">
+                  {formatClock(waitLeft)}
+                </span>
+                <span>
+                  Bạn vừa nộp bài, vui lòng chờ. Nút <b>Nộp bài</b> tự mở lại khi hết giờ — bài đang làm vẫn được lưu.
+                </span>
+                <span className={styles.cooldownBar} style={{ '--ratio': waitLeft / waitTotal }} aria-hidden="true" />
+              </div>
+            )}
+            {waitUntil > 0 && waitLeft === 0 && (
+              <p className="small" role="status">
+                Đã có thể nộp bài.
+              </p>
+            )}
             <div className={styles.dialogActions}>
               <button type="button" className="btn" onClick={() => setConfirming(false)} disabled={submitting}>
                 Làm tiếp
               </button>
-              <button type="button" className="btn btn-primary" onClick={submit} disabled={submitting} autoFocus>
-                {submitting ? 'Đang chấm…' : 'Nộp bài'}
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={submit}
+                disabled={submitting || waitLeft > 0}
+                autoFocus
+              >
+                {submitting ? 'Đang chấm…' : waitLeft > 0 ? `Nộp bài (${formatClock(waitLeft)})` : 'Nộp bài'}
               </button>
             </div>
           </div>
