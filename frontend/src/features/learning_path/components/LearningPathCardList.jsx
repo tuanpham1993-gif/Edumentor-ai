@@ -21,7 +21,7 @@ const STATUS_CONFIG = {
   },
 };
 
-export default function LearningPathCard({ learningPath }) {
+export default function LearningPathCard({ learningPath, index = 0 }) {
   const navigate = useNavigate();
   //console.log(learningPath)
   const {record_id, original_query, goal_type} = learningPath;
@@ -35,12 +35,12 @@ export default function LearningPathCard({ learningPath }) {
   }
 
   return (
-    <article className={styles.cardLearningPath}>
+    <article className={styles.cardLearningPath} style={{ "--i": index }}>
       <div className={styles.cardHeaderLearningPath}>
-        <h2 className={styles.titleLearningPath}>{original_query}</h2>
         <span className={`${styles.statusLearningPath} ${styles[statusInfo.className]}`}>
           {statusInfo.label}
         </span>
+        <h2 className={styles.titleLearningPath} title={original_query}>{original_query}</h2>
       </div>
 
       <p className={styles.goalInfoLearningPath}>
@@ -56,7 +56,7 @@ export default function LearningPathCard({ learningPath }) {
 
       <div className={styles.progressTrackLearningPath}
         role="progressbar"
-        aria-label={`${original_query} progress`}
+        aria-label={`Tiến độ: ${original_query}`}
         aria-valuenow={progressPercentage}
         aria-valuemin={0} aria-valuemax={100}>
         <div className={styles.progressFillLearningPath}
@@ -64,10 +64,10 @@ export default function LearningPathCard({ learningPath }) {
       </div>
 
       <div className={styles.cardFooterLearningPath}>
-        <span>{progressPercentage}% completed</span>
+        <span>Hoàn thành {progressPercentage}%</span>
       </div>
 
-      <button type="button" className={styles.viewButtonLearningPath} 
+      <button type="button" className={`btn btn-primary ${styles.viewButtonLearningPath}`} 
       onClick={handleViewPath}> Xem lộ trình </button>
     </article>
   );

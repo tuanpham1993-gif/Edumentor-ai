@@ -7,7 +7,7 @@ import { getMyLearningPaths } from '../../../api/learningPaths.api';
 
 import styles from '../styles/MyLearningPaths.module.css';
 
-const LIMIT = 10;
+const LIMIT = 15; // 22/11: 3 hàng × 5 thẻ mỗi trang (lưới 5 cột)
 
 const FILTERS = [
   { value: 'all', label: 'Tất cả' },
@@ -180,11 +180,15 @@ export default function MyLearningPathsPage() {
             </nav>
 
             {learningPaths.length > 0 ? (
-              <section className={styles.gridLearningPaths}>
-                {learningPaths.map((path) => (
+              <section
+                className={styles.gridLearningPaths}
+                key={`${activeFilter}-${currentPage}`} /* đổi bộ lọc / trang → thẻ hiện dần lại */
+              >
+                {learningPaths.map((path, index) => (
                   <LearningPathCard
                     key={path.record_id}
                     learningPath={path}
+                    index={index}
                   />
                 ))}
               </section>

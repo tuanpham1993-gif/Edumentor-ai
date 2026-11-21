@@ -98,13 +98,29 @@
 
 /* ---------- Card grid ---------- */
 
+/* Tuấn 22/11 (Hòa yêu cầu): 5 thẻ / hàng, đổi số cột theo màn hình như row-cols-* của Bootstrap
+   (≥1200: 5 · 992–1199: 4 · 768–991: 3 · 576–767: 2 · <576: 1). stretch → thẻ cùng hàng cao bằng nhau. */
 .gridLearningPaths {
     display: grid;
-    grid-template-columns:
-        repeat(auto-fill, minmax(min(100%, 340px), 365px));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 16px;
+}
 
-    align-items: start;
-    gap: 20px;
+@media (max-width: 1199px) {
+    .gridLearningPaths { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 991px) {
+    .gridLearningPaths { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+    .gridLearningPaths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 575px) {
+    .gridLearningPaths { grid-template-columns: 1fr; }
 }
 
 /* ---------- Empty state ---------- */
@@ -225,9 +241,6 @@
         font-size: 12px;
     }
 
-    .gridLearningPaths {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

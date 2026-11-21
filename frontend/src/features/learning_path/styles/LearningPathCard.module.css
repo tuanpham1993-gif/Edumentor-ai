@@ -1,13 +1,15 @@
 
 .cardLearningPath {
+    position: relative; /* cho dải sáng "lướt sóng" */
+    overflow: hidden;
     width: 100%;
-    max-width: 365px;
+    min-width: 0;
 
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 
-    padding: 22px 24px 20px;
+    padding: 18px 16px 16px;
 
     background: var(--card);
     color: var(--text);
@@ -19,21 +21,65 @@
         border-color var(--d-base) var(--e-std),
         transform var(--d-base) var(--e-std),
         box-shadow var(--d-base) var(--e-std);
+
+    /* hiện dần lần lượt (--i = thứ tự thẻ, tối đa 10 bậc). backwards: chỉ tác động lúc chạy → xong trả transform
+       cho hiệu ứng nâng lên khi rê chuột */
+    animation: cardInLearningPath 420ms var(--ease-out, ease-out) backwards;
+    animation-delay: calc(min(var(--i, 0), 10) * 60ms);
 }
 
-.cardLearningPath:hover {
-    border-color: var(--outline);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(var(--shadow-rgb), 0.2);
+.cardLearningPath:hover,
+.cardLearningPath:focus-within {
+    border-color: rgba(245, 165, 36, 0.45);
+    transform: translateY(-15px) scale(1.05);
+    box-shadow:
+        0 22px 44px rgba(var(--shadow-rgb), 0.45),
+        0 0 0 1px rgba(245, 165, 36, 0.12),
+        0 12px 40px -10px rgba(245, 165, 36, 0.3);
+}
+
+/* "Lướt sóng" khi rê chuột (thử 22/11): dải sáng cam nhạt chạy chéo qua thẻ một lần */
+.cardLearningPath::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+        110deg,
+        transparent 30%,
+        rgba(255, 210, 122, 0.06) 42%,
+        rgba(255, 210, 122, 0.22) 50%,
+        rgba(255, 210, 122, 0.06) 58%,
+        transparent 70%
+    );
+    transform: translateX(-120%);
+}
+
+.cardLearningPath:hover::before,
+.cardLearningPath:focus-within::before {
+    animation: waveLearningPath 900ms var(--ease-out, ease-out);
+}
+
+@keyframes waveLearningPath {
+    from { transform: translateX(-120%); }
+    to { transform: translateX(120%); }
+}
+
+@keyframes cardInLearningPath {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
 }
 
 /* ---------- Header ---------- */
 
 .cardHeaderLearningPath {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
 }
 
 .titleLearningPath {
@@ -41,11 +87,18 @@
     margin: 0;
 
     color: var(--text);
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
     line-height: 1.4;
 
     overflow-wrap: anywhere;
+
+    /* tối đa 3 dòng, dài hơn → "…" (rê chuột xem đủ qua title); giữ chỗ 3 dòng để các dòng dưới thẳng hàng */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.4em * 3);
 }
 
 /* ---------- Status ---------- */
@@ -140,29 +193,8 @@
     align-items: center;
     justify-content: center;
 
-    margin-top: 2px;
-    padding: 8px 14px;
-
-    border: 1px solid var(--card-border);
-    border-radius: var(--r-md);
-
-    background: transparent;
-    color: var(--text);
-
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background var(--d-fast),
-        border-color var(--d-fast),
-        color var(--d-fast);
-}
-
-.viewButtonLearningPath:hover {
-    background: var(--hover);
-    border-color: var(--outline);
+    margin-top: auto; /* nút luôn ở đáy thẻ → các nút cùng hàng thẳng nhau */
+    /* màu cam, chữ, hover lấy từ class chung `btn btn-primary` (giống nút "Tạo lộ trình mới với AI") — 22/11 */
 }
 
 .viewButtonLearningPath:active {
@@ -171,12 +203,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 480px) {
-    .cardLearningPath {
-        max-width: none;
-        padding: 18px;
-    }
-
+@media (max-width: 575px) {
     .titleLearningPath {
         font-size: 16px;
     }
@@ -187,5 +214,19 @@
     .progressFillLearningPath,
     .viewButtonLearningPath {
         transition: none;
+    }
+
+    .cardLearningPath {
+        animation: none;
+    }
+
+    .cardLearningPath:hover::before,
+    .cardLearningPath:focus-within::before {
+        animation: none;
+    }
+
+    .cardLearningPath:hover,
+    .cardLearningPath:focus-within {
+        transform: none;
     }
 }
