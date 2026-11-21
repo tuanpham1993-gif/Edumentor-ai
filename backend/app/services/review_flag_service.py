@@ -128,7 +128,7 @@ def list_flags(
     total = len(rows)
     rows = rows[(page - 1) * size : page * size]
     users = repo.user_names(db, [a.user_id for a, _, _ in rows])
-    titles = repo.course_titles(db, [a.course_id for a, _, _ in rows])
+    titles = review_service.target_names(db, [a for a, _, _ in rows])  # khóa + kỹ năng (G2d)
     reviewer_ids = [(_essays(a).get(ans.position, {}).get("review") or {}).get("by") for a, ans, _ in rows]
     reviewers = repo.user_names(db, [uid for uid in reviewer_ids if uid is not None])
     return {
@@ -154,8 +154,7 @@ def _item(attempt, answer, reasons, users, titles, reviewers) -> dict:
         "user_id": attempt.user_id,
         "user_name": name,
         "user_email": email,
-        "course_id": attempt.course_id,
-        "course_title": titles.get(attempt.course_id, ""),
+        **review_service.target_fields(None, attempt, titles),
         "submitted_at": attempt.submitted_at,
         "attempt_score": float(attempt.score) if attempt.score is not None else None,
         "attempt_passed": attempt.passed,
@@ -269,7 +268,7 @@ def resolve(
     db.refresh(attempt)
     reasons = reasons_for(attempt, position)
     users = repo.user_names(db, [attempt.user_id, admin.user_id])
-    titles = repo.course_titles(db, [attempt.course_id])
+    titles = review_service.target_names(db, [attempt])
     answer = next(a for a in attempt.answers if a.position == position)
     return {
         "item": _item(attempt, answer, reasons, users, titles, users),

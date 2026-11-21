@@ -196,12 +196,14 @@ def count_in_progress(db: Session, user_id: int) -> int:
     )
 
 
-def list_attempts(db: Session, user_id: int, course_id: int) -> list[ReviewAttempt]:
-    """Mới nhất trước."""
+def list_attempts(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> list[ReviewAttempt]:
+    """Mới nhất trước. Theo khóa, hoặc theo kỹ năng (skill_id — G2d)."""
     return list(
         db.scalars(
             select(ReviewAttempt)
-            .where(ReviewAttempt.user_id == user_id, ReviewAttempt.course_id == course_id)
+            .where(ReviewAttempt.user_id == user_id, _target(course_id, skill_id))
             .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
         )
     )
@@ -302,7 +304,20 @@ def skill_review_history(db: Session, user_id: int, skill_ids) -> list[tuple[int
         )
         .order_by(ReviewAttempt.submitted_at, ReviewAttempt.attempt_id)
     )
-    return [tuple(row) for row in db.execute(stmt).all()]
+    # G2d: lượt ôn THẲNG theo kỹ năng cũng là một lần ôn kỹ năng đó
+    direct = (
+        select(ReviewAttempt.skill_id, ReviewAttempt.submitted_at, ReviewAttempt.passed, ReviewAttempt.score)
+        .where(
+            ReviewAttempt.user_id == user_id,
+            ReviewAttempt.status == "graded",
+            ReviewAttempt.passed.is_not(None),
+            ReviewAttempt.submitted_at.is_not(None),
+            ReviewAttempt.skill_id.in_(ids),
+        )
+        .order_by(ReviewAttempt.submitted_at, ReviewAttempt.attempt_id)
+    )
+    rows = [tuple(r) for r in db.execute(stmt).all()] + [tuple(r) for r in db.execute(direct).all()]
+    return sorted(rows, key=lambda r: r[1])  # cũ trước
 
 
 def known_skill_ids(db: Session, user_id: int, skill_ids=None) -> set[int]:
@@ -362,23 +377,23 @@ def list_history(
     passed: bool | None = None,
     offset: int = 0,
     limit: int = 10,
-) -> tuple[list[tuple[ReviewAttempt, str]], int]:
-    """Các lượt ĐÃ NỘP của người dùng (mới nhất trước) kèm tên khóa + tổng số dòng khớp bộ lọc."""
+) -> tuple[list[ReviewAttempt], int]:
+    """Các lượt ĐÃ NỘP của người dùng (theo khóa và theo kỹ năng, mới nhất trước) + tổng số dòng khớp bộ lọc."""
     conditions = [ReviewAttempt.user_id == user_id, ReviewAttempt.status != "in_progress"]
     if course_id is not None:
         conditions.append(ReviewAttempt.course_id == course_id)
     if passed is not None:
         conditions.append(ReviewAttempt.passed.is_(passed))
     total = db.scalar(select(func.count()).select_from(ReviewAttempt).where(*conditions))
-    rows = db.execute(
-        select(ReviewAttempt, Courses.title)
-        .join(Courses, Courses.course_id == ReviewAttempt.course_id)
+    # G2d: không JOIN courses — lượt theo kỹ năng (course_id NULL) vẫn phải có trong lịch sử; tên do service lấy
+    rows = db.scalars(
+        select(ReviewAttempt)
         .where(*conditions)
         .order_by(ReviewAttempt.submitted_at.desc(), ReviewAttempt.attempt_id.desc())
         .offset(offset)
         .limit(limit)
     ).all()
-    return [(attempt, title) for attempt, title in rows], total
+    return list(rows), total
 
 
 # ─────────────── Quản trị ngân hàng câu hỏi (GĐ7 · 13/11) ───────────────

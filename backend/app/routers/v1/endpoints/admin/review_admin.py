@@ -56,7 +56,7 @@ from app.services import review_admin_service as service
 from app.services import review_bank_service as bank
 from app.services import review_flag_service as flags
 from app.services import review_readiness_service as readiness_service
-from app.services import skill_search_service
+from app.services import review_service, skill_search_service
 
 router = APIRouter()
 
@@ -332,15 +332,17 @@ def resolve_flag(
         raise HTTPException(422, str(err)) from None
     if result["notify_email"]:  # đổi sang Đạt → email kết quả, dùng chung mẫu khi nộp bài (Tuấn chốt 17/11)
         item = result["item"]
+        title, target = review_service.email_target(item)
         background_tasks.add_task(
             send_review_result_email,
             item["user_email"],
             item["user_name"],
-            item["course_title"],
+            title,
             item["attempt_score"],
             item["attempt_passed"],
             result["completed_course"],
             attempt_id,
+            target=target,
         )
     return result
 
@@ -356,4 +358,3 @@ def search_skills(
     db: Session = Depends(get_db),
 ):
     return skill_search_service.search(db, q, limit)
-

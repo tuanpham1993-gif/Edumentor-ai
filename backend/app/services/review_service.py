@@ -209,10 +209,19 @@ def skill_reviews(db: Session, user: Users, skill_ids: list[int]) -> dict:
         return (2, str(last["submitted_at"] or last["started_at"]))
 
     due = review_due_service.due_info(db, user.user_id, wanted)  # 21/11 (Q12): "Đến hạn ôn" theo kỹ năng
+    from app.services import skill_review_service  # import vòng: skill_review_service dùng review_service
+
     items = []
     for skill_id in wanted:
         found = sorted((r["course"] for r in rows if skill_id in r["skill_ids"]), key=order)
-        items.append({"skill_id": skill_id, "courses": found, "due": due.get(skill_id)})
+        items.append(
+            {
+                "skill_id": skill_id,
+                "courses": found,
+                "due": due.get(skill_id),
+                "skill": skill_review_service.direct_review(db, user, skill_id),  # G2d: ôn thẳng theo kỹ năng
+            }
+        )
     return {"items": items}
 
 
@@ -442,12 +451,11 @@ def _owned_attempt(db: Session, user: Users, attempt_id: int, *, lock: bool = Fa
 
 
 def _unfinished_view(db: Session, attempts: list[ReviewAttempt]) -> list[dict]:
-    titles = repo.course_titles(db, [a.course_id for a in attempts])
+    names = target_names(db, attempts)
     return [
         {
             "attempt_id": a.attempt_id,
-            "course_id": a.course_id,
-            "course_title": titles.get(a.course_id, ""),
+            **target_fields(db, a, names),
             "answered": sum(1 for x in a.answers if _is_answered(x)),
             "total": len(a.answers),
             "started_at": a.started_at,
@@ -470,17 +478,36 @@ def _is_answered(a: ReviewAnswer) -> bool:
     return a.selected_index is not None or bool(a.text_answer and a.text_answer.strip())
 
 
-def target_fields(db: Session, attempt: ReviewAttempt) -> dict:
-    """Lượt thuộc khóa nào HOẶC kỹ năng nào (G2c, 22/11): lượt theo kỹ năng có course_id = None, course_title = ""."""
-    course_title = repo.get_course_title(db, attempt.course_id) if attempt.course_id is not None else None
-    skill_name = repo.skill_names(db, [attempt.skill_id]).get(attempt.skill_id) if attempt.skill_id else None
+def target_names(db: Session, attempts: list[ReviewAttempt]) -> tuple[dict[int, str], dict[int, str]]:
+    """(tên khóa theo course_id, tên kỹ năng theo skill_id) cho nhiều lượt — 2 truy vấn."""
+    courses = repo.course_titles(db, [a.course_id for a in attempts if a.course_id is not None])
+    skills = repo.skill_names(db, [a.skill_id for a in attempts if a.skill_id is not None])
+    return courses, skills
+
+
+def target_fields(db: Session, attempt: ReviewAttempt, names=None) -> dict:
+    """Lượt thuộc khóa nào HOẶC kỹ năng nào (G2c/G2d, 22/11): lượt theo kỹ năng có course_id None, course_title ""."""
+    courses, skills = names or target_names(db, [attempt])
     return {
         "course_id": attempt.course_id,
-        "course_title": course_title or "",
+        "course_title": courses.get(attempt.course_id, "") if attempt.course_id is not None else "",
         "skill_id": attempt.skill_id,
-        "skill_name": skill_name,
+        "skill_name": skills.get(attempt.skill_id) if attempt.skill_id is not None else None,
         "path_id": attempt.path_id,
     }
+
+
+def email_target(view: dict) -> tuple[str, str]:
+    """(tên, "khóa học" | "kỹ năng") cho email kết quả, từ kết quả / mục báo lỗi có course_id + course_title + skill_name."""
+    if view.get("course_id") is None:
+        return view.get("skill_name") or "", "kỹ năng"
+    return view.get("course_title") or "", "khóa học"
+
+
+def target_title(db: Session, attempt: ReviewAttempt) -> str:
+    """Tên hiển thị: tên khóa, hoặc tên kỹ năng với lượt theo kỹ năng (thông báo, email)."""
+    fields = target_fields(db, attempt)
+    return fields["course_title"] if attempt.course_id is not None else (fields["skill_name"] or "")
 
 
 def attempt_view(db: Session, attempt_id: int, *, resumed: bool = False) -> dict:
@@ -635,7 +662,14 @@ def complete_if_first_pass(db: Session, user_id: int, attempt: ReviewAttempt) ->
     """Đạt + khóa đang 'ongoing' → khóa Hoàn thành + mọi kỹ năng của khóa "Đã biết" (B1). Không commit.
     Hoàn thành = đạt + khóa đang 'ongoing' (chốt với Khôi, điểm 3 — 12/11). Khóa đã Hoàn thành không bỏ được và
     Khôi giữ nguyên 'completed' khi tham gia lại → không cần kiểm "lần đạt đầu"; bỏ khóa rồi tham gia lại (T9)
-    vẫn Hoàn thành được. Dùng chung cho nộp bài và admin chấm lại (review_flag_service, 17/11)."""
+    vẫn Hoàn thành được. Dùng chung cho nộp bài và admin chấm lại (review_flag_service, 17/11).
+    Lượt theo KỸ NĂNG (G2d, 22/11): đạt → CHỈ kỹ năng đó "Đã biết", không đụng khóa nào; is_first_pass luôn False
+    (cột này = "lượt làm khóa Hoàn thành")."""
+    if attempt.course_id is None:
+        attempt.is_first_pass = False
+        if attempt.passed and attempt.skill_id is not None:
+            user_skill_service.mark_known(db, user_id, [attempt.skill_id], source="review")
+        return False
     enrollment = course_gateway.get_enrollment_status(db, user_id, attempt.course_id)
     first_pass = bool(attempt.passed) and enrollment == course_gateway.IN_PROGRESS
     attempt.is_first_pass = first_pass
@@ -671,11 +705,12 @@ def finish_grading(
             send_review_result_email(
                 user.email,
                 user.full_name,
-                result["course_title"],
+                target_title(session, attempt),
                 result["score"],
                 result["passed"],
                 result["completed_course"],
                 attempt_id,
+                target="khóa học" if attempt.course_id is not None else "kỹ năng",
             )
     except Exception:
         logger.exception("Ôn tập: chấm nền lượt %s lỗi — chờ recover_stuck_grading", attempt_id)
@@ -703,7 +738,7 @@ def recover_stuck_grading(db: Session, user: Users) -> None:
 def _notify_result(db: Session, user: Users, attempt: ReviewAttempt, *, renew: bool = False) -> None:
     """Thông báo trên chuông: kết quả ôn tập; đạt lần đầu thì thêm \"khóa đã hoàn thành\".
     renew=True (admin chấm lại, 17/11): cập nhật thông báo kết quả cũ của lượt này + đặt lại chưa đọc."""
-    title = repo.get_course_title(db, attempt.course_id) or ""
+    title = target_title(db, attempt)
     verdict = "Đạt" if attempt.passed else "Chưa đạt"
     send = notification_service.renotify if renew else notification_service.notify
     send(
@@ -711,7 +746,7 @@ def _notify_result(db: Session, user: Users, attempt: ReviewAttempt, *, renew: b
         user.user_id,
         "review_graded",
         f"Kết quả ôn tập: {float(attempt.score):g}/10 — {verdict}",
-        body=title,
+        body=title if attempt.course_id is not None else f"Kỹ năng: {title}",
         link=f"/review/{attempt.attempt_id}/result",
         source_id=attempt.attempt_id,
     )
@@ -735,8 +770,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
         # Đang chấm (T1): chưa có điểm → chưa trả đáp án / từng câu; frontend hiện "Đang chấm" và hỏi lại sau.
         return {
             "attempt_id": attempt.attempt_id,
-            "course_id": attempt.course_id,
-            "course_title": repo.get_course_title(db, attempt.course_id) or "",
+            **target_fields(db, attempt),
             "status": attempt.status,
             "score": None,
             "passed": None,
@@ -816,8 +850,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
         questions.append(item)
     return {
         "attempt_id": attempt.attempt_id,
-        "course_id": attempt.course_id,
-        "course_title": repo.get_course_title(db, attempt.course_id) or "",
+        **target_fields(db, attempt),
         "status": attempt.status,
         "score": float(attempt.score) if attempt.score is not None else None,
         "passed": attempt.passed,
@@ -825,6 +858,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
         "mcq_score": round(mcq_score, 2),
         "essay_score": round(essay_score, 2),
         "completed_course": attempt.is_first_pass,
+        "skill_known": bool(attempt.passed) and attempt.skill_id is not None,
         "started_at": attempt.started_at,
         "submitted_at": attempt.submitted_at,
         "questions": questions,
@@ -847,11 +881,9 @@ def history_list(
     rows, total = repo.list_history(
         db, user.user_id, course_id=course_id, passed=passed, offset=(page - 1) * size, limit=size
     )
+    names = target_names(db, rows)
     return {
-        "items": [
-            {**_summary(a), "course_id": a.course_id, "course_title": title, "completed_course": a.is_first_pass}
-            for a, title in rows
-        ],
+        "items": [{**_summary(a), **target_fields(db, a, names), "completed_course": a.is_first_pass} for a in rows],
         "total": total,
         "page": page,
         "size": size,
@@ -877,6 +909,7 @@ def attempt_trace(db: Session, attempt_id: int) -> dict:
         "attempt_id": attempt.attempt_id,
         "user_id": attempt.user_id,
         "course_id": attempt.course_id,
+        "skill_id": attempt.skill_id,
         "status": attempt.status,
         "score": float(attempt.score) if attempt.score is not None else None,
         "started_at": attempt.started_at,

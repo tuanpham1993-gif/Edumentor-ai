@@ -214,8 +214,10 @@ class FlagItemOut(BaseModel):
     user_id: int
     user_name: str
     user_email: str
-    course_id: int
+    course_id: int | None  # None = lượt ôn theo kỹ năng (G2d, 22/11)
     course_title: str
+    skill_id: int | None = None
+    skill_name: str | None = None
     submitted_at: datetime | None
     attempt_score: float | None
     attempt_passed: bool | None

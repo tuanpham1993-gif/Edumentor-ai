@@ -1,7 +1,9 @@
 """Ôn tập theo KỸ NĂNG — mở từ node lộ trình (module 09 · Tuấn · G2c, 22/11/2026 — docs/guide.md mục 1, 3).
 
     skill_readiness(db, skill_id)                    → kỹ năng nào trong nhóm tên trùng giữ ngân hàng câu, đủ đề chưa
-    start_skill_attempt(db, user, skill_id, path_id) → có lượt dở cùng kỹ năng → trả lại; không → ráp đề mới
+    skill_review_info   GET  /skills/{id}/review               — thông tin + lý do chưa thể ôn (G2d)
+    start_skill_attempt POST /skills/{id}/review-attempts?path= — có lượt dở cùng kỹ năng → trả lại; không → ráp đề
+    direct_review(db, user, skill_id)                → phần "ôn thẳng theo kỹ năng" của huy hiệu trên node lộ trình
 
 Đề 15 câu CÙNG MỘT kỹ năng, cùng khung với ôn theo khóa (exam_builder.plan_exam với 1 kỹ năng): 6 nhận biết +
 6 thông hiểu + 2 tự luận dễ + 1 nâng cao. Làm bài / lưu / nộp / chấm / kết quả dùng lại review_service.
@@ -78,6 +80,51 @@ def skill_readiness(db: Session, skill_id: int) -> Readiness:
     except exam_builder.NotEnoughQuestionsError:
         ready = False
     return Readiness(skill_id, name, bank_id, available, ready)
+
+
+def _blocked(code: str) -> dict:
+    message = NO_SKILL_BANK if code == "no_question_bank" else core.block_message(code)
+    return {"code": code, "message": message}
+
+
+def skill_review_info(db: Session, user: Users, skill_id: int) -> dict:
+    info = skill_readiness(db, skill_id)
+    core.recover_stuck_grading(db, user)
+    in_progress = repo.get_in_progress(db, user.user_id, skill_id=skill_id)
+    block, unfinished = None, []
+    if in_progress is None:
+        unfinished = repo.list_in_progress(db, user.user_id)
+        if len(unfinished) >= settings.REVIEW_MAX_UNFINISHED:
+            block = "too_many_unfinished"
+        elif not info.ready:
+            block = "no_question_bank"
+    return {
+        "skill_id": skill_id,
+        "skill": info.skill,
+        "structure": core._structure(),
+        "pass_score": settings.REVIEW_PASS_SCORE,
+        "can_start": block is None,
+        "blocked": _blocked(block) if block else None,
+        "in_progress_attempt_id": in_progress.attempt_id if in_progress else None,
+        "unfinished_attempts": core._unfinished_view(db, unfinished) if block == "too_many_unfinished" else [],
+        "attempts": [core._summary(a) for a in repo.list_attempts(db, user.user_id, skill_id=skill_id)],
+    }
+
+
+def direct_review(db: Session, user: Users, skill_id: int) -> dict | None:
+    """{ready, in_progress_attempt_id, last_attempt} — None nếu kỹ năng không tồn tại / ngừng dùng."""
+    try:
+        info = skill_readiness(db, skill_id)
+    except SkillNotFoundError:
+        return None
+    attempts = repo.list_attempts(db, user.user_id, skill_id=skill_id)  # mới nhất trước
+    in_progress = next((a for a in attempts if a.status == "in_progress"), None)
+    last = next((a for a in attempts if a.status in ("graded", "grading")), None)
+    return {
+        "ready": info.ready,
+        "in_progress_attempt_id": in_progress.attempt_id if in_progress else None,
+        "last_attempt": core._summary(last) if last else None,
+    }
 
 
 def start_skill_attempt(

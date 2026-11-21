@@ -140,3 +140,102 @@ def test_next_attempt_avoids_questions_of_the_previous_one_when_possible(world):
     mcq_prev = {q for q in prev if db.get(ReviewQuestion, q).type == "mcq"}
     # mỗi mức TN có 8 câu, đề cần 6, lượt trước đã dùng 6 → chỉ còn 2 câu mới → buộc lặp 4 / mức = 8 (tối thiểu)
     assert len(ids & mcq_prev) == 8
+
+
+# ─────────────── G2d · API + trọn luồng ───────────────
+
+STUDENT = "student.test@edumentor.vn"
+
+
+@pytest.fixture()
+def api_world(world, student_headers):
+    db = world["db"]
+    student = db.query(Users).filter_by(email=STUDENT).one()
+    path = LearningPath(student_id=student.user_id, original_query="python", goal_type="career", status="ongoing")
+    db.add(path)
+    db.flush()
+    db.add(LearningPathNode(path_id=path.record_id, skill_id=NODE_SKILL, is_target=True, added_by="system",
+                            is_required=True, display_order=1))  # fmt: skip
+    db.commit()
+    return {**world, "student": student, "student_path": path.record_id}
+
+
+def _answer_all_mcq_correctly(db, attempt_id):
+    from app.models import ReviewAnswer
+
+    for a in db.query(ReviewAnswer).filter_by(attempt_id=attempt_id):
+        if a.question.type == "mcq":
+            a.selected_index = a.option_order.index(a.question.correct_index)
+    db.commit()
+
+
+def test_api_info_start_submit_result_history(client, api_world, student_headers):
+    db, path = api_world["db"], api_world["student_path"]
+    info = client.get(f"/api/skills/{NODE_SKILL}/review", headers=student_headers).json()
+    assert info["can_start"] is True and info["skill"] == "Python Programming" and info["attempts"] == []
+
+    started = client.post(f"/api/skills/{NODE_SKILL}/review-attempts", params={"path": path}, headers=student_headers)
+    assert started.status_code == 200, started.text
+    body = started.json()
+    assert body["course_id"] is None and body["skill_id"] == NODE_SKILL and body["path_id"] == path
+    assert body["skill_name"] == "Python Programming" and body["total_questions"] == 15
+    attempt_id = body["attempt_id"]
+    assert client.get(f"/api/review-attempts/{attempt_id}", headers=student_headers).status_code == 200
+
+    _answer_all_mcq_correctly(db, attempt_id)  # 12 × 0,5 = 6,0 = ngưỡng đạt
+    result = client.post(f"/api/review-attempts/{attempt_id}/submit", headers=student_headers)
+    assert result.status_code == 200, result.text
+    result = result.json()
+    assert result["passed"] is True and result["skill_known"] is True and result["completed_course"] is False
+    assert result["course_id"] is None and result["skill_name"] == "Python Programming"
+
+    # chỉ kỹ năng của node thành "Đã biết" (không đụng khóa, không đụng kỹ năng giữ ngân hàng)
+    from app.models import Notification, UserSkill
+
+    known = {s.skill_id for s in db.query(UserSkill).filter_by(user_id=api_world["student"].user_id)}
+    assert known == {NODE_SKILL}
+    note = db.query(Notification).filter_by(user_id=api_world["student"].user_id, type="review_graded").one()
+    assert note.body == "Kỹ năng: Python Programming"
+
+    history = client.get("/api/me/review-history", headers=student_headers).json()
+    assert history["total"] == 1 and history["items"][0]["skill_id"] == NODE_SKILL
+    assert history["items"][0]["course_id"] is None
+    detail = client.get(f"/api/me/review-history/{attempt_id}", headers=student_headers)
+    assert detail.status_code == 200 and detail.json()["skill_known"] is True
+
+    info = client.get(f"/api/skills/{NODE_SKILL}/review", headers=student_headers).json()
+    assert [a["attempt_id"] for a in info["attempts"]] == [attempt_id]
+
+    # huy hiệu trên node: phần "ôn thẳng theo kỹ năng" + "Đến hạn ôn" tính cả lượt theo kỹ năng
+    badge = client.get("/api/me/review/skills", params={"skill_ids": str(NODE_SKILL)}, headers=student_headers).json()
+    item = badge["items"][0]
+    assert item["skill"]["ready"] is True and item["skill"]["last_attempt"]["attempt_id"] == attempt_id
+    assert item["due"] is not None and item["due"]["last_passed"] is True
+
+
+def test_api_errors(client, api_world, student_headers):
+    url = "/api/skills/{}/review-attempts"
+    assert client.post(url.format(NODE_SKILL)).status_code == 401
+    assert client.get("/api/skills/9999/review", headers=student_headers).status_code == 404
+    assert client.post(url.format(9999), headers=student_headers).status_code == 404
+    other_path = client.post(url.format(NODE_SKILL), params={"path": api_world["path"]}, headers=student_headers)
+    assert other_path.status_code == 404  # lộ trình của người khác
+    empty = client.post(url.format(EMPTY_SKILL), headers=student_headers)
+    assert empty.status_code == 409 and empty.json()["detail"] == "Chưa có đề ôn tập cho kỹ năng này."
+    info = client.get(f"/api/skills/{EMPTY_SKILL}/review", headers=student_headers).json()
+    assert info["can_start"] is False and info["blocked"]["code"] == "no_question_bank"
+
+
+def test_other_user_cannot_open_skill_attempt(client, api_world, student_headers):
+    view = start(api_world, user=api_world["other"])
+    assert client.get(f"/api/review-attempts/{view['attempt_id']}", headers=student_headers).status_code == 404
+
+
+def test_failed_skill_attempt_does_not_mark_known(api_world):
+    from app.models import UserSkill
+
+    db = api_world["db"]
+    view = start(api_world)
+    review_service.submit_attempt(db, api_world["user"], view["attempt_id"], ai=MockAI())  # bỏ trống → 0 điểm
+    assert db.get(ReviewAttempt, view["attempt_id"]).passed is False
+    assert db.query(UserSkill).filter_by(user_id=api_world["user"].user_id).count() == 0
