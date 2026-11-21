@@ -16,7 +16,7 @@ import threading
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -96,7 +96,9 @@ def _reminders(db: Session, user_id: int, due: dict[int, dict]) -> list[ReviewDu
 
 
 def _last(db: Session, user_id: int, column) -> datetime | None:
-    value = db.scalar(select(column).where(ReviewDueReminder.user_id == user_id).order_by(column.desc()).limit(1))
+    # MAX bỏ qua NULL trên mọi CSDL. (ORDER BY … DESC LIMIT 1 trên PostgreSQL đưa NULL lên ĐẦU → trả None dù đã
+    # từng nhắc → mất giới hạn 24 giờ / 1 tuần; SQLite xếp NULL cuối nên test không bắt được — sửa 21/11.)
+    value = db.scalar(select(func.max(column)).where(ReviewDueReminder.user_id == user_id))
     return _aware(value) if value is not None else None
 
 
