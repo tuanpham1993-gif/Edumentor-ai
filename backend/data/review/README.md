@@ -1,6 +1,6 @@
 # Ngân hàng câu hỏi ôn tập — quy ước soạn (module 09 · Tuấn · 10/11/2026)
 
-Mỗi khóa một file `course_<course_id>.json`. Nạp vào DB: `python -m scripts.seed_review --file data/review/course_<id>.json`
+Mỗi khóa một file `course_<course_id>.json`. Nạp vào DB: `python -m app.core.seed_data.seed_review --file data/review/course_<id>.json`
 (trong thư mục `backend`). Script **kiểm tra trước, ghi sau** — sai ở đâu in hết lỗi, không ghi gì.
 
 ## Các khóa đã có ngân hàng
@@ -11,11 +11,16 @@ Mỗi khóa một file `course_<course_id>.json`. Nạp vào DB: `python -m scri
 | `course_1855_en.json` | 1855 Programming for Everybody (Getting Started with Python) — 20/11/2026 | 3 kỹ năng mới (Computer Programming, Python Syntax And Semantics, Basic Programming Language) · 60 câu · 9 đoạn tri thức; kỹ năng Python Programming dùng chung câu của khóa 312 |
 | `course_743_en.json` | 743 Practice Exam for Certified Scrum Master (CSM) Certification — 20/11/2026 | 5 kỹ năng (agile, Scrum Master, CSM, Scrum Alliance, Certification) · 100 câu · 15 đoạn tri thức. Theo Scrum Guide 2020 + Agile Manifesto; số liệu kỳ thi CSM (50 câu, 60 phút, 37/50, 2 lần thi trong 90 ngày, khóa 16 giờ, gia hạn 2 năm = 20 SEU + 100 USD) đối chiếu scrumalliance.org ngày 20/11/2026 — **kiểm tra lại khi Scrum Alliance đổi quy định** |
 
-Sau khi pull, mỗi máy tự nạp (chỉ thêm câu chưa có, không đụng khóa khác):
+**Tự nạp khi khởi tạo database (21/11/2026):** backend khởi động mà bảng `review_questions` còn **trống** (vd Docker
+lần đầu, database mới) → tự nạp mọi `course_*_en.json` ở thư mục này rồi tính embedding ở luồng nền
+(`app/core/seed_data/review_autoseed.py`, gọi trong `init_db()` sau `seed_data()` của Hòa). Đã có đề → bỏ qua.
+Script nạp tay nằm ở `backend/app/core/seed_data/` (chuyển từ `backend/scripts/` ngày 21/11).
+
+Database **đã có đề** mà muốn thêm khóa mới / cập nhật → chạy tay (chỉ thêm câu chưa có, không đụng khóa khác):
 ```
-python -m scripts.seed_review --file data/review/course_1855_en.json --apply-changes   # --apply-changes: máy đã nạp 1855 trước 20/11 tối (cập nhật 4 từ khóa)
-python -m scripts.seed_review --file data/review/course_743_en.json
-python -m scripts.build_embeddings
+python -m app.core.seed_data.seed_review --file data/review/course_1855_en.json --apply-changes   # --apply-changes: máy đã nạp 1855 trước 20/11 tối (cập nhật 4 từ khóa)
+python -m app.core.seed_data.seed_review --file data/review/course_743_en.json
+python -m app.core.seed_data.build_embeddings
 ```
 Kiểm tra từ khóa khi soạn: cụm từ khóa bị bộ chấm bỏ từ đệm (`keyword_grader_en._kw("which line")` → `('line',)`) —
 chọn cụm còn ≥ 2 từ có nghĩa, tránh từ khóa 1 chữ chung chung ("line", "for", "0", "back").
@@ -25,11 +30,11 @@ chọn cụm còn ≥ 2 từ có nghĩa, tránh từ khóa 1 chữ chung chung (
 - File đang dùng: **`course_312_en.json`** (dịch từ `course_312.json`, giữ nguyên đáp án, mức, đoạn tri thức, điểm từng ý).
   `course_312.json` (tiếng Việt) giữ lại làm lịch sử — **không nạp mới**; từ 21/11/2026 nằm ở
   `archive/course_312.json` (dùng cho lệnh `--retire`, test bộ chấm tiếng Việt và `scripts/review_grader_holdout.py`).
-  `python -m scripts.seed_review` không kèm `--file` giờ nạp `course_312_en.json`.
+  `python -m app.core.seed_data.seed_review` không kèm `--file` giờ nạp `course_312_en.json`.
 - Chuyển DB sang tiếng Anh (một giao dịch: nạp bản tiếng Anh + tắt câu tiếng Việt + xóa đoạn tri thức tiếng Việt):
   ```
-  python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/archive/course_312.json
-  python -m scripts.build_embeddings
+  python -m app.core.seed_data.seed_review --file data/review/course_312_en.json --retire data/review/archive/course_312.json
+  python -m app.core.seed_data.build_embeddings
   ```
 - **Mã mới theo QT9** (bỏ tiền tố khóa): `PY-TN-01`, `PY-TL-01`, `PY-K01` — không trùng mã tiếng Việt `312-PY-TN-01`.
 - **Nội dung tiếng Anh**; từ khóa chấm tiếng Anh (`keyword_grader_en.py`, chọn tự động theo ngôn ngữ ở `keyword_grading.py`):

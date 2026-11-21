@@ -1,4 +1,4 @@
-"""Test script tạo học viên mẫu scripts/seed_students.py (13/11/2026).
+"""Test script tạo học viên mẫu app/core/seed_data/seed_students.py (13/11/2026).
 
 Chạy:  python -m pytest tests/test_seed_students.py -v      (trong thư mục backend)
 """
@@ -7,7 +7,7 @@ import pytest
 
 from app.core.security import verify_password
 from app.models.user import Users
-from scripts import seed_students as script
+from app.core.seed_data import seed_students as script
 
 PASSWORD = "HocVien@123"
 

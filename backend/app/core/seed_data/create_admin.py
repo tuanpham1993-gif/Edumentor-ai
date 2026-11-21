@@ -3,7 +3,7 @@
 Đăng ký qua API luôn tạo student (FR-40) → admin chỉ tạo bằng script này, chạy trên máy server.
 
 Chạy (trong thư mục backend):
-    python -m scripts.create_admin --email admin@edumentor.vn --full-name "Quản trị viên"
+    python -m app.core.seed_data.create_admin --email admin@edumentor.vn --full-name "Quản trị viên"
 Mật khẩu được hỏi bằng getpass (không hiện khi gõ, không lưu vào lịch sử lệnh).
 """
 

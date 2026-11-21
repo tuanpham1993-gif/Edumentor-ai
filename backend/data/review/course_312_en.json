@@ -1,7 +1,7 @@
 {
   "course_id": 312,
   "course_title": "Python Basics: Selection and Iteration",
-  "note": "English bank (D1, 13/11/2026): translated from course_312.json (Vietnamese, now retired). 5 skills x 20 questions = 100 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays); 30 essays = 18 easy + 12 advanced. Codes follow QT9 (no course prefix). Load with: python -m scripts.seed_review --file data/review/course_312_en.json",
+  "note": "English bank (D1, 13/11/2026): translated from course_312.json (Vietnamese, now retired). 5 skills x 20 questions = 100 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays); 30 essays = 18 easy + 12 advanced. Codes follow QT9 (no course prefix). Load with: python -m app.core.seed_data.seed_review --file data/review/course_312_en.json",
   "skills": {
     "PY": 167,
     "CS": 170,

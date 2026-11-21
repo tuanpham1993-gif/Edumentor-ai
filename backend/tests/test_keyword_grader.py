@@ -10,7 +10,7 @@ import pytest
 
 from app.ai.review.keyword_grader import fold, grade_essay, normalize, split_sentences
 from app.ai.review.validator import grading_errors
-from scripts import seed_review
+from app.core.seed_data import seed_review
 
 BANK = seed_review.load_bank(seed_review.VI_ARCHIVE_FILE)  # bộ chấm tiếng Việt → test trên bản tiếng Việt
 

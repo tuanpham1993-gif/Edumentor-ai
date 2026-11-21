@@ -6,9 +6,9 @@ Domain example.com là domain dành riêng cho ví dụ (RFC 2606) → không ph
 hệ thống có lỡ gửi mail cũng không tới ai.
 
 Chạy (trong thư mục backend):
-    python -m scripts.seed_students                         # 1.500 học viên, mật khẩu demo mặc định
-    python -m scripts.seed_students --count 200             # số lượng khác
-    python -m scripts.seed_students --csv data/students.csv # xuất danh sách email + họ tên ra CSV
+    python -m app.core.seed_data.seed_students                         # 1.500 học viên, mật khẩu demo mặc định
+    python -m app.core.seed_data.seed_students --count 200             # số lượng khác
+    python -m app.core.seed_data.seed_students --csv data/students.csv # xuất danh sách email + họ tên ra CSV
 
 Đặc điểm:
 - Chạy lại nhiều lần an toàn (idempotent): email đã có thì bỏ qua, không tạo trùng.

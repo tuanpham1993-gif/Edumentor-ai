@@ -86,7 +86,7 @@ Cây thư mục chi tiết của backend và frontend, ánh xạ endpoint → fi
 
 ## Công nghệ (giả định)
 
-- **Backend:** Python, FastAPI, SQLAlchemy, Alembic
+- **Backend:** Python, FastAPI, SQLAlchemy (bảng tạo bằng `create_all` khi khởi động; Alembic: kế hoạch sau)
 - **CSDL:** PostgreSQL
 - **Frontend:** React 18, Vite 6.4.5, react-router-dom 6, CSS Modules, Axios (D-FE-09)
 - **AI:** mô hình ngôn ngữ lớn qua API
@@ -95,14 +95,40 @@ Cây thư mục chi tiết của backend và frontend, ánh xạ endpoint → fi
 
 ```bash
 git clone <repo-url> edumentor-ai && cd edumentor-ai
-cp .env.example .env
-docker compose up -d db
+cp .env.example .env        # rồi điền giá trị thật (khóa AI, SMTP, SECRET_KEY…) — xem SETUP.md
+```
+
+> `.env` phải có `ALLOWED_ORIGINS` (bắt buộc), vd `ALLOWED_ORIGINS=["http://localhost:5173","http://localhost:8088"]`.
+
+**Cách 1 — chạy toàn bộ bằng Docker**
+
+```bash
+docker compose up -d --build
+# Frontend: http://localhost:8088   ·   Backend (Swagger): http://localhost:8001/api/docs
+```
+
+**Cách 2 — chạy dev trên máy** (Docker chỉ chạy PostgreSQL + Qdrant)
+
+```bash
+docker compose up -d postgres qdrant
 
 cd backend && pip install -r requirements.txt
-alembic upgrade head && python scripts/seed_data.py
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8000     # Swagger: http://localhost:8000/api/docs
 
-cd ../frontend && npm install && npm run dev
+cd ../frontend && npm install && npm run dev   # http://localhost:5173
+```
+
+**Dữ liệu khởi tạo — tự động khi backend khởi động trên database mới:** tạo bảng, nạp kỹ năng / khóa học /
+lộ trình mẫu (`backend/app/core/seed_data/seed_data_code.py`), nạp ngân hàng đề ôn tập + embedding
+(`review_autoseed.py`, chỉ khi chưa có đề). Không cần chạy migration hay script seed bằng tay.
+
+**Chạy tay khi cần** (trong thư mục `backend`; với Docker thêm `docker compose exec backend` phía trước):
+
+```bash
+python -m app.core.seed_data.create_admin --email <email> --full-name "Quản trị viên"   # tài khoản admin (hỏi mật khẩu)
+python -m app.core.seed_data.seed_students --count 200                                 # học viên mẫu (demo)
+python -m app.core.seed_data.seed_review --file data/review/course_<id>_en.json        # thêm đề vào DB đã có đề
+python -m app.core.seed_data.build_embeddings
 ```
 
 Xem hướng dẫn đầy đủ (gồm `VITE_USE_MOCK` để xem giao diện khi chưa có backend) tại [SETUP.md](SETUP.md).

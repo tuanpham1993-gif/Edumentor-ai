@@ -15,7 +15,7 @@ from app.models import (
     ReviewQuestion,
     Users,
 )
-from scripts import seed_review as script
+from app.core.seed_data import seed_review as script
 from tests.test_seed_review import bank, course_312  # noqa: F401 — fixture
 
 EN = script.load_bank(Path(__file__).parents[1] / "data/review/course_312_en.json")

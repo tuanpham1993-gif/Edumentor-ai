@@ -1,4 +1,4 @@
-"""Test tự động: script tạo admin scripts/create_admin.py (module 01 · Tuấn · GĐ8, 07/11/2026).
+"""Test tự động: script tạo admin app/core/seed_data/create_admin.py (module 01 · Tuấn · GĐ8, 07/11/2026).
 
 Chạy:  python -m pytest tests/test_create_admin.py -v      (trong thư mục backend)
 
@@ -14,7 +14,7 @@ from pydantic import ValidationError
 
 from app.models.user import Users
 from app.services import auth_service
-from scripts import create_admin as script
+from app.core.seed_data import create_admin as script
 
 EMAIL = "admin@edumentor.vn"
 PASSWORD = "Admin!123"

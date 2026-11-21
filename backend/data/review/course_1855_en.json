@@ -1,7 +1,7 @@
 {
   "course_id": 1855,
   "course_title": "Programming for Everybody (Getting Started with Python)",
-  "note": "English bank (20/11/2026, drafted by Claude, reviewed by Tuấn): 3 new skills x 20 questions = 60 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 9 knowledge chunks. Python Programming (skill 167) reuses the course 312 bank. Topics follow Python for Everybody ch. 1-5 and avoid repeating course 312 questions. Load with: python -m scripts.seed_review --file data/review/course_1855_en.json",
+  "note": "English bank (20/11/2026, drafted by Claude, reviewed by Tuấn): 3 new skills x 20 questions = 60 (each skill: 14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 9 knowledge chunks. Python Programming (skill 167) reuses the course 312 bank. Topics follow Python for Everybody ch. 1-5 and avoid repeating course 312 questions. Load with: python -m app.core.seed_data.seed_review --file data/review/course_1855_en.json",
   "skills": {
     "CPROG": 26,
     "SYN": 169,

@@ -1,8 +1,8 @@
 """Tính vector embedding cho đoạn tri thức ôn tập — chạy TAY trên máy (module 09 · Tuấn · GĐ2, 09/11/2026).
 
 Chạy (trong thư mục backend):
-    python -m scripts.build_embeddings          # chỉ các đoạn CHƯA có vector (sau khi seed thêm / sửa đoạn)
-    python -m scripts.build_embeddings --all    # tính lại TẤT CẢ (sau khi đổi REVIEW_EMBEDDING_MODEL)
+    python -m app.core.seed_data.build_embeddings          # chỉ các đoạn CHƯA có vector (sau khi seed thêm / sửa đoạn)
+    python -m app.core.seed_data.build_embeddings --all    # tính lại TẤT CẢ (sau khi đổi REVIEW_EMBEDDING_MODEL)
 
 - Mô hình: settings.REVIEW_EMBEDDING_MODEL (đa ngôn ngữ — tài liệu viết tiếng Việt). Lần đầu tự tải
   về máy (~470 MB, lưu cache Hugging Face); những lần sau và lúc server chạy dùng bản đã tải.

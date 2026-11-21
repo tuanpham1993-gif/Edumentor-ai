@@ -1,11 +1,11 @@
 """Nạp ngân hàng câu hỏi + tài liệu tri thức ôn tập từ file JSON (module 09 · Tuấn · GĐ1, 09/11/2026).
 
 Chạy (trong thư mục backend):
-    python -m scripts.seed_review                                   # mặc định data/review/course_312_en.json
-    python -m scripts.seed_review --file data/review/course_37.json
-    python -m scripts.seed_review --apply-changes                   # áp thay đổi của file vào câu ĐÃ có
+    python -m app.core.seed_data.seed_review                                   # mặc định data/review/course_312_en.json
+    python -m app.core.seed_data.seed_review --file data/review/course_37.json
+    python -m app.core.seed_data.seed_review --apply-changes                   # áp thay đổi của file vào câu ĐÃ có
     # Chuyển sang ngân hàng tiếng Anh (D1, 13/11) — nạp bản tiếng Anh + ngừng dùng bản tiếng Việt, cùng 1 giao dịch:
-    python -m scripts.seed_review --file data/review/course_312_en.json --retire data/review/archive/course_312.json
+    python -m app.core.seed_data.seed_review --file data/review/course_312_en.json --retire data/review/archive/course_312.json
 
 - KIỂM TRA TRƯỚC, GHI SAU: dữ liệu sai ở đâu → in TẤT CẢ lỗi, không ghi gì vào DB.
 - QT4 (chốt 12/11): DATABASE là nơi lưu chính (admin sửa trên trang quản trị). Seed mặc định CHỈ THÊM câu chưa có
@@ -35,10 +35,12 @@ from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_question import ReviewQuestion
 from app.services import review_bank_service
 
-DEFAULT_FILE = Path(__file__).resolve().parents[1] / "data" / "review" / "course_312_en.json"
+# 21/11: file chuyển từ backend/scripts/ vào app/core/seed_data/ (Hòa đề nghị) → backend/ là parents[3]
+BACKEND_DIR = Path(__file__).resolve().parents[3]
+DEFAULT_FILE = BACKEND_DIR / "data" / "review" / "course_312_en.json"
 # Bản tiếng Việt khóa 312 (ngừng nạp từ 14/11): lưu trữ cho lệnh --retire, test bộ chấm tiếng Việt và
 # scripts/review_grader_holdout.py — dọn 21/11/2026.
-VI_ARCHIVE_FILE = Path(__file__).resolve().parents[1] / "data" / "review" / "archive" / "course_312.json"
+VI_ARCHIVE_FILE = BACKEND_DIR / "data" / "review" / "archive" / "course_312.json"
 
 
 def load_bank(path) -> dict:
@@ -250,7 +252,7 @@ def main() -> int:
     if retired is not None:
         print(
             f"Ngừng dùng {args.retire}: tắt {retired['questions_deactivated']} câu hỏi, "
-            f"xóa {retired['chunks_deleted']} đoạn tri thức. Nhớ chạy: python -m scripts.build_embeddings"
+            f"xóa {retired['chunks_deleted']} đoạn tri thức. Nhớ chạy: python -m app.core.seed_data.build_embeddings"
         )
     return 0
 

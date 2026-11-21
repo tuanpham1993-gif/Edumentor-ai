@@ -23,7 +23,7 @@ from app.models import (
     Users,
 )
 from app.services import course_gateway, review_service
-from scripts import seed_review
+from app.core.seed_data import seed_review
 
 BANK = seed_review.load_bank(seed_review.VI_ARCHIVE_FILE)  # bản tiếng Việt (lưu trữ 21/11) — 10 file test dùng chung
 SKILL_IDS = sorted(BANK["skills"].values())

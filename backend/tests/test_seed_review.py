@@ -10,7 +10,7 @@ from collections import Counter
 import pytest
 
 from app.models import Courses, CourseSkill, KnowledgeChunk, ReviewQuestion, Skills
-from scripts import seed_review as script
+from app.core.seed_data import seed_review as script
 
 BANK = script.load_bank(script.VI_ARCHIVE_FILE)  # dữ liệu mẫu: bản tiếng Việt (mã 312-...) — đã lưu trữ 21/11
 

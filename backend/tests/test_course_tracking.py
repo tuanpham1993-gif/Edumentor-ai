@@ -32,7 +32,7 @@ from app.services import (
     review_service,
     user_skill_service,
 )
-from scripts import seed_review
+from app.core.seed_data import seed_review
 
 REGISTER_URL = "/api/auth/register"
 LOGIN_URL = "/api/auth/login"

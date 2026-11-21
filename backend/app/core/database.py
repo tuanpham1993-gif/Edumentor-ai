@@ -59,6 +59,14 @@ def init_db() -> None:
         print(f"[WARNING] Seed data file not found, skipping seed: {e}")
     except Exception as e:
         print(f"[WARNING] Seed data failed: {e}")
+    # Tuấn 21/11: database mới (vd Docker lần đầu) → tự nạp đề ôn tập + embedding, thay 4 lệnh tay. Chỉ khi bảng
+    # review_questions trống; lỗi chỉ ghi log. Chạy SAU seed_data() vì cần khóa học + kỹ năng.
+    try:
+        from app.core.seed_data import review_autoseed
+
+        review_autoseed.run(SessionLocal)
+    except Exception as e:
+        print(f"[WARNING] Review bank auto-seed failed: {e}")
     index_skills_to_qdrant()
 
 def index_skills_to_qdrant() -> None:

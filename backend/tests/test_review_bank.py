@@ -15,7 +15,7 @@ from app.models import (
 )
 from app.repositories import review_repository as repo
 from app.services import review_bank_service as bank_service
-from scripts import seed_review as script
+from app.core.seed_data import seed_review as script
 from tests.test_seed_review import bank, course_312, question  # noqa: F401 — bank, course_312 là fixture
 
 

@@ -246,6 +246,7 @@ review_answers.rubric_result · review_answers.points (code tính) · review_att
 
 | Ngày | Nội dung |
 |---|---|
+| 21/11/2026 | Theo Hòa: chuyển `seed_review.py`, `build_embeddings.py` (+ `create_admin.py`, `seed_students.py` — chỉ chuyển chỗ, không tự chạy) từ `backend/scripts/` vào `backend/app/core/seed_data/` (giữ nguyên nội dung, không gộp vào `seed_data_code.py`). Thêm `review_autoseed.py`: database mới (Docker lần đầu) tự nạp mọi `course_*_en.json` + embedding, chỉ khi `review_questions` trống. Thử trên database PostgreSQL mới: 260 câu / 39 đoạn tri thức, chạy lại không nạp lần 2 |
 | 21/11/2026 | Làm Q12 "Đến hạn ôn": `review_due_service` (tính hạn 7/30/90, luồng nền nhắc chuông ≤ 1/ngày + email ≤ 1/tuần), bảng `review_due_reminders`, loại thông báo `review_due`, trường `due` trong `/me/review/skills`, chấm cam + dòng nhắc trên huy hiệu; 17 test. Dọn `course_312.json` → `data/review/archive/` |
 | 21/11/2026 | Chốt Q12 "Đến hạn ôn": nhắc giãn dần 7 → 30 → 90 ngày, theo kỹ năng, chỉ kỹ năng Đã biết đã từng ôn đạt, không hạ trạng thái, nhắc trên huy hiệu + chuông + email (mỗi ngày gom một lần); làm sau 25/11 |
 | 20/11/2026 (tối) | Làm theo Hòa nhờ (`3d5580e`): màu node theo trạng thái + chú thích, bỏ ✓, tiếng Việt `learning_path`, gắn huy hiệu ôn tập (bước 5). Đồng hồ đếm ngược khi bị chặn nộp (`f279f2c`). Menu "Lộ trình". Ngân hàng đề khóa 1855 (60 câu) và 743 (100 câu) — khóa có người học mới ôn được; ghi hạn chế độ phủ đề + 3 hướng mở rộng vào báo cáo mục 8, 9 (liên quan mục 8 tài liệu này) |

@@ -10,7 +10,7 @@ import pytest
 
 from app.models import ReviewQuestion, ReviewQuestionMeta
 from app.services import review_bank_service as bank_service
-from scripts import seed_review as script
+from app.core.seed_data import seed_review as script
 from tests.test_review_bank import by_code, use_in_attempt
 from tests.test_seed_review import bank, course_312  # noqa: F401 — fixture
 

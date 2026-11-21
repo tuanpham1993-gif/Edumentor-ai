@@ -160,8 +160,8 @@ def _login_headers(client, email, password=TEST_PASSWORD):
 
 @pytest.fixture()
 def admin_headers(client, db_session):
-    """Header Bearer của một tài khoản admin (tạo bằng scripts.create_admin)."""
-    from scripts.create_admin import create_admin
+    """Header Bearer của một tài khoản admin (tạo bằng app.core.seed_data.create_admin)."""
+    from app.core.seed_data.create_admin import create_admin
 
     create_admin(
         db_session, email=ADMIN_EMAIL, full_name="Admin Test", password=TEST_PASSWORD
