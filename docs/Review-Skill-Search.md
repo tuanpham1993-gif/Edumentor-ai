@@ -1,6 +1,6 @@
 # Đề xuất: Tìm kỹ năng theo tên → `skill_id` → câu hỏi ôn tập
 
-> Module 09 (Ôn tập) · phụ trách: Tuấn · lập 17/11/2026 · trạng thái: **đề xuất, chưa code**
+> Module 09 (Ôn tập) · phụ trách: Tuấn · lập 17/11/2026 · trạng thái: **đã làm bản 1 (21/11/2026, nhánh `tuan/skill-search`)** — kết quả đo ở mục 7.1
 
 ## 1. Bối cảnh
 
@@ -107,6 +107,24 @@ Bộ test cố định khoảng **40 truy vấn** có đáp án `skill_id` đún
 
 **Mục tiêu bản 1:** Hit@5 ≥ 95%, Hit@1 ≥ 85%, không có `confident` sai, dưới 50 ms mỗi truy vấn.
 
+### 7.1 Kết quả bản 1 (21/11/2026, DB thật: 5.893 kỹ năng)
+
+Bộ 42 truy vấn: 37 có đáp án (tiếng Anh 19, tiếng Việt 10, viết tắt 3, sai chính tả 4, mô tả 1) + 5 không có kỹ năng
+tương ứng ("nấu ăn món Huế", "xyzabc"…). Nhóm tên trùng tính là đúng.
+
+| Cấu hình | Hit@1 | Hit@5 | Chắc chắn mà sai | 5 câu không có kỹ năng: không tự chọn | Thời gian TB |
+|---|---|---|---|---|---|
+| Chỉ vector (cách thử 17/11) | 68% | 73% | 0 | 5/5 | 24 ms |
+| Chỉ BM25 | 70% | 70% | 0 | 5/5 | 4 ms |
+| **Hybrid (exact + BM25 + vector, RRF)** | **86%** | **92%** | **0** | **5/5** | **22 ms** |
+
+- Đạt mục tiêu Hit@1 ≥ 85%, không có "chắc chắn mà sai", < 50 ms. **Chưa đạt Hit@5 ≥ 95%**: trượt 3 truy vấn
+  viết tắt / thuật ngữ tiếng Việt — `js`, `ml`, `học máy` (mô hình nhỏ không hiểu; BM25 không có token khớp).
+- Vector bỏ lỡ từ ngắn (`java`, `git`, `ai`) và lỗi gõ; BM25 bỏ lỡ toàn bộ tiếng Việt → hybrid bù cho nhau.
+- Thêm so với đề xuất: sửa lỗi gõ trong khối 3 (`difflib`, ngưỡng 0,8): `pyhton` → python, `javscript` → javascript.
+- Hướng tiếp: từ điển viết tắt nhỏ (js, ml, ai, k8s…) và thuật ngữ tiếng Việt phổ biến (học máy, trí tuệ nhân tạo);
+  đo lại trên bộ truy vấn **mới** (không chỉnh theo bộ này để tránh "học vẹt" bộ test).
+
 ## 8. Kế hoạch
 
 | Bước | Việc | Ước lượng |
@@ -126,4 +144,5 @@ Bộ test cố định khoảng **40 truy vấn** có đáp án `skill_id` đún
 
 | Ngày | Nội dung |
 |---|---|
+| 21/11/2026 | Làm bản 1 trên nhánh `tuan/skill-search`: `bm25.py`, `pipeline/skill_search.py` (khối 0–8 + sửa lỗi gõ), `skill_search_service.py` (cache vector `data/cache/skill_name_vectors.npz`, tự tính ở nền khi khởi động), `GET /api/admin/review/skills/search`, ô "Tìm kỹ năng" trên trang Ngân hàng câu hỏi, 14 test. Đo: hybrid Hit@1 86%, Hit@5 92%, 0 chắc chắn sai, 22 ms |
 | 17/11/2026 | Lập đề xuất. Thử nghiệm tìm bằng vector trên 5.893 tên kỹ năng: tốt với tên đầy đủ và tiếng Việt, sai với từ ngắn ("java", "if else") → chọn hybrid exact + BM25 + vector (RRF) |

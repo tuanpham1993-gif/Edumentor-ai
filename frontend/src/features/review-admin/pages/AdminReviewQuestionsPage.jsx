@@ -12,6 +12,7 @@ import { parseApiError } from '../../../utils/errors.js';
 import QuestionEditor, { blankQuestion } from '../components/QuestionEditor.jsx';
 import QuestionRow from '../components/QuestionRow.jsx';
 import ReadinessPanel from '../components/ReadinessPanel.jsx';
+import SkillSearchBox from '../components/SkillSearchBox.jsx';
 import { LEVEL_FILTERS, STATUS_FILTERS, TYPE_FILTERS } from '../reviewAdminFormat.js';
 import styles from '../styles/AdminReviewQuestions.module.css';
 
@@ -42,6 +43,8 @@ export default function AdminReviewQuestionsPage() {
   const [notice, setNotice] = useState('');
   const [newQuestion, setNewQuestion] = useState(null); // P3: câu trống đang soạn trong form "Thêm câu hỏi"
   const [reloadKey, setReloadKey] = useState(0); // tăng → tải lại bảng (sau khi thêm câu)
+  // G1 (21/11): kỹ năng chọn từ ô "Tìm kỹ năng" — lọc / thêm câu không cần chọn khóa trước
+  const [pickedSkill, setPickedSkill] = useState(null);
 
   const loadCounts = useCallback(async () => {
     try {
@@ -116,6 +119,7 @@ export default function AdminReviewQuestionsPage() {
   }, [search]);
 
   function setFilter(key, value) {
+    if (key === 'course') setPickedSkill(null);
     setFilters((f) => ({ ...f, [key]: value, ...(key === 'course' ? { skill: '' } : {}) }));
     setPage(1);
     setNotice('');
@@ -133,7 +137,14 @@ export default function AdminReviewQuestionsPage() {
   }
 
   const pages = data ? Math.max(1, Math.ceil(data.total / PAGE_SIZE)) : 1;
-  const skills = courseDetail?.skills || [];
+  const skills = courseDetail?.skills || (pickedSkill ? [pickedSkill] : []);
+
+  function pickSkill(skill) {
+    setPickedSkill(skill);
+    setFilters((f) => ({ ...f, course: '', skill: String(skill.skill_id) }));
+    setPage(1);
+    setNotice('');
+  }
 
   // Thêm câu: kỹ năng mặc định = kỹ năng đang lọc, không thì kỹ năng đầu của khóa đang chọn
   function startCreate() {
@@ -190,6 +201,8 @@ export default function AdminReviewQuestionsPage() {
         onPickSkill={(id) => setFilter('skill', String(id))}
       />
 
+      <SkillSearchBox onPick={pickSkill} />
+
       <div className={`card ${styles.filters}`}>
         <select
           className="select"
@@ -210,7 +223,7 @@ export default function AdminReviewQuestionsPage() {
           aria-label="Kỹ năng"
           value={filters.skill}
           disabled={!skills.length}
-          title={skills.length ? undefined : 'Chọn khóa học trước'}
+          title={skills.length ? undefined : 'Chọn khóa học trước, hoặc tìm kỹ năng ở ô phía trên'}
           onChange={(e) => setFilter('skill', e.target.value)}
         >
           <option value="">Kỹ năng: tất cả</option>

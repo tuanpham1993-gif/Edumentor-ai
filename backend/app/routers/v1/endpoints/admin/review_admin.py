@@ -15,6 +15,7 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     POST   /api/admin/review/questions/{id}/reject     — từ chối câu AI soạn (ẩn, không xóa)
     GET    /api/admin/review/skills/{skill_id}/suggested-code?type= — mã gợi ý cho câu sắp thêm (7.6 P3)
     GET    /api/admin/review/skills/{skill_id}/chunks  — đoạn tri thức của kỹ năng (ô chọn khi sửa câu, 7.6)
+    GET    /api/admin/review/skills/search?q=&limit=    — tìm kỹ năng theo tên (G1, 21/11): exact + BM25 + vector, RRF
     GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
     GET    /api/admin/review/flags                     — bài cần xem lại: câu tự luận bị gắn cờ (17/11)
     POST   /api/admin/review/flags/{attempt_id}/{position}/resolve — admin chấm lại từng ý (Đạt / Không đạt)
@@ -48,12 +49,14 @@ from app.schemas.review_admin import (
     QuestionUpdate,
     ReadinessOut,
     ReviewStatus,
+    SkillSearchOut,
     SuggestedCodeOut,
 )
 from app.services import review_admin_service as service
 from app.services import review_bank_service as bank
 from app.services import review_flag_service as flags
 from app.services import review_readiness_service as readiness_service
+from app.services import skill_search_service
 
 router = APIRouter()
 
@@ -340,3 +343,17 @@ def resolve_flag(
             attempt_id,
         )
     return result
+
+
+# ─────────────── Tìm kỹ năng theo tên (G1, 21/11/2026) ───────────────
+
+
+@router.get("/skills/search", response_model=SkillSearchOut, summary="[Admin] Tìm kỹ năng theo tên → skill_id")
+def search_skills(
+    q: str = Query(..., min_length=1, max_length=100, description="Tên kỹ năng, tiếng Anh hoặc tiếng Việt"),
+    limit: int = Query(5, ge=1, le=20),
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return skill_search_service.search(db, q, limit)
+

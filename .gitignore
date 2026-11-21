@@ -40,3 +40,5 @@ backend/data/ai-grading/private/
 
 .agents/
 powershell.cmd
+# Tuấn 21/11 (G1): vector tên kỹ năng tính lại được — không đưa vào git
+backend/data/cache/

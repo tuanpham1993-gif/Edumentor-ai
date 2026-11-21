@@ -253,3 +253,29 @@ class FlagResolveOut(BaseModel):
     score_changed: bool
     passed_changed: bool
     completed_course: bool  # đổi sang đạt → khóa vừa Hoàn thành
+
+
+# ─────────────── Tìm kỹ năng theo tên (G1, 21/11/2026 — docs/Review-Skill-Search.md) ───────────────
+
+
+class SkillAliasOut(BaseModel):
+    skill_id: int
+    skill: str
+
+
+class SkillMatchOut(BaseModel):
+    skill_id: int  # đại diện nhóm tên trùng: id có nhiều câu đang bật nhất
+    skill: str
+    score: float  # điểm gộp RRF (chỉ để xếp hạng)
+    match: Literal["exact", "keyword", "vector", "hybrid"]
+    cosine: float  # độ gần nghĩa với truy vấn (0 = không có từ nguồn vector)
+    aliases: list[SkillAliasOut]  # các id khác cùng tên chuẩn hóa
+    active_questions: int
+    pending_questions: int
+
+
+class SkillSearchOut(BaseModel):
+    query: str
+    confident: bool  # True = chắc chắn (khớp nguyên văn / rất gần và bỏ xa); False = để người dùng chọn
+    results: list[SkillMatchOut]
+

@@ -254,3 +254,21 @@
   .buttons { justify-content: flex-end; }
   .contentCell { min-width: 180px; }
 }
+
+/* G1 (21/11) — ô "Tìm kỹ năng" + danh sách kết quả */
+.skillSearch { position: relative; }
+.skillSearch :global(.input) { width: 100%; }
+.skillResults {
+  position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; right: 0;
+  display: flex; flex-direction: column; gap: 4px; padding: 8px;
+  max-height: 360px; overflow-y: auto;
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb, 0, 0, 0), 0.3);
+}
+.skillResult {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  width: 100%; padding: 8px 10px; border: 0; border-radius: var(--r-md, 8px);
+  background: none; color: var(--text); text-align: left; cursor: pointer;
+}
+.skillResult:hover, .skillResult:focus-visible { background: var(--accent-soft-bg); outline: none; }
+.skillResult :global(.chip) { margin-left: 8px; }
+

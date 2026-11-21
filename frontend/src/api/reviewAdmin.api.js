@@ -89,3 +89,11 @@ export async function resolveFlag(attemptId, position, labels, note) {
   });
   return response.data;
 }
+
+// ─── Tìm kỹ năng theo tên (G1, 21/11/2026 — docs/Review-Skill-Search.md) ───
+// GET /admin/review/skills/search?q=&limit= → { query, confident, results: [{ skill_id, skill, score, match, cosine,
+//   aliases: [{ skill_id, skill }], active_questions, pending_questions }] }
+export async function searchSkills(q, limit = 8) {
+  const response = await client.get('/admin/review/skills/search', { params: { q, limit } });
+  return response.data;
+}
