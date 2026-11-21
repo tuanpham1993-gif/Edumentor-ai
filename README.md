@@ -107,6 +107,15 @@ docker compose up -d --build
 # Frontend: http://localhost:8088   ·   Backend (Swagger): http://localhost:8001/api/docs
 ```
 
+> ⏱ **Lần đầu chạy lâu — không phải máy bị treo** (đo 21/11/2026 trên máy 8 GB RAM):
+> - Build image backend **khoảng 15–20 phút** (cài thư viện AI: torch, transformers…). Những lần sau dùng lại cache, nhanh.
+> - Backend khởi động lần đầu **khoảng 4 phút** (tạo bảng, nạp 4.509 khóa học / 5.893 kỹ năng, nạp đề ôn tập).
+>   Mở Swagger thấy được là dùng được.
+> - Sau đó vài phút backend còn **tải mô hình embedding** (~470 MB) ở nền và tính vector cho tài liệu ôn tập —
+>   trong lúc này làm bài, chấm bài vẫn bình thường.
+> - Máy ít RAM: chỉ cần luồng ôn tập thì có thể bỏ 2 dịch vụ LLM cục bộ:
+>   `docker compose up -d postgres qdrant && docker compose up -d --no-deps backend frontend`.
+
 **Cách 2 — chạy dev trên máy** (Docker chỉ chạy PostgreSQL + Qdrant)
 
 ```bash
