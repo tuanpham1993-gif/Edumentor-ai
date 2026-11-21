@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.models.course import Courses
 from app.models.course_skill import CourseSkill
 from app.models.knowledge_chunk import KnowledgeChunk
+from app.models.learning_path import LearningPath, LearningPathNode
 from app.models.review_attempt import ReviewAnswer, ReviewAttempt
 from app.models.review_question import ReviewQuestion
 from app.models.review_question_meta import ReviewQuestionMeta
@@ -156,11 +157,20 @@ def stuck_grading_ids(db: Session, user_id: int, submitted_before) -> list[int]:
     )
 
 
-def get_in_progress(db: Session, user_id: int, course_id: int) -> ReviewAttempt | None:
+def _target(course_id: int | None, skill_id: int | None):
+    """Lượt theo khóa (course_id) hoặc theo kỹ năng (skill_id — G2c, 22/11)."""
+    if skill_id is not None:
+        return ReviewAttempt.skill_id == skill_id
+    return ReviewAttempt.course_id == course_id
+
+
+def get_in_progress(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> ReviewAttempt | None:
     return db.scalar(
         select(ReviewAttempt).where(
             ReviewAttempt.user_id == user_id,
-            ReviewAttempt.course_id == course_id,
+            _target(course_id, skill_id),
             ReviewAttempt.status == "in_progress",
         )
     )
@@ -219,13 +229,15 @@ def family_questions(db: Session, question_ids: list[int]) -> list[ReviewQuestio
     )
 
 
-def last_submitted_questions(db: Session, user_id: int, course_id: int) -> list[ReviewQuestion]:
-    """Các câu của lượt ĐÃ NỘP gần nhất — để lượt mới tránh lặp (A1)."""
+def last_submitted_questions(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> list[ReviewQuestion]:
+    """Các câu của lượt ĐÃ NỘP gần nhất (cùng khóa, hoặc cùng kỹ năng) — để lượt mới tránh lặp (A1)."""
     last_id = db.scalar(
         select(ReviewAttempt.attempt_id)
         .where(
             ReviewAttempt.user_id == user_id,
-            ReviewAttempt.course_id == course_id,
+            _target(course_id, skill_id),
             ReviewAttempt.status != "in_progress",
         )
         .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
@@ -247,6 +259,26 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     if not ids:
         return {}
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
+
+
+def get_active_skill_name(db: Session, skill_id: int) -> str | None:
+    return db.scalar(select(Skills.skill).where(Skills.skill_id == skill_id, Skills.is_active.is_(True)))
+
+
+def path_has_skill(db: Session, path_id: int, user_id: int, skill_id: int) -> bool:
+    """Lộ trình là của người học này VÀ có node kỹ năng này (bảng của Hòa — chỉ đọc). G2c, 22/11."""
+    return (
+        db.scalar(
+            select(LearningPathNode.skill_id)
+            .join(LearningPath, LearningPath.record_id == LearningPathNode.path_id)
+            .where(
+                LearningPathNode.path_id == path_id,
+                LearningPathNode.skill_id == skill_id,
+                LearningPath.student_id == user_id,
+            )
+        )
+        is not None
+    )
 
 
 # ─────────────── "Đến hạn ôn" (21/11, Q12 guide.md) ───────────────
