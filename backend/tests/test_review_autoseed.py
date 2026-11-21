@@ -98,3 +98,26 @@ def test_build_missing_embeddings_only_when_needed(db_session, course_312):
     assert auto.build_missing_embeddings(factory, load_model) == chunks and len(calls) == 1
     assert auto.build_missing_embeddings(factory, load_model) == 0 and len(calls) == 1  # đủ vector → không nạp lại
     assert db_session.query(KnowledgeChunk).filter(KnowledgeChunk.embedding.is_(None)).count() == 0
+
+
+def test_load_or_download_model_downloads_once_when_cache_is_empty(monkeypatch):
+    # Docker lần đầu: _try_load (local_files_only) không thấy mô hình → tải về một lần rồi dùng luôn
+    import sys
+    import types
+
+    from app.services import review_rag_service as rag
+
+    downloads = []
+
+    class FakeST:
+        def __init__(self, name, **kwargs):
+            downloads.append((name, kwargs))
+
+    monkeypatch.setitem(sys.modules, "sentence_transformers", types.SimpleNamespace(SentenceTransformer=FakeST))
+    monkeypatch.setattr(rag, "_model_state", {"model": None})  # đã thử đọc cache: không có
+
+    first = rag.load_or_download_model()
+    second = rag.load_or_download_model()
+
+    assert isinstance(first, FakeST) and second is first
+    assert downloads == [(rag.settings.REVIEW_EMBEDDING_MODEL, {})]  # KHÔNG local_files_only, chỉ tải 1 lần

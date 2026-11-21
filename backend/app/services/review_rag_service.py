@@ -52,6 +52,27 @@ def _load_model():
     return _model_state["model"]
 
 
+def load_or_download_model():
+    """Như _load_model, nhưng máy MỚI chưa có mô hình (_try_load chỉ đọc file đã tải: local_files_only) thì TẢI về
+    một lần vào HF_HOME rồi dùng luôn cho RAG (Tuấn 21/11 — Docker lần đầu không có ai chạy build_embeddings tay).
+    Chỉ gọi từ luồng nền tự nạp đề, KHÔNG gọi trong request (request không bao giờ chờ tải mô hình). Lỗi → None."""
+    model = _load_model()
+    if model is not None:
+        return model
+    with _MODEL_LOCK:
+        if _model_state.get("model") is not None:
+            return _model_state["model"]
+        try:
+            from sentence_transformers import SentenceTransformer
+
+            logger.info("RAG: máy chưa có mô hình %s — đang tải về (một lần)…", settings.REVIEW_EMBEDDING_MODEL)
+            _model_state["model"] = SentenceTransformer(settings.REVIEW_EMBEDDING_MODEL)
+        except Exception as err:  # noqa: BLE001 — mất mạng / thiếu thư viện: giữ chế độ không xếp hạng
+            logger.warning("RAG: tải mô hình embedding thất bại (%s)", err)
+            return None
+    return _model_state["model"]
+
+
 def _try_load():
     try:
         from sentence_transformers import SentenceTransformer

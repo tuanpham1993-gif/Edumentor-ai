@@ -105,10 +105,11 @@ def run(session_factory) -> dict:
 
 
 def _embed_in_background(session_factory) -> None:
-    from app.services.review_rag_service import _load_model  # nặng → chỉ nạp trong luồng nền
+    # nặng → chỉ nạp trong luồng nền. Máy mới chưa có mô hình → tải về một lần (load_or_download_model)
+    from app.services.review_rag_service import load_or_download_model
 
     try:
-        count = build_missing_embeddings(session_factory, _load_model)
+        count = build_missing_embeddings(session_factory, load_or_download_model)
         if count:
             logger.info("Tự nạp đề: đã tính embedding cho %d đoạn tri thức", count)
     except Exception:
