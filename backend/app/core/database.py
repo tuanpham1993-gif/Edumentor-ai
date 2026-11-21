@@ -18,9 +18,19 @@ Base = declarative_base()
 
 
 def create_tables() -> None:
-    import app.models
+    """Tuấn 22/11 (G2a): tạo / nâng cấp bảng bằng Alembic (app/core/migrations.py). Alembic lỗi (vd đang ở nhánh
+    cũ chưa có file migration mới → "Can't locate revision") → ghi cảnh báo, rơi về create_all như trước, server vẫn chạy.
+    """
+    import app.models  # noqa: F401 — đăng ký mọi bảng
 
-    Base.metadata.create_all(bind=engine)
+    try:
+        from app.core.migrations import current_revision, run_migrations
+
+        action = run_migrations(engine)
+        print(f"[INFO] Database: {action} → Alembic {current_revision(engine)}")
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARNING] Alembic migration lỗi, chỉ chạy create_all: {e}")
+        Base.metadata.create_all(bind=engine)
     sync_notification_types()
 
 
@@ -45,7 +55,9 @@ def sync_notification_types(bind=None) -> bool:
             return False
         allowed = ", ".join(f"'{t}'" for t in TYPES)  # TYPES là hằng trong code, không phải dữ liệu người dùng
         conn.execute(text("ALTER TABLE notifications DROP CONSTRAINT IF EXISTS ck_notifications_type"))
-        conn.execute(text(f"ALTER TABLE notifications ADD CONSTRAINT ck_notifications_type CHECK (type IN ({allowed}))"))
+        conn.execute(
+            text(f"ALTER TABLE notifications ADD CONSTRAINT ck_notifications_type CHECK (type IN ({allowed}))")
+        )
     return True
 
 
@@ -54,6 +66,7 @@ def init_db() -> None:
     create_tables()
     try:
         from app.core.seed_data.seed_data_code import seed_data
+
         seed_data(SessionLocal())
     except FileNotFoundError as e:
         print(f"[WARNING] Seed data file not found, skipping seed: {e}")
@@ -68,6 +81,7 @@ def init_db() -> None:
     except Exception as e:
         print(f"[WARNING] Review bank auto-seed failed: {e}")
     index_skills_to_qdrant()
+
 
 def index_skills_to_qdrant() -> None:
     """Hòa: đánh chỉ mục tên kỹ năng vào Qdrant (lần đầu tạo collection) để gợi ý lộ trình tìm kỹ năng gần nghĩa.

@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 QuestionType = Literal["mcq", "essay"]
 QuestionLevel = Literal["recognize", "understand", "easy", "advanced"]
-ReviewStatus = Literal["pending", "approved", "rejected"]
+ReviewStatus = Literal["pending", "approved", "rejected", "auto_approved"]  # auto_approved: G2b · D7
 
 
 # ─────────────── vào ───────────────
@@ -278,4 +278,3 @@ class SkillSearchOut(BaseModel):
     query: str
     confident: bool  # True = chắc chắn (khớp nguyên văn / rất gần và bỏ xa); False = để người dùng chọn
     results: list[SkillMatchOut]
-

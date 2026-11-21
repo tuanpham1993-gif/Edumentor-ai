@@ -20,10 +20,12 @@ from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
     func,
+    text,
 )
 
 from app.core.database import Base
@@ -63,9 +65,7 @@ class ReviewQuestion(Base):
     explanation = Column(Text, nullable=True)
     source = Column(String(10), nullable=False, default="bank", server_default="bank")
     is_active = Column(Boolean, nullable=False, default=True, server_default="true")
-    created_at = Column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
-    )
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     __table_args__ = (
         CheckConstraint("type IN ('mcq', 'essay')", name="ck_review_questions_type"),
@@ -84,4 +84,13 @@ class ReviewQuestion(Base):
             name="ck_review_questions_shape",
         ),
         CheckConstraint("source IN ('bank', 'ai')", name="ck_review_questions_source"),
+        # D5: đếm "kỹ năng đã đủ câu chưa" mỗi lần nhấn node lộ trình — chỉ câu đang bật.
+        Index(
+            "ix_review_questions_skill_type_level_active",
+            "skill_id",
+            "type",
+            "level",
+            postgresql_where=text("is_active"),
+            sqlite_where=text("is_active"),
+        ),
     )
