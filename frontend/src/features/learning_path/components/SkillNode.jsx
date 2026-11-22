@@ -22,9 +22,12 @@ export default function SkillNode({ data }) {
             type="target" position={Position.Left}
             isConnectable={false} className={styles.nodeHandleLearningGraph}/>
 
-        {/* Bước 5 review-on-graph (20/11): huy hiệu ôn tập — chỉ node Đã biết / Đang học. Huy hiệu tự ẩn khi kỹ
-            năng không có khóa ôn được; ngoài <SkillReviewProvider> (vd trang xem trước) cũng không hiện. */}
-        {(data.status === 'known' || data.status === 'learning') && (
+        {/* Bước 5 review-on-graph (20/11): huy hiệu ôn tập. Huy hiệu tự ẩn khi kỹ năng không có khóa ôn được VÀ
+            chưa đủ câu để ôn riêng; ngoài <SkillReviewProvider> (vd trang xem trước) cũng không hiện.
+            TẠM (Tuấn 22/11, G2 — chờ Hòa duyệt): hiện huy hiệu ở MỌI node để ôn / kiểm tra cả kỹ năng chưa học.
+            Hòa không đồng ý → xóa dòng `{true && (` và bỏ comment dòng điều kiện cũ ngay dưới. */}
+        {/* {(data.status === 'known' || data.status === 'learning') && ( */}
+        {true && (
             <span className={styles.reviewBadgeSlot}>
                 <SkillReviewBadge skillId={data.skillId} skillName={data.skillName} />
             </span>

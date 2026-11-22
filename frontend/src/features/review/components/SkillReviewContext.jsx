@@ -44,6 +44,12 @@ export function useSkillReview(skillId) {
   return context?.bySkill[Number(skillId)]?.courses ?? [];
 }
 
+/** G2 (22/11): ôn THẲNG theo kỹ năng — { ready, in_progress_attempt_id, last_attempt } hoặc null. */
+export function useSkillDirect(skillId) {
+  const context = useContext(SkillReviewContext);
+  return context?.bySkill[Number(skillId)]?.skill ?? null;
+}
+
 /** 21/11 (Q12): "Đến hạn ôn" của kỹ năng — { due, due_at, last_reviewed_at, last_score, … } hoặc null (không xét). */
 export function useSkillDue(skillId) {
   const context = useContext(SkillReviewContext);

@@ -16,6 +16,20 @@ export async function startReview(courseId) {
   return response.data;
 }
 
+// G2 (22/11) — ôn theo KỸ NĂNG (mở từ node lộ trình, không cần tham gia khóa).
+// GET /skills/{id}/review → { skill, structure, pass_score, can_start, blocked, in_progress_attempt_id, attempts }
+export async function getSkillReviewInfo(skillId) {
+  const response = await client.get(`/skills/${skillId}/review`);
+  return response.data;
+}
+
+// POST /skills/{id}/review-attempts?path= → đề (AttemptOut, course_id = null, skill_id, skill_name, path_id).
+export async function startSkillReview(skillId, pathId) {
+  const params = pathId ? { path: pathId } : undefined;
+  const response = await client.post(`/skills/${skillId}/review-attempts`, null, { params });
+  return response.data;
+}
+
 // GET /review-attempts/{id} → đề + câu trả lời đã lưu (KHÔNG có đáp án)
 export async function getAttempt(attemptId) {
   const response = await client.get(`/review-attempts/${attemptId}`);

@@ -8,7 +8,7 @@ import * as reviewApi from '../../../api/review.api.js';
 import Pagination from '../../common/components/Pagination.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
-import { DEMO_COURSES, formatScore } from '../reviewFormat.js';
+import { DEMO_COURSES, formatScore, startUrl, targetTitle } from '../reviewFormat.js';
 import styles from '../styles/ReviewHistoryPage.module.css';
 
 const PAGE_SIZE = 10;
@@ -36,7 +36,8 @@ export default function ReviewHistoryPage() {
       setData(page_);
       setKnownCourses((current) => {
         const next = new Map(current);
-        page_.items.forEach((item) => next.set(String(item.course_id), item.course_title));
+        // bộ lọc theo khóa: bỏ lượt ôn theo kỹ năng (không có khóa — G2)
+        page_.items.forEach((item) => item.course_id && next.set(String(item.course_id), item.course_title));
         return next;
       });
     } catch (err) {
@@ -149,7 +150,8 @@ export default function ReviewHistoryPage() {
                     <tr key={item.attempt_id}>
                       <td className="muted">{formatDateTime(item.submitted_at)}</td>
                       <td className={styles.course}>
-                        {item.course_title}
+                        {targetTitle(item)}
+                        {!item.course_id && <span className="chip chip-info">Kỹ năng</span>}
                         {item.completed_course && <span className="chip chip-accent">Hoàn thành khóa</span>}
                       </td>
                       <td className={styles.score}>
@@ -168,7 +170,7 @@ export default function ReviewHistoryPage() {
                         <Link to={`/review/${item.attempt_id}/result`} className="btn btn-sm">
                           Xem chi tiết
                         </Link>
-                        <Link to={`/courses/${item.course_id}/review`} className="btn btn-sm btn-soft">
+                        <Link to={startUrl(item)} className="btn btn-sm btn-soft">
                           Làm lại
                         </Link>
                       </td>

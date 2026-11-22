@@ -90,6 +90,7 @@ export default function AppRoutes() {
           {/* Ôn tập — module 09 (Tuấn, GĐ4 09/11) */}
           <Route path="/me/review-history" element={<ReviewHistoryPage />} />
           <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
+          <Route path="/skills/:skillId/review" element={<ReviewStartPage />} /> {/* G2: ôn theo kỹ năng */}
           <Route path="/review/:attemptId" element={<ReviewQuizPage />} />
           <Route path="/review/:attemptId/result" element={<ReviewResultPage />} />
           {/* Khóa học — module Khôi */}

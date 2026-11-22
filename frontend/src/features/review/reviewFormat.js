@@ -55,6 +55,18 @@ export function highlightSegments(text, evidences) {
 // TODO: khi trang "Khóa học của tôi" (Tâm) có nút Ôn tập dẫn tới /courses/:id/review thì bỏ danh sách này.
 export const DEMO_COURSES = [{ courseId: 312, title: 'Python Basics: Selection and Iteration' }];
 
+/** G2 (22/11): lượt theo khóa → tên khóa; lượt theo kỹ năng (course_id null) → tên kỹ năng. */
+export function targetTitle(item) {
+  return (item?.course_id ? item.course_title : item?.skill_name) || item?.course_title || '';
+}
+
+/** Trang Bắt đầu ôn của lượt: /courses/:id/review hoặc /skills/:id/review?path= (G2). */
+export function startUrl(item) {
+  if (item?.course_id) return `/courses/${item.course_id}/review`;
+  if (!item?.skill_id) return '/me/review-history';
+  return `/skills/${item.skill_id}/review${item.path_id ? `?path=${item.path_id}` : ''}`;
+}
+
 /** 7.7 → "7,7" ; 10 → "10" (dấu phẩy thập phân kiểu Việt Nam). */
 export function formatScore(value) {
   if (value === null || value === undefined) return '—';
