@@ -292,11 +292,33 @@
 }
 
 .skillName {
-  flex: 1;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text);
   word-break: break-word;
+}
+
+.skillContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.prereqHint {
+  font-size: 0.725rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.foundationHint {
+  font-size: 0.725rem;
+  color: var(--muted);
+  opacity: 0.8;
 }
 
 .targetBadge {

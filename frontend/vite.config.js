@@ -7,8 +7,8 @@ export default defineConfig({
     port: 5173,
     proxy: {
       // Mọi request bắt đầu bằng /api hoặc /uploads → chuyển sang backend FastAPI
-      '/api': 'http://localhost:8000',      
-      '/uploads': 'http://localhost:8000',  
+      '/api': 'http://127.0.0.1:8000',      
+      '/uploads': 'http://127.0.0.1:8000',  
     },
   },
 });

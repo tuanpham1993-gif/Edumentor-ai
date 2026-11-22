@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   getSharedLearningPath,
@@ -8,6 +8,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import LearningPathGraphForDetail from '../components/LearningPathGraphForDetail';
 import CourseRecommendation from '../components/CourseRecommendation';
 import { formatDate, initials } from '../../../utils/formatters';
+import { sortLearningPathNodes } from '../../../utils/sortLearningPathNodes';
 import styles from '../styles/SharedLearningPath.module.css';
 
 export default function SharedLearningPathPage() {
@@ -57,6 +58,10 @@ export default function SharedLearningPathPage() {
       isMounted = false;
     };
   }, [shareCode]);
+
+  const sortedNodes = useMemo(() => {
+    return sortLearningPathNodes(path?.nodes, path?.edges);
+  }, [path?.nodes, path?.edges]);
 
   function handleSelectSkill(skill) {
     setSelectedSkill(skill);
@@ -250,7 +255,7 @@ export default function SharedLearningPathPage() {
               </p>
 
               <ol className={styles.skillList}>
-                {(path.nodes || []).map((node, idx) => (
+                {sortedNodes.map((node, idx) => (
                   <li
                     key={node.skill_id}
                     className={styles.skillItem}
@@ -264,9 +269,20 @@ export default function SharedLearningPathPage() {
                     }
                   >
                     <span className={styles.skillNumber}>{idx + 1}</span>
-                    <span className={styles.skillName}>
-                      {node.skill?.skill || `Kỹ năng #${node.skill_id}`}
-                    </span>
+                    <div className={styles.skillContent}>
+                      <span className={styles.skillName}>
+                        {node.skill?.skill || `Kỹ năng #${node.skill_id}`}
+                      </span>
+                      {node._topology?.prerequisiteNames?.length > 0 ? (
+                        <span className={styles.prereqHint}>
+                          ↳ Cần: {node._topology.prerequisiteNames.join(', ')}
+                        </span>
+                      ) : (
+                        <span className={styles.foundationHint}>
+                          Nền tảng khởi đầu
+                        </span>
+                      )}
+                    </div>
                     {node.is_target && (
                       <span className={styles.targetBadge}>Mục tiêu</span>
                     )}

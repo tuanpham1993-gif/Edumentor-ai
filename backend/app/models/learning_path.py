@@ -40,7 +40,12 @@ class LearningPath(Base):
         foreign_keys=[cloned_from_id],
     )
 
-    nodes = relationship("LearningPathNode", back_populates="learning_path", cascade="all, delete-orphan")
+    nodes = relationship(
+        "LearningPathNode",
+        back_populates="learning_path",
+        cascade="all, delete-orphan",
+        order_by="LearningPathNode.display_order",
+    )
     edges = relationship("LearningPathEdge", back_populates="learning_path", cascade="all, delete-orphan")
 
     __table_args__ = (
