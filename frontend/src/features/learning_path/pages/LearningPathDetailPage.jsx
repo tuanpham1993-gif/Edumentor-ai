@@ -130,6 +130,7 @@ export default function LearningPathDetailPage() {
 
                 <LearningPathToolBar
                     recordId={learningPath.record_id}
+                    learningPath={learningPath}
                     selectedSkill={selectedSkill}
                     nodes={learningPath.nodes}
                     edges={learningPath.edges}
