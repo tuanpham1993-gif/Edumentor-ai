@@ -59,6 +59,35 @@ services:
       - "6336:6334"
     volumes:
       - edumentor_qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/127.0.0.1/6333"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  ingestion:
+    build: ./backend
+    image: edumentor/backend:dev
+    container_name: edumentor_ingestion
+    restart: "no"
+    env_file: 
+      .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://edumentor:edumentor123@postgres:5432/edumentor_db
+      QDRANT_URL: http://qdrant:6333
+      DATA_DIR: /app/datajson
+      HF_HOME: /cache/huggingface
+    volumes:
+      - ./datajson:/app/datajson:ro
+      - edumentor_hf_cache:/cache/huggingface
+    command: ["python", "-m", "scripts.ingest_qdrant"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+
   backend:
     build: ./backend
     image: edumentor/backend:dev
@@ -83,7 +112,9 @@ services:
       postgres:
         condition: service_healthy
       qdrant:
-        condition: service_started
+        condition: service_healthy
+      ingestion:
+        condition: service_completed_successfully
       ollama:
         condition: service_started
       llama-adapter:

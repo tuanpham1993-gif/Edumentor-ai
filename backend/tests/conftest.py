@@ -12,24 +12,18 @@ backend_dir = Path(__file__).resolve().parent.parent
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
-# Mock kết nối Qdrant khi chạy test cục bộ / CI không có server Qdrant
-try:
-    from unittest.mock import MagicMock
-    import llama_index.vector_stores.qdrant.base as qb
-
-    qb.QdrantVectorStore._collection_exists = MagicMock(return_value=True)
-except Exception:
-    pass
+# NOTE: The old LlamaIndex Qdrant mock has been removed. No tests in the suite require it.
 
 from app.core.database import Base, get_db
+# Import the API router directly – any import error should surface loudly.
 from app.routers.v1.api import api_router
 from app.core.config import settings
 
-# Tạo FastAPI app riêng cho test để không kích hoạt lifespan kết nối PostgreSQL thật
+# Create a minimal FastAPI app for tests.
 app = FastAPI()
 app.include_router(api_router, prefix=settings.API_STR)
 
-# SQLite in-memory engine cho testing
+# SQLite in-memory engine for testing
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 test_engine = create_engine(
@@ -42,26 +36,24 @@ TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_eng
 
 @pytest.fixture(autouse=True)
 def _no_real_email_or_ai(monkeypatch):
-    """Test KHÔNG BAO GIỜ gửi email thật / gọi AI thật, kể cả khi .env đã cấu hình Gmail, AI_MODE=real (Tuấn 12/11).
+    """Disable real email/AI calls during tests.
 
-    SMTP_HOST rỗng → core/email in thư ra terminal thay vì gửi (tránh Gmail bị khóa vì gửi hàng loạt khi chạy test).
-    AI_MODE=mock → không tốn lượt Gemini; test nào cần chế độ khác tự monkeypatch lại.
+    - SMTP_HOST empty → core/email prints instead of sending.
+    - AI_MODE=mock → Gemini calls are mocked unless a test explicitly patches.
     """
     monkeypatch.setattr(settings, "SMTP_HOST", "")
     monkeypatch.setattr(settings, "AI_MODE", "mock")
-    # 19/11: bộ đếm giới hạn tần suất (đăng nhập, quên mật khẩu…) dùng chung trong tiến trình → xóa trước mỗi test
+    # Reset rate limiters
     from app.core import rate_limit
-
     for limiter in rate_limit.ALL_LIMITERS:
         limiter.clear()
-    # 19/11: nhiều test nộp bài ôn tập liên tiếp → tắt "chờ 2 phút giữa 2 lần nộp"; test riêng bật lại
+    # Remove cooldown for review submit
     monkeypatch.setattr(settings, "REVIEW_SUBMIT_COOLDOWN", 0)
 
 
 @pytest.fixture()
 def db_session():
     import app.models  # Đảm bảo nạp đầy đủ metadata của tất cả models
-
     Base.metadata.create_all(bind=test_engine)
     db = TestSessionLocal()
     try:
@@ -137,7 +129,6 @@ def sample_learning_path(db_session):
         "python_skill_id": python_skill.skill_id,
         "fastapi_skill_id": fastapi_skill.skill_id,
     }
-
 
 # ─────────────── Token đăng nhập dùng chung (module 01 · Tuấn · 09/11/2026) ───────────────
 # Dùng cho mọi test cần gọi API có require_admin / get_current_user:

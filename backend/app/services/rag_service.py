@@ -1,78 +1,64 @@
+"""
+RAG Service using Qdrant vector collections (edumentor_courses, edumentor_skills).
+Provides retrieve_knowledge interface performing actual semantic search.
+"""
 
-from llama_index.core import VectorStoreIndex
-
-from app.core.embedding_model_tutor import embedding_model_tutor
-from app.core.qdrant_tutor import get_qdrant_vector_store
-
-
-# ==========================================
-# 1. CONFIGURATION
-# ==========================================
+from typing import Any
 
 DEFAULT_TOP_K = 5
 
 
-# ==========================================
-# 2. INITIALIZE VECTOR INDEX
-# ==========================================
-
-vector_store = get_qdrant_vector_store()
-
-vector_index = VectorStoreIndex.from_vector_store(
-    vector_store=vector_store,
-    embed_model=embedding_model_tutor,
-)
-
-
-# ==========================================
-# 3. RETRIEVE KNOWLEDGE
-# ==========================================
-
 def retrieve_knowledge(
     query: str,
     top_k: int = DEFAULT_TOP_K,
-) -> list[dict]:
-
+) -> list[dict[str, Any]]:
+    """
+    Truy xuất tri thức ngữ nghĩa thực tế qua Qdrant và EmbeddingService.
+    Tìm kiếm song song các khóa học và kỹ năng phù hợp nhất.
+    """
     if not isinstance(query, str) or not query.strip():
         raise ValueError("Query cannot be empty.")
 
     if not isinstance(top_k, int) or isinstance(top_k, bool) or top_k < 1:
         raise ValueError("top_k must be a positive integer.")
 
-    retriever = vector_index.as_retriever(
-        similarity_top_k=top_k
-    )
+    try:
+        from app.services.embedding_service import embedding_service
+        from app.services.qdrant_service import qdrant_course_service, qdrant_skill_service
 
-    retrieved_nodes = retriever.retrieve(query.strip())
+        vector = embedding_service.encode_text(query.strip())
+        results: list[dict[str, Any]] = []
 
-    results = []
+        # 1. Search Courses
+        try:
+            course_hits = qdrant_course_service.search_courses(embedding=vector, limit=top_k)
+            for h in course_hits:
+                payload = h.payload or {}
+                results.append({
+                    "content": f"Khóa học: {payload.get('title', '')} - Tổ chức: {payload.get('organization', 'N/A')}",
+                    "score": getattr(h, "score", 0.0),
+                    "metadata": payload,
+                })
+        except Exception as e:  # noqa: BLE001
+            print(f"[RAG SERVICE] Qdrant course retrieval error: {e}")
 
-    for item in retrieved_nodes:
-        node = item.node
-        metadata = node.metadata or {}
+        # 2. Search Skills
+        try:
+            skill_hits = qdrant_skill_service.search_skill(embedding=vector, limit=top_k)
+            for h in skill_hits:
+                payload = h.payload or {}
+                results.append({
+                    "content": f"Kỹ năng: {payload.get('skill', '')}",
+                    "score": getattr(h, "score", 0.0),
+                    "metadata": payload,
+                })
+        except Exception as e:  # noqa: BLE001
+            print(f"[RAG SERVICE] Qdrant skill retrieval error: {e}")
 
-        results.append({
-            "content": node.get_content(),
-            "score": item.score,
-            "metadata": {
-                "source": metadata.get("source"),
-                "section": metadata.get("section"),
-                "section_number": metadata.get("section_number"),
-                "category": metadata.get("category"),
-                "tags": metadata.get("tags", []),
+        # Sort combined results by score descending and take top_k
+        results.sort(key=lambda x: x.get("score", 0.0), reverse=True)
+        return results[:top_k]
 
-                # Feature metadata
-                "feature_number": metadata.get("feature_number"),
-                "feature_title": metadata.get("feature_title"),
-                "route": metadata.get("route"),
-
-                # FAQ metadata
-                "faq_category": metadata.get("faq_category"),
-                "faq_question_number": metadata.get("faq_question_number"),
-                "faq_chunk_index": metadata.get("faq_chunk_index"),
-
-                "chunk_index": metadata.get("chunk_index"),
-            },
-        })
-
-    return results
+    except Exception as e:  # noqa: BLE001
+        print(f"[RAG SERVICE] Semantic retrieval fallback: {e}")
+        return []
