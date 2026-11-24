@@ -40,3 +40,8 @@ backend/data/ai-grading/private/
 
 .agents/
 powershell.cmd
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
