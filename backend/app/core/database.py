@@ -21,6 +21,32 @@ def create_tables() -> None:
     import app.models
 
     Base.metadata.create_all(bind=engine)
+    sync_notification_types()
+
+
+def sync_notification_types(bind=None) -> bool:
+    """Tuấn 21/11: bảng `notifications` đã tạo ở mọi máy với CHECK chỉ cho các loại cũ; create_all không sửa bảng
+    có sẵn và dự án chưa có Alembic (G2a). Khi TYPES có loại mới (vd "review_due") → tạo lại CHECK cho khớp.
+    Chạy lại nhiều lần vẫn an toàn (đã khớp thì không làm gì). Chỉ PostgreSQL; SQLite (test) tạo bảng mới từ model.
+    Trả True nếu đã sửa."""
+    from app.models.notification import TYPES
+
+    bind = bind or engine
+    if bind.dialect.name != "postgresql":
+        return False
+    with bind.begin() as conn:
+        definition = conn.execute(
+            text(
+                "SELECT pg_get_constraintdef(c.oid) FROM pg_constraint c JOIN pg_class t ON t.oid = c.conrelid "
+                "WHERE t.relname = 'notifications' AND c.conname = 'ck_notifications_type'"
+            )
+        ).scalar()
+        if definition is not None and all(f"'{t}'" in definition for t in TYPES):
+            return False
+        allowed = ", ".join(f"'{t}'" for t in TYPES)  # TYPES là hằng trong code, không phải dữ liệu người dùng
+        conn.execute(text("ALTER TABLE notifications DROP CONSTRAINT IF EXISTS ck_notifications_type"))
+        conn.execute(text(f"ALTER TABLE notifications ADD CONSTRAINT ck_notifications_type CHECK (type IN ({allowed}))"))
+    return True
 
 
 def init_db() -> None:
@@ -33,6 +59,14 @@ def init_db() -> None:
         print(f"[WARNING] Seed data file not found, skipping seed: {e}")
     except Exception as e:
         print(f"[WARNING] Seed data failed: {e}")
+    # Tuấn 21/11: database mới (vd Docker lần đầu) → tự nạp đề ôn tập + embedding, thay 4 lệnh tay. Chỉ khi bảng
+    # review_questions trống; lỗi chỉ ghi log. Chạy SAU seed_data() vì cần khóa học + kỹ năng.
+    try:
+        from app.core.seed_data import review_autoseed
+
+        review_autoseed.run(SessionLocal)
+    except Exception as e:
+        print(f"[WARNING] Review bank auto-seed failed: {e}")
     index_skills_to_qdrant()
 
 def index_skills_to_qdrant() -> None:

@@ -238,6 +238,16 @@ GENERIC_ENTITIES = {
     "khoa nay",
     "kia",
     "khoa hoc kia",
+    "di",
+    "do di",
+    "nay di",
+    "nhe",
+    "nha",
+    "voi",
+    "a",
+    "ha",
+    "nhi",
+    "vay",
 }
 
 # ==========================================

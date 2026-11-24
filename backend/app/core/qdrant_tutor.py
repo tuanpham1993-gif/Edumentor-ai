@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.services.qdrant_service import (
     COURSE_COLLECTION_NAME,
     SKILL_COLLECTION_NAME,
+    TUTOR_SKILL_COLLECTION_NAME,
     EMBEDDING_DIMENSION,
 )
 
@@ -51,8 +52,9 @@ def create_collection(collection_name: str) -> bool:
 
 def initialize_collections():
     """
-    Initialize Course and Skill collections.
+    Initialize Course and Skill collections for both Chatbot and system.
     """
 
     create_collection(COURSE_COLLECTION_NAME)
+    create_collection(TUTOR_SKILL_COLLECTION_NAME)
     create_collection(SKILL_COLLECTION_NAME)

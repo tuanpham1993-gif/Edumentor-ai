@@ -169,7 +169,7 @@ def test_qdrant_service_definitions():
     assert qdrant_skill_service.COLLECTION_NAME == "edumentor_skills"
     assert qdrant_skill_service.VECTOR_SIZE == 384
     assert COURSE_COLLECTION_NAME == "edumentor_courses"
-    assert SKILL_COLLECTION_NAME == "edumentor_skills"
+    assert SKILL_COLLECTION_NAME == "tutor_skills"
 
 
 if __name__ == "__main__":

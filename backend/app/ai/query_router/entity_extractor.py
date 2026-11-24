@@ -203,6 +203,7 @@ def extract_skill_search_entity(user_message: str) -> dict:
 
 def extract_course_review_entity(user_message: str) -> dict:
     text = normalize_text(user_message)
+
     patterns = [
         (r"(?:khoa hoc|khoa|course|courses)\s+(?:nay\s+)?(?:trong he thong\s+)?(?:khong|ha|nhi)?\s+(.+?)[?.!]*$"),
         (r"(?:khoa hoc|khoa|course|courses)\s+(?:ve\s+)?(.+?)[?.!]*$"),
@@ -212,8 +213,9 @@ def extract_course_review_entity(user_message: str) -> dict:
         match = re.search(pattern, text, flags=re.IGNORECASE)
         if match:
             raw_entity = match.group(1).strip()
-            # Loại bỏ các từ phụ như "nay", "trong he thong", "khong" nếu còn sót
-            raw_entity = re.sub(r"^(?:nay\s+|do\s+|trong he thong\s+|khong\s+)+", "", raw_entity, flags=re.IGNORECASE)
+            # Loại bỏ các từ phụ như "nay", "trong he thong", "khong", "di" nếu còn sót
+            raw_entity = re.sub(r"^(?:nay\s+|do\s+|trong he thong\s+|khong\s+|di\s+)+", "", raw_entity, flags=re.IGNORECASE).strip()
+            raw_entity = re.sub(r"(?:\s+di|\s+nhe|\s+nha|\s+voi|\s+vay|\s+a)+$", "", raw_entity, flags=re.IGNORECASE).strip()
             entity_name = finalize_entity(raw_entity)
             if entity_name and not is_generic_entity(entity_name):
                 return {
@@ -228,6 +230,28 @@ def extract_course_review_entity(user_message: str) -> dict:
 
 def extract_skill_review_entity(user_message: str) -> dict:
     text = normalize_text(user_message)
+
+    anaphoric_markers = [
+        "skill do",
+        "ky nang do",
+        "chu de do",
+        "cai do",
+        "skill nay",
+        "ky nang nay",
+        "chu de nay",
+        "cai nay",
+        "do thi sao",
+        "no thi sao",
+        "ve no",
+        "den no",
+    ]
+    if any(re.search(r"\b" + re.escape(m) + r"\b", text) for m in anaphoric_markers) or re.search(
+        r"\b(?:skill|ky nang|chu de)\s+(?:do|nay)\b", text
+    ):
+        return {
+            "entity_type": "skill",
+            "entity_name": None,
+        }
 
     # First check for known skills
     for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):

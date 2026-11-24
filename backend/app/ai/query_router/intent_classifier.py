@@ -266,6 +266,8 @@ def classify_by_rules(user_message: str) -> dict | None:
     course_skill_patterns = [
         r"(?:skill|skills|ky nang).*?(?:trong|cua)\s+(?:he thong\s+)?(?:khoa hoc|khoa|course|courses)\b",
         r"(?:skill|skills|ky nang).*?lien quan(?:\s+den|\s+toi|\s+ve)?\s+(?:khoa hoc|khoa|course|courses)\b",
+        r"(?:khoa hoc|khoa|course|courses).*?(?:day|co|hoc|chua|gom|tap trung|lien quan).*?(?:skill|skills|ky nang)\b",
+        r"(?:trong|cua)\s+(?:khoa hoc|khoa|course|courses).*?(?:co\s+)?(?:skill|skills|ky nang)\b",
     ]
     if any(re.search(p, text, flags=re.IGNORECASE) for p in course_skill_patterns):
         entity = extract_course_review_entity(user_message)
@@ -280,9 +282,9 @@ def classify_by_rules(user_message: str) -> dict | None:
     # --------------------------------------
     course_question_patterns = [
         r"(?:cho toi hoi|hoi|tim hieu|xem|chi tiet|thong tin|noi dung|gioi thieu)\s+(?:ve\s+)?(?:khoa hoc|khoa|course|courses)\s+(.+)",
-        r"(?:co|tim|tim thay)?\s*(?:khoa hoc|khoa|course|courses)\s+(?:nay|do)\s+(?:trong he thong\s+)?(?:khong|ha|nhi|la gi|noi ve gi|co gi|gom nhung gi)",
         r"(?:ban\s+)?(?:co\s+)?(?:khoa hoc|khoa|course|courses)\s+(?:nay\s+)?(?:trong he thong\s+)?(?:khong|ha|nhi)?\s+(.+)",
-        r"(?:khoa hoc|khoa|course|courses)\s+(?:nay|do)\s+(?:la gi|noi ve gi|co gi|gom nhung gi)",
+        r"(?:co|tim|tim thay)?\s*(?:khoa hoc|khoa|course|courses)\s+(?:nay|do)\s+(?:trong he thong\s+)?(?:khong|ha|nhi|la gi|noi ve gi|co gi|gom nhung gi)[?.!\s]*$",
+        r"(?:khoa hoc|khoa|course|courses)\s+(?:nay|do)\s+(?:la gi|noi ve gi|co gi|gom nhung gi)[?.!\s]*$",
     ]
     for cqp in course_question_patterns:
         m_cq = re.search(cqp, text, flags=re.IGNORECASE)

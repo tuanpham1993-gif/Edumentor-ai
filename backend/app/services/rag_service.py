@@ -24,7 +24,7 @@ def retrieve_knowledge(
 
     try:
         from app.services.embedding_service import embedding_service
-        from app.services.qdrant_service import qdrant_course_service, qdrant_skill_service
+        from app.services.qdrant_service import qdrant_course_service, qdrant_tutor_skill_service
 
         vector = embedding_service.encode_text(query.strip())
         results: list[dict[str, Any]] = []
@@ -42,9 +42,9 @@ def retrieve_knowledge(
         except Exception as e:  # noqa: BLE001
             print(f"[RAG SERVICE] Qdrant course retrieval error: {e}")
 
-        # 2. Search Skills
+        # 2. Search Skills (Dedicated Chatbot collection: tutor_skills)
         try:
-            skill_hits = qdrant_skill_service.search_skill(embedding=vector, limit=top_k)
+            skill_hits = qdrant_tutor_skill_service.search_skill(embedding=vector, limit=top_k)
             for h in skill_hits:
                 payload = h.payload or {}
                 results.append({

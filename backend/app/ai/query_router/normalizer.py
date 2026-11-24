@@ -184,6 +184,19 @@ def clean_entity_name(entity_name: str) -> str:
         "cac",
         "co",
         "la",
+        "di",
+        "do",
+        "nay",
+        "kia",
+        "nhe",
+        "nha",
+        "voi",
+        "a",
+        "ha",
+        "nhi",
+        "chua",
+        "the",
+        "vay",
     }
     if remove_accents(name).strip() in standalone_noise:
         return ""

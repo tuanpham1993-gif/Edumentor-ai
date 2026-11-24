@@ -40,7 +40,7 @@ MAX_SEQ_LENGTH = 128
 DEFAULT_BATCH_SIZE = 128
 
 COURSE_COLLECTION_NAME = "edumentor_courses"
-SKILL_COLLECTION_NAME = "edumentor_skills"
+SKILL_COLLECTION_NAME = "tutor_skills"
 
 # Stable Point ID Generators
 def generate_course_point_id(course_id: int) -> str:

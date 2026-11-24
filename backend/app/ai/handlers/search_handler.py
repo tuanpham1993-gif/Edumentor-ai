@@ -13,7 +13,7 @@ from app.ai.query_router.config import (
 )
 from app.ai.query_router.normalizer import normalize_text
 from app.services.embedding_service import embedding_service
-from app.services.qdrant_service import qdrant_course_service, qdrant_skill_service
+from app.services.qdrant_service import qdrant_course_service, qdrant_tutor_skill_service
 from app.services.sql_retrieval import (
     course_to_dict,
     get_course_by_id,
@@ -143,7 +143,7 @@ class SearchHandler:
 
         try:
             vector = embedding_service.encode_text(query.strip())
-            hits = qdrant_skill_service.search_skill(embedding=vector, limit=limit)
+            hits = qdrant_tutor_skill_service.search_skill(embedding=vector, limit=limit)
         except Exception as e:  # noqa: BLE001
             print(f"[SEARCH HANDLER] Qdrant skill search failed: {e}")
             return []
