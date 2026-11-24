@@ -97,3 +97,18 @@ export async function searchSkills(q, limit = 8) {
   const response = await client.get('/admin/review/skills/search', { params: { q, limit } });
   return response.data;
 }
+
+// ─── Phạm vi ôn tập theo kỹ năng (G3.0, 24/11/2026) ───
+// GET /admin/review/skill-scopes → { items: [{ skill_id, skill, label, category, reason, source, model, prompt_version,
+//   updated_by_name, updated_at }], total, page, size, counts: { open, closed, unsure, unlabeled } }
+//   params: label ('open' | 'closed' | 'unsure' | 'unlabeled'), category, source ('ai' | 'admin'), q, skill_id, page, size
+export async function listSkillScopes(params = {}) {
+  const response = await client.get('/admin/review/skill-scopes', { params });
+  return response.data;
+}
+
+// PATCH /admin/review/skill-scopes/{skill_id} — body { label, category?, reason? } → nguồn "admin"
+export async function updateSkillScope(skillId, body) {
+  const response = await client.patch(`/admin/review/skill-scopes/${skillId}`, body);
+  return response.data;
+}

@@ -24,6 +24,7 @@ from app.models.review_question import ReviewQuestion
 from app.models.review_question_meta import ReviewQuestionMeta
 from app.models.review_attempt import ReviewAttempt, ReviewAnswer
 from app.models.review_due_reminder import ReviewDueReminder
+from app.models.review_skill_scope import ReviewSkillScope
 
 # Model chatbot Tutor của Tâm
 from app.models.chat_session import ChatSession
@@ -58,6 +59,7 @@ __all__ = [
     "ReviewQuestion",
     "ReviewQuestionMeta",
     "ReviewAttempt",
+    "ReviewSkillScope",
     "ReviewAnswer",
     "ReviewDueReminder",
 

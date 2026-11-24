@@ -137,6 +137,18 @@ class RealAI(ReviewAI):
         except (KeyError, IndexError, ValueError, TypeError):
             raise AIOutputError("Gemini trả về không phải JSON hợp lệ") from None
 
+    # ─────────────── phân loại phạm vi kỹ năng (G3.0, 24/11) ───────────────
+
+    def classify_skills(self, items: list[dict], *, timeout: float = 120.0):
+        """Một lô kỹ năng → JSON thô {"results": [...]} (skill_scope_service kiểm lại bằng parse_scope).
+        temperature 0 (cùng đầu vào → cùng nhãn); lô 100 kỹ năng trả chậm hơn chấm bài → timeout riêng."""
+        from app.ai.prompts.review_scope import SCOPE_SYSTEM_PROMPT, build_scope_prompt
+        from app.ai.review.scope_schema import GEMINI_SCOPE_SCHEMA
+
+        return self._call(
+            SCOPE_SYSTEM_PROMPT, build_scope_prompt(items), temperature=0.0, timeout=timeout, schema=GEMINI_SCOPE_SCHEMA
+        )
+
     # ─────────────── chấm tự luận ───────────────
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:

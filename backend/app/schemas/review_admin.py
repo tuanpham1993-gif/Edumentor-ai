@@ -280,3 +280,54 @@ class SkillSearchOut(BaseModel):
     query: str
     confident: bool  # True = chắc chắn (khớp nguyên văn / rất gần và bỏ xa); False = để người dùng chọn
     results: list[SkillMatchOut]
+
+
+# ─────────────── Phạm vi ôn tập theo kỹ năng (G3.0, 24/11/2026) ───────────────
+
+ScopeLabel = Literal["open", "closed", "unsure"]
+ScopeCategory = Literal[
+    "programming",
+    "software_tools",
+    "data_bi",
+    "infra_security",
+    "software_process",
+    "math_science",
+    "business_domain",
+    "soft_skill",
+    "specialized_domain",
+    "other",
+]
+
+
+class SkillScopeOut(BaseModel):
+    skill_id: int
+    skill: str
+    label: ScopeLabel | None  # None = chưa có nhãn (coi như Chưa rõ → chưa mở)
+    category: ScopeCategory | None
+    reason: str | None
+    source: Literal["ai", "admin"] | None
+    model: str | None
+    prompt_version: str | None
+    updated_by_name: str | None
+    updated_at: datetime | None
+
+
+class SkillScopeCounts(BaseModel):
+    open: int
+    closed: int
+    unsure: int
+    unlabeled: int
+
+
+class SkillScopePage(BaseModel):
+    items: list[SkillScopeOut]
+    total: int
+    page: int
+    size: int
+    counts: SkillScopeCounts
+
+
+class SkillScopeUpdate(BaseModel):
+    label: ScopeLabel
+    category: ScopeCategory | None = None
+    reason: str | None = Field(default=None, max_length=200)

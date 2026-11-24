@@ -16,6 +16,8 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     GET    /api/admin/review/skills/{skill_id}/suggested-code?type= — mã gợi ý cho câu sắp thêm (7.6 P3)
     GET    /api/admin/review/skills/{skill_id}/chunks  — đoạn tri thức của kỹ năng (ô chọn khi sửa câu, 7.6)
     GET    /api/admin/review/skills/search?q=&limit=    — tìm kỹ năng theo tên (G1, 21/11): exact + BM25 + vector, RRF
+    GET    /api/admin/review/skill-scopes               — phạm vi ôn tập theo kỹ năng: lọc label / category / source / q (G3.0)
+    PATCH  /api/admin/review/skill-scopes/{skill_id}    — admin đặt nhãn Mở / Không mở / Chưa rõ (G3.0, 24/11)
     GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
     GET    /api/admin/review/flags                     — bài cần xem lại: câu tự luận bị gắn cờ (17/11)
     POST   /api/admin/review/flags/{attempt_id}/{position}/resolve — admin chấm lại từng ý (Đạt / Không đạt)
@@ -23,6 +25,8 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
 Lỗi: không thấy câu 404 · nội dung câu sai 422 (kèm danh sách lỗi) · mã trùng / sửa nhỏ sai / không bật được /
 không duyệt được 409 · kỹ năng / đoạn tri thức sai 400.
 """
+
+from typing import Literal
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
@@ -49,6 +53,11 @@ from app.schemas.review_admin import (
     QuestionUpdate,
     ReadinessOut,
     ReviewStatus,
+    ScopeCategory,
+    ScopeLabel,
+    SkillScopeOut,
+    SkillScopePage,
+    SkillScopeUpdate,
     SkillSearchOut,
     SuggestedCodeOut,
 )
@@ -56,7 +65,7 @@ from app.services import review_admin_service as service
 from app.services import review_bank_service as bank
 from app.services import review_flag_service as flags
 from app.services import review_readiness_service as readiness_service
-from app.services import review_service, skill_search_service
+from app.services import review_service, skill_scope_service, skill_search_service
 
 router = APIRouter()
 
@@ -358,3 +367,40 @@ def search_skills(
     db: Session = Depends(get_db),
 ):
     return skill_search_service.search(db, q, limit)
+
+
+# ─────────────── Phạm vi ôn tập theo kỹ năng (G3.0, 24/11/2026) ───────────────
+
+
+@router.get(
+    "/skill-scopes", response_model=SkillScopePage, summary="[Admin] Phạm vi ôn tập theo kỹ năng (nhãn AI / admin)"
+)
+def list_skill_scopes(
+    label: ScopeLabel | Literal["unlabeled"] | None = None,
+    category: ScopeCategory | None = None,
+    source: Literal["ai", "admin"] | None = None,
+    q: str | None = Query(None, max_length=100, description="Tìm trong tên kỹ năng"),
+    skill_id: int | None = Query(None, ge=1),
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return skill_scope_service.list_page(
+        db, label=label, category=category, source=source, q=q, skill_id=skill_id, page=page, size=size
+    )
+
+
+@router.patch("/skill-scopes/{skill_id}", response_model=SkillScopeOut, summary="[Admin] Đặt nhãn phạm vi cho kỹ năng")
+def update_skill_scope(
+    skill_id: int,
+    body: SkillScopeUpdate,
+    admin: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    try:
+        return skill_scope_service.set_scope(
+            db, admin, skill_id, label=body.label, category=body.category, reason=body.reason
+        )
+    except skill_scope_service.ScopeSkillNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.") from None

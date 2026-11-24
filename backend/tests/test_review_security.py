@@ -87,6 +87,8 @@ ADMIN_CALLS = [
     ("get", "/api/admin/review/skills/1/suggested-code?type=mcq"),
     ("get", "/api/admin/review/skills/1/chunks"),
     ("get", "/api/admin/review/skills/search?q=java"),  # G1 (21/11)
+    ("get", "/api/admin/review/skill-scopes"),  # G3.0 (24/11)
+    ("patch", "/api/admin/review/skill-scopes/1"),
     ("get", "/api/admin/review/readiness"),
     ("get", "/api/admin/review/flags"),
     ("post", "/api/admin/review/flags/1/13/resolve"),
