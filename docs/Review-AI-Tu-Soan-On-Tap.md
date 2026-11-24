@@ -1,0 +1,268 @@
+# Review — AI tự soạn câu ôn tập theo kỹ năng (G3)
+
+> Module **09 — Ôn tập & Đánh giá** · Người làm: **Phạm Thanh Tuấn** · Nhánh: `tuan/skill-review` (chưa gộp vào `review/featrure`)
+> Cập nhật: **24/11/2026** · Trạng thái: **G3.0 xong** (commit `9ef4585`), G3a–G3g chưa làm
+> File này **gom toàn bộ** thông tin về G3 trước đây nằm rải rác ở: `docs/guide.md` (Q8, Q13, mục 5, 8, 9, nhật ký),
+> `docs/De-xuat-AI-On-tap.md` (đề xuất gốc 06/11), `docs/Review-Assessment.md` (A4, A7, A8), tài liệu review của thầy
+> (21/11) và các buổi thảo luận 22–24/11. Từ nay **cập nhật G3 ở file này**; `guide.md` chỉ trỏ sang đây.
+
+---
+
+## 1. Mục tiêu
+
+Học viên bấm **"Ôn riêng kỹ năng này"** trên một node của lộ trình. Kỹ năng đã đủ câu thì mở đề ngay (G2 đã làm).
+Kỹ năng **chưa có câu** (ví dụ Docker) thì **AI tự soạn đề**, tự kiểm tra, lưu lại; người sau dùng câu đã lưu.
+
+Lý do cần G3: hệ thống có **5.893 kỹ năng**, nhưng ngân hàng soạn tay mới phủ **13 kỹ năng** (3 khóa: 312, 743, 1855).
+Không thể soạn tay hay duyệt tay cho ~5.880 kỹ năng còn lại (≈ 88.000 câu nếu mỗi kỹ năng 15 câu).
+
+---
+
+## 2. Quyết định đã chốt
+
+| # | Quyết định | Ngày | Ghi chú |
+|---|---|---|---|
+| D1 | **Câu AI soạn cho ôn THEO KỸ NĂNG dùng ngay**, không qua admin duyệt. Câu qua cổng lưu `review_status = auto_approved`, kết quả cổng vào `ai_check`. Admin lọc **"Tự duyệt"** ở Ngân hàng câu hỏi để xem lại, sai thì sửa / tắt | 22/11 | Khác kế hoạch của thầy (mục 4.4) |
+| D2 | **Ôn theo KHÓA giữ như cũ** (QT6-A): chỉ dùng câu đã duyệt, **không lẫn** câu `auto_approved` | 22/11 | Demo khóa 312 không bị ảnh hưởng |
+| D3 | **Câu hỏng cổng** sau 2 lần soạn lại → **bỏ** (chỉ ghi vết để đo tỉ lệ hỏng), AI soạn câu khác thay | 22/11 | Thay cho "lưu Chờ duyệt" ở `guide.md` 5.2 cũ |
+| D4 | **Phản ánh câu hỏi**: nút "Phản ánh câu này" trên trang Kết quả (chỉ **sau khi nộp**), chọn lý do + ghi chú. Lưu **bảng riêng của module 09** `review_question_reports` (Alembic), chuyển về khu admin Ôn tập (trang "Câu bị phản ánh"). **Không dùng bảng `feedback` của Tâm** | 22/11 | Đã cân nhắc 3 cách (bảng Tâm + `question_id` / bảng Tâm nguyên trạng / bảng riêng) — chọn bảng riêng |
+| D5 | **Tự tắt tạm**: câu bị **≥ 3 người khác nhau** phản ánh (một người báo nhiều lần tính 1, ngưỡng cấu hình được) → không vào đề nữa cho tới khi admin xem (sửa rồi bật lại, hoặc bật lại nếu phản ánh sai) | 22/11 | |
+| D6 | **Phạm vi kỹ năng** (sửa Q8 cũ "chỉ CNTT"): mở cho kỹ năng mà câu AI soạn có **đáp án đúng rõ ràng VÀ nhóm (cùng học viên) nhận ra được khi AI soạn sai**. AI gắn **một lần** 3 nhãn Mở / Không mở / Chưa rõ; "Chưa rõ" = chưa mở; admin sửa được. Kỹ năng đã có ngân hàng tay luôn ôn được | 22/11 | Ví dụ: Docker, Excel, CSV, Power BI, Scrum = Mở; Communication, Workday, Nursing = Không mở; Financial Modeling = Chưa rõ |
+| D7 | Kỹ năng Mở vẫn phải có **tài liệu nguồn** (đoạn tri thức hoặc mô tả khóa dạy kỹ năng) mới soạn; không có nguồn thì không gọi Gemini | 22/11 | |
+| D8 | **Cổng kiểm tra giữ đủ 4 khối** (khung · trùng · giải mù trắc nghiệm · bài giả tự luận) nhưng **gộp lượt gọi** (~5–7 lần gọi Gemini / đề thay vì 20–30) | 22/11 | |
+| D9 | **Soạn ở nền**: bấm Bắt đầu trả về ngay, màn "Đang soạn đề… (bước x/4)" hỏi lại vài giây một lần, xong tự mở đề. Khóa theo `skill_id` để nhiều người bấm cùng lúc chỉ soạn **một lần** | 22/11 | Tránh Nginx / Docker cắt kết nối sau 60 s |
+| D10 | **Đợt này chỉ soạn đủ phần thiếu của một đề**; dự phòng tới 30 câu để sau | 22/11 | ⚠️ Đang có đề xuất đổi — xem P1 |
+| D11 | Làm **sau demo 25/11** trên `tuan/skill-review`; test tự động luôn dùng AI giả; đo thật bằng Gemini trên ~10 kỹ năng, Tuấn đọc mẫu 20–30 câu | 22/11 | |
+| D12 | **Tài liệu review của thầy (21/11) dùng để THAM KHẢO.** Không hỏi lại thầy trước; G3 làm theo quyết định của nhóm, sau buổi review 25/11 thầy góp ý gì thì sửa | 22/11 | |
+| D13 | **IoT / phần cứng / điện tử** giữ nhãn AI hiện tại (phần lớn "Chưa rõ"); admin **bật tay** ở trang "Phạm vi kỹ năng" khi có học viên cần. Không chạy lại phân loại | 24/11 | Đã cân nhắc thêm nhóm `hardware` 2 tầng — chưa làm |
+| D14 | Prompt phân loại **siết lên v2**: kỹ thuật ngoài CNTT (năng lượng, cơ khí, điện tử…), kinh doanh / tài chính, tên chung chung → "Chưa rõ" | 24/11 | v1 mở hơi rộng (Photovoltaics, AI Capabilities, Business Analysis = Mở) |
+
+---
+
+## 3. Đề xuất CHƯA chốt (chờ sau buổi review 25/11)
+
+Rút từ tài liệu của thầy (mục 4) và từ đối chiếu ngày 24/11. Tuấn chưa quyết — **không code** khi chưa chốt.
+
+| # | Đề xuất | Lý do | Nguồn |
+|---|---|---|---|
+| P1 | **Đổi D10**: lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới 30 câu**; lượt làm lại chỉ mở khi có đủ câu chưa làm (chưa đủ → "Đề mới đang được soạn") | Chỉ 15 câu thì lượt 2 gặp lại đúng 15 câu vừa hiện đáp án → chép lại là Đạt (gap G5) | Phase 06 thầy · `guide.md` 5.1 cũ |
+| P2 | Tránh câu của **3 lượt gần nhất** thay vì 1 (cả ôn theo khóa) | Chống học thuộc | Phase 06a |
+| P3 | **Ẩn đáp án mẫu tự luận khi chưa Đạt** (mức `mcq_only`), vẫn hiện đúng/sai và ý barem còn thiếu; đặt sau cờ cấu hình | Chống chép đáp án mẫu | Phase 06b — cần quyết UX |
+| P4 | Gắn cờ "xem lại" khi bài tự luận **chép đáp án mẫu** (chỉ cờ, không đổi điểm; chạy lại `eval_grading`) | | Phase 06c |
+| P5 | **Kho đoạn tri thức**: AI viết đoạn từ `courses.description` + `modules` của các khóa dạy kỹ năng, tính embedding, lưu dùng chung; admin thêm / sửa / xóa | Hiện chỉ 39 đoạn của 3 khóa → D7 khiến G3 gần như không mở được kỹ năng mới (gap G2) | Phase 04 |
+| P6 | **Sinh câu có cấu trúc**: `responseSchema` + Pydantic; AI trả `passage` → gán đúng `chunk_id` (bỏ `chunks[0]`); soạn lại **kèm lỗi lần trước**; prompt gửi kèm câu đã có; ghi `prompt_version` | Gap G4, F3, F4, F5 | Phase 02 |
+| P7 | **Cổng hợp nhất 6 phép**: khung · gần trùng (cosine) · giải mù ở temperature 0 **có xáo thứ tự đáp án** · **bám nguồn** (grounding) · luật **L1** (đáp án đúng dài bất thường) và **L7** (từ khóa barem nằm sẵn trong đề) · 4 bài giả tự luận. Hiệu chỉnh ngưỡng trên ~300 câu tay (312, 743, 1855), mục tiêu giải mù lệch ≤ 5% | Gap G3 | Phase 05 + D8 |
+| P8 | **Phase 01 cho ôn theo khóa**: cờ `REVIEW_GENERATE_ON_START=false` — bấm Bắt đầu không gọi Gemini | Gap G1 vẫn còn ở luồng ôn theo khóa | Phase 01 (đã thử 22/11 rồi hoàn tác — xem mục 9) |
+| P9 | **Số liệu sinh câu**: tỉ lệ qua cổng, tỉ lệ bị phản ánh, tỉ lệ admin tắt, theo `prompt_version` | Gap G6, G9 | Phase 07 |
+| P10 | **Lọc "Tự duyệt có cờ"** ở Ngân hàng câu hỏi (cờ từ cổng) để admin xem lại có trọng tâm | Bổ sung D1 | Phase 05 |
+| P11 | **Nhóm `hardware`** 2 tầng: phần cứng máy tính / IoT cơ bản / nhúng → Mở; điện tử chuyên sâu (FPGA, mạch analog, MEMS) → Chưa rõ | Hiện ~130 kỹ năng phần cứng xếp không nhất quán ("Computer hardware" Mở, "hardware" Chưa rõ) | Thảo luận 24/11 — tạm theo D13 |
+| P12 | **Xuất nhãn phạm vi ra JSON** + tự nạp khi bảng `review_skill_scopes` trống (giống autoseed đề ôn tập) | Nhãn hiện **chỉ có trên DB máy Tuấn**; máy khác / Docker lần đầu = không kỹ năng nào mở | 24/11 — đề xuất làm cùng G3d |
+
+**Mâu thuẫn trong tài liệu cũ cần lưu ý** (file này là bản đúng):
+- `guide.md` 5.1 (17/11) ghi "mục tiêu 30 câu, dự phòng soạn ở nền" ↔ Q13 (22/11) "đợt này chỉ soạn đủ một đề" → hiện theo **D10**, đề xuất đổi ở **P1**.
+- `guide.md` 5.2 (17/11) ghi "câu hỏng lưu Chờ duyệt" ↔ Q13 "bỏ" → theo **D3**.
+
+---
+
+## 4. Tài liệu review của thầy (21/11) — `261121-2216-on-tap-ai-improvement.zip`
+
+Gồm bản review gap (G1–G10), phân tích sâu (F1–F12), kế hoạch 8 phase (~27 giờ). Thầy review nhánh `review/featrure`
+trên máy thầy (chưa chạy được test vì `.env` thiếu `ALLOWED_ORIGINS`).
+
+### 4.1 Đánh giá chung của thầy
+- **Chấm tự luận bằng AI: tốt, vượt yêu cầu** (pipeline 9 khối, khớp 94–95% từng ý, QWK 0,95, kappa 0,81).
+- **AI sinh câu hỏi: mới đúng về hình thức** — câu Gemini sinh ra không bao giờ vào đề; AI không mở được đề cho khóa
+  chưa có câu; độ phủ 3/4.509 khóa, 13/5.893 kỹ năng.
+
+### 4.2 Các gap — đã kiểm lại với code (24/11): **đều đúng**
+| Gap | Nội dung | Kiểm code | G3 xử lý |
+|---|---|---|---|
+| G1 | Sinh câu nằm trên đường chờ học viên nhưng câu vẫn vào Chờ duyệt | Đúng. Demo an toàn vì 3 khóa đúng 20 câu / kỹ năng; **admin tắt 1 câu là Bắt đầu sẽ gọi Gemini** | D9 (theo kỹ năng), P8 (theo khóa) |
+| G2 | AI không mở được đề cho kỹ năng trống; không có API tạo đoạn tri thức | Đúng | G3 + P5 |
+| G3 | Validator chỉ kiểm cấu trúc | Đúng | D8, P7 |
+| G4 | Không `responseSchema`; `chunk_id = chunks[0]` (`real_ai.py:200`) | Đúng | P6 |
+| G5 | Học thuộc đáp án (lịch sử hiện "Model answer"; chỉ tránh 1 lượt) | Đúng, **nặng hơn với G3** | P1–P4 |
+| G6 | RAG sinh đề chưa có tác dụng (`TOP_K = 3`, ~3 đoạn / kỹ năng) | Đúng | P5 |
+| G7 | "Đã biết" không theo từng kỹ năng (quyết định B1) | Đúng | **Ôn theo kỹ năng (G2) đã giải quyết**: đạt chỉ ghi đúng kỹ năng đó |
+| G8–G10 | Lịch nhắc cố định; chưa có số liệu sinh câu; việc tồn | | P9 |
+
+Phần đã cũ trong tài liệu thầy: "chưa có migration, chỉ được thêm bảng" — nhánh `tuan/skill-review` đã có **Alembic tự chạy**.
+
+### 4.3 Kế hoạch 8 phase của thầy ↔ G3
+| Phase thầy | Nội dung | Ứng với |
+|---|---|---|
+| 01 | Gỡ sinh câu AI khỏi nút Bắt đầu (cờ) | P8, D9 |
+| 02 | Sinh câu có cấu trúc, đúng nguồn, có phản hồi, chống trùng | P6 → G3b |
+| 03 | Dịch vụ sinh câu dùng chung + màn admin "Soạn câu bằng AI" | G3d (kích hoạt bởi học viên thay vì admin — D1) |
+| 04 | Kho đoạn tri thức: CRUD + AI viết nháp + embedding | P5 → G3a |
+| 05 | Cổng chất lượng (chỉ gắn cờ) | P7 → G3c (G3 loại câu hỏng — D3) |
+| 06 | Chống học thuộc | P1–P4 → G3e |
+| 07 | Số liệu + tài liệu | P9 → G3g |
+| 08 | "Đã biết" theo từng kỹ năng | Không cần — ôn theo kỹ năng đã làm đúng |
+
+### 4.4 Điểm G3 khác kế hoạch của thầy
+| | Kế hoạch thầy | G3 (nhóm chốt) |
+|---|---|---|
+| Ai kích hoạt AI soạn | Admin | Học viên bấm ôn kỹ năng thiếu câu (soạn ở nền) |
+| Câu AI soạn | Chờ duyệt | Dùng ngay cho ôn theo kỹ năng (`auto_approved`) |
+| Cổng kiểm tra | Chỉ gắn cờ | Loại câu hỏng |
+| Đề chưa duyệt cho học viên | Thầy ghi "ngoài phạm vi, cần BA/SRS trước" | Chính là G3 → **cần cập nhật BA/SRS (FR-24, FR-54)** khi gộp |
+
+### 4.5 Câu thầy hỏi — gợi ý trả lời (chưa gửi; theo D12 chờ buổi review 25/11)
+1. Demo có cần AI sinh câu chạy thật? → Không; demo phần chấm AI, sinh câu là hướng phát triển (G3).
+2. Có giữ hiện đáp án ngay sau khi trượt? → Đề xuất ẩn đáp án mẫu tự luận khi chưa Đạt (P3).
+3. B1 có giữ sau 25/11? → Giữ cho ôn theo khóa; ôn theo kỹ năng đã cho "Đã biết" đúng từng kỹ năng.
+4. Chấp nhận thêm 1 lượt Gemini / câu trắc nghiệm (giải mù)? → Có, gộp theo lô (D8).
+
+---
+
+## 5. Luồng G3
+
+```mermaid
+flowchart TD
+  A([Học viên bấm 'Ôn riêng kỹ năng này' trên node]) --> B{Kỹ năng Mở?<br/>nhãn + có tài liệu nguồn}
+  B -- Không / Chưa rõ --> X[Chưa có đề cho kỹ năng này]
+  B -- Mở --> C{Ngân hàng đủ 15 câu?<br/>6 NB + 6 TH + 2 TL dễ + 1 TL nâng cao}
+  C -- Đủ --> E[Ráp đề, mở ngay — G2]
+  C -- Thiếu --> F[Tạo việc soạn ở nền<br/>khóa theo skill_id · trả về ngay]
+  F --> G[Màn 'Đang soạn đề… bước x/4'<br/>hỏi lại vài giây một lần]
+  F --> H[RAG lấy đoạn tri thức → Gemini soạn phần thiếu]
+  H --> I{Cổng kiểm tra từng câu}
+  I -- Hỏng --> J[Soạn lại kèm lỗi, tối đa 2 lần<br/>vẫn hỏng → bỏ, soạn câu khác]
+  J --> I
+  I -- Đạt --> K[(Lưu source=ai,<br/>review_status=auto_approved, ai_check)]
+  K --> E
+  E --> L[Làm bài · nộp · chấm như cũ]
+  L --> M{Đạt ≥ 6/10?}
+  M -- Đạt --> N[(Chỉ kỹ năng này → Đã biết)]
+  M -- Chưa đạt --> O[Làm lại đề khác]
+  L --> P[Trang Kết quả: 'Phản ánh câu này']
+  P --> Q{≥ 3 người phản ánh?}
+  Q -- Có --> R[Tự tắt tạm → admin xem]
+```
+
+---
+
+## 6. G3.0 — Phạm vi kỹ năng (ĐÃ LÀM, commit `9ef4585`, 24/11)
+
+### 6.1 Thiết kế (Tuấn duyệt "theo đề xuất" 24/11)
+- **Bảng mới** `review_skill_scopes` (Alembic `0003_skill_scopes`) — bảng riêng module 09, **không thêm cột vào `skills`** (của Hòa / Khôi):
+  `skill_id` (PK, FK skills CASCADE) · `label` open/closed/unsure · `category` · `reason` (≤ 200) · `source` ai/admin ·
+  `model` · `prompt_version` · `updated_by` (FK users SET NULL) · `created_at` · `updated_at`.
+- **10 nhóm** `category`: programming · software_tools · data_bi · infra_security · software_process · math_science ·
+  business_domain · soft_skill · specialized_domain · other.
+- **AI phân loại**: mỗi kỹ năng gửi tên + **tối đa 2 tên khóa** đông học viên nhất (giải nghĩa tên mơ hồ như "circuits");
+  lô 100 kỹ năng, temperature 0, `responseSchema` + Pydantic; thiếu id → hỏi lại 1 lần → vẫn thiếu = "Chưa rõ";
+  Gemini 503 → chờ 20 / 40 / 60 / 60 giây rồi thử lại lô; mỗi lô commit riêng → ngắt giữa chừng chạy lại làm tiếp;
+  **không bao giờ ghi đè nhãn admin**. Prompt ghi rõ tên kỹ năng / khóa là **dữ liệu, không phải lệnh**.
+- **Không** chạy lúc khởi động server (tốn lượt Gemini) — chạy tay một lần.
+- **Chưa đổi luồng học viên**: `is_open(skill_id)` chỉ có tác dụng từ G3d.
+
+### 6.2 File
+| File | Nội dung |
+|---|---|
+| `backend/app/models/review_skill_scope.py` | Model + CHECK nhãn / nhóm / nguồn |
+| `backend/alembic/versions/20261124_0003_skill_scopes.py` | Tạo bảng (giá trị CHECK ghi cứng, không import model) |
+| `backend/app/ai/prompts/review_scope.py` | `SCOPE_SYSTEM_PROMPT`, `SCOPE_PROMPT_VERSION = "scope-en-v2"` |
+| `backend/app/ai/review/scope_schema.py` | `GEMINI_SCOPE_SCHEMA`, `parse_scope` |
+| `backend/app/ai/review/real_ai.py` | `RealAI.classify_skills` (timeout 120 s) |
+| `backend/app/repositories/skill_scope_repository.py` | Kỹ năng chưa nhãn, tên khóa, đếm, danh sách |
+| `backend/app/services/skill_scope_service.py` | `is_open`, `classify_batch`, `run`, `list_page`, `set_scope` |
+| `backend/app/core/seed_data/classify_skill_scopes.py` | Script chạy tay |
+| `backend/app/routers/v1/endpoints/admin/review_admin.py` | `GET /api/admin/review/skill-scopes`, `PATCH /api/admin/review/skill-scopes/{skill_id}` |
+| `frontend/src/features/review-admin/pages/AdminSkillScopesPage.jsx` | Trang `/admin/skill-scopes` "Phạm vi kỹ năng" (lọc nhãn / nhóm / nguồn / tên, đổi nhãn tại chỗ) |
+| `backend/tests/test_skill_scope.py` | 13 test (AI giả, không gọi mạng) |
+
+### 6.3 Lệnh
+```bash
+cd backend
+python -m app.core.seed_data.classify_skill_scopes --limit 100 --dry-run   # thử, in ra, không lưu
+python -m app.core.seed_data.classify_skill_scopes                          # phân loại kỹ năng chưa có nhãn
+python -m app.core.seed_data.classify_skill_scopes --sample 50 --out <file.csv>   # xuất mẫu để người kiểm
+```
+
+### 6.4 Kết quả chạy thật (24/11, Gemini `gemini-3.5-flash-lite`, prompt v2)
+- **5.893 kỹ năng**: **3.467 Mở · 1.268 Không mở · 1.158 Chưa rõ**; 0 kỹ năng AI bỏ sót. Khoảng 65 lượt gọi, 3 đợt chạy
+  (đợt đầu dừng giữa chừng vì Gemini 503 → thêm cơ chế chờ + thử lại lô, chạy tiếp được).
+- **Theo nhóm:**
+
+| Nhóm | Mở | Không mở | Chưa rõ | Tổng |
+|---|---:|---:|---:|---:|
+| infra_security | 1.108 | 15 | 10 | 1.133 |
+| programming | 695 | 0 | 5 | 700 |
+| soft_skill | 3 | 676 | 3 | 682 |
+| other | 5 | 10 | 622 | 637 |
+| business_domain | 6 | 124 | 466 | 596 |
+| data_bi | 487 | 1 | 10 | 498 |
+| math_science | 460 | 0 | 24 | 484 |
+| software_tools | 462 | 0 | 5 | 467 |
+| specialized_domain | 0 | 439 | 5 | 444 |
+| software_process | 241 | 3 | 8 | 252 |
+- **So v1 ↔ v2** trên cùng 100 kỹ năng: v1 53 / 42 / 5 → v2 51 / 30 / 19 (Mở / Không mở / Chưa rõ); Photovoltaics, AI Capabilities, Business Analysis chuyển Chưa rõ.
+
+### 6.5 Kiểm tay 50 mẫu (Tuấn, 24/11 — file `Gắn nhãn phạm vi kỹ năng – mẫu 50.xlsx`)
+| Chỉ số | Lần 1 | Lần 2 (Tuấn sửa) | Mục tiêu |
+|---|---|---|---|
+| Khớp đúng nhãn | 65% | **84%** (42/50) | ≥ 85% |
+| Khớp Mở / không Mở | 80% | **92%** (46/50) | |
+| **AI mở sai** (người không mở, AI Mở) | 0 | **0** | 0 ✅ |
+
+Lệch còn lại: 4 cặp Không mở ↔ Chưa rõ (không ảnh hưởng); 4 kỹ năng Tuấn Mở – AI Chưa rõ (Ứng dụng IoT, Ứng dụng IoT
+thực tế, Quản trị AI tạo sinh, Giải quyết vấn đề). Lưu ý: "Kiến thức nền tảng IoT" Tuấn để Chưa rõ nhưng 2 kỹ năng IoT
+kia Mở — chưa nhất quán → theo **D13** admin bật tay khi cần.
+**Kết luận: đạt yêu cầu** (0 mở sai), commit.
+
+### 6.6 Kiểm tra
+1.103 test qua (2 lỗi cũ của Tâm: `test_embedding_model`, `test_query_router_course_skills`); migration trống → head
+khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn nguyên.
+
+---
+
+## 7. Kế hoạch G3 (đề xuất 24/11 — thứ tự có thể đổi sau review 25/11)
+
+| Bước | Việc | Theo phase thầy | Trạng thái |
+|---|---|---|---|
+| **G3.0** | AI gắn nhãn phạm vi + trang admin sửa nhãn | — | ✅ Xong `9ef4585` (chưa push) |
+| G3a | Kho đoạn tri thức: AI viết từ mô tả khóa + embedding + admin thêm / sửa / xóa | 04 | Chờ trình bày thiết kế |
+| G3b | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | |
+| G3c | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | |
+| G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt (+ P1, P8, P12 nếu chốt) | 01, 03 | |
+| G3e | Chống học thuộc (P1–P4 nếu chốt) | 06 | |
+| G3f | Phản ánh câu hỏi + tự tắt ≥ 3 người + lọc "Tự duyệt (có cờ)" | — | |
+| G3g | Số liệu + đo ~10 kỹ năng + cập nhật BA/SRS, báo cáo | 07 | |
+
+**Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
+câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.
+
+---
+
+## 8. Việc còn treo liên quan
+
+| Việc | Ai | Ghi chú |
+|---|---|---|
+| Bản tạm `SkillNode.jsx` — huy hiệu ôn tập hiện ở **mọi node** (để ôn cả kỹ năng chưa học) | Hòa duyệt | Điều kiện cũ để trong comment; không đồng ý thì khôi phục |
+| Nhãn phạm vi chỉ có trên DB máy Tuấn | Tuấn | P12 |
+| Gộp `tuan/skill-review` vào `review/featrure` | Sau 25/11 | Cả nhóm bắt đầu dùng Alembic: sửa cột bảng có sẵn phải viết migration; ghi vào README khi gộp |
+| Cập nhật BA/SRS (FR-24, FR-54) cho "đề do AI soạn, dùng ngay" | Tuấn | Trước khi gộp G3d |
+
+---
+
+## 9. Cách làm việc (rút kinh nghiệm)
+
+- Tuấn quyết từng bước: **xong một mục → báo → chờ quyết** rồi mới làm mục sau. Câu kiểu "cứ dựa vào tài liệu mà làm"
+  **không** có nghĩa là bắt đầu code. Ngày 22/11 Claude tự code phase 01 của thầy trên nhánh demo khi chưa hỏi → đã
+  hoàn tác toàn bộ (4 file), nhánh demo về đúng `952aee6`.
+- Mỗi bước G3: trình bày **thiết kế chi tiết** → Tuấn duyệt → code → test → Tuấn kiểm → Tuấn bảo commit.
+- Không sửa module của bạn khác khi chưa được đồng ý; file dùng chung chỉ thêm đúng dòng cần (black không định dạng lại cả file).
+
+---
+
+## 10. Nhật ký
+
+| Ngày | Nội dung |
+|---|---|
+| 06/11 | Đề xuất gốc "AI sinh câu bằng system prompt + RAG" (`De-xuat-AI-On-tap.md`) |
+| 17/11 | Thiết kế ôn theo kỹ năng (`guide.md`): AI soạn khi thiếu, cổng 4 khối, mục tiêu 30 câu / kỹ năng, chỉ CNTT (Q8) |
+| 21/11 | Thầy gửi review + kế hoạch 8 phase (`261121-2216-on-tap-ai-improvement`) |
+| 22/11 | G2 xong. Chốt G3 (D1–D11, D4–D5 phản ánh + tự tắt), sửa Q8 → D6. Quyết định không hỏi lại thầy, dùng tài liệu thầy để tham khảo (D12). Thử phase 01 rồi hoàn tác |
+| 24/11 | Đối chiếu tài liệu thầy (gap đều đúng) → đề xuất P1–P12. **G3.0 xong**: bảng + prompt v2 + 5.893 nhãn + trang admin; Tuấn kiểm 50 mẫu (84% / 92% / 0 mở sai); IoT theo D13. Gom toàn bộ G3 vào file này |
