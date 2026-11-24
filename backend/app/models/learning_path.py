@@ -27,7 +27,7 @@ class LearningPath(Base):
     share_code = Column(String(50), unique=True, index=True, nullable=True)
     shared_at = Column(DateTime(timezone=True), nullable=True)
     clone_count = Column(Integer, nullable=False, default=0, server_default="0")
-    cloned_from_id = Column(Integer, ForeignKey("learning_paths.record_id"), nullable=True)
+    cloned_from_id = Column(Integer, ForeignKey("learning_paths.record_id", ondelete="SET NULL"), nullable=True)
 
     student = relationship(
         "Users",
