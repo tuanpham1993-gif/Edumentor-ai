@@ -21,11 +21,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ai.prompts.review_generate import GEN_PROMPT_VERSION
+from app.ai.review import question_idea
 from app.ai.review.grading_schema import AIOutputError
 from app.ai.review.question_gate import Embed, GateContext, Solve, model_answer, run_gate
 from app.ai.review.question_schema import check_questions
 from app.models.review_question import ReviewQuestion
 from app.repositories import knowledge_repository
+from app.repositories import review_repository
 from app.repositories import skill_scope_repository as scope_repo
 from app.services import skill_scope_service
 
@@ -35,9 +37,10 @@ FULL_EXAM = {"recognize": 6, "understand": 6, "easy": 2, "advanced": 1}  # khung
 SKILL_TARGET = {"recognize": 12, "understand": 12, "easy": 4, "advanced": 2}  # ~30 câu / kỹ năng (D25)
 KINDS = {"mcq": ("recognize", "understand"), "essay": ("easy", "advanced")}
 MAX_RETRIES = 2  # D3: soạn lại tối đa 2 lần
+DUPLICATE_IDEA = "duplicate_idea"  # disabled_reason: câu tắt vì trùng ý (script dedupe_question_ideas)
 
-# write(skill, passages, kind, need, existing, feedback) -> JSON thô {"questions": [...]}
-Write = Callable[[str, list[dict], str, dict, list[str], list[str]], object]
+# write(skill, passages, kind, need, existing, feedback, used=[câu trích đã dùng cùng loại]) -> JSON thô {"questions": [...]}
+Write = Callable[..., object]
 
 
 class GenError(Exception):
@@ -60,6 +63,13 @@ def existing_questions(db: Session, skill_id: int) -> list[tuple[int, str, str]]
     )
 
 
+def existing_ideas(db: Session, skill_id: int) -> list[question_idea.UsedIdea]:
+    """Bước A (25/11): ý đã dùng của kỹ năng — câu đang bật + câu tắt vì trùng ý. Câu tắt vì lỗi (mentor phản ánh…) trả
+    lại ý cho câu mới."""
+    rows = review_repository.question_sources(db, skill_id=skill_id)
+    return question_idea.from_rows(r for r in rows if r.is_active or r.disabled_reason == DUPLICATE_IDEA)
+
+
 def existing_contents(db: Session, skill_id: int) -> list[str]:
     return [content for _, content, _ in existing_questions(db, skill_id)]
 
@@ -79,8 +89,9 @@ def _generate_kind(
             break
         calls += 1
         seen = [content for _, content, _ in ctx.existing]
+        used = [u.quote for u in ctx.ideas if u.type == kind]  # Bước A: câu trích đã dùng → AI chọn câu nguồn khác
         try:
-            data = write(ctx.skill, passages, kind, left, seen, feedback)
+            data = write(ctx.skill, passages, kind, left, seen, feedback, used=used)
         except AIOutputError as err:
             feedback = [f"the answer was not valid JSON for the schema ({err})"]
             rejected.append({"kind": kind, "attempt": attempt + 1, "errors": feedback})
@@ -145,6 +156,7 @@ def generate(
         skill=name,
         chunks={c.chunk_id: c.content for c in chunks},
         existing=existing_questions(db, skill_id),
+        ideas=existing_ideas(db, skill_id),
         solve=counted_solve if solve else None,
         embed=embed,
         rng=rng or random.Random(),

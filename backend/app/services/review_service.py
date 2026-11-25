@@ -28,6 +28,7 @@ from sqlalchemy.orm import Session
 
 from app.ai.prompts.review import GENERATE_SYSTEM_PROMPT, build_generation_prompt
 from app.ai.review import get_review_ai
+from app.ai.review import question_idea
 from app.ai.review.base import AIUnavailableError, GenerationRequest, ReviewAI
 from app.ai.review.mock_ai import pick_from_bank
 from app.ai.review.validator import generated_errors
@@ -243,6 +244,26 @@ def recent_avoid(
     return family, {q.question_id: fam_penalty[fam_of[q.question_id]] for q in family}
 
 
+def attach_ideas(db: Session, candidates: list[dict], avoid: dict[int, int] | set[int]) -> dict[int, int]:
+    """Bước A (25/11): gắn "idea" cho câu AI soạn (một đề không lấy 2 câu cùng ý — pick_from_bank) và trả mức phạt P2 MỚI:
+    câu khác id nhưng cùng ý (cùng loại) với câu của lượt gần đây nhận mức phạt của lượt đó → lượt sau ưu tiên ý mới."""
+    penalty = dict(avoid) if isinstance(avoid, dict) else dict.fromkeys(avoid, 1)
+    ids = sorted({c["question_id"] for c in candidates} | set(penalty))
+    ideas = {u.question_id: u for u in question_idea.from_rows(repo.question_sources(db, question_ids=ids))}
+    recent: dict[tuple, int] = {}
+    for qid, p in penalty.items():
+        if (u := ideas.get(qid)) is not None:
+            for t in u.idea:
+                recent[(u.type, *t)] = max(recent.get((u.type, *t), 0), p)
+    for c in candidates:
+        u = ideas.get(c["question_id"])
+        c["idea"] = sorted(u.idea) if u else []
+        p = max((recent.get((c["type"], *t), 0) for t in c["idea"]), default=0)
+        if p > penalty.get(c["question_id"], 0):
+            penalty[c["question_id"]] = p
+    return penalty
+
+
 def _question_dict(q: ReviewQuestion) -> dict:
     return {
         "question_id": q.question_id,
@@ -327,14 +348,16 @@ def pick_questions(
     for skill_id, need in plan.items():
         chunks = review_rag_service.retrieve_chunks(db, skill_id, names[skill_id], embedder=embedder)
         prompt = build_generation_prompt(course_title=title, skill_name=names[skill_id], chunks=chunks, need=need)
+        candidates = [_question_dict(q) for q in repo.bank_questions(db, skill_id, include_auto=include_auto)]
+        skill_avoid = attach_ideas(db, candidates, avoid) if include_auto else avoid  # Bước A: chỉ ôn theo kỹ năng
         request = GenerationRequest(
             course_title=title,
             skill_id=skill_id,
             skill_name=names[skill_id],
             need=need,
             chunks=chunks,
-            candidates=[_question_dict(q) for q in repo.bank_questions(db, skill_id, include_auto=include_auto)],
-            avoid_question_ids=avoid,
+            candidates=candidates,
+            avoid_question_ids=skill_avoid,
             system_prompt=GENERATE_SYSTEM_PROMPT,
             prompt=prompt,
             pending_count=repo.pending_count(db, skill_id),
@@ -349,7 +372,7 @@ def pick_questions(
                 need,
                 rng,
                 prefer_chunk_ids={c.chunk_id for c in chunks},
-                avoid_question_ids=avoid,
+                avoid_question_ids=skill_avoid,
             )
             if generated_errors(questions, need):
                 raise exam_builder.NotEnoughQuestionsError(f"Ngân hàng kỹ năng {skill_id} không đủ câu")

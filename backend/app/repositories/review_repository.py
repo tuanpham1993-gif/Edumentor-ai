@@ -276,6 +276,28 @@ def recent_submitted_question_ids(
     return out
 
 
+def question_sources(db: Session, *, question_ids: list[int] | None = None, skill_id: int | None = None) -> list:
+    """Bước A chống trùng ý (25/11): (question_id, type, chunk_id, nội dung đoạn, ai_check, is_active, disabled_reason,
+    mentor_status) của câu CÓ meta (câu AI soạn / qua kho) — theo danh sách id hoặc theo kỹ năng."""
+    stmt = (
+        select(
+            ReviewQuestion.question_id, ReviewQuestion.type, ReviewQuestion.chunk_id, KnowledgeChunk.content,
+            ReviewQuestionMeta.ai_check, ReviewQuestion.is_active, ReviewQuestionMeta.disabled_reason,
+            ReviewQuestionMeta.mentor_status,
+        )  # fmt: skip
+        .join(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .outerjoin(KnowledgeChunk, KnowledgeChunk.chunk_id == ReviewQuestion.chunk_id)
+        .order_by(ReviewQuestion.question_id)
+    )
+    if question_ids is not None:
+        if not question_ids:
+            return []
+        stmt = stmt.where(ReviewQuestion.question_id.in_(question_ids))
+    if skill_id is not None:
+        stmt = stmt.where(ReviewQuestion.skill_id == skill_id)
+    return list(db.execute(stmt).all())
+
+
 def family_ids(db: Session, question_ids: list[int]) -> dict[int, int]:
     """{question_id: family_id} — câu chưa có meta là họ của chính nó."""
     if not question_ids:

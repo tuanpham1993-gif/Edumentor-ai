@@ -23,11 +23,14 @@ def pick_from_bank(
     1) thuộc đoạn RAG + chưa có ở lượt trước → 2) chưa có ở lượt trước → 3) còn lại (đành lặp lại).
     Trong cùng một nhóm ưu tiên thì ngẫu nhiên. Thiếu câu → trả về ít hơn (validator sẽ báo).
     G3e P2 (D29): avoid_question_ids có thể là {question_id: mức phạt} — phải lặp thì lặp câu phạt THẤP (lượt cũ) trước.
+    Bước A (25/11): câu có "idea" ([(chunk_id, số câu nguồn)] — question_idea) → một đề không lấy 2 câu CÙNG LOẠI chung
+    câu nguồn; ràng buộc MỀM: không đủ câu khác ý thì mới lấy câu trùng ý.
     """
     prefer = prefer_chunk_ids or set()
     avoid = avoid_question_ids or set()
     penalty = avoid if isinstance(avoid, dict) else dict.fromkeys(avoid, 1)
     picked = []
+    used: set[tuple] = set()
     for level, count in need.items():
         pool = [q for q in candidates if q["level"] == level]
         rng.shuffle(pool)
@@ -37,7 +40,17 @@ def pick_from_bank(
                 bool(prefer) and q.get("chunk_id") not in prefer,
             )
         )
-        picked += pool[:count]
+        chosen, skipped = [], []
+        for q in pool:
+            if len(chosen) == count:
+                break
+            keys = {(q.get("type"), *t) for t in q.get("idea") or ()}
+            if keys & used:
+                skipped.append(q)
+                continue
+            chosen.append(q)
+            used |= keys
+        picked += chosen + skipped[: count - len(chosen)]
     return picked
 
 

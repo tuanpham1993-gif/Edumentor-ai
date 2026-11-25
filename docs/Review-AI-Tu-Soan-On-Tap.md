@@ -375,9 +375,20 @@ P2 / P3 đúng; mentor Đạt / Phản ánh / admin bác đúng. Phát hiện:
 - [x] **Soạn bổ sung lặp mãi khi làm lại**: `topup` "xong mà vẫn thiếu" → bấm lại lại tạo `topup`. Sửa: việc bổ sung vừa
   kết thúc trong `TOPUP_RETRY_MINUTES=10` phút → ráp đề lặp một phần (`recent_topup_finished`)
 - [x] Test `test_generation_jobs.py` +3 (tổng 19)
-- [ ] **Trùng ý kiến thức** (chờ làm — Bước A / B): 30 câu Kubernetes chỉ dùng 15 câu trích; cổng gần trùng (MiniLM)
-  chấm các cặp diễn đạt lại 0,52–0,80 < 0,95. Hướng: dùng `source_quote` làm "ý" — cổng loại trùng câu trích, prompt gửi
-  câu trích đã dùng, ráp đề không lấy 2 câu cùng câu trích, P2 tránh theo câu trích; sau đó số câu theo số ý (sửa D25)
+- [x] **Bước A — trùng ý kiến thức** (Tuấn duyệt 25/11): 30 câu Kubernetes chỉ dùng 15 câu trích; cổng gần trùng (MiniLM)
+  chấm các cặp diễn đạt lại 0,52–0,80 < 0,95. Ý của câu = các câu của đoạn mà `source_quote` phủ lên
+  (`ai/review/question_idea.py`); chỉ so CÙNG LOẠI; câu soạn tay / không có câu trích không bị chặn
+  - Cổng phép 5 (`gate-v2`): trùng ý với câu đang bật / câu tắt vì trùng / câu vừa đạt → loại + "trích câu khác"
+  - Prompt **`gen-en-v5`**: gửi kèm tối đa 40 câu trích đã dùng cùng loại
+  - Ráp đề (`pick_from_bank`): một đề không lấy 2 câu cùng ý (mềm — thiếu thì vẫn lấy); P2 (`attach_ideas`): câu cùng ý
+    với câu của 3 lượt gần nhất nhận mức phạt của lượt đó — chỉ ôn theo kỹ năng
+  - Script `python -m app.core.seed_data.dedupe_question_ideas --skills "…" [--apply]` (giữ câu mentor Đạt, rồi câu cũ
+    nhất; còn lại `disabled_reason='duplicate_idea'`). Chạy thử trên DB máy Tuấn: Kubernetes giữ 20 / tắt 10, Power BI
+    giữ 11 / tắt 4 (Power BI khi đó thiếu cho 1 đề → lần ôn sau tự soạn bổ sung). **Chưa `--apply`**
+  - Test `test_question_idea.py` (9); dữ liệu giả của test cũ mỗi câu trích một câu nguồn riêng; toàn bộ 1.220 qua
+  - Đo thật 25/11 (Gemini quá tải 503 liên tục): Linux **12 TN / 12 câu trích khác nhau** sau 2 lần soạn + 2 lần giải mù
+    (trước: Power BI 12 TN / 9 câu trích); tự luận Linux và SQL chưa đo được vì 503 → đo lại khi Gemini ổn
+- [ ] Bước B — số câu theo số ý (sửa D25), AI viết thêm đoạn tài liệu khi hết ý: chờ Tuấn chốt
 - [ ] Commit (khi Tuấn bảo)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp

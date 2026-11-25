@@ -14,6 +14,8 @@ Phép kiểm:
      (câu trắc nghiệm và tự luận cùng chủ đề là bình thường — hiệu chỉnh 25/11).
   4. Bài giả tự luận (bộ chấm từ khóa, 0 lượt gọi): bài mẫu ≥ REVIEW_GATE_MODEL_MIN; bài chép đề ≤ REVIEW_GATE_COPY_MAX;
      bài mẫu câu khác ≤ REVIEW_GATE_OTHER_MAX → không thì loại.
+  5. Trùng ý (25/11, Bước A — question_idea): câu trích phủ lên câu nguồn mà câu CÙNG LOẠI đã có (ngân hàng / vừa đạt)
+     đã dùng → loại; lý do gửi lại cho AI "trích câu khác". Không cần embedder.
   + Bám nguồn: cosine(câu + đáp án, đoạn nguồn) — CHỈ GHI, không loại.
 Không có embedder → bỏ qua 3 và bám nguồn ("skipped"). Lỗi AI khi giải mù (503…) → AIUnavailableError đi ra ngoài.
 """
@@ -23,11 +25,11 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from app.ai.review import keyword_grading
+from app.ai.review import keyword_grading, question_idea
 from app.ai.review.grading_schema import AIOutputError
 from app.core.config import settings
 
-GATE_VERSION = "gate-v1"
+GATE_VERSION = "gate-v2"  # v2 (25/11): + trùng ý (phép 5)
 
 Solve = Callable[[str, list[dict]], object]  # (skill, items[{id, content, options}]) -> {"answers": [{id, index}]}
 Embed = Callable[[str], list[float] | None]
@@ -39,6 +41,7 @@ class GateContext:
     chunks: dict[int, str]  # chunk_id → nội dung đoạn
     existing: list[tuple[int | None, str, str]] = field(default_factory=list)  # (question_id, đề, loại) cùng kỹ năng
     other_answers: list[str] = field(default_factory=list)  # bài mẫu tự luận khác (cho bài giả "câu khác")
+    ideas: list[question_idea.UsedIdea] = field(default_factory=list)  # ý đã dùng (ngân hàng + câu vừa đạt) — phép 5
     solve: Solve | None = None
     embed: Embed | None = None
     rng: random.Random = field(default_factory=random.Random)
@@ -200,6 +203,15 @@ def run_gate(questions: list[dict], kind: str, ctx: GateContext) -> tuple[list[d
     if ctx.embed is not None:
         seen = [(qid, v) for qid, text, t in ctx.existing if t == kind and (v := ctx.vector(text)) is not None]
     for q, gate in checks:
+        quote = question_idea.quote_of(q.get("ai_check"))
+        idea = question_idea.idea_of(quote, q.get("chunk_id"), ctx.chunks.get(q.get("chunk_id")))
+        gate["idea"] = sorted([list(t) for t in idea])
+        same = question_idea.clash(idea, kind, ctx.ideas)
+        if same is not None:
+            gate["same_idea_as"] = same.question_id
+            rejected.append((q, f'tests the same source sentence as an existing question ("{same.quote[:80]}") — '
+                                "write about a different sentence of the passages and quote that one"))  # fmt: skip
+            continue
         vec = ctx.vector(q["content"])
         if vec is None:
             gate["max_similarity"] = gate["grounding"] = None
@@ -221,4 +233,6 @@ def run_gate(questions: list[dict], kind: str, ctx: GateContext) -> tuple[list[d
         gate["passed"] = True
         q.setdefault("ai_check", {})["gate"] = gate
         passed.append(q)
+        if idea:
+            ctx.ideas.append(question_idea.UsedIdea(None, kind, idea, quote))
     return passed, rejected

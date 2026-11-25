@@ -14,7 +14,7 @@ from app.models import ReviewGenerationJob, ReviewQuestion, ReviewQuestionMeta, 
 from app.repositories import review_repository as repo
 from app.services import review_generation_service as gen
 from tests.test_question_gate import Solver
-from tests.test_question_gen import FakeAI, essay, gdb, mcq  # noqa: F401 — fixture kỹ năng 80 "Docker" Mở + 2 đoạn
+from tests.test_question_gen import FakeAI, essay, fact, gdb, mcq  # noqa: F401 — fixture Docker Mở + 2 đoạn
 
 SKILL = 80
 
@@ -194,7 +194,7 @@ def more_mcqs(start: int, n_rec: int, n_und: int) -> dict:
     qs = []
     for i in range(n_rec + n_und):
         level = "recognize" if i < n_rec else "understand"
-        q = mcq(level, 0)
+        q = mcq(level, 0, quote=fact(60 + start + i))  # câu nguồn riêng (cổng trùng ý — Bước A)
         q["content"] = f"Question {start + i}: what is true about Docker {topics[(start + i) % len(topics)]}?"
         qs.append(q)
     return {"questions": qs}

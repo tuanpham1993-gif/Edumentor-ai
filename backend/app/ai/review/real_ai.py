@@ -177,6 +177,7 @@ class RealAI(ReviewAI):
         existing: list[str],
         feedback: list[str],
         *,
+        used: list[str] = (),
         timeout: float = 120.0,
     ):
         """→ JSON thô {"questions": [...]} (question_gen_service kiểm lại bằng check_questions). kind: "mcq" | "essay".
@@ -184,7 +185,7 @@ class RealAI(ReviewAI):
         from app.ai.prompts.review_generate import GEN_SYSTEM_PROMPT, build_question_prompt
         from app.ai.review.question_schema import GEMINI_QUESTION_SCHEMAS
 
-        prompt = build_question_prompt(skill, passages, need, existing, feedback)
+        prompt = build_question_prompt(skill, passages, need, existing, feedback, used)  # used: Bước A (gen-en-v5)
         return self._call(
             GEN_SYSTEM_PROMPT, prompt, temperature=0.5, timeout=timeout, schema=GEMINI_QUESTION_SCHEMAS[kind]
         )

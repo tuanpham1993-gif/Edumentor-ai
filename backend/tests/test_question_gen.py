@@ -15,6 +15,15 @@ from app.services import question_gen_service as gen
 SKILL = 80
 P1 = "Docker images are read-only templates. A container is a running instance of an image with a writable layer."
 P2 = "A Dockerfile begins with a FROM instruction that names the base image. RUN, COPY and ADD create new layers."
+
+
+def fact(k: int) -> str:
+    """Câu nguồn riêng thứ k (Bước A 25/11: mỗi câu giả trích MỘT câu nguồn khác → không bị cổng trùng ý loại)."""
+    return f"Docker fact number {k} is written in this passage"
+
+
+P1 += " " + " ".join(f"{fact(200 + k)}." for k in range(1, 11))  # câu nguồn cho tự luận
+P2 += " " + " ".join(f"{fact(k)}." for k in range(1, 121))  # câu nguồn cho trắc nghiệm
 PASSAGES = [P1, P2]
 
 
@@ -34,8 +43,9 @@ STEMS = [
 ]
 
 
-def mcq(level="recognize", n=0, *, passage=2, quote="a dockerfile begins with a from instruction", options=None):
+def mcq(level="recognize", n=0, *, passage=2, quote=None, options=None):
     stem = STEMS[(n + (6 if level == "understand" else 0)) % len(STEMS)]
+    quote = quote or fact(1 + n + (30 if level == "understand" else 0))  # mỗi (mức, n) một câu nguồn
     return {"level": level, "passage": passage, "content": stem,
             "options": options or ["FROM", "BASE", "IMAGE", "RUN"], "correct_index": 0,
             "explanation": "FROM names the base image.", "source_quote": quote}  # fmt: skip
@@ -59,13 +69,16 @@ ESSAY_KEYS = {
 }  # fmt: skip
 
 
+ESSAY_FACT = {("easy", 1): 201, ("easy", 2): 202, ("advanced", 1): 203}
+
+
 def essay(level="easy", n=1):
     keys, answer = ESSAY_KEYS[(level, n)]
     points = [10 // len(keys) + (10 % len(keys) if i == 0 else 0) for i in range(len(keys))]
     rubric = [{"text": " ".join(k), "max_points": p, "main_keywords": k, "sub_keywords": []}
               for k, p in zip(keys, points, strict=True)]  # fmt: skip
     return {"level": level, "passage": 1, "content": ESSAYS[(level, n)], "rubric": rubric,
-            "explanation": f"Model answer: {answer}", "source_quote": "A container is a running instance of an image"}  # fmt: skip
+            "explanation": f"Model answer: {answer}", "source_quote": fact(ESSAY_FACT[(level, n)])}  # fmt: skip
 
 
 # ─────────────── check_questions ───────────────
@@ -165,8 +178,9 @@ class FakeAI:
         self.answers = {k: list(v) for k, v in answers.items()}
         self.calls = []
 
-    def __call__(self, skill, passages, kind, need, existing, feedback):
-        self.calls.append({"kind": kind, "need": dict(need), "existing": list(existing), "feedback": list(feedback)})
+    def __call__(self, skill, passages, kind, need, existing, feedback, used=()):
+        self.calls.append({"kind": kind, "need": dict(need), "existing": list(existing), "feedback": list(feedback),
+                           "used": list(used)})  # fmt: skip
         answer = self.answers[kind].pop(0) if self.answers.get(kind) else {"questions": []}  # hết → AI không soạn được
         if isinstance(answer, Exception):
             raise answer
