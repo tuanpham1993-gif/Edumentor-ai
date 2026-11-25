@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str
     FRONTEND_URL: str = "http://localhost:5173"
 
-    # Ôn tập — module 09 (Tuấn, chốt 09/11). Đổi trong .env, KHÔNG ghi cứng trong code.
+    # Ôn tập Đổi trong .env, KHÔNG ghi cứng trong code.
     AI_MODE: str = "mock"                 # "mock" (giai đoạn 1, 0 đồng) | "real" (giai đoạn 2, cần LLM_API_KEY)
     REVIEW_PASS_SCORE: float = 6.0        # Đạt khi điểm (thang 10) ≥ giá trị này
     REVIEW_GRADING_TIMEOUT: int = 20      # giây chờ chấm khi nộp; quá → trạng thái "grading" (T1)
