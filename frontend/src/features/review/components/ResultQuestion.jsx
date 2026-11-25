@@ -132,6 +132,11 @@ export default function ResultQuestion({ question: q, showExplanation, onToggle 
         </div>
       )}
 
+      {q.answer_hidden && (
+        <p className="muted small" style={{ margin: 0 }}>
+          🔒 {q.type === 'mcq' ? 'Đáp án và giải thích' : 'Bài mẫu'} sẽ hiện khi bạn đạt bài ôn tập.
+        </p>
+      )}{/* G3e P3 (25/11, D29) */}
       {q.explanation && (
         <div className={styles.explain}>
           <button type="button" className={styles.toggle} aria-expanded={showExplanation} onClick={onToggle}>

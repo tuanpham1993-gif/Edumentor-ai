@@ -259,7 +259,7 @@ khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn ng
 | **G3b** | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | ✅ Xong `f4ba1e8` |
 | **G3c** | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | ✅ Xong — mục 7.4 |
 | G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt + D24–D26 + P12 | 01, 03 | G3d-1 `c6ccef2`, G3d-2 `9231ba7`, G3d-3 ✅ — mục 7.5 |
-| G3e | Chống học thuộc (P2–P4 → D29) | 06 | Đang làm — mục 7.6 |
+| G3e | Chống học thuộc (P2–P4 → D29) | 06 | Code xong — mục 7.6 |
 | **G3f** | Mentor duyệt câu AI soạn (D19–D23, D27) | — | ✅ Xong `450af21` (G3f-7 thử tay còn treo) |
 | G3g | Số liệu + đo ~10 kỹ năng + cập nhật BA/SRS, báo cáo | 07 | |
 
@@ -355,6 +355,15 @@ Lưu ở `ai_check["gate"]` (không bảng mới).
 - [x] Lệnh tay `python -m app.core.seed_data.run_pregen --dry-run` / `--limit N`. Chạy thử `--dry-run` trên DB máy Tuấn: đứng đầu Computer Programming (177 người học), Python Programming (133), Data Analysis (125), Machine Learning (92), Database (86), SQL (84)…
 - [x] Test thêm 5 (tổng `test_generation_jobs.py` 16)
 - [x] Commit (Tuấn bảo 25/11)
+
+### 7.6 G3e — Chống học thuộc đáp án (D29)
+
+- [x] **P2** `review_repository.recent_submitted_question_ids` + `review_service.recent_avoid`: ráp đề tránh câu (cả họ phiên bản — 7.5a) của **3 lượt nộp gần nhất** (`REVIEW_AVOID_LAST_ATTEMPTS=3`), mỗi câu có **mức phạt** (lượt gần nhất cao nhất) → `pick_from_bank` phải lặp thì lặp câu **cũ nhất** trước. Áp cho ôn theo khóa và theo kỹ năng (ôn kỹ năng còn kích hoạt soạn bổ sung — D25 — khi thiếu câu mới)
+- [x] **P3** `result_view`: lượt **chưa Đạt** với `REVIEW_REVEAL_ON_FAIL=mcq_only` (mặc định) → ẩn **bài mẫu tự luận** (`answer_hidden`), vẫn hiện đáp án trắc nghiệm + ý barem + lý do chấm; `none` ẩn cả đáp án / giải thích trắc nghiệm; `all` như cũ. Lượt Đạt luôn hiện đủ. Trang Kết quả hiện "🔒 Bài mẫu sẽ hiện khi bạn đạt bài ôn tập". Email kết quả không có đáp án (đã kiểm)
+- [x] **P4** khối Guard (`pipeline/essay.py`): bài làm có **≥ 80% cụm 3 từ của bài mẫu** (bài mẫu ≥ 8 từ) → cờ `copied_model_answer`; trang admin "Kết Quả - AI Chấm" thêm lý do **"Bài chép bài mẫu"**. **Không đổi điểm** (test so điểm có / không có cờ)
+- [x] Kiểm P4 **không cần Gemini** trên bộ bài chuẩn (60 bài: 20 thật, 40 nhóm viết): **0 bài bị gắn cờ nhầm**. ⚠️ **Không chạy lại `eval_grading` trên tập test**: chính script ghi "test chạy MỘT lần cho bản cuối (B10)" — chạy lại là rò rỉ tập test; cờ không đổi điểm nên chạy lại chỉ thêm nhiễu Gemini
+- [x] Test `test_anti_memorization.py` (10); sửa `test_review_submit.test_meeting_example_essay_scores_8_of_10` theo P3 (lượt chưa Đạt không còn "Đáp án mẫu"); toàn bộ 1.208 qua (2 lỗi cũ của Tâm). Build Vite không lỗi
+- [ ] Commit (khi Tuấn bảo)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.

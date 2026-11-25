@@ -22,16 +22,18 @@ def pick_from_bank(
     """Bốc câu cho từng mức độ theo thứ tự ưu tiên:
     1) thuộc đoạn RAG + chưa có ở lượt trước → 2) chưa có ở lượt trước → 3) còn lại (đành lặp lại).
     Trong cùng một nhóm ưu tiên thì ngẫu nhiên. Thiếu câu → trả về ít hơn (validator sẽ báo).
+    G3e P2 (D29): avoid_question_ids có thể là {question_id: mức phạt} — phải lặp thì lặp câu phạt THẤP (lượt cũ) trước.
     """
     prefer = prefer_chunk_ids or set()
     avoid = avoid_question_ids or set()
+    penalty = avoid if isinstance(avoid, dict) else dict.fromkeys(avoid, 1)
     picked = []
     for level, count in need.items():
         pool = [q for q in candidates if q["level"] == level]
         rng.shuffle(pool)
         pool.sort(
             key=lambda q: (
-                q["question_id"] in avoid,
+                penalty.get(q["question_id"], 0),
                 bool(prefer) and q.get("chunk_id") not in prefer,
             )
         )

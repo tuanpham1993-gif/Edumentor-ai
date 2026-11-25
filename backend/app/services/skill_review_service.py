@@ -211,7 +211,7 @@ def start_skill_attempt(
     ai = ai or _BankOnly()
     bank_id = info.bank_skill_id
     previous = repo.last_submitted_questions(db, user.user_id, skill_id=skill_id)
-    family = repo.family_questions(db, [q.question_id for q in previous])  # tránh mọi phiên bản cùng họ (7.5a)
+    family, avoid = core.recent_avoid(db, user.user_id, skill_id=skill_id)  # 3 lượt gần nhất (D29), cả họ (7.5a)
     fresh = dict(info.available)
     for q in family:
         if q.is_active and (q.skill_id, q.level) in fresh:
@@ -223,7 +223,6 @@ def start_skill_attempt(
     except exam_builder.NotEnoughQuestionsError:
         raise SkillBankMissingError from None
 
-    avoid = {q.question_id for q in family}
     trace = core._new_trace(ai, avoid)
     trace.update(mode="skill", skill_id=skill_id, bank_skill_id=bank_id, path_id=path_id)
     try:

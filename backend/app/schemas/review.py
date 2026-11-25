@@ -156,10 +156,12 @@ class ResultQuestionOut(BaseModel):
     needs_review: bool = False  # D8/D10: điểm AI và từ khóa vẫn lệch sau khi chấm lại → điểm tính tạm, đang xem lại
     reviewed: bool = False  # 17/11: giáo viên đã xem lại / chấm lại câu này (trang admin "Bài cần xem lại")
     feedback: str | None = None  # nhận xét chung của AI (B7)
+    answer_hidden: bool = False  # G3e P3 (D29): lượt chưa Đạt → ẩn bài mẫu (và đáp án TN nếu cấu hình "none")
 
 
 class AttemptResultOut(BaseModel):
     attempt_id: int
+    answers_hidden: bool = False  # G3e P3: có câu bị ẩn đáp án vì lượt chưa Đạt
     course_id: int | None  # None = lượt ôn theo KỸ NĂNG (G2d, 22/11)
     course_title: str  # "" với lượt theo kỹ năng
     skill_id: int | None = None  # lượt theo kỹ năng: kỹ năng đã ôn (node lộ trình)

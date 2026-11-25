@@ -42,6 +42,10 @@ class Settings(BaseSettings):
     # số bài làm dở cùng lúc (theo khóa học; ôn theo kỹ năng sau này áp cùng quy tắc cho kỹ năng).
     REVIEW_SUBMIT_COOLDOWN: int = 120  # giây tối thiểu giữa 2 lần nộp của một người
     REVIEW_MAX_UNFINISHED: int = 5  # số bài làm dở tối đa; đủ → phải nộp hoặc bỏ bớt mới bắt đầu bài mới
+    # G3e (25/11, D29): chống học thuộc — tránh câu của N lượt nộp gần nhất (P2); lượt CHƯA ĐẠT ẩn gì (P3):
+    #   all = hiện đủ (như cũ) · mcq_only = ẩn bài mẫu tự luận · none = ẩn cả đáp án trắc nghiệm. Lượt Đạt luôn hiện đủ.
+    REVIEW_AVOID_LAST_ATTEMPTS: int = 3
+    REVIEW_REVEAL_ON_FAIL: str = "mcq_only"
     # G3c (25/11) cổng kiểm câu AI soạn — ngưỡng chốt sau hiệu chỉnh trên 263 câu soạn tay (docs mục 7.4)
     REVIEW_GATE_LENGTH_RATIO: float = 1.5  # L1: đáp án đúng dài hơn N × lựa chọn sai dài nhất…
     REVIEW_GATE_LENGTH_MIN_DIFF: int = 15  # …VÀ dài hơn ≥ N ký tự (bỏ qua lựa chọn ngắn như "PO" / "The Developers")

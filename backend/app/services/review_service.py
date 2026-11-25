@@ -228,6 +228,21 @@ def skill_reviews(db: Session, user: Users, skill_ids: list[int]) -> dict:
 # ─────────────── Sinh đề ───────────────
 
 
+def recent_avoid(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> tuple[list[ReviewQuestion], dict[int, int]]:
+    """G3e P2 (D29): (mọi phiên bản cùng họ với câu của REVIEW_AVOID_LAST_ATTEMPTS lượt nộp gần nhất, {question_id: mức
+    phạt}). 7.5a: tránh cả phiên bản mới của câu đã làm (v1 → v2 chỉ khác vài chữ)."""
+    recent = repo.recent_submitted_question_ids(db, user_id, course_id, skill_id=skill_id,
+                                                attempts=max(1, settings.REVIEW_AVOID_LAST_ATTEMPTS))  # fmt: skip
+    family = repo.family_questions(db, list(recent))
+    fam_of = repo.family_ids(db, list(recent) + [q.question_id for q in family])
+    fam_penalty: dict[int, int] = {}
+    for qid, p in recent.items():
+        fam_penalty[fam_of[qid]] = max(fam_penalty.get(fam_of[qid], 0), p)
+    return family, {q.question_id: fam_penalty[fam_of[q.question_id]] for q in family}
+
+
 def _question_dict(q: ReviewQuestion) -> dict:
     return {
         "question_id": q.question_id,
@@ -302,7 +317,7 @@ def pick_questions(
     ai: ReviewAI,
     rng: random.Random,
     embedder: review_rag_service.Embedder | None,
-    avoid: set[int],
+    avoid: dict[int, int] | set[int],  # G3e: {question_id: mức phạt}
     trace: dict,
     include_auto: bool = False,
 ) -> list[dict]:
@@ -412,7 +427,8 @@ def start_attempt(
     previous = repo.last_submitted_questions(db, user.user_id, course_id)
     # 7.5a (16/11): tránh MỌI phiên bản cùng họ với câu lượt trước — admin sửa câu v1 thành v2 thì lượt sau
     # cũng không ra v2 (chỉ khác vài chữ). fresh trừ phiên bản ĐANG BẬT của họ (v1 đã tắt, v2 đang bật).
-    family = repo.family_questions(db, [q.question_id for q in previous])
+    # G3e P2 (D29): tránh câu của 3 lượt nộp gần nhất (không chỉ 1); phải lặp thì lặp câu cũ nhất trước.
+    family, avoid = recent_avoid(db, user.user_id, course_id)
     available = repo.bank_counts(db, skill_ids)
     fresh = dict(available)
     for q in family:
@@ -429,7 +445,6 @@ def start_attempt(
     except exam_builder.NotEnoughQuestionsError:
         raise ReviewBlockedError("no_question_bank") from None
 
-    avoid = {q.question_id for q in family}
     trace = _new_trace(ai, avoid)
     try:
         picked = pick_questions(db, title=title, names=names, plan=plan, ai=ai, rng=rng, embedder=embedder,
@@ -789,6 +804,9 @@ def result_view(db: Session, attempt_id: int) -> dict:
     fallback = {f["position"] for f in grading.get("keyword_fallback", [])}
     essays = {e["position"]: e for e in grading.get("essays", [])}
     keyword_only = grading.get("ai") in ("mock", "unavailable")  # AI_MODE=mock thực chất là chấm từ khóa
+    # G3e P3 (D29): lượt CHƯA ĐẠT ẩn đáp án theo REVIEW_REVEAL_ON_FAIL (mcq_only: ẩn bài mẫu tự luận; none: ẩn cả đáp án
+    # trắc nghiệm). Ý barem + lý do chấm vẫn hiện để học viên biết mình thiếu gì. Lượt Đạt luôn hiện đủ.
+    reveal = "all" if attempt.passed else settings.REVIEW_REVEAL_ON_FAIL
     questions = []
     mcq_score = essay_score = 0.0
     for a in attempt.answers:
@@ -814,6 +832,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
             "needs_review": False,
             "reviewed": False,
             "feedback": None,
+            "answer_hidden": False,
         }
         if q.type == "mcq":
             mcq_score += points
@@ -823,8 +842,12 @@ def result_view(db: Session, attempt_id: int) -> dict:
                 correct_index=review_grader.displayed_correct_index(a),
                 is_correct=review_grader.is_mcq_correct(a),
             )
+            if reveal == "none":
+                item.update(correct_index=None, explanation=None, answer_hidden=True)
         else:
             essay_score += points
+            if reveal in ("mcq_only", "none") and q.explanation:
+                item.update(explanation=None, answer_hidden=True)
             results = a.rubric_result or [{} for _ in q.rubric]
             item.update(
                 text_answer=a.text_answer,
@@ -858,6 +881,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
         "pass_score": settings.REVIEW_PASS_SCORE,
         "mcq_score": round(mcq_score, 2),
         "essay_score": round(essay_score, 2),
+        "answers_hidden": any(item["answer_hidden"] for item in questions),
         "completed_course": attempt.is_first_pass,
         "skill_known": bool(attempt.passed) and attempt.skill_id is not None,
         "started_at": attempt.started_at,

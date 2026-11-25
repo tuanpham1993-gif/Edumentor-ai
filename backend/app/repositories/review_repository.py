@@ -251,6 +251,44 @@ def family_questions(db: Session, question_ids: list[int]) -> list[ReviewQuestio
     )
 
 
+def recent_submitted_question_ids(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None, attempts: int = 3
+) -> dict[int, int]:
+    """G3e P2 (D29): {question_id: mức phạt} của N lượt ĐÃ NỘP gần nhất (cùng khóa / kỹ năng). Lượt gần nhất phạt N,
+    lượt cũ nhất phạt 1 → khi phải lặp câu thì lặp câu CŨ NHẤT trước. Câu có ở nhiều lượt lấy mức phạt cao nhất."""
+    attempt_ids = list(
+        db.scalars(
+            select(ReviewAttempt.attempt_id)
+            .where(ReviewAttempt.user_id == user_id, _target(course_id, skill_id), ReviewAttempt.status != "in_progress")
+            .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
+            .limit(attempts)
+        )
+    )
+    if not attempt_ids:
+        return {}
+    penalty = {aid: attempts - i for i, aid in enumerate(attempt_ids)}
+    out: dict[int, int] = {}
+    rows = db.execute(
+        select(ReviewAnswer.question_id, ReviewAnswer.attempt_id).where(ReviewAnswer.attempt_id.in_(attempt_ids))
+    )
+    for question_id, attempt_id in rows:
+        out[question_id] = max(out.get(question_id, 0), penalty[attempt_id])
+    return out
+
+
+def family_ids(db: Session, question_ids: list[int]) -> dict[int, int]:
+    """{question_id: family_id} — câu chưa có meta là họ của chính nó."""
+    if not question_ids:
+        return {}
+    family = func.coalesce(ReviewQuestionMeta.family_id, ReviewQuestion.question_id)
+    rows = db.execute(
+        select(ReviewQuestion.question_id, family)
+        .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.question_id.in_(question_ids))
+    )
+    return dict(rows.all())
+
+
 def last_submitted_questions(
     db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
 ) -> list[ReviewQuestion]:
