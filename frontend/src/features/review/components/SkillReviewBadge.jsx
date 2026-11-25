@@ -61,7 +61,10 @@ const PATH_ID = /\/details\/(\d+)/; // /me/my-learning-path/details/:recordId �
 export default function SkillReviewBadge({ skillId, skillName }) {
   const courses = useSkillReview(skillId);
   const direct = useSkillDirect(skillId);
-  const showDirect = Boolean(direct && (direct.ready || direct.in_progress_attempt_id || direct.last_attempt));
+  // G3d (25/11): kỹ năng chưa đủ câu nhưng AI soạn được (can_generate) cũng hiện dòng ôn riêng
+  const showDirect = Boolean(
+    direct && (direct.ready || direct.can_generate || direct.in_progress_attempt_id || direct.last_attempt),
+  );
   const due = useSkillDue(skillId);
   const isDue = Boolean(due?.due);
   const { pathname } = useLocation();
@@ -142,7 +145,10 @@ export default function SkillReviewBadge({ skillId, skillName }) {
                 <li className={styles.row}>
                   <span className={styles.rowText}>
                     <span className={styles.course}>Ôn riêng kỹ năng này</span>
-                    <span className={styles.meta}>{statusText(direct)} · 15 câu, không cần tham gia khóa</span>
+                    <span className={styles.meta}>
+                      {statusText(direct)} · 15 câu, không cần tham gia khóa
+                      {!direct.ready && !direct.in_progress_attempt_id ? ' · AI soạn đề khi bạn bấm ôn' : ''}
+                    </span>
                   </span>
                   <Link
                     to={

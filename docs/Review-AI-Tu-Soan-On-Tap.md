@@ -338,6 +338,14 @@ Lưu ở `ai_check["gate"]` (không bảng mới).
 - [x] Đo thật Power BI #1542 (DB máy Tuấn, 25/11): việc 1 lưu **14 / 15** câu sau 80 giây rồi `failed` "chưa đủ" (tự luận dễ hỏng phép bài mẫu cả 3 lần); việc 2 (thử lại, cùng logic) vẫn hỏng → thêm **vòng soạn thứ 2 mỗi bước + lưu ngay sau mỗi vòng**; việc 3: soạn nốt câu thiếu, **`done` sau 71 giây → Power BI đủ đề 15 câu**. Nhận xét: phép "bài mẫu ≥ 7" làm tự luận mỗi lượt chỉ qua ~½ → theo dõi ở G3g (số liệu), có thể hạ ngưỡng
 - [x] Commit (Tuấn bảo 25/11)
 
+**G3d-2 — giao diện màn soạn đề**
+- [x] `review.api.js`: `startSkillReview` nhận cả 202 `{generation}`; `getSkillGeneration`
+- [x] `GenerationProgress.jsx`: "AI đang soạn đề… (bước x/4)", thanh tiến độ, 4 bước (tài liệu · trắc nghiệm · tự luận · kiểm đủ đề), lỗi → "Thử lại" (chỉ soạn phần còn thiếu, ghi số câu đã soạn được)
+- [x] `ReviewStartPage` (chế độ kỹ năng): bấm Bắt đầu → 202 → hỏi tiến độ 3 giây / lần → xong tự bắt đầu lại và mở đề; vào lại trang khi đang soạn → hiện tiến độ tiếp; câu nhắc "chưa có sẵn đề — AI sẽ soạn" khi `will_generate`
+- [x] Huy hiệu node: hiện "Ôn riêng kỹ năng này" cả khi `can_generate` (+ "AI soạn đề khi bạn bấm ôn"). Build Vite không lỗi
+- [ ] Tuấn thử tay (Docker đang thiếu 9 câu → thấy màn soạn đề; Power BI đã đủ đề) — làm sau
+- [x] Commit (Tuấn bảo 25/11)
+
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.
 

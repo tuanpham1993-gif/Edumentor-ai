@@ -6,7 +6,9 @@
 //   - 19/11: đủ 5 bài làm dở (khóa khác) → danh sách bài dở với Tiếp tục / Bỏ bài; bài dở của khóa này có "Bỏ bài này".
 //   - G2 (22/11): route /skills/:skillId/review?path= — ôn theo KỸ NĂNG (mở từ huy hiệu node lộ trình): 15 câu của
 //     cùng kỹ năng, không cần tham gia khóa; đạt → chỉ kỹ năng này "Đã biết".
-import { useCallback, useEffect, useState } from 'react';
+//   - G3d-2 (25/11): kỹ năng thiếu câu → bấm Bắt đầu, backend trả 202 → màn "AI đang soạn đề… bước x/4", hỏi tiến độ
+//     3 giây / lần; xong → tự bắt đầu lại và mở đề; lỗi → nút Thử lại (chỉ soạn phần còn thiếu). Không chuông (D28).
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import * as reviewApi from '../../../api/review.api.js';
@@ -14,10 +16,14 @@ import StatusPanel from '../../common/components/StatusPanel.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
 import AbandonAttemptButton from '../components/AbandonAttemptButton.jsx';
+import GenerationProgress from '../components/GenerationProgress.jsx';
 import TempJoinCourseButton from '../components/TempJoinCourseButton.jsx'; // TẠM — xóa khi Khôi có trang khóa học
 import { formatScore, targetTitle } from '../reviewFormat.js';
 import { attemptKey, courseKey, readReturn, saveReturn, skillKey } from '../reviewReturn.js';
 import styles from '../styles/ReviewStartPage.module.css';
+
+const POLL_MS = 3000;
+const RUNNING = ['queued', 'running'];
 
 const BLOCK_TITLES = {
   no_question_bank: 'Bài ôn tập chưa sẵn sàng',
@@ -42,12 +48,17 @@ export default function ReviewStartPage() {
   const [loadError, setLoadError] = useState(null); // { status, message }
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState('');
+  const [generation, setGeneration] = useState(null); // G3d: việc AI soạn đề đang theo dõi
+  const opening = useRef(false); // đã tự mở đề khi soạn xong (tránh mở 2 lần)
   const returnTo = readReturn(isSkill ? skillKey(skillId) : courseKey(courseId)); // bấm từ huy hiệu trên đồ thị
 
   const load = useCallback(async () => {
     setLoadError(null);
     try {
-      setInfo(await (isSkill ? reviewApi.getSkillReviewInfo(skillId) : reviewApi.getReviewInfo(courseId)));
+      const data = await (isSkill ? reviewApi.getSkillReviewInfo(skillId) : reviewApi.getReviewInfo(courseId));
+      setInfo(data);
+      // G3d: vào lại trang khi AI vẫn đang soạn → hiện tiến độ tiếp (việc đã lỗi từ trước thì không hiện lại)
+      if (data.generation && RUNNING.includes(data.generation.status)) setGeneration(data.generation);
     } catch (error) {
       setLoadError(parseApiError(error));
     }
@@ -57,19 +68,48 @@ export default function ReviewStartPage() {
     load();
   }, [load]);
 
-  async function handleStart() {
+  const handleStart = useCallback(async () => {
     setStarting(true);
     setStartError('');
     try {
-      const attempt = await (isSkill ? reviewApi.startSkillReview(skillId, pathId) : reviewApi.startReview(courseId));
+      const result = await (isSkill ? reviewApi.startSkillReview(skillId, pathId) : reviewApi.startReview(courseId));
+      if (result.generation) {
+        // G3d: thiếu câu → AI đang soạn ở nền
+        opening.current = false;
+        setGeneration(result.generation);
+        setStarting(false);
+        return;
+      }
       // 20/11: đến từ đồ thị lộ trình → chép địa chỉ lộ trình sang bài làm (màn Kết quả có nút quay lại)
-      if (returnTo) saveReturn(attemptKey(attempt.attempt_id), returnTo);
-      navigate(`/review/${attempt.attempt_id}`, { state: { attempt } });
+      if (returnTo) saveReturn(attemptKey(result.attempt_id), returnTo);
+      navigate(`/review/${result.attempt_id}`, { state: { attempt: result } });
     } catch (error) {
       setStartError(parseApiError(error).message);
+      setGeneration(null);
       setStarting(false);
     }
-  }
+  }, [isSkill, skillId, pathId, courseId, returnTo, navigate]);
+
+  // G3d: đang soạn → hỏi tiến độ; xong → tự bắt đầu (mở đề) một lần
+  useEffect(() => {
+    if (!generation) return undefined;
+    if (generation.status === 'done') {
+      if (!opening.current) {
+        opening.current = true;
+        handleStart();
+      }
+      return undefined;
+    }
+    if (!RUNNING.includes(generation.status)) return undefined;
+    const timer = setTimeout(async () => {
+      try {
+        setGeneration(await reviewApi.getSkillGeneration(skillId));
+      } catch {
+        setGeneration((g) => ({ ...g })); // lỗi mạng tạm thời → hỏi lại lần sau
+      }
+    }, POLL_MS);
+    return () => clearTimeout(timer);
+  }, [generation, skillId, handleStart]);
 
   if (loadError) {
     return (
@@ -197,8 +237,15 @@ export default function ReviewStartPage() {
             </p>
           )}
 
+          {generation && <GenerationProgress generation={generation} onRetry={handleStart} retrying={starting} />}
+          {!generation && info.will_generate && (
+            <p className="muted small" style={{ margin: 0 }}>
+              Kỹ năng này chưa có sẵn đề — bấm Bắt đầu, AI sẽ soạn đề mới cho bạn (khoảng 1 phút).
+            </p>
+          )}
+
           <div className={styles.actions}>
-            {info.can_start && (
+            {info.can_start && !generation && (
               <button type="button" className="btn btn-primary btn-lg" onClick={handleStart} disabled={starting}>
                 {starting ? 'Đang tạo đề…' : resumable ? 'Tiếp tục bài đang làm →' : 'Bắt đầu ôn tập →'}
               </button>

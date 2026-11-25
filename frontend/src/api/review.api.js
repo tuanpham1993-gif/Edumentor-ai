@@ -24,9 +24,17 @@ export async function getSkillReviewInfo(skillId) {
 }
 
 // POST /skills/{id}/review-attempts?path= → đề (AttemptOut, course_id = null, skill_id, skill_name, path_id).
+// G3d (25/11): kỹ năng thiếu câu → 202 { generation: { job_id, status, step, steps, saved, error } } — AI đang soạn đề
+// ở nền; trang hỏi tiến độ bằng getSkillGeneration rồi gọi lại hàm này khi status = 'done'.
 export async function startSkillReview(skillId, pathId) {
   const params = pathId ? { path: pathId } : undefined;
   const response = await client.post(`/skills/${skillId}/review-attempts`, null, { params });
+  return response.data;
+}
+
+// GET /skills/{id}/generation → { job_id, status: queued|running|done|failed, step 1..4, steps, saved, error } (G3d)
+export async function getSkillGeneration(skillId) {
+  const response = await client.get(`/skills/${skillId}/generation`);
   return response.data;
 }
 
