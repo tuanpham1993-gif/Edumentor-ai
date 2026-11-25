@@ -1,18 +1,28 @@
 /**
- * Tự động tính toán tọa độ (x, y) và kích thước canvas cho AdminRoadmapCanvas
- * từ dữ liệu thật (nodes, edges) không lưu tọa độ trong PostgreSQL.
+ * Tự động tính toán tọa độ (x, y), kích thước canvas và quan hệ tiên quyết
+ * cho AdminRoadmapCanvas từ dữ liệu thật (không lưu tọa độ trong DB).
  *
- * Dùng thuật toán Kahn phân tầng (DAG Layering) giống buildGraphForDetail.js:
- * - Các cạnh prerequisite quyết định cột (tầng học từ trái sang phải).
- * - Các cạnh related / extension vẫn được vẽ đầy đủ nhưng không gây chu trình chia tầng.
+ * Cải tiến bố cục:
+ * - Phân tách nhánh có liên kết (connected nodes) đặt ở vùng đồ thị chính phía trên
+ *   theo thuật toán Kahn (từ trái sang phải).
+ * - Gom các kỹ năng độc lập (chưa nối cạnh) thành lưới ngang gọn gàng phía dưới
+ *   kèm dividerY để tránh cột 0 bị kéo dài tạo khoảng trống lớn.
+ * - Bổ sung danh sách `prerequisites` và `unlocks` cho từng node để thanh chi tiết hiển thị.
  */
 
 const NODE_WIDTH = 154;
 const NODE_HEIGHT = 54;
 const COLUMN_GAP = 64;
-const ROW_GAP = 22;
+const ROW_GAP = 20;
 const PADDING_X = 28;
-const PADDING_Y = 26;
+const PADDING_Y = 24;
+const ISOLATED_GAP_X = 14;
+const ISOLATED_GAP_Y = 16;
+const SECTION_GAP = 42;
+
+function getNodeName(node, fallbackId) {
+  return node?.skill_name || node?.skill?.skill || node?.name || `Kỹ năng #${fallbackId}`;
+}
 
 function mapCanvasNodeStatus(node) {
   const skillStatus = node.user_skill_status || node.status || 'unlearned';
@@ -34,10 +44,12 @@ export function buildAdminRoadmapLayout(rawNodes = [], rawEdges = []) {
       connections: [],
       width: 720,
       height: 240,
+      dividerY: null,
+      isolatedCount: 0,
     };
   }
 
-  // Nếu dữ liệu đã có tọa độ (từ AdminBasePathsPage mock) thì giữ nguyên
+  // Giữ nguyên tọa độ cho màn hình AdminBasePathsPage (mode="template")
   const hasExplicitCoords = rawNodes.every(
     (n) => typeof n.x === 'number' && typeof n.y === 'number'
   );
@@ -47,49 +59,103 @@ export function buildAdminRoadmapLayout(rawNodes = [], rawEdges = []) {
       connections: rawEdges,
       width: null,
       height: null,
+      dividerY: null,
+      isolatedCount: 0,
     };
   }
 
-  const nodeIds = rawNodes.map((n) => String(n.skill_id ?? n.id));
+  const nodeById = new Map();
+  const prerequisitesMap = new Map();
+  const unlocksMap = new Map();
+  const connectedIds = new Set();
+
+  rawNodes.forEach((n) => {
+    const id = String(n.skill_id ?? n.id);
+    nodeById.set(id, n);
+    prerequisitesMap.set(id, []);
+    unlocksMap.set(id, []);
+  });
+
+  const validEdges = (rawEdges || []).filter((edge) => {
+    const source = String(edge.from_skill_id ?? edge.from);
+    const target = String(edge.to_skill_id ?? edge.to);
+    return nodeById.has(source) && nodeById.has(target) && source !== target;
+  });
+
+  validEdges.forEach((edge) => {
+    const source = String(edge.from_skill_id ?? edge.from);
+    const target = String(edge.to_skill_id ?? edge.to);
+    connectedIds.add(source);
+    connectedIds.add(target);
+
+    const relType = edge.relation_type || edge.type || 'prerequisite';
+    if (relType === 'prerequisite') {
+      prerequisitesMap.get(target).push(getNodeName(nodeById.get(source), source));
+      unlocksMap.get(source).push(getNodeName(nodeById.get(target), target));
+    }
+  });
+
+  const connectedNodes = rawNodes.filter((n) =>
+    connectedIds.has(String(n.skill_id ?? n.id))
+  );
+  const isolatedNodes = rawNodes
+    .filter((n) => !connectedIds.has(String(n.skill_id ?? n.id)))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
+
+  // Tính phân tầng cho cụm có cạnh nối
   const indegree = new Map();
   const adjacency = new Map();
   const layer = new Map();
 
-  nodeIds.forEach((id) => {
+  connectedNodes.forEach((n) => {
+    const id = String(n.skill_id ?? n.id);
     indegree.set(id, 0);
     adjacency.set(id, []);
     layer.set(id, 0);
   });
 
-  (rawEdges || [])
-    .filter((edge) => (edge.relation_type || edge.type) === 'prerequisite')
-    .forEach((edge) => {
-      const source = String(edge.from_skill_id ?? edge.from);
-      const target = String(edge.to_skill_id ?? edge.to);
-      if (!indegree.has(source) || !indegree.has(target)) return;
+  validEdges
+    .filter((e) => (e.relation_type || e.type) === 'prerequisite')
+    .forEach((e) => {
+      const source = String(e.from_skill_id ?? e.from);
+      const target = String(e.to_skill_id ?? e.to);
       adjacency.get(source).push(target);
-      indegree.set(target, indegree.get(target) + 1);
+      indegree.set(target, (indegree.get(target) || 0) + 1);
     });
 
-  const queue = nodeIds.filter((id) => indegree.get(id) === 0);
-  let idx = 0;
-  while (idx < queue.length) {
-    const current = queue[idx++];
+  const queue = connectedNodes
+    .filter((n) => indegree.get(String(n.skill_id ?? n.id)) === 0)
+    .map((n) => String(n.skill_id ?? n.id));
+  const visited = new Set(queue);
+
+  let qIdx = 0;
+  while (qIdx < queue.length) {
+    const current = queue[qIdx++];
     for (const next of adjacency.get(current) || []) {
       layer.set(next, Math.max(layer.get(next), layer.get(current) + 1));
       indegree.set(next, indegree.get(next) - 1);
-      if (indegree.get(next) === 0) {
+      if (indegree.get(next) === 0 && !visited.has(next)) {
         queue.push(next);
+        visited.add(next);
       }
     }
   }
 
+  // Phòng hờ chu trình: mọi node chưa duyệt đẩy vào cột cuối
+  const maxVisitedLayer = Math.max(0, ...layer.values());
+  connectedNodes.forEach((n) => {
+    const id = String(n.skill_id ?? n.id);
+    if (!visited.has(id)) {
+      layer.set(id, maxVisitedLayer + 1);
+    }
+  });
+
   const layerGroups = new Map();
-  rawNodes.forEach((node) => {
-    const id = String(node.skill_id ?? node.id);
+  connectedNodes.forEach((n) => {
+    const id = String(n.skill_id ?? n.id);
     const col = layer.get(id) ?? 0;
     if (!layerGroups.has(col)) layerGroups.set(col, []);
-    layerGroups.get(col).push(node);
+    layerGroups.get(col).push(n);
   });
 
   const sortedLayers = [...layerGroups.entries()].sort(([a], [b]) => a - b);
@@ -98,23 +164,36 @@ export function buildAdminRoadmapLayout(rawNodes = [], rawEdges = []) {
   });
 
   const numCols = sortedLayers.length;
-  const maxRows = Math.max(1, ...sortedLayers.map(([, list]) => list.length));
+  const maxConnectedRows =
+    numCols > 0 ? Math.max(1, ...sortedLayers.map(([, list]) => list.length)) : 0;
 
-  const contentHeight = maxRows * NODE_HEIGHT + Math.max(0, maxRows - 1) * ROW_GAP;
-  const contentWidth = numCols * NODE_WIDTH + Math.max(0, numCols - 1) * COLUMN_GAP;
-
-  const canvasWidth = Math.max(720, contentWidth + PADDING_X * 2);
-  const canvasHeight = Math.max(240, contentHeight + PADDING_Y * 2);
-
-  // Căn đều ngang nếu ít cột để canvas cân đối
-  const effectiveColWidth =
-    numCols > 1
-      ? Math.max(NODE_WIDTH + COLUMN_GAP, (canvasWidth - PADDING_X * 2 - NODE_WIDTH) / (numCols - 1))
+  const connectedWidth =
+    numCols > 0 ? numCols * NODE_WIDTH + Math.max(0, numCols - 1) * COLUMN_GAP : 0;
+  const connectedHeight =
+    maxConnectedRows > 0
+      ? maxConnectedRows * NODE_HEIGHT + Math.max(0, maxConnectedRows - 1) * ROW_GAP
       : 0;
 
-  const layoutNodes = sortedLayers.flatMap(([colIndex, list], actualColIdx) => {
+  const isolatedColsPerRow = isolatedNodes.length > 0 ? Math.min(4, Math.max(3, numCols || 3)) : 0;
+  const isolatedGridWidth =
+    isolatedColsPerRow > 0
+      ? Math.min(isolatedNodes.length, isolatedColsPerRow) * NODE_WIDTH +
+        Math.max(0, Math.min(isolatedNodes.length, isolatedColsPerRow) - 1) * ISOLATED_GAP_X
+      : 0;
+
+  const canvasWidth = Math.max(720, Math.max(connectedWidth, isolatedGridWidth) + PADDING_X * 2);
+
+  const effectiveColWidth =
+    numCols > 1
+      ? Math.max(
+          NODE_WIDTH + COLUMN_GAP,
+          (canvasWidth - PADDING_X * 2 - NODE_WIDTH) / (numCols - 1)
+        )
+      : 0;
+
+  const layoutConnectedNodes = sortedLayers.flatMap(([, list], actualColIdx) => {
     const colContentHeight = list.length * NODE_HEIGHT + Math.max(0, list.length - 1) * ROW_GAP;
-    const verticalOffset = PADDING_Y + (contentHeight - colContentHeight) / 2;
+    const verticalOffset = PADDING_Y + (connectedHeight - colContentHeight) / 2;
 
     return list.map((node, rowIdx) => {
       const id = String(node.skill_id ?? node.id);
@@ -127,28 +206,76 @@ export function buildAdminRoadmapLayout(rawNodes = [], rawEdges = []) {
       return {
         id,
         skillId: node.skill_id ?? node.id,
-        name: node.skill_name || node.name || `Kỹ năng #${id}`,
+        name: getNodeName(node, id),
         role: node.node_role || node.role || null,
         isTarget: Boolean(node.is_target),
         status: mapCanvasNodeStatus(node),
         rawStatus: node.user_skill_status || 'unlearned',
+        prerequisites: prerequisitesMap.get(id) || [],
+        unlocks: unlocksMap.get(id) || [],
         x,
         y,
       };
     });
   });
 
-  const layoutConnections = (rawEdges || []).map((edge) => ({
+  // Bố trí nhóm kỹ năng độc lập (lưới ngang gọn gàng)
+  let dividerY = null;
+  let isolatedStartY = PADDING_Y;
+
+  if (isolatedNodes.length > 0 && connectedNodes.length > 0) {
+    dividerY = PADDING_Y + connectedHeight + Math.round(SECTION_GAP / 2) - 4;
+    isolatedStartY = PADDING_Y + connectedHeight + SECTION_GAP + 14;
+  }
+
+  const maxPerRow = Math.max(1, Math.floor((canvasWidth - PADDING_X * 2 + ISOLATED_GAP_X) / (NODE_WIDTH + ISOLATED_GAP_X)));
+  const isolatedRows = Math.ceil(isolatedNodes.length / maxPerRow);
+
+  const layoutIsolatedNodes = isolatedNodes.map((node, i) => {
+    const id = String(node.skill_id ?? node.id);
+    const col = i % maxPerRow;
+    const row = Math.floor(i / maxPerRow);
+
+    return {
+      id,
+      skillId: node.skill_id ?? node.id,
+      name: getNodeName(node, id),
+      role: node.node_role || node.role || null,
+      isTarget: Boolean(node.is_target),
+      status: mapCanvasNodeStatus(node),
+      rawStatus: node.user_skill_status || 'unlearned',
+      prerequisites: [],
+      unlocks: [],
+      x: Math.round(PADDING_X + col * (NODE_WIDTH + ISOLATED_GAP_X)),
+      y: Math.round(isolatedStartY + row * (NODE_HEIGHT + ISOLATED_GAP_Y)),
+    };
+  });
+
+  const isolatedSectionHeight =
+    isolatedNodes.length > 0
+      ? isolatedRows * NODE_HEIGHT + Math.max(0, isolatedRows - 1) * ISOLATED_GAP_Y
+      : 0;
+
+  const totalBottom =
+    isolatedNodes.length > 0
+      ? isolatedStartY + isolatedSectionHeight + PADDING_Y
+      : PADDING_Y + connectedHeight + PADDING_Y;
+
+  const canvasHeight = Math.max(200, totalBottom);
+
+  const layoutConnections = validEdges.map((edge) => ({
     from: String(edge.from_skill_id ?? edge.from),
     to: String(edge.to_skill_id ?? edge.to),
     type: edge.relation_type || edge.type || 'prerequisite',
   }));
 
   return {
-    nodes: layoutNodes,
+    nodes: [...layoutConnectedNodes, ...layoutIsolatedNodes],
     connections: layoutConnections,
     width: canvasWidth,
     height: canvasHeight,
+    dividerY,
+    isolatedCount: isolatedNodes.length,
   };
 }
 

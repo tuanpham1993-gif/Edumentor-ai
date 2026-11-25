@@ -47,7 +47,9 @@ export function sortLearningPathNodes(nodes = [], edges = []) {
     indegree.set(target, (indegree.get(target) || 0) + 1);
 
     const sourceSkillName =
-      skillMap.get(source)?.skill?.skill || `Kỹ năng #${source}`;
+      skillMap.get(source)?.skill?.skill ||
+      skillMap.get(source)?.skill_name ||
+      `Kỹ năng #${source}`;
     prerequisitesMap.get(target).push(sourceSkillName);
   });
 

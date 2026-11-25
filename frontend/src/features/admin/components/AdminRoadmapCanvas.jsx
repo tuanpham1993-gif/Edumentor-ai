@@ -24,6 +24,8 @@ export default function AdminRoadmapCanvas({
   const renderConnections = layout.connections;
   const canvasWidth = layout.width ?? width;
   const canvasHeight = layout.height ?? height;
+  const dividerY = layout.dividerY;
+  const isolatedCount = layout.isolatedCount || 0;
 
   // Bản đồ tìm kiếm node nhanh theo id hoặc tên
   const nodeMap = new Map();
@@ -50,7 +52,7 @@ export default function AdminRoadmapCanvas({
               markerHeight="6"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1 L 8 5 L 0 9 z" fill="#6b5a40" />
+              <path d="M 0 1 L 8 5 L 0 9 z" style={{ fill: 'var(--edge)' }} />
             </marker>
             <marker
               id="arrow-accent"
@@ -61,7 +63,7 @@ export default function AdminRoadmapCanvas({
               markerHeight="6"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1 L 8 5 L 0 9 z" fill="#f5a524" />
+              <path d="M 0 1 L 8 5 L 0 9 z" style={{ fill: 'var(--accent)' }} />
             </marker>
           </defs>
 
@@ -77,7 +79,11 @@ export default function AdminRoadmapCanvas({
             const dx = Math.max(30, Math.abs(x2 - x1) / 2);
 
             const pathD = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
-            const isDashed = c.type === 'Mở rộng' || c.type === 'extension' || c.type === 'related' || c.type === 'Liên quan';
+            const isDashed =
+              c.type === 'Mở rộng' ||
+              c.type === 'extension' ||
+              c.type === 'related' ||
+              c.type === 'Liên quan';
             const showArrow = c.type !== 'related' && c.type !== 'Liên quan' && !isDashed;
 
             return (
@@ -90,6 +96,13 @@ export default function AdminRoadmapCanvas({
             );
           })}
         </svg>
+
+        {/* Đường phân tách nhóm kỹ năng bổ trợ độc lập (nếu có) */}
+        {dividerY !== null && (
+          <div className={styles.isolatedDivider} style={{ top: `${dividerY}px` }}>
+            <span>Kỹ năng độc lập chưa nối nhánh ({isolatedCount})</span>
+          </div>
+        )}
 
         {/* Các Node HTML */}
         {renderNodes.map((node) => {
@@ -118,6 +131,7 @@ export default function AdminRoadmapCanvas({
           return (
             <div
               key={node.id}
+              title={node.name}
               className={`${styles.node} ${stateClass} ${isSelected ? styles.nodeSelected : ''}`}
               style={{ left: `${node.x}px`, top: `${node.y}px` }}
               onClick={() => onNodeClick && onNodeClick(node)}
@@ -131,7 +145,7 @@ export default function AdminRoadmapCanvas({
               tabIndex={0}
               aria-pressed={isSelected}
             >
-              <span>
+              <span className={styles.nodeLabel}>
                 {node.name}
                 {labelSuffix}
               </span>
@@ -158,10 +172,13 @@ export default function AdminRoadmapCanvas({
               <span className={`${styles.swatch} ${styles.swatchTarget}`} /> Mục tiêu
             </span>
             <span className={styles.legendItem}>
-              <span className={styles.lineSampleDashed} /> Mở rộng
+              <span className={styles.lineSample} /> Tiên quyết
             </span>
-            <span style={{ marginLeft: 'auto', fontStyle: 'italic', opacity: 0.8 }}>
-              Bấm một kỹ năng để xem trạng thái
+            <span className={styles.legendItem}>
+              <span className={styles.lineSampleDashed} /> Mở rộng / Liên quan
+            </span>
+            <span className={styles.legendHint}>
+              Bấm vào một kỹ năng để xem chi tiết
             </span>
           </>
         ) : (

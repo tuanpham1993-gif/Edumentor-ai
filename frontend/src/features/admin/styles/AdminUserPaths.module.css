@@ -1,34 +1,34 @@
-/* Quản trị lộ trình người dùng (FĐ Admin · F14) */
+/* Quản trị lộ trình người dùng (FĐ Admin · F14) — Tuân thủ Design Tokens cho Sáng & Tối */
 .pageHead h1 {
   margin: 0;
-  font-size: 26px;
+  font-size: 25px;
   font-weight: 700;
-  color: var(--text, #ede8e3);
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
 .pageSubtitle {
-  margin: 6px 0 0;
-  font-size: 14px;
-  color: var(--text-muted, #8a8070);
+  margin: 5px 0 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
 }
 
 /* Thanh chỉ số tổng hợp hệ thống (hairline strip, tránh lạm dụng card) */
 .statsStrip {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  border-top: 1px solid var(--line, #2b2622);
-  border-bottom: 1px solid var(--line, #2b2622);
-  background: var(--surface-sunk, #131417);
+  border: 1px solid var(--line);
+  background: var(--surface-sunk);
   border-radius: var(--r-lg, 12px);
   overflow: hidden;
 }
 
 .statCell {
-  padding: 14px 18px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  border-right: 1px solid var(--line, #2b2622);
+  border-right: 1px solid var(--line);
 }
 
 .statCell:last-child {
@@ -36,44 +36,44 @@
 }
 
 .statLabel {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: var(--text-muted, #8a8070);
+  color: var(--text-muted);
 }
 
 .statValue {
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--text, #ede8e3);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
 .statInfo {
-  color: var(--info-fg, #a9c6e8);
+  color: var(--info-fg);
 }
 
 .statOk {
-  color: var(--ok-fg, #a8e0b5);
+  color: var(--ok-fg);
 }
 
 .statAccent {
-  color: var(--accent, #f5a524);
+  color: var(--accent);
 }
 
 .statSub {
-  font-size: 11.5px;
-  color: var(--text-dim, #8f897f);
+  font-size: 11px;
+  color: var(--text-dim);
 }
 
 .statsSkeleton {
   grid-column: 1 / -1;
-  padding: 18px;
+  padding: 16px;
   font-size: 13px;
-  color: var(--text-muted, #8a8070);
+  color: var(--text-muted);
 }
 
-/* Thanh mục tiêu phổ biến ở trên */
+/* Dải mục tiêu phổ biến (gọn, wrap không cắt chip mép phải) */
 .goalStrip {
   display: flex;
   flex-direction: column;
@@ -87,138 +87,208 @@
   gap: 12px;
 }
 
-.goalClearBtn {
+.goalStripTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.goalStripActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.goalActionBtn,
+.goalActionMutedBtn {
   background: none;
   border: none;
   padding: 0;
   font: inherit;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--accent, #f5a524);
   cursor: pointer;
 }
 
-.goalClearBtn:hover,
-.goalClearBtn:focus-visible {
+.goalActionBtn {
+  color: var(--accent);
+}
+
+.goalActionMutedBtn {
+  color: var(--text-muted);
+}
+
+.goalActionBtn:hover,
+.goalActionBtn:focus-visible,
+.goalActionMutedBtn:hover,
+.goalActionMutedBtn:focus-visible {
   text-decoration: underline;
   outline: none;
 }
 
-.goalStripTitle {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-muted, #8a8070);
-}
-
 .goalChips {
   display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .goalChip {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-  color: var(--text, #ede8e3);
+  max-width: 265px;
+  padding: 8px 14px;
+  border-radius: var(--r-md, 10px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text);
   font: inherit;
+  text-align: left;
   cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--d-fast, 0.15s);
+  transition:
+    border-color var(--d-fast, 0.15s),
+    background-color var(--d-fast, 0.15s),
+    transform var(--d-fast, 0.15s);
 }
 
-.goalChip:hover {
-  border-color: rgba(245, 165, 36, 0.4);
-  transform: translateY(-2px);
+.goalChip:hover,
+.goalChip:focus-visible {
+  border-color: var(--accent-soft-border);
+  transform: translateY(-1px);
+  outline: none;
 }
 
 .goalChipActive {
-  background: rgba(245, 165, 36, 0.1);
-  border-color: var(--accent, #f5a524);
+  background: var(--accent-tint);
+  border-color: var(--accent);
 }
 
 .goalChipTitle {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .goalChipActive .goalChipTitle {
-  color: var(--accent, #f5a524);
+  color: var(--accent);
 }
 
 .goalChipSub {
-  font-size: 12px;
-  color: var(--text-muted, #8a8070);
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Layout 2 cột */
+/* Bố cục Master-Detail 2 cột */
 .splitLayout {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
-  gap: 24px;
+  gap: 22px;
   align-items: start;
 }
 
-/* Cột trái: Segmented toggle + Search + User list */
+/* Cột trái cố định khi cuộn */
 .leftCol {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  position: sticky;
+  top: 84px;
 }
 
 .segmentedToggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 4px;
-  border-radius: 10px;
-  background: var(--surface-sunk, #141211);
-  border: 1px solid var(--line, #2b2622);
+  border-radius: var(--r-md, 10px);
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
 }
 
 .segBtn {
-  padding: 8px;
+  padding: 7px 8px;
   border-radius: 7px;
   border: none;
   background: none;
-  color: var(--text-muted, #8a8070);
+  color: var(--text-muted);
   font: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--d-fast, 0.15s);
+  transition: color var(--d-fast, 0.15s), background-color var(--d-fast, 0.15s);
+}
+
+.segBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .segBtnActive {
-  background: var(--card, #1c1815);
-  color: var(--accent, #f5a524);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(var(--shadow-rgb), 0.18);
 }
 
 .searchBox {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 44px;
-  padding: 0 14px;
-  border-radius: 10px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-  color: var(--text, #ede8e3);
+  gap: 8px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: var(--r-md, 10px);
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  transition: border-color var(--d-fast, 0.15s);
+}
+
+.searchBox:focus-within {
+  border-color: var(--accent);
 }
 
 .searchBox input {
   flex: 1;
+  min-width: 0;
   background: none;
   border: none;
   color: inherit;
   font: inherit;
-  font-size: 13.5px;
+  font-size: 13px;
   outline: none;
+}
+
+.clearSearchBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.clearSearchBtn:hover,
+.clearSearchBtn:focus-visible {
+  color: var(--text);
+  outline: none;
+}
+
+.filterContextHint {
+  font-size: 11.5px;
+  color: var(--accent-soft-fg);
+  background: var(--accent-soft-bg);
+  border: 1px solid var(--accent-soft-border);
+  padding: 6px 10px;
+  border-radius: var(--r-sm, 8px);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .userList {
@@ -230,320 +300,45 @@
 .userCard {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-  color: var(--text, #ede8e3);
+  gap: 11px;
+  padding: 11px 12px;
+  border-radius: var(--r-lg, 12px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text);
   font: inherit;
   cursor: pointer;
   text-align: left;
-  transition: all var(--d-fast, 0.15s);
+  transition:
+    transform var(--d-fast, 0.15s),
+    border-color var(--d-fast, 0.15s),
+    background-color var(--d-fast, 0.15s);
 }
 
-.userCard:hover {
+.userCard:hover,
+.userCard:focus-visible {
   transform: translateX(2px);
-  border-color: rgba(245, 165, 36, 0.4);
+  border-color: var(--accent-soft-border);
+  outline: none;
 }
 
 .userCardActive {
-  border-color: var(--accent, #f5a524);
-  background: rgba(245, 165, 36, 0.08);
+  border-color: var(--accent);
+  background: var(--accent-tint);
 }
 
 .userAvatar {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(245, 165, 36, 0.15);
-  color: var(--accent, #f5a524);
+  background: var(--accent-soft-bg);
+  color: var(--accent);
   display: grid;
   place-items: center;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
-  border: 1px solid rgba(245, 165, 36, 0.3);
+  border: 1px solid var(--accent-soft-border);
   flex: none;
-}
-
-.userMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.userName {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: var(--text, #ede8e3);
-}
-
-.userEmail {
-  font-size: 12px;
-  color: var(--text-muted, #8a8070);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.userSummary {
-  font-size: 11.5px;
-  color: var(--text-muted, #8a8070);
-  margin-top: 2px;
-}
-
-/* Cột phải: Chi tiết người dùng */
-.rightCol {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.userHeaderCard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  border-radius: 12px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-}
-
-.userHeaderLeft {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.userHeaderAvatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(245, 165, 36, 0.15);
-  color: var(--accent, #f5a524);
-  display: grid;
-  place-items: center;
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid rgba(245, 165, 36, 0.4);
-}
-
-.userHeaderInfo h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text, #ede8e3);
-}
-
-.userHeaderMeta {
-  font-size: 13px;
-  color: var(--text-muted, #8a8070);
-  margin-top: 2px;
-}
-
-.readonlyBadge {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line, #2b2622);
-  color: var(--text-muted, #8a8070);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Tab trạng thái lộ trình */
-.pathStatusTabs {
-  display: flex;
-  gap: 8px;
-}
-
-.statusTabBtn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-  color: var(--text-soft, #a89f91);
-  font: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--d-fast, 0.15s);
-}
-
-.statusTabBtn:hover {
-  color: var(--text, #ede8e3);
-}
-
-.statusTabBtnActive {
-  background: var(--accent, #f5a524);
-  color: #141211;
-  font-weight: 600;
-  border-color: var(--accent, #f5a524);
-}
-
-/* Thẻ các lộ trình của học viên */
-.pathCardsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 14px;
-}
-
-.pathCard {
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: left;
-  cursor: pointer;
-  transition: all var(--d-fast, 0.15s);
-}
-
-.pathCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(245, 165, 36, 0.4);
-}
-
-.pathCardActive {
-  border-color: var(--accent, #f5a524);
-  background: rgba(245, 165, 36, 0.06);
-}
-
-.pathCardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.pathGoalLabel {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--accent, #f5a524);
-  letter-spacing: 0.8px;
-}
-
-.pathStatusBadge {
-  font-size: 11.5px;
-  padding: 2px 7px;
-  border-radius: 999px;
-  font-weight: 500;
-}
-
-.badgeOngoing {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-}
-
-.badgeCompleted {
-  background: rgba(34, 197, 94, 0.12);
-  color: #22c55e;
-}
-
-.badgeAbandoned {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-muted, #8a8070);
-}
-
-.pathCardTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text, #ede8e3);
-}
-
-.pathCardTemplate {
-  font-size: 12px;
-  color: var(--text-muted, #8a8070);
-}
-
-.pathCardProgress {
-  font-size: 12px;
-  color: var(--text-soft, #a89f91);
-  margin-top: 4px;
-}
-
-/* Khung chi tiết lộ trình đang chọn */
-.pathDetailCard {
-  padding: 24px;
-  border-radius: 12px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.pathDetailHead {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
-  border-bottom: 1px solid var(--line, #2b2622);
-  padding-bottom: 16px;
-}
-
-.pathDetailHead h3 {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--text-muted, #8a8070);
-}
-
-.pathDetailTitle {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text, #ede8e3);
-  margin-top: 4px;
-}
-
-.pathDetailSubtitle {
-  font-size: 13px;
-  color: var(--text-muted, #8a8070);
-  margin-top: 4px;
-}
-
-.pathMetaKv {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 6px 14px;
-  font-size: 13px;
-  align-content: start;
-}
-
-.pathMetaKv dt {
-  color: var(--text-muted, #8a8070);
-}
-
-.pathMetaKv dd {
-  margin: 0;
-  color: var(--text, #ede8e3);
-}
-
-.highlightTarget {
-  color: var(--accent, #f5a524);
-  font-weight: 600;
-}
-
-/* Search clear & avatars & role badges */
-.clearSearchBtn {
-  background: none;
-  border: none;
-  color: var(--text-muted, #8a8070);
-  font-size: 18px;
-  line-height: 1;
-  padding: 2px 6px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.clearSearchBtn:hover,
-.clearSearchBtn:focus-visible {
-  color: var(--text, #ede8e3);
-  outline: none;
 }
 
 .userAvatarImg {
@@ -553,11 +348,28 @@
   border-radius: 50%;
 }
 
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
 .userNameRow {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .userRoleTag,
@@ -566,18 +378,265 @@
   font-weight: 600;
   padding: 2px 7px;
   border-radius: 999px;
-  background: var(--accent-soft-bg, #2e2414);
-  color: var(--accent-soft-fg, #f5c46d);
-  border: 1px solid var(--accent-soft-border, #5a4220);
+  background: var(--accent-soft-bg);
+  color: var(--accent-soft-fg);
+  border: 1px solid var(--accent-soft-border);
   white-space: nowrap;
 }
 
-/* Thẻ lộ trình: chips chia sẻ / clone & progress bar */
+.userEmail {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userSummary {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cột phải: Chi tiết người dùng */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Khối Header người dùng + Tab trạng thái gộp nhất quán */
+.inspectorHeaderCard {
+  padding: 16px 20px 14px;
+  border-radius: var(--r-lg, 12px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.userHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.userHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.userHeaderAvatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent-soft-bg);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 700;
+  border: 1px solid var(--accent-soft-border);
+  flex: none;
+}
+
+.userHeaderInfo {
+  min-width: 0;
+}
+
+.userHeaderInfo h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.userHeaderMeta {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.readonlyBadge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Tab trạng thái lộ trình (nằm dưới hairline divider trong cùng header card) */
+.pathStatusTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.statusTabBtn {
+  padding: 6px 13px;
+  border-radius: var(--r-sm, 8px);
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: all var(--d-fast, 0.15s);
+}
+
+.statusTabBtn:hover,
+.statusTabBtn:focus-visible {
+  color: var(--text);
+  border-color: var(--card-border);
+  outline: none;
+}
+
+.statusTabBtnActive {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  border-color: var(--accent);
+}
+
+/* Lưới chọn lộ trình 2 cột cân đối, nhỏ gọn để ưu tiên không gian cho đồ thị */
+.pathCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pathCard {
+  padding: 12px 14px;
+  border-radius: var(--r-lg, 12px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--d-fast, 0.15s),
+    border-color var(--d-fast, 0.15s),
+    background-color var(--d-fast, 0.15s);
+}
+
+.pathCard:hover,
+.pathCard:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--accent-soft-border);
+  outline: none;
+}
+
+.pathCardActive {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.pathCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.pathGoalLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 0.6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pathStatusBadge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badgeOngoing {
+  background: var(--info-bg);
+  color: var(--info-fg);
+  border: 1px solid var(--info-border);
+}
+
+.badgeCompleted {
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  border: 1px solid var(--ok-border);
+}
+
+.badgeAbandoned {
+  background: var(--chip-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--line);
+}
+
+.pathCardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pathCardFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pathProgressRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width var(--d-base, 0.22s) var(--ease-out);
+}
+
+.pathCardProgress {
+  font-size: 11.5px;
+  color: var(--text-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .pathMetaChips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  min-height: 4px;
 }
 
 .shareChip {
@@ -585,9 +644,9 @@
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--ok-bg, #16241a);
-  color: var(--ok-fg, #a8e0b5);
-  border: 1px solid var(--ok-border, #2f5a3a);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  border: 1px solid var(--ok-border);
 }
 
 .cloneChip {
@@ -595,38 +654,136 @@
   font-weight: 500;
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--info-bg, #1f2a36);
-  color: var(--info-fg, #a9c6e8);
-  border: 1px solid var(--info-border, #34465a);
+  background: var(--info-bg);
+  color: var(--info-fg);
+  border: 1px solid var(--info-border);
 }
 
-.progressTrack {
-  width: 100%;
-  height: 5px;
-  border-radius: 999px;
-  background: var(--track, #26272b);
-  overflow: hidden;
+/* Khung chi tiết lộ trình đang chọn */
+.pathDetailCard {
+  padding: 20px;
+  border-radius: var(--r-lg, 12px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pathDetailHead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+}
+
+.pathDetailMain {
+  min-width: 0;
+}
+
+.pathDetailEyebrowRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pathDetailHead h3 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.viewModeSwitch {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--r-sm, 8px);
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
+}
+
+.viewModeBtn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--d-fast, 0.15s), background-color var(--d-fast, 0.15s);
+}
+
+.viewModeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.viewModeBtnActive {
+  background: var(--card-inner);
+  color: var(--accent);
+}
+
+.pathDetailTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 6px;
+}
+
+.pathDetailSubtitle {
+  font-size: 12.5px;
+  color: var(--text-muted);
   margin-top: 4px;
+  font-variant-numeric: tabular-nums;
 }
 
-.progressFill {
-  height: 100%;
-  border-radius: 999px;
-  background: var(--accent, #f5a524);
-  transition: width var(--d-base, 0.22s) var(--ease-out, ease);
+.pathMetaKv {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 5px 14px;
+  font-size: 12.5px;
+  align-content: start;
+}
+
+.pathMetaKv dt {
+  color: var(--text-muted);
+}
+
+.pathMetaKv dd {
+  margin: 0;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.highlightTarget {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* Thanh chi tiết kỹ năng khi bấm vào node trên đồ thị */
 .skillInspectBar {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: var(--r-md, 10px);
+  background: var(--surface-sunk);
+  border: 1px solid var(--card-border);
+}
+
+.skillInspectTop {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: var(--r-md, 10px);
-  background: var(--surface-sunk, #131417);
-  border: 1px solid var(--card-border, #2c2b29);
+  gap: 10px;
 }
 
 .skillInspectMain {
@@ -638,12 +795,12 @@
 
 .skillInspectLabel {
   font-size: 12.5px;
-  color: var(--text-muted, #a39d93);
+  color: var(--text-muted);
 }
 
 .skillInspectName {
   font-size: 14px;
-  color: var(--text, #f3efe8);
+  color: var(--text);
 }
 
 .skillInspectMeta {
@@ -657,9 +814,9 @@
   font-size: 12px;
   padding: 3px 10px;
   border-radius: 999px;
-  background: var(--chip-bg, #232427);
-  color: var(--text-soft, #c9c2b7);
-  border: 1px solid var(--line, #221f1c);
+  background: var(--chip-bg);
+  color: var(--text-soft);
+  border: 1px solid var(--line);
 }
 
 .skillInspectStatus {
@@ -667,46 +824,140 @@
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .inspectKnown {
-  background: var(--ok-bg, #16241a);
-  color: var(--ok-fg, #a8e0b5);
-  border: 1px solid var(--ok-border, #2f5a3a);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  border: 1px solid var(--ok-border);
 }
 
 .inspectLearning {
-  background: var(--info-bg, #1f2a36);
-  color: var(--info-fg, #a9c6e8);
-  border: 1px solid var(--info-border, #34465a);
+  background: var(--info-bg);
+  color: var(--info-fg);
+  border: 1px solid var(--info-border);
 }
 
 .inspectUnlearned {
-  background: var(--chip-bg, #232427);
-  color: var(--text-muted, #a39d93);
-  border: 1px solid var(--line, #221f1c);
+  background: var(--chip-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--line);
+}
+
+.skillRelationsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--text-soft);
+}
+
+.skillRelationText strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Chế độ xem Danh sách theo thứ tự tiên quyết */
+.topoSkillList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.topoSkillItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--r-md, 10px);
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--d-fast, 0.15s), background-color var(--d-fast, 0.15s);
+}
+
+.topoSkillItem:hover,
+.topoSkillItem:focus-visible {
+  border-color: var(--accent-soft-border);
+  outline: none;
+}
+
+.topoSkillItemActive {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.topoSkillIndex {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--chip-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.topoSkillBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topoSkillName {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.topoSkillHint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.topoSkillBadges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 /* Error, Empty & Skeleton states */
 .errorBanner,
 .emptyPanel {
-  padding: 24px;
+  padding: 22px;
   border-radius: var(--r-lg, 12px);
-  background: var(--card, #16171a);
-  border: 1px solid var(--line, #221f1c);
-  color: var(--text-muted, #a39d93);
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--text-muted);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  font-size: 13.5px;
+  gap: 10px;
+  font-size: 13px;
 }
 
 .errorBanner {
-  background: var(--danger-bg, #2a1a17);
-  border-color: var(--danger-border, #5a2e25);
-  color: var(--danger-fg, #f4a58e);
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger-fg);
 }
 
 .errorBanner p,
@@ -717,9 +968,9 @@
 .retryBtn {
   padding: 7px 14px;
   border-radius: var(--r-sm, 8px);
-  border: 1px solid var(--card-border, #2c2b29);
-  background: var(--card-inner, #1c1d20);
-  color: var(--text, #f3efe8);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
+  color: var(--text);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -728,7 +979,7 @@
 
 .retryBtn:hover,
 .retryBtn:focus-visible {
-  border-color: var(--accent, #f5a524);
+  border-color: var(--accent);
   outline: none;
 }
 
@@ -737,31 +988,31 @@
 .skeletonGrid,
 .skeletonCanvas {
   border-radius: var(--r-lg, 12px);
-  background: var(--skeleton-hi, #1d1e21);
-  border: 1px solid var(--line, #221f1c);
+  background: var(--skeleton-hi);
+  border: 1px solid var(--line);
   animation: pulseLoad 1.4s ease-in-out infinite;
 }
 
 .skeletonCard {
-  height: 74px;
+  height: 72px;
 }
 
 .detailSkeleton {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .skeletonHeader {
-  height: 86px;
+  height: 112px;
 }
 
 .skeletonGrid {
-  height: 130px;
+  height: 110px;
 }
 
 .skeletonCanvas {
-  height: 300px;
+  height: 280px;
 }
 
 @keyframes pulseLoad {
@@ -778,8 +1029,13 @@
   .skeletonCard,
   .skeletonHeader,
   .skeletonGrid,
-  .skeletonCanvas {
+  .skeletonCanvas,
+  .goalChip,
+  .userCard,
+  .pathCard,
+  .progressFill {
     animation: none;
+    transition: none;
   }
 }
 
@@ -788,9 +1044,15 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .statCell {
-    border-bottom: 1px solid var(--line, #221f1c);
+    border-bottom: 1px solid var(--line);
   }
   .splitLayout {
+    grid-template-columns: 1fr;
+  }
+  .leftCol {
+    position: static;
+  }
+  .pathCardsGrid {
     grid-template-columns: 1fr;
   }
   .pathDetailHead {

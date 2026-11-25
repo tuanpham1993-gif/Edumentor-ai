@@ -1,7 +1,9 @@
-// Trang Quản trị lộ trình người dùng (/admin/user-paths) — F14 (API thật)
+// Trang Quản trị lộ trình người dùng (/admin/user-paths) — F14 (API thật + UI/UX cải tiến)
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { adminApi } from '../../../api/admin.api.js';
+import { buildAdminRoadmapLayout } from '../../../utils/buildAdminRoadmapLayout.js';
 import { formatDate, initials, roleLabel } from '../../../utils/formatters.js';
+import { sortLearningPathNodes } from '../../../utils/sortLearningPathNodes.js';
 import Pagination from '../../common/components/Pagination.jsx';
 import AdminRoadmapCanvas from '../components/AdminRoadmapCanvas.jsx';
 import styles from '../styles/AdminUserPaths.module.css';
@@ -50,6 +52,7 @@ export default function AdminUserPathsPage() {
   // 1. Tổng hợp toàn hệ thống & mục tiêu phổ biến
   const [overview, setOverview] = useState(null);
   const [loadingOverview, setLoadingOverview] = useState(true);
+  const [showAllGoals, setShowAllGoals] = useState(false);
 
   // 2. Bộ lọc & danh sách người dùng (cột trái)
   const [viewMode, setViewMode] = useState('user'); // 'user' | 'goal'
@@ -72,9 +75,11 @@ export default function AdminUserPathsPage() {
 
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedPathId, setSelectedPathId] = useState(null);
+  const [inspectorMode, setInspectorMode] = useState('graph'); // 'graph' | 'list'
   const [selectedSkillNode, setSelectedSkillNode] = useState(null);
 
   const tabRefs = useRef([]);
+  const activeDetailUserRef = useRef(null);
 
   // Debounce từ khóa tìm kiếm (350ms)
   useEffect(() => {
@@ -92,7 +97,7 @@ export default function AdminUserPathsPage() {
       const data = await adminApi.getUserPathsOverview();
       setOverview(data);
     } catch {
-      // Thống kê tổng quan lỗi sẽ ẩn mượt mà hoặc không chặn luồng chính
+      // Lỗi thống kê tổng quan không chặn phần tra cứu chính
     } finally {
       setLoadingOverview(false);
     }
@@ -118,7 +123,6 @@ export default function AdminUserPathsPage() {
       setUsers(list);
       setTotalUsers(data.total || 0);
 
-      // Tự động chọn user đầu tiên nếu chưa chọn hoặc user hiện tại không nằm trong kết quả mới
       setSelectedUserId((prevId) => {
         if (list.length === 0) return null;
         if (prevId && list.some((u) => u.user_id === prevId)) return prevId;
@@ -137,17 +141,20 @@ export default function AdminUserPathsPage() {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Tải chi tiết lộ trình của user đang chọn
+  // Tải chi tiết lộ trình của user đang chọn (kèm kiểm tra chống ghi đè race-condition)
   const fetchUserDetail = useCallback(async (userId) => {
     if (!userId) {
+      activeDetailUserRef.current = null;
       setUserDetail(null);
       return;
     }
+    activeDetailUserRef.current = userId;
     setLoadingDetail(true);
     setErrorDetail('');
     setSelectedSkillNode(null);
     try {
       const detail = await adminApi.getUserPathsDetail(userId);
+      if (activeDetailUserRef.current !== userId) return;
       setUserDetail(detail);
       setStatusFilter('all');
       if (detail.paths && detail.paths.length > 0) {
@@ -156,11 +163,14 @@ export default function AdminUserPathsPage() {
         setSelectedPathId(null);
       }
     } catch (err) {
+      if (activeDetailUserRef.current !== userId) return;
       setErrorDetail(
         err?.response?.data?.detail || 'Không thể tải chi tiết lộ trình của người dùng này.'
       );
     } finally {
-      setLoadingDetail(false);
+      if (activeDetailUserRef.current === userId) {
+        setLoadingDetail(false);
+      }
     }
   }, []);
 
@@ -182,6 +192,18 @@ export default function AdminUserPathsPage() {
       filteredUserPaths[0]
     );
   }, [filteredUserPaths, selectedPathId]);
+
+  // Chuẩn bị dữ liệu cho chế độ Danh sách theo thứ tự tiên quyết & thông tin quan hệ
+  const sortedNodesForList = useMemo(() => {
+    if (!activePath?.nodes) return [];
+    return sortLearningPathNodes(activePath.nodes, activePath.edges);
+  }, [activePath]);
+
+  const layoutMetaById = useMemo(() => {
+    if (!activePath?.nodes) return new Map();
+    const layout = buildAdminRoadmapLayout(activePath.nodes, activePath.edges);
+    return new Map(layout.nodes.map((n) => [String(n.id), n]));
+  }, [activePath]);
 
   function handleSelectUser(u) {
     if (u.user_id !== selectedUserId) {
@@ -228,6 +250,7 @@ export default function AdminUserPathsPage() {
 
   const stats = overview?.stats;
   const popularGoals = overview?.popular_goals || [];
+  const visibleGoals = showAllGoals ? popularGoals : popularGoals.slice(0, 4);
   const totalPages = Math.max(1, Math.ceil(totalUsers / pageSize));
   const activeUserSummary = users.find((u) => u.user_id === selectedUserId) || null;
   const activeUserInfo = userDetail?.user || activeUserSummary;
@@ -235,10 +258,12 @@ export default function AdminUserPathsPage() {
   return (
     <>
       <div className={styles.pageHead}>
-        <h1>Lộ trình người dùng</h1>
-        <p className={styles.pageSubtitle}>
-          Tổng hợp số liệu, mục tiêu, lộ trình học tập và tiến độ kỹ năng thực tế của từng người dùng. Chỉ xem, không chỉnh sửa thay người dùng.
-        </p>
+        <div>
+          <h1>Lộ trình người dùng</h1>
+          <p className={styles.pageSubtitle}>
+            Tổng hợp số liệu, mục tiêu và tiến độ kỹ năng thực tế của từng tài khoản. Chế độ chỉ xem, không chỉnh sửa thay người dùng.
+          </p>
+        </div>
       </div>
 
       {/* Thanh chỉ số tổng hợp hệ thống */}
@@ -282,29 +307,41 @@ export default function AdminUserPathsPage() {
         ) : null}
       </section>
 
-      {/* Dải mục tiêu phổ biến */}
+      {/* Dải mục tiêu phổ biến (gọn, không cắt ngang mép phải) */}
       {popularGoals.length > 0 && (
         <section className={styles.goalStrip} aria-label="Mục tiêu phổ biến">
           <div className={styles.goalStripHeader}>
             <span className={styles.goalStripTitle}>Mục tiêu phổ biến</span>
-            {selectedPopularGoal && (
-              <button
-                type="button"
-                className={styles.goalClearBtn}
-                onClick={() => handleTogglePopularGoal(selectedPopularGoal)}
-              >
-                Bỏ lọc mục tiêu
-              </button>
-            )}
+            <div className={styles.goalStripActions}>
+              {selectedPopularGoal && (
+                <button
+                  type="button"
+                  className={styles.goalActionBtn}
+                  onClick={() => handleTogglePopularGoal(selectedPopularGoal)}
+                >
+                  Bỏ lọc mục tiêu
+                </button>
+              )}
+              {popularGoals.length > 4 && (
+                <button
+                  type="button"
+                  className={styles.goalActionMutedBtn}
+                  onClick={() => setShowAllGoals((prev) => !prev)}
+                >
+                  {showAllGoals ? 'Thu gọn' : `Xem thêm (+${popularGoals.length - 4})`}
+                </button>
+              )}
+            </div>
           </div>
           <div className={styles.goalChips}>
-            {popularGoals.map((g) => {
+            {visibleGoals.map((g) => {
               const isActive =
                 selectedPopularGoal.toLowerCase() === g.title.toLowerCase();
               return (
                 <button
                   key={g.title}
                   type="button"
+                  title={g.title}
                   aria-pressed={isActive}
                   className={`${styles.goalChip} ${isActive ? styles.goalChipActive : ''}`}
                   onClick={() => handleTogglePopularGoal(g.title)}
@@ -320,10 +357,10 @@ export default function AdminUserPathsPage() {
         </section>
       )}
 
-      {/* Bố cục 2 cột */}
+      {/* Bố cục Master-Detail 2 cột */}
       <div className={styles.splitLayout}>
-        {/* Cột trái: Segmented Mode + Search + Danh sách User */}
-        <div className={styles.leftCol}>
+        {/* Cột trái cố định khi cuộn: Mode + Search + Danh sách User */}
+        <aside className={styles.leftCol} aria-label="Bộ lọc và danh sách người dùng">
           <div className={styles.segmentedToggle} role="radiogroup" aria-label="Chế độ tìm kiếm">
             <button
               type="button"
@@ -348,8 +385,8 @@ export default function AdminUserPathsPage() {
           <div className={styles.searchBox}>
             <svg
               aria-hidden="true"
-              width="18"
-              height="18"
+              width="17"
+              height="17"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -362,12 +399,12 @@ export default function AdminUserPathsPage() {
             </svg>
             <input
               placeholder={
-                viewMode === 'user' ? 'Tìm tên hoặc email' : 'Tìm theo mục tiêu lộ trình'
+                viewMode === 'user' ? 'Tìm tên hoặc email...' : 'Tìm người theo mục tiêu...'
               }
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               aria-label={
-                viewMode === 'user' ? 'Tìm tên hoặc email' : 'Tìm theo mục tiêu lộ trình'
+                viewMode === 'user' ? 'Tìm tên hoặc email' : 'Tìm người theo mục tiêu lộ trình'
               }
             />
             {searchInput && (
@@ -381,6 +418,14 @@ export default function AdminUserPathsPage() {
               </button>
             )}
           </div>
+
+          {(viewMode === 'goal' || selectedPopularGoal) && (
+            <div className={styles.filterContextHint}>
+              {selectedPopularGoal
+                ? `Đang lọc mục tiêu: “${selectedPopularGoal}”`
+                : 'Tìm tài khoản sở hữu lộ trình khớp từ khóa'}
+            </div>
+          )}
 
           {errorUsers ? (
             <div className={styles.errorBanner} role="alert">
@@ -432,7 +477,9 @@ export default function AdminUserPathsPage() {
                             <span className={styles.userRoleTag}>Admin</span>
                           )}
                         </div>
-                        <span className={styles.userEmail}>{u.email}</span>
+                        <span className={styles.userEmail} title={u.email}>
+                          {u.email}
+                        </span>
                         <span className={styles.userSummary}>{formatUserSummary(u)}</span>
                       </div>
                     </button>
@@ -448,9 +495,9 @@ export default function AdminUserPathsPage() {
               />
             </>
           )}
-        </div>
+        </aside>
 
-        {/* Cột phải: Thông tin User & Lộ trình */}
+        {/* Cột phải: Thông tin User + Chọn lộ trình gọn + Đồ thị/Danh sách */}
         <div className={styles.rightCol}>
           {errorDetail ? (
             <div className={styles.errorBanner} role="alert">
@@ -475,78 +522,80 @@ export default function AdminUserPathsPage() {
             </div>
           ) : (
             <>
-              {/* Header Người dùng */}
-              <div className={styles.userHeaderCard}>
-                <div className={styles.userHeaderLeft}>
-                  <span className={styles.userHeaderAvatar}>
-                    {activeUserInfo.avatar_url ? (
-                      <img
-                        src={activeUserInfo.avatar_url}
-                        alt=""
-                        className={styles.userAvatarImg}
-                      />
-                    ) : (
-                      initials(activeUserInfo.full_name)
-                    )}
-                  </span>
-                  <div className={styles.userHeaderInfo}>
-                    <div className={styles.userNameRow}>
-                      <h2>{activeUserInfo.full_name}</h2>
-                      <span className={styles.roleBadge}>
-                        {roleLabel(activeUserInfo.role)}
-                      </span>
-                    </div>
-                    <div className={styles.userHeaderMeta}>
-                      {activeUserInfo.email} · tham gia {formatDate(activeUserInfo.created_at)}
-                      {activeUserSummary && (
-                        <>
-                          {' '}
-                          · {activeUserSummary.known_skills_count} kỹ năng đã biết ·{' '}
-                          {activeUserSummary.learning_skills_count} đang học
-                        </>
+              {/* Gộp User Header + Tab trạng thái thành 1 khối thống nhất */}
+              <div className={styles.inspectorHeaderCard}>
+                <div className={styles.userHeaderRow}>
+                  <div className={styles.userHeaderLeft}>
+                    <span className={styles.userHeaderAvatar}>
+                      {activeUserInfo.avatar_url ? (
+                        <img
+                          src={activeUserInfo.avatar_url}
+                          alt=""
+                          className={styles.userAvatarImg}
+                        />
+                      ) : (
+                        initials(activeUserInfo.full_name)
                       )}
+                    </span>
+                    <div className={styles.userHeaderInfo}>
+                      <div className={styles.userNameRow}>
+                        <h2>{activeUserInfo.full_name}</h2>
+                        <span className={styles.roleBadge}>
+                          {roleLabel(activeUserInfo.role)}
+                        </span>
+                      </div>
+                      <div className={styles.userHeaderMeta}>
+                        {activeUserInfo.email} · tham gia {formatDate(activeUserInfo.created_at)}
+                        {activeUserSummary && (
+                          <>
+                            {' '}
+                            · {activeUserSummary.known_skills_count} kỹ năng đã biết ·{' '}
+                            {activeUserSummary.learning_skills_count} đang học
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
+
+                  <span className={styles.readonlyBadge}>Chỉ xem</span>
                 </div>
 
-                <span className={styles.readonlyBadge}>Chỉ xem</span>
+                {/* Tab trạng thái lộ trình */}
+                <div
+                  className={styles.pathStatusTabs}
+                  role="tablist"
+                  aria-label="Trạng thái lộ trình"
+                >
+                  {STATUS_TABS.map((tab, idx) => {
+                    const count = userDetail?.status_counts?.[tab.key] ?? 0;
+                    const isActive = statusFilter === tab.key;
+                    return (
+                      <button
+                        key={tab.key}
+                        ref={(el) => {
+                          tabRefs.current[idx] = el;
+                        }}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        tabIndex={isActive ? 0 : -1}
+                        className={`${styles.statusTabBtn} ${
+                          isActive ? styles.statusTabBtnActive : ''
+                        }`}
+                        onClick={() => {
+                          setStatusFilter(tab.key);
+                          setSelectedSkillNode(null);
+                        }}
+                        onKeyDown={(e) => handleTabKeyDown(e, idx)}
+                      >
+                        {tab.label} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Tab trạng thái: Tất cả, Đang theo, Hoàn thành, Đã từ bỏ */}
-              <div
-                className={styles.pathStatusTabs}
-                role="tablist"
-                aria-label="Trạng thái lộ trình"
-              >
-                {STATUS_TABS.map((tab, idx) => {
-                  const count = userDetail?.status_counts?.[tab.key] ?? 0;
-                  const isActive = statusFilter === tab.key;
-                  return (
-                    <button
-                      key={tab.key}
-                      ref={(el) => {
-                        tabRefs.current[idx] = el;
-                      }}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      tabIndex={isActive ? 0 : -1}
-                      className={`${styles.statusTabBtn} ${
-                        isActive ? styles.statusTabBtnActive : ''
-                      }`}
-                      onClick={() => {
-                        setStatusFilter(tab.key);
-                        setSelectedSkillNode(null);
-                      }}
-                      onKeyDown={(e) => handleTabKeyDown(e, idx)}
-                    >
-                      {tab.label} ({count})
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Các thẻ lộ trình của người dùng */}
+              {/* Lưới 2 cột thẻ lộ trình gọn gàng để giữ đồ thị trong vùng nhìn đầu tiên */}
               {filteredUserPaths.length === 0 ? (
                 <div className={styles.emptyPanel}>
                   Người dùng này chưa có lộ trình nào ở trạng thái đã chọn.
@@ -568,6 +617,7 @@ export default function AdminUserPathsPage() {
                       <button
                         key={p.record_id}
                         type="button"
+                        title={p.original_query}
                         aria-pressed={Boolean(isSelected)}
                         className={`${styles.pathCard} ${isSelected ? styles.pathCardActive : ''}`}
                         onClick={() => handleSelectPath(p.record_id)}
@@ -583,36 +633,40 @@ export default function AdminUserPathsPage() {
 
                         <div className={styles.pathCardTitle}>“{p.original_query}”</div>
 
-                        <div className={styles.pathMetaChips}>
-                          {p.is_shared && (
-                            <span className={styles.shareChip}>
-                              Đang chia sẻ · {p.clone_count} lượt học
+                        <div className={styles.pathCardFooter}>
+                          <div className={styles.pathProgressRow}>
+                            <div
+                              className={styles.progressTrack}
+                              role="progressbar"
+                              aria-valuemin={0}
+                              aria-valuemax={p.progress_total}
+                              aria-valuenow={p.progress_known}
+                              aria-label={`Tiến độ ${p.original_query}`}
+                            >
+                              <div
+                                className={styles.progressFill}
+                                style={{ width: `${percent}%` }}
+                              />
+                            </div>
+                            <span className={styles.pathCardProgress}>
+                              {p.progress_known}/{p.progress_total} đã biết
                             </span>
-                          )}
-                          {p.cloned_from_id && (
-                            <span className={styles.cloneChip}>
-                              Sao chép từ #{p.cloned_from_id}
-                            </span>
-                          )}
-                        </div>
+                          </div>
 
-                        <div
-                          className={styles.progressTrack}
-                          role="progressbar"
-                          aria-valuemin={0}
-                          aria-valuemax={p.progress_total}
-                          aria-valuenow={p.progress_known}
-                          aria-label={`Tiến độ ${p.original_query}`}
-                        >
-                          <div
-                            className={styles.progressFill}
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
-
-                        <div className={styles.pathCardProgress}>
-                          {p.progress_known}/{p.progress_total} kỹ năng đã biết
-                          {p.progress_learning > 0 && ` · ${p.progress_learning} đang học`}
+                          {(p.is_shared || p.cloned_from_id) && (
+                            <div className={styles.pathMetaChips}>
+                              {p.is_shared && (
+                                <span className={styles.shareChip}>
+                                  Chia sẻ · {p.clone_count} lượt
+                                </span>
+                              )}
+                              {p.cloned_from_id && (
+                                <span className={styles.cloneChip}>
+                                  Từ #{p.cloned_from_id}
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </button>
                     );
@@ -620,12 +674,42 @@ export default function AdminUserPathsPage() {
                 </div>
               )}
 
-              {/* Chi tiết lộ trình & Đồ thị trực quan */}
+              {/* Chi tiết lộ trình & Đồ thị / Danh sách tiên quyết */}
               {activePath && (
                 <div className={styles.pathDetailCard}>
                   <div className={styles.pathDetailHead}>
-                    <div>
-                      <h3>Mục đích của lộ trình</h3>
+                    <div className={styles.pathDetailMain}>
+                      <div className={styles.pathDetailEyebrowRow}>
+                        <h3>Mục đích của lộ trình</h3>
+                        <div
+                          className={styles.viewModeSwitch}
+                          role="radiogroup"
+                          aria-label="Chế độ xem chi tiết lộ trình"
+                        >
+                          <button
+                            type="button"
+                            role="radio"
+                            aria-checked={inspectorMode === 'graph'}
+                            className={`${styles.viewModeBtn} ${
+                              inspectorMode === 'graph' ? styles.viewModeBtnActive : ''
+                            }`}
+                            onClick={() => setInspectorMode('graph')}
+                          >
+                            Đồ thị
+                          </button>
+                          <button
+                            type="button"
+                            role="radio"
+                            aria-checked={inspectorMode === 'list'}
+                            className={`${styles.viewModeBtn} ${
+                              inspectorMode === 'list' ? styles.viewModeBtnActive : ''
+                            }`}
+                            onClick={() => setInspectorMode('list')}
+                          >
+                            Danh sách ({activePath.nodes.length})
+                          </button>
+                        </div>
+                      </div>
                       <div className={styles.pathDetailTitle}>“{activePath.original_query}”</div>
                       <div className={styles.pathDetailSubtitle}>
                         {GOAL_TYPE_LABELS[activePath.goal_type] || 'Lộ trình'} ·{' '}
@@ -639,17 +723,17 @@ export default function AdminUserPathsPage() {
                     <dl className={styles.pathMetaKv}>
                       <dt>Mã lộ trình</dt>
                       <dd>#{activePath.record_id}</dd>
-                      <dt>Kỹ năng mục tiêu</dt>
+                      <dt>Mục tiêu</dt>
                       <dd className={styles.highlightTarget}>
                         {activePath.target_skills && activePath.target_skills.length > 0
                           ? activePath.target_skills.join(', ')
-                          : 'Chưa gắn mục tiêu cụ thể'}
+                          : 'Theo toàn bộ lộ trình'}
                       </dd>
-                      <dt>Tiến độ kỹ năng</dt>
+                      <dt>Tiến độ</dt>
                       <dd>
                         {activePath.progress_known}/{activePath.progress_total} đã biết
                         {activePath.progress_learning > 0 &&
-                          ` (${activePath.progress_learning} đang học)`}
+                          ` · ${activePath.progress_learning} đang học`}
                       </dd>
                     </dl>
                   </div>
@@ -658,7 +742,7 @@ export default function AdminUserPathsPage() {
                     <div className={styles.emptyPanel}>
                       Lộ trình này hiện chưa có kỹ năng nào.
                     </div>
-                  ) : (
+                  ) : inspectorMode === 'graph' ? (
                     <>
                       <AdminRoadmapCanvas
                         nodes={activePath.nodes}
@@ -670,34 +754,114 @@ export default function AdminUserPathsPage() {
 
                       {selectedSkillNode && (
                         <div className={styles.skillInspectBar} role="status">
-                          <div className={styles.skillInspectMain}>
-                            <span className={styles.skillInspectLabel}>Kỹ năng đang chọn:</span>
-                            <strong className={styles.skillInspectName}>
-                              {selectedSkillNode.name}
-                            </strong>
+                          <div className={styles.skillInspectTop}>
+                            <div className={styles.skillInspectMain}>
+                              <span className={styles.skillInspectLabel}>Kỹ năng đang chọn:</span>
+                              <strong className={styles.skillInspectName}>
+                                {selectedSkillNode.name}
+                              </strong>
+                            </div>
+                            <div className={styles.skillInspectMeta}>
+                              <span className={styles.skillInspectChip}>
+                                Vai trò:{' '}
+                                {selectedSkillNode.isTarget
+                                  ? 'Mục tiêu'
+                                  : NODE_ROLE_LABELS[selectedSkillNode.role] ||
+                                    'Kỹ năng trong lộ trình'}
+                              </span>
+                              <span
+                                className={`${styles.skillInspectStatus} ${
+                                  selectedSkillNode.rawStatus === 'known'
+                                    ? styles.inspectKnown
+                                    : selectedSkillNode.rawStatus === 'learning'
+                                    ? styles.inspectLearning
+                                    : styles.inspectUnlearned
+                                }`}
+                              >
+                                {SKILL_STATUS_LABELS[selectedSkillNode.rawStatus] || 'Chưa học'}
+                              </span>
+                            </div>
                           </div>
-                          <div className={styles.skillInspectMeta}>
-                            <span className={styles.skillInspectChip}>
-                              Vai trò:{' '}
-                              {selectedSkillNode.isTarget
-                                ? 'Mục tiêu'
-                                : NODE_ROLE_LABELS[selectedSkillNode.role] || 'Kỹ năng trong lộ trình'}
-                            </span>
-                            <span
-                              className={`${styles.skillInspectStatus} ${
-                                selectedSkillNode.rawStatus === 'known'
-                                  ? styles.inspectKnown
-                                  : selectedSkillNode.rawStatus === 'learning'
-                                  ? styles.inspectLearning
-                                  : styles.inspectUnlearned
-                              }`}
-                            >
-                              {SKILL_STATUS_LABELS[selectedSkillNode.rawStatus] || 'Chưa học'}
-                            </span>
-                          </div>
+
+                          {(selectedSkillNode.prerequisites?.length > 0 ||
+                            selectedSkillNode.unlocks?.length > 0) && (
+                            <div className={styles.skillRelationsRow}>
+                              {selectedSkillNode.prerequisites?.length > 0 && (
+                                <span className={styles.skillRelationText}>
+                                  <strong>Học sau:</strong>{' '}
+                                  {selectedSkillNode.prerequisites.join(', ')}
+                                </span>
+                              )}
+                              {selectedSkillNode.unlocks?.length > 0 && (
+                                <span className={styles.skillRelationText}>
+                                  <strong>Mở khóa cho:</strong>{' '}
+                                  {selectedSkillNode.unlocks.join(', ')}
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                     </>
+                  ) : (
+                    <ol className={styles.topoSkillList}>
+                      {sortedNodesForList.map((node, idx) => {
+                        const meta = layoutMetaById.get(String(node.skill_id));
+                        const isSelected =
+                          selectedSkillNode &&
+                          String(selectedSkillNode.id) === String(node.skill_id);
+                        const statusKey = node.user_skill_status || 'unlearned';
+                        const statusClass =
+                          statusKey === 'known'
+                            ? styles.inspectKnown
+                            : statusKey === 'learning'
+                            ? styles.inspectLearning
+                            : styles.inspectUnlearned;
+
+                        return (
+                          <li key={node.skill_id}>
+                            <button
+                              type="button"
+                              aria-pressed={Boolean(isSelected)}
+                              className={`${styles.topoSkillItem} ${
+                                isSelected ? styles.topoSkillItemActive : ''
+                              }`}
+                              onClick={() =>
+                                setSelectedSkillNode(
+                                  meta || {
+                                    id: String(node.skill_id),
+                                    name: node.skill_name,
+                                    role: node.node_role,
+                                    isTarget: node.is_target,
+                                    rawStatus: statusKey,
+                                    prerequisites: node._topology?.prerequisiteNames || [],
+                                    unlocks: [],
+                                  }
+                                )
+                              }
+                            >
+                              <span className={styles.topoSkillIndex}>{idx + 1}</span>
+                              <div className={styles.topoSkillBody}>
+                                <span className={styles.topoSkillName}>{node.skill_name}</span>
+                                <span className={styles.topoSkillHint}>
+                                  {node._topology?.prerequisiteNames?.length > 0
+                                    ? `↳ Cần: ${node._topology.prerequisiteNames.join(', ')}`
+                                    : 'Nền tảng khởi đầu'}
+                                </span>
+                              </div>
+                              <div className={styles.topoSkillBadges}>
+                                {node.is_target && (
+                                  <span className={styles.skillInspectChip}>Mục tiêu</span>
+                                )}
+                                <span className={`${styles.skillInspectStatus} ${statusClass}`}>
+                                  {SKILL_STATUS_LABELS[statusKey] || 'Chưa học'}
+                                </span>
+                              </div>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ol>
                   )}
                 </div>
               )}
