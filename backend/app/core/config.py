@@ -42,6 +42,13 @@ class Settings(BaseSettings):
     # số bài làm dở cùng lúc (theo khóa học; ôn theo kỹ năng sau này áp cùng quy tắc cho kỹ năng).
     REVIEW_SUBMIT_COOLDOWN: int = 120  # giây tối thiểu giữa 2 lần nộp của một người
     REVIEW_MAX_UNFINISHED: int = 5  # số bài làm dở tối đa; đủ → phải nộp hoặc bỏ bớt mới bắt đầu bài mới
+    # G3c (25/11) cổng kiểm câu AI soạn — ngưỡng chốt sau hiệu chỉnh trên 263 câu soạn tay (docs mục 7.4)
+    REVIEW_GATE_LENGTH_RATIO: float = 1.5  # L1: đáp án đúng dài hơn N × lựa chọn sai dài nhất…
+    REVIEW_GATE_LENGTH_MIN_DIFF: int = 15  # …VÀ dài hơn ≥ N ký tự (bỏ qua lựa chọn ngắn như "PO" / "The Developers")
+    REVIEW_GATE_DUP_MAX: float = 0.95  # cosine với câu CÙNG LOẠI, cùng kỹ năng ≥ ngưỡng → gần trùng → loại
+    REVIEW_GATE_MODEL_MIN: float = 7.0  # bài mẫu của AI chấm bằng từ khóa phải ≥ (thang 10)
+    REVIEW_GATE_COPY_MAX: float = 5.0  # bài chép lại đề phải ≤ (thang 10)
+    REVIEW_GATE_OTHER_MAX: float = 6.0  # bài mẫu của câu tự luận khác phải ≤ (thang 10)
     # 21/11 (Q12 guide.md) "Đến hạn ôn": khoảng nhắc giãn dần theo số lần ĐẠT liên tiếp của kỹ năng (lần 1, 2, 3+);
     # lần ôn gần nhất chưa đạt → dùng khoảng đầu. Chuông gom tối đa 1 lần / ngày, email tối đa 1 lần / tuần.
     REVIEW_DUE_INTERVALS: list[int] = [7, 30, 90]  # ngày

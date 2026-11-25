@@ -254,8 +254,8 @@ khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn ng
 |---|---|---|---|
 | **G3.0** | AI gắn nhãn phạm vi + trang admin sửa nhãn | — | ✅ Xong `9ef4585` |
 | **G3a** | Kho đoạn tri thức: AI viết từ mô tả khóa + embedding + admin thêm / sửa / xóa | 04 | ✅ Code xong `450af21` (G3a-7 đo thêm còn treo) |
-| G3b | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | Đang làm — mục 7.3 |
-| G3c | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | |
+| **G3b** | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | ✅ Xong `f4ba1e8` |
+| **G3c** | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | ✅ Xong — mục 7.4 |
 | G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt (+ P1, P8, P12 nếu chốt) | 01, 03 | |
 | G3e | Chống học thuộc (P1–P4 nếu chốt) | 06 | |
 | **G3f** | Mentor duyệt câu AI soạn (D19–D23, D27) | — | ✅ Xong `450af21` (G3f-7 thử tay còn treo) |
@@ -302,7 +302,27 @@ Chốt: chỉ **soạn + kiểm, chưa lưu DB** (lưu ở G3d sau cổng G3c) �
 - [x] G3b-6 Đo thật 25/11: Docker 15/15 (3 lần gọi — 1 câu trùng câu đã có bị loại, soạn lại), Power BI 15/15 (2 lần gọi); 30/30 câu đúng kiến thức, bám đúng đoạn. Bản dịch + nhận xét: `Downloads/Cau-hoi-AI-soan-G3b-Docker-PowerBI.md`
 - [x] G3b-7 Tuấn chốt P18 → prompt **`gen-en-v2`**, đo lại 25/11: Docker 15/15 (2 lần gọi), Power BI 15/15 (3 lần gọi — 1 câu nâng cao thiếu ý barem, soạn lại). Câu thông hiểu có tình huống 2 → 11 / 12; đáp án dài nhất 3 → 0; câu đố vặt 2 → 1; từ khóa cụm dài 2 → 0. **Mới tệ hơn:** 3 câu tự luận dễ chỉ cần kể tên 1 lệnh / công cụ; 2 đề tự luận chứa sẵn đáp án → P19
 - [x] G3b-7b Tuấn chốt P19 → prompt **`gen-en-v3`** + luật **L7** ở server (`leaked_items`: ý barem có mọi từ khóa chính nằm trong đề → loại), test 19. Đo lại 25/11: Docker 15/15 (3 lần gọi), Power BI 15/15 (2 lần gọi + 1 lần 503). Tự luận chỉ cần kể tên 1 thứ **3 → 0**; đề nói thẳng đáp án **2 → 0**; còn 2 câu lộ một phần bằng từ đồng nghĩa (so chữ không bắt được → cổng G3c kiểm theo nghĩa); 1 câu trắc nghiệm gần đố vặt
-- [ ] G3b-8 Commit (khi Tuấn bảo)
+- [x] G3b-8 Commit `f4ba1e8`
+
+### 7.4 G3c — Cổng kiểm câu AI soạn (Tuấn duyệt "theo đề xuất" 25/11)
+
+Chốt: câu hỏng cổng **loại + soạn lại** (D3, khác thầy chỉ gắn cờ) · giải mù **không** cho xem đoạn tài liệu · bài giả tự
+luận chấm bằng **bộ chấm từ khóa** (0 lượt gọi) · bám nguồn **chỉ ghi** · hiệu chỉnh trên câu soạn tay trước khi chốt ngưỡng.
+Lưu ở `ai_check["gate"]` (không bảng mới).
+
+- [x] G3c-1 `ai/review/question_gate.py`: giải mù (1 lần gọi / lô, xáo lựa chọn rồi quy ngược, solver lỗi khung → "skipped"), L1, gần trùng theo nghĩa (embedding, **chỉ so câu cùng loại**), bài giả tự luận (bài mẫu / chép đề / bài câu khác), bám nguồn (chỉ ghi). Prompt `solve-en-v1`, `RealAI.solve_mcqs`
+- [x] G3c-2 Nối vào `question_gen_service`: câu hỏng → lý do gửi lại cho AI, tính chung 2 lần soạn lại; câu đạt ghi `ai_check.gate`; đếm `solve_calls`
+- [x] G3c-3 Hiệu chỉnh `python -m app.core.seed_data.calibrate_question_gate` trên **263 câu soạn tay** (184 TN, 79 TL; 17 lần gọi giải mù):
+  - giải mù lệch **1 / 184 (0,5%)** — mục tiêu ≤ 5% ✔. Câu lệch là **lỗi thật**: `VAR-TN-15` #205 (`x = 2; x = x * 3` → 6) ghi đáp án A "5", đúng phải là B "6". Đây là câu **AI soạn ngày 16/11** (luồng ôn theo khóa, đã được duyệt), chỉ có trong DB (không có trong file JSON) → bằng chứng cổng giải mù cần thiết; chờ Tuấn sửa trên trang Câu hỏi ôn tập
+  - L1: ngưỡng thầy 1,5 loại 30 câu tay, phần lớn vì lựa chọn sai rất ngắn ("PO" vs "The Developers") → thêm điều kiện **dài hơn ≥ 15 ký tự** (còn 28 câu tay — ngân hàng tay cũng hay có đáp án dài)
+  - gần trùng: 0,90 loại 33 câu tay, đa số là cặp TN ↔ TL cùng chủ đề → **chỉ so cùng loại, ngưỡng 0,95** (còn 4 câu: các câu "code này in ra gì" chỉ khác số)
+  - bài giả: bài mẫu tay đều 10/10; chép đề > 5 điểm: 3 câu tay; bài câu khác > 6: 0 câu → **chép đề ≤ 5, câu khác ≤ 6**
+  - bám nguồn: p5 0,34, p50 0,64 (chỉ ghi)
+- [x] G3c-4 Ngưỡng vào `config.py`: `REVIEW_GATE_LENGTH_RATIO=1.5`, `REVIEW_GATE_LENGTH_MIN_DIFF=15`, `REVIEW_GATE_DUP_MAX=0.95`, `REVIEW_GATE_MODEL_MIN=7`, `REVIEW_GATE_COPY_MAX=5`, `REVIEW_GATE_OTHER_MAX=6`
+- [x] G3c-5 Đo Docker + Power BI có cổng: trắc nghiệm 24 / 24 qua giải mù. Tự luận bị loại nhiều vì từ khóa barem không khớp bài mẫu → Power BI **thiếu 1 câu** sau 3 lần soạn. Sửa: lý do loại **ghi rõ ý / từ khóa thiếu** + prompt **`gen-en-v4`** ("mỗi từ khóa chính phải có nguyên văn trong câu tương ứng của bài mẫu"). Đo lại: **Docker 15/15 (5 lần soạn + 2 giải mù), Power BI 15/15 (4 + 1)** — trong mức D8. Còn đề lộ một phần bằng từ khác (vd Power BI "chart filter") → mentor bắt
+- [x] G3c-6 Test `test_question_gate.py` (15, solver / embedder giả) + `test_question_gen.py` (19); toàn bộ 1.182 qua (2 lỗi cũ của Tâm)
+- [x] G3c-7 Tuấn bảo sửa `VAR-TN-15` (25/11): đáp án A "5" → **B "6"** + giải thích, qua `review_admin_service.update` (chưa bài nào dùng câu → sửa tại chỗ, không tạo phiên bản). Chỉ sửa trên DB máy Tuấn (câu không có trong file JSON)
+- [x] G3c-8 Commit (Tuấn bảo 25/11)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.

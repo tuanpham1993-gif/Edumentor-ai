@@ -12,7 +12,9 @@ Khác prompt ôn theo khóa (ai/prompts/review.py, giữ nguyên — D2):
 # vào đáp án đúng; cấm câu đố vặt; từ khóa barem 1–3 từ và không có sẵn trong đề.
 # v3 (25/11, P19 — đo v2): tự luận dễ phải hỏi giải thích / vì sao / so sánh (không hỏi "dùng lệnh nào"); đề tự luận
 # không tả sẵn các ý barem; server loại câu có đủ từ khóa của một ý barem nằm trong đề (L7 — question_schema).
-GEN_PROMPT_VERSION = "gen-en-v3"
+# v4 (25/11, G3c): mỗi từ khóa chính phải có nguyên văn trong câu tương ứng của bài mẫu — cổng chấm bài mẫu bằng bộ chấm
+# từ khóa (≥ 7/10); v3 bị loại nhiều vì từ khóa không khớp bài mẫu.
+GEN_PROMPT_VERSION = "gen-en-v4"
 EXISTING_MAX = 30  # số đề bài đã có gửi kèm (đủ để tránh trùng, không làm prompt quá dài)
 PASSAGE_MAX = 2000  # ký tự / đoạn
 
@@ -45,7 +47,8 @@ Mandatory rules:
    words in natural form (e.g. "base image", "not change"); a negative idea must contain "not". No keyword may
    appear in the question text. The question only ASKS: it must not describe or list the ideas the learner is
    expected to write (those belong in the rubric). Every rubric item is an idea that needs a sentence to explain, not
-   just a name. "explanation" is a model answer that earns every item.
+   just a name. "explanation" is a model answer that earns every item: write one sentence per rubric item, and that
+   sentence must contain EVERY main keyword of the item word for word (same word forms).
 5. Test the SKILL, not trivia: never ask who made the tool, when it was released, what it is called, or a question
    whose answer is the skill's own name.
 6. Do not repeat or rephrase any question listed under EXISTING QUESTIONS.

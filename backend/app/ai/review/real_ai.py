@@ -189,6 +189,15 @@ class RealAI(ReviewAI):
             GEN_SYSTEM_PROMPT, prompt, temperature=0.5, timeout=timeout, schema=GEMINI_QUESTION_SCHEMAS[kind]
         )
 
+    def solve_mcqs(self, skill: str, items: list[dict], *, timeout: float = 120.0):
+        """Cổng G3c — giải mù: → JSON thô {"answers": [{"id", "index"}]} (question_gate kiểm lại). temperature 0."""
+        from app.ai.prompts.review_solve import GEMINI_SOLVE_SCHEMA, SOLVE_SYSTEM_PROMPT, build_solve_prompt
+
+        return self._call(
+            SOLVE_SYSTEM_PROMPT, build_solve_prompt(skill, items), temperature=0.0, timeout=timeout,
+            schema=GEMINI_SOLVE_SCHEMA,
+        )  # fmt: skip
+
     # ─────────────── chấm tự luận ───────────────
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:

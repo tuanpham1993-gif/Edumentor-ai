@@ -48,12 +48,24 @@ ESSAYS = {
 }
 
 
+# (từ khóa từng ý, bài mẫu) — bài mẫu chứa đủ từ khóa (cổng G3c: bài mẫu ≥ 7/10), đề không chứa từ khóa (L7)
+ESSAY_KEYS = {
+    ("easy", 1): ([["read-only", "template"], ["running", "instance"]],
+                  "An image is a read-only template. A container is a running instance of it."),
+    ("easy", 2): ([["persist", "data"], ["removed", "survive"]],
+                  "A volume lets data persist outside the container. The files survive when it is removed."),
+    ("advanced", 1): ([["base", "python"], ["install", "requirements"], ["copy", "source"], ["start", "command"]],
+                      "Use a python base. Install the requirements first. Then copy the source. Set the start command."),
+}  # fmt: skip
+
+
 def essay(level="easy", n=1):
-    items = 2 if level == "easy" else 4
-    rubric = [{"text": f"idea {i}", "max_points": 10 // items + (10 % items if i == 0 else 0),
-               "main_keywords": ["template"], "sub_keywords": []} for i in range(items)]  # fmt: skip
+    keys, answer = ESSAY_KEYS[(level, n)]
+    points = [10 // len(keys) + (10 % len(keys) if i == 0 else 0) for i in range(len(keys))]
+    rubric = [{"text": " ".join(k), "max_points": p, "main_keywords": k, "sub_keywords": []}
+              for k, p in zip(keys, points, strict=True)]  # fmt: skip
     return {"level": level, "passage": 1, "content": ESSAYS[(level, n)], "rubric": rubric,
-            "explanation": "Model answer.", "source_quote": "A container is a running instance of an image"}  # fmt: skip
+            "explanation": f"Model answer: {answer}", "source_quote": "A container is a running instance of an image"}  # fmt: skip
 
 
 # ─────────────── check_questions ───────────────
@@ -95,7 +107,7 @@ def test_duplicates_rejected_and_extras_dropped():
 
 def test_essay_rubric_checked():
     bad = essay()
-    bad["rubric"][0]["max_points"] = 9  # tổng ≠ 10
+    bad["rubric"][0]["max_points"] = 1  # tổng ≠ 10
     good, errors = check_questions({"questions": [bad, essay("advanced")]}, "essay", {"easy": 1, "advanced": 1},
                                    passages=PASSAGES)  # fmt: skip
     assert [q["level"] for q in good] == ["advanced"] and "missing: 1 easy" in errors[-1]

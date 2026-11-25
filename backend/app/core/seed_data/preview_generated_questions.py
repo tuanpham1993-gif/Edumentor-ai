@@ -22,7 +22,8 @@ LEVEL_VI = {"recognize": "TN nhận biết", "understand": "TN thông hiểu", "
 
 def _render(result: dict, chunks: dict[int, str]) -> list[str]:
     lines = [f"\n## {result['skill']} (#{result['skill_id']}) — {len(result['questions'])} câu, "
-             f"{result['calls']} lần gọi Gemini" + (f", còn thiếu {result['missing']}" if result["missing"] else "")
+             f"{result['calls']} lần soạn + {result.get('solve_calls', 0)} lần giải mù"
+             + (f", còn thiếu {result['missing']}" if result["missing"] else "")
              + "\n"]  # fmt: skip
     for i, q in enumerate(result["questions"], start=1):
         gen = q["ai_check"]["gen"]
@@ -36,7 +37,17 @@ def _render(result: dict, chunks: dict[int, str]) -> list[str]:
                 lines.append(f"- ({item['max_points']} đ) {item['text']} — từ khóa: {', '.join(item['main_keywords'])}")
         lines.append(f"\n*Giải thích:* {q['explanation']}  ")
         lines.append(f"*Đoạn nguồn:* {chunks.get(q['chunk_id'], q['chunk_id'])} · *câu trích:* \"{gen['source_quote']}\""
-                     f" · lần soạn {gen['attempt']}\n")  # fmt: skip
+                     f" · lần soạn {gen['attempt']}  ")  # fmt: skip
+        gate = q["ai_check"].get("gate") or {}
+        solved = gate.get("solver_index")
+        parts = [
+            f"giải mù {LETTERS[solved]}" if solved is not None else "giải mù —",
+            f"L1 {gate['length_ratio']}" if "length_ratio" in gate else None,
+            f"bài giả {gate['fake_scores']}" if "fake_scores" in gate else None,
+            f"trùng {gate.get('max_similarity')}",
+            f"bám nguồn {gate.get('grounding')}",
+        ]
+        lines.append("*Cổng:* " + " · ".join(p for p in parts if p) + "\n")
     if result["rejected"]:
         lines.append("\n**Bị loại / soạn lại:**\n")
         for r in result["rejected"]:
@@ -56,6 +67,7 @@ def main(argv=None) -> int:
     from app.ai.review.real_ai import RealAI, review_llm
     from app.repositories import knowledge_repository
     from app.services import question_gen_service as gen
+    from app.services.review_rag_service import embed_query
 
     key, model = review_llm()
     if settings.AI_MODE != "real" or not key or not model:
@@ -72,7 +84,8 @@ def main(argv=None) -> int:
             result = None
             for wait in (20, 40, None):  # Gemini 503 (quá tải) → chờ rồi thử lại cả kỹ năng
                 try:
-                    result = gen.generate(db, skill_id, write=ai.write_questions, model=model)
+                    result = gen.generate(db, skill_id, write=ai.write_questions, model=model, solve=ai.solve_mcqs,
+                                          embed=embed_query)  # fmt: skip
                     break
                 except gen.GenError as err:
                     print(f"- {name} (#{skill_id}): {err.message}")
@@ -85,7 +98,8 @@ def main(argv=None) -> int:
                     time.sleep(wait)
             if result is None:
                 continue
-            print(f"- {name} (#{skill_id}): {len(result['questions'])} câu, {result['calls']} lần gọi, "
+            print(f"- {name} (#{skill_id}): {len(result['questions'])} câu, {result['calls']} lần soạn + "
+                  f"{result['solve_calls']} lần giải mù, "
                   f"thiếu {result['missing'] or 0}")  # fmt: skip
             chunks = {c.chunk_id: c.title for c in knowledge_repository.chunks_for_skill(db, skill_id)}
             lines += _render(result, chunks)
