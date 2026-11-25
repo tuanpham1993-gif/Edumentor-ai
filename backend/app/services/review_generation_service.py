@@ -21,7 +21,7 @@ import threading
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -41,6 +41,9 @@ STEPS = 4
 WAITS = (20, 40, 60)  # giây chờ khi Gemini quá tải (P14)
 ROUNDS = 2  # số vòng soạn mỗi bước (mỗi vòng = 1 lần soạn + tối đa 2 lần soạn lại — D3)
 TOPUP_ENABLED = True  # D25: đủ đề → tự soạn bổ sung tới ~30 câu (test tắt để đếm lượt gọi gọn)
+# 25/11: làm lại ngay sau một việc bổ sung đã kết thúc (xong mà vẫn thiếu / lỗi) → không tạo việc mới trong N phút, ráp
+# đề lặp một phần. Chặn vòng "xong → bấm lại → vẫn thiếu → soạn tiếp" tốn lượt Gemini mãi.
+TOPUP_RETRY_MINUTES = 10
 _sleep = time.sleep  # test thay bằng hàm không chờ
 ACTIVE = ("queued", "running")
 FAILED_AI = "Chưa soạn được đề vì AI đang quá tải, bạn thử lại sau ít phút."
@@ -120,6 +123,25 @@ def latest_job(db: Session, skill_id: int) -> ReviewGenerationJob | None:
         .order_by(ReviewGenerationJob.job_id.desc())
         .limit(1)
     )
+
+
+def get_job(db: Session, skill_id: int, job_id: int) -> ReviewGenerationJob | None:
+    """Đúng việc học viên đang chờ (25/11): màn chờ hỏi theo job_id — việc 'exam' xong tự tạo 'topup', nếu hỏi
+    latest_job thì màn chờ theo nhầm việc bổ sung thêm vài phút dù đề đã sẵn. Việc của kỹ năng khác → None."""
+    job = db.get(ReviewGenerationJob, job_id)
+    return job if job is not None and job.skill_id == skill_id else None
+
+
+def recent_topup_finished(db: Session, skill_id: int) -> bool:
+    """Có việc bổ sung của kỹ năng đã kết thúc (done / failed) trong TOPUP_RETRY_MINUTES phút qua."""
+    since = datetime.now(UTC) - timedelta(minutes=TOPUP_RETRY_MINUTES)
+    stmt = select(ReviewGenerationJob.job_id).where(
+        ReviewGenerationJob.skill_id == skill_id,
+        ReviewGenerationJob.kind == "topup",
+        ReviewGenerationJob.status.in_(("done", "failed")),
+        ReviewGenerationJob.finished_at >= since,
+    )
+    return db.scalar(stmt.limit(1)) is not None
 
 
 def cannot_generate(db: Session, skill_id: int) -> str | None:

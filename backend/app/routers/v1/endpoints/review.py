@@ -324,6 +324,7 @@ def read_review_trace(
 )
 def read_skill_generation(
     skill_id: int,
+    job_id: int | None = Query(default=None, ge=1, description="Việc đang chờ (phản hồi 202); trống = mới nhất"),
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -333,7 +334,10 @@ def read_skill_generation(
         info = skill_review_service.skill_readiness(db, skill_id)
     except skill_review_service.SkillNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, SKILL_NOT_FOUND) from None
-    job = review_generation_service.latest_job(db, info.bank_skill_id)
+    if job_id is not None:  # 25/11: theo đúng việc đang chờ, không nhảy sang việc bổ sung tự tạo sau đó
+        job = review_generation_service.get_job(db, info.bank_skill_id, job_id)
+    else:
+        job = review_generation_service.latest_job(db, info.bank_skill_id)
     if job is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Chưa có việc soạn đề nào cho kỹ năng này.")
     return review_generation_service.job_view(job)

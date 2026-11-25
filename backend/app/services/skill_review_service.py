@@ -77,6 +77,9 @@ def _topup_if_short(db: Session, user: Users, bank_id: int, fresh: dict) -> None
     short = any(fresh.get((bank_id, lv), 0) < n for lv, n in question_gen_service.FULL_EXAM.items())
     if not short or not gen.missing_for(db, bank_id, "topup") or gen.cannot_generate(db, bank_id):
         return
+    # 25/11: việc bổ sung vừa kết thúc mà vẫn thiếu → ráp đề lặp một phần, không soạn lại liên tục
+    if gen.active_job(db, bank_id) is None and gen.recent_topup_finished(db, bank_id):
+        return
     raise GenerationPending(gen.job_view(gen.request(db, bank_id, user.user_id, kind="topup")))
 
 

@@ -365,6 +365,21 @@ Lưu ở `ai_check["gate"]` (không bảng mới).
 - [x] Test `test_anti_memorization.py` (10); sửa `test_review_submit.test_meeting_example_essay_scores_8_of_10` theo P3 (lượt chưa Đạt không còn "Đáp án mẫu"); toàn bộ 1.208 qua (2 lỗi cũ của Tâm). Build Vite không lỗi
 - [ ] Commit (khi Tuấn bảo)
 
+### 7.7 Thử thật 25/11 (Kubernetes #193, Gemini thật) — sửa màn chờ (Tuấn duyệt 25/11)
+
+Thử luồng học viên + mentor qua API thật: soạn lần 1 `failed` 14/15 sau ~5 phút (thiếu TL nâng cao), thử lại xong; G3e
+P2 / P3 đúng; mentor Đạt / Phản ánh / admin bác đúng. Phát hiện:
+- [x] **Màn chờ theo nhầm việc bổ sung**: `exam` xong tự tạo `topup`, `GET /skills/{id}/generation` trả việc MỚI NHẤT →
+  học viên chờ thêm ~2 phút dù đề đã sẵn. Sửa: API nhận `?job_id=` (`get_job`, việc kỹ năng khác → 404), frontend hỏi
+  theo `job_id` từ phản hồi 202
+- [x] **Soạn bổ sung lặp mãi khi làm lại**: `topup` "xong mà vẫn thiếu" → bấm lại lại tạo `topup`. Sửa: việc bổ sung vừa
+  kết thúc trong `TOPUP_RETRY_MINUTES=10` phút → ráp đề lặp một phần (`recent_topup_finished`)
+- [x] Test `test_generation_jobs.py` +3 (tổng 19)
+- [ ] **Trùng ý kiến thức** (chờ làm — Bước A / B): 30 câu Kubernetes chỉ dùng 15 câu trích; cổng gần trùng (MiniLM)
+  chấm các cặp diễn đạt lại 0,52–0,80 < 0,95. Hướng: dùng `source_quote` làm "ý" — cổng loại trùng câu trích, prompt gửi
+  câu trích đã dùng, ráp đề không lấy 2 câu cùng câu trích, P2 tránh theo câu trích; sau đó số câu theo số ý (sửa D25)
+- [ ] Commit (khi Tuấn bảo)
+
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.
 

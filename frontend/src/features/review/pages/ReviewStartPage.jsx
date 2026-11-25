@@ -103,7 +103,7 @@ export default function ReviewStartPage() {
     if (!RUNNING.includes(generation.status)) return undefined;
     const timer = setTimeout(async () => {
       try {
-        setGeneration(await reviewApi.getSkillGeneration(skillId));
+        setGeneration(await reviewApi.getSkillGeneration(skillId, generation.job_id)); // 25/11: đúng việc đang chờ
       } catch {
         setGeneration((g) => ({ ...g })); // lỗi mạng tạm thời → hỏi lại lần sau
       }

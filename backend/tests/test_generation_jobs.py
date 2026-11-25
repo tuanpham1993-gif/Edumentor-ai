@@ -233,6 +233,39 @@ def test_retake_without_fresh_questions_triggers_topup(client, gdb, sync_jobs, s
     assert r.json()["generation"]["status"] == "failed"
 
 
+def test_retake_right_after_topup_ended_builds_exam(client, gdb, sync_jobs, student_headers):  # noqa: F811
+    """25/11: bổ sung vừa kết thúc mà vẫn thiếu → bấm lại không tạo việc mới (không lặp soạn mãi), ráp đề lặp một phần."""
+    test_retake_without_fresh_questions_triggers_topup(client, gdb, sync_jobs, student_headers)
+    r = client.post(f"/api/skills/{SKILL}/review-attempts", headers=student_headers)
+    assert r.status_code == 200 and len(r.json()["questions"]) == 15, r.text
+    kinds = [j.kind for j in gdb.query(ReviewGenerationJob).order_by(ReviewGenerationJob.job_id)]
+    assert kinds == ["exam", "topup"]  # không có việc bổ sung thứ hai
+
+
+def test_poll_by_job_id_follows_exam_not_topup(client, gdb, sync_jobs, student_headers, monkeypatch):  # noqa: F811
+    """25/11: việc 'exam' xong tự tạo 'topup' — màn chờ hỏi theo job_id vẫn thấy 'exam' done (không chờ thêm)."""
+    monkeypatch.setattr(gen, "TOPUP_ENABLED", True)
+    monkeypatch.setattr(gen, "runner", lambda job_id: None)  # việc nằm 'queued' — tự chạy từng việc bên dưới
+    r = client.post(f"/api/skills/{SKILL}/review-attempts", headers=student_headers)
+    exam_id = r.json()["generation"]["job_id"]
+    gen.run_job(exam_id, lambda: _same_session(gdb), deps(sync_jobs["ai"]))  # xong → tạo 'topup' (đang chờ)
+    url = f"/api/skills/{SKILL}/generation"
+    latest = client.get(url, headers=student_headers).json()
+    assert latest["kind"] == "topup" and latest["status"] == "queued"  # không job_id → việc mới nhất (như cũ)
+    mine = client.get(url, headers=student_headers, params={"job_id": exam_id}).json()
+    assert mine["job_id"] == exam_id and mine["status"] == "done"
+    assert client.post(f"/api/skills/{SKILL}/review-attempts", headers=student_headers).status_code == 200
+
+
+def test_poll_job_id_of_other_skill_404(client, gdb, sync_jobs, student_headers):  # noqa: F811
+    gdb.add(Skills(skill_id=81, skill="Git", is_active=True))
+    gdb.add(ReviewGenerationJob(skill_id=81, kind="exam", status="running"))
+    gdb.commit()
+    other = gdb.query(ReviewGenerationJob).filter_by(skill_id=81).one()
+    r = client.get(f"/api/skills/{SKILL}/generation", headers=student_headers, params={"job_id": other.job_id})
+    assert r.status_code == 404
+
+
 def _ongoing_path(db, skill_id, learners=1):
     from app.models import LearningPath, LearningPathNode, Users
 

@@ -33,8 +33,10 @@ export async function startSkillReview(skillId, pathId) {
 }
 
 // GET /skills/{id}/generation → { job_id, status: queued|running|done|failed, step 1..4, steps, saved, error } (G3d)
-export async function getSkillGeneration(skillId) {
-  const response = await client.get(`/skills/${skillId}/generation`);
+// 25/11: gửi job_id của việc đang chờ — việc soạn đề xong tự tạo việc bổ sung, không có job_id sẽ theo nhầm việc đó.
+export async function getSkillGeneration(skillId, jobId) {
+  const params = jobId ? { job_id: jobId } : undefined;
+  const response = await client.get(`/skills/${skillId}/generation`, { params });
   return response.data;
 }
 
