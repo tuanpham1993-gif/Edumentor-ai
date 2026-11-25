@@ -154,3 +154,20 @@ class CourseListResponse(BaseModel):
     page: int
     page_size: int
     data: list[CourseSummaryResponse]
+
+
+class RecommendedCourseItem(CourseSummaryResponse):
+    relevance_reason: str = Field(..., description="Lý do gợi ý khóa học cho kỹ năng này")
+    match_type: Literal["direct", "keyword_fallback"] = Field(
+        ..., description="Khớp trực tiếp trong bảng course_skill hoặc tìm dự phòng theo từ khóa"
+    )
+    user_status: Literal["bookmarked", "ongoing", "completed", "abandoned"] | None = None
+    is_bookmarked: bool = False
+
+
+class CourseRecommendationResponse(BaseModel):
+    skill_id: int
+    skill_name: str
+    user_skill_status: Literal["known", "learning"] | None = None
+    total: int
+    items: list[RecommendedCourseItem] = Field(default_factory=list)

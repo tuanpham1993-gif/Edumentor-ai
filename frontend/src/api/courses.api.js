@@ -150,3 +150,20 @@ export async function getPopularSkills({ keyword = '', page = 1, size = 60 } = {
     throw err;
   }
 }
+
+/**
+ * Lấy danh sách khóa học gợi ý theo một node kỹ năng (chỉ gọi khi người dùng bấm chọn node).
+ * Endpoint: GET /api/courses/recommendations
+ *
+ * @param {Object} params
+ * @param {number|string} params.skillId
+ * @param {'beginner'|'intermediate'|'advanced'|''} [params.level]
+ * @param {number} [params.limit=8]
+ * @returns {Promise<{skill_id: number, skill_name: string, user_skill_status: string|null, total: number, items: Array}>}
+ */
+export async function getRecommendedCoursesBySkill({ skillId, level = '', limit = 8 } = {}) {
+  const params = { skill_id: skillId, limit };
+  if (level && level.trim()) params.level = level.trim();
+  const response = await client.get('/courses/recommendations', { params });
+  return response.data;
+}
