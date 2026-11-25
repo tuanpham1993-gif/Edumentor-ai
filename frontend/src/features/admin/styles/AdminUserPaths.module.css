@@ -12,11 +12,96 @@
   color: var(--text-muted, #8a8070);
 }
 
+/* Thanh chỉ số tổng hợp hệ thống (hairline strip, tránh lạm dụng card) */
+.statsStrip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--line, #2b2622);
+  border-bottom: 1px solid var(--line, #2b2622);
+  background: var(--surface-sunk, #131417);
+  border-radius: var(--r-lg, 12px);
+  overflow: hidden;
+}
+
+.statCell {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-right: 1px solid var(--line, #2b2622);
+}
+
+.statCell:last-child {
+  border-right: none;
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted, #8a8070);
+}
+
+.statValue {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text, #ede8e3);
+  font-variant-numeric: tabular-nums;
+}
+
+.statInfo {
+  color: var(--info-fg, #a9c6e8);
+}
+
+.statOk {
+  color: var(--ok-fg, #a8e0b5);
+}
+
+.statAccent {
+  color: var(--accent, #f5a524);
+}
+
+.statSub {
+  font-size: 11.5px;
+  color: var(--text-dim, #8f897f);
+}
+
+.statsSkeleton {
+  grid-column: 1 / -1;
+  padding: 18px;
+  font-size: 13px;
+  color: var(--text-muted, #8a8070);
+}
+
 /* Thanh mục tiêu phổ biến ở trên */
 .goalStrip {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.goalStripHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.goalClearBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent, #f5a524);
+  cursor: pointer;
+}
+
+.goalClearBtn:hover,
+.goalClearBtn:focus-visible {
+  text-decoration: underline;
+  outline: none;
 }
 
 .goalStripTitle {
@@ -443,7 +528,268 @@
   font-weight: 600;
 }
 
+/* Search clear & avatars & role badges */
+.clearSearchBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted, #8a8070);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.clearSearchBtn:hover,
+.clearSearchBtn:focus-visible {
+  color: var(--text, #ede8e3);
+  outline: none;
+}
+
+.userAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.userNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.userRoleTag,
+.roleBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft-bg, #2e2414);
+  color: var(--accent-soft-fg, #f5c46d);
+  border: 1px solid var(--accent-soft-border, #5a4220);
+  white-space: nowrap;
+}
+
+/* Thẻ lộ trình: chips chia sẻ / clone & progress bar */
+.pathMetaChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 4px;
+}
+
+.shareChip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ok-bg, #16241a);
+  color: var(--ok-fg, #a8e0b5);
+  border: 1px solid var(--ok-border, #2f5a3a);
+}
+
+.cloneChip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--info-bg, #1f2a36);
+  color: var(--info-fg, #a9c6e8);
+  border: 1px solid var(--info-border, #34465a);
+}
+
+.progressTrack {
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--track, #26272b);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent, #f5a524);
+  transition: width var(--d-base, 0.22s) var(--ease-out, ease);
+}
+
+/* Thanh chi tiết kỹ năng khi bấm vào node trên đồ thị */
+.skillInspectBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--r-md, 10px);
+  background: var(--surface-sunk, #131417);
+  border: 1px solid var(--card-border, #2c2b29);
+}
+
+.skillInspectMain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skillInspectLabel {
+  font-size: 12.5px;
+  color: var(--text-muted, #a39d93);
+}
+
+.skillInspectName {
+  font-size: 14px;
+  color: var(--text, #f3efe8);
+}
+
+.skillInspectMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skillInspectChip {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--chip-bg, #232427);
+  color: var(--text-soft, #c9c2b7);
+  border: 1px solid var(--line, #221f1c);
+}
+
+.skillInspectStatus {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.inspectKnown {
+  background: var(--ok-bg, #16241a);
+  color: var(--ok-fg, #a8e0b5);
+  border: 1px solid var(--ok-border, #2f5a3a);
+}
+
+.inspectLearning {
+  background: var(--info-bg, #1f2a36);
+  color: var(--info-fg, #a9c6e8);
+  border: 1px solid var(--info-border, #34465a);
+}
+
+.inspectUnlearned {
+  background: var(--chip-bg, #232427);
+  color: var(--text-muted, #a39d93);
+  border: 1px solid var(--line, #221f1c);
+}
+
+/* Error, Empty & Skeleton states */
+.errorBanner,
+.emptyPanel {
+  padding: 24px;
+  border-radius: var(--r-lg, 12px);
+  background: var(--card, #16171a);
+  border: 1px solid var(--line, #221f1c);
+  color: var(--text-muted, #a39d93);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.errorBanner {
+  background: var(--danger-bg, #2a1a17);
+  border-color: var(--danger-border, #5a2e25);
+  color: var(--danger-fg, #f4a58e);
+}
+
+.errorBanner p,
+.emptyPanel p {
+  margin: 0;
+}
+
+.retryBtn {
+  padding: 7px 14px;
+  border-radius: var(--r-sm, 8px);
+  border: 1px solid var(--card-border, #2c2b29);
+  background: var(--card-inner, #1c1d20);
+  color: var(--text, #f3efe8);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.retryBtn:hover,
+.retryBtn:focus-visible {
+  border-color: var(--accent, #f5a524);
+  outline: none;
+}
+
+.skeletonCard,
+.skeletonHeader,
+.skeletonGrid,
+.skeletonCanvas {
+  border-radius: var(--r-lg, 12px);
+  background: var(--skeleton-hi, #1d1e21);
+  border: 1px solid var(--line, #221f1c);
+  animation: pulseLoad 1.4s ease-in-out infinite;
+}
+
+.skeletonCard {
+  height: 74px;
+}
+
+.detailSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skeletonHeader {
+  height: 86px;
+}
+
+.skeletonGrid {
+  height: 130px;
+}
+
+.skeletonCanvas {
+  height: 300px;
+}
+
+@keyframes pulseLoad {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonCard,
+  .skeletonHeader,
+  .skeletonGrid,
+  .skeletonCanvas {
+    animation: none;
+  }
+}
+
 @media (max-width: 960px) {
+  .statsStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .statCell {
+    border-bottom: 1px solid var(--line, #221f1c);
+  }
   .splitLayout {
     grid-template-columns: 1fr;
   }

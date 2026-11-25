@@ -73,9 +73,15 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.node:hover {
+.node:hover,
+.node:focus-visible {
   transform: translateY(-2px);
   border-color: var(--accent, #f5a524);
+  outline: none;
+}
+
+.nodeSelected {
+  box-shadow: 0 0 0 2px var(--accent, #f5a524), 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 /* Các trạng thái của Node */

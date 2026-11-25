@@ -1,5 +1,6 @@
 // Component vẽ đồ thị các node kỹ năng và đường cong Bezier SVG kết nối (Admin F11–F14).
-import React from 'react';
+import React, { useMemo } from 'react';
+import { buildAdminRoadmapLayout } from '../../../utils/buildAdminRoadmapLayout.js';
 import styles from '../styles/AdminRoadmapCanvas.module.css';
 
 export default function AdminRoadmapCanvas({
@@ -8,23 +9,37 @@ export default function AdminRoadmapCanvas({
   width = 720,
   height = 240,
   mode = 'user', // 'user' | 'template'
+  selectedNodeId = null,
   onNodeClick,
 }) {
   const nodeWidth = 154;
   const nodeHeight = 54;
 
+  const layout = useMemo(
+    () => buildAdminRoadmapLayout(nodes, connections),
+    [nodes, connections]
+  );
+
+  const renderNodes = layout.nodes;
+  const renderConnections = layout.connections;
+  const canvasWidth = layout.width ?? width;
+  const canvasHeight = layout.height ?? height;
+
   // Bản đồ tìm kiếm node nhanh theo id hoặc tên
   const nodeMap = new Map();
-  nodes.forEach((n) => {
+  renderNodes.forEach((n) => {
     nodeMap.set(n.id, n);
     nodeMap.set(n.name, n);
   });
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.canvas} style={{ width: `${width}px`, height: `${height}px` }}>
+      <div
+        className={styles.canvas}
+        style={{ width: `${canvasWidth}px`, height: `${canvasHeight}px` }}
+      >
         {/* Lớp SVG vẽ các đường cong nối */}
-        <svg className={styles.svg} viewBox={`0 0 ${width} ${height}`}>
+        <svg className={styles.svg} viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}>
           <defs>
             <marker
               id="arrow-solid"
@@ -50,7 +65,7 @@ export default function AdminRoadmapCanvas({
             </marker>
           </defs>
 
-          {connections.map((c, i) => {
+          {renderConnections.map((c, i) => {
             const sourceNode = nodeMap.get(c.from);
             const targetNode = nodeMap.get(c.to);
             if (!sourceNode || !targetNode) return null;
@@ -59,24 +74,25 @@ export default function AdminRoadmapCanvas({
             const y1 = sourceNode.y + nodeHeight / 2;
             const x2 = targetNode.x;
             const y2 = targetNode.y + nodeHeight / 2;
-            const dx = Math.max(30, (x2 - x1) / 2);
+            const dx = Math.max(30, Math.abs(x2 - x1) / 2);
 
             const pathD = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
-            const isDashed = c.type === 'Mở rộng';
+            const isDashed = c.type === 'Mở rộng' || c.type === 'extension' || c.type === 'related' || c.type === 'Liên quan';
+            const showArrow = c.type !== 'related' && c.type !== 'Liên quan' && !isDashed;
 
             return (
               <path
                 key={`edge-${i}`}
                 d={pathD}
                 className={`${styles.edge} ${isDashed ? styles.edgeDashed : styles.edgeSolid}`}
-                markerEnd={isDashed ? '' : 'url(#arrow-solid)'}
+                markerEnd={showArrow ? 'url(#arrow-solid)' : ''}
               />
             );
           })}
         </svg>
 
         {/* Các Node HTML */}
-        {nodes.map((node) => {
+        {renderNodes.map((node) => {
           let stateClass = styles.unlearned;
           let labelSuffix = '';
           let icon = null;
@@ -90,21 +106,30 @@ export default function AdminRoadmapCanvas({
           } else if (node.status === 'target_learning') {
             stateClass = styles.targetLearning;
             labelSuffix = ' · đang học ◎';
-          } else if (node.status === 'target_unlearned' || node.role === 'target') {
+          } else if (node.status === 'target_unlearned' || node.role === 'target' || node.isTarget) {
             stateClass = styles.target;
             labelSuffix = ' ◎';
           } else if (node.role === 'prerequisite') {
             stateClass = styles.unlearned;
           }
 
+          const isSelected = selectedNodeId !== null && String(selectedNodeId) === String(node.id);
+
           return (
             <div
               key={node.id}
-              className={`${styles.node} ${stateClass}`}
+              className={`${styles.node} ${stateClass} ${isSelected ? styles.nodeSelected : ''}`}
               style={{ left: `${node.x}px`, top: `${node.y}px` }}
               onClick={() => onNodeClick && onNodeClick(node)}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter' || e.key === ' ') && onNodeClick) {
+                  e.preventDefault();
+                  onNodeClick(node);
+                }
+              }}
               role="button"
               tabIndex={0}
+              aria-pressed={isSelected}
             >
               <span>
                 {node.name}

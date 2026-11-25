@@ -1,10 +1,12 @@
+from fastapi import APIRouter, Depends
+
 from app.core.dependencies import require_admin
 from app.routers.admin.course_skill_relations import (
     router as admin_course_skill_relations_router,
 )
 from app.routers.admin.courses import router as admin_courses_router
 from app.routers.admin.skills import router as admin_skills_router
-from fastapi import APIRouter, Depends
+from app.routers.v1.endpoints.admin.users import router as admin_user_paths_router
 
 admin_router = APIRouter(
     dependencies=[Depends(require_admin)],
@@ -24,4 +26,9 @@ admin_router.include_router(
     admin_course_skill_relations_router,
     prefix="/course-skill-relations",
     tags=["Admin Course-Skill Relations"],
+)
+admin_router.include_router(
+    admin_user_paths_router,
+    prefix="/user-paths",
+    tags=["Admin User Paths"],
 )
