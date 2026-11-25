@@ -167,7 +167,7 @@ class FakeAI:
 
     def __call__(self, skill, passages, kind, need, existing, feedback):
         self.calls.append({"kind": kind, "need": dict(need), "existing": list(existing), "feedback": list(feedback)})
-        answer = self.answers[kind].pop(0)
+        answer = self.answers[kind].pop(0) if self.answers.get(kind) else {"questions": []}  # hết → AI không soạn được
         if isinstance(answer, Exception):
             raise answer
         return answer

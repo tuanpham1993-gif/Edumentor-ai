@@ -68,6 +68,18 @@ def _missing_message(reason: str | None) -> str:
     return NOT_OPEN if reason == "not_open" else NO_SKILL_BANK
 
 
+def _topup_if_short(db: Session, user: Users, bank_id: int, fresh: dict) -> None:
+    """D25 (G3d-3): làm lại mà không đủ câu CHƯA làm ở lượt trước cho một đề → ngân hàng chưa tới ~30 câu và AI soạn được
+    thì tạo việc soạn bổ sung + GenerationPending ("Đề mới đang được soạn"); không thì ráp đề như cũ (lặp một phần)."""
+    from app.services import question_gen_service
+    from app.services import review_generation_service as gen
+
+    short = any(fresh.get((bank_id, lv), 0) < n for lv, n in question_gen_service.FULL_EXAM.items())
+    if not short or not gen.missing_for(db, bank_id, "topup") or gen.cannot_generate(db, bank_id):
+        return
+    raise GenerationPending(gen.job_view(gen.request(db, bank_id, user.user_id, kind="topup")))
+
+
 def _generate_or_missing(db: Session, user: Users, info: "Readiness"):
     """Thiếu câu: soạn được → tạo / vào việc soạn rồi ném GenerationPending; không → SkillBankMissingError."""
     from app.services import review_generation_service as gen
@@ -204,6 +216,8 @@ def start_skill_attempt(
     for q in family:
         if q.is_active and (q.skill_id, q.level) in fresh:
             fresh[(q.skill_id, q.level)] -= 1
+    if previous:
+        _topup_if_short(db, user, bank_id, fresh)
     try:
         plan = exam_builder.plan_exam([bank_id], info.available, rng, fresh=fresh)
     except exam_builder.NotEnoughQuestionsError:

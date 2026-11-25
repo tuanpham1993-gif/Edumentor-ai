@@ -50,6 +50,7 @@ Không thể soạn tay hay duyệt tay cho ~5.880 kỹ năng còn lại (≈ 88
 | D26 | **Câu sinh sẵn chỉ dùng khi mentor đã bấm "Đạt"** (P16 tùy chọn 4, Tuấn chốt 25/11). Câu **sinh khi cần** (học viên bấm ôn mà chưa có câu) vẫn **dùng ngay** như D1 | 25/11 | Câu sinh sẵn luôn có người chuyên môn xem trước. Mentor duyệt chậm → câu nằm chờ, kỹ năng đó vẫn sinh khi cần được. Cần phân biệt nguồn "sinh sẵn" / "sinh khi cần" trong `review_question_meta` |
 | D27 | **Chi tiết G3f mentor (Tuấn duyệt "theo đề xuất" 25/11):** viết lại migration `0005` (chưa commit); **admin vào được trang mentor** để kiểm tra; admin **bác phản ánh hoặc sửa câu → câu bật lại và coi như Đạt**; hàng chờ ưu tiên kỹ năng có nhiều lượt ôn; Claude soạn nháp BA/SRS | 25/11 | Mục 7.2 |
 | D28 | **G3d (Tuấn duyệt "theo đề xuất" 25/11):** chia 3 bước G3d-1 (luồng nền + lưu câu + vá lỗ hổng) → G3d-2 (giao diện màn chờ) → G3d-3 (bổ sung ~30 câu, làm lại khi hết câu mới, soạn sẵn ban đêm); **ôn theo khóa chỉ dùng câu đã duyệt** (vá D2); **không gửi chuông** khi soạn xong (học viên ở lại trang thì đề tự mở, rời trang thì bấm lại là có đề); **P12 làm cùng G3d-1**; **P8 để sau G3** | 25/11 | Mục 7.5 |
+| D29 | **G3e chống học thuộc (Tuấn chốt "theo đề xuất" 25/11 — P2, P3, P4):** (P2) ráp đề tránh câu của **3 lượt nộp gần nhất** (`REVIEW_AVOID_LAST_ATTEMPTS=3`), thiếu câu mới thì lặp câu cũ nhất trước — cả ôn theo khóa và kỹ năng; (P3) lượt **chưa Đạt** ẩn **bài mẫu tự luận** (mức `mcq_only`, `REVIEW_REVEAL_ON_FAIL`), vẫn hiện đáp án trắc nghiệm + ý barem còn thiếu, lượt Đạt hiện đủ; (P4) bài tự luận **chép bài mẫu ≥ 80%** (cụm 3 từ) → gắn cờ "cần xem lại", **không đổi điểm**, chạy lại `eval_grading` | 25/11 | Mục 7.6 |
 
 ---
 
@@ -60,9 +61,9 @@ Rút từ tài liệu của thầy (mục 4) và từ đối chiếu ngày 24/11
 | # | Đề xuất | Lý do | Nguồn |
 |---|---|---|---|
 | P1 | **ĐÃ CHỐT 25/11 thành D25.** **Đổi D10**: lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới 30 câu**; lượt làm lại chỉ mở khi có đủ câu chưa làm (chưa đủ → "Đề mới đang được soạn") | Chỉ 15 câu thì lượt 2 gặp lại đúng 15 câu vừa hiện đáp án → chép lại là Đạt (gap G5) | Phase 06 thầy · `guide.md` 5.1 cũ |
-| P2 | Tránh câu của **3 lượt gần nhất** thay vì 1 (cả ôn theo khóa) | Chống học thuộc | Phase 06a |
-| P3 | **Ẩn đáp án mẫu tự luận khi chưa Đạt** (mức `mcq_only`), vẫn hiện đúng/sai và ý barem còn thiếu; đặt sau cờ cấu hình | Chống chép đáp án mẫu | Phase 06b — cần quyết UX |
-| P4 | Gắn cờ "xem lại" khi bài tự luận **chép đáp án mẫu** (chỉ cờ, không đổi điểm; chạy lại `eval_grading`) | | Phase 06c |
+| P2 | **ĐÃ CHỐT 25/11 → D29.** Tránh câu của **3 lượt gần nhất** thay vì 1 (cả ôn theo khóa) | Chống học thuộc | Phase 06a |
+| P3 | **ĐÃ CHỐT 25/11 → D29.** **Ẩn đáp án mẫu tự luận khi chưa Đạt** (mức `mcq_only`), vẫn hiện đúng/sai và ý barem còn thiếu; đặt sau cờ cấu hình | Chống chép đáp án mẫu | Phase 06b — cần quyết UX |
+| P4 | **ĐÃ CHỐT 25/11 → D29.** Gắn cờ "xem lại" khi bài tự luận **chép đáp án mẫu** (chỉ cờ, không đổi điểm; chạy lại `eval_grading`) | | Phase 06c |
 | P5 | **Kho đoạn tri thức**: AI viết đoạn từ `courses.description` + `modules` của các khóa dạy kỹ năng, tính embedding, lưu dùng chung; admin thêm / sửa / xóa | Hiện chỉ 39 đoạn của 3 khóa → D7 khiến G3 gần như không mở được kỹ năng mới (gap G2) | Phase 04 |
 | P6 | **Sinh câu có cấu trúc**: `responseSchema` + Pydantic; AI trả `passage` → gán đúng `chunk_id` (bỏ `chunks[0]`); soạn lại **kèm lỗi lần trước**; prompt gửi kèm câu đã có; ghi `prompt_version` | Gap G4, F3, F4, F5 | Phase 02 |
 | P7 | **Cổng hợp nhất 6 phép**: khung · gần trùng (cosine) · giải mù ở temperature 0 **có xáo thứ tự đáp án** · **bám nguồn** (grounding) · luật **L1** (đáp án đúng dài bất thường) và **L7** (từ khóa barem nằm sẵn trong đề) · 4 bài giả tự luận. Hiệu chỉnh ngưỡng trên ~300 câu tay (312, 743, 1855), mục tiêu giải mù lệch ≤ 5% | Gap G3 | Phase 05 + D8 |
@@ -257,8 +258,8 @@ khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn ng
 | **G3a** | Kho đoạn tri thức: AI viết từ mô tả khóa + embedding + admin thêm / sửa / xóa | 04 | ✅ Code xong `450af21` (G3a-7 đo thêm còn treo) |
 | **G3b** | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | ✅ Xong `f4ba1e8` |
 | **G3c** | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | ✅ Xong — mục 7.4 |
-| G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt + D24–D26 + P12 | 01, 03 | Đang làm G3d-1 — mục 7.5 |
-| G3e | Chống học thuộc (P1–P4 nếu chốt) | 06 | |
+| G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt + D24–D26 + P12 | 01, 03 | G3d-1 `c6ccef2`, G3d-2 `9231ba7`, G3d-3 ✅ — mục 7.5 |
+| G3e | Chống học thuộc (P2–P4 → D29) | 06 | Đang làm — mục 7.6 |
 | **G3f** | Mentor duyệt câu AI soạn (D19–D23, D27) | — | ✅ Xong `450af21` (G3f-7 thử tay còn treo) |
 | G3g | Số liệu + đo ~10 kỹ năng + cập nhật BA/SRS, báo cáo | 07 | |
 
@@ -344,6 +345,15 @@ Lưu ở `ai_check["gate"]` (không bảng mới).
 - [x] `ReviewStartPage` (chế độ kỹ năng): bấm Bắt đầu → 202 → hỏi tiến độ 3 giây / lần → xong tự bắt đầu lại và mở đề; vào lại trang khi đang soạn → hiện tiến độ tiếp; câu nhắc "chưa có sẵn đề — AI sẽ soạn" khi `will_generate`
 - [x] Huy hiệu node: hiện "Ôn riêng kỹ năng này" cả khi `can_generate` (+ "AI soạn đề khi bạn bấm ôn"). Build Vite không lỗi
 - [ ] Tuấn thử tay (Docker đang thiếu 9 câu → thấy màn soạn đề; Power BI đã đủ đề) — làm sau
+- [x] Commit (Tuấn bảo 25/11)
+
+**G3d-3 — bổ sung ~30 câu, làm lại, soạn sẵn ban đêm**
+- [x] Mục tiêu ~30 câu / kỹ năng (`SKILL_TARGET` 12 NB + 12 TH + 4 TL dễ + 2 TL nâng cao — D25)
+- [x] Việc `exam` xong → tự tạo việc **`topup`** soạn tới ~30 câu ở nền (học viên không chờ); thiếu một ít vẫn tính xong
+- [x] **Làm lại** (D25): không đủ câu chưa làm ở lượt trước cho một đề + ngân hàng chưa tới ~30 câu + AI soạn được → tạo `topup`, trả 202 ("Đề mới đang được soạn"); không thì ráp đề như cũ (lặp một phần)
+- [x] **Soạn sẵn ban đêm** (D24) `review_pregen_service`: chọn kỹ năng trong lộ trình **đang học** (`ongoing`) + Mở + còn thiếu + có nguồn; nhiều người học trước, rồi nhiều lượt ôn; soạn lần lượt, tối đa `REVIEW_PREGEN_PER_NIGHT=20` / đêm lúc `REVIEW_PREGEN_HOUR=2`; **mặc định tắt** (`REVIEW_PREGEN_ENABLED=true` để bật). Câu lưu `origin='nightly'` → **chỉ vào đề khi mentor Đạt** (D26); đêm sau tính cả câu chờ mentor (không soạn lại)
+- [x] Lệnh tay `python -m app.core.seed_data.run_pregen --dry-run` / `--limit N`. Chạy thử `--dry-run` trên DB máy Tuấn: đứng đầu Computer Programming (177 người học), Python Programming (133), Data Analysis (125), Machine Learning (92), Database (86), SQL (84)…
+- [x] Test thêm 5 (tổng `test_generation_jobs.py` 16)
 - [x] Commit (Tuấn bảo 25/11)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp

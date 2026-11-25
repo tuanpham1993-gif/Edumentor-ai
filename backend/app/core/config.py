@@ -49,6 +49,10 @@ class Settings(BaseSettings):
     REVIEW_GATE_MODEL_MIN: float = 7.0  # bài mẫu của AI chấm bằng từ khóa phải ≥ (thang 10)
     REVIEW_GATE_COPY_MAX: float = 5.0  # bài chép lại đề phải ≤ (thang 10)
     REVIEW_GATE_OTHER_MAX: float = 6.0  # bài mẫu của câu tự luận khác phải ≤ (thang 10)
+    # G3d-3 (25/11, D24): soạn sẵn câu ban đêm cho kỹ năng trong lộ trình đang học. MẶC ĐỊNH TẮT (tốn lượt Gemini)
+    REVIEW_PREGEN_ENABLED: bool = False
+    REVIEW_PREGEN_PER_NIGHT: int = 20  # số kỹ năng tối đa mỗi đêm
+    REVIEW_PREGEN_HOUR: int = 2  # giờ chạy (giờ máy chủ)
     # 21/11 (Q12 guide.md) "Đến hạn ôn": khoảng nhắc giãn dần theo số lần ĐẠT liên tiếp của kỹ năng (lần 1, 2, 3+);
     # lần ôn gần nhất chưa đạt → dùng khoảng đầu. Chuông gom tối đa 1 lần / ngày, email tối đa 1 lần / tuần.
     REVIEW_DUE_INTERVALS: list[int] = [7, 30, 90]  # ngày

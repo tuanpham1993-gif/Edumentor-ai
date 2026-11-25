@@ -32,6 +32,7 @@ from app.services import skill_scope_service
 logger = logging.getLogger(__name__)
 
 FULL_EXAM = {"recognize": 6, "understand": 6, "easy": 2, "advanced": 1}  # khung đề 15 câu (G2c)
+SKILL_TARGET = {"recognize": 12, "understand": 12, "easy": 4, "advanced": 2}  # ~30 câu / kỹ năng (D25)
 KINDS = {"mcq": ("recognize", "understand"), "essay": ("easy", "advanced")}
 MAX_RETRIES = 2  # D3: soạn lại tối đa 2 lần
 

@@ -9,7 +9,9 @@ D9, D25, P14, mục 7.5).
     job_view / latest_job             màn "Đang soạn đề… bước x/4" hỏi tiến độ
     recover_on_startup()              server khởi động lại → việc đang chạy dở thành 'failed' (học viên bấm lại là tạo mới)
 
-G3d-1 chỉ soạn ĐỦ MỘT ĐỀ (phần còn thiếu của khung 15 câu). Bổ sung tới ~30 câu (D25) + soạn sẵn ban đêm (D24) → G3d-3.
+Loại việc: 'exam' (đủ MỘT đề — học viên đang chờ) → xong thì tự tạo 'topup' (bổ sung tới ~30 câu, D25, ở nền);
+'topup' cũng được tạo khi học viên làm lại mà hết câu chưa làm; 'nightly' (soạn sẵn ban đêm, D24 — câu chỉ dùng khi
+mentor Đạt, D26) do review_pregen_service tạo.
 Gemini quá tải (503) → chờ 20 / 40 / 60 giây rồi thử lại bước đó; vẫn lỗi → 'failed' + thông báo dễ hiểu (P14), câu đã
 lưu vẫn giữ. Không có AI thật (AI_MODE=mock / thiếu khóa) → không tạo việc, học viên thấy "Chưa có đề" như G2.
 """
@@ -38,6 +40,7 @@ logger = logging.getLogger(__name__)
 STEPS = 4
 WAITS = (20, 40, 60)  # giây chờ khi Gemini quá tải (P14)
 ROUNDS = 2  # số vòng soạn mỗi bước (mỗi vòng = 1 lần soạn + tối đa 2 lần soạn lại — D3)
+TOPUP_ENABLED = True  # D25: đủ đề → tự soạn bổ sung tới ~30 câu (test tắt để đếm lượt gọi gọn)
 _sleep = time.sleep  # test thay bằng hàm không chờ
 ACTIVE = ("queued", "running")
 FAILED_AI = "Chưa soạn được đề vì AI đang quá tải, bạn thử lại sau ít phút."
@@ -132,11 +135,27 @@ def cannot_generate(db: Session, skill_id: int) -> str | None:
     return None
 
 
+def _gap(target: dict[str, int], have: dict[str, int]) -> dict[str, int]:
+    return {lv: n - have.get(lv, 0) for lv, n in target.items() if n > have.get(lv, 0)}
+
+
+def usable_counts(db: Session, skill_id: int) -> dict[str, int]:
+    """Câu DÙNG ĐƯỢC ra đề ôn theo kỹ năng, theo mức."""
+    return {lv: n for (_s, lv), n in repo.bank_counts(db, [skill_id], include_auto=True).items()}
+
+
 def missing_for_exam(db: Session, skill_id: int) -> dict[str, int]:
     """Số câu CÒN THIẾU theo mức để đủ khung 1 đề (chỉ tính câu dùng được cho ôn theo kỹ năng)."""
-    counts = repo.bank_counts(db, [skill_id], include_auto=True)
-    return {lv: n - counts.get((skill_id, lv), 0) for lv, n in question_gen_service.FULL_EXAM.items()
-            if n > counts.get((skill_id, lv), 0)}  # fmt: skip
+    return _gap(question_gen_service.FULL_EXAM, usable_counts(db, skill_id))
+
+
+def missing_for(db: Session, skill_id: int, kind: str) -> dict[str, int]:
+    """exam: đủ 1 đề · topup: tới ~30 câu dùng được (D25) · nightly: tới ~30 câu ĐÃ SOẠN (kể cả câu soạn sẵn chờ mentor
+    — không soạn lại mỗi đêm khi mentor chưa kịp duyệt)."""
+    if kind == "exam":
+        return missing_for_exam(db, skill_id)
+    have = repo.stocked_counts(db, skill_id) if kind == "nightly" else usable_counts(db, skill_id)
+    return _gap(question_gen_service.SKILL_TARGET, have)
 
 
 # ─────────────── tạo việc ───────────────
@@ -228,21 +247,25 @@ def run_job(job_id: int, session_factory, deps: Deps | None) -> None:
             for step, levels in ((2, ("recognize", "understand")), (3, ("easy", "advanced"))):
                 _set(db, job, step=step)
                 for _round in range(ROUNDS):
-                    need = missing_for_exam(db, job.skill_id)
+                    need = missing_for(db, job.skill_id, job.kind)
                     part = {lv: need[lv] for lv in levels if need.get(lv)}
                     if not part:
                         break
                     result = _with_waits(question_gen_service.generate, db, job.skill_id, write=deps.write_questions,
                                          need=part, model=deps.model, solve=deps.solve, embed=deps.embed)  # fmt: skip
                     job.calls += result["calls"] + result.get("solve_calls", 0)
-                    job.saved += save_questions(db, job.skill_id, result["questions"], "on_demand")
+                    origin = "nightly" if job.kind == "nightly" else "on_demand"
+                    job.saved += save_questions(db, job.skill_id, result["questions"], origin)
                     db.commit()
-            # 4) kiểm đủ đề
+            # 4) kiểm đủ đề (soạn bổ sung / ban đêm: thiếu một ít vẫn tính xong — lần sau soạn tiếp)
             _set(db, job, step=4)
-            if missing_for_exam(db, job.skill_id):
+            if job.kind == "exam" and missing_for_exam(db, job.skill_id):
                 raise GenerationError("short", "short")
             _set(db, job, status="done", finished_at=datetime.now(UTC))
-            logger.info("Soạn đề xong: kỹ năng %s, lưu %d câu, %d lần gọi AI", job.skill_id, job.saved, job.calls)
+            logger.info("Soạn đề xong (%s): kỹ năng %s, lưu %d câu, %d lần gọi AI", job.kind, job.skill_id, job.saved,
+                        job.calls)  # fmt: skip
+            if job.kind == "exam" and TOPUP_ENABLED and missing_for(db, job.skill_id, "topup"):
+                _request_topup(db, job.skill_id)
         except Exception as err:  # việc nền: mọi lỗi phải thành 'failed', không làm treo màn chờ
             db.rollback()
             job = db.get(ReviewGenerationJob, job_id)
@@ -254,6 +277,14 @@ def run_job(job_id: int, session_factory, deps: Deps | None) -> None:
                 message = FAILED_OTHER
                 logger.exception("Soạn đề lỗi: kỹ năng %s", job.skill_id)
             _set(db, job, status="failed", error=message, finished_at=datetime.now(UTC))
+
+
+def _request_topup(db: Session, skill_id: int) -> None:
+    """D25: đủ một đề rồi → tự tạo việc soạn bổ sung tới ~30 câu ở nền (học viên không phải chờ)."""
+    try:
+        request(db, skill_id, None, kind="topup")
+    except Exception:  # bổ sung lỗi không ảnh hưởng đề vừa soạn
+        logger.warning("Không tạo được việc soạn bổ sung cho kỹ năng %s", skill_id, exc_info=True)
 
 
 def recover_on_startup(session_factory) -> int:

@@ -79,6 +79,18 @@ def bank_counts(db: Session, skill_ids: list[int], *, include_auto: bool = False
     return {(skill_id, level): n for skill_id, level, n in rows}
 
 
+def stocked_counts(db: Session, skill_id: int) -> dict[str, int]:
+    """G3d-3: số câu ĐANG BẬT theo mức, gồm cả câu soạn sẵn ban đêm chưa được mentor Đạt (đã soạn rồi → không soạn
+    thêm). Không tính câu chờ duyệt / bị từ chối (luôn tắt)."""
+    stmt = (
+        select(ReviewQuestion.level, func.count())
+        .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
+        .group_by(ReviewQuestion.level)
+    )
+    return dict(db.execute(stmt).all())
+
+
 def bank_questions(db: Session, skill_id: int, *, include_auto: bool = False) -> list[ReviewQuestion]:
     stmt = select(ReviewQuestion).where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
     return list(db.scalars(_usable(stmt, include_auto).order_by(ReviewQuestion.question_id)))
