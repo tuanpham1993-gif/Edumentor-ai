@@ -209,10 +209,30 @@ class SkillDueOut(BaseModel):
     interval_days: int  # 7 / 30 / 90 (cấu hình REVIEW_DUE_INTERVALS)
 
 
+class GenerationOut(BaseModel):
+    """Việc AI soạn đề ở nền (G3d, 25/11) — màn "Đang soạn đề… bước x/4"."""
+
+    job_id: int
+    skill_id: int  # kỹ năng giữ ngân hàng câu (có thể là tên trùng khác id của node)
+    kind: Literal["exam", "topup", "nightly"]
+    status: Literal["queued", "running", "done", "failed"]
+    step: int  # 1 đoạn tài liệu · 2 trắc nghiệm · 3 tự luận · 4 lưu
+    steps: int
+    saved: int
+    error: str | None
+
+
+class GenerationStartOut(BaseModel):
+    """POST /skills/{id}/review-attempts khi thiếu câu và AI đang soạn → 202."""
+
+    generation: GenerationOut
+
+
 class SkillReviewDirectOut(BaseModel):
     """Ôn THẲNG theo kỹ năng (G2d, 22/11 — docs/guide.md mục 1): không cần tham gia khóa."""
 
     ready: bool  # đủ câu trong ngân hàng (kể cả của tên trùng) để ráp đề 15 câu
+    can_generate: bool = False  # G3d: chưa đủ câu nhưng AI soạn được khi bấm ôn
     in_progress_attempt_id: int | None
     last_attempt: AttemptSummaryOut | None
 
@@ -240,6 +260,8 @@ class SkillReviewInfoOut(BaseModel):
     in_progress_attempt_id: int | None
     unfinished_attempts: list[UnfinishedAttemptOut] = []
     attempts: list[AttemptSummaryOut]
+    will_generate: bool = False  # G3d: chưa đủ câu, bấm Bắt đầu → AI soạn đề ở nền
+    generation: GenerationOut | None = None  # việc soạn gần nhất của kỹ năng (đang chạy / lỗi gần đây)
 
 
 class HistoryPage(BaseModel):

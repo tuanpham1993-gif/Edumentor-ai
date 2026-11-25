@@ -55,6 +55,9 @@ class ReviewQuestionMeta(Base):
     mentor_status = Column(String(10), nullable=True)
     mentor_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True)
     mentor_at = Column(DateTime(timezone=True), nullable=True)
+    # G3d (25/11 — D24, D26): câu AI soạn cho ôn theo kỹ năng sinh ra từ đâu. NULL = cũ / soạn tay.
+    #   'on_demand' = học viên bấm ôn mà thiếu câu → dùng ngay · 'nightly' = soạn sẵn ban đêm → chỉ dùng khi mentor Đạt
+    origin = Column(String(10), nullable=True)
     reviewed_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True)
     reviewed_at = Column(DateTime(timezone=True), nullable=True)
     created_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True)
@@ -72,4 +75,5 @@ class ReviewQuestionMeta(Base):
             "mentor_status IS NULL OR mentor_status IN ('passed', 'reported')",
             name="ck_review_question_meta_mentor_status",
         ),
+        CheckConstraint("origin IS NULL OR origin IN ('on_demand', 'nightly')", name="ck_review_question_meta_origin"),
     )

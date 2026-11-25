@@ -10,7 +10,9 @@
 
 Tên trùng (G1): node lộ trình "JavaScript" (#4) nhưng ngân hàng câu gắn "Javascript" (#4919) → đề lấy câu của id
 NHIỀU câu nhất trong nhóm tên trùng (skill_search.normalize); lượt vẫn ghi skill_id của node (người học ôn kỹ năng nào).
-G2 chỉ dùng câu có sẵn trong ngân hàng; thiếu câu → "Chưa có đề" (AI soạn khi thiếu là G3).
+G3d-1 (25/11): ngân hàng gồm câu đã duyệt + câu AI tự duyệt (`include_auto`). Ráp đề CHỈ bốc câu có sẵn (không gọi
+đường sinh câu cũ của ôn theo khóa). Thiếu câu → kỹ năng soạn được (Mở + có nguồn + có AI thật) thì tạo việc soạn ở nền
+(review_generation_service) và báo GenerationPending (API trả 202 + tiến độ); không soạn được → "Chưa có đề" như G2.
 """
 
 import random
@@ -18,8 +20,8 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
-from app.ai.review import get_review_ai
 from app.ai.review.base import ReviewAI
+from app.ai.review.mock_ai import MockAI
 from app.ai.review.pipeline.skill_search import normalize
 from app.core.config import settings
 from app.models.review_attempt import ReviewAttempt
@@ -30,6 +32,7 @@ from app.services import review_service as core
 from app.services.review_service import ReviewBlockedError, ReviewError
 
 NO_SKILL_BANK = "Chưa có đề ôn tập cho kỹ năng này."
+NOT_OPEN = "Kỹ năng này chưa được mở cho AI soạn đề ôn tập."
 
 
 class SkillNotFoundError(ReviewError):
@@ -41,10 +44,39 @@ class PathNotFoundError(ReviewError):
 
 
 class SkillBankMissingError(ReviewError):
-    def __init__(self):
-        super().__init__(NO_SKILL_BANK)
+    def __init__(self, message: str = NO_SKILL_BANK):
+        super().__init__(message)
         self.code = "no_question_bank"
-        self.message = NO_SKILL_BANK
+        self.message = message
+
+
+class GenerationPending(ReviewError):
+    """Thiếu câu → đang soạn ở nền (G3d). job: review_generation_service.job_view."""
+
+    def __init__(self, job: dict):
+        super().__init__("Đang soạn đề")
+        self.job = job
+
+
+class _BankOnly(MockAI):
+    """Ôn theo kỹ năng chỉ bốc câu CÓ SẴN — không gọi đường sinh câu cũ (lỗ hổng B, G3d-1)."""
+
+    name = "bank"
+
+
+def _missing_message(reason: str | None) -> str:
+    return NOT_OPEN if reason == "not_open" else NO_SKILL_BANK
+
+
+def _generate_or_missing(db: Session, user: Users, info: "Readiness"):
+    """Thiếu câu: soạn được → tạo / vào việc soạn rồi ném GenerationPending; không → SkillBankMissingError."""
+    from app.services import review_generation_service as gen
+
+    try:
+        job = gen.request(db, info.bank_skill_id, user.user_id)
+    except gen.GenerationError as err:
+        raise SkillBankMissingError(_missing_message(err.code)) from None
+    raise GenerationPending(gen.job_view(job))
 
 
 @dataclass
@@ -70,7 +102,7 @@ def skill_readiness(db: Session, skill_id: int) -> Readiness:
     if name is None:
         raise SkillNotFoundError
     ids = _group_ids(db, skill_id, name)
-    counts = repo.bank_counts(db, ids)
+    counts = repo.bank_counts(db, ids, include_auto=True)  # G3d: + câu AI tự duyệt
     totals = {i: sum(n for (s, _), n in counts.items() if s == i) for i in ids}
     bank_id = max(ids, key=lambda i: (totals[i], i == skill_id, -i))  # nhiều câu nhất; bằng nhau → chính nó
     available = {k: n for k, n in counts.items() if k[0] == bank_id}
@@ -91,20 +123,31 @@ def skill_review_info(db: Session, user: Users, skill_id: int) -> dict:
     info = skill_readiness(db, skill_id)
     core.recover_stuck_grading(db, user)
     in_progress = repo.get_in_progress(db, user.user_id, skill_id=skill_id)
-    block, unfinished = None, []
+    from app.services import review_generation_service as gen
+
+    block, unfinished, reason = None, [], None
     if in_progress is None:
         unfinished = repo.list_in_progress(db, user.user_id)
         if len(unfinished) >= settings.REVIEW_MAX_UNFINISHED:
             block = "too_many_unfinished"
         elif not info.ready:
-            block = "no_question_bank"
+            reason = gen.cannot_generate(db, info.bank_skill_id)
+            if reason:
+                block = "no_question_bank"
+    job = gen.latest_job(db, info.bank_skill_id) if not info.ready else None
+    if block == "no_question_bank":
+        blocked = {"code": block, "message": _missing_message(reason)}
+    else:
+        blocked = _blocked(block) if block else None
     return {
         "skill_id": skill_id,
         "skill": info.skill,
         "structure": core._structure(),
         "pass_score": settings.REVIEW_PASS_SCORE,
         "can_start": block is None,
-        "blocked": _blocked(block) if block else None,
+        "blocked": blocked,
+        "will_generate": in_progress is None and not info.ready and block is None,  # G3d: bấm Bắt đầu → AI soạn
+        "generation": gen.job_view(job),
         "in_progress_attempt_id": in_progress.attempt_id if in_progress else None,
         "unfinished_attempts": core._unfinished_view(db, unfinished) if block == "too_many_unfinished" else [],
         "attempts": [core._summary(a) for a in repo.list_attempts(db, user.user_id, skill_id=skill_id)],
@@ -120,8 +163,11 @@ def direct_review(db: Session, user: Users, skill_id: int) -> dict | None:
     attempts = repo.list_attempts(db, user.user_id, skill_id=skill_id)  # mới nhất trước
     in_progress = next((a for a in attempts if a.status == "in_progress"), None)
     last = next((a for a in attempts if a.status in ("graded", "grading")), None)
+    from app.services import review_generation_service as gen
+
     return {
         "ready": info.ready,
+        "can_generate": not info.ready and gen.cannot_generate(db, info.bank_skill_id) is None,  # G3d
         "in_progress_attempt_id": in_progress.attempt_id if in_progress else None,
         "last_attempt": core._summary(last) if last else None,
     }
@@ -147,10 +193,10 @@ def start_skill_attempt(
     if repo.count_in_progress(db, user.user_id) >= settings.REVIEW_MAX_UNFINISHED:
         raise ReviewBlockedError("too_many_unfinished")
     if not info.ready:
-        raise SkillBankMissingError
+        _generate_or_missing(db, user, info)
 
     rng = rng or random.Random()
-    ai = ai or get_review_ai()
+    ai = ai or _BankOnly()
     bank_id = info.bank_skill_id
     previous = repo.last_submitted_questions(db, user.user_id, skill_id=skill_id)
     family = repo.family_questions(db, [q.question_id for q in previous])  # tránh mọi phiên bản cùng họ (7.5a)
@@ -168,7 +214,7 @@ def start_skill_attempt(
     trace.update(mode="skill", skill_id=skill_id, bank_skill_id=bank_id, path_id=path_id)
     try:
         picked = core.pick_questions(db, title=info.skill, names={bank_id: info.skill}, plan=plan, ai=ai, rng=rng,
-                                     embedder=embedder, avoid=avoid, trace=trace)  # fmt: skip
+                                     embedder=embedder, avoid=avoid, trace=trace, include_auto=True)  # fmt: skip
     except exam_builder.NotEnoughQuestionsError:
         raise SkillBankMissingError from None
     attempt = ReviewAttempt(user_id=user.user_id, skill_id=skill_id, path_id=path_id, trace=trace)

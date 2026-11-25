@@ -49,6 +49,7 @@ Không thể soạn tay hay duyệt tay cho ~5.880 kỹ năng còn lại (≈ 88
 | D25 | **Giữ khoảng 30 câu mỗi kỹ năng (P1, Tuấn chốt 25/11 — thay D10):** lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới ~30 câu** (mục tiêu có dư câu tự luận: ~4 dễ + ~2 nâng cao); lượt làm lại chỉ mở khi đủ câu chưa làm, chưa đủ → "Đề mới đang được soạn" | 25/11 | Chống học thuộc (gap G5), người làm cùng lúc nhận tổ hợp câu khác nhau, chống chép theo nội dung. Thuộc G3d |
 | D26 | **Câu sinh sẵn chỉ dùng khi mentor đã bấm "Đạt"** (P16 tùy chọn 4, Tuấn chốt 25/11). Câu **sinh khi cần** (học viên bấm ôn mà chưa có câu) vẫn **dùng ngay** như D1 | 25/11 | Câu sinh sẵn luôn có người chuyên môn xem trước. Mentor duyệt chậm → câu nằm chờ, kỹ năng đó vẫn sinh khi cần được. Cần phân biệt nguồn "sinh sẵn" / "sinh khi cần" trong `review_question_meta` |
 | D27 | **Chi tiết G3f mentor (Tuấn duyệt "theo đề xuất" 25/11):** viết lại migration `0005` (chưa commit); **admin vào được trang mentor** để kiểm tra; admin **bác phản ánh hoặc sửa câu → câu bật lại và coi như Đạt**; hàng chờ ưu tiên kỹ năng có nhiều lượt ôn; Claude soạn nháp BA/SRS | 25/11 | Mục 7.2 |
+| D28 | **G3d (Tuấn duyệt "theo đề xuất" 25/11):** chia 3 bước G3d-1 (luồng nền + lưu câu + vá lỗ hổng) → G3d-2 (giao diện màn chờ) → G3d-3 (bổ sung ~30 câu, làm lại khi hết câu mới, soạn sẵn ban đêm); **ôn theo khóa chỉ dùng câu đã duyệt** (vá D2); **không gửi chuông** khi soạn xong (học viên ở lại trang thì đề tự mở, rời trang thì bấm lại là có đề); **P12 làm cùng G3d-1**; **P8 để sau G3** | 25/11 | Mục 7.5 |
 
 ---
 
@@ -76,7 +77,7 @@ Rút từ tài liệu của thầy (mục 4) và từ đối chiếu ngày 24/11
 | P17 | ~~**BỎ** (Tuấn 25/11) — không làm hàng đợi soạn đề; khóa theo kỹ năng D9 vẫn giữ.~~ **Nhiều người cùng bấm ôn** (thuộc G3d): (a) nhiều người cùng bấm **một** kỹ năng chưa có câu → **chờ chung một việc soạn** (theo D9); (b) tối đa **2 việc soạn chạy song song** (cấu hình được), việc khác xếp hàng, hiện vị trí + ước tính, xong báo chuông; (c) Gemini bận → **chấm bài trước, soạn đề sau**; (d) mỗi người tối đa **2 việc soạn đang chờ**. Bảng `review_generation_jobs` + API `GET /skills/{id}/generation` | 50 người bấm 50 kỹ năng mới cùng lúc ≈ 300 lần gọi Gemini trong vài giây → 503 hàng loạt. Kỹ năng đã đủ câu thì không vấn đề (ráp đề < 1 giây, không gọi Gemini) | Thảo luận 25/11 |
 | P18 | **ĐÃ LÀM 25/11 (Tuấn chốt) — kết quả ở G3b-7.** **Siết prompt soạn câu lên `gen-en-v2`** (đo G3b 25/11): (1) câu **thông hiểu** phải có đoạn lệnh / code / tình huống để đọc và dự đoán, không hỏi nhớ; (2) **không chép nguyên văn** tài liệu vào đáp án đúng, viết lại ngắn bằng các lựa chọn sai; (3) **cấm câu đố vặt** (hỏi tên kỹ năng, hãng sản xuất, năm ra đời); (4) từ khóa barem **1–3 từ**, không có sẵn trong đề | Đo 30 câu: 4 câu thông hiểu thực chất là nhớ, 3 câu đáp án dài nhất → đoán được, 2 câu đố vặt, 2 câu barem yếu. (2) và (4) cổng G3c cũng bắt (luật L1, L7) nhưng sửa từ prompt thì ít phải soạn lại | G3b-6 |
 | P19 | **ĐÃ LÀM 25/11 (Tuấn chốt) — kết quả ở G3b-7b.** **Prompt `gen-en-v3` cho tự luận + kiểm L7 ngay ở G3b:** (1) tự luận dễ phải hỏi **giải thích / vì sao / so sánh** (trả lời 2–4 câu), không hỏi "dùng lệnh / công cụ nào"; (2) đề tự luận **không mô tả sẵn** các ý của barem; (3) server loại câu có từ khóa chính của barem nằm trong đề (luật L7, đang định để ở G3c — chuyển sớm vì rẻ, không gọi AI) | Đo v2 25/11: Docker 13, 14 và Power BI 14 chỉ cần kể tên 1 thứ; Power BI 15 đề tả sẵn đáp án | G3b-7 |
-| P12 | **Xuất nhãn phạm vi ra JSON** + tự nạp khi bảng `review_skill_scopes` trống (giống autoseed đề ôn tập) | Nhãn hiện **chỉ có trên DB máy Tuấn**; máy khác / Docker lần đầu = không kỹ năng nào mở | 24/11 — đề xuất làm cùng G3d |
+| P12 | **ĐÃ LÀM cùng G3d-1 (D28).** **Xuất nhãn phạm vi ra JSON** + tự nạp khi bảng `review_skill_scopes` trống (giống autoseed đề ôn tập) | Nhãn hiện **chỉ có trên DB máy Tuấn**; máy khác / Docker lần đầu = không kỹ năng nào mở | 24/11 — đề xuất làm cùng G3d |
 
 ### 3.1 Thảo luận P15 — ai được phản ánh câu hỏi (25/11, chưa chốt)
 
@@ -256,7 +257,7 @@ khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn ng
 | **G3a** | Kho đoạn tri thức: AI viết từ mô tả khóa + embedding + admin thêm / sửa / xóa | 04 | ✅ Code xong `450af21` (G3a-7 đo thêm còn treo) |
 | **G3b** | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | ✅ Xong `f4ba1e8` |
 | **G3c** | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | ✅ Xong — mục 7.4 |
-| G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt (+ P1, P8, P12 nếu chốt) | 01, 03 | |
+| G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt + D24–D26 + P12 | 01, 03 | Đang làm G3d-1 — mục 7.5 |
 | G3e | Chống học thuộc (P1–P4 nếu chốt) | 06 | |
 | **G3f** | Mentor duyệt câu AI soạn (D19–D23, D27) | — | ✅ Xong `450af21` (G3f-7 thử tay còn treo) |
 | G3g | Số liệu + đo ~10 kỹ năng + cập nhật BA/SRS, báo cáo | 07 | |
@@ -323,6 +324,19 @@ Lưu ở `ai_check["gate"]` (không bảng mới).
 - [x] G3c-6 Test `test_question_gate.py` (15, solver / embedder giả) + `test_question_gen.py` (19); toàn bộ 1.182 qua (2 lỗi cũ của Tâm)
 - [x] G3c-7 Tuấn bảo sửa `VAR-TN-15` (25/11): đáp án A "5" → **B "6"** + giải thích, qua `review_admin_service.update` (chưa bài nào dùng câu → sửa tại chỗ, không tạo phiên bản). Chỉ sửa trên DB máy Tuấn (câu không có trong file JSON)
 - [x] G3c-8 Commit (Tuấn bảo 25/11)
+
+### 7.5 G3d — Soạn đề ở nền + lưu câu (D28)
+
+**G3d-1 — luồng nền + lưu câu + vá lỗ hổng**
+- [x] Vá **lỗ hổng A** (D2): `review_repository.bank_counts / bank_questions` mặc định chỉ câu **đã duyệt** (hoặc chưa có meta) → ôn theo khóa không lẫn câu AI tự duyệt; `include_auto=True` cho ôn theo kỹ năng (+ câu `auto_approved`; câu `nightly` chỉ khi mentor Đạt — D26)
+- [x] Vá **lỗ hổng B**: ôn theo kỹ năng ráp đề chỉ bốc câu có sẵn (`_BankOnly`), không gọi đường sinh câu cũ (câu "Chờ duyệt")
+- [x] Migration `0006`: bảng `review_generation_jobs` (mỗi kỹ năng tối đa 1 việc đang chờ / chạy — D9) + `review_question_meta.origin` (`on_demand` / `nightly`)
+- [x] `review_generation_service`: `request` (tạo hoặc vào chung việc của kỹ năng) → luồng nền `run_job` 4 bước (đoạn tài liệu G3a → trắc nghiệm → tự luận, G3b + G3c → kiểm đủ đề). Câu đạt **lưu ngay** (`auto_approved`, bật, `origin='on_demand'`, `ai_check` gen + gate); mỗi bước tối đa 2 vòng soạn. Gemini quá tải → chờ 20 / 40 / 60 giây; vẫn lỗi → `failed` + thông báo dễ hiểu (P14), câu đã lưu vẫn giữ. Không có AI thật → không tạo việc (như G2). Server khởi động lại → việc dở thành `failed`
+- [x] API: `POST /skills/{id}/review-attempts` thiếu câu → **202** `{generation}`; `GET /skills/{id}/generation` (tiến độ); `GET /skills/{id}/review` thêm `will_generate`, `generation`, thông báo "chưa được mở cho AI" khi kỹ năng không Mở; huy hiệu node thêm `can_generate`
+- [x] **P12**: `data/review/skill_scopes.json` (5.893 nhãn, một nhãn một dòng) + `python -m app.core.seed_data.skill_scopes_json --export / --import`; khởi tạo DB mà bảng nhãn trống → tự nạp (khớp theo id, lệch thì theo tên)
+- [x] Test `test_generation_jobs.py` (11, AI giả, việc nền chạy đồng bộ); toàn bộ 1.193 qua (2 lỗi cũ của Tâm)
+- [x] Đo thật Power BI #1542 (DB máy Tuấn, 25/11): việc 1 lưu **14 / 15** câu sau 80 giây rồi `failed` "chưa đủ" (tự luận dễ hỏng phép bài mẫu cả 3 lần); việc 2 (thử lại, cùng logic) vẫn hỏng → thêm **vòng soạn thứ 2 mỗi bước + lưu ngay sau mỗi vòng**; việc 3: soạn nốt câu thiếu, **`done` sau 71 giây → Power BI đủ đề 15 câu**. Nhận xét: phép "bài mẫu ≥ 7" làm tự luận mỗi lượt chỉ qua ~½ → theo dõi ở G3g (số liệu), có thể hạ ngưỡng
+- [x] Commit (Tuấn bảo 25/11)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.

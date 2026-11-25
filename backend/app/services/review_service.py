@@ -304,6 +304,7 @@ def pick_questions(
     embedder: review_rag_service.Embedder | None,
     avoid: set[int],
     trace: dict,
+    include_auto: bool = False,
 ) -> list[dict]:
     """Lấy câu cho TỪNG kỹ năng của plan (RAG → AI → validator → ngân hàng dự phòng), ghi vết vào trace.
     Dùng chung cho ôn theo khóa và theo kỹ năng (G2c). Không đủ câu → NotEnoughQuestionsError."""
@@ -317,7 +318,7 @@ def pick_questions(
             skill_name=names[skill_id],
             need=need,
             chunks=chunks,
-            candidates=[_question_dict(q) for q in repo.bank_questions(db, skill_id)],
+            candidates=[_question_dict(q) for q in repo.bank_questions(db, skill_id, include_auto=include_auto)],
             avoid_question_ids=avoid,
             system_prompt=GENERATE_SYSTEM_PROMPT,
             prompt=prompt,

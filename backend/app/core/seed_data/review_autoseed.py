@@ -98,10 +98,25 @@ def run(session_factory) -> dict:
             db.close()
     if not result["skipped"]:
         logger.info("Tự nạp đề ôn tập: nạp %s, lỗi %s", result["loaded"], result["failed"])
+    _seed_scopes(session_factory)
     if "pytest" not in sys.modules:
         threading.Thread(target=_embed_in_background, args=(session_factory,), name="review-embeddings",
                          daemon=True).start()  # fmt: skip
     return result
+
+
+def _seed_scopes(session_factory) -> None:
+    """P12 (G3d-1, 25/11): bảng nhãn phạm vi kỹ năng trống → nạp data/review/skill_scopes.json. Lỗi chỉ ghi log."""
+    from app.core.seed_data.skill_scopes_json import seed_scopes_if_empty
+
+    try:
+        with session_factory() as db:
+            result = seed_scopes_if_empty(db)
+            db.commit()
+        if not result["skipped"]:
+            logger.info("Tự nạp nhãn phạm vi kỹ năng: %d nhãn, %d không khớp", result["loaded"], result["unmatched"])
+    except Exception:
+        logger.exception("Tự nạp nhãn phạm vi kỹ năng thất bại (chạy tay: python -m app.core.seed_data.skill_scopes_json --import)")
 
 
 def _embed_in_background(session_factory) -> None:

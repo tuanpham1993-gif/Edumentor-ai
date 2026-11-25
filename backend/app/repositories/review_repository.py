@@ -54,26 +54,34 @@ def course_skills_many(db: Session, course_ids: list[int]) -> dict[int, list[tup
 # ─────────────── Ngân hàng câu hỏi, đoạn tri thức ───────────────
 
 
-def bank_counts(db: Session, skill_ids: list[int]) -> dict[tuple[int, str], int]:
-    """Số câu ĐANG BẬT theo (skill_id, level)."""
+def _usable(stmt, include_auto: bool):
+    """Câu ĐƯỢC DÙNG ra đề. Ôn theo KHÓA (mặc định): chỉ câu đã duyệt / chưa có meta (nạp trước 13/11) — KHÔNG lẫn câu
+    AI tự duyệt (D2). Ôn theo KỸ NĂNG (include_auto=True, G3d): thêm câu `auto_approved`; câu soạn sẵn ban đêm
+    (origin='nightly') chỉ dùng khi mentor đã Đạt (D26)."""
+    stmt = stmt.outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+    approved = ReviewQuestionMeta.question_id.is_(None) | (ReviewQuestionMeta.review_status == "approved")
+    if not include_auto:
+        return stmt.where(approved)
+    auto = (ReviewQuestionMeta.review_status == "auto_approved") & (
+        ReviewQuestionMeta.origin.is_distinct_from("nightly") | (ReviewQuestionMeta.mentor_status == "passed")
+    )
+    return stmt.where(approved | auto)
+
+
+def bank_counts(db: Session, skill_ids: list[int], *, include_auto: bool = False) -> dict[tuple[int, str], int]:
+    """Số câu ĐANG BẬT, được dùng ra đề, theo (skill_id, level). include_auto: xem _usable."""
     if not skill_ids:
         return {}
-    rows = db.execute(
-        select(ReviewQuestion.skill_id, ReviewQuestion.level, func.count())
-        .where(ReviewQuestion.skill_id.in_(skill_ids), ReviewQuestion.is_active.is_(True))
-        .group_by(ReviewQuestion.skill_id, ReviewQuestion.level)
+    stmt = select(ReviewQuestion.skill_id, ReviewQuestion.level, func.count()).where(
+        ReviewQuestion.skill_id.in_(skill_ids), ReviewQuestion.is_active.is_(True)
     )
+    rows = db.execute(_usable(stmt, include_auto).group_by(ReviewQuestion.skill_id, ReviewQuestion.level))
     return {(skill_id, level): n for skill_id, level, n in rows}
 
 
-def bank_questions(db: Session, skill_id: int) -> list[ReviewQuestion]:
-    return list(
-        db.scalars(
-            select(ReviewQuestion)
-            .where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
-            .order_by(ReviewQuestion.question_id)
-        )
-    )
+def bank_questions(db: Session, skill_id: int, *, include_auto: bool = False) -> list[ReviewQuestion]:
+    stmt = select(ReviewQuestion).where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
+    return list(db.scalars(_usable(stmt, include_auto).order_by(ReviewQuestion.question_id)))
 
 
 def pending_count(db: Session, skill_id: int) -> int:
