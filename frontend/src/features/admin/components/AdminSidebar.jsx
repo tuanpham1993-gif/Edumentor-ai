@@ -13,6 +13,8 @@ const ADMIN_NAV_LINKS = [
   { to: '/admin/questions', label: 'Câu hỏi ôn tập' }, // Tuấn · module 09 (16/11, Tuấn duyệt thêm)
   { to: '/admin/review-flags', label: 'Kết Quả - AI Chấm' }, // Tuấn · module 09 (17/11, Tuấn duyệt thêm)
   { to: '/admin/skill-scopes', label: 'Phạm vi kỹ năng' }, // Tuấn · module 09 G3.0 (24/11)
+  { to: '/admin/review-reports', label: 'Câu bị phản ánh' }, // Tuấn · module 09 G3f (25/11 — mentor phản ánh)
+  { to: '/admin/review-mentors', label: 'Mentor ôn tập' }, // Tuấn · module 09 G3f (25/11)
 ];
 
 export default function AdminSidebar() {

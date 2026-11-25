@@ -149,6 +149,23 @@ class RealAI(ReviewAI):
             SCOPE_SYSTEM_PROMPT, build_scope_prompt(items), temperature=0.0, timeout=timeout, schema=GEMINI_SCOPE_SCHEMA
         )
 
+    # ─────────────── viết đoạn tri thức (G3a, 24/11) ───────────────
+
+    def write_knowledge(
+        self, skill: str, courses: list[dict], n: int, existing_titles: list[str], feedback: list[str], *, timeout=120.0
+    ):
+        """→ JSON thô {"passages": [...]} (knowledge_service kiểm lại bằng check_passages). temperature 0,3: viết tự nhiên
+        nhưng ít bịa; feedback = lỗi lần trước (viết lại có phản hồi — phase 02 của thầy)."""
+        from app.ai.prompts.review_knowledge import KNOWLEDGE_SYSTEM_PROMPT, build_knowledge_prompt
+        from app.ai.review.knowledge_schema import GEMINI_KNOWLEDGE_SCHEMA
+
+        prompt = build_knowledge_prompt(skill, courses, n, existing_titles)
+        if feedback:
+            prompt += "\n\nYOUR PREVIOUS ATTEMPT WAS REJECTED BECAUSE:\n- " + "\n- ".join(feedback)
+        return self._call(
+            KNOWLEDGE_SYSTEM_PROMPT, prompt, temperature=0.3, timeout=timeout, schema=GEMINI_KNOWLEDGE_SCHEMA
+        )
+
     # ─────────────── chấm tự luận ───────────────
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:

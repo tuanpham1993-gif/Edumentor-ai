@@ -31,11 +31,24 @@ Không thể soạn tay hay duyệt tay cho ~5.880 kỹ năng còn lại (≈ 88
 | D7 | Kỹ năng Mở vẫn phải có **tài liệu nguồn** (đoạn tri thức hoặc mô tả khóa dạy kỹ năng) mới soạn; không có nguồn thì không gọi Gemini | 22/11 | |
 | D8 | **Cổng kiểm tra giữ đủ 4 khối** (khung · trùng · giải mù trắc nghiệm · bài giả tự luận) nhưng **gộp lượt gọi** (~5–7 lần gọi Gemini / đề thay vì 20–30) | 22/11 | |
 | D9 | **Soạn ở nền**: bấm Bắt đầu trả về ngay, màn "Đang soạn đề… (bước x/4)" hỏi lại vài giây một lần, xong tự mở đề. Khóa theo `skill_id` để nhiều người bấm cùng lúc chỉ soạn **một lần** | 22/11 | Tránh Nginx / Docker cắt kết nối sau 60 s |
-| D10 | **Đợt này chỉ soạn đủ phần thiếu của một đề**; dự phòng tới 30 câu để sau | 22/11 | ⚠️ Đang có đề xuất đổi — xem P1 |
+| D10 | **Đợt này chỉ soạn đủ phần thiếu của một đề**; dự phòng tới 30 câu để sau | 22/11 | ⚠️ **Đã thay bằng D25** (25/11) |
 | D11 | Làm **sau demo 25/11** trên `tuan/skill-review`; test tự động luôn dùng AI giả; đo thật bằng Gemini trên ~10 kỹ năng, Tuấn đọc mẫu 20–30 câu | 22/11 | |
 | D12 | **Tài liệu review của thầy (21/11) dùng để THAM KHẢO.** Không hỏi lại thầy trước; G3 làm theo quyết định của nhóm, sau buổi review 25/11 thầy góp ý gì thì sửa | 22/11 | |
 | D13 | **IoT / phần cứng / điện tử** giữ nhãn AI hiện tại (phần lớn "Chưa rõ"); admin **bật tay** ở trang "Phạm vi kỹ năng" khi có học viên cần. Không chạy lại phân loại | 24/11 | Đã cân nhắc thêm nhóm `hardware` 2 tầng — chưa làm |
 | D14 | Prompt phân loại **siết lên v2**: kỹ thuật ngoài CNTT (năng lượng, cơ khí, điện tử…), kinh doanh / tài chính, tên chung chung → "Chưa rõ" | 24/11 | v1 mở hơi rộng (Photovoltaics, AI Capabilities, Business Analysis = Mở) |
+| D15 | **Phản ánh: 5 lý do** — đáp án đúng bị sai · câu mơ hồ / có 2 đáp án đúng · sai kiến thức · barem tự luận không hợp lý (chỉ câu tự luận) · khác; kèm ghi chú ≤ 500 ký tự, không bắt buộc | 24/11 | |
+| D16 | **Báo lại học viên chỉ bằng chuông**, chỉ khi câu được **sửa hoặc tắt**; admin "bỏ qua" thì không báo | 24/11 | Không email |
+| D17 | **Sửa D5:** tự tắt (≥ 3 người) **chỉ áp cho câu AI soạn** (`auto_approved`). Câu soạn tay (đã có người duyệt, gồm khóa demo 312 / 743 / 1855) **không tự tắt**, chỉ báo admin | 24/11 | Tránh khóa demo thiếu đề vì phản ánh nhầm |
+| D18 | **Giới hạn 20 lượt phản ánh / ngày** mỗi học viên (`REVIEW_REPORT_DAILY_LIMIT`); mỗi người một câu một lần; chỉ phản ánh câu đã làm và đã nộp | 24/11 | Chống spam |
+| D19 | **Vai trò mentor (P15, Tuấn chốt 25/11):** mentor **duyệt câu AI soạn** và **phản ánh lỗi cho admin**; admin xác nhận. **Học viên không phản ánh** (nút "Phản ánh" chuyển sang mentor) — người mới không biết câu đúng hay sai | 25/11 | Thay D4 (người phản ánh), D15–D18 áp cho mentor; G3f phải sửa trước khi commit |
+| D20 | Mentor phản ánh lỗi → câu AI soạn **tắt ngay**; admin **bác** thì câu bật lại | 25/11 | Thay D17 (≥ 3 học viên) |
+| D21 | Mentor **chỉ duyệt câu AI soạn** (`auto_approved`); câu soạn tay đã có người duyệt | 25/11 | |
+| D22 | **Admin gán vai trò `mentor`** cho tài khoản có sẵn (thêm `mentor` vào CHECK `users.role` — module 01) | 25/11 | Cần BA/SRS |
+| D23 | Mentor **xem** câu hỏi, đáp án, barem, đoạn tài liệu; bấm **Đạt / Phản ánh lỗi**. **Không** sửa, xóa, bật / tắt câu (việc của admin) | 25/11 | |
+| D24 | **Sinh câu theo cách C — kết hợp (P16, Tuấn chốt 25/11):** (1) **việc chạy nền theo lịch** (giống nhắc "Đến hạn ôn", **mặc định tắt**, bật bằng cấu hình); mỗi đêm soạn cho **N kỹ năng** (ví dụ 20, giới hạn để không vượt hạn mức Gemini) theo ưu tiên: kỹ năng có trong **lộ trình đang hoạt động** → kỹ năng **sắp hết câu chưa làm** → kỹ năng **bị mentor tắt câu** làm thiếu ngân hàng; (2) câu sinh sẵn qua cổng kiểm tra rồi **vào hàng chờ mentor duyệt**; (3) kỹ năng **chưa sinh sẵn** mà học viên bấm ôn thì vẫn **sinh khi cần** (luồng D1/D9), không ai gặp "Chưa có đề" | 25/11 | Trả lời câu thầy "bao lâu sinh đề mới". Số liệu 25/11: 693 kỹ năng vừa trong lộ trình vừa Mở ≈ 4.500 lần gọi Gemini, chia nhiều đêm. Thuộc G3d (thêm ½–1 ngày). Câu sinh sẵn lâu ngày có thể lỗi thời → kiểm lại định kỳ (khi mentor duyệt). Số câu mỗi kỹ năng theo **D25** |
+| D25 | **Giữ khoảng 30 câu mỗi kỹ năng (P1, Tuấn chốt 25/11 — thay D10):** lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới ~30 câu** (mục tiêu có dư câu tự luận: ~4 dễ + ~2 nâng cao); lượt làm lại chỉ mở khi đủ câu chưa làm, chưa đủ → "Đề mới đang được soạn" | 25/11 | Chống học thuộc (gap G5), người làm cùng lúc nhận tổ hợp câu khác nhau, chống chép theo nội dung. Thuộc G3d |
+| D26 | **Câu sinh sẵn chỉ dùng khi mentor đã bấm "Đạt"** (P16 tùy chọn 4, Tuấn chốt 25/11). Câu **sinh khi cần** (học viên bấm ôn mà chưa có câu) vẫn **dùng ngay** như D1 | 25/11 | Câu sinh sẵn luôn có người chuyên môn xem trước. Mentor duyệt chậm → câu nằm chờ, kỹ năng đó vẫn sinh khi cần được. Cần phân biệt nguồn "sinh sẵn" / "sinh khi cần" trong `review_question_meta` |
+| D27 | **Chi tiết G3f mentor (Tuấn duyệt "theo đề xuất" 25/11):** viết lại migration `0005` (chưa commit); **admin vào được trang mentor** để kiểm tra; admin **bác phản ánh hoặc sửa câu → câu bật lại và coi như Đạt**; hàng chờ ưu tiên kỹ năng có nhiều lượt ôn; Claude soạn nháp BA/SRS | 25/11 | Mục 7.2 |
 
 ---
 
@@ -45,7 +58,7 @@ Rút từ tài liệu của thầy (mục 4) và từ đối chiếu ngày 24/11
 
 | # | Đề xuất | Lý do | Nguồn |
 |---|---|---|---|
-| P1 | **Đổi D10**: lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới 30 câu**; lượt làm lại chỉ mở khi có đủ câu chưa làm (chưa đủ → "Đề mới đang được soạn") | Chỉ 15 câu thì lượt 2 gặp lại đúng 15 câu vừa hiện đáp án → chép lại là Đạt (gap G5) | Phase 06 thầy · `guide.md` 5.1 cũ |
+| P1 | **ĐÃ CHỐT 25/11 thành D25.** **Đổi D10**: lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới 30 câu**; lượt làm lại chỉ mở khi có đủ câu chưa làm (chưa đủ → "Đề mới đang được soạn") | Chỉ 15 câu thì lượt 2 gặp lại đúng 15 câu vừa hiện đáp án → chép lại là Đạt (gap G5) | Phase 06 thầy · `guide.md` 5.1 cũ |
 | P2 | Tránh câu của **3 lượt gần nhất** thay vì 1 (cả ôn theo khóa) | Chống học thuộc | Phase 06a |
 | P3 | **Ẩn đáp án mẫu tự luận khi chưa Đạt** (mức `mcq_only`), vẫn hiện đúng/sai và ý barem còn thiếu; đặt sau cờ cấu hình | Chống chép đáp án mẫu | Phase 06b — cần quyết UX |
 | P4 | Gắn cờ "xem lại" khi bài tự luận **chép đáp án mẫu** (chỉ cờ, không đổi điểm; chạy lại `eval_grading`) | | Phase 06c |
@@ -56,7 +69,22 @@ Rút từ tài liệu của thầy (mục 4) và từ đối chiếu ngày 24/11
 | P9 | **Số liệu sinh câu**: tỉ lệ qua cổng, tỉ lệ bị phản ánh, tỉ lệ admin tắt, theo `prompt_version` | Gap G6, G9 | Phase 07 |
 | P10 | **Lọc "Tự duyệt có cờ"** ở Ngân hàng câu hỏi (cờ từ cổng) để admin xem lại có trọng tâm | Bổ sung D1 | Phase 05 |
 | P11 | **Nhóm `hardware`** 2 tầng: phần cứng máy tính / IoT cơ bản / nhúng → Mở; điện tử chuyên sâu (FPGA, mạch analog, MEMS) → Chưa rõ | Hiện ~130 kỹ năng phần cứng xếp không nhất quán ("Computer hardware" Mở, "hardware" Chưa rõ) | Thảo luận 24/11 — tạm theo D13 |
+| P13 | **Siết prompt viết đoạn tri thức** thêm 2 quy tắc: tránh khẳng định tuyệt đối ("mỗi", "tất cả") nếu không chắc đúng hoàn toàn; ví dụ phiên bản phải là bản **còn được hỗ trợ** | Đo Docker 24/11: "mỗi chỉ thị Dockerfile tạo một lớp" (thực ra chỉ RUN / COPY / ADD) và `python:3.9` (hết hỗ trợ 10/2025). **Chỉ thêm khi kiểm thêm vài kỹ năng vẫn gặp cùng kiểu lỗi** (Tuấn 24/11) | G3a-7 |
+| P14 | **Gemini 503 thường xuyên** → G3d phải soạn ở nền có chờ + thử lại, báo rõ "Chưa soạn được đề, thử lại sau ít phút", không bao giờ để học viên treo | Đo 24/11: phân loại 5.893 kỹ năng gặp 503 nhiều lần; viết đoạn tri thức 5/6 kỹ năng bị 503 cả sau 2 lần chờ | G3a-7 |
+| P15 | **Đổi người được phản ánh — ĐÃ CHỐT 25/11 thành D19–D23** (mentor duyệt + phản ánh, admin xác nhận): học viên **không** phản ánh câu hỏi; thay vào đó **thầy giáo / mentor** phản ánh cho admin | Học viên mới không biết đáp án đúng hay sai → phản ánh dễ sai ("mình trả lời sai nên tưởng câu sai"). Người có chuyên môn mới đánh giá được câu đúng / sai. **Ảnh hưởng:** đổi D4, D15–D18; G3f đã code cho học viên (nút ở trang Kết quả) → phải đổi quyền + thêm vai trò; hệ thống hiện chỉ có `student` / `admin`; D1 "dùng trước, kiểm sau" mất bớt một lớp kiểm (học viên). Chi tiết thảo luận: mục 3.1 | Thảo luận 25/11 |
+| P16 | **Sinh câu sẵn theo định kỳ — ĐÃ CHỐT 25/11 thành D24 (cách C) + D26 (tùy chọn 4)**. Tùy chọn 4: câu **sinh sẵn chỉ dùng khi mentor đã bấm "Đạt"**; câu **sinh khi cần** vẫn dùng ngay như D1 | Có tùy chọn 4 thì câu sinh sẵn luôn có người chuyên môn xem trước khi học viên làm (giải lo ngại của thầy "đề chưa ai duyệt"). Đổi lại: mentor duyệt chậm thì câu sinh sẵn nằm chờ, kỹ năng phải sinh khi cần | Thảo luận 25/11 |
+| P17 | ~~**BỎ** (Tuấn 25/11) — không làm hàng đợi soạn đề; khóa theo kỹ năng D9 vẫn giữ.~~ **Nhiều người cùng bấm ôn** (thuộc G3d): (a) nhiều người cùng bấm **một** kỹ năng chưa có câu → **chờ chung một việc soạn** (theo D9); (b) tối đa **2 việc soạn chạy song song** (cấu hình được), việc khác xếp hàng, hiện vị trí + ước tính, xong báo chuông; (c) Gemini bận → **chấm bài trước, soạn đề sau**; (d) mỗi người tối đa **2 việc soạn đang chờ**. Bảng `review_generation_jobs` + API `GET /skills/{id}/generation` | 50 người bấm 50 kỹ năng mới cùng lúc ≈ 300 lần gọi Gemini trong vài giây → 503 hàng loạt. Kỹ năng đã đủ câu thì không vấn đề (ráp đề < 1 giây, không gọi Gemini) | Thảo luận 25/11 |
 | P12 | **Xuất nhãn phạm vi ra JSON** + tự nạp khi bảng `review_skill_scopes` trống (giống autoseed đề ôn tập) | Nhãn hiện **chỉ có trên DB máy Tuấn**; máy khác / Docker lần đầu = không kỹ năng nào mở | 24/11 — đề xuất làm cùng G3d |
+
+### 3.1 Thảo luận P15 — ai được phản ánh câu hỏi (25/11, chưa chốt)
+
+- **Ý của Tuấn:** người học mới chưa đủ kiến thức để biết đáp án đúng hay sai; phản ánh nên do **thầy giáo hoặc mentor** gửi cho admin.
+- **Hiện trạng code (G3f):** mọi học viên đã nộp bài đều phản ánh được; câu AI soạn bị ≥ 3 người phản ánh thì tự tắt (D17).
+- **Việc phát sinh nếu chốt:** (1) thêm vai trò `mentor` (bảng `users` hiện chỉ `student` / `admin` — module 01 của Tuấn); (2) mentor xem được câu hỏi để phản ánh mà không cần tự làm bài; (3) nút phản ánh ở trang Kết quả của học viên bỏ hoặc đổi thành "Hỏi mentor"; (4) ngưỡng tự tắt tính theo mentor; (5) cập nhật BA/SRS.
+- **Phương án đã cân nhắc:** A — chỉ mentor phản ánh · B — học viên báo → mentor xác nhận → admin · C — giữ nguyên.
+- **Tuấn chọn hướng (25/11):** có vai trò **mentor** để **duyệt câu hỏi** và **phản ánh lỗi cho admin xác nhận**; học viên không phản ánh. Mentor chủ động duyệt hàng chờ câu AI soạn (không cần tự làm bài) → khắc phục điểm yếu "mentor ít khi nhìn thấy câu".
+- **Luồng phác thảo:** câu AI soạn qua cổng → `auto_approved`, học viên dùng ngay (D1 giữ nguyên) → vào hàng chờ "Mentor duyệt" → mentor bấm **Đạt** (đánh dấu đã có người chuyên môn xem) hoặc **Phản ánh lỗi** (lý do + ghi chú) → câu tạm tắt chờ admin → admin **Sửa / Tắt / Bác phản ánh** (bác thì bật lại).
+- **Còn phải chốt:** (1) mentor phản ánh thì câu **tạm tắt ngay** hay chờ admin; (2) nút phản ánh của học viên bỏ hẳn hay đổi thành "Hỏi mentor"; (3) mentor duyệt cả câu soạn tay hay chỉ câu AI; (4) ai tạo tài khoản mentor (admin gán vai trò); (5) mentor được xem / sửa gì. Hỏi ý thầy trong buổi review 25/11 (vai trò mới → đổi BA/SRS, CHECK `users.role`).
 
 **Mâu thuẫn trong tài liệu cũ cần lưu ý** (file này là bản đúng):
 - `guide.md` 5.1 (17/11) ghi "mục tiêu 30 câu, dự phòng soạn ở nền" ↔ Q13 (22/11) "đợt này chỉ soạn đủ một đề" → hiện theo **D10**, đề xuất đổi ở **P1**.
@@ -231,6 +259,34 @@ khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn ng
 | G3f | Phản ánh câu hỏi + tự tắt ≥ 3 người + lọc "Tự duyệt (có cờ)" | — | |
 | G3g | Số liệu + đo ~10 kỹ năng + cập nhật BA/SRS, báo cáo | 07 | |
 
+### 7.1 G3a — Kho đoạn tri thức (Tuấn duyệt 24/11: lưu ngay · 3 đoạn / kỹ năng tiếng Anh · cho dùng kiến thức phổ thông)
+
+Mô tả khóa học mang giọng quảng cáo, ít kiến thức chi tiết → AI dùng mô tả để biết **phạm vi**, viết đoạn bằng **kiến
+thức phổ thông, chắc chắn**; không số liệu / lương / quảng cáo. 3.439 / 3.467 kỹ năng Mở có mô tả ≥ 500 ký tự.
+
+- [x] G3a-1 Migration `0004` + model: `knowledge_chunks` thêm `source` (manual / ai / admin), `source_course_ids`, `model`, `prompt_version`, `updated_by`, `updated_at` — kiểm trên PostgreSQL tạm: khớp model, downgrade / upgrade lại đúng
+- [x] G3a-2 Prompt `knowledge-en-v1` + schema + bộ kiểm tra đoạn (đủ 3, độ dài, không trùng, không quảng cáo) — `$ docker ps` giữ, `$137,000` / salary bị loại
+- [x] G3a-3 Service `ensure_chunks` + embedding + script `--skills` (`knowledge_service.py`, `knowledge_repository.py`, `RealAI.write_knowledge`, `write_knowledge_chunks.py`)
+- [x] G3a-4 API admin: `POST /skills/{id}/chunks`, `POST /skills/{id}/chunks/generate`, `PATCH /chunks/{id}`, `DELETE /chunks/{id}` (đang có câu dùng → 409); `GET` trả thêm nội dung + nguồn, không trả vector
+- [x] G3a-5 Giao diện "Đoạn tài liệu (n)" ở trang Câu hỏi ôn tập (`ChunkManager.jsx`: xem, thêm, sửa, xóa, "AI viết đoạn tài liệu")
+- [x] G3a-6 Test + chạy toàn bộ — `test_knowledge.py` (14 test); toàn bộ 1.123 qua (2 lỗi cũ của Tâm)
+- [ ] G3a-7 Đo 5–10 kỹ năng với Gemini thật, Tuấn đọc (có bản dịch tiếng Việt)
+- [ ] G3a-8 Commit (khi Tuấn bảo)
+
+### 7.2 G3f — Mentor duyệt câu AI soạn (Tuấn duyệt 25/11: D19–D23, D27)
+
+Bản 24/11 (học viên phản ánh, ≥ 3 người tự tắt — D15–D18) **chưa commit, đã thay toàn bộ** bằng mô hình mentor.
+
+- [x] G3f-1 Migration `0005` **viết lại** (hạ DB máy Tuấn về `0004` rồi nâng lại; kiểm SQLite + Postgres, lên / xuống / lên, so model = 0 sai lệch): CHECK `users.role` thêm `mentor`; bảng `review_question_reports` (mentor, lý do, ghi chú, trạng thái; **mỗi câu một phản ánh đang mở** — index duy nhất có điều kiện); `review_question_meta` + `mentor_status` / `mentor_by` / `mentor_at` / `disabled_reason`; chuông `review_report`
+- [x] G3f-2 `require_mentor` (mentor + admin) · service `review_report_service`: hàng chờ (kỹ năng nhiều lượt ôn trước), Đạt, Phản ánh lỗi (tắt ngay), admin bác / giữ tắt, sửa câu tự đóng + bật lại + Đạt, gán / thu hồi mentor, chuông báo mentor
+- [x] G3f-3 API mentor `/api/mentor/review-questions` (GET, `/{id}/pass`, `/{id}/report`) · API admin `/reports` (resolve `dismiss` / `keep_disabled`), `/mentors` (GET / POST email / DELETE) · `mentor_status` ở danh sách + chi tiết câu admin
+- [x] G3f-4 Gỡ phần học viên: API phản ánh, trường `reported`, nút "Phản ánh câu này", cấu hình `REVIEW_REPORT_AUTO_DISABLE` / `REVIEW_REPORT_DAILY_LIMIT` (các file học viên về đúng bản đã commit)
+- [x] G3f-5 Giao diện: trang `/mentor/review` "Duyệt câu hỏi" (3 tab, xem đoạn tài liệu, Đạt / Phản ánh lỗi) + menu người dùng "Duyệt câu hỏi" (mentor) + nhãn vai trò "Mentor"; admin `/admin/review-mentors` "Mentor ôn tập"; sửa `/admin/review-reports` (Sửa câu / Giữ tắt / Bác phản ánh); huy hiệu "Chờ mentor / Mentor đã duyệt / Mentor phản ánh" ở Câu hỏi ôn tập
+- [x] G3f-6 Test `test_mentor_review.py` (19 test, thay `test_question_reports.py`) + `test_review_security.py` thêm 3 API mentor; toàn bộ 1.148 qua (2 lỗi cũ của Tâm)
+- [x] G3f-6b Script test tay `python -m app.core.seed_data.make_sample_ai_questions` (6 câu mẫu Docker, câu 3 **cố ý sai**; `--remove` để xóa) — đã tạo trên DB máy Tuấn · nháp BA/SRS ở `docs/Thay-doi-BA-SRS-19-11.md` mục "Bổ sung 25/11"
+- [ ] G3f-7 Thử tay trên giao diện (Tuấn gán một tài khoản làm mentor)
+- [ ] G3f-8 Commit (khi Tuấn bảo)
+
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.
 
@@ -265,4 +321,5 @@ câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có b�
 | 17/11 | Thiết kế ôn theo kỹ năng (`guide.md`): AI soạn khi thiếu, cổng 4 khối, mục tiêu 30 câu / kỹ năng, chỉ CNTT (Q8) |
 | 21/11 | Thầy gửi review + kế hoạch 8 phase (`261121-2216-on-tap-ai-improvement`) |
 | 22/11 | G2 xong. Chốt G3 (D1–D11, D4–D5 phản ánh + tự tắt), sửa Q8 → D6. Quyết định không hỏi lại thầy, dùng tài liệu thầy để tham khảo (D12). Thử phase 01 rồi hoàn tác |
+| 25/11 | Buổi review của thầy. Chốt vai trò mentor (D19–D23): mentor duyệt câu AI soạn + phản ánh lỗi, admin xác nhận, học viên không phản ánh. Thầy hỏi thêm: bộ đề sinh thế nào, bao lâu sinh đề mới → chốt **D24** (cách C: sinh sẵn ban đêm cho kỹ năng ưu tiên + sinh khi cần cho phần còn lại). Code G3f theo mô hình mentor (D27, mục 7.2). Chốt **D25** (P1 — ~30 câu / kỹ năng) và **D26** (P16 tùy chọn 4 — câu sinh sẵn chờ mentor "Đạt"); **bỏ P17** (hàng đợi soạn đề khi nhiều người cùng bấm); xác nhận đã có xáo thứ tự câu + lựa chọn (`order_exam`), giới hạn còn lại cần P1 |
 | 24/11 | Đối chiếu tài liệu thầy (gap đều đúng) → đề xuất P1–P12. **G3.0 xong**: bảng + prompt v2 + 5.893 nhãn + trang admin; Tuấn kiểm 50 mẫu (84% / 92% / 0 mở sai); IoT theo D13. Gom toàn bộ G3 vào file này |

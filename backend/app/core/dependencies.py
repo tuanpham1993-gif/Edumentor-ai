@@ -68,3 +68,13 @@ def require_admin(current_user: Users = Depends(get_current_user)) -> Users:
             detail="Bạn không có quyền thực hiện thao tác này.",
         )
     return current_user
+
+
+def require_mentor(current_user: Users = Depends(get_current_user)) -> Users:
+    """Mentor hoặc admin (admin vào để kiểm tra) — trang mentor duyệt câu ôn tập (G3f, 25/11 · D19–D23)."""
+    if current_user.role not in ("mentor", "admin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Bạn không có quyền thực hiện thao tác này.",
+        )
+    return current_user

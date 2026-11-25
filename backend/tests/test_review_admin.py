@@ -8,9 +8,9 @@ Quy tắc phiên bản / sửa nhỏ / xóa đã test kỹ ở test_review_bank.
 
 import pytest
 
+from app.core.seed_data import seed_review as script
 from app.models import ReviewQuestion, ReviewQuestionMeta
 from app.services import review_bank_service as bank_service
-from app.core.seed_data import seed_review as script
 from tests.test_review_bank import by_code, use_in_attempt
 from tests.test_seed_review import bank, course_312  # noqa: F401 — fixture
 
@@ -488,7 +488,9 @@ def test_skill_chunks(client, seeded, admin_headers, student_headers, db_session
     assert client.get(url, headers=student_headers).status_code == 403
     chunks = client.get(url, headers=admin_headers).json()
     assert len(chunks) == 3 and q.chunk_id in [c["chunk_id"] for c in chunks]
-    assert set(chunks[0]) == {"chunk_id", "code", "title"}  # không trả nội dung / vector
+    # G3a (24/11): trả thêm nội dung + nguồn gốc cho khối "Đoạn tài liệu"; vector KHÔNG trả (chỉ has_embedding)
+    assert {"chunk_id", "code", "title", "content", "source", "has_embedding"} <= set(chunks[0])
+    assert "embedding" not in chunks[0]
     assert client.get("/api/admin/review/skills/999999/chunks", headers=admin_headers).status_code == 404
 
 

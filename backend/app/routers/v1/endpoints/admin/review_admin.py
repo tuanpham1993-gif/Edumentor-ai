@@ -15,9 +15,19 @@ Mọi API chỉ admin (`require_admin`: chưa đăng nhập 401, học viên 403
     POST   /api/admin/review/questions/{id}/reject     — từ chối câu AI soạn (ẩn, không xóa)
     GET    /api/admin/review/skills/{skill_id}/suggested-code?type= — mã gợi ý cho câu sắp thêm (7.6 P3)
     GET    /api/admin/review/skills/{skill_id}/chunks  — đoạn tri thức của kỹ năng (ô chọn khi sửa câu, 7.6)
+    POST   /api/admin/review/skills/{skill_id}/chunks  — admin thêm đoạn tri thức (G3a, 24/11)
+    POST   /api/admin/review/skills/{skill_id}/chunks/generate — AI viết đoạn còn thiếu từ mô tả khóa, lưu ngay (G3a)
+    PATCH  /api/admin/review/chunks/{chunk_id}         — admin sửa đoạn (tính lại embedding) (G3a)
+    DELETE /api/admin/review/chunks/{chunk_id}         — xóa đoạn; đang là nguồn của câu hỏi → 409 (G3a)
     GET    /api/admin/review/skills/search?q=&limit=    — tìm kỹ năng theo tên (G1, 21/11): exact + BM25 + vector, RRF
     GET    /api/admin/review/skill-scopes               — phạm vi ôn tập theo kỹ năng: lọc label / category / source / q (G3.0)
     PATCH  /api/admin/review/skill-scopes/{skill_id}    — admin đặt nhãn Mở / Không mở / Chưa rõ (G3.0, 24/11)
+    GET    /api/admin/review/reports                    — câu bị mentor phản ánh, gom theo câu (G3f, 25/11)
+    GET    /api/admin/review/reports/count              — số câu đang chờ xử lý (số đỏ trên menu)
+    POST   /api/admin/review/reports/{question_id}/resolve — bác (dismiss) / giữ tắt (keep_disabled) → chuông báo mentor
+    GET    /api/admin/review/mentors                    — danh sách mentor (D22)
+    POST   /api/admin/review/mentors                    — gán mentor theo email (không đổi tài khoản admin)
+    DELETE /api/admin/review/mentors/{user_id}          — thu hồi mentor (về học viên)
     GET    /api/admin/review/readiness                 — mức sẵn sàng ôn tập từng khóa (7.4, 16/11); ?course_id= → 1 khóa
     GET    /api/admin/review/flags                     — bài cần xem lại: câu tự luận bị gắn cờ (17/11)
     POST   /api/admin/review/flags/{attempt_id}/{position}/resolve — admin chấm lại từng ý (Đạt / Không đạt)
@@ -38,6 +48,7 @@ from app.models.user import Users
 from app.repositories import review_repository as repo
 from app.schemas.review_admin import (
     ApproveRequest,
+    ChunkIn,
     ChunkOut,
     DeleteResultOut,
     EditResultOut,
@@ -45,6 +56,9 @@ from app.schemas.review_admin import (
     FlagReason,
     FlagResolveOut,
     FlagResolveRequest,
+    GenerateChunksOut,
+    MentorIn,
+    MentorOut,
     QuestionCreate,
     QuestionDetail,
     QuestionLevel,
@@ -52,6 +66,10 @@ from app.schemas.review_admin import (
     QuestionType,
     QuestionUpdate,
     ReadinessOut,
+    ReportPageOut,
+    ReportReason,
+    ReportResolveIn,
+    ReportResolveOut,
     ReviewStatus,
     ScopeCategory,
     ScopeLabel,
@@ -61,11 +79,17 @@ from app.schemas.review_admin import (
     SkillSearchOut,
     SuggestedCodeOut,
 )
+from app.services import (
+    knowledge_service,
+    review_report_service,
+    review_service,
+    skill_scope_service,
+    skill_search_service,
+)
 from app.services import review_admin_service as service
 from app.services import review_bank_service as bank
 from app.services import review_flag_service as flags
 from app.services import review_readiness_service as readiness_service
-from app.services import review_service, skill_scope_service, skill_search_service
 
 router = APIRouter()
 
@@ -280,9 +304,68 @@ def read_readiness(
     summary="[Admin] Đoạn tri thức của kỹ năng",
 )
 def list_skill_chunks(skill_id: int, _: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    from app.repositories import knowledge_repository
+
     if not repo.skill_exists(db, skill_id):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.")
-    return repo.chunks_for_skill(db, skill_id)
+    return [knowledge_service.chunk_dict(c) for c in knowledge_repository.chunks_for_skill(db, skill_id)]
+
+
+# ─────────────── Kho đoạn tri thức (G3a, 24/11/2026) ───────────────
+
+_KNOWLEDGE_STATUS = {"not_found": 404, "not_open": 409, "no_source": 409, "in_use": 409, "invalid": 422,
+                     "ai_failed": 503}  # fmt: skip
+
+
+def _knowledge_error(err: knowledge_service.KnowledgeError) -> HTTPException:
+    return HTTPException(_KNOWLEDGE_STATUS.get(err.code, 400), err.message)
+
+
+@router.post("/skills/{skill_id}/chunks", response_model=ChunkOut, status_code=201,
+             summary="[Admin] Thêm đoạn tri thức")  # fmt: skip
+def create_skill_chunk(
+    skill_id: int, body: ChunkIn, admin: Users = Depends(require_admin), db: Session = Depends(get_db)
+):
+    try:
+        return knowledge_service.create_chunk(db, admin, skill_id, title=body.title, content=body.content)
+    except knowledge_service.KnowledgeError as err:
+        raise _knowledge_error(err) from None
+
+
+@router.post("/skills/{skill_id}/chunks/generate", response_model=GenerateChunksOut,
+             summary="[Admin] AI viết đoạn tri thức còn thiếu (từ mô tả khóa học), lưu ngay")  # fmt: skip
+def generate_skill_chunks(skill_id: int, _: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    from app.ai.review.base import AIUnavailableError
+    from app.ai.review.real_ai import RealAI, review_llm
+    from app.core.config import settings
+
+    key, model = review_llm()
+    if settings.AI_MODE != "real" or not key or not model:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "AI chưa bật (cần AI_MODE=real và khóa Gemini).")
+    try:
+        return knowledge_service.ensure_chunks(db, skill_id, write=RealAI().write_knowledge, model=model)
+    except knowledge_service.KnowledgeError as err:
+        raise _knowledge_error(err) from None
+    except AIUnavailableError as err:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, f"AI không phản hồi, thử lại sau ít phút ({err})."
+        ) from None
+
+
+@router.patch("/chunks/{chunk_id}", response_model=ChunkOut, summary="[Admin] Sửa đoạn tri thức")
+def update_chunk(chunk_id: int, body: ChunkIn, admin: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    try:
+        return knowledge_service.update_chunk(db, admin, chunk_id, title=body.title, content=body.content)
+    except knowledge_service.KnowledgeError as err:
+        raise _knowledge_error(err) from None
+
+
+@router.delete("/chunks/{chunk_id}", status_code=204, summary="[Admin] Xóa đoạn tri thức (đang có câu dùng → 409)")
+def delete_chunk(chunk_id: int, _: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    try:
+        knowledge_service.delete_chunk(db, chunk_id)
+    except knowledge_service.KnowledgeError as err:
+        raise _knowledge_error(err) from None
 
 
 @router.get(
@@ -404,3 +487,65 @@ def update_skill_scope(
         )
     except skill_scope_service.ScopeSkillNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Không tìm thấy kỹ năng.") from None
+
+
+# ─────────────── Mentor phản ánh câu hỏi + tài khoản mentor (G3f, 25/11/2026 — D19–D23) ───────────────
+
+_REPORT_STATUS = {"not_found": 404, "not_ai": 409, "conflict": 409, "invalid": 422}
+
+
+def _report_error(err: review_report_service.ReportError) -> HTTPException:
+    return HTTPException(_REPORT_STATUS.get(err.code, 400), err.message)
+
+
+@router.get("/reports", response_model=ReportPageOut, summary="[Admin] Câu bị mentor phản ánh (gom theo câu hỏi)")
+def list_reports(
+    status_: Literal["open", "handled", "all"] = Query("open", alias="status"),
+    reason: ReportReason | None = None,
+    skill_id: int | None = Query(None, ge=1),
+    page: int = Query(1, ge=1),
+    size: int = Query(10, ge=1, le=50),
+    _: Users = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return review_report_service.list_page(
+        db, status=status_, reason=reason, skill_id=skill_id, page=page, size=size
+    )
+
+
+@router.get("/reports/count", summary="[Admin] Số câu đang có phản ánh chờ xử lý")
+def count_reports(_: Users = Depends(require_admin), db: Session = Depends(get_db)) -> dict:
+    return {"open_total": review_report_service.open_count(db)}
+
+
+@router.post("/reports/{question_id}/resolve", response_model=ReportResolveOut,
+             summary="[Admin] Xử lý phản ánh: bác (bật lại, coi như Đạt) / giữ tắt — báo mentor")  # fmt: skip
+def resolve_reports(
+    question_id: int, body: ReportResolveIn, admin: Users = Depends(require_admin), db: Session = Depends(get_db)
+):
+    try:
+        return review_report_service.resolve(db, admin, question_id, body.action, body.note)
+    except review_report_service.ReportError as err:
+        raise _report_error(err) from None
+
+
+@router.get("/mentors", response_model=list[MentorOut], summary="[Admin] Danh sách mentor ôn tập")
+def list_mentors(_: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    return review_report_service.list_mentors(db)
+
+
+@router.post("/mentors", response_model=MentorOut, status_code=201,
+             summary="[Admin] Gán vai trò mentor cho tài khoản có sẵn (theo email)")  # fmt: skip
+def add_mentor(body: MentorIn, _: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    try:
+        return review_report_service.add_mentor(db, body.email)
+    except review_report_service.ReportError as err:
+        raise _report_error(err) from None
+
+
+@router.delete("/mentors/{user_id}", status_code=204, summary="[Admin] Thu hồi vai trò mentor (về học viên)")
+def remove_mentor(user_id: int, _: Users = Depends(require_admin), db: Session = Depends(get_db)):
+    try:
+        review_report_service.remove_mentor(db, user_id)
+    except review_report_service.ReportError as err:
+        raise _report_error(err) from None

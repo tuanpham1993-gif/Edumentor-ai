@@ -453,7 +453,7 @@ def list_questions(
 ) -> tuple[list, int]:
     """Danh sách câu hỏi cho trang quản trị + tổng số dòng khớp bộ lọc.
 
-    Mỗi dòng: (ReviewQuestion, version, family_id, review_status, used_count, skill_name).
+    Mỗi dòng: (ReviewQuestion, version, family_id, review_status, used_count, skill_name, mentor_status).
     - Câu chưa có meta (nạp trước 13/11) → coi như phiên bản 1, họ = chính nó, đã duyệt (OUTER JOIN + COALESCE).
     - used_count đếm bằng subquery GROUP BY — một truy vấn cho cả trang (không N+1).
     - latest_only: chỉ phiên bản mới nhất của mỗi họ (bản cũ xem ở "Lịch sử phiên bản" của trang chi tiết).
@@ -515,6 +515,7 @@ def list_questions(
                 status.label("review_status"),
                 func.coalesce(used.c.n, 0).label("used_count"),
                 Skills.skill.label("skill_name"),
+                ReviewQuestionMeta.mentor_status.label("mentor_status"),  # G3f (25/11): mentor duyệt câu AI soạn
             ).select_from(ReviewQuestion)
         )
         .outerjoin(used, used.c.question_id == ReviewQuestion.question_id)

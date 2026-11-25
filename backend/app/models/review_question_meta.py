@@ -47,6 +47,14 @@ class ReviewQuestionMeta(Base):
         String(20), nullable=False, default="approved", server_default="approved"
     )
     ai_check = Column(JSON(none_as_null=True), nullable=True)  # D6
+    # G3f (25/11 — D19–D23): mentor duyệt câu AI soạn (auto_approved).
+    #   disabled_reason: 'mentor_report' = câu bị tắt ngay vì mentor phản ánh lỗi (D20) → admin bác thì bật lại;
+    #                    NULL = không bị tắt vì phản ánh (câu admin chủ động tắt giữ nguyên).
+    #   mentor_status: NULL = chưa mentor duyệt | 'passed' = Đạt | 'reported' = bị phản ánh, chờ admin.
+    disabled_reason = Column(String(20), nullable=True)
+    mentor_status = Column(String(10), nullable=True)
+    mentor_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True)
+    mentor_at = Column(DateTime(timezone=True), nullable=True)
     reviewed_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True)
     reviewed_at = Column(DateTime(timezone=True), nullable=True)
     created_by = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True)
@@ -59,5 +67,9 @@ class ReviewQuestionMeta(Base):
         CheckConstraint(
             "review_status IN ('pending', 'approved', 'rejected', 'auto_approved')",
             name="ck_review_question_meta_status",
+        ),
+        CheckConstraint(
+            "mentor_status IS NULL OR mentor_status IN ('passed', 'reported')",
+            name="ck_review_question_meta_mentor_status",
         ),
     )

@@ -24,6 +24,7 @@ from app.routers.v1.endpoints import (
     feedback,  # Feedback dành cho User
 )
 from app.routers.v1.endpoints.admin import review_admin
+from app.routers.v1.endpoints import mentor_review  # Tuấn · G3f 25/11: mentor duyệt câu ôn tập AI soạn
 
 # Feedback dành cho Admin
 from app.routers.v1.endpoints.admin import feedback as admin_feedback
@@ -93,6 +94,9 @@ api_router.include_router(
     tags=["Admin Review (Quản trị ôn tập)"],
     prefix="/admin/review",
 )
+
+# Mentor duyệt câu ôn tập AI soạn (Tuấn, G3f · 25/11)
+api_router.include_router(mentor_review.router, tags=["Mentor (Duyệt câu ôn tập)"], prefix="/mentor")
 
 # 5. Chatbot gia sư của Tâm
 

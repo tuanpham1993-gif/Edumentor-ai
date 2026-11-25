@@ -57,7 +57,8 @@ export function timeAgo(iso, now = Date.now()) {
   return formatDate(iso);
 }
 
-/** "student" → "Học viên", "admin" → "Quản trị viên". */
+/** "student" → "Học viên", "mentor" → "Mentor" (G3f 25/11), "admin" → "Quản trị viên". */
 export function roleLabel(role) {
-  return role === 'admin' ? 'Quản trị viên' : 'Học viên';
+  if (role === 'admin') return 'Quản trị viên';
+  return role === 'mentor' ? 'Mentor' : 'Học viên';
 }

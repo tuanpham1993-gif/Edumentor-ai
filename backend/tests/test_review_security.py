@@ -86,10 +86,20 @@ ADMIN_CALLS = [
     ("post", "/api/admin/review/questions/1/reject"),
     ("get", "/api/admin/review/skills/1/suggested-code?type=mcq"),
     ("get", "/api/admin/review/skills/1/chunks"),
+    ("post", "/api/admin/review/skills/1/chunks"),  # G3a (24/11)
+    ("post", "/api/admin/review/skills/1/chunks/generate"),
+    ("patch", "/api/admin/review/chunks/1"),
+    ("delete", "/api/admin/review/chunks/1"),
     ("get", "/api/admin/review/skills/search?q=java"),  # G1 (21/11)
     ("get", "/api/admin/review/skill-scopes"),  # G3.0 (24/11)
     ("patch", "/api/admin/review/skill-scopes/1"),
     ("get", "/api/admin/review/readiness"),
+    ("get", "/api/admin/review/reports"),  # G3f (25/11 — mentor phản ánh)
+    ("get", "/api/admin/review/reports/count"),
+    ("post", "/api/admin/review/reports/1/resolve"),
+    ("get", "/api/admin/review/mentors"),  # G3f mentor (25/11)
+    ("post", "/api/admin/review/mentors"),
+    ("delete", "/api/admin/review/mentors/1"),
     ("get", "/api/admin/review/flags"),
     ("post", "/api/admin/review/flags/1/13/resolve"),
     ("get", "/api/admin/review-attempts/1/trace"),
@@ -115,6 +125,8 @@ def test_admin_call_list_covers_every_admin_route():
         .replace("{skill_id}", "1")
         .replace("{attempt_id}", "1")
         .replace("{position}", "13")
+        .replace("{chunk_id}", "1")
+        .replace("{user_id}", "1")
         for p in paths
     }
     assert normalized <= covered, f"Chưa kiểm phân quyền: {sorted(normalized - covered)}"

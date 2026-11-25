@@ -91,6 +91,7 @@ class QuestionListItem(BaseModel):
     family_id: int
     version: int
     review_status: ReviewStatus
+    mentor_status: Literal["passed", "reported"] | None = None  # G3f (25/11): câu AI soạn — None = chờ mentor duyệt
     used_count: int  # số bài làm đã dùng câu này (> 0 → sửa nội dung sẽ tạo phiên bản mới)
     created_at: datetime
 
@@ -135,13 +136,33 @@ class DeleteResultOut(BaseModel):
 
 
 class ChunkOut(BaseModel):
-    """Đoạn tri thức RAG của kỹ năng — ô chọn "Đoạn tri thức" khi sửa / thêm câu (7.6)."""
+    """Đoạn tri thức RAG của kỹ năng — ô chọn "Đoạn tri thức" khi sửa / thêm câu (7.6).
+    G3a (24/11): thêm nội dung + nguồn gốc cho khối quản lý "Đoạn tài liệu" (các trường mới có mặc định → tương thích).
+    """
 
     model_config = ConfigDict(from_attributes=True)
 
     chunk_id: int
     code: str | None
     title: str | None
+    content: str = ""
+    source: Literal["manual", "ai", "admin"] = "manual"
+    source_course_ids: list[int] = []
+    has_embedding: bool = False
+    prompt_version: str | None = None
+    updated_at: datetime | None = None
+
+
+class ChunkIn(BaseModel):
+    """Admin thêm / sửa đoạn tri thức (G3a). Độ dài nội dung kiểm ở service (200–1.500 ký tự)."""
+
+    title: str | None = Field(default=None, max_length=200)
+    content: str = Field(min_length=1, max_length=5000)
+
+
+class GenerateChunksOut(BaseModel):
+    created: list[ChunkOut]  # đoạn AI vừa viết và lưu (rỗng = kỹ năng đã đủ đoạn)
+    existing: int  # số đoạn có sẵn trước khi viết
 
 
 # ─────────────── mức sẵn sàng (7.4) ───────────────
@@ -331,3 +352,80 @@ class SkillScopeUpdate(BaseModel):
     label: ScopeLabel
     category: ScopeCategory | None = None
     reason: str | None = Field(default=None, max_length=200)
+
+
+# ─────────────── Mentor phản ánh câu hỏi (G3f, 25/11/2026 — D19–D23) ───────────────
+
+ReportReason = Literal["wrong_answer", "ambiguous", "wrong_knowledge", "bad_rubric", "other"]
+
+
+class ReportedQuestionOut(BaseModel):
+    question_id: int
+    code: str | None
+    skill_id: int
+    skill: str
+    type: QuestionType
+    level: QuestionLevel
+    content: str
+    options: list[str] | None
+    correct_index: int | None
+    rubric: list[dict] | None
+    explanation: str | None
+    source: str
+    review_status: ReviewStatus
+    mentor_status: Literal["passed", "reported"] | None
+    is_active: bool
+    disabled_by_report: bool  # đang tắt vì mentor phản ánh (D20) — admin bác thì bật lại
+
+
+class ReportItemOut(BaseModel):
+    report_id: int
+    user_name: str  # tên mentor phản ánh
+    reason: ReportReason
+    note: str | None
+    status: Literal["open", "resolved", "dismissed"]
+    admin_note: str | None
+    created_at: datetime
+    resolved_at: datetime | None
+
+
+class ReportGroupOut(BaseModel):
+    question: ReportedQuestionOut
+    people: int
+    reason_counts: dict[str, int]
+    latest_at: datetime
+    reports: list[ReportItemOut]
+
+
+class ReportPageOut(BaseModel):
+    items: list[ReportGroupOut]
+    total: int
+    page: int
+    size: int
+    open_total: int  # số câu đang có phản ánh chờ xử lý (số đỏ trên menu)
+
+
+class ReportResolveIn(BaseModel):
+    action: Literal["dismiss", "keep_disabled"]  # bác phản ánh (bật lại, coi như Đạt) | giữ tắt
+    note: str | None = Field(default=None, max_length=500)
+
+
+class ReportResolveOut(BaseModel):
+    question_id: int
+    closed: int
+    is_active: bool
+
+
+class MentorIn(BaseModel):
+    """D22: admin gán vai trò mentor cho tài khoản có sẵn (theo email)."""
+
+    email: str = Field(min_length=3, max_length=255)
+
+
+class MentorOut(BaseModel):
+    user_id: int
+    full_name: str
+    email: str
+    is_active: bool
+    passed: int  # số câu mentor đã bấm Đạt
+    reported: int  # số lần phản ánh
