@@ -61,6 +61,8 @@ class Settings(BaseSettings):
 
     ALLOWED_ORIGINS: list[str]
     LLM_URL_ADAPTER: str  # Hòa: llama.cpp + LoRA (llama-adapter)
+    LLM_MODEL_NAME: str = "edumentor-qwen3"
+    LLM_MAX_TOKENS: int = 4096
     SYSTEM_PROMPT: str = """
     You are EduMentor AI, an intelligent learning-path skill
     extraction assistant.

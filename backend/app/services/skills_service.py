@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, Literal
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -14,16 +15,34 @@ from app.models.skill import Skills
 from app.models.skill_relation import SkillRelation
 
 
-def sync_skill_to_qdrant(skill):
-    """Hòa: cập nhật vector kỹ năng trong Qdrant khi sửa / tắt kỹ năng (import trong hàm — gộp nhánh 13/11)."""
-    from app.core.embedding_model import generate_embedding_skills_name
-    from app.services.qdrant_service import qdrant_skill_service
+logger = logging.getLogger(__name__)
 
-    if not skill.is_active:
-        qdrant_skill_service.delete_skill(skill.skill_id)
-        return
-    embedding = generate_embedding_skills_name([skill.skill])[0]
-    qdrant_skill_service.update_skill(skill_id=skill.skill_id, skill=skill.skill, embedding=embedding)
+
+def sync_skill_to_qdrant(skill) -> None:
+    """Đẩy thay đổi của một kỹ năng Postgres sang Qdrant (gọi sau khi commit).
+
+    Đang hoạt động: cập nhật vector kỹ năng + tên canonical trong payload của các alias.
+    Bị tắt: xóa point kỹ năng, các alias của nó, và gỡ khỏi candidate_skill_ids của mọi vai trò.
+    Import trong hàm để server vẫn chạy khi chưa cài sentence-transformers / chưa có Qdrant.
+    """
+    from app.services.ai_reference_service import AIReferenceService
+
+    AIReferenceService(db=None).on_skill_changed(skill)
+
+
+def remove_skill_from_qdrant(skill_id: int) -> None:
+    """Gọi sau khi xóa vật lý một kỹ năng khỏi Postgres."""
+    from app.services.ai_reference_service import AIReferenceService
+
+    AIReferenceService(db=None).on_skill_deleted(skill_id)
+
+
+def _safe_sync(action, *args) -> None:
+    """Qdrant là phần phụ: lỗi đồng bộ chỉ ghi log, không làm hỏng thao tác Postgres đã commit."""
+    try:
+        action(*args)
+    except Exception:  # noqa: BLE001
+        logger.exception("Không đồng bộ được kỹ năng sang Qdrant: %s", args)
 
 
 class SkillsService:
@@ -65,6 +84,7 @@ class SkillsService:
                 detail=f"Kỹ năng '{data.skill}' đã tồn tại trong hệ thống.",
             )
         skill = self.skill_repo.create(data.skill)
+        _safe_sync(sync_skill_to_qdrant, skill)
         return SkillRequestResponse.model_validate(skill)
 
     def update_skill(self, skill_id: int, data: SkillUpdate) -> SkillRequestResponse:
@@ -86,6 +106,7 @@ class SkillsService:
                 )
 
         updated_skill = self.skill_repo.update(skill, update_dict)
+        _safe_sync(sync_skill_to_qdrant, updated_skill)
         return SkillRequestResponse.model_validate(updated_skill)
 
     def delete_skill(self, skill_id: int) -> dict:
@@ -102,6 +123,7 @@ class SkillsService:
         if usages["total_usages"] > 0:
             # Vô hiệu hóa (soft delete) thay vì xóa vật lý gây lỗi Foreign Key
             self.skill_repo.soft_delete(skill)
+            _safe_sync(sync_skill_to_qdrant, skill)
             return {
                 "message": f"Kỹ năng '{skill.skill}' đang được sử dụng ({usages['course_skills']} khóa học, "
                            f"{usages['skill_relations']} quan hệ, {usages['learning_path_nodes']} lộ trình). "
@@ -111,9 +133,11 @@ class SkillsService:
             }
 
         # Nếu không vướng ràng buộc nào, xóa thật
+        name = skill.skill
         self.skill_repo.delete_physical(skill)
+        _safe_sync(remove_skill_from_qdrant, skill_id)
         return {
-            "message": f"Đã xóa hoàn toàn kỹ năng '{skill.skill}' khỏi danh mục.",
+            "message": f"Đã xóa hoàn toàn kỹ năng '{name}' khỏi danh mục.",
             "action": "deleted",
             "skill_id": skill_id,
         }

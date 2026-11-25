@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, field_validator
 from typing import Literal
 
 RelationType = Literal["prerequisite", "related", "extension"]
@@ -76,7 +76,14 @@ class LearningPathResponse(LearningPathBase):
     record_id: int
     nodes: list[LearningPathNodeResponse]
     edges: list[LearningPathEdgeResponse]
+    # True when the path was made by AI v2 and has a learner profile (GET /learning-paths/{id}/profile)
+    has_profile: bool = Field(default=False, validation_alias=AliasChoices("learner_profile", "has_profile"))
     model_config = ConfigDict(from_attributes=True)
+
+    @field_validator("has_profile", mode="before")
+    @classmethod
+    def _profile_exists(cls, value) -> bool:
+        return value is not None and value is not False
 
 class LearningPathListResponse(BaseModel):
     total: int

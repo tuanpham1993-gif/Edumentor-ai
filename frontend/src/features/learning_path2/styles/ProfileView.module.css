@@ -1,0 +1,55 @@
+.wrap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.compact { grid-template-columns: 1fr; }
+
+.section {
+  padding: 14px 16px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-xl);
+  background: var(--card-inner);
+}
+.section h3 { margin: 0 0 10px; font-size: 0.92rem; color: var(--text); }
+.section h4 { margin: 14px 0 6px; font-size: 0.82rem; color: var(--text-soft); }
+.section dl { margin: 0; display: grid; gap: 8px; }
+
+.row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px; font-size: 0.86rem; }
+.row dt { color: var(--text-dim); }
+.row dd { margin: 0; color: var(--text); overflow-wrap: anywhere; }
+
+.none { color: var(--text-dim); font-size: 0.85rem; margin: 0; }
+.muted { color: var(--text-dim); font-weight: 400; }
+
+.chips { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 2px 9px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-pill);
+  background: var(--chip-bg);
+  color: var(--text-soft);
+  font-size: 0.76rem;
+}
+
+.skills { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.skills li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-md);
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: 0.86rem;
+}
+.skills li.unlinked { border-style: dashed; opacity: 0.8; }
+.meta { margin-left: auto; display: inline-flex; gap: 6px; }
+.badge, .badgeSoft { padding: 1px 8px; border-radius: var(--r-pill); font-size: 0.72rem; font-weight: 600; }
+.badge { background: var(--ok-bg); color: var(--ok-fg); border: 1px solid var(--ok-border); }
+.badgeSoft { background: var(--chip-bg); color: var(--text-muted); border: 1px solid var(--card-border); }
+
+.experiences { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--text-soft); font-size: 0.85rem; }
+.experiences .chips { margin-left: 6px; }
+
+@media (max-width: 720px) {
+  .wrap { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 100px minmax(0, 1fr); }
+}

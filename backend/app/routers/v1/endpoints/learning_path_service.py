@@ -8,6 +8,8 @@ from app.schemas.learning_path import (
 )
 from app.services import learning_path_service as path_service
 from app.services import learning_path_node_service as node_service
+from app.services import learning_path_generation_v2_service as lp2_service
+from app.schemas.learning_path_generation_v2 import LearningPathProfileResponse
 from app.core.dependencies import get_current_user, require_admin
 from app.models.user import Users
 router = APIRouter()
@@ -69,6 +71,17 @@ def get_learning_path(record_id: int,
     if learning_path is None:
         raise HTTPException( status_code=status.HTTP_404_NOT_FOUND, detail="Learning path not found.",)
     return learning_path
+
+@router.get("/{record_id}/profile", response_model=LearningPathProfileResponse,
+            summary="Learner profile snapshot + generated graph info of an AI learning path (v2)")
+def get_learning_path_profile(record_id: int,
+                              current_user: Users = Depends(get_current_user),
+                              db: Session = Depends(get_db)):
+    result = lp2_service.get_path_profile(db=db, user_id=current_user.user_id, record_id=record_id)
+    if result is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="This learning path has no learner profile (created before AI v2).")
+    return result
 
 @router.patch(
     "/{record_id}/abandon",

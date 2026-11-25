@@ -118,3 +118,32 @@ export async function deleteLearningPathEdge(recordId, payload) {
     { data: payload }
   );
 }
+
+// ---------------- AI learning path v2 (learning_path2) ----------------
+// POST /learning-paths-generation/generate_ai_2  body = G1 input
+//   { original_query, learner_input: { current_job_title, career_level, relevant_it_work_experience,
+//     industry, technical_domains[], skill_profiles[{skill_name, proficiency_level, experience_duration}],
+//     certifications[], learning_constraints: { available_study_time, deadline } } }
+// The LLM runs on CPU: this call can take a minute or more.
+export async function generateLearningPath2(payload) {
+  const response = await client.post('/learning-paths-generation/generate_ai_2', payload);
+  return response.data;
+}
+
+// Body = the preview from generateLearningPath2 plus { confirmed }.
+export async function confirmLearningPath2(preview, confirmed = true) {
+  const response = await client.post('/learning-paths-generation/confirm-2', { ...preview, confirmed });
+  return response.data;
+}
+
+// { career_levels, proficiency_levels, certifications[{cert_id,name,issuer}], technical_domains[{domain_id,name}] }
+export async function getLearningPathFormOptions() {
+  const response = await client.get('/learning-paths-generation/options');
+  return response.data;
+}
+
+// Learner profile snapshot of one AI v2 path (404 for older paths).
+export async function getLearningPathProfile(recordId) {
+  const response = await client.get(`/learning-paths/${recordId}/profile`);
+  return response.data;
+}

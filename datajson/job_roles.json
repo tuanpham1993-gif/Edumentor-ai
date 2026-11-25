@@ -1,0 +1,2162 @@
+{
+  "taxonomy_version": "1.0",
+  "roles": [
+    {
+      "id": 1,
+      "name": "Frontend Developer",
+      "aliases": [
+        "Front-end Developer",
+        "Frontend Engineer",
+        "UI Developer",
+        "Client-side Developer",
+        "Lập trình viên frontend"
+      ],
+      "description": "Builds user-facing interfaces for web applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Backend Developer",
+      "aliases": [
+        "Backend Software Engineer",
+        "Server-side Developer",
+        "Back-end Developer",
+        "Backend Engineer",
+        "Lập trình viên backend"
+      ],
+      "description": "Develops server-side application logic, APIs, and backend services.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Full Stack Developer",
+      "aliases": [
+        "Fullstack Developer",
+        "Full-stack Engineer",
+        "Full Stack Engineer",
+        "Lập trình viên full stack"
+      ],
+      "description": "Works across both frontend and backend layers of web applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Software Engineer",
+      "aliases": [
+        "Software Developer",
+        "Application Developer",
+        "Programmer",
+        "SWE",
+        "Software Programmer",
+        "Coder",
+        "Kỹ sư phần mềm"
+      ],
+      "description": "Designs, develops, tests, and maintains software systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Web Developer",
+      "aliases": [
+        "Web Programmer",
+        "Website Developer",
+        "Website Builder",
+        "Lập trình viên web",
+        "Lập trình web"
+      ],
+      "description": "Builds and maintains websites and web-based applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2
+      ]
+    },
+    {
+      "id": 6,
+      "name": "API Developer",
+      "aliases": [
+        "API Engineer",
+        "Integration Developer"
+      ],
+      "description": "Designs and builds APIs and integration services.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Android Developer",
+      "aliases": [
+        "Android Engineer",
+        "Android App Developer"
+      ],
+      "description": "Develops applications for the Android platform.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        3
+      ]
+    },
+    {
+      "id": 8,
+      "name": "iOS Developer",
+      "aliases": [
+        "iOS Engineer",
+        "iPhone Developer",
+        "Swift Developer"
+      ],
+      "description": "Develops applications for Apple iOS and related platforms.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        3
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Mobile Application Developer",
+      "aliases": [
+        "Mobile Developer",
+        "Mobile Engineer",
+        "App Developer",
+        "Lập trình viên mobile",
+        "Lập trình viên di động",
+        "Lập trình di động"
+      ],
+      "description": "Develops applications for mobile platforms.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        3
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Cross-Platform Mobile Developer",
+      "aliases": [
+        "React Native Developer",
+        "Flutter Developer",
+        "Hybrid App Developer"
+      ],
+      "description": "Builds mobile applications targeting multiple platforms from a shared codebase.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        3
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Game Developer",
+      "aliases": [
+        "Game Programmer",
+        "Video Game Developer",
+        "Game Dev",
+        "Lập trình viên game",
+        "Lập trình game"
+      ],
+      "description": "Develops video games across various platforms.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Gameplay Programmer",
+      "aliases": [
+        "Game Mechanics Programmer"
+      ],
+      "description": "Implements game mechanics, controls, and player interactions.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Game Engine Developer",
+      "aliases": [
+        "Engine Programmer",
+        "Graphics Engine Developer"
+      ],
+      "description": "Develops and optimises game engine technology.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4,
+        1
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Embedded Software Engineer",
+      "aliases": [
+        "Embedded Systems Engineer",
+        "Embedded Developer",
+        "Embedded Programmer",
+        "Kỹ sư nhúng",
+        "Lập trình nhúng",
+        "Kỹ sư phần mềm nhúng"
+      ],
+      "description": "Develops software for embedded systems and microcontrollers.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        5,
+        1
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Firmware Engineer",
+      "aliases": [
+        "Firmware Developer",
+        "Firmware Programmer"
+      ],
+      "description": "Develops low-level firmware for hardware devices.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        5
+      ]
+    },
+    {
+      "id": 16,
+      "name": "IoT Engineer",
+      "aliases": [
+        "IoT Developer",
+        "Internet of Things Engineer"
+      ],
+      "description": "Designs and builds Internet of Things solutions.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        5,
+        18
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Software Architect",
+      "aliases": [
+        "Application Architect",
+        "Technical Architect",
+        "Kiến trúc sư phần mềm"
+      ],
+      "description": "Designs high-level software system structures and technical strategies.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Solutions Architect",
+      "aliases": [
+        "Solution Architect",
+        "IT Solutions Architect",
+        "Kiến trúc sư giải pháp"
+      ],
+      "description": "Designs end-to-end technical solutions aligned with business requirements.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        18
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Enterprise Architect",
+      "aliases": [
+        "IT Enterprise Architect"
+      ],
+      "description": "Defines organisation-wide technology architecture and standards.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        23
+      ]
+    },
+    {
+      "id": 20,
+      "name": "QA Engineer",
+      "aliases": [
+        "Quality Assurance Engineer",
+        "Software QA Engineer",
+        "QA Analyst",
+        "Software Tester",
+        "Tester",
+        "Kiểm thử viên",
+        "Kỹ sư kiểm thử",
+        "Nhân viên kiểm thử",
+        "Kiểm thử viên phần mềm"
+      ],
+      "description": "Ensures software quality through testing processes and methodologies.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        21
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Automation Test Engineer",
+      "aliases": [
+        "Test Automation Engineer",
+        "SDET",
+        "Software Development Engineer in Test",
+        "Kỹ sư kiểm thử tự động",
+        "Automation Tester"
+      ],
+      "description": "Designs and implements automated testing frameworks and scripts.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        21,
+        1
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Performance Test Engineer",
+      "aliases": [
+        "Performance Engineer",
+        "Load Test Engineer"
+      ],
+      "description": "Tests and optimises system performance, scalability, and reliability.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        21
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Manual Tester",
+      "aliases": [
+        "Manual QA Tester",
+        "QA Tester"
+      ],
+      "description": "Performs manual testing to identify software defects.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        21
+      ]
+    },
+    {
+      "id": 24,
+      "name": "DevOps Engineer",
+      "aliases": [
+        "DevOps Specialist",
+        "DevOps Developer",
+        "DevOps",
+        "Kỹ sư DevOps"
+      ],
+      "description": "Builds and maintains CI/CD pipelines, infrastructure, and deployment automation.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Site Reliability Engineer",
+      "aliases": [
+        "SRE",
+        "Reliability Engineer"
+      ],
+      "description": "Ensures the reliability, availability, and performance of production systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19,
+        20
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Platform Engineer",
+      "aliases": [
+        "Infrastructure Platform Engineer",
+        "Internal Platform Engineer"
+      ],
+      "description": "Builds and maintains internal developer platforms and tooling.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19,
+        18
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Infrastructure Engineer",
+      "aliases": [
+        "Infra Engineer",
+        "Systems Infrastructure Engineer"
+      ],
+      "description": "Designs and manages IT infrastructure including servers, storage, and networking.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19,
+        20
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Release Engineer",
+      "aliases": [
+        "Release Manager",
+        "Build and Release Engineer"
+      ],
+      "description": "Manages software release processes and build pipelines.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Cloud Engineer",
+      "aliases": [
+        "Cloud Infrastructure Engineer",
+        "Cloud Developer",
+        "Cloud Computing Engineer",
+        "Kỹ sư cloud",
+        "Kỹ sư điện toán đám mây"
+      ],
+      "description": "Designs and manages cloud infrastructure and services.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        18
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Cloud Architect",
+      "aliases": [
+        "Cloud Solutions Architect",
+        "Cloud Infrastructure Architect",
+        "Kiến trúc sư cloud",
+        "Kiến trúc sư điện toán đám mây"
+      ],
+      "description": "Designs cloud architecture and migration strategies.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        18
+      ]
+    },
+    {
+      "id": 31,
+      "name": "System Administrator",
+      "aliases": [
+        "SysAdmin",
+        "Systems Admin",
+        "Linux Administrator",
+        "Windows Administrator",
+        "Quản trị hệ thống",
+        "Quản trị viên hệ thống"
+      ],
+      "description": "Manages and maintains IT systems, servers, and infrastructure.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        20
+      ]
+    },
+    {
+      "id": 32,
+      "name": "IT Support Specialist",
+      "aliases": [
+        "IT Support Engineer",
+        "Desktop Support",
+        "IT Technician",
+        "IT Support",
+        "Nhân viên IT",
+        "Nhân viên hỗ trợ kỹ thuật"
+      ],
+      "description": "Provides technical support and troubleshooting for IT systems and users.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        24,
+        20
+      ]
+    },
+    {
+      "id": 33,
+      "name": "Help Desk Technician",
+      "aliases": [
+        "Help Desk Analyst",
+        "Service Desk Analyst",
+        "IT Help Desk"
+      ],
+      "description": "First point of contact for IT issues and user support requests.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        24
+      ]
+    },
+    {
+      "id": 34,
+      "name": "IT Operations Engineer",
+      "aliases": [
+        "IT Ops Engineer",
+        "Operations Engineer"
+      ],
+      "description": "Monitors and maintains day-to-day IT operations and system health.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": 35,
+      "name": "Technical Support Engineer",
+      "aliases": [
+        "Support Engineer",
+        "Customer Support Engineer",
+        "L2 Support Engineer"
+      ],
+      "description": "Provides advanced technical support for products or services.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        24
+      ]
+    },
+    {
+      "id": 36,
+      "name": "Network Engineer",
+      "aliases": [
+        "Network Infrastructure Engineer",
+        "Networking Engineer",
+        "Kỹ sư mạng"
+      ],
+      "description": "Designs, implements, and manages computer networks.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        17
+      ]
+    },
+    {
+      "id": 37,
+      "name": "Network Administrator",
+      "aliases": [
+        "Network Admin",
+        "LAN Administrator",
+        "Quản trị mạng",
+        "Quản trị viên mạng"
+      ],
+      "description": "Administers and maintains network infrastructure.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        17
+      ]
+    },
+    {
+      "id": 38,
+      "name": "Network Architect",
+      "aliases": [
+        "Network Solutions Architect",
+        "Network Design Engineer"
+      ],
+      "description": "Designs enterprise network architecture and topology.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        17
+      ]
+    },
+    {
+      "id": 39,
+      "name": "Database Administrator",
+      "aliases": [
+        "DBA",
+        "DB Admin",
+        "Database Manager",
+        "Quản trị cơ sở dữ liệu",
+        "Quản trị viên cơ sở dữ liệu"
+      ],
+      "description": "Manages, optimises, and secures database systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        7
+      ]
+    },
+    {
+      "id": 40,
+      "name": "Database Developer",
+      "aliases": [
+        "DB Developer",
+        "SQL Developer",
+        "Database Programmer"
+      ],
+      "description": "Designs and develops database schemas, queries, and stored procedures.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        7
+      ]
+    },
+    {
+      "id": 41,
+      "name": "Database Architect",
+      "aliases": [
+        "Database Design Architect",
+        "DB Architect"
+      ],
+      "description": "Designs enterprise database architecture and data models.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        7
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Data Engineer",
+      "aliases": [
+        "Big Data Engineer",
+        "Data Platform Engineer",
+        "Data Infrastructure Engineer",
+        "Kỹ sư dữ liệu"
+      ],
+      "description": "Builds and maintains data pipelines, warehouses, and processing systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        8,
+        7
+      ]
+    },
+    {
+      "id": 43,
+      "name": "Analytics Engineer",
+      "aliases": [
+        "Analytical Engineer"
+      ],
+      "description": "Bridges data engineering and analytics by building clean, tested data models.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        8,
+        9
+      ]
+    },
+    {
+      "id": 44,
+      "name": "Data Architect",
+      "aliases": [
+        "Enterprise Data Architect",
+        "Data Solutions Architect"
+      ],
+      "description": "Designs organisation-wide data architecture and governance strategies.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        8,
+        7
+      ]
+    },
+    {
+      "id": 45,
+      "name": "ETL Developer",
+      "aliases": [
+        "ETL Engineer",
+        "Data Integration Developer",
+        "ELT Developer"
+      ],
+      "description": "Builds extract, transform, and load processes for data integration.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        8
+      ]
+    },
+    {
+      "id": 46,
+      "name": "Data Warehouse Engineer",
+      "aliases": [
+        "DWH Engineer",
+        "Data Warehouse Developer"
+      ],
+      "description": "Designs and maintains data warehouse systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        8,
+        7
+      ]
+    },
+    {
+      "id": 47,
+      "name": "Data Analyst",
+      "aliases": [
+        "Business Data Analyst",
+        "Reporting Analyst",
+        "Data Analytics Specialist",
+        "Chuyên viên phân tích dữ liệu",
+        "Nhà phân tích dữ liệu"
+      ],
+      "description": "Analyses data to extract insights and support business decisions.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 48,
+      "name": "BI Analyst",
+      "aliases": [
+        "Business Intelligence Analyst",
+        "BI Reporting Analyst"
+      ],
+      "description": "Creates reports, dashboards, and business intelligence deliverables.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 49,
+      "name": "BI Developer",
+      "aliases": [
+        "Business Intelligence Developer",
+        "BI Engineer",
+        "Business Intelligence Engineer"
+      ],
+      "description": "Develops and maintains BI platforms, dashboards, and data visualisations.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 50,
+      "name": "Data Scientist",
+      "aliases": [
+        "Applied Data Scientist",
+        "Data Science Specialist",
+        "Nhà khoa học dữ liệu"
+      ],
+      "description": "Applies statistical and computational methods to solve data problems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        10,
+        12
+      ]
+    },
+    {
+      "id": 51,
+      "name": "Research Data Scientist",
+      "aliases": [
+        "Research Scientist",
+        "Applied Research Scientist"
+      ],
+      "description": "Conducts research using data science methods, often in an academic or R&D context.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        10
+      ]
+    },
+    {
+      "id": 52,
+      "name": "Quantitative Analyst",
+      "aliases": [
+        "Quant",
+        "Quantitative Developer",
+        "Quant Developer"
+      ],
+      "description": "Applies mathematical and statistical models, often in finance.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        10
+      ]
+    },
+    {
+      "id": 53,
+      "name": "Machine Learning Engineer",
+      "aliases": [
+        "ML Engineer",
+        "Applied ML Engineer",
+        "Machine Learning Developer",
+        "ML Developer",
+        "Kỹ sư học máy",
+        "Kỹ sư machine learning"
+      ],
+      "description": "Builds and deploys machine learning models in production systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        12,
+        1
+      ]
+    },
+    {
+      "id": 54,
+      "name": "AI Engineer",
+      "aliases": [
+        "Artificial Intelligence Engineer",
+        "Applied AI Engineer",
+        "AI Developer",
+        "Kỹ sư AI",
+        "Kỹ sư trí tuệ nhân tạo"
+      ],
+      "description": "Develops AI-powered features and integrates AI models into applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        1
+      ]
+    },
+    {
+      "id": 55,
+      "name": "NLP Engineer",
+      "aliases": [
+        "Natural Language Processing Engineer",
+        "Computational Linguist"
+      ],
+      "description": "Builds systems that process and understand human language.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        14,
+        12
+      ]
+    },
+    {
+      "id": 56,
+      "name": "Computer Vision Engineer",
+      "aliases": [
+        "CV Engineer",
+        "Image Processing Engineer"
+      ],
+      "description": "Develops systems that interpret and process visual data.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        15,
+        12
+      ]
+    },
+    {
+      "id": 57,
+      "name": "Deep Learning Engineer",
+      "aliases": [
+        "DL Engineer",
+        "Neural Network Engineer"
+      ],
+      "description": "Designs and trains deep neural network models.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        13,
+        12
+      ]
+    },
+    {
+      "id": 58,
+      "name": "AI Research Scientist",
+      "aliases": [
+        "ML Research Scientist",
+        "AI Researcher"
+      ],
+      "description": "Conducts original research in artificial intelligence and machine learning.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        12
+      ]
+    },
+    {
+      "id": 59,
+      "name": "MLOps Engineer",
+      "aliases": [
+        "ML Operations Engineer",
+        "Machine Learning Operations Engineer"
+      ],
+      "description": "Manages ML model deployment, monitoring, and lifecycle in production.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        12,
+        19
+      ]
+    },
+    {
+      "id": 60,
+      "name": "ML Platform Engineer",
+      "aliases": [
+        "Machine Learning Platform Engineer",
+        "AI Platform Engineer"
+      ],
+      "description": "Builds and maintains the platforms and tools used by ML teams.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        12,
+        19
+      ]
+    },
+    {
+      "id": 61,
+      "name": "Cybersecurity Analyst",
+      "aliases": [
+        "Security Analyst",
+        "Information Security Analyst",
+        "Cyber Analyst",
+        "InfoSec Analyst",
+        "Chuyên viên an ninh mạng",
+        "Chuyên viên an toàn thông tin"
+      ],
+      "description": "Monitors, detects, and responds to security threats and incidents.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 62,
+      "name": "Security Engineer",
+      "aliases": [
+        "Information Security Engineer",
+        "Security Infrastructure Engineer",
+        "Kỹ sư bảo mật",
+        "Kỹ sư an ninh mạng"
+      ],
+      "description": "Designs and implements security controls and infrastructure.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 63,
+      "name": "SOC Analyst",
+      "aliases": [
+        "Security Operations Center Analyst",
+        "Security Operations Analyst"
+      ],
+      "description": "Monitors security events and investigates alerts in a SOC environment.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 64,
+      "name": "Security Architect",
+      "aliases": [
+        "Information Security Architect",
+        "Cybersecurity Architect"
+      ],
+      "description": "Designs enterprise security architecture and strategies.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 65,
+      "name": "Cloud Security Engineer",
+      "aliases": [
+        "Cloud SecOps Engineer"
+      ],
+      "description": "Secures cloud infrastructure and services.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16,
+        18
+      ]
+    },
+    {
+      "id": 66,
+      "name": "Application Security Engineer",
+      "aliases": [
+        "AppSec Engineer",
+        "Product Security Engineer"
+      ],
+      "description": "Identifies and mitigates security vulnerabilities in software applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16,
+        1
+      ]
+    },
+    {
+      "id": 67,
+      "name": "Penetration Tester",
+      "aliases": [
+        "Pen Tester",
+        "Ethical Hacker",
+        "Offensive Security Specialist",
+        "Pentester",
+        "Pentest Engineer",
+        "Chuyên gia kiểm thử xâm nhập"
+      ],
+      "description": "Tests systems for security vulnerabilities through simulated attacks.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 68,
+      "name": "Red Team Specialist",
+      "aliases": [
+        "Red Teamer",
+        "Adversary Simulation Specialist"
+      ],
+      "description": "Simulates advanced persistent threats to test organisational defences.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 69,
+      "name": "Vulnerability Analyst",
+      "aliases": [
+        "Vulnerability Assessment Analyst",
+        "Vulnerability Management Analyst"
+      ],
+      "description": "Identifies, classifies, and prioritises security vulnerabilities.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 70,
+      "name": "Incident Response Analyst",
+      "aliases": [
+        "IR Analyst",
+        "Incident Handler",
+        "CSIRT Analyst"
+      ],
+      "description": "Responds to and manages cybersecurity incidents.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 71,
+      "name": "Digital Forensics Analyst",
+      "aliases": [
+        "Computer Forensics Analyst",
+        "Forensic Investigator"
+      ],
+      "description": "Investigates digital evidence from security incidents or crimes.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 72,
+      "name": "IT Project Manager",
+      "aliases": [
+        "Technical Project Manager",
+        "Software Project Manager",
+        "Quản lý dự án IT",
+        "Quản lý dự án phần mềm"
+      ],
+      "description": "Manages technology projects from planning through delivery.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27
+      ]
+    },
+    {
+      "id": 73,
+      "name": "IT Manager",
+      "aliases": [
+        "Information Technology Manager"
+      ],
+      "description": "Manages IT teams, budgets, and operational delivery.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27,
+        24
+      ]
+    },
+    {
+      "id": 74,
+      "name": "Engineering Manager",
+      "aliases": [
+        "Software Engineering Manager",
+        "Development Manager"
+      ],
+      "description": "Manages a software engineering team, balancing technical and people leadership.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        27
+      ]
+    },
+    {
+      "id": 75,
+      "name": "Scrum Master",
+      "aliases": [
+        "Agile Scrum Master",
+        "Certified Scrum Master"
+      ],
+      "description": "Facilitates Agile/Scrum processes for a development team.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27
+      ]
+    },
+    {
+      "id": 76,
+      "name": "Product Owner",
+      "aliases": [
+        "PO",
+        "Agile Product Owner"
+      ],
+      "description": "Defines product vision and prioritises the development backlog.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27
+      ]
+    },
+    {
+      "id": 77,
+      "name": "Business Analyst",
+      "aliases": [
+        "BA",
+        "IT Business Analyst",
+        "Chuyên viên phân tích nghiệp vụ",
+        "Phân tích nghiệp vụ"
+      ],
+      "description": "Analyses business requirements and translates them into technical specifications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27
+      ]
+    },
+    {
+      "id": 78,
+      "name": "Systems Analyst",
+      "aliases": [
+        "IT Systems Analyst",
+        "Application Analyst"
+      ],
+      "description": "Analyses and designs IT systems to meet business needs.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 79,
+      "name": "Technical Business Analyst",
+      "aliases": [
+        "Technical BA"
+      ],
+      "description": "Bridges business and technical teams with deep understanding of both domains.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        27
+      ]
+    },
+    {
+      "id": 80,
+      "name": "Product Manager",
+      "aliases": [
+        "PM",
+        "Technical Product Manager",
+        "Quản lý sản phẩm"
+      ],
+      "description": "Defines product strategy, roadmap, and feature priorities.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27,
+        22
+      ]
+    },
+    {
+      "id": 81,
+      "name": "UX Designer",
+      "aliases": [
+        "User Experience Designer",
+        "UX/UI Designer",
+        "UI/UX Designer",
+        "Thiết kế UX",
+        "Nhà thiết kế trải nghiệm người dùng"
+      ],
+      "description": "Designs user experiences through research, wireframes, and prototyping.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        22
+      ]
+    },
+    {
+      "id": 82,
+      "name": "UI Designer",
+      "aliases": [
+        "User Interface Designer",
+        "Visual Designer",
+        "Thiết kế giao diện",
+        "Nhà thiết kế giao diện"
+      ],
+      "description": "Designs the visual appearance and interactive elements of digital products.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        22
+      ]
+    },
+    {
+      "id": 83,
+      "name": "Product Designer",
+      "aliases": [
+        "Digital Product Designer"
+      ],
+      "description": "Designs end-to-end product experiences combining UX and UI.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        22
+      ]
+    },
+    {
+      "id": 84,
+      "name": "UX Researcher",
+      "aliases": [
+        "User Researcher",
+        "Design Researcher"
+      ],
+      "description": "Conducts user research to inform product and design decisions.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        22
+      ]
+    },
+    {
+      "id": 85,
+      "name": "ERP Consultant",
+      "aliases": [
+        "ERP Specialist",
+        "ERP Implementation Consultant"
+      ],
+      "description": "Implements and configures enterprise resource planning systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        23
+      ]
+    },
+    {
+      "id": 86,
+      "name": "SAP Consultant",
+      "aliases": [
+        "SAP Developer",
+        "SAP Specialist",
+        "SAP Functional Consultant"
+      ],
+      "description": "Implements, configures, and customises SAP enterprise solutions.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        23
+      ]
+    },
+    {
+      "id": 87,
+      "name": "Salesforce Developer",
+      "aliases": [
+        "SFDC Developer",
+        "Salesforce Engineer"
+      ],
+      "description": "Develops and customises applications on the Salesforce platform.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        23
+      ]
+    },
+    {
+      "id": 88,
+      "name": "Technical Writer",
+      "aliases": [
+        "Documentation Specialist",
+        "Technical Author",
+        "Người viết tài liệu kỹ thuật"
+      ],
+      "description": "Creates technical documentation, guides, and reference material.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 89,
+      "name": "Documentation Engineer",
+      "aliases": [
+        "Docs Engineer",
+        "Developer Documentation Writer"
+      ],
+      "description": "Builds documentation systems and writes developer-focused documentation.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 90,
+      "name": "IT Consultant",
+      "aliases": [
+        "Technology Consultant",
+        "IT Advisory Consultant"
+      ],
+      "description": "Advises organisations on technology strategy, implementation, and optimisation.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        24
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Digital Transformation Consultant",
+      "aliases": [
+        "DX Consultant",
+        "Transformation Consultant"
+      ],
+      "description": "Guides organisations through digital transformation initiatives.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        24,
+        27
+      ]
+    },
+    {
+      "id": 92,
+      "name": "Blockchain Developer",
+      "aliases": [
+        "Smart Contract Developer",
+        "Web3 Developer",
+        "DApp Developer",
+        "Crypto Developer",
+        "Lập trình viên blockchain"
+      ],
+      "description": "Develops decentralised applications and smart contracts.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        25,
+        1
+      ]
+    },
+    {
+      "id": 93,
+      "name": "Robotics Engineer",
+      "aliases": [
+        "Robotics Software Engineer",
+        "Autonomous Systems Engineer"
+      ],
+      "description": "Designs and programmes robotic and autonomous systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        26,
+        5
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Chief Technology Officer",
+      "aliases": [
+        "CTO"
+      ],
+      "description": "Executive responsible for technology vision and strategy.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 95,
+      "name": "Chief Information Officer",
+      "aliases": [
+        "CIO"
+      ],
+      "description": "Executive responsible for IT operations and information management.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        24
+      ]
+    },
+    {
+      "id": 96,
+      "name": "Chief Information Security Officer",
+      "aliases": [
+        "CISO"
+      ],
+      "description": "Executive responsible for information security strategy and governance.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 97,
+      "name": "IT Director",
+      "aliases": [
+        "Director of IT",
+        "Director of Engineering",
+        "VP Engineering"
+      ],
+      "description": "Senior leader overseeing IT or engineering departments.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27
+      ]
+    },
+    {
+      "id": 98,
+      "name": "React Developer",
+      "aliases": [
+        "ReactJS Developer",
+        "React.js Developer",
+        "React Engineer"
+      ],
+      "description": "Builds web user interfaces with React and its ecosystem.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2
+      ]
+    },
+    {
+      "id": 99,
+      "name": "Angular Developer",
+      "aliases": [
+        "AngularJS Developer",
+        "Angular Engineer"
+      ],
+      "description": "Builds web applications with the Angular framework.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2
+      ]
+    },
+    {
+      "id": 100,
+      "name": "Node.js Developer",
+      "aliases": [
+        "NodeJS Developer",
+        "Node Developer",
+        "Node.js Engineer"
+      ],
+      "description": "Builds server-side applications and APIs with Node.js.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": 101,
+      "name": "Python Developer",
+      "aliases": [
+        "Python Engineer",
+        "Python Programmer",
+        "Django Developer"
+      ],
+      "description": "Builds applications and services primarily in Python.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Java Developer",
+      "aliases": [
+        "Java Engineer",
+        "Java Programmer",
+        "Spring Boot Developer"
+      ],
+      "description": "Builds applications and services primarily in Java.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": 103,
+      "name": ".NET Developer",
+      "aliases": [
+        "C# Developer",
+        "ASP.NET Developer",
+        "Dot Net Developer",
+        ".NET Engineer"
+      ],
+      "description": "Builds applications with C# and the .NET platform.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": 104,
+      "name": "PHP Developer",
+      "aliases": [
+        "PHP Programmer",
+        "Laravel Developer"
+      ],
+      "description": "Builds web applications with PHP.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Ruby on Rails Developer",
+      "aliases": [
+        "Rails Developer",
+        "Ruby Developer",
+        "RoR Developer"
+      ],
+      "description": "Builds web applications with Ruby and Rails.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Go Developer",
+      "aliases": [
+        "Golang Developer",
+        "Go Engineer",
+        "Golang Engineer"
+      ],
+      "description": "Builds backend services and tools in Go.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Rust Developer",
+      "aliases": [
+        "Rust Engineer",
+        "Rust Programmer"
+      ],
+      "description": "Builds performance- and safety-critical software in Rust.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": 108,
+      "name": "C++ Developer",
+      "aliases": [
+        "C++ Engineer",
+        "C++ Programmer",
+        "CPP Developer"
+      ],
+      "description": "Builds performance-critical software in C++.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        6
+      ]
+    },
+    {
+      "id": 109,
+      "name": "JavaScript Developer",
+      "aliases": [
+        "JS Developer",
+        "JavaScript Engineer"
+      ],
+      "description": "Builds applications with JavaScript and TypeScript.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2,
+        6
+      ]
+    },
+    {
+      "id": 110,
+      "name": "WordPress Developer",
+      "aliases": [
+        "WordPress Engineer",
+        "WP Developer"
+      ],
+      "description": "Builds and customizes websites on WordPress.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2
+      ]
+    },
+    {
+      "id": 111,
+      "name": "Web Designer",
+      "aliases": [
+        "Website Designer",
+        "Web UI Designer"
+      ],
+      "description": "Designs the visual layout and experience of websites.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        2,
+        22
+      ]
+    },
+    {
+      "id": 112,
+      "name": "Unity Developer",
+      "aliases": [
+        "Unity Engineer",
+        "Unity Game Developer",
+        "Unity3D Developer"
+      ],
+      "description": "Builds games and interactive applications with Unity.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4
+      ]
+    },
+    {
+      "id": 113,
+      "name": "Unreal Engine Developer",
+      "aliases": [
+        "Unreal Developer",
+        "UE Developer",
+        "Unreal Engine Programmer"
+      ],
+      "description": "Builds games and real-time 3D applications with Unreal Engine.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4
+      ]
+    },
+    {
+      "id": 114,
+      "name": "AR/VR Developer",
+      "aliases": [
+        "XR Developer",
+        "VR Developer",
+        "AR Developer",
+        "Extended Reality Developer"
+      ],
+      "description": "Builds augmented and virtual reality applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4
+      ]
+    },
+    {
+      "id": 115,
+      "name": "Game Designer",
+      "aliases": [
+        "Level Designer",
+        "Video Game Designer"
+      ],
+      "description": "Designs game mechanics, levels and player experience.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4
+      ]
+    },
+    {
+      "id": 116,
+      "name": "AWS Cloud Engineer",
+      "aliases": [
+        "AWS Engineer",
+        "Amazon Web Services Engineer",
+        "AWS Developer"
+      ],
+      "description": "Builds and operates infrastructure on Amazon Web Services.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        18
+      ]
+    },
+    {
+      "id": 117,
+      "name": "Azure Cloud Engineer",
+      "aliases": [
+        "Azure Engineer",
+        "Microsoft Azure Engineer",
+        "Azure Administrator"
+      ],
+      "description": "Builds and operates infrastructure on Microsoft Azure.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        18
+      ]
+    },
+    {
+      "id": 118,
+      "name": "Google Cloud Engineer",
+      "aliases": [
+        "GCP Engineer",
+        "Google Cloud Platform Engineer",
+        "GCP Cloud Engineer"
+      ],
+      "description": "Builds and operates infrastructure on Google Cloud.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        18
+      ]
+    },
+    {
+      "id": 119,
+      "name": "Kubernetes Administrator",
+      "aliases": [
+        "Kubernetes Engineer",
+        "K8s Administrator",
+        "K8s Engineer"
+      ],
+      "description": "Operates and secures Kubernetes clusters.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19,
+        18
+      ]
+    },
+    {
+      "id": 120,
+      "name": "DevSecOps Engineer",
+      "aliases": [
+        "DevSecOps Specialist",
+        "Security DevOps Engineer"
+      ],
+      "description": "Integrates security into CI/CD and infrastructure workflows.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        19,
+        16
+      ]
+    },
+    {
+      "id": 121,
+      "name": "Cloud Network Engineer",
+      "aliases": [
+        "Cloud Networking Engineer"
+      ],
+      "description": "Designs and operates networks in cloud environments.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        17,
+        18
+      ]
+    },
+    {
+      "id": 122,
+      "name": "Network Security Engineer",
+      "aliases": [
+        "Network Security Specialist",
+        "Firewall Engineer"
+      ],
+      "description": "Protects networks with firewalls, IDS and secure architecture.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        17,
+        16
+      ]
+    },
+    {
+      "id": 123,
+      "name": "Cloud Data Engineer",
+      "aliases": [
+        "Azure Data Engineer",
+        "AWS Data Engineer",
+        "GCP Data Engineer"
+      ],
+      "description": "Builds data pipelines on cloud data platforms.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        8,
+        18
+      ]
+    },
+    {
+      "id": 124,
+      "name": "Data Visualization Specialist",
+      "aliases": [
+        "Data Visualization Engineer",
+        "Data Viz Specialist",
+        "Visualization Analyst"
+      ],
+      "description": "Turns data into clear charts, dashboards and stories.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 125,
+      "name": "Power BI Developer",
+      "aliases": [
+        "Power BI Analyst",
+        "Power BI Engineer"
+      ],
+      "description": "Builds data models and reports in Power BI.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 126,
+      "name": "Tableau Developer",
+      "aliases": [
+        "Tableau Analyst",
+        "Tableau Engineer"
+      ],
+      "description": "Builds dashboards and visual analytics in Tableau.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 127,
+      "name": "Generative AI Engineer",
+      "aliases": [
+        "GenAI Engineer",
+        "Generative AI Developer",
+        "GenAI Developer"
+      ],
+      "description": "Builds applications on generative AI models.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        13
+      ]
+    },
+    {
+      "id": 128,
+      "name": "LLM Engineer",
+      "aliases": [
+        "Large Language Model Engineer",
+        "LLM Developer",
+        "LLMOps Engineer"
+      ],
+      "description": "Adapts, fine-tunes and deploys large language models.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        14
+      ]
+    },
+    {
+      "id": 129,
+      "name": "Prompt Engineer",
+      "aliases": [
+        "AI Prompt Engineer",
+        "Prompt Designer"
+      ],
+      "description": "Designs prompts and evaluation for LLM-based systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11
+      ]
+    },
+    {
+      "id": 130,
+      "name": "Chatbot Developer",
+      "aliases": [
+        "Conversational AI Developer",
+        "Chatbot Engineer",
+        "Conversational AI Engineer"
+      ],
+      "description": "Builds chatbots and conversational assistants.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        14
+      ]
+    },
+    {
+      "id": 131,
+      "name": "AI Product Manager",
+      "aliases": [
+        "AI PM",
+        "Machine Learning Product Manager",
+        "ML Product Manager"
+      ],
+      "description": "Manages products built on AI and machine learning.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        27
+      ]
+    },
+    {
+      "id": 132,
+      "name": "Data Governance Analyst",
+      "aliases": [
+        "Data Governance Specialist",
+        "Data Steward",
+        "Data Quality Analyst"
+      ],
+      "description": "Defines and monitors data quality, privacy and governance.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        7
+      ]
+    },
+    {
+      "id": 133,
+      "name": "FPGA Engineer",
+      "aliases": [
+        "FPGA Developer",
+        "FPGA Design Engineer",
+        "Digital Design Engineer"
+      ],
+      "description": "Designs digital logic for FPGAs using HDLs.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        5
+      ]
+    },
+    {
+      "id": 134,
+      "name": "Malware Analyst",
+      "aliases": [
+        "Malware Researcher",
+        "Reverse Engineer (Malware)"
+      ],
+      "description": "Analyses malicious software to understand and stop threats.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 135,
+      "name": "Threat Intelligence Analyst",
+      "aliases": [
+        "Cyber Threat Intelligence Analyst",
+        "CTI Analyst",
+        "Threat Hunter"
+      ],
+      "description": "Collects and analyses threat intelligence and hunts threats.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 136,
+      "name": "GRC Analyst",
+      "aliases": [
+        "Security Compliance Analyst",
+        "IT Risk Analyst",
+        "Governance Risk and Compliance Analyst"
+      ],
+      "description": "Manages security governance, risk and compliance.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16
+      ]
+    },
+    {
+      "id": 137,
+      "name": "Salesforce Administrator",
+      "aliases": [
+        "Salesforce Admin",
+        "SFDC Administrator"
+      ],
+      "description": "Configures and maintains Salesforce for an organization.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        23
+      ]
+    },
+    {
+      "id": 138,
+      "name": "Power Platform Developer",
+      "aliases": [
+        "Power Apps Developer",
+        "Microsoft Power Platform Developer",
+        "Low-code Developer"
+      ],
+      "description": "Builds low-code apps and automations on Microsoft Power Platform.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        23
+      ]
+    },
+    {
+      "id": 139,
+      "name": "RPA Developer",
+      "aliases": [
+        "Robotic Process Automation Developer",
+        "Automation Developer",
+        "RPA Engineer"
+      ],
+      "description": "Automates business processes with RPA tools.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        23
+      ]
+    },
+    {
+      "id": 140,
+      "name": "Agile Coach",
+      "aliases": [
+        "Agile Transformation Coach",
+        "Enterprise Agile Coach"
+      ],
+      "description": "Coaches teams and organizations in agile ways of working.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        27
+      ]
+    },
+    {
+      "id": 141,
+      "name": "GIS Analyst",
+      "aliases": [
+        "GIS Specialist",
+        "GIS Developer",
+        "Geospatial Analyst"
+      ],
+      "description": "Analyses and visualizes geographic and spatial data.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        9
+      ]
+    },
+    {
+      "id": 142,
+      "name": "Computer Graphics Programmer",
+      "aliases": [
+        "Graphics Programmer",
+        "Graphics Engineer",
+        "Rendering Engineer"
+      ],
+      "description": "Implements rendering and graphics systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        4,
+        1
+      ]
+    },
+    {
+      "id": 143,
+      "name": "Systems Programmer",
+      "aliases": [
+        "Systems Software Engineer",
+        "Kernel Developer",
+        "Low-level Programmer"
+      ],
+      "description": "Builds operating-system-level and low-level software.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 144,
+      "name": "Mainframe Developer",
+      "aliases": [
+        "COBOL Developer",
+        "Mainframe Programmer",
+        "Mainframe Engineer"
+      ],
+      "description": "Develops and maintains mainframe applications.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1,
+        23
+      ]
+    },
+    {
+      "id": 145,
+      "name": "Quantum Computing Developer",
+      "aliases": [
+        "Quantum Software Engineer",
+        "Quantum Developer",
+        "Quantum Programmer"
+      ],
+      "description": "Writes and tests quantum algorithms on quantum SDKs.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        1
+      ]
+    },
+    {
+      "id": 146,
+      "name": "IT Auditor",
+      "aliases": [
+        "Information Systems Auditor",
+        "IT Audit Specialist"
+      ],
+      "description": "Audits IT controls, risks and compliance.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        16,
+        24
+      ]
+    },
+    {
+      "id": 147,
+      "name": "Embedded Linux Engineer",
+      "aliases": [
+        "Embedded Linux Developer",
+        "Linux Kernel Engineer"
+      ],
+      "description": "Builds and customizes Linux for embedded devices.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        5
+      ]
+    },
+    {
+      "id": 148,
+      "name": "Statistician",
+      "aliases": [
+        "Statistical Analyst",
+        "Biostatistician",
+        "Statistical Programmer"
+      ],
+      "description": "Designs studies and applies statistical methods to data.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        10
+      ]
+    },
+    {
+      "id": 149,
+      "name": "NOC Technician",
+      "aliases": [
+        "Network Operations Center Technician",
+        "NOC Engineer",
+        "NOC Analyst"
+      ],
+      "description": "Monitors networks and responds to incidents in a NOC.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        17,
+        24
+      ]
+    },
+    {
+      "id": 150,
+      "name": "Speech Recognition Engineer",
+      "aliases": [
+        "Speech Engineer",
+        "ASR Engineer",
+        "Voice AI Engineer"
+      ],
+      "description": "Builds speech recognition and voice systems.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        11,
+        13
+      ]
+    },
+    {
+      "id": 151,
+      "name": "Recommendation Systems Engineer",
+      "aliases": [
+        "Recommender Systems Engineer",
+        "Personalization Engineer"
+      ],
+      "description": "Builds recommendation and personalization models.",
+      "role_family_id": null,
+      "technical_domain_ids": [
+        12
+      ]
+    }
+  ]
+}

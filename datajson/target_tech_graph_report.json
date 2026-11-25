@@ -1,0 +1,6381 @@
+{
+  "distinct_technologies": 224,
+  "linked_in_graph": 223,
+  "unresolved": [
+    {
+      "name": "Chrome",
+      "count": 1
+    }
+  ],
+  "linked_but_outside_graph": [],
+  "technology_failures": 0,
+  "projects": {
+    "total": 131,
+    "ok": 130,
+    "no_linked_target": 1,
+    "fail": 0
+  },
+  "technologies": [
+    {
+      "name": "Python",
+      "skill_id": 2787,
+      "skill": "Python",
+      "count": 21,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Python"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "React",
+      "skill_id": 363,
+      "skill": "React",
+      "count": 17,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "React"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "PostgreSQL",
+      "skill_id": 3432,
+      "skill": "PostgreSQL",
+      "count": 14,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "PostgreSQL"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Go",
+      "skill_id": 2097,
+      "skill": "Golang Fundamentals",
+      "count": 11,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Golang Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Flutter",
+      "skill_id": 5930,
+      "skill": "Flutter",
+      "count": 10,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "Dart",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "Flutter"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Next.js",
+      "skill_id": 5896,
+      "skill": "Next.js",
+      "count": 10,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "React",
+        "Next.js"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Firebase",
+      "skill_id": 4064,
+      "skill": "Firebase",
+      "count": 9,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "JavaScript",
+        "NoSQL",
+        "Firebase"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kubernetes",
+      "skill_id": 193,
+      "skill": "Kubernetes",
+      "count": 8,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Linux",
+        "Linux command line",
+        "Docker",
+        "Kubernetes"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kafka",
+      "skill_id": 3451,
+      "skill": "Kafka",
+      "count": 8,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Data Streaming",
+        "Kafka"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Django",
+      "skill_id": 771,
+      "skill": "Django (Web Framework)",
+      "count": 8,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Python",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Django (Web Framework)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "AWS",
+      "skill_id": 1053,
+      "skill": "AWS",
+      "count": 8,
+      "nodes": 5,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "AWS"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Supabase",
+      "skill_id": 5943,
+      "skill": "Supabase",
+      "count": 7,
+      "nodes": 6,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "PostgreSQL",
+        "Supabase"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "FastAPI",
+      "skill_id": 5944,
+      "skill": "FastAPI",
+      "count": 7,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Python",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "FastAPI"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "dbt",
+      "skill_id": 5978,
+      "skill": "dbt (Data Build Tool)",
+      "count": 7,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Advanced SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Data Warehousing",
+        "dbt (Data Build Tool)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Azure",
+      "skill_id": 831,
+      "skill": "Azure",
+      "count": 7,
+      "nodes": 5,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Azure"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Node.js",
+      "skill_id": 1141,
+      "skill": "Node.js",
+      "count": 6,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Node.js"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Stripe",
+      "skill_id": 5951,
+      "skill": "Stripe",
+      "count": 6,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Stripe"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Redis",
+      "skill_id": 5946,
+      "skill": "Redis",
+      "count": 6,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "Redis"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "TypeScript",
+      "skill_id": 4582,
+      "skill": "Typescript",
+      "count": 5,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Typescript"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kotlin",
+      "skill_id": 3573,
+      "skill": "Kotlin",
+      "count": 5,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Kotlin"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "WordPress",
+      "skill_id": 3518,
+      "skill": "Wordpress",
+      "count": 4,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Wordpress"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "JavaScript",
+      "skill_id": 4,
+      "skill": "JavaScript",
+      "count": 4,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "JavaScript"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "React Native",
+      "skill_id": 1887,
+      "skill": "React Native",
+      "count": 4,
+      "nodes": 12,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "Object-Oriented Programming",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Mobile App Development",
+        "Web Development",
+        "React",
+        "React Native"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Laravel",
+      "skill_id": 2752,
+      "skill": "Laravel",
+      "count": 4,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "CSS",
+        "Hypertext Preprocessor (PHP)",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Laravel"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Airflow",
+      "skill_id": 1630,
+      "skill": "Apache Airflow",
+      "count": 4,
+      "nodes": 12,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Pipelines",
+        "Apache Airflow"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "NestJS",
+      "skill_id": 5945,
+      "skill": "NestJS",
+      "count": 4,
+      "nodes": 5,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Node.js",
+        "Typescript",
+        "NestJS"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Rust",
+      "skill_id": 1625,
+      "skill": "Rust (Programming Language)",
+      "count": 4,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Rust (Programming Language)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Spring Boot",
+      "skill_id": 2139,
+      "skill": "Spring Boot",
+      "count": 4,
+      "nodes": 11,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Java",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Web Development",
+        "Java Spring Framework",
+        "Spring Boot"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Selenium",
+      "skill_id": 2234,
+      "skill": "Selenium (Software)",
+      "count": 3,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Software Development Lifecycle (SDLC)",
+        "Software Testing",
+        "Test Automation",
+        "Selenium (Software)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "PyTorch",
+      "skill_id": 1644,
+      "skill": "PyTorch",
+      "count": 3,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "PyTorch"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Spark",
+      "skill_id": 1761,
+      "skill": "Spark",
+      "count": 3,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Spark"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "FinOps",
+      "skill_id": 5995,
+      "skill": "FinOps",
+      "count": 3,
+      "nodes": 5,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "FinOps"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Playwright",
+      "skill_id": 5916,
+      "skill": "Playwright",
+      "count": 3,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "JavaScript",
+        "Software Development Lifecycle (SDLC)",
+        "Software Testing",
+        "Test Automation",
+        "Playwright"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "OpenAI API",
+      "skill_id": 2914,
+      "skill": "Open AI API",
+      "count": 3,
+      "nodes": 16,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "Calculus",
+        "Computer Network",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Machine Learning",
+        "Neural Networks",
+        "REST APIs",
+        "Deep Learning",
+        "Transformer Architecture",
+        "Large Language Models",
+        "Open AI API"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Backstage",
+      "skill_id": 6001,
+      "skill": "Backstage",
+      "count": 3,
+      "nodes": 12,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "JavaScript",
+        "Operating Systems",
+        "Software Development Lifecycle (SDLC)",
+        "Version Control Systems",
+        "Git (Version Control System)",
+        "Linux",
+        "Typescript",
+        "CI/CD",
+        "DevOps",
+        "Backstage"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Swift",
+      "skill_id": 686,
+      "skill": "Swift Programming",
+      "count": 3,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Swift Programming"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "LangChain",
+      "skill_id": 1438,
+      "skill": "LangChain",
+      "count": 3,
+      "nodes": 12,
+      "max_depth": 7,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "Transformer Architecture",
+        "Large Language Models",
+        "LangChain"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Wix",
+      "skill_id": 5905,
+      "skill": "Wix",
+      "count": 3,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Wix"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kotlin Multiplatform",
+      "skill_id": 5928,
+      "skill": "Kotlin Multiplatform",
+      "count": 3,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "Kotlin",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "Kotlin Multiplatform"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Slack",
+      "skill_id": 5955,
+      "skill": "Slack API",
+      "count": 3,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Slack API"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "LLM",
+      "skill_id": 262,
+      "skill": "Large Language Models",
+      "count": 3,
+      "nodes": 11,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "Transformer Architecture",
+        "Large Language Models"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Terraform",
+      "skill_id": 2937,
+      "skill": "Terraform",
+      "count": 3,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Infrastructure as Code (IaC)",
+        "Terraform"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Java",
+      "skill_id": 199,
+      "skill": "Java",
+      "count": 2,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Java"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Room",
+      "skill_id": 5938,
+      "skill": "Room (Android)",
+      "count": 2,
+      "nodes": 11,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Kotlin",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "Relational Database Management System (RDBMS)",
+        "Android Development",
+        "SQL",
+        "Sqlite",
+        "Room (Android)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Nuxt",
+      "skill_id": 5895,
+      "skill": "Nuxt.js",
+      "count": 2,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Vue.js",
+        "Nuxt.js"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "SQL",
+      "skill_id": 305,
+      "skill": "SQL",
+      "count": 2,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "SQL"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Flink",
+      "skill_id": 5984,
+      "skill": "Apache Flink",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Data Streaming",
+        "Apache Flink"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "microservices",
+      "skill_id": 798,
+      "skill": "Microservices",
+      "count": 2,
+      "nodes": 12,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Software Engineering",
+        "REST APIs",
+        "Software Design",
+        "Software Architecture",
+        "Microservices"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "scikit-learn",
+      "skill_id": 1350,
+      "skill": "Scikit-Learn",
+      "count": 2,
+      "nodes": 8,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "NumPy",
+        "Scikit-Learn"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Apex",
+      "skill_id": 6032,
+      "skill": "Apex (Salesforce)",
+      "count": 2,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Customer Relationship Management (CRM)",
+        "Object-Oriented Programming",
+        "Salesforce",
+        "Apex (Salesforce)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Shopify",
+      "skill_id": 5902,
+      "skill": "Shopify",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Shopify"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Vue",
+      "skill_id": 5894,
+      "skill": "Vue.js",
+      "count": 2,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Vue.js"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Combine",
+      "skill_id": 5933,
+      "skill": "Combine Framework",
+      "count": 2,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "Swift Programming",
+        "Combine Framework"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Scrapy",
+      "skill_id": 5967,
+      "skill": "Scrapy",
+      "count": 2,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "HTML",
+        "Python",
+        "Web Scraping",
+        "Scrapy"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Flask",
+      "skill_id": 773,
+      "skill": "Flask",
+      "count": 2,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Python",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Flask"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Solidity",
+      "skill_id": 919,
+      "skill": "Solidity",
+      "count": 2,
+      "nodes": 11,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "Computer Network",
+        "Discrete Mathematics",
+        "Operating Systems",
+        "Cybersecurity Fundamentals",
+        "Cryptography",
+        "Blockchain",
+        "Ethereum",
+        "Solidity"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "GCP",
+      "skill_id": 316,
+      "skill": "Google Cloud Platform",
+      "count": 2,
+      "nodes": 5,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Google Cloud Platform"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "RAG",
+      "skill_id": 704,
+      "skill": "Retrieval Augmented Generation",
+      "count": 2,
+      "nodes": 16,
+      "max_depth": 7,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "Calculus",
+        "Database (DBMS)",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "NoSQL",
+        "Neural Networks",
+        "Vector Database",
+        "Deep Learning",
+        "Transformer Architecture",
+        "Large Language Models",
+        "Retrieval Augmented Generation"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Metabase",
+      "skill_id": 5987,
+      "skill": "Metabase",
+      "count": 2,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Mathematics",
+        "Database (DBMS)",
+        "Statistics",
+        "Descriptive Statistics",
+        "Relational Database Management System (RDBMS)",
+        "Data Analysis",
+        "SQL",
+        "Data Visualization",
+        "Metabase"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "WooCommerce",
+      "skill_id": 5904,
+      "skill": "WooCommerce",
+      "count": 2,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Wordpress",
+        "WooCommerce"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "TensorFlow Lite",
+      "skill_id": 4379,
+      "skill": "TensorFlow Lite",
+      "count": 2,
+      "nodes": 13,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Object-Oriented Programming",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "Mobile App Development",
+        "Neural Networks",
+        "Deep Learning",
+        "TensorFlow",
+        "TensorFlow Lite"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Android",
+      "skill_id": 999,
+      "skill": "Android",
+      "count": 2,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "Kotlin",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "Android"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "MLflow",
+      "skill_id": 5971,
+      "skill": "MLflow",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "MLflow"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "SvelteKit",
+      "skill_id": 5898,
+      "skill": "SvelteKit",
+      "count": 2,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Svelte",
+        "SvelteKit"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "OpenCV",
+      "skill_id": 4206,
+      "skill": "OpenCV",
+      "count": 2,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Linear Algebra",
+        "Python",
+        "Image Processing",
+        "OpenCV"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Grafana",
+      "skill_id": 6005,
+      "skill": "Grafana",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Observability",
+        "Grafana"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "vector database",
+      "skill_id": 4604,
+      "skill": "Vector Database",
+      "count": 2,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "Vector Database"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Databricks",
+      "skill_id": 2163,
+      "skill": "Databricks",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Apache Spark",
+        "Databricks"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Squarespace",
+      "skill_id": 5906,
+      "skill": "Squarespace",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Squarespace"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "OAuth 2.0",
+      "skill_id": 2102,
+      "skill": "Oauth",
+      "count": 2,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Oauth"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Streamlit",
+      "skill_id": 1437,
+      "skill": "Streamlit",
+      "count": 2,
+      "nodes": 8,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Python",
+        "Statistics",
+        "Descriptive Statistics",
+        "Data Analysis",
+        "Data Visualization",
+        "Streamlit"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Docker",
+      "skill_id": 192,
+      "skill": "Docker",
+      "count": 2,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Operating Systems",
+        "Linux",
+        "Linux command line",
+        "Docker"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Prometheus",
+      "skill_id": 6004,
+      "skill": "Prometheus",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Observability",
+        "Prometheus"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Livewire",
+      "skill_id": 5901,
+      "skill": "Livewire",
+      "count": 2,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "CSS",
+        "Hypertext Preprocessor (PHP)",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Laravel",
+        "Livewire"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Cloudinary",
+      "skill_id": 5910,
+      "skill": "Cloudinary",
+      "count": 2,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Cloudinary"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "HTMX",
+      "skill_id": 5900,
+      "skill": "HTMX",
+      "count": 2,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Hypertext Transfer Protocol (HTTP)",
+        "HTMX"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Glide",
+      "skill_id": 5961,
+      "skill": "Glide (No-Code)",
+      "count": 2,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "IT Fundamentals",
+        "Microsoft Excel",
+        "Glide (No-Code)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "golang",
+      "skill_id": 2097,
+      "skill": "Golang Fundamentals",
+      "count": 1,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Golang Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Agile",
+      "skill_id": 3964,
+      "skill": "Agile",
+      "count": 1,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "IT Fundamentals",
+        "Software Development Lifecycle (SDLC)",
+        "Agile"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Apache Airflow",
+      "skill_id": 1630,
+      "skill": "Apache Airflow",
+      "count": 1,
+      "nodes": 12,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Pipelines",
+        "Apache Airflow"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Istio",
+      "skill_id": 5999,
+      "skill": "Istio",
+      "count": 1,
+      "nodes": 18,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Object-Oriented Programming",
+        "Operating Systems",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Linux",
+        "Software Engineering",
+        "Linux command line",
+        "REST APIs",
+        "Software Design",
+        "Docker",
+        "Software Architecture",
+        "Kubernetes",
+        "Microservices Architecture",
+        "Istio"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Unity",
+      "skill_id": 537,
+      "skill": "Unity",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C#",
+        "Game Design",
+        "Object-Oriented Programming",
+        "Game Programming",
+        "Unity"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "websockets",
+      "skill_id": 5921,
+      "skill": "WebSockets",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "JavaScript",
+        "Hypertext Transfer Protocol (HTTP)",
+        "WebSockets"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "redis pubsub",
+      "skill_id": 5946,
+      "skill": "Redis",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "Redis"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Vitest",
+      "skill_id": 5914,
+      "skill": "Vitest",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Unit Testing",
+        "Vitest"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Dapr",
+      "skill_id": 5948,
+      "skill": "Dapr",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Software Engineering",
+        "REST APIs",
+        "Software Design",
+        "Software Architecture",
+        "Microservices Architecture",
+        "Dapr"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "event-driven design",
+      "skill_id": 5071,
+      "skill": "Event-driven architectures",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Software Engineering",
+        "Software Design",
+        "Software Architecture",
+        "Event-driven architectures"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "UiPath",
+      "skill_id": 5965,
+      "skill": "UiPath",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Workflow Automation",
+        "robotic process automation",
+        "UiPath"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Unreal Engine",
+      "skill_id": 467,
+      "skill": "Unreal Engine",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C++",
+        "Game Design",
+        "Object-Oriented Programming",
+        "Game Programming",
+        "Unreal Engine"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Power BI",
+      "skill_id": 1542,
+      "skill": "Power BI",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 5,
+      "path": [
+        "Mathematics",
+        "Statistics",
+        "Descriptive Statistics",
+        "Data Analysis",
+        "Data Visualization",
+        "Power BI"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Spring Cloud",
+      "skill_id": 4521,
+      "skill": "Spring Cloud",
+      "count": 1,
+      "nodes": 19,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Java",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "CSS",
+        "Design Patterns",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Software Engineering",
+        "REST APIs",
+        "Software Design",
+        "Web Development",
+        "Java Spring Framework",
+        "Software Architecture",
+        "Microservices Architecture",
+        "Spring Boot",
+        "Spring Cloud"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Lightning Web Components",
+      "skill_id": 6031,
+      "skill": "Lightning Web Components",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Customer Relationship Management (CRM)",
+        "JavaScript",
+        "Salesforce",
+        "Salesforce Lightning",
+        "Lightning Web Components"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Fastlane",
+      "skill_id": 5940,
+      "skill": "Fastlane",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Version Control Systems",
+        "Git (Version Control System)",
+        "Mobile App Development",
+        "CI/CD",
+        "Fastlane"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "domain-driven design",
+      "skill_id": 6027,
+      "skill": "Domain-Driven Design",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Software Engineering",
+        "Software Design",
+        "Domain-Driven Design"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "COBIT",
+      "skill_id": 6017,
+      "skill": "COBIT",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Communication Skills",
+        "IT Fundamentals",
+        "Computer Network",
+        "ITIL service management",
+        "Operating Systems",
+        "Project Management",
+        "System Administration",
+        "Information Technology (IT) Operations",
+        "Information Technology (IT) Management",
+        "COBIT"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "D3.js",
+      "skill_id": 5911,
+      "skill": "D3.js",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "JavaScript",
+        "Statistics",
+        "Descriptive Statistics",
+        "Data Analysis",
+        "Data Visualization",
+        "D3.js"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "modular architecture",
+      "skill_id": 5942,
+      "skill": "Modular Architecture",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Software Engineering",
+        "Software Design",
+        "Software Architecture",
+        "Modular Architecture"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "pgvector",
+      "skill_id": 5975,
+      "skill": "pgvector",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "Vector Database",
+        "PostgreSQL",
+        "pgvector"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Render",
+      "skill_id": 5925,
+      "skill": "Render (Cloud Platform)",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Version Control Systems",
+        "CSS",
+        "Git (Version Control System)",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Render (Cloud Platform)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Liquid",
+      "skill_id": 5903,
+      "skill": "Shopify Liquid",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Shopify",
+        "Shopify Liquid"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Prisma",
+      "skill_id": 5919,
+      "skill": "Prisma",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "JavaScript",
+        "Object-Oriented Programming",
+        "Node.js",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "Object Relational Mapping (ORM)",
+        "Prisma"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "AWS CDK",
+      "skill_id": 5994,
+      "skill": "AWS CDK",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "JavaScript",
+        "Operating Systems",
+        "Cloud Computing",
+        "Typescript",
+        "AWS",
+        "Infrastructure as Code (IaC)",
+        "AWS CDK"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "ClickHouse",
+      "skill_id": 5983,
+      "skill": "ClickHouse",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Data Warehousing",
+        "ClickHouse"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "postgres",
+      "skill_id": 3432,
+      "skill": "PostgreSQL",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "PostgreSQL"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "rust",
+      "skill_id": 1625,
+      "skill": "Rust (Programming Language)",
+      "count": 1,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Rust (Programming Language)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "C",
+      "skill_id": 1184,
+      "skill": "C Programming",
+      "count": 1,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "C Programming"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "STM32",
+      "skill_id": 6018,
+      "skill": "STM32",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C Programming",
+        "Computer Hardware",
+        "Computer Architecture",
+        "Embedded Systems",
+        "Embedded C",
+        "Microcontroller Programming",
+        "STM32"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "VNPay",
+      "skill_id": 5952,
+      "skill": "VNPay",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "VNPay"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "NetBox",
+      "skill_id": 6015,
+      "skill": "NetBox",
+      "count": 1,
+      "nodes": 12,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Python",
+        "OSI Models",
+        "Network Switches",
+        "Transmission Control Protocol / Internet Protocol (TCP/IP)",
+        "Subnetwork",
+        "Network Routing",
+        "Network Configuration",
+        "Network Automation",
+        "NetBox"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Nornir",
+      "skill_id": 6016,
+      "skill": "Nornir",
+      "count": 1,
+      "nodes": 12,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Python",
+        "OSI Models",
+        "Network Switches",
+        "Transmission Control Protocol / Internet Protocol (TCP/IP)",
+        "Subnetwork",
+        "Network Routing",
+        "Network Configuration",
+        "Network Automation",
+        "Nornir"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "data mesh",
+      "skill_id": 5993,
+      "skill": "Data Mesh",
+      "count": 1,
+      "nodes": 16,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Data Management",
+        "Relational Database Management System (RDBMS)",
+        "Data Governance",
+        "Data Lake",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Data Warehousing",
+        "Data Architecture",
+        "Data Mesh"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Qdrant",
+      "skill_id": 5977,
+      "skill": "Qdrant",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "Vector Database",
+        "Qdrant"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Bubble",
+      "skill_id": 5962,
+      "skill": "Bubble (No-Code)",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Bubble (No-Code)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Web Vitals",
+      "skill_id": 5913,
+      "skill": "Web Vitals",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Frontend Development",
+        "Web Vitals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "eBPF",
+      "skill_id": 6000,
+      "skill": "eBPF",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C Programming",
+        "Operating Systems",
+        "Linux Kernel",
+        "eBPF"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Mapbox",
+      "skill_id": 6033,
+      "skill": "Mapbox",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Geographic Information System (GIS)",
+        "JavaScript",
+        "Mapbox"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "S3",
+      "skill_id": 3199,
+      "skill": "Amazon S3 Buckets",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "AWS",
+        "Amazon S3 Buckets"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "AWS Cost Explorer",
+      "skill_id": 5996,
+      "skill": "AWS Cost Explorer",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "AWS",
+        "FinOps",
+        "AWS Cost Explorer"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Ansible",
+      "skill_id": 1052,
+      "skill": "Ansible",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Infrastructure as Code (IaC)",
+        "Linux command line",
+        "Ansible"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "PagerDuty",
+      "skill_id": 6008,
+      "skill": "PagerDuty",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Observability",
+        "PagerDuty"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Chrome extension",
+      "skill_id": 5918,
+      "skill": "Chrome Extension Development",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "HTML",
+        "JavaScript",
+        "Chrome Extension Development"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "DeepL API",
+      "skill_id": 5956,
+      "skill": "DeepL API",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "DeepL API"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Google AppSheet",
+      "skill_id": 163,
+      "skill": "AppSheet",
+      "count": 1,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "IT Fundamentals",
+        "Microsoft Excel",
+        "AppSheet"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Expo",
+      "skill_id": 5927,
+      "skill": "Expo",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "Object-Oriented Programming",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Mobile App Development",
+        "Web Development",
+        "React",
+        "React Native",
+        "Expo"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Astro",
+      "skill_id": 5899,
+      "skill": "Astro",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Astro"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Markdown",
+      "skill_id": 3261,
+      "skill": "Markdown",
+      "count": 1,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "IT Fundamentals",
+        "Markdown"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Yocto",
+      "skill_id": 6019,
+      "skill": "Yocto Project",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C Programming",
+        "Computer Hardware",
+        "Operating Systems",
+        "Computer Architecture",
+        "Linux",
+        "Embedded Systems",
+        "Linux On Embedded Systems",
+        "Yocto Project"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Nx",
+      "skill_id": 5917,
+      "skill": "Nx (Monorepo)",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Typescript",
+        "Nx (Monorepo)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Canvas",
+      "skill_id": 5912,
+      "skill": "HTML5 Canvas",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "HTML",
+        "JavaScript",
+        "HTML5 Canvas"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "WebSockets",
+      "skill_id": 5921,
+      "skill": "WebSockets",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "JavaScript",
+        "Hypertext Transfer Protocol (HTTP)",
+        "WebSockets"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "GraphQL",
+      "skill_id": 5922,
+      "skill": "GraphQL",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "GraphQL"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Apollo Federation",
+      "skill_id": 5923,
+      "skill": "Apollo Federation",
+      "count": 1,
+      "nodes": 14,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Software Engineering",
+        "GraphQL",
+        "REST APIs",
+        "Software Design",
+        "Software Architecture",
+        "Microservices Architecture",
+        "Apollo Federation"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Synapse",
+      "skill_id": 5992,
+      "skill": "Azure Synapse Analytics",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Operating Systems",
+        "Cloud Computing",
+        "Relational Database Management System (RDBMS)",
+        "Microsoft Azure",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Data Warehousing",
+        "Azure Synapse Analytics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "MoveIt",
+      "skill_id": 6021,
+      "skill": "MoveIt",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "C Programming",
+        "C++",
+        "Computer Hardware",
+        "Linear Algebra",
+        "Python",
+        "Computer Architecture",
+        "Embedded Systems",
+        "Robotics",
+        "Robot Programming",
+        "MoveIt"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "SAML",
+      "skill_id": 739,
+      "skill": "Security Assertion Markup Language (SAML)",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cybersecurity Fundamentals",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Security Assertion Markup Language (SAML)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kubernetes operators",
+      "skill_id": 5998,
+      "skill": "Kubernetes Operators",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Golang Fundamentals",
+        "Operating Systems",
+        "Linux",
+        "Linux command line",
+        "Docker",
+        "Kubernetes",
+        "Kubernetes Operators"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "DataHub",
+      "skill_id": 5989,
+      "skill": "DataHub",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Data Management",
+        "Data Governance",
+        "DataHub"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Photon",
+      "skill_id": 6022,
+      "skill": "Photon Engine",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C#",
+        "Game Design",
+        "Object-Oriented Programming",
+        "Game Programming",
+        "Unity",
+        "Photon Engine"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Netcode",
+      "skill_id": 6023,
+      "skill": "Unity Netcode",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C#",
+        "Computer Network",
+        "Game Design",
+        "Object-Oriented Programming",
+        "Game Programming",
+        "Unity",
+        "Unity Netcode"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Cypress",
+      "skill_id": 5915,
+      "skill": "Cypress",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "JavaScript",
+        "Software Development Lifecycle (SDLC)",
+        "Software Testing",
+        "Test Automation",
+        "Cypress"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Crossplane",
+      "skill_id": 5997,
+      "skill": "Crossplane",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Infrastructure as Code (IaC)",
+        "Linux command line",
+        "Docker",
+        "Kubernetes",
+        "Crossplane"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "blockchain",
+      "skill_id": 921,
+      "skill": "Blockchain",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Mathematics",
+        "Computer Network",
+        "Discrete Mathematics",
+        "Operating Systems",
+        "Cybersecurity Fundamentals",
+        "Cryptography",
+        "Blockchain"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Superset",
+      "skill_id": 5988,
+      "skill": "Apache Superset",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Mathematics",
+        "Database (DBMS)",
+        "Statistics",
+        "Descriptive Statistics",
+        "Relational Database Management System (RDBMS)",
+        "Data Analysis",
+        "SQL",
+        "Data Visualization",
+        "Apache Superset"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "WebAssembly",
+      "skill_id": 6030,
+      "skill": "WebAssembly",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "C++",
+        "JavaScript",
+        "WebAssembly"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "PHP",
+      "skill_id": 190,
+      "skill": "Hypertext Preprocessor (PHP)",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "HTML",
+        "Hypertext Preprocessor (PHP)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Ruby on Rails",
+      "skill_id": 5232,
+      "skill": "Ruby on Rails",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "Ruby programming",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Ruby on Rails"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "SLO design",
+      "skill_id": 6003,
+      "skill": "Service Level Objectives (SLO)",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Software Development Lifecycle (SDLC)",
+        "Version Control Systems",
+        "Cloud Computing",
+        "Git (Version Control System)",
+        "Linux",
+        "CI/CD",
+        "Observability",
+        "DevOps",
+        "Site Reliability Engineering",
+        "Service Level Objectives (SLO)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Iceberg",
+      "skill_id": 5985,
+      "skill": "Apache Iceberg",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Data Lake",
+        "Apache Iceberg"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Jira",
+      "skill_id": 6011,
+      "skill": "Jira",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Software Development Lifecycle (SDLC)",
+        "Agile Methodology",
+        "Jira"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Google Analytics",
+      "skill_id": 1489,
+      "skill": "Google Analytics",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "Mathematics",
+        "Statistics",
+        "Descriptive Statistics",
+        "Data Analysis",
+        "Google Analytics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Tkinter",
+      "skill_id": 5966,
+      "skill": "Tkinter",
+      "count": 1,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "Python",
+        "Tkinter"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "HL7",
+      "skill_id": 6025,
+      "skill": "HL7",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 6,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Integration",
+        "HL7"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "FHIR",
+      "skill_id": 6026,
+      "skill": "FHIR",
+      "count": 1,
+      "nodes": 14,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "REST APIs",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Integration",
+        "FHIR"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "k6",
+      "skill_id": 6009,
+      "skill": "k6",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "JavaScript",
+        "Software Development Lifecycle (SDLC)",
+        "Software Testing",
+        "k6"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "LLMOps",
+      "skill_id": 5974,
+      "skill": "LLMOps",
+      "count": 1,
+      "nodes": 22,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Operating Systems",
+        "Python",
+        "Software Development Lifecycle (SDLC)",
+        "Statistics",
+        "Version Control Systems",
+        "Git (Version Control System)",
+        "Linux",
+        "Machine Learning",
+        "CI/CD",
+        "Linux command line",
+        "Neural Networks",
+        "Deep Learning",
+        "Docker",
+        "MLOps (Machine Learning Operations)",
+        "Transformer Architecture",
+        "Large Language Models",
+        "LLMOps"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Google Apps Script",
+      "skill_id": 5958,
+      "skill": "Google Apps Script",
+      "count": 1,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Google Apps Script"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Jest",
+      "skill_id": 3572,
+      "skill": "•\tWrite unit testing using Jest",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Unit Testing",
+        "•\tWrite unit testing using Jest"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Telegram",
+      "skill_id": 5954,
+      "skill": "Telegram Bot API",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Telegram Bot API"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Sigma rules",
+      "skill_id": 6014,
+      "skill": "Sigma Rules",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cybersecurity Fundamentals",
+        "OSI Models",
+        "Transmission Control Protocol / Internet Protocol (TCP/IP)",
+        "Network Security",
+        "Security Information And Event Management (SIEM)",
+        "Sigma Rules"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Aurora Global Database",
+      "skill_id": 495,
+      "skill": "Amazon Aurora",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Operating Systems",
+        "Cloud Computing",
+        "Relational Database Management System (RDBMS)",
+        "AWS",
+        "SQL",
+        "AWS RDS",
+        "Amazon Aurora"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "YOLO",
+      "skill_id": 847,
+      "skill": "YOLO",
+      "count": 1,
+      "nodes": 14,
+      "max_depth": 7,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Image Processing",
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "Convolutional Neural Networks",
+        "Computer Vision",
+        "Object Detection",
+        "YOLO"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "ONNX",
+      "skill_id": 5969,
+      "skill": "ONNX",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "ONNX"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Golang",
+      "skill_id": 2097,
+      "skill": "Golang Fundamentals",
+      "count": 1,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "Computer Programming",
+        "Golang Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Google Maps SDK",
+      "skill_id": 5939,
+      "skill": "Google Maps SDK",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "Google Maps SDK"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Apache Iceberg",
+      "skill_id": 5985,
+      "skill": "Apache Iceberg",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Data Lake",
+        "Apache Iceberg"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Trino",
+      "skill_id": 5986,
+      "skill": "Trino",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Big Data",
+        "Relational Database Management System (RDBMS)",
+        "Data Lake",
+        "SQL",
+        "Trino"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Zero Trust",
+      "skill_id": 4482,
+      "skill": "zero-trust architectures",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Cybersecurity Fundamentals",
+        "OSI Models",
+        "Cloud Security",
+        "Transmission Control Protocol / Internet Protocol (TCP/IP)",
+        "Network Security",
+        "zero-trust architectures"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Feast",
+      "skill_id": 5973,
+      "skill": "Feast (Feature Store)",
+      "count": 1,
+      "nodes": 21,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "Linear Algebra",
+        "Operating Systems",
+        "Python",
+        "Software Development Lifecycle (SDLC)",
+        "Statistics",
+        "Version Control Systems",
+        "Descriptive Statistics",
+        "Git (Version Control System)",
+        "Linux",
+        "Machine Learning",
+        "CI/CD",
+        "Data Analysis",
+        "Linux command line",
+        "Docker",
+        "Pandas",
+        "Feature Engineering for AI Systems",
+        "MLOps (Machine Learning Operations)",
+        "Feast (Feature Store)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "XGBoost",
+      "skill_id": 1847,
+      "skill": "Xgboost",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Machine Learning",
+        "Xgboost"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Sanity CMS",
+      "skill_id": 5909,
+      "skill": "Sanity CMS",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "JavaScript",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Sanity CMS"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "AUTOSAR Adaptive",
+      "skill_id": 6020,
+      "skill": "AUTOSAR Adaptive",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "C Programming",
+        "C++",
+        "Computer Hardware",
+        "Computer Architecture",
+        "Embedded Systems",
+        "AUTOSAR Adaptive"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Prophet",
+      "skill_id": 5968,
+      "skill": "Prophet (Forecasting)",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Python",
+        "Statistics",
+        "Regression Analysis",
+        "Time Series Analysis And Forecasting",
+        "Prophet (Forecasting)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "event sourcing",
+      "skill_id": 6028,
+      "skill": "Event Sourcing",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Software Engineering",
+        "Software Design",
+        "Software Architecture",
+        "Event-driven architectures",
+        "Event Sourcing"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "CQRS",
+      "skill_id": 6029,
+      "skill": "CQRS",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Software Engineering",
+        "Software Design",
+        "Software Architecture",
+        "CQRS"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kong",
+      "skill_id": 5949,
+      "skill": "Kong Gateway",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Software Engineering",
+        "REST APIs",
+        "Software Design",
+        "Software Architecture",
+        "Microservices Architecture",
+        "Kong Gateway"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Google Sites",
+      "skill_id": 5963,
+      "skill": "Google Sites",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Google Sites"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Google Forms",
+      "skill_id": 5964,
+      "skill": "Google Forms",
+      "count": 1,
+      "nodes": 2,
+      "max_depth": 1,
+      "path": [
+        "IT Fundamentals",
+        "Google Forms"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Pinecone",
+      "skill_id": 5976,
+      "skill": "Pinecone",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "Vector Database",
+        "Pinecone"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "OpenSearch",
+      "skill_id": 251,
+      "skill": "AWS OpenSearch",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "NoSQL",
+        "AWS OpenSearch"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Fluent Bit",
+      "skill_id": 6007,
+      "skill": "Fluent Bit",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Observability",
+        "Fluent Bit"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Azure Functions",
+      "skill_id": 2863,
+      "skill": "Azure Functions",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Microsoft Azure",
+        "Serverless Computing",
+        "Azure Functions"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Cosmos DB",
+      "skill_id": 5145,
+      "skill": "Azure CosmosDB",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Operating Systems",
+        "Cloud Computing",
+        "NoSQL",
+        "Microsoft Azure",
+        "Azure CosmosDB"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "RabbitMQ",
+      "skill_id": 5947,
+      "skill": "RabbitMQ",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Relational Database Management System (RDBMS)",
+        "REST APIs",
+        "SQL",
+        "Back End (Software Engineering)",
+        "RabbitMQ"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "FlutterFlow",
+      "skill_id": 5932,
+      "skill": "FlutterFlow",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "FlutterFlow"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Fortinet",
+      "skill_id": 6012,
+      "skill": "Fortinet FortiGate",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cybersecurity Fundamentals",
+        "OSI Models",
+        "Transmission Control Protocol / Internet Protocol (TCP/IP)",
+        "Network Security",
+        "Firewall",
+        "Fortinet FortiGate"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "GitLab",
+      "skill_id": 6010,
+      "skill": "GitLab",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Software Development Lifecycle (SDLC)",
+        "Version Control Systems",
+        "Git (Version Control System)",
+        "CI/CD",
+        "GitLab"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "SQLite",
+      "skill_id": 349,
+      "skill": "Sqlite",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "Sqlite"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Swift concurrency",
+      "skill_id": 5934,
+      "skill": "Swift Concurrency",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "Asynchronous programming",
+        "Swift Programming",
+        "Swift Concurrency"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "MinIO",
+      "skill_id": 5950,
+      "skill": "MinIO",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Operating Systems",
+        "Linux",
+        "MinIO"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Datadog",
+      "skill_id": 6006,
+      "skill": "Datadog",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cloud Computing",
+        "Linux",
+        "Observability",
+        "Datadog"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "MediaPipe",
+      "skill_id": 5970,
+      "skill": "MediaPipe",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Calculus",
+        "Linear Algebra",
+        "Python",
+        "Statistics",
+        "Image Processing",
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "Convolutional Neural Networks",
+        "Computer Vision",
+        "MediaPipe"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "LitmusChaos",
+      "skill_id": 6002,
+      "skill": "LitmusChaos",
+      "count": 1,
+      "nodes": 16,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Software Development Lifecycle (SDLC)",
+        "Version Control Systems",
+        "Cloud Computing",
+        "Git (Version Control System)",
+        "Linux",
+        "CI/CD",
+        "Linux command line",
+        "Observability",
+        "DevOps",
+        "Docker",
+        "Kubernetes",
+        "Site Reliability Engineering",
+        "LitmusChaos"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Webflow",
+      "skill_id": 5907,
+      "skill": "Webflow",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Webflow"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Palo Alto",
+      "skill_id": 6013,
+      "skill": "Palo Alto Networks Firewall",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Operating Systems",
+        "Cybersecurity Fundamentals",
+        "OSI Models",
+        "Transmission Control Protocol / Internet Protocol (TCP/IP)",
+        "Network Security",
+        "Firewall",
+        "Palo Alto Networks Firewall"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Fly.io",
+      "skill_id": 5926,
+      "skill": "Fly.io",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 5,
+      "path": [
+        "IT Fundamentals",
+        "Operating Systems",
+        "Linux",
+        "Linux command line",
+        "Docker",
+        "Fly.io"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Azure Data Factory",
+      "skill_id": 4640,
+      "skill": "Data Factory",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Operating Systems",
+        "Cloud Computing",
+        "Relational Database Management System (RDBMS)",
+        "Microsoft Azure",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Factory"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Zalo",
+      "skill_id": 5953,
+      "skill": "Zalo API",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Zalo API"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Notion API",
+      "skill_id": 5957,
+      "skill": "Notion API",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "REST APIs",
+        "Notion API"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "ARKit",
+      "skill_id": 5936,
+      "skill": "ARKit",
+      "count": 1,
+      "nodes": 15,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "C#",
+        "Game Design",
+        "Linear Algebra",
+        "Object-Oriented Programming",
+        "Swift Programming",
+        "Computer Graphics (CG)",
+        "Game Programming",
+        "Mobile App Development",
+        "Unity",
+        "iOS App Development",
+        "Virtual Reality (VR) and Augmented Reality (AR)",
+        "ARKit"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "AR Foundation",
+      "skill_id": 5937,
+      "skill": "AR Foundation",
+      "count": 1,
+      "nodes": 12,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "C#",
+        "Game Design",
+        "Linear Algebra",
+        "Object-Oriented Programming",
+        "Computer Graphics (CG)",
+        "Game Programming",
+        "Unity",
+        "Virtual Reality (VR) and Augmented Reality (AR)",
+        "AR Foundation"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Svelte",
+      "skill_id": 5897,
+      "skill": "Svelte",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "HTML",
+        "JavaScript",
+        "CSS",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Web Development",
+        "Svelte"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "FPGA",
+      "skill_id": 1323,
+      "skill": "FPGA Architecture and Design",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Hardware",
+        "Digital Circuit Design",
+        "FPGA Architecture and Design"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Great Expectations",
+      "skill_id": 5981,
+      "skill": "Great Expectations",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Data Management",
+        "Data Quality",
+        "Great Expectations"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Carrd",
+      "skill_id": 5908,
+      "skill": "Carrd",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "HTML",
+        "Human Computer Interaction (HCI)",
+        "CSS",
+        "User Interface Design (UI Design)",
+        "Web Design",
+        "Carrd"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Clean Architecture",
+      "skill_id": 5941,
+      "skill": "Clean Architecture",
+      "count": 1,
+      "nodes": 9,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Object-Oriented Programming",
+        "Software Development Lifecycle (SDLC)",
+        "Design Patterns",
+        "Software Engineering",
+        "Software Design",
+        "Software Architecture",
+        "Clean Architecture"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Bloc",
+      "skill_id": 5931,
+      "skill": "BLoC Pattern",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Dart",
+        "Object-Oriented Programming",
+        "Mobile App Development",
+        "Flutter",
+        "BLoC Pattern"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Socket.IO",
+      "skill_id": 5920,
+      "skill": "Socket.IO",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Computer Network",
+        "JavaScript",
+        "Hypertext Transfer Protocol (HTTP)",
+        "Node.js",
+        "WebSockets",
+        "Socket.IO"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Airbyte",
+      "skill_id": 5980,
+      "skill": "Airbyte",
+      "count": 1,
+      "nodes": 10,
+      "max_depth": 6,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Integration",
+        "Airbyte"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Chrome Extensions API",
+      "skill_id": 5918,
+      "skill": "Chrome Extension Development",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 2,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "HTML",
+        "JavaScript",
+        "Chrome Extension Development"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Houdini",
+      "skill_id": 6024,
+      "skill": "Houdini (3D Software)",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Mathematics",
+        "Linear Algebra",
+        "Computer Graphics (CG)",
+        "Houdini (3D Software)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Dagster",
+      "skill_id": 5979,
+      "skill": "Dagster",
+      "count": 1,
+      "nodes": 12,
+      "max_depth": 6,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Python",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Extract Transform and Load (ETL)",
+        "Data Pipelines",
+        "Dagster"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "DuckDB",
+      "skill_id": 5982,
+      "skill": "DuckDB",
+      "count": 1,
+      "nodes": 5,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "SQL",
+        "DuckDB"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Microsoft Fabric",
+      "skill_id": 5991,
+      "skill": "Microsoft Fabric",
+      "count": 1,
+      "nodes": 13,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Operating Systems",
+        "Cloud Computing",
+        "Relational Database Management System (RDBMS)",
+        "Microsoft Azure",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Data Warehousing",
+        "Microsoft Fabric"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "JWT",
+      "skill_id": 3624,
+      "skill": "JWT Authentication",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Hypertext Transfer Protocol (HTTP)",
+        "JWT Authentication"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Kubeflow",
+      "skill_id": 5972,
+      "skill": "Kubeflow",
+      "count": 1,
+      "nodes": 14,
+      "max_depth": 5,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Mathematics",
+        "Computer Network",
+        "Linear Algebra",
+        "Operating Systems",
+        "Python",
+        "Statistics",
+        "Linux",
+        "Machine Learning",
+        "Linux command line",
+        "Docker",
+        "Kubernetes",
+        "Kubeflow"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Cube",
+      "skill_id": 5990,
+      "skill": "Cube (Semantic Layer)",
+      "count": 1,
+      "nodes": 8,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Database (DBMS)",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Cube (Semantic Layer)"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Snowflake",
+      "skill_id": 2436,
+      "skill": "Snowflake",
+      "count": 1,
+      "nodes": 12,
+      "max_depth": 4,
+      "path": [
+        "IT Fundamentals",
+        "Computer Network",
+        "Database (DBMS)",
+        "Operating Systems",
+        "Cloud Computing",
+        "Relational Database Management System (RDBMS)",
+        "Normalization",
+        "SQL",
+        "Database (DB) Design",
+        "Data Modeling",
+        "Data Warehousing",
+        "Snowflake"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Airtable",
+      "skill_id": 5959,
+      "skill": "Airtable",
+      "count": 1,
+      "nodes": 3,
+      "max_depth": 2,
+      "path": [
+        "IT Fundamentals",
+        "Microsoft Excel",
+        "Airtable"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "Softr",
+      "skill_id": 5960,
+      "skill": "Softr",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "IT Fundamentals",
+        "Microsoft Excel",
+        "Airtable",
+        "Softr"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "LWC",
+      "skill_id": 6031,
+      "skill": "Lightning Web Components",
+      "count": 1,
+      "nodes": 7,
+      "max_depth": 4,
+      "path": [
+        "Computer Programming",
+        "IT Fundamentals",
+        "Customer Relationship Management (CRM)",
+        "JavaScript",
+        "Salesforce",
+        "Salesforce Lightning",
+        "Lightning Web Components"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "npm",
+      "skill_id": 5924,
+      "skill": "npm",
+      "count": 1,
+      "nodes": 4,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "JavaScript",
+        "Node.js",
+        "npm"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "SwiftUI",
+      "skill_id": 1257,
+      "skill": "Swift and SwiftUI",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Object-Oriented Programming",
+        "Swift Programming",
+        "Mobile App Development",
+        "iOS App Development",
+        "Swift and SwiftUI"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "name": "HealthKit",
+      "skill_id": 5935,
+      "skill": "HealthKit",
+      "count": 1,
+      "nodes": 6,
+      "max_depth": 3,
+      "path": [
+        "Computer Programming",
+        "Object-Oriented Programming",
+        "Swift Programming",
+        "Mobile App Development",
+        "iOS App Development",
+        "HealthKit"
+      ],
+      "status": "ok",
+      "problems": []
+    }
+  ],
+  "project_samples": [
+    {
+      "sample_id": "G1_001007",
+      "technologies": [
+        "Room"
+      ],
+      "targets": [
+        "Room (Android)"
+      ],
+      "nodes": 11,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001021",
+      "technologies": [
+        "WordPress"
+      ],
+      "targets": [
+        "Wordpress"
+      ],
+      "nodes": 7,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001032",
+      "technologies": [
+        "Flutter",
+        "Firebase"
+      ],
+      "targets": [
+        "Flutter",
+        "Firebase"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001035",
+      "technologies": [
+        "Stripe"
+      ],
+      "targets": [
+        "Stripe"
+      ],
+      "nodes": 6,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001047",
+      "technologies": [
+        "websockets",
+        "redis pubsub"
+      ],
+      "targets": [
+        "WebSockets",
+        "Redis"
+      ],
+      "nodes": 9,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001067",
+      "technologies": [
+        "React Native",
+        "Supabase"
+      ],
+      "targets": [
+        "React Native",
+        "Supabase"
+      ],
+      "nodes": 17,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001074",
+      "technologies": [
+        "Python",
+        "FastAPI"
+      ],
+      "targets": [
+        "Python",
+        "FastAPI"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001087",
+      "technologies": [
+        "Django"
+      ],
+      "targets": [
+        "Django (Web Framework)"
+      ],
+      "nodes": 9,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001095",
+      "technologies": [
+        "Python"
+      ],
+      "targets": [
+        "Python"
+      ],
+      "nodes": 2,
+      "max_depth": 1,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001115",
+      "technologies": [
+        "OpenAI API",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "Open AI API",
+        "PostgreSQL"
+      ],
+      "nodes": 20,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001122",
+      "technologies": [
+        "Python",
+        "scikit-learn"
+      ],
+      "targets": [
+        "Python",
+        "Scikit-Learn"
+      ],
+      "nodes": 8,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001133",
+      "technologies": [
+        "Backstage",
+        "Kubernetes"
+      ],
+      "targets": [
+        "Backstage",
+        "Kubernetes"
+      ],
+      "nodes": 16,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001142",
+      "technologies": [
+        "Shopify"
+      ],
+      "targets": [
+        "Shopify"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001148",
+      "technologies": [
+        "Flutter"
+      ],
+      "targets": [
+        "Flutter"
+      ],
+      "nodes": 5,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001165",
+      "technologies": [
+        "Python",
+        "Scrapy",
+        "Flask"
+      ],
+      "targets": [
+        "Python",
+        "Scrapy",
+        "Flask"
+      ],
+      "nodes": 11,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001174",
+      "technologies": [
+        "NestJS",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "NestJS",
+        "PostgreSQL"
+      ],
+      "nodes": 10,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001185",
+      "technologies": [
+        "RAG",
+        "pgvector",
+        "Python"
+      ],
+      "targets": [
+        "Retrieval Augmented Generation",
+        "pgvector",
+        "Python"
+      ],
+      "nodes": 20,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001191",
+      "technologies": [
+        "Flutter",
+        "Firebase"
+      ],
+      "targets": [
+        "Flutter",
+        "Firebase"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001209",
+      "technologies": [
+        "FastAPI",
+        "React",
+        "Render"
+      ],
+      "targets": [
+        "FastAPI",
+        "React",
+        "Render (Cloud Platform)"
+      ],
+      "nodes": 15,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001214",
+      "technologies": [
+        "Next.js",
+        "Prisma"
+      ],
+      "targets": [
+        "Next.js",
+        "Prisma"
+      ],
+      "nodes": 17,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001223",
+      "technologies": [
+        "ClickHouse",
+        "dbt",
+        "Metabase"
+      ],
+      "targets": [
+        "ClickHouse",
+        "dbt (Data Build Tool)",
+        "Metabase"
+      ],
+      "nodes": 17,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001230",
+      "technologies": [
+        "Spring Boot",
+        "React",
+        "AWS"
+      ],
+      "targets": [
+        "Spring Boot",
+        "React",
+        "AWS"
+      ],
+      "nodes": 16,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001240",
+      "technologies": [
+        "Next.js"
+      ],
+      "targets": [
+        "Next.js"
+      ],
+      "nodes": 10,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001249",
+      "technologies": [
+        "WordPress"
+      ],
+      "targets": [
+        "Wordpress"
+      ],
+      "nodes": 7,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001260",
+      "technologies": [
+        "Spring Boot",
+        "VNPay"
+      ],
+      "targets": [
+        "Spring Boot",
+        "VNPay"
+      ],
+      "nodes": 12,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001273",
+      "technologies": [
+        "FastAPI",
+        "Redis",
+        "React"
+      ],
+      "targets": [
+        "FastAPI",
+        "Redis",
+        "React"
+      ],
+      "nodes": 15,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001284",
+      "technologies": [
+        "LangChain",
+        "Qdrant",
+        "FastAPI"
+      ],
+      "targets": [
+        "LangChain",
+        "Qdrant",
+        "FastAPI"
+      ],
+      "nodes": 21,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001291",
+      "technologies": [
+        "Bubble"
+      ],
+      "targets": [
+        "Bubble (No-Code)"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001300",
+      "technologies": [
+        "WordPress",
+        "WooCommerce"
+      ],
+      "targets": [
+        "Wordpress",
+        "WooCommerce"
+      ],
+      "nodes": 8,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001304",
+      "technologies": [
+        "TensorFlow Lite",
+        "Android"
+      ],
+      "targets": [
+        "TensorFlow Lite",
+        "Android"
+      ],
+      "nodes": 15,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001314",
+      "technologies": [
+        "Flutter",
+        "Firebase"
+      ],
+      "targets": [
+        "Flutter",
+        "Firebase"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001323",
+      "technologies": [
+        "Django",
+        "PostgreSQL",
+        "Stripe"
+      ],
+      "targets": [
+        "Django (Web Framework)",
+        "PostgreSQL",
+        "Stripe"
+      ],
+      "nodes": 15,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001340",
+      "technologies": [
+        "Wix"
+      ],
+      "targets": [
+        "Wix"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001347",
+      "technologies": [
+        "React Native",
+        "Firebase"
+      ],
+      "targets": [
+        "React Native",
+        "Firebase"
+      ],
+      "nodes": 15,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001359",
+      "technologies": [
+        "SvelteKit",
+        "Supabase"
+      ],
+      "targets": [
+        "SvelteKit",
+        "Supabase"
+      ],
+      "nodes": 15,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001364",
+      "technologies": [
+        "Python",
+        "OpenCV",
+        "FastAPI"
+      ],
+      "targets": [
+        "Python",
+        "OpenCV",
+        "FastAPI"
+      ],
+      "nodes": 11,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001373",
+      "technologies": [
+        "Kotlin Multiplatform"
+      ],
+      "targets": [
+        "Kotlin Multiplatform"
+      ],
+      "nodes": 5,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001391",
+      "technologies": [
+        "Next.js",
+        "Mapbox"
+      ],
+      "targets": [
+        "Next.js",
+        "Mapbox"
+      ],
+      "nodes": 12,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001404",
+      "technologies": [
+        "React",
+        "Node.js"
+      ],
+      "targets": [
+        "React",
+        "Node.js"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001415",
+      "technologies": [
+        "Django",
+        "S3"
+      ],
+      "targets": [
+        "Django (Web Framework)",
+        "Amazon S3 Buckets"
+      ],
+      "nodes": 13,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001422",
+      "technologies": [
+        "AWS Cost Explorer",
+        "Grafana"
+      ],
+      "targets": [
+        "AWS Cost Explorer",
+        "Grafana"
+      ],
+      "nodes": 10,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001435",
+      "technologies": [
+        "Slack",
+        "PagerDuty",
+        "LLM"
+      ],
+      "targets": [
+        "Slack API",
+        "PagerDuty",
+        "Large Language Models"
+      ],
+      "nodes": 21,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001441",
+      "technologies": [
+        "Chrome extension",
+        "DeepL API"
+      ],
+      "targets": [
+        "Chrome Extension Development",
+        "DeepL API"
+      ],
+      "nodes": 9,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001447",
+      "technologies": [
+        "Google AppSheet"
+      ],
+      "targets": [
+        "AppSheet"
+      ],
+      "nodes": 3,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001459",
+      "technologies": [
+        "Astro",
+        "Markdown",
+        "Supabase"
+      ],
+      "targets": [
+        "Astro",
+        "Markdown",
+        "Supabase"
+      ],
+      "nodes": 15,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001465",
+      "technologies": [
+        "React",
+        "Canvas",
+        "WebSockets"
+      ],
+      "targets": [
+        "React",
+        "HTML5 Canvas",
+        "WebSockets"
+      ],
+      "nodes": 11,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001473",
+      "technologies": [
+        "GraphQL",
+        "Apollo Federation"
+      ],
+      "targets": [
+        "GraphQL",
+        "Apollo Federation"
+      ],
+      "nodes": 14,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001491",
+      "technologies": [
+        "Vue",
+        "Firebase"
+      ],
+      "targets": [
+        "Vue.js",
+        "Firebase"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001499",
+      "technologies": [
+        "Squarespace"
+      ],
+      "targets": [
+        "Squarespace"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001510",
+      "technologies": [
+        "Kotlin",
+        "Room"
+      ],
+      "targets": [
+        "Kotlin",
+        "Room (Android)"
+      ],
+      "nodes": 11,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001515",
+      "technologies": [
+        "Python",
+        "scikit-learn",
+        "Streamlit"
+      ],
+      "targets": [
+        "Python",
+        "Scikit-Learn",
+        "Streamlit"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001522",
+      "technologies": [
+        "Scrapy",
+        "Airflow",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "Scrapy",
+        "Apache Airflow",
+        "PostgreSQL"
+      ],
+      "nodes": 16,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001533",
+      "technologies": [
+        "DataHub"
+      ],
+      "targets": [
+        "DataHub"
+      ],
+      "nodes": 5,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001547",
+      "technologies": [
+        "Flutter"
+      ],
+      "targets": [
+        "Flutter"
+      ],
+      "nodes": 5,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001566",
+      "technologies": [
+        "Stripe"
+      ],
+      "targets": [
+        "Stripe"
+      ],
+      "nodes": 6,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001575",
+      "technologies": [
+        "Superset",
+        "dbt",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "Apache Superset",
+        "dbt (Data Build Tool)",
+        "PostgreSQL"
+      ],
+      "nodes": 17,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001590",
+      "technologies": [
+        "Flutter",
+        "Firebase"
+      ],
+      "targets": [
+        "Flutter",
+        "Firebase"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001598",
+      "technologies": [
+        "Wix"
+      ],
+      "targets": [
+        "Wix"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001609",
+      "technologies": [
+        "Ruby on Rails",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "Ruby on Rails",
+        "PostgreSQL"
+      ],
+      "nodes": 13,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001622",
+      "technologies": [
+        "NestJS",
+        "PostgreSQL",
+        "Redis"
+      ],
+      "targets": [
+        "NestJS",
+        "PostgreSQL",
+        "Redis"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001633",
+      "technologies": [
+        "OpenAI API",
+        "Jira"
+      ],
+      "targets": [
+        "Open AI API",
+        "Jira"
+      ],
+      "nodes": 19,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001647",
+      "technologies": [
+        "Python",
+        "Tkinter"
+      ],
+      "targets": [
+        "Python",
+        "Tkinter"
+      ],
+      "nodes": 3,
+      "max_depth": 1,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001653",
+      "technologies": [
+        "React Native",
+        "Firebase"
+      ],
+      "targets": [
+        "React Native",
+        "Firebase"
+      ],
+      "nodes": 15,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001665",
+      "technologies": [
+        "Laravel",
+        "Livewire",
+        "Stripe"
+      ],
+      "targets": [
+        "Laravel",
+        "Livewire",
+        "Stripe"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001679",
+      "technologies": [
+        "Go",
+        "React"
+      ],
+      "targets": [
+        "Golang Fundamentals",
+        "React"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001690",
+      "technologies": [
+        "React"
+      ],
+      "targets": [
+        "React"
+      ],
+      "nodes": 9,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001698",
+      "technologies": [],
+      "status": "no_linked_target"
+    },
+    {
+      "sample_id": "G1_001699",
+      "technologies": [
+        "Google Apps Script"
+      ],
+      "targets": [
+        "Google Apps Script"
+      ],
+      "nodes": 3,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001704",
+      "technologies": [
+        "Python",
+        "LangChain",
+        "Telegram"
+      ],
+      "targets": [
+        "Python",
+        "LangChain",
+        "Telegram Bot API"
+      ],
+      "nodes": 17,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001723",
+      "technologies": [
+        "Flutter",
+        "Go"
+      ],
+      "targets": [
+        "Flutter",
+        "Golang Fundamentals"
+      ],
+      "nodes": 6,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001735",
+      "technologies": [
+        "AWS",
+        "Aurora Global Database"
+      ],
+      "targets": [
+        "AWS",
+        "Amazon Aurora"
+      ],
+      "nodes": 10,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001746",
+      "technologies": [
+        "Django"
+      ],
+      "targets": [
+        "Django (Web Framework)"
+      ],
+      "nodes": 9,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001755",
+      "technologies": [
+        "SvelteKit",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "SvelteKit",
+        "PostgreSQL"
+      ],
+      "nodes": 14,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001765",
+      "technologies": [
+        "Kotlin",
+        "Google Maps SDK",
+        "Firebase"
+      ],
+      "targets": [
+        "Kotlin",
+        "Google Maps SDK",
+        "Firebase"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001777",
+      "technologies": [
+        "Feast",
+        "Redis",
+        "Kubernetes"
+      ],
+      "targets": [
+        "Feast (Feature Store)",
+        "Redis",
+        "Kubernetes"
+      ],
+      "nodes": 26,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001784",
+      "technologies": [
+        "Python",
+        "XGBoost",
+        "FastAPI"
+      ],
+      "targets": [
+        "Python",
+        "Xgboost",
+        "FastAPI"
+      ],
+      "nodes": 12,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001793",
+      "technologies": [
+        "Next.js",
+        "Cloudinary"
+      ],
+      "targets": [
+        "Next.js",
+        "Cloudinary"
+      ],
+      "nodes": 11,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001808",
+      "technologies": [
+        "Next.js",
+        "Stripe",
+        "Sanity CMS"
+      ],
+      "targets": [
+        "Next.js",
+        "Stripe",
+        "Sanity CMS"
+      ],
+      "nodes": 13,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001822",
+      "technologies": [
+        "Python",
+        "Prophet",
+        "Streamlit"
+      ],
+      "targets": [
+        "Python",
+        "Prophet (Forecasting)",
+        "Streamlit"
+      ],
+      "nodes": 11,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001833",
+      "technologies": [
+        "Kong",
+        "OAuth 2.0"
+      ],
+      "targets": [
+        "Kong Gateway",
+        "Oauth"
+      ],
+      "nodes": 14,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001845",
+      "technologies": [
+        "Google Sites",
+        "Google Forms"
+      ],
+      "targets": [
+        "Google Sites",
+        "Google Forms"
+      ],
+      "nodes": 8,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001854",
+      "technologies": [
+        "Python",
+        "OpenCV",
+        "Flask"
+      ],
+      "targets": [
+        "Python",
+        "OpenCV",
+        "Flask"
+      ],
+      "nodes": 13,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001865",
+      "technologies": [
+        "Slack",
+        "RAG",
+        "LangChain",
+        "Pinecone"
+      ],
+      "targets": [
+        "Slack API",
+        "Retrieval Augmented Generation",
+        "LangChain",
+        "Pinecone"
+      ],
+      "nodes": 22,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001872",
+      "technologies": [
+        "OpenSearch",
+        "Fluent Bit",
+        "Grafana"
+      ],
+      "targets": [
+        "AWS OpenSearch",
+        "Fluent Bit",
+        "Grafana"
+      ],
+      "nodes": 11,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001884",
+      "technologies": [
+        "React",
+        "Node.js"
+      ],
+      "targets": [
+        "React",
+        "Node.js"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001893",
+      "technologies": [
+        "Django",
+        "HTMX"
+      ],
+      "targets": [
+        "Django (Web Framework)",
+        "HTMX"
+      ],
+      "nodes": 10,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001922",
+      "technologies": [
+        "Go",
+        "RabbitMQ",
+        "PostgreSQL"
+      ],
+      "targets": [
+        "Golang Fundamentals",
+        "RabbitMQ",
+        "PostgreSQL"
+      ],
+      "nodes": 12,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001929",
+      "technologies": [
+        "Kafka",
+        "Flink"
+      ],
+      "targets": [
+        "Kafka",
+        "Apache Flink"
+      ],
+      "nodes": 8,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001940",
+      "technologies": [
+        "FlutterFlow"
+      ],
+      "targets": [
+        "FlutterFlow"
+      ],
+      "nodes": 4,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001945",
+      "technologies": [
+        "React Native"
+      ],
+      "targets": [
+        "React Native"
+      ],
+      "nodes": 12,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001953",
+      "technologies": [
+        "Flutter",
+        "Supabase"
+      ],
+      "targets": [
+        "Flutter",
+        "Supabase"
+      ],
+      "nodes": 11,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001958",
+      "technologies": [
+        "Chrome",
+        "OpenAI API",
+        "TypeScript"
+      ],
+      "targets": [
+        "Open AI API",
+        "Typescript"
+      ],
+      "nodes": 18,
+      "max_depth": 6,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001965",
+      "technologies": [
+        "GitLab",
+        "AWS",
+        "Terraform"
+      ],
+      "targets": [
+        "GitLab",
+        "AWS",
+        "Terraform"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001979",
+      "technologies": [
+        "Python",
+        "FastAPI",
+        "MLflow"
+      ],
+      "targets": [
+        "Python",
+        "FastAPI",
+        "MLflow"
+      ],
+      "nodes": 12,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_001993",
+      "technologies": [
+        "Next.js",
+        "Supabase"
+      ],
+      "targets": [
+        "Next.js",
+        "Supabase"
+      ],
+      "nodes": 15,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002009",
+      "technologies": [
+        "Python",
+        "SQLite"
+      ],
+      "targets": [
+        "Python",
+        "Sqlite"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002022",
+      "technologies": [
+        "Spring Boot",
+        "React",
+        "MinIO"
+      ],
+      "targets": [
+        "Spring Boot",
+        "React",
+        "MinIO"
+      ],
+      "nodes": 16,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002033",
+      "technologies": [
+        "Next.js",
+        "Supabase",
+        "Datadog"
+      ],
+      "targets": [
+        "Next.js",
+        "Supabase",
+        "Datadog"
+      ],
+      "nodes": 20,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002047",
+      "technologies": [
+        "Glide"
+      ],
+      "targets": [
+        "Glide (No-Code)"
+      ],
+      "nodes": 3,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002053",
+      "technologies": [
+        "MediaPipe",
+        "TensorFlow Lite",
+        "Android"
+      ],
+      "targets": [
+        "MediaPipe",
+        "TensorFlow Lite",
+        "Android"
+      ],
+      "nodes": 19,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002065",
+      "technologies": [
+        "Laravel",
+        "Livewire",
+        "Stripe"
+      ],
+      "targets": [
+        "Laravel",
+        "Livewire",
+        "Stripe"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002079",
+      "technologies": [
+        "LitmusChaos",
+        "Kubernetes"
+      ],
+      "targets": [
+        "LitmusChaos",
+        "Kubernetes"
+      ],
+      "nodes": 16,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002090",
+      "technologies": [
+        "WordPress",
+        "WooCommerce"
+      ],
+      "targets": [
+        "Wordpress",
+        "WooCommerce"
+      ],
+      "nodes": 8,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002099",
+      "technologies": [
+        "Webflow"
+      ],
+      "targets": [
+        "Webflow"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002109",
+      "technologies": [
+        "Go",
+        "Redis",
+        "PostgreSQL",
+        "Fly.io"
+      ],
+      "targets": [
+        "Golang Fundamentals",
+        "Redis",
+        "PostgreSQL",
+        "Fly.io"
+      ],
+      "nodes": 14,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002122",
+      "technologies": [
+        "Django",
+        "PostgreSQL",
+        "Zalo"
+      ],
+      "targets": [
+        "Django (Web Framework)",
+        "PostgreSQL",
+        "Zalo API"
+      ],
+      "nodes": 15,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002133",
+      "technologies": [
+        "Go",
+        "PostgreSQL",
+        "React"
+      ],
+      "targets": [
+        "Golang Fundamentals",
+        "PostgreSQL",
+        "React"
+      ],
+      "nodes": 14,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002147",
+      "technologies": [
+        "Notion API",
+        "Python"
+      ],
+      "targets": [
+        "Notion API",
+        "Python"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002153",
+      "technologies": [
+        "Kotlin Multiplatform"
+      ],
+      "targets": [
+        "Kotlin Multiplatform"
+      ],
+      "nodes": 5,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002165",
+      "technologies": [
+        "Svelte",
+        "Supabase"
+      ],
+      "targets": [
+        "Svelte",
+        "Supabase"
+      ],
+      "nodes": 14,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002179",
+      "technologies": [
+        "Great Expectations",
+        "Airflow",
+        "Slack"
+      ],
+      "targets": [
+        "Great Expectations",
+        "Apache Airflow",
+        "Slack API"
+      ],
+      "nodes": 19,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002190",
+      "technologies": [
+        "Shopify"
+      ],
+      "targets": [
+        "Shopify"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002199",
+      "technologies": [
+        "Carrd"
+      ],
+      "targets": [
+        "Carrd"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002209",
+      "technologies": [
+        "Socket.IO",
+        "React"
+      ],
+      "targets": [
+        "Socket.IO",
+        "React"
+      ],
+      "nodes": 12,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002222",
+      "technologies": [
+        "Airbyte",
+        "dbt",
+        "Metabase"
+      ],
+      "targets": [
+        "Airbyte",
+        "dbt (Data Build Tool)",
+        "Metabase"
+      ],
+      "nodes": 19,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002233",
+      "technologies": [
+        "Backstage",
+        "Go",
+        "Python"
+      ],
+      "targets": [
+        "Backstage",
+        "Golang Fundamentals",
+        "Python"
+      ],
+      "nodes": 14,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002247",
+      "technologies": [
+        "Squarespace"
+      ],
+      "targets": [
+        "Squarespace"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002253",
+      "technologies": [
+        "TypeScript",
+        "Chrome Extensions API"
+      ],
+      "targets": [
+        "Typescript",
+        "Chrome Extension Development"
+      ],
+      "nodes": 6,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002265",
+      "technologies": [
+        "Dagster",
+        "DuckDB"
+      ],
+      "targets": [
+        "Dagster",
+        "DuckDB"
+      ],
+      "nodes": 13,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002279",
+      "technologies": [
+        "Backstage",
+        "Prometheus"
+      ],
+      "targets": [
+        "Backstage",
+        "Prometheus"
+      ],
+      "nodes": 16,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002290",
+      "technologies": [
+        "Glide"
+      ],
+      "targets": [
+        "Glide (No-Code)"
+      ],
+      "nodes": 3,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002299",
+      "technologies": [
+        "Next.js",
+        "Cloudinary"
+      ],
+      "targets": [
+        "Next.js",
+        "Cloudinary"
+      ],
+      "nodes": 11,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002309",
+      "technologies": [
+        "Spring Boot",
+        "JWT",
+        "PostgreSQL",
+        "React"
+      ],
+      "targets": [
+        "Spring Boot",
+        "JWT Authentication",
+        "PostgreSQL",
+        "React"
+      ],
+      "nodes": 18,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002322",
+      "technologies": [
+        "Flutter",
+        "Firebase"
+      ],
+      "targets": [
+        "Flutter",
+        "Firebase"
+      ],
+      "nodes": 10,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002333",
+      "technologies": [
+        "Cube",
+        "dbt",
+        "Snowflake"
+      ],
+      "targets": [
+        "Cube (Semantic Layer)",
+        "dbt (Data Build Tool)",
+        "Snowflake"
+      ],
+      "nodes": 15,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002347",
+      "technologies": [
+        "Airtable",
+        "Softr"
+      ],
+      "targets": [
+        "Airtable",
+        "Softr"
+      ],
+      "nodes": 4,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002353",
+      "technologies": [
+        "Django",
+        "HTMX"
+      ],
+      "targets": [
+        "Django (Web Framework)",
+        "HTMX"
+      ],
+      "nodes": 10,
+      "max_depth": 2,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002365",
+      "technologies": [
+        "Node.js",
+        "Redis",
+        "npm"
+      ],
+      "targets": [
+        "Node.js",
+        "Redis",
+        "npm"
+      ],
+      "nodes": 8,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002379",
+      "technologies": [
+        "Go",
+        "Redis",
+        "LLM"
+      ],
+      "targets": [
+        "Golang Fundamentals",
+        "Redis",
+        "Large Language Models"
+      ],
+      "nodes": 16,
+      "max_depth": 5,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002390",
+      "technologies": [
+        "Wix"
+      ],
+      "targets": [
+        "Wix"
+      ],
+      "nodes": 7,
+      "max_depth": 4,
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "sample_id": "G1_002399",
+      "technologies": [
+        "SwiftUI",
+        "HealthKit"
+      ],
+      "targets": [
+        "Swift and SwiftUI",
+        "HealthKit"
+      ],
+      "nodes": 7,
+      "max_depth": 3,
+      "status": "ok",
+      "problems": []
+    }
+  ]
+}
