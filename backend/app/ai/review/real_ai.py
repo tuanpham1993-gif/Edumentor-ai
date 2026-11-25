@@ -166,6 +166,29 @@ class RealAI(ReviewAI):
             KNOWLEDGE_SYSTEM_PROMPT, prompt, temperature=0.3, timeout=timeout, schema=GEMINI_KNOWLEDGE_SCHEMA
         )
 
+    # ─────────────── soạn câu ôn theo kỹ năng (G3b, 25/11) ───────────────
+
+    def write_questions(
+        self,
+        skill: str,
+        passages: list[dict],
+        kind: str,
+        need: dict[str, int],
+        existing: list[str],
+        feedback: list[str],
+        *,
+        timeout: float = 120.0,
+    ):
+        """→ JSON thô {"questions": [...]} (question_gen_service kiểm lại bằng check_questions). kind: "mcq" | "essay".
+        temperature 0,5: câu đa dạng nhưng bám tài liệu; feedback = lỗi lần trước (soạn lại có phản hồi — phase 02)."""
+        from app.ai.prompts.review_generate import GEN_SYSTEM_PROMPT, build_question_prompt
+        from app.ai.review.question_schema import GEMINI_QUESTION_SCHEMAS
+
+        prompt = build_question_prompt(skill, passages, need, existing, feedback)
+        return self._call(
+            GEN_SYSTEM_PROMPT, prompt, temperature=0.5, timeout=timeout, schema=GEMINI_QUESTION_SCHEMAS[kind]
+        )
+
     # ─────────────── chấm tự luận ───────────────
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:
