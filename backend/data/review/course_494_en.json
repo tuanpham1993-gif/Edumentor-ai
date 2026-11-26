@@ -297,7 +297,7 @@
       "content": "Explain what the Internet of Things is and what an object needs in order to become part of it.",
       "rubric": [
         {
-          "text": "Things collect and exchange data with other devices over a network",
+          "text": "Things exchange data over a network (any one of: collect data, send data, share data, exchange data).",
           "max_points": 4,
           "main_keywords": [
             "exchange data",
@@ -313,7 +313,7 @@
           "sub_keywords": []
         },
         {
-          "text": "They have sensors and network connectivity",
+          "text": "What an object needs (both needed: sensors; network connectivity).",
           "max_points": 3,
           "main_keywords": [
             "sensor",
@@ -350,7 +350,7 @@
       "content": "Describe how IoT is used in healthcare and in industry, and give the benefit of each.",
       "rubric": [
         {
-          "text": "Healthcare: wearable devices track heart rate or blood glucose and alert doctors remotely",
+          "text": "Healthcare use of IoT (any one of: wearables track heart rate or blood glucose, doctors are alerted remotely).",
           "max_points": 4,
           "main_keywords": [
             "wearable",
@@ -385,7 +385,7 @@
           ]
         },
         {
-          "text": "Industry benefit: failures are predicted before they happen (predictive maintenance)",
+          "text": "Industry benefit (any one of: failures predicted before they happen, fewer breakdowns, less downtime).",
           "max_points": 3,
           "main_keywords": [
             "predict failure",
@@ -415,7 +415,7 @@
       "content": "Explain why security and privacy are serious problems for IoT devices used in homes.",
       "rubric": [
         {
-          "text": "Devices keep default passwords and rarely get updates",
+          "text": "Devices are easy to break into (any one of: default passwords, weak passwords, rarely updated).",
           "max_points": 4,
           "main_keywords": [
             "default password",
@@ -433,7 +433,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Attackers can take the devices over, for example into a botnet",
+          "text": "Attackers can take the devices over (any one of: hijack, control the device, use it in a botnet).",
           "max_points": 3,
           "main_keywords": [
             "botnet",
@@ -445,7 +445,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Sensors collect personal data about people's habits and health",
+          "text": "Sensors collect personal data about people (any one of: habits, health, daily life).",
           "max_points": 3,
           "main_keywords": [
             "personal data",
@@ -469,7 +469,7 @@
       "content": "IoT devices and systems are often described as constrained, heterogeneous and dynamic. Explain what each of these three characteristics means.",
       "rubric": [
         {
-          "text": "Constrained: little memory, low processing power, battery power",
+          "text": "Constrained: devices have limited resources (any one of: little memory, low processing power, battery power).",
           "max_points": 4,
           "main_keywords": [
             "little memory",
@@ -484,7 +484,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Heterogeneous: devices from many vendors with different hardware and protocols",
+          "text": "Heterogeneous: devices differ from each other (any one of: many vendors, different hardware, different protocols).",
           "max_points": 3,
           "main_keywords": [
             "many vendors",
@@ -499,7 +499,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Dynamic: devices join, leave or move all the time",
+          "text": "Dynamic: the set of devices keeps changing (any one of: devices join, leave, move, go offline).",
           "max_points": 3,
           "main_keywords": [
             "join",
@@ -580,7 +580,7 @@
       "content": "A city plans to install 100,000 IoT sensors from several vendors, most of them running on batteries. For each of these three challenges — security, interoperability and energy — suggest one concrete way to handle it. Also explain why energy matters so much for this project.",
       "rubric": [
         {
-          "text": "Security: unique or strong passwords, regular updates or encryption",
+          "text": "Security: one concrete protection (any one of: unique or strong passwords, regular updates, encryption).",
           "max_points": 3,
           "main_keywords": [
             "unique password",
@@ -611,7 +611,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Energy: low-power hardware and radios, devices sleep most of the time",
+          "text": "Energy: one way to save power (any one of: low-power hardware or radios, sleep most of the time, energy harvesting).",
           "max_points": 3,
           "main_keywords": [
             "low-power",
@@ -623,7 +623,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Why energy matters: replacing or recharging 100,000 batteries is slow and costly",
+          "text": "Why energy matters: batteries are hard to service at this scale (any one of: replacing or recharging 100,000 batteries is slow, costly, impractical).",
           "max_points": 2,
           "main_keywords": [
             "replace",
@@ -901,7 +901,7 @@
           ]
         },
         {
-          "text": "A gateway connects local devices to the internet and translates protocols",
+          "text": "A gateway links local devices to the internet (any one of: connects them to the internet, translates protocols, forwards their data).",
           "max_points": 4,
           "main_keywords": [
             "connect",
@@ -954,7 +954,7 @@
           ]
         },
         {
-          "text": "The bottom layer collects data from the physical world with sensors and actuators",
+          "text": "The bottom layer collects data from the physical world (any one of: with sensors, with actuators, senses the environment).",
           "max_points": 4,
           "main_keywords": [
             "collect data",
@@ -991,7 +991,7 @@
           ]
         },
         {
-          "text": "Device-to-gateway: a local gateway such as a hub or phone forwards the data",
+          "text": "Device-to-gateway (both needed: a local gateway such as a hub or phone; it forwards the data onward to the cloud).",
           "max_points": 5,
           "main_keywords": [
             "hub",
@@ -1031,7 +1031,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Scalability: a system may have millions of devices and large volumes of data",
+          "text": "Scalability: a system may grow very large (any one of: millions of devices, large volumes of data).",
           "max_points": 5,
           "main_keywords": [
             "million",
@@ -1080,7 +1080,7 @@
           "sub_keywords": []
         },
         {
-          "text": "The hub / gateway and the network layer carry the data to the cloud",
+          "text": "The network layer carries the data (any one of: via the hub, via the gateway, over Zigbee or Wi-Fi).",
           "max_points": 2,
           "main_keywords": [
             "network layer"
@@ -1095,7 +1095,7 @@
           ]
         },
         {
-          "text": "Sensor and bulb belong to the perception layer",
+          "text": "The sensor and the bulb are mapped to the perception layer (both needed: sensor; bulb).",
           "max_points": 2,
           "main_keywords": [
             "perception layer",
@@ -1162,7 +1162,7 @@
           ]
         },
         {
-          "text": "Processing layer: stores and analyses large amounts of data",
+          "text": "Processing layer: handles large amounts of data (any one of: stores, analyses, processes).",
           "max_points": 2,
           "main_keywords": [
             "store",
@@ -1191,7 +1191,7 @@
           ]
         },
         {
-          "text": "Business layer: manages the whole system, business models and privacy",
+          "text": "Business layer: manages the whole system (any one of: overall management, business models, privacy).",
           "max_points": 2,
           "main_keywords": [
             "manage",
@@ -1482,7 +1482,7 @@
       "content": "Compare MQTT QoS 0 and QoS 1.",
       "rubric": [
         {
-          "text": "QoS 0: at most once, no acknowledgement, the message may be lost",
+          "text": "QoS 0 (both needed: delivered at most once or without acknowledgement; the message may be lost).",
           "max_points": 5,
           "main_keywords": [
             "at most once",
@@ -1503,7 +1503,7 @@
           ]
         },
         {
-          "text": "QoS 1: at least once, acknowledged with PUBACK, may be duplicated",
+          "text": "QoS 1 (both needed: delivered at least once or acknowledged with PUBACK; the message may be duplicated).",
           "max_points": 5,
           "main_keywords": [
             "at least once",
@@ -1545,7 +1545,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Confirmable messages are acknowledged and retransmitted",
+          "text": "Confirmable messages (both needed: acknowledged with an ACK; retransmitted if no ACK arrives).",
           "max_points": 3,
           "main_keywords": [
             "ack",
@@ -1563,7 +1563,7 @@
           ]
         },
         {
-          "text": "Non-confirmable messages save energy and bandwidth for data that can be lost",
+          "text": "Non-confirmable messages are not acknowledged, which saves resources (any one of: energy, bandwidth, fewer messages).",
           "max_points": 3,
           "main_keywords": [
             "save energy",
@@ -1604,7 +1604,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Both use methods such as GET and POST and similar response codes",
+          "text": "Like HTTP, CoAP uses requests with methods or codes (any one of: methods such as GET or POST, similar response codes).",
           "max_points": 3,
           "main_keywords": [
             "method",
@@ -1616,7 +1616,7 @@
           "sub_keywords": []
         },
         {
-          "text": "CoAP runs over UDP instead of TCP, with a small header",
+          "text": "CoAP differs in transport or size (any one of: runs over UDP instead of TCP, small 4-byte header).",
           "max_points": 4,
           "main_keywords": [
             "udp",
@@ -1648,7 +1648,7 @@
           "sub_keywords": []
         },
         {
-          "text": "Topics have one level per room, e.g. greenhouse/<room>/temperature",
+          "text": "Each room has its own topic level (any one of: greenhouse/<room>/temperature, one topic per room).",
           "max_points": 2,
           "main_keywords": [
             "greenhouse /",
@@ -1660,7 +1660,7 @@
           "sub_keywords": []
         },
         {
-          "text": "The dashboard uses the + wildcard, which matches one level",
+          "text": "The dashboard subscribes with the single-level wildcard (any one of: +, plus sign, matches one level).",
           "max_points": 2,
           "main_keywords": [
             "+",
@@ -1733,7 +1733,7 @@
           ]
         },
         {
-          "text": "CoAP runs over UDP with a small header",
+          "text": "CoAP is light on the network (any one of: runs over UDP, small 4-byte header).",
           "max_points": 2,
           "main_keywords": [
             "udp",
