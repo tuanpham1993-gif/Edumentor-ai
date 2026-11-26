@@ -1,0 +1,4 @@
+{
+  "note": "Mẫu. Chép thành test_users.local.json (đã .gitignore) và ghi user ID các tài khoản thử được phép xóa lượt ôn tập. Không ghi email vào đây.",
+  "user_ids": []
+}

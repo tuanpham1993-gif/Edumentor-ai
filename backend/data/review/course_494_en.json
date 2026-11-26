@@ -1095,7 +1095,7 @@
           ]
         },
         {
-          "text": "The sensor and the bulb are mapped to the perception layer (both needed: sensor; bulb).",
+          "text": "Perception layer mapping (both needed: the motion sensor; the smart bulb or relay).",
           "max_points": 2,
           "main_keywords": [
             "perception layer",
