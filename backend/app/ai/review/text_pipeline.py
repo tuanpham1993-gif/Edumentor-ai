@@ -30,12 +30,14 @@ from functools import lru_cache
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 
-NEGATIONS = frozenset({"not", "no", "nor", "never", "none", "nothing", "neither", "nobody", "nowhere"})
+# 26/11: thêm "without" — "without a broker" không được tính là ý "qua broker" (Tuấn review đề 494).
+NEGATIONS = frozenset({"not", "no", "nor", "never", "none", "nothing", "neither", "nobody", "nowhere", "without"})
 # Từ khóa Python (for, while, if, in, is, and, or, ...) — stopwords của NLTK có nhiều từ này; bỏ đi thì
 # "while loop" chỉ còn "loop" → không phân biệt được for / while. Giữ nguyên, KHÔNG lemmatize ("is" giữ là "is").
 PYTHON_KEYWORDS = frozenset(k.lower() for k in keyword.kwlist)
 # Có trong stopwords của NLTK nhưng làm đổi nghĩa câu khi chấm → giữ lại.
-MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after", "again"})
+# 26/11: thêm "once" — "at most once" / "at least once" / "exactly once" (QoS MQTT) không bị rút còn "most" / "least".
+MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after", "again", "once"})
 # Ký hiệu lập trình được giữ; dấu câu khác bị bỏ.
 CODE_SYMBOLS = frozenset(
     {"[", "]", "(", ")", "{", "}", "=", "==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%", "+=", "-="}

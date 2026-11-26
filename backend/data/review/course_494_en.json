@@ -1,0 +1,1864 @@
+{
+  "course_id": 494,
+  "course_title": "Introduction to Internet of Things",
+  "note": "English bank (26/11/2026, drafted by Claude, reviewed by Tuấn) — batch 1 of 3: IoT, Model and Components of IoT, Messaging Protocols; 3 skills x 20 questions (14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 9 knowledge chunks. Batch 2: Sensors, Sensor Readout, Readout Non-Idealities; batch 3: Data analysis for IoT, Data Analysis Techniques. Content: well-established IoT basics, MQTT (OASIS standard) and CoAP (RFC 7252). Load with: python -m app.core.seed_data.seed_review --file data/review/course_494_en.json",
+  "skills": {
+    "IOT": 1109,
+    "IOTM": 1112,
+    "MSG": 1108
+  },
+  "chunks": [
+    {
+      "code": "IOT-K01",
+      "skill": "IOT",
+      "title": "What the Internet of Things is",
+      "content": "The Internet of Things (IoT) is a network of physical objects, called things, that have sensors, software and network connectivity so they can collect data and exchange it with other devices and systems over the internet. Each thing needs a unique identity, such as an IP address or a device ID, so that it can be found and addressed. Things sense their environment, for example temperature, motion or light, and some can also act on it through actuators such as motors, valves or switches. Key characteristics of IoT are connectivity, sensing, unique identity, heterogeneity (devices from many vendors with different hardware and protocols), very large scale (billions of devices) and dynamic change, because devices join, leave, move or sleep to save energy. Many IoT devices are constrained: they have little memory, low processing power and run on batteries."
+    },
+    {
+      "code": "IOT-K02",
+      "skill": "IOT",
+      "title": "Applications of IoT",
+      "content": "IoT is used in many sectors. In smart homes, connected lights, thermostats, door locks and cameras can be monitored and controlled from a phone, and rules can automate them, such as turning off lights when nobody is in a room. In agriculture, soil moisture sensors tell an irrigation system when to water crops, which saves water. In healthcare, wearable devices track heart rate or blood glucose and can alert doctors remotely. In industry, sensors on machines measure vibration and temperature to predict failures before they happen, which is called predictive maintenance. In smart cities, IoT supports smart parking, street lights that dim when roads are empty, and air quality monitoring."
+    },
+    {
+      "code": "IOT-K03",
+      "skill": "IOT",
+      "title": "Challenges of IoT",
+      "content": "IoT also brings challenges. Security is a major one: many devices ship with default passwords and rarely get software updates, so attackers can take them over, for example to build a botnet. Privacy is another, because sensors in homes and wearables collect personal data about people's habits and health. Interoperability is hard because devices from different vendors use different protocols and data formats, so they cannot always work together; standards and gateways help. Energy is limited for battery-powered devices, so they must use low-power hardware and radios and sleep most of the time. Scalability matters because a system may have to manage millions of devices and handle large volumes of data."
+    },
+    {
+      "code": "IOTM-K01",
+      "skill": "IOTM",
+      "title": "Components of an IoT system",
+      "content": "A typical IoT system has several components. Sensors measure physical quantities such as temperature, humidity or motion, and actuators change the physical world, for example by switching a relay or turning a motor. The sensors and actuators are attached to an IoT node (device), usually built around a microcontroller with a radio. A gateway connects local devices to the internet and can translate between protocols, for example from Zigbee or Bluetooth to Wi-Fi or Ethernet, and can filter or aggregate data. The network carries the data, and a cloud or server platform stores and analyses it. Finally, an application or user interface, such as a mobile app or dashboard, lets people see the data and send commands. In home automation, a motion sensor in a room sends an event through a hub (gateway) to the cloud, and a rule turns on the light."
+    },
+    {
+      "code": "IOTM-K02",
+      "skill": "IOTM",
+      "title": "Layered IoT architectures",
+      "content": "IoT architectures are often described in layers. The basic three-layer architecture has a perception layer, a network layer and an application layer. The perception layer (also called the sensing or device layer) contains sensors and actuators that collect data from the physical world. The network layer transmits that data to other devices and servers using technologies such as Wi-Fi, cellular networks, Zigbee or LoRa. The application layer delivers services to users, such as a smart home app or a smart city service. A five-layer architecture adds a processing layer (middleware) between the network and application layers to store, analyse and process large amounts of data, and a business layer on top that manages the whole system, including business models and user privacy."
+    },
+    {
+      "code": "IOTM-K03",
+      "skill": "IOTM",
+      "title": "Communication models and design goals",
+      "content": "IoT devices communicate in four common models. In the device-to-device model, devices talk directly to each other, for example a light switch and a bulb using Bluetooth or Zigbee. In the device-to-cloud model, a device connects directly to a cloud service over the internet, for example through Wi-Fi. In the device-to-gateway model, devices connect to a local gateway, such as a smartphone or hub, which forwards data to the cloud. In the back-end data-sharing model, data collected in one cloud service is shared with other authorised services so they can combine and analyse it. Design goals for IoT systems include low power consumption, low cost per device, scalability, reliability, security and privacy by design, and interoperability between devices from different vendors."
+    },
+    {
+      "code": "MSG-K01",
+      "skill": "MSG",
+      "title": "MQTT basics",
+      "content": "MQTT (Message Queuing Telemetry Transport) is a lightweight messaging protocol designed for constrained devices and unreliable networks. It uses a publish/subscribe model: clients do not send messages directly to each other but to a central server called a broker. A client that sends data publishes a message to a topic, a text string such as home/livingroom/temperature, and the broker forwards the message to every client that has subscribed to that topic. Topics are hierarchical, with levels separated by slashes. Subscribers can use wildcards: the plus sign (+) matches exactly one level, so home/+/temperature matches home/kitchen/temperature, and the hash sign (#) matches all remaining levels and must be the last character, so home/# matches every topic under home. MQTT runs over TCP; the default port is 1883, and 8883 is used for MQTT over TLS."
+    },
+    {
+      "code": "MSG-K02",
+      "skill": "MSG",
+      "title": "MQTT quality of service and session features",
+      "content": "MQTT offers three Quality of Service (QoS) levels for delivering a message. QoS 0 means at most once: the message is sent once without acknowledgement, so it may be lost. QoS 1 means at least once: the sender keeps the message until it receives a PUBACK, so the message arrives but may be duplicated. QoS 2 means exactly once: a four-step handshake (PUBLISH, PUBREC, PUBREL, PUBCOMP) makes sure the message arrives once, at the cost of more overhead. A retained message is stored by the broker for its topic and sent immediately to new subscribers, so they get the last known value. The Last Will and Testament is a message the client registers when it connects; the broker publishes it if the client disconnects unexpectedly. The keep-alive interval tells the broker how long the client may stay silent; the client sends PINGREQ packets to show it is still connected."
+    },
+    {
+      "code": "MSG-K03",
+      "skill": "MSG",
+      "title": "CoAP",
+      "content": "CoAP (Constrained Application Protocol) is a web transfer protocol for constrained devices and networks, standardised by the IETF in RFC 7252. Like HTTP it follows the REST style: resources are identified by URIs and accessed with the methods GET, POST, PUT and DELETE, and responses use codes similar to HTTP, such as 2.05 Content or 4.04 Not Found. Unlike HTTP, CoAP runs over UDP, by default on port 5683, and uses a compact 4-byte fixed header to save bandwidth and energy. Because UDP is unreliable, CoAP has its own message types: Confirmable (CON) messages must be acknowledged with an Acknowledgement (ACK) and are retransmitted if no ACK arrives; Non-confirmable (NON) messages are not acknowledged; a Reset (RST) message indicates that a received message could not be processed. With the Observe option, a client can register interest in a resource and the server sends notifications whenever it changes."
+    }
+  ],
+  "questions": [
+    {
+      "code": "IOT-TN-01",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does each IoT device need so that it can be found and addressed on a network?",
+      "options": [
+        "A unique identity such as an IP address or device ID",
+        "A large colour touch screen for local user input",
+        "A permanent wired connection to the electricity grid",
+        "A full desktop operating system such as Windows"
+      ],
+      "correct_index": 0,
+      "explanation": "Each thing needs a unique identity, such as an IP address or device ID, so that it can be found and addressed."
+    },
+    {
+      "code": "IOT-TN-02",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which term describes IoT devices that have little memory, low processing power and run on batteries?",
+      "options": [
+        "Mainframe devices",
+        "Constrained devices",
+        "Virtual devices",
+        "Redundant devices"
+      ],
+      "correct_index": 1,
+      "explanation": "Devices with little memory, low processing power and battery power are called constrained devices."
+    },
+    {
+      "code": "IOT-TN-03",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which component lets an IoT device act on the physical world, for example by opening a valve?",
+      "options": [
+        "A sensor",
+        "A gateway",
+        "An actuator",
+        "A broker"
+      ],
+      "correct_index": 2,
+      "explanation": "Actuators such as motors, valves or switches act on the physical world; sensors only measure it."
+    },
+    {
+      "code": "IOT-TN-04",
+      "skill": "IOT",
+      "chunk": "IOT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is predictive maintenance in industrial IoT?",
+      "options": [
+        "Replacing every machine on a fixed yearly schedule",
+        "Repairing machines only after they have broken down",
+        "Buying spare machines in case one of them fails",
+        "Using machine sensor data to predict failures early"
+      ],
+      "correct_index": 3,
+      "explanation": "Sensors measure vibration and temperature so failures can be predicted before they happen."
+    },
+    {
+      "code": "IOT-TN-05",
+      "skill": "IOT",
+      "chunk": "IOT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In smart agriculture, which sensor tells an irrigation system when crops need water?",
+      "options": [
+        "Soil moisture sensor",
+        "Accelerometer",
+        "Smoke detector",
+        "Proximity sensor"
+      ],
+      "correct_index": 0,
+      "explanation": "Soil moisture sensors tell the irrigation system when to water crops, which saves water."
+    },
+    {
+      "code": "IOT-TN-06",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does interoperability mean for IoT devices?",
+      "options": [
+        "Devices can run for years on a single battery",
+        "Devices from different vendors can work together",
+        "Devices can encrypt every message that they send",
+        "Devices can be installed without any network"
+      ],
+      "correct_index": 1,
+      "explanation": "Interoperability is the ability of devices from different vendors, protocols and data formats to work together."
+    },
+    {
+      "code": "IOT-TN-07",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Why are many IoT devices easy for attackers to take over?",
+      "options": [
+        "They always use the newest and strongest encryption",
+        "They are never connected to the public internet at all",
+        "They often keep default passwords and rarely get updates",
+        "They are protected by a powerful firewall in the cloud"
+      ],
+      "correct_index": 2,
+      "explanation": "Many devices ship with default passwords and rarely get software updates, so attackers can take them over."
+    },
+    {
+      "code": "IOT-TN-08",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A smart thermostat measures room temperature and switches the heater on when the room gets cold. Which two IoT capabilities does it use?",
+      "options": [
+        "Routing and switching",
+        "Encryption and compression",
+        "Storage and backup",
+        "Sensing and actuating"
+      ],
+      "correct_index": 3,
+      "explanation": "It senses the temperature (sensor) and acts on the heater (actuator)."
+    },
+    {
+      "code": "IOT-TN-09",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A smart-city network has thousands of sensors from different vendors; some sleep to save energy and new ones are added every month. Which pair of IoT characteristics does this show?",
+      "options": [
+        "Heterogeneity and dynamic change",
+        "Low latency and high bandwidth",
+        "Central control and fixed topology",
+        "Wired power and identical hardware"
+      ],
+      "correct_index": 0,
+      "explanation": "Devices from many vendors show heterogeneity; devices that sleep, join and leave show dynamic change."
+    },
+    {
+      "code": "IOT-TN-10",
+      "skill": "IOT",
+      "chunk": "IOT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A hospital wants to watch a patient's heart rate at home and alert the doctor if it becomes dangerous. Which IoT application area is this?",
+      "options": [
+        "Precision agriculture",
+        "Remote health monitoring",
+        "Smart parking",
+        "Predictive maintenance"
+      ],
+      "correct_index": 1,
+      "explanation": "Wearable devices that track heart rate and alert doctors remotely are a healthcare (remote monitoring) use."
+    },
+    {
+      "code": "IOT-TN-11",
+      "skill": "IOT",
+      "chunk": "IOT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A city wants its street lights to use less energy late at night when roads are empty. Which IoT solution fits best?",
+      "options": [
+        "Replacing all street lights with brighter bulbs",
+        "Switching every street light off for the whole night",
+        "Lights with motion sensors that dim when nobody is near",
+        "Asking residents to report broken lights by email"
+      ],
+      "correct_index": 2,
+      "explanation": "Smart street lights dim when roads are empty, saving energy without leaving roads dark."
+    },
+    {
+      "code": "IOT-TN-12",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A company buys smart locks from vendor A and a hub from vendor B, but the hub cannot control the locks because they use different protocols. Which IoT challenge is this?",
+      "options": [
+        "Scalability",
+        "Energy efficiency",
+        "Latency",
+        "Interoperability"
+      ],
+      "correct_index": 3,
+      "explanation": "Devices from different vendors using different protocols that cannot work together is an interoperability problem."
+    },
+    {
+      "code": "IOT-TN-13",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A fitness band records sleep times and location all day and uploads them to the cloud. Which concern does this raise most directly?",
+      "options": [
+        "Privacy of personal data",
+        "Battery chemistry",
+        "Radio interference",
+        "Screen resolution"
+      ],
+      "correct_index": 0,
+      "explanation": "Wearables collect personal data about people's habits and health, which is a privacy concern."
+    },
+    {
+      "code": "IOT-TN-14",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why do battery-powered IoT sensors usually sleep most of the time and wake up only to send data?",
+      "options": [
+        "To get more processing power from the CPU",
+        "To save energy so the battery lasts longer",
+        "To make the radio signal travel much further",
+        "To store more readings in their small memory"
+      ],
+      "correct_index": 1,
+      "explanation": "Energy is limited for battery-powered devices, so they sleep most of the time to save it."
+    },
+    {
+      "code": "IOT-TL-01",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain what the Internet of Things is and what an object needs in order to become part of it.",
+      "rubric": [
+        {
+          "text": "Things collect and exchange data with other devices over a network",
+          "max_points": 4,
+          "main_keywords": [
+            "exchange data",
+            "collect data",
+            "share data",
+            "send data",
+            "transmit data",
+            "exchange information",
+            "share information",
+            "send and receive",
+            "communicate",
+            "communicates"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "They have sensors and network connectivity",
+          "max_points": 3,
+          "main_keywords": [
+            "sensor",
+            "connectivity",
+            "internet connection",
+            "network connection",
+            "connect to the internet",
+            "connected to the internet"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Each thing has a unique identity",
+          "max_points": 3,
+          "main_keywords": [
+            "unique identity",
+            "unique id",
+            "unique identifier",
+            "unique address",
+            "ip address",
+            "device id"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The Internet of Things is a network of physical things that collect and exchange data over the internet. An object needs sensors, software and network connectivity. It also needs a unique identity, such as an IP address."
+    },
+    {
+      "code": "IOT-TL-02",
+      "skill": "IOT",
+      "chunk": "IOT-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Describe how IoT is used in healthcare and in industry, and give the benefit of each.",
+      "rubric": [
+        {
+          "text": "Healthcare: wearable devices track heart rate or blood glucose and alert doctors remotely",
+          "max_points": 4,
+          "main_keywords": [
+            "wearable",
+            "heart rate",
+            "blood glucose",
+            "blood sugar",
+            "smartwatch",
+            "fitness tracker",
+            "vital sign",
+            "alert",
+            "remote",
+            "remotely",
+            "doctor",
+            "alerts",
+            "doctors"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Industry: sensors on machines measure vibration or temperature",
+          "max_points": 3,
+          "main_keywords": [
+            "vibration",
+            "machine",
+            "equipment",
+            "factory",
+            "temperature",
+            "machines"
+          ],
+          "sub_keywords": [
+            "machine",
+            "factory",
+            "industry",
+            "equipment",
+            "machines"
+          ]
+        },
+        {
+          "text": "Industry benefit: failures are predicted before they happen (predictive maintenance)",
+          "max_points": 3,
+          "main_keywords": [
+            "predict failure",
+            "predictive maintenance",
+            "before they happen",
+            "before it happen",
+            "before fail",
+            "before failing",
+            "before break",
+            "fewer failures",
+            "fewer breakdowns",
+            "less downtime",
+            "repaired early",
+            "repair early"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: In healthcare, wearable devices track a patient's heart rate or blood glucose and alert doctors remotely when something is wrong. In industry, sensors on machines measure vibration and temperature, so the company can predict failures before they happen and repair the machine in time."
+    },
+    {
+      "code": "IOT-TL-03",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain why security and privacy are serious problems for IoT devices used in homes.",
+      "rubric": [
+        {
+          "text": "Devices keep default passwords and rarely get updates",
+          "max_points": 4,
+          "main_keywords": [
+            "default password",
+            "factory password",
+            "same password",
+            "weak password",
+            "rarely updated",
+            "rarely get update",
+            "not updated",
+            "never updated",
+            "no update",
+            "without update",
+            "outdated"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Attackers can take the devices over, for example into a botnet",
+          "max_points": 3,
+          "main_keywords": [
+            "botnet",
+            "hijack",
+            "hacker",
+            "attacker",
+            "attack",
+            "hijacks",
+            "attacks"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Sensors collect personal data about people's habits and health",
+          "max_points": 3,
+          "main_keywords": [
+            "personal data",
+            "personal information",
+            "habit",
+            "health",
+            "private",
+            "daily life",
+            "habits"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Many home IoT devices ship with default passwords and rarely get software updates, so attackers can take them over and use them in a botnet. Privacy is also at risk, because cameras, sensors and wearables collect personal data about people's habits and health."
+    },
+    {
+      "code": "IOT-TL-04",
+      "skill": "IOT",
+      "chunk": "IOT-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "IoT devices and systems are often described as constrained, heterogeneous and dynamic. Explain what each of these three characteristics means.",
+      "rubric": [
+        {
+          "text": "Constrained: little memory, low processing power, battery power",
+          "max_points": 4,
+          "main_keywords": [
+            "little memory",
+            "limited memory",
+            "low memory",
+            "small memory",
+            "low processing power",
+            "limited processing",
+            "weak processor",
+            "battery"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Heterogeneous: devices from many vendors with different hardware and protocols",
+          "max_points": 3,
+          "main_keywords": [
+            "many vendors",
+            "different vendors",
+            "different manufacturers",
+            "different hardware",
+            "different protocols",
+            "different types of devices",
+            "different kinds of devices",
+            "many kinds"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Dynamic: devices join, leave or move all the time",
+          "max_points": 3,
+          "main_keywords": [
+            "join",
+            "leave",
+            "move",
+            "go offline",
+            "disconnect",
+            "come and go",
+            "joins",
+            "leaves",
+            "moves",
+            "disconnects"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Constrained means that many devices have little memory and low processing power and run on batteries. Heterogeneous means that the devices come from many vendors with different hardware and protocols. Dynamic means that devices join, leave or move all the time, so the system keeps changing."
+    },
+    {
+      "code": "IOT-TL-05",
+      "skill": "IOT",
+      "chunk": "IOT-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A farm wants to use less water for irrigation. Describe an IoT solution: which device measures the field, which device acts on the water supply, and what rule the system follows.",
+      "rubric": [
+        {
+          "text": "Soil moisture sensors measure the field",
+          "max_points": 3,
+          "main_keywords": [
+            "soil moisture",
+            "moisture sensor",
+            "humidity sensor"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "An actuator such as a valve or pump controls the water",
+          "max_points": 3,
+          "main_keywords": [
+            "valve",
+            "pump",
+            "actuator",
+            "sprinkler",
+            "pumps"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Rule: water only when the soil is dry or below a threshold",
+          "max_points": 2,
+          "main_keywords": [
+            "dry",
+            "threshold",
+            "only when needed",
+            "only when necessary",
+            "dries"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Benefit: less water is used",
+          "max_points": 2,
+          "main_keywords": [
+            "save water",
+            "less water",
+            "reduce water",
+            "water use",
+            "waste water",
+            "wasting water",
+            "water consumption"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Soil moisture sensors are placed in the fields to measure how wet the soil is. A valve on the water pipe is the actuator that the system opens or closes. The rule is to open the valve only when the soil is dry, so the farm saves water."
+    },
+    {
+      "code": "IOT-TL-06",
+      "skill": "IOT",
+      "chunk": "IOT-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A city plans to install 100,000 IoT sensors from several vendors, most of them running on batteries. For each of these three challenges — security, interoperability and energy — suggest one concrete way to handle it. Also explain why energy matters so much for this project.",
+      "rubric": [
+        {
+          "text": "Security: unique or strong passwords, regular updates or encryption",
+          "max_points": 3,
+          "main_keywords": [
+            "unique password",
+            "strong password",
+            "change default password",
+            "change the default password",
+            "software update",
+            "security update",
+            "firmware update",
+            "regular update",
+            "update regularly",
+            "patch",
+            "encryption",
+            "encrypt",
+            "patches",
+            "encrypts"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Interoperability: require open standards or use gateways that translate protocols",
+          "max_points": 2,
+          "main_keywords": [
+            "standard",
+            "gateway",
+            "translate",
+            "common protocol",
+            "same protocol",
+            "translates"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Energy: low-power hardware and radios, devices sleep most of the time",
+          "max_points": 3,
+          "main_keywords": [
+            "low-power",
+            "low power",
+            "sleep",
+            "energy harvesting",
+            "solar",
+            "sleeps"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Why energy matters: replacing or recharging 100,000 batteries is slow and costly",
+          "max_points": 2,
+          "main_keywords": [
+            "replace",
+            "recharge",
+            "battery life",
+            "change the batteries",
+            "costly",
+            "expensive",
+            "replaces",
+            "recharges"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: For security, every sensor should get a unique password and regular security updates. For interoperability, the city should require open standards or use gateways that translate between protocols. For energy, the sensors should use low-power radios and sleep most of the time, waking up only to send data. Energy matters so much because replacing 100,000 batteries would be slow and expensive."
+    },
+    {
+      "code": "IOTM-TN-01",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which IoT component connects local devices to the internet and can translate between protocols?",
+      "options": [
+        "Sensor",
+        "Actuator",
+        "Gateway",
+        "Dashboard"
+      ],
+      "correct_index": 2,
+      "explanation": "A gateway connects local devices to the internet and can translate, for example, from Zigbee to Wi-Fi."
+    },
+    {
+      "code": "IOTM-TN-02",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is an IoT node usually built around?",
+      "options": [
+        "A large database server",
+        "A desktop graphics card",
+        "A fibre-optic switch",
+        "A microcontroller with a radio"
+      ],
+      "correct_index": 3,
+      "explanation": "An IoT node is usually built around a microcontroller with a radio."
+    },
+    {
+      "code": "IOTM-TN-03",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In an IoT system, what is the main job of the cloud or server platform?",
+      "options": [
+        "To store and analyse data from the devices",
+        "To measure the room temperature directly",
+        "To physically switch the lights on and off",
+        "To supply power to battery-powered devices"
+      ],
+      "correct_index": 0,
+      "explanation": "The cloud or server platform stores and analyses the data; sensors measure and actuators act."
+    },
+    {
+      "code": "IOTM-TN-04",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What are the three layers of the basic IoT architecture?",
+      "options": [
+        "Physical, data link and transport",
+        "Perception, network and application",
+        "Client, server and database",
+        "Input, storage and output"
+      ],
+      "correct_index": 1,
+      "explanation": "The basic three-layer IoT architecture has a perception layer, a network layer and an application layer."
+    },
+    {
+      "code": "IOTM-TN-05",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which layer of the three-layer IoT architecture contains the sensors and actuators?",
+      "options": [
+        "Application layer",
+        "Network layer",
+        "Perception layer",
+        "Business layer"
+      ],
+      "correct_index": 2,
+      "explanation": "The perception (sensing) layer contains the sensors and actuators."
+    },
+    {
+      "code": "IOTM-TN-06",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which layer does the five-layer IoT architecture add between the network and application layers?",
+      "options": [
+        "Presentation layer",
+        "Physical layer",
+        "Session layer",
+        "Processing layer"
+      ],
+      "correct_index": 3,
+      "explanation": "The five-layer architecture adds a processing layer (middleware) between the network and application layers."
+    },
+    {
+      "code": "IOTM-TN-07",
+      "skill": "IOTM",
+      "chunk": "IOTM-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In which IoT communication model do devices talk directly to each other, for example a switch and a bulb over Bluetooth?",
+      "options": [
+        "Device-to-device",
+        "Device-to-cloud",
+        "Device-to-gateway",
+        "Back-end data sharing"
+      ],
+      "correct_index": 0,
+      "explanation": "In the device-to-device model, devices communicate directly with each other."
+    },
+    {
+      "code": "IOTM-TN-08",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "In a home automation system, a motion sensor detects a person and the hall light turns on. What is the role of the light?",
+      "options": [
+        "A sensor that measures motion",
+        "An actuator that acts on a command",
+        "A gateway that links two networks",
+        "A broker that routes the messages"
+      ],
+      "correct_index": 1,
+      "explanation": "The light changes the physical world when it receives a command, so it is an actuator."
+    },
+    {
+      "code": "IOTM-TN-09",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Smart bulbs in a house use Zigbee, but the cloud service can only be reached over Wi-Fi. Which component solves this?",
+      "options": [
+        "A second Zigbee bulb next to the Wi-Fi router",
+        "A larger battery inside every one of the bulbs",
+        "A hub that translates between Zigbee and Wi-Fi",
+        "A mobile app that shows the status of the bulbs"
+      ],
+      "correct_index": 2,
+      "explanation": "A gateway (hub) connects local devices to the internet and translates between protocols."
+    },
+    {
+      "code": "IOTM-TN-10",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A team is choosing between Wi-Fi, LoRa and cellular to send sensor data to a server. Which layer of the three-layer architecture are they designing?",
+      "options": [
+        "Perception layer",
+        "Application layer",
+        "Business layer",
+        "Network layer"
+      ],
+      "correct_index": 3,
+      "explanation": "The network layer transmits data using technologies such as Wi-Fi, cellular networks, Zigbee or LoRa."
+    },
+    {
+      "code": "IOTM-TN-11",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A system must store and analyse terabytes of sensor data before showing results in an app. In the five-layer architecture, which layer does this work?",
+      "options": [
+        "Processing layer",
+        "Perception layer",
+        "Business layer",
+        "Network layer"
+      ],
+      "correct_index": 0,
+      "explanation": "The processing layer (middleware) stores, analyses and processes large amounts of data."
+    },
+    {
+      "code": "IOTM-TN-12",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A smart parking app shows drivers where the free parking spaces are. Which layer of the IoT architecture does the app belong to?",
+      "options": [
+        "Perception layer",
+        "Application layer",
+        "Network layer",
+        "Processing layer"
+      ],
+      "correct_index": 1,
+      "explanation": "The application layer delivers services, such as a smart parking app, to users."
+    },
+    {
+      "code": "IOTM-TN-13",
+      "skill": "IOTM",
+      "chunk": "IOTM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A fitness band sends data via Bluetooth to the owner's phone, and the phone uploads it to the cloud. Which communication model is this?",
+      "options": [
+        "Device-to-device",
+        "Device-to-cloud",
+        "Device-to-gateway",
+        "Back-end data sharing"
+      ],
+      "correct_index": 2,
+      "explanation": "The phone acts as a local gateway that forwards the band's data to the cloud."
+    },
+    {
+      "code": "IOTM-TN-14",
+      "skill": "IOTM",
+      "chunk": "IOTM-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A thermostat company shares its users' energy data, with their permission, with the electricity provider's platform. Which communication model is this?",
+      "options": [
+        "Device-to-device",
+        "Device-to-gateway",
+        "Device-to-cloud",
+        "Back-end data sharing"
+      ],
+      "correct_index": 3,
+      "explanation": "Data collected in one cloud service is shared with another authorised service: back-end data sharing."
+    },
+    {
+      "code": "IOTM-TL-01",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain what sensors, actuators and a gateway each do in an IoT system.",
+      "rubric": [
+        {
+          "text": "Sensors measure physical quantities",
+          "max_points": 3,
+          "main_keywords": [
+            "measure",
+            "detect",
+            "sense",
+            "collect data",
+            "read",
+            "measures",
+            "detects",
+            "senses",
+            "reads"
+          ],
+          "sub_keywords": [
+            "sensor"
+          ]
+        },
+        {
+          "text": "Actuators change the physical world",
+          "max_points": 3,
+          "main_keywords": [
+            "change",
+            "act",
+            "switch",
+            "turn",
+            "move",
+            "control",
+            "open",
+            "changes",
+            "acts",
+            "switches",
+            "turns",
+            "moves",
+            "controls",
+            "opens"
+          ],
+          "sub_keywords": [
+            "actuator"
+          ]
+        },
+        {
+          "text": "A gateway connects local devices to the internet and translates protocols",
+          "max_points": 4,
+          "main_keywords": [
+            "connect",
+            "translate",
+            "forward",
+            "bridge",
+            "link",
+            "connects",
+            "translates",
+            "forwards",
+            "bridges",
+            "links"
+          ],
+          "sub_keywords": [
+            "gateway",
+            "hub"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Sensors measure the physical world, for example temperature. Actuators change it, for example by switching a relay. A gateway connects the local devices to the internet and translates between protocols such as Zigbee and Wi-Fi."
+    },
+    {
+      "code": "IOTM-TL-02",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "In the three-layer IoT architecture, which layer is at the bottom and which is at the top? Describe what the bottom layer does.",
+      "rubric": [
+        {
+          "text": "The lowest layer is the perception layer",
+          "max_points": 3,
+          "main_keywords": [
+            "perception layer",
+            "sensing layer",
+            "device layer"
+          ],
+          "sub_keywords": [
+            "lowest",
+            "bottom",
+            "first",
+            "bottoms"
+          ]
+        },
+        {
+          "text": "The top layer is the application layer",
+          "max_points": 3,
+          "main_keywords": [
+            "application layer"
+          ],
+          "sub_keywords": [
+            "top",
+            "highest",
+            "last",
+            "upper",
+            "tops",
+            "lasts"
+          ]
+        },
+        {
+          "text": "The bottom layer collects data from the physical world with sensors and actuators",
+          "max_points": 4,
+          "main_keywords": [
+            "collect data",
+            "gather data",
+            "sensor",
+            "physical world"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The lowest layer is the perception layer. It uses sensors and actuators to collect data from the physical world. The top layer is the application layer, which delivers services to users."
+    },
+    {
+      "code": "IOTM-TL-03",
+      "skill": "IOTM",
+      "chunk": "IOTM-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the difference between the device-to-cloud and the device-to-gateway communication models.",
+      "rubric": [
+        {
+          "text": "Device-to-cloud: the device connects directly to a cloud service",
+          "max_points": 5,
+          "main_keywords": [
+            "directly",
+            "straight",
+            "own internet connection",
+            "wi-fi",
+            "wifi"
+          ],
+          "sub_keywords": [
+            "device-to-cloud",
+            "device to cloud"
+          ]
+        },
+        {
+          "text": "Device-to-gateway: a local gateway such as a hub or phone forwards the data",
+          "max_points": 5,
+          "main_keywords": [
+            "hub",
+            "smartphone",
+            "phone",
+            "gateway",
+            "forward",
+            "pass",
+            "relay",
+            "phones",
+            "forwards",
+            "passes",
+            "relays"
+          ],
+          "sub_keywords": [
+            "device-to-gateway",
+            "device to gateway"
+          ]
+        }
+      ],
+      "explanation": "Model answer: In the device-to-cloud model, the device connects directly to a cloud service over the internet, for example through Wi-Fi. In the device-to-gateway model, the device connects to a local hub or smartphone, which forwards the data to the cloud."
+    },
+    {
+      "code": "IOTM-TL-04",
+      "skill": "IOTM",
+      "chunk": "IOTM-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain why low power consumption and scalability are important design goals for IoT systems.",
+      "rubric": [
+        {
+          "text": "Low power: many devices run on batteries for a long time",
+          "max_points": 5,
+          "main_keywords": [
+            "battery",
+            "years",
+            "long time",
+            "recharge",
+            "replace",
+            "recharges",
+            "replaces"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Scalability: a system may have millions of devices and large volumes of data",
+          "max_points": 5,
+          "main_keywords": [
+            "million",
+            "billion",
+            "thousand",
+            "many devices",
+            "large number",
+            "large volume",
+            "more devices",
+            "grow",
+            "grows"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Low power consumption matters because many devices run on batteries that must last for years. Scalability matters because a system may grow to millions of devices that produce large volumes of data."
+    },
+    {
+      "code": "IOTM-TL-05",
+      "skill": "IOTM",
+      "chunk": "IOTM-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Design a home automation system that turns on the hall light when someone enters at night. Describe the components and map them to the three architecture layers.",
+      "rubric": [
+        {
+          "text": "A motion sensor detects the person",
+          "max_points": 2,
+          "main_keywords": [
+            "motion sensor",
+            "pir",
+            "presence sensor",
+            "motion detector"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A smart bulb or relay is the actuator",
+          "max_points": 2,
+          "main_keywords": [
+            "smart bulb",
+            "relay",
+            "actuator",
+            "smart switch",
+            "smart light",
+            "relays"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The hub / gateway and the network layer carry the data to the cloud",
+          "max_points": 2,
+          "main_keywords": [
+            "network layer"
+          ],
+          "sub_keywords": [
+            "hub",
+            "gateway",
+            "zigbee",
+            "wi-fi",
+            "wifi",
+            "data"
+          ]
+        },
+        {
+          "text": "Sensor and bulb belong to the perception layer",
+          "max_points": 2,
+          "main_keywords": [
+            "perception layer",
+            "sensing layer",
+            "device layer"
+          ],
+          "sub_keywords": [
+            "sensor",
+            "bulb",
+            "relay",
+            "actuator",
+            "device",
+            "relays"
+          ]
+        },
+        {
+          "text": "The rule runs in the application layer",
+          "max_points": 2,
+          "main_keywords": [
+            "application layer"
+          ],
+          "sub_keywords": [
+            "rule",
+            "app",
+            "automation",
+            "logic",
+            "rules"
+          ]
+        }
+      ],
+      "explanation": "Model answer: A motion sensor detects a person, and a smart bulb is the actuator that switches the light. The sensor and the bulb belong to the perception layer. They talk to a hub over Zigbee, and the network layer carries the data to the cloud. The rule that turns on the light at night runs in the application layer."
+    },
+    {
+      "code": "IOTM-TL-06",
+      "skill": "IOTM",
+      "chunk": "IOTM-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Describe the five-layer IoT architecture layer by layer, and explain what the two extra layers add compared with the three-layer model.",
+      "rubric": [
+        {
+          "text": "Perception layer: sensors collect data",
+          "max_points": 2,
+          "main_keywords": [
+            "collect",
+            "sense",
+            "sensor",
+            "gather",
+            "collects",
+            "senses",
+            "gathers"
+          ],
+          "sub_keywords": [
+            "perception",
+            "sensing layer"
+          ]
+        },
+        {
+          "text": "Network layer: transmits the data",
+          "max_points": 2,
+          "main_keywords": [
+            "transmit",
+            "transmits",
+            "send",
+            "carry",
+            "carries",
+            "transfer",
+            "transfers",
+            "sends"
+          ],
+          "sub_keywords": [
+            "network layer"
+          ]
+        },
+        {
+          "text": "Processing layer: stores and analyses large amounts of data",
+          "max_points": 2,
+          "main_keywords": [
+            "store",
+            "analyse",
+            "analyze",
+            "database",
+            "big data",
+            "large amount",
+            "stores",
+            "analyses",
+            "analyzes"
+          ],
+          "sub_keywords": [
+            "processing layer",
+            "middleware"
+          ]
+        },
+        {
+          "text": "Application layer: delivers services to users",
+          "max_points": 2,
+          "main_keywords": [
+            "service",
+            "user",
+            "app",
+            "services"
+          ],
+          "sub_keywords": [
+            "application layer"
+          ]
+        },
+        {
+          "text": "Business layer: manages the whole system, business models and privacy",
+          "max_points": 2,
+          "main_keywords": [
+            "manage",
+            "business model",
+            "privacy",
+            "profit",
+            "whole system",
+            "manages",
+            "profits"
+          ],
+          "sub_keywords": [
+            "business layer"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The perception layer has sensors and actuators that collect data. The network layer transmits the data. The processing layer, or middleware, stores and analyses large amounts of data. The application layer delivers services to users. The business layer manages the whole system, including business models and privacy."
+    },
+    {
+      "code": "MSG-TN-01",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which messaging model does MQTT use?",
+      "options": [
+        "Publish/subscribe",
+        "Request/response",
+        "Peer-to-peer streaming",
+        "Remote procedure call"
+      ],
+      "correct_index": 0,
+      "explanation": "MQTT uses a publish/subscribe model with a central broker."
+    },
+    {
+      "code": "MSG-TN-02",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In MQTT, what is the server that receives messages and forwards them to subscribers called?",
+      "options": [
+        "Router",
+        "Broker",
+        "Gateway",
+        "Proxy"
+      ],
+      "correct_index": 1,
+      "explanation": "Clients send messages to a central server called a broker, which forwards them to subscribers."
+    },
+    {
+      "code": "MSG-TN-03",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the default port for MQTT without TLS?",
+      "options": [
+        "80",
+        "443",
+        "1883",
+        "5683"
+      ],
+      "correct_index": 2,
+      "explanation": "MQTT uses port 1883 by default and 8883 over TLS; 5683 is the CoAP port."
+    },
+    {
+      "code": "MSG-TN-04",
+      "skill": "MSG",
+      "chunk": "MSG-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which MQTT QoS level delivers a message exactly once?",
+      "options": [
+        "QoS 0",
+        "QoS 1",
+        "QoS 3",
+        "QoS 2"
+      ],
+      "correct_index": 3,
+      "explanation": "QoS 2 uses a four-step handshake to deliver a message exactly once; there is no QoS 3."
+    },
+    {
+      "code": "MSG-TN-05",
+      "skill": "MSG",
+      "chunk": "MSG-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does the broker do with a retained message?",
+      "options": [
+        "Stores it and sends it to new subscribers of the topic",
+        "Deletes it after the first subscriber reads it",
+        "Sends it back only to the client that published it",
+        "Hides it until the publisher connects again"
+      ],
+      "correct_index": 0,
+      "explanation": "A retained message is stored for its topic and sent immediately to new subscribers."
+    },
+    {
+      "code": "MSG-TN-06",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which transport protocol does CoAP use by default?",
+      "options": [
+        "TCP",
+        "UDP",
+        "HTTP",
+        "SCTP"
+      ],
+      "correct_index": 1,
+      "explanation": "Unlike HTTP, CoAP runs over UDP, by default on port 5683."
+    },
+    {
+      "code": "MSG-TN-07",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which CoAP message type must be acknowledged by the receiver?",
+      "options": [
+        "Non-confirmable (NON)",
+        "Reset (RST)",
+        "Confirmable (CON)",
+        "Notification (NTF)"
+      ],
+      "correct_index": 2,
+      "explanation": "Confirmable messages must be acknowledged with an ACK and are retransmitted if no ACK arrives."
+    },
+    {
+      "code": "MSG-TN-08",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A client subscribes to the topic home/+/temperature. Which published topic will it receive?",
+      "options": [
+        "home/kitchen/humidity",
+        "home/floor1/kitchen/temperature",
+        "office/kitchen/temperature",
+        "home/kitchen/temperature"
+      ],
+      "correct_index": 3,
+      "explanation": "The plus sign matches exactly one level, so only home/<one level>/temperature matches."
+    },
+    {
+      "code": "MSG-TN-09",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which subscription receives every message published under home, at any depth?",
+      "options": [
+        "home/#",
+        "home/+",
+        "home/*",
+        "#/home"
+      ],
+      "correct_index": 0,
+      "explanation": "The hash sign matches all remaining levels and must be the last character."
+    },
+    {
+      "code": "MSG-TN-10",
+      "skill": "MSG",
+      "chunk": "MSG-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A sensor sends a temperature reading every second, and losing one reading does not matter. Which QoS level is the most efficient choice?",
+      "options": [
+        "QoS 1",
+        "QoS 0",
+        "QoS 2",
+        "QoS 3"
+      ],
+      "correct_index": 1,
+      "explanation": "QoS 0 (at most once) has no acknowledgement overhead; an occasional lost reading is acceptable here."
+    },
+    {
+      "code": "MSG-TN-11",
+      "skill": "MSG",
+      "chunk": "MSG-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A door lock must receive the 'unlock' command once and only once, even on an unreliable network. Which QoS level fits?",
+      "options": [
+        "QoS 0",
+        "QoS 1",
+        "QoS 2",
+        "QoS 3"
+      ],
+      "correct_index": 2,
+      "explanation": "Only QoS 2 guarantees exactly-once delivery; QoS 1 may deliver the command twice."
+    },
+    {
+      "code": "MSG-TN-12",
+      "skill": "MSG",
+      "chunk": "MSG-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A monitoring app wants to know when a sensor goes offline unexpectedly. Which MQTT feature should the sensor set when it connects?",
+      "options": [
+        "Retained message",
+        "Topic wildcard",
+        "Persistent topic",
+        "Last Will and Testament"
+      ],
+      "correct_index": 3,
+      "explanation": "The broker publishes the Last Will message if the client disconnects unexpectedly."
+    },
+    {
+      "code": "MSG-TN-13",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A client sends a CoAP GET request for /temperature and the resource exists. Which response code is typical?",
+      "options": [
+        "2.05 Content",
+        "4.04 Not Found",
+        "5.00 Internal Server Error",
+        "2.01 Created"
+      ],
+      "correct_index": 0,
+      "explanation": "2.05 Content returns the resource; 4.04 means it does not exist."
+    },
+    {
+      "code": "MSG-TN-14",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A dashboard must be told every time a sensor's value changes, without sending repeated GET requests. Which CoAP feature helps?",
+      "options": [
+        "Reset message",
+        "Observe",
+        "Non-confirmable message",
+        "Port 5683"
+      ],
+      "correct_index": 1,
+      "explanation": "With the Observe option, the server sends notifications whenever the resource changes."
+    },
+    {
+      "code": "MSG-TL-01",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain how messages travel from one client to another in MQTT.",
+      "rubric": [
+        {
+          "text": "Messages go through a central broker",
+          "max_points": 4,
+          "main_keywords": [
+            "broker",
+            "central server",
+            "brokers"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "A client publishes a message to a topic",
+          "max_points": 3,
+          "main_keywords": [
+            "publish",
+            "topic",
+            "publishes"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The broker forwards the message to the subscribers",
+          "max_points": 3,
+          "main_keywords": [
+            "forward",
+            "deliver",
+            "pass",
+            "route",
+            "forwards",
+            "delivers",
+            "passes",
+            "routes"
+          ],
+          "sub_keywords": [
+            "broker",
+            "brokers"
+          ]
+        }
+      ],
+      "explanation": "Model answer: In MQTT, clients do not send messages directly to each other. A client publishes a message to a topic on a central broker, and the broker forwards it to every client that has subscribed to that topic."
+    },
+    {
+      "code": "MSG-TL-02",
+      "skill": "MSG",
+      "chunk": "MSG-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Compare MQTT QoS 0 and QoS 1.",
+      "rubric": [
+        {
+          "text": "QoS 0: at most once, no acknowledgement, the message may be lost",
+          "max_points": 5,
+          "main_keywords": [
+            "at most once",
+            "no acknowledgement",
+            "no acknowledgment",
+            "without acknowledgement",
+            "without acknowledgment",
+            "no ack",
+            "without ack",
+            "not acknowledged",
+            "lost",
+            "fire and forget"
+          ],
+          "sub_keywords": [
+            "qos 0",
+            "qos0",
+            "level 0"
+          ]
+        },
+        {
+          "text": "QoS 1: at least once, acknowledged with PUBACK, may be duplicated",
+          "max_points": 5,
+          "main_keywords": [
+            "at least once",
+            "puback",
+            "acknowledgement",
+            "acknowledgment",
+            "acknowledged",
+            "ack",
+            "duplicate",
+            "more than once",
+            "resend",
+            "retransmit",
+            "duplicates",
+            "retransmits"
+          ],
+          "sub_keywords": [
+            "qos 1",
+            "qos1",
+            "level 1"
+          ]
+        }
+      ],
+      "explanation": "Model answer: QoS 0 means at most once: the message is sent without acknowledgement, so it may be lost. QoS 1 means at least once: the sender keeps the message until it gets a PUBACK, so it arrives but may be duplicated."
+    },
+    {
+      "code": "MSG-TL-03",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Why does CoAP define both Confirmable and Non-confirmable messages?",
+      "rubric": [
+        {
+          "text": "CoAP runs over unreliable UDP",
+          "max_points": 4,
+          "main_keywords": [
+            "udp",
+            "unreliable",
+            "lose packets"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Confirmable messages are acknowledged and retransmitted",
+          "max_points": 3,
+          "main_keywords": [
+            "ack",
+            "acknowledge",
+            "acknowledgement",
+            "acknowledgment",
+            "retransmit",
+            "resend",
+            "sent again",
+            "repeat",
+            "acknowledges",
+            "retransmits",
+            "repeats"
+          ],
+          "sub_keywords": [
+            "confirmable",
+            "con",
+            "cons"
+          ]
+        },
+        {
+          "text": "Non-confirmable messages save energy and bandwidth for data that can be lost",
+          "max_points": 3,
+          "main_keywords": [
+            "save energy",
+            "bandwidth",
+            "overhead",
+            "faster",
+            "less traffic",
+            "fewer messages",
+            "lost",
+            "not important"
+          ],
+          "sub_keywords": [
+            "non-confirmable",
+            "non"
+          ]
+        }
+      ],
+      "explanation": "Model answer: CoAP runs over UDP, which is unreliable. Confirmable messages must be acknowledged with an ACK and are retransmitted if no ACK arrives. Non-confirmable messages are not acknowledged, which saves energy and bandwidth for data that can be lost."
+    },
+    {
+      "code": "MSG-TL-04",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Give two ways in which CoAP is similar to HTTP and one way in which it is different.",
+      "rubric": [
+        {
+          "text": "Both follow the REST style: resources identified by URIs",
+          "max_points": 3,
+          "main_keywords": [
+            "rest",
+            "restful",
+            "uri",
+            "url",
+            "resource",
+            "rests"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Both use methods such as GET and POST and similar response codes",
+          "max_points": 3,
+          "main_keywords": [
+            "method",
+            "response code",
+            "status code",
+            "post",
+            "delete",
+            "posts",
+            "deletes"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "CoAP runs over UDP instead of TCP, with a small header",
+          "max_points": 4,
+          "main_keywords": [
+            "udp",
+            "small header",
+            "4-byte",
+            "compact header"
+          ],
+          "sub_keywords": [
+            "coap"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Like HTTP, CoAP follows the REST style and identifies resources with URIs. It also uses methods such as GET and POST and response codes similar to HTTP. Unlike HTTP, CoAP runs over UDP instead of TCP."
+    },
+    {
+      "code": "MSG-TL-05",
+      "skill": "MSG",
+      "chunk": "MSG-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "Design the MQTT messaging for a smart greenhouse with a temperature sensor and a fan in each of three rooms. Give example topics, a subscription that lets one dashboard read all rooms, and the delivery guarantee you would use for sensor data and for fan commands.",
+      "rubric": [
+        {
+          "text": "All messages go through one broker",
+          "max_points": 2,
+          "main_keywords": [
+            "broker",
+            "brokers"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Topics have one level per room, e.g. greenhouse/<room>/temperature",
+          "max_points": 2,
+          "main_keywords": [
+            "greenhouse /",
+            "/ temperature",
+            "/ temp",
+            "/ fan",
+            "per room"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The dashboard uses the + wildcard, which matches one level",
+          "max_points": 2,
+          "main_keywords": [
+            "+",
+            "plus sign",
+            "wildcard",
+            "one level",
+            "single level"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Sensor data: QoS 0 (at most once)",
+          "max_points": 2,
+          "main_keywords": [
+            "qos 0",
+            "qos0",
+            "at most once"
+          ],
+          "sub_keywords": [
+            "sensor",
+            "temperature",
+            "reading"
+          ]
+        },
+        {
+          "text": "Fan commands: QoS 1 or QoS 2",
+          "max_points": 2,
+          "main_keywords": [
+            "qos 1",
+            "qos 2",
+            "qos1",
+            "qos2",
+            "at least once",
+            "exactly once"
+          ],
+          "sub_keywords": [
+            "fan",
+            "command",
+            "fans",
+            "commands"
+          ]
+        }
+      ],
+      "explanation": "Model answer: All devices connect to one broker. Each room publishes to its own topic, for example greenhouse/room1/temperature, and each fan subscribes to a command topic such as greenhouse/room1/fan. The dashboard subscribes to greenhouse/+/temperature, where the plus sign matches one level, so it gets all rooms. Sensor readings use QoS 0, because a lost reading is replaced a second later. Fan commands use QoS 1, so a command is not lost."
+    },
+    {
+      "code": "MSG-TL-06",
+      "skill": "MSG",
+      "chunk": "MSG-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A battery-powered sensor network must choose between MQTT and CoAP. Compare the two protocols and recommend one for a device that only answers occasional requests from a server.",
+      "rubric": [
+        {
+          "text": "MQTT runs over TCP",
+          "max_points": 2,
+          "main_keywords": [
+            "tcp"
+          ],
+          "sub_keywords": [
+            "mqtt"
+          ]
+        },
+        {
+          "text": "MQTT needs a broker",
+          "max_points": 2,
+          "main_keywords": [
+            "broker",
+            "brokers"
+          ],
+          "sub_keywords": [
+            "mqtt"
+          ]
+        },
+        {
+          "text": "CoAP runs over UDP with a small header",
+          "max_points": 2,
+          "main_keywords": [
+            "udp",
+            "small header",
+            "4-byte",
+            "compact header"
+          ],
+          "sub_keywords": [
+            "coap"
+          ]
+        },
+        {
+          "text": "CoAP follows the REST style",
+          "max_points": 2,
+          "main_keywords": [
+            "rest",
+            "restful",
+            "resource",
+            "uri",
+            "rests"
+          ],
+          "sub_keywords": [
+            "coap"
+          ]
+        },
+        {
+          "text": "Recommends CoAP",
+          "max_points": 2,
+          "main_keywords": [
+            "recommend",
+            "prefer",
+            "choose",
+            "pick",
+            "recommends",
+            "prefers",
+            "chooses",
+            "picks"
+          ],
+          "sub_keywords": [
+            "coap"
+          ]
+        }
+      ],
+      "explanation": "Model answer: MQTT runs over TCP and needs a broker, and devices keep a connection open. CoAP runs over UDP with a small 4-byte header, which saves energy. CoAP follows the REST style, where a server reads a resource with GET. For a device that only answers occasional requests, I recommend CoAP, because it needs no broker and no open TCP connection."
+    }
+  ]
+}

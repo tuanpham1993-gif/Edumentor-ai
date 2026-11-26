@@ -208,3 +208,27 @@ def test_dispatcher_turns_partial_into_none_with_zero_points():
     out = keyword_grading.grade_essay(RUBRIC, "List mutable.", "")
     assert out[0] == {"result": "none", "points": 0.0, "evidence": None}
     assert {r["result"] for r in out} <= {"full", "none"}
+
+
+MQTT_RUBRIC = [
+    {"text": "Messages go through a broker", "max_points": 5, "main_keywords": ["broker"], "sub_keywords": []},
+    {"text": "QoS 0 is at most once", "max_points": 5, "main_keywords": ["at most once"], "sub_keywords": []},
+]
+
+
+def test_without_blocks_main_keyword():
+    """26/11: "without a broker" KHÔNG được tính là ý "qua broker"."""
+    answer = "Clients send messages directly to each other without a broker in this design."
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, answer)[0]["result"] == "none"
+    answer = "Every client sends its messages to a broker that forwards them to subscribers."
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, answer)[0]["result"] == "full"
+
+
+def test_at_most_once_needs_once():
+    """26/11: "at most once" khớp nguyên cụm, không còn khớp mọi chữ "most"."""
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, "QoS 0 delivers a message at most once, it may be lost.")[1][
+        "result"
+    ] == "full"
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, "Most messages arrive quickly with QoS 0 in practice.")[1][
+        "result"
+    ] == "none"

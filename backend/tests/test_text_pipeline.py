@@ -7,6 +7,7 @@ Cần dữ liệu NLTK: punkt_tab, stopwords, wordnet, averaged_perceptron_tagge
 import pytest
 
 from app.ai.review.text_pipeline import (
+    NEGATIONS,
     normalize,
     preprocess,
     remove_stopwords,
@@ -132,3 +133,11 @@ def test_steps_compose():
 def test_python_keywords_kept(text, expected):
     """Stopwords NLTK có for / while / if / in / and... — bỏ đi thì không phân biệt được for với while."""
     assert preprocess(text) == expected
+
+
+def test_without_is_a_negation_and_once_is_kept():
+    """26/11 (đề 494): "without a broker" phải giữ phủ định; "at most once" không được rút còn "most"."""
+    assert preprocess("without a broker") == ["without", "broker"]
+    assert "without" in NEGATIONS
+    assert preprocess("at most once") == ["most", "once"]
+    assert preprocess("at least once") == ["least", "once"]
