@@ -384,8 +384,8 @@ def test_free_ideas_and_cap(gdb):  # noqa: F811
     assert free == {"mcq": 5, "essay": 6}
     assert qgen.cap_by_ideas({"recognize": 4, "understand": 4, "easy": 2}, free) == {
         "recognize": 4, "understand": 1, "easy": 2}  # fmt: skip
-    # cần 8 TN → muốn ≥ 16 ý trống (dư để AI chọn), có 5 → thiếu 11; tự luận cần 2 → muốn 4, có 6 → đủ
-    assert qgen.ideas_short({"recognize": 4, "understand": 4, "easy": 2}, free) == 11
+    # cần 8 TN → muốn ≥ 10 ý trống (dư 2 để AI chọn), có 5 → thiếu 5; tự luận cần 2 → muốn 4, có 6 → đủ
+    assert qgen.ideas_short({"recognize": 4, "understand": 4, "easy": 2}, free) == 5
     # ca Power BI 26/11: cần đúng 1 câu, còn đúng 1 ý → vẫn tính THIẾU (muốn ≥ 3) → viết thêm đoạn
     assert qgen.ideas_short({"understand": 1}, {"mcq": 1, "essay": 9}) == 2
     assert qgen.ideas_short({}, free) == 0

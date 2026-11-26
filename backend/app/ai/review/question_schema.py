@@ -101,6 +101,31 @@ def norm(text: str) -> str:
     return " ".join(re.sub(r"[^\w\s]", " ", (text or "").lower()).split())
 
 
+# 26/11 (3b): lời giải thích / bài mẫu nhắc tới "the text" — học viên KHÔNG thấy đoạn tài liệu → bỏ cụm dẫn nguồn
+_SOURCE_REF = re.compile(
+    r"according to the (?:text|passage|source|document|context),?\s*"
+    r"|(?:the|this) (?:text|passage|source|document|context) "
+    r"(?:states|says|explains|mentions|notes|indicates|shows|describes)(?: that)?\s*",
+    re.IGNORECASE,
+)
+
+
+def clean_explanation(text: str | None) -> str | None:
+    """Bỏ "The text states that…", "According to the passage, …"; cụm ở đầu câu thì viết hoa chữ kế tiếp."""
+    if not text:
+        return text
+    out, pos = [], 0
+    for m in _SOURCE_REF.finditer(text):
+        out.append(text[pos : m.start()])
+        pos = m.end()
+        before = text[: m.start()].rstrip()
+        if (not before or before[-1] in ".!?:") and pos < len(text):
+            out.append(text[pos].upper())
+            pos += 1
+    out.append(text[pos:])
+    return "".join(out)
+
+
 def is_duplicate(content: str, others: list[str]) -> bool:
     text = norm(content)
     return any(text == o or SequenceMatcher(None, text, o).ratio() >= DUPLICATE_RATIO for o in others)
@@ -187,7 +212,9 @@ def check_questions(
             continue
         seen.append(norm(q.content))
         left[q.level] -= 1
-        good.append(_as_question(q, kind))
+        item = _as_question(q, kind)
+        item["explanation"] = clean_explanation(item["explanation"])  # 26/11: không nhắc "the text" (3b)
+        good.append(item)
     missing = {level: n for level, n in left.items() if n > 0}
     if missing:
         errors.append("still missing: " + ", ".join(f"{n} {level}" for level, n in missing.items()))

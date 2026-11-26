@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+from typing import Literal
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 
@@ -45,7 +46,7 @@ class Settings(BaseSettings):
     # G3e (25/11, D29): chống học thuộc — tránh câu của N lượt nộp gần nhất (P2); lượt CHƯA ĐẠT ẩn gì (P3):
     #   all = hiện đủ (như cũ) · mcq_only = ẩn bài mẫu tự luận · none = ẩn cả đáp án trắc nghiệm. Lượt Đạt luôn hiện đủ.
     REVIEW_AVOID_LAST_ATTEMPTS: int = 3
-    REVIEW_REVEAL_ON_FAIL: str = "mcq_only"
+    REVIEW_REVEAL_ON_FAIL: Literal["all", "mcq_only", "none"] = "mcq_only"  # 26/11: gõ sai → lỗi khi khởi động
     # G3c (25/11) cổng kiểm câu AI soạn — ngưỡng chốt sau hiệu chỉnh trên 263 câu soạn tay (docs mục 7.4)
     REVIEW_GATE_LENGTH_RATIO: float = 1.5  # L1: đáp án đúng dài hơn N × lựa chọn sai dài nhất…
     REVIEW_GATE_LENGTH_MIN_DIFF: int = 15  # …VÀ dài hơn ≥ N ký tự (bỏ qua lựa chọn ngắn như "PO" / "The Developers")

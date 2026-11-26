@@ -258,8 +258,9 @@ khớp model; DB thật lên `0003` (sao lưu trước), dữ liệu cũ còn ng
 | **G3a** | Kho đoạn tri thức: AI viết từ mô tả khóa + embedding + admin thêm / sửa / xóa | 04 | ✅ Code xong `450af21` (G3a-7 đo thêm còn treo) |
 | **G3b** | Sinh câu có schema, ghi đúng nguồn, soạn lại kèm lỗi, tránh trùng | 02 | ✅ Xong `f4ba1e8` |
 | **G3c** | Cổng kiểm tra hợp nhất + hiệu chỉnh ngưỡng | 05 | ✅ Xong — mục 7.4 |
-| G3d | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt + D24–D26 + P12 | 01, 03 | G3d-1 `c6ccef2`, G3d-2 `9231ba7`, G3d-3 ✅ — mục 7.5 |
-| G3e | Chống học thuộc (P2–P4 → D29) | 06 | Code xong — mục 7.6 |
+| **G3d** | Soạn ở nền + "Đang soạn đề…" + `auto_approved` + khóa chống soạn trùng + ôn theo khóa không lẫn câu tự duyệt + D24–D26 + P12 | 01, 03 | ✅ G3d-1 `c6ccef2`, G3d-2 `9231ba7`, G3d-3 `d33ccfb` — mục 7.5 (thử tay G3d-2 còn treo) |
+| **G3e** | Chống học thuộc (P2–P4 → D29) | 06 | ✅ Xong `f516f39` — mục 7.6 |
+| **7.7** | Sửa sau thử thật: màn chờ theo `job_id`, chặn trùng ý theo câu trích (Bước A), số câu theo số ý + viết thêm đoạn (Bước B, sửa D25) | — | ✅ `5b3dd9f`, `a7b9e2b`, `e262457`, `ee8780a` — mục 7.7 |
 | **G3f** | Mentor duyệt câu AI soạn (D19–D23, D27) | — | ✅ Xong `450af21` (G3f-7 thử tay còn treo) |
 | G3g | Số liệu + đo ~10 kỹ năng + cập nhật BA/SRS, báo cáo | 07 | |
 
@@ -275,7 +276,7 @@ thức phổ thông, chắc chắn**; không số liệu / lương / quảng cá
 - [x] G3a-5 Giao diện "Đoạn tài liệu (n)" ở trang Câu hỏi ôn tập (`ChunkManager.jsx`: xem, thêm, sửa, xóa, "AI viết đoạn tài liệu")
 - [x] G3a-6 Test + chạy toàn bộ — `test_knowledge.py` (14 test); toàn bộ 1.123 qua (2 lỗi cũ của Tâm)
 - [ ] G3a-7 Đo 5–10 kỹ năng với Gemini thật, Tuấn đọc (có bản dịch tiếng Việt)
-- [ ] G3a-8 Commit (khi Tuấn bảo)
+- [x] G3a-8 Commit `450af21`
 
 ### 7.2 G3f — Mentor duyệt câu AI soạn (Tuấn duyệt 25/11: D19–D23, D27)
 
@@ -289,7 +290,7 @@ Bản 24/11 (học viên phản ánh, ≥ 3 người tự tắt — D15–D18) *
 - [x] G3f-6 Test `test_mentor_review.py` (19 test, thay `test_question_reports.py`) + `test_review_security.py` thêm 3 API mentor; toàn bộ 1.148 qua (2 lỗi cũ của Tâm)
 - [x] G3f-6b Script test tay `python -m app.core.seed_data.make_sample_ai_questions` (6 câu mẫu Docker, câu 3 **cố ý sai**; `--remove` để xóa) — đã tạo trên DB máy Tuấn · nháp BA/SRS ở `docs/Thay-doi-BA-SRS-19-11.md` mục "Bổ sung 25/11"
 - [ ] G3f-7 Thử tay trên giao diện (Tuấn gán một tài khoản làm mentor)
-- [ ] G3f-8 Commit (khi Tuấn bảo)
+- [x] G3f-8 Commit `450af21`
 
 ### 7.3 G3b — AI soạn câu hỏi (Tuấn duyệt "theo đề xuất" 25/11)
 
@@ -363,7 +364,7 @@ Lưu ở `ai_check["gate"]` (không bảng mới).
 - [x] **P4** khối Guard (`pipeline/essay.py`): bài làm có **≥ 80% cụm 3 từ của bài mẫu** (bài mẫu ≥ 8 từ) → cờ `copied_model_answer`; trang admin "Kết Quả - AI Chấm" thêm lý do **"Bài chép bài mẫu"**. **Không đổi điểm** (test so điểm có / không có cờ)
 - [x] Kiểm P4 **không cần Gemini** trên bộ bài chuẩn (60 bài: 20 thật, 40 nhóm viết): **0 bài bị gắn cờ nhầm**. ⚠️ **Không chạy lại `eval_grading` trên tập test**: chính script ghi "test chạy MỘT lần cho bản cuối (B10)" — chạy lại là rò rỉ tập test; cờ không đổi điểm nên chạy lại chỉ thêm nhiễu Gemini
 - [x] Test `test_anti_memorization.py` (10); sửa `test_review_submit.test_meeting_example_essay_scores_8_of_10` theo P3 (lượt chưa Đạt không còn "Đáp án mẫu"); toàn bộ 1.208 qua (2 lỗi cũ của Tâm). Build Vite không lỗi
-- [ ] Commit (khi Tuấn bảo)
+- [x] Commit `f516f39` (26/11)
 
 ### 7.7 Thử thật 25/11 (Kubernetes #193, Gemini thật) — sửa màn chờ (Tuấn duyệt 25/11)
 
@@ -410,8 +411,24 @@ P2 / P3 đúng; mentor Đạt / Phản ánh / admin bác đúng. Phát hiện:
   thiếu sau các vòng → `_add_chunk` viết thêm 1 đoạn (chưa đủ 6) rồi soạn thêm 1 vòng (`_generate_steps(…, 1)`). Test +1
   (tổng `test_generation_jobs.py` 24); toàn bộ 1.225 qua. Đo lại Power BI: viết thêm "Writing DAX Measures in Power BI",
   **đề xong, 2 lần gọi**, 12 TN / 12 câu trích
-- [ ] Commit phần sửa (khi Tuấn bảo)
-- [ ] Commit (khi Tuấn bảo)
+- [x] Commit phần sửa `ee8780a` (26/11)
+- [x] Thử tay 26/11 (Tuấn): lượt 83 *Computer Programming* chưa Đạt → 3 câu tự luận ẩn bài mẫu ✔ (P3). Màn soạn đề
+  (Docker) và mentor / admin **chưa có dấu vết trong DB** → G3d-2, G3f-7 vẫn mở
+- [x] **Lỗi nhỏ sau review (Tuấn duyệt 26/11):**
+  - 3a Migration **`0007`**: `review_generation_jobs.detail` (JSON) — mỗi vòng soạn: bước, cần, đạt, lưu, lượt gọi, số câu
+    bị loại theo **nhóm lý do** (`same_idea`, `solver`, `model_answer`, `leaks_answer`, `generic_rubric`, `length_hint`,
+    `near_duplicate`, `quote`, `schema`, `shape`, `other`) + ≤ 3 lý do mẫu; `chunks_added`. Kiểm SQLite lên / xuống / lên;
+    DB máy Tuấn đã lên `0007`, model ↔ DB 0 sai lệch
+  - 3b `clean_explanation` bỏ "The text states…", "According to the passage, …" (không loại câu, không tốn lượt gọi) +
+    prompt **`gen-en-v6`** quy tắc 8; làm sạch 2 câu cũ (#374, #390) — 121 câu AI soạn không còn câu nào nhắc "the text"
+  - 3c `REVIEW_REVEAL_ON_FAIL: Literal["all", "mcq_only", "none"]` — gõ sai → lỗi khi khởi động
+  - 3d black 1 dòng `review_repository.py`
+  - Test `test_generation_detail.py` (27)
+  - Đo HTML #486 (`gen-en-v6`): đề xong 15 câu, 10 lần gọi, 0 câu nhắc "the text". `detail` cho thấy tự luận nâng cao bị
+    loại vì lộ đáp án (3) và thiếu ý barem (2). **Lưu ý:** biên dư ý 2× làm lần soạn đề đầu tiên viết luôn **6 đoạn**
+    (cần 12 TN → muốn ≥ 24 ý trống) — tốn thêm 1 lần gọi, nhiều đoạn AI viết chưa ai đọc → **Tuấn chốt 26/11: dư cố định 2**
+    (`IDEA_MARGIN`: cần n câu → muốn ≥ n + 2 ý trống; ca Power BI vẫn được sửa)
+- [x] Commit: màn chờ `5b3dd9f`, Bước A `a7b9e2b` (25/11)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
 câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có bản ghi kiểm chất lượng.
@@ -447,5 +464,7 @@ câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có b�
 | 17/11 | Thiết kế ôn theo kỹ năng (`guide.md`): AI soạn khi thiếu, cổng 4 khối, mục tiêu 30 câu / kỹ năng, chỉ CNTT (Q8) |
 | 21/11 | Thầy gửi review + kế hoạch 8 phase (`261121-2216-on-tap-ai-improvement`) |
 | 22/11 | G2 xong. Chốt G3 (D1–D11, D4–D5 phản ánh + tự tắt), sửa Q8 → D6. Quyết định không hỏi lại thầy, dùng tài liệu thầy để tham khảo (D12). Thử phase 01 rồi hoàn tác |
+| 26/11 | Đo thật Bước A / B với Gemini (Linux, SQL, Kubernetes, Power BI đều đủ đề, không còn 2 câu TN cùng câu trích; Kubernetes AI viết thêm 2 đoạn, đủ ~30 câu). Power BI lộ lỗ hổng "đúng 1 ý cho 1 câu" → sửa giữ dư ý + đoạn dự phòng `ee8780a`. Dọn ô commit cũ trong tài liệu |
+| 25/11 (tối) | Review backend + frontend, thử thật luồng học viên + mentor (Kubernetes): phát hiện màn chờ theo nhầm việc bổ sung, soạn bổ sung lặp mãi, câu diễn đạt lại trùng ý (cổng MiniLM không bắt) → sửa màn chờ `5b3dd9f`, Bước A `a7b9e2b`; commit G3e `f516f39`; `dedupe --apply` Kubernetes −10, Power BI −4 |
 | 25/11 | Buổi review của thầy. Chốt vai trò mentor (D19–D23): mentor duyệt câu AI soạn + phản ánh lỗi, admin xác nhận, học viên không phản ánh. Thầy hỏi thêm: bộ đề sinh thế nào, bao lâu sinh đề mới → chốt **D24** (cách C: sinh sẵn ban đêm cho kỹ năng ưu tiên + sinh khi cần cho phần còn lại). Code G3f theo mô hình mentor (D27, mục 7.2). Chốt **D25** (P1 — ~30 câu / kỹ năng) và **D26** (P16 tùy chọn 4 — câu sinh sẵn chờ mentor "Đạt"); **bỏ P17** (hàng đợi soạn đề khi nhiều người cùng bấm); xác nhận đã có xáo thứ tự câu + lựa chọn (`order_exam`), giới hạn còn lại cần P1 |
 | 24/11 | Đối chiếu tài liệu thầy (gap đều đúng) → đề xuất P1–P12. **G3.0 xong**: bảng + prompt v2 + 5.893 nhãn + trang admin; Tuấn kiểm 50 mẫu (84% / 92% / 0 mở sai); IoT theo D13. Gom toàn bộ G3 vào file này |

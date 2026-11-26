@@ -9,7 +9,7 @@ Docs: docs/Review-AI-Tu-Soan-On-Tap.md D9, D24, D25, mục 7.5.
   - D9: MỖI kỹ năng chỉ một việc đang chờ / chạy (index duy nhất có điều kiện) → nhiều người bấm cùng lúc chỉ soạn 1 lần.
 """
 
-from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index, Integer, String, func, text
+from sqlalchemy import JSON, CheckConstraint, Column, DateTime, ForeignKey, Index, Integer, String, func, text
 
 from app.core.database import Base
 
@@ -32,6 +32,8 @@ class ReviewGenerationJob(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     started_at = Column(DateTime(timezone=True), nullable=True)
     finished_at = Column(DateTime(timezone=True), nullable=True)
+    # 26/11 (migration 0007): lý do câu bị loại theo từng vòng — {"rounds": [...], "chunks_added": n}
+    detail = Column(JSON, nullable=True)
 
     __table_args__ = (
         CheckConstraint("kind IN ('exam', 'topup', 'nightly')", name="ck_review_generation_jobs_kind"),

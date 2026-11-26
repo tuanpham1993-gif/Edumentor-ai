@@ -206,8 +206,9 @@ def _ensure_ideas(db: Session, job: ReviewGenerationJob, deps: Deps) -> None:
         if target <= len(chunks):
             return
         try:
-            _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
-                        embed=deps.embed or (lambda _t: None), model=deps.model, target=target)  # fmt: skip
+            made = _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
+                               embed=deps.embed or (lambda _t: None), model=deps.model, target=target)  # fmt: skip
+            _log(job, chunks_added=len(made["created"]))
         except knowledge_service.KnowledgeError:
             if not chunks:
                 raise
@@ -323,12 +324,72 @@ def _add_chunk(db: Session, job: ReviewGenerationJob, deps: Deps) -> bool:
         return False
     _set(db, job, step=1)
     try:
-        _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
-                    embed=deps.embed or (lambda _t: None), model=deps.model, target=count + 1)  # fmt: skip
+        made = _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
+                           embed=deps.embed or (lambda _t: None), model=deps.model, target=count + 1)  # fmt: skip
+        _log(job, chunks_added=len(made["created"]))
     except knowledge_service.KnowledgeError:
         logger.warning("Soạn đề: không viết thêm được đoạn dự phòng (kỹ năng %s)", job.skill_id)
         return False
     return True
+
+
+# 26/11 (3a): nhóm lý do câu bị loại — so theo câu báo lỗi của question_schema (G3b) / question_gate (G3c, Bước A)
+REASON_GROUPS = (
+    ("same_idea", "same source sentence"),
+    ("solver", "independent solver"),
+    ("model_answer", "model answer only scores"),
+    ("leaks_answer", "copying the question text"),
+    ("leaks_answer", "already contains the keywords"),
+    ("generic_rubric", "answer to a different question"),
+    ("length_hint", "longer than the longest wrong"),
+    ("near_duplicate", "means almost the same"),
+    ("near_duplicate", "repeats an existing question"),
+    ("quote", "source_quote"),
+    ("quote", "passage must be"),
+    ("schema", "json"),
+    # validator chung (tiếng Việt) + thiếu giải thích → sai khung câu (đo HTML 26/11: "câu advanced phải có 4–5 ý")
+    ("shape", "phải có"),
+    ("shape", "phải là"),
+    ("shape", "max_points"),
+    ("shape", "lựa chọn"),
+    ("shape", "không được có"),
+    ("shape", "missing explanation"),
+    ("shape", "was not requested"),
+)
+DETAIL_ROUNDS_MAX = 30
+EXAMPLES_MAX, EXAMPLE_CHARS = 3, 200
+
+
+def reason_group(reason: str) -> str:
+    text = reason.lower()
+    return next((group for group, key in REASON_GROUPS if key.lower() in text), "other")
+
+
+def _log(job: ReviewGenerationJob, **changes) -> None:
+    """Ghi vào job.detail (gán dict MỚI để SQLAlchemy biết cột JSON đổi). Không commit."""
+    detail = dict(job.detail or {})
+    for key, value in changes.items():
+        if key == "round":
+            detail["rounds"] = (list(detail.get("rounds", [])) + [value])[-DETAIL_ROUNDS_MAX:]
+        else:
+            detail[key] = detail.get(key, 0) + value
+    job.detail = detail
+
+
+def _round_detail(step: int, part: dict, result: dict, saved: int) -> dict:
+    rejected: dict[str, int] = {}
+    examples: list[str] = []
+    for entry in result.get("rejected", []):
+        for error in entry.get("errors", []):
+            if error.startswith("still missing"):
+                continue
+            group = reason_group(error)
+            rejected[group] = rejected.get(group, 0) + 1
+            if len(examples) < EXAMPLES_MAX:
+                examples.append(error[:EXAMPLE_CHARS])
+    return {"step": step, "need": part, "passed": len(result.get("questions", [])), "saved": saved,
+            "calls": result.get("calls", 0) + result.get("solve_calls", 0), "rejected": rejected,
+            "examples": examples}  # fmt: skip
 
 
 def _generate_steps(db: Session, job: ReviewGenerationJob, deps: Deps, rounds: int) -> None:
@@ -346,7 +407,9 @@ def _generate_steps(db: Session, job: ReviewGenerationJob, deps: Deps, rounds: i
                                  need=part, model=deps.model, solve=deps.solve, embed=deps.embed)  # fmt: skip
             job.calls += result["calls"] + result.get("solve_calls", 0)
             origin = "nightly" if job.kind == "nightly" else "on_demand"
-            job.saved += save_questions(db, job.skill_id, result["questions"], origin)
+            saved = save_questions(db, job.skill_id, result["questions"], origin)
+            job.saved += saved
+            _log(job, round=_round_detail(step, part, result, saved))
             db.commit()
 
 

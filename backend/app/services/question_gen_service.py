@@ -91,14 +91,18 @@ def cap_by_ideas(need: dict[str, int], free: dict[str, int]) -> dict[str, int]:
     return out
 
 
+IDEA_MARGIN = 2  # số ý trống dư tối thiểu khi soạn (26/11)
+
+
 def ideas_short(need: dict[str, int], free: dict[str, int]) -> int:
     """Bước B: số ý còn THIẾU (loại thiếu nhiều nhất) để soạn đủ `need`, có DƯ để AI còn chọn: cần n câu → muốn
-    ≥ max(2n, n + 2) ý trống (đo 26/11: Power BI còn đúng 1 ý cho 1 câu → AI soạn 4 lần đều hỏng)."""
+    ≥ n + 2 ý trống (đo 26/11: Power BI còn đúng 1 ý cho 1 câu → AI soạn 4 lần đều hỏng; dư 2n thì lần soạn đề đầu
+    tiên viết luôn 6 đoạn — HTML — nên chỉ dư cố định 2)."""
     shorts = []
     for kind, levels in KINDS.items():
         n = sum(need.get(lv, 0) for lv in levels)
         if n > 0:
-            shorts.append(max(2 * n, n + 2) - free.get(kind, 0))
+            shorts.append(n + IDEA_MARGIN - free.get(kind, 0))
     return max(shorts, default=0)
 
 

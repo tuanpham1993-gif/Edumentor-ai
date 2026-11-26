@@ -259,7 +259,9 @@ def recent_submitted_question_ids(
     attempt_ids = list(
         db.scalars(
             select(ReviewAttempt.attempt_id)
-            .where(ReviewAttempt.user_id == user_id, _target(course_id, skill_id), ReviewAttempt.status != "in_progress")
+            .where(
+                ReviewAttempt.user_id == user_id, _target(course_id, skill_id), ReviewAttempt.status != "in_progress"
+            )
             .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
             .limit(attempts)
         )
