@@ -441,8 +441,8 @@ câu của 3 lượt gần nhất (nếu chốt P2); mỗi câu AI soạn có b�
 |---|---|---|
 | Bản tạm `SkillNode.jsx` — huy hiệu ôn tập hiện ở **mọi node** (để ôn cả kỹ năng chưa học) | Hòa duyệt | Điều kiện cũ để trong comment; không đồng ý thì khôi phục |
 | Nhãn phạm vi chỉ có trên DB máy Tuấn | Tuấn | P12 |
-| Gộp `tuan/skill-review` vào `review/featrure` | Sau 25/11 | Cả nhóm bắt đầu dùng Alembic: sửa cột bảng có sẵn phải viết migration; ghi vào README khi gộp |
-| Cập nhật BA/SRS (FR-24, FR-54) cho "đề do AI soạn, dùng ngay" | Tuấn | Trước khi gộp G3d |
+| Gộp `tuan/skill-review` vào `review/featrure` | Sau 25/11 | Cả nhóm bắt đầu dùng Alembic: sửa cột bảng có sẵn phải viết migration — **đã ghi vào README 26/11** |
+| Cập nhật BA/SRS (FR-24, FR-54) cho "đề do AI soạn, dùng ngay" | Tuấn | **Nháp 26/11** ở `docs/Thay-doi-BA-SRS-19-11.md` (mục "Bổ sung 26/11", 17 dòng: UC-24, FR-60–62, BR-38, sửa FR-24/27/54/57…) + nháp Mentor 25/11 — chờ Tuấn duyệt rồi chép vào Word |
 
 ---
 

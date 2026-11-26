@@ -86,7 +86,7 @@ Cây thư mục chi tiết của backend và frontend, ánh xạ endpoint → fi
 
 ## Công nghệ (giả định)
 
-- **Backend:** Python, FastAPI, SQLAlchemy (bảng tạo bằng `create_all` khi khởi động; Alembic: kế hoạch sau)
+- **Backend:** Python, FastAPI, SQLAlchemy, Alembic (backend tự chạy migration khi khởi động — `app/core/migrations.py`)
 - **CSDL:** PostgreSQL
 - **Frontend:** React 18, Vite 6.4.5, react-router-dom 6, CSS Modules, Axios (D-FE-09)
 - **AI:** mô hình ngôn ngữ lớn qua API
@@ -130,6 +130,11 @@ cd ../frontend && npm install && npm run dev   # http://localhost:5173
 **Dữ liệu khởi tạo — tự động khi backend khởi động trên database mới:** tạo bảng, nạp kỹ năng / khóa học /
 lộ trình mẫu (`backend/app/core/seed_data/seed_data_code.py`), nạp ngân hàng đề ôn tập + embedding
 (`review_autoseed.py`, chỉ khi chưa có đề). Không cần chạy migration hay script seed bằng tay.
+
+**Đổi cấu trúc database (cả nhóm):** backend tự nâng database lên migration mới nhất (Alembic) mỗi lần khởi động.
+Bảng MỚI vẫn được tạo tự động từ model; nhưng **sửa bảng có sẵn** (thêm / đổi / xóa cột, index, CHECK) thì phải viết
+migration trong `backend/alembic/versions` (`python -m alembic revision --autogenerate -m "..."` trong thư mục `backend`,
+đọc lại file sinh ra rồi commit cùng code) — `create_all` không sửa bảng đã có.
 
 **Chạy tay khi cần** (trong thư mục `backend`; với Docker thêm `docker compose exec backend` phía trước):
 
