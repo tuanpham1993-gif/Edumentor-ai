@@ -308,8 +308,7 @@
             "exchange information",
             "share information",
             "send and receive",
-            "communicate",
-            "communicates"
+            "communicate"
           ],
           "sub_keywords": []
         },
@@ -364,9 +363,7 @@
             "alert",
             "remote",
             "remotely",
-            "doctor",
-            "alerts",
-            "doctors"
+            "doctor"
           ],
           "sub_keywords": []
         },
@@ -378,15 +375,13 @@
             "machine",
             "equipment",
             "factory",
-            "temperature",
-            "machines"
+            "temperature"
           ],
           "sub_keywords": [
             "machine",
             "factory",
             "industry",
-            "equipment",
-            "machines"
+            "equipment"
           ]
         },
         {
@@ -445,9 +440,7 @@
             "hijack",
             "hacker",
             "attacker",
-            "attack",
-            "hijacks",
-            "attacks"
+            "attack"
           ],
           "sub_keywords": []
         },
@@ -460,8 +453,7 @@
             "habit",
             "health",
             "private",
-            "daily life",
-            "habits"
+            "daily life"
           ],
           "sub_keywords": []
         }
@@ -515,11 +507,7 @@
             "move",
             "go offline",
             "disconnect",
-            "come and go",
-            "joins",
-            "leaves",
-            "moves",
-            "disconnects"
+            "come and go"
           ],
           "sub_keywords": []
         }
@@ -551,8 +539,7 @@
             "valve",
             "pump",
             "actuator",
-            "sprinkler",
-            "pumps"
+            "sprinkler"
           ],
           "sub_keywords": []
         },
@@ -563,8 +550,7 @@
             "dry",
             "threshold",
             "only when needed",
-            "only when necessary",
-            "dries"
+            "only when necessary"
           ],
           "sub_keywords": []
         },
@@ -608,9 +594,7 @@
             "update regularly",
             "patch",
             "encryption",
-            "encrypt",
-            "patches",
-            "encrypts"
+            "encrypt"
           ],
           "sub_keywords": []
         },
@@ -622,8 +606,7 @@
             "gateway",
             "translate",
             "common protocol",
-            "same protocol",
-            "translates"
+            "same protocol"
           ],
           "sub_keywords": []
         },
@@ -635,8 +618,7 @@
             "low power",
             "sleep",
             "energy harvesting",
-            "solar",
-            "sleeps"
+            "solar"
           ],
           "sub_keywords": []
         },
@@ -649,9 +631,7 @@
             "battery life",
             "change the batteries",
             "costly",
-            "expensive",
-            "replaces",
-            "recharges"
+            "expensive"
           ],
           "sub_keywords": []
         }
@@ -898,11 +878,7 @@
             "detect",
             "sense",
             "collect data",
-            "read",
-            "measures",
-            "detects",
-            "senses",
-            "reads"
+            "read"
           ],
           "sub_keywords": [
             "sensor"
@@ -918,14 +894,7 @@
             "turn",
             "move",
             "control",
-            "open",
-            "changes",
-            "acts",
-            "switches",
-            "turns",
-            "moves",
-            "controls",
-            "opens"
+            "open"
           ],
           "sub_keywords": [
             "actuator"
@@ -939,12 +908,7 @@
             "translate",
             "forward",
             "bridge",
-            "link",
-            "connects",
-            "translates",
-            "forwards",
-            "bridges",
-            "links"
+            "link"
           ],
           "sub_keywords": [
             "gateway",
@@ -973,8 +937,7 @@
           "sub_keywords": [
             "lowest",
             "bottom",
-            "first",
-            "bottoms"
+            "first"
           ]
         },
         {
@@ -987,9 +950,7 @@
             "top",
             "highest",
             "last",
-            "upper",
-            "tops",
-            "lasts"
+            "upper"
           ]
         },
         {
@@ -1039,11 +1000,7 @@
             "gateway",
             "forward",
             "pass",
-            "relay",
-            "phones",
-            "forwards",
-            "passes",
-            "relays"
+            "relay"
           ],
           "sub_keywords": [
             "device-to-gateway",
@@ -1069,9 +1026,7 @@
             "years",
             "long time",
             "recharge",
-            "replace",
-            "recharges",
-            "replaces"
+            "replace"
           ],
           "sub_keywords": []
         },
@@ -1086,8 +1041,7 @@
             "large number",
             "large volume",
             "more devices",
-            "grow",
-            "grows"
+            "grow"
           ],
           "sub_keywords": []
         }
@@ -1121,8 +1075,7 @@
             "relay",
             "actuator",
             "smart switch",
-            "smart light",
-            "relays"
+            "smart light"
           ],
           "sub_keywords": []
         },
@@ -1154,8 +1107,7 @@
             "bulb",
             "relay",
             "actuator",
-            "device",
-            "relays"
+            "device"
           ]
         },
         {
@@ -1168,8 +1120,7 @@
             "rule",
             "app",
             "automation",
-            "logic",
-            "rules"
+            "logic"
           ]
         }
       ],
@@ -1190,10 +1141,7 @@
             "collect",
             "sense",
             "sensor",
-            "gather",
-            "collects",
-            "senses",
-            "gathers"
+            "gather"
           ],
           "sub_keywords": [
             "perception",
@@ -1205,13 +1153,9 @@
           "max_points": 2,
           "main_keywords": [
             "transmit",
-            "transmits",
             "send",
             "carry",
-            "carries",
-            "transfer",
-            "transfers",
-            "sends"
+            "transfer"
           ],
           "sub_keywords": [
             "network layer"
@@ -1224,12 +1168,10 @@
             "store",
             "analyse",
             "analyze",
+            "analyses",
             "database",
             "big data",
-            "large amount",
-            "stores",
-            "analyses",
-            "analyzes"
+            "large amount"
           ],
           "sub_keywords": [
             "processing layer",
@@ -1242,8 +1184,7 @@
           "main_keywords": [
             "service",
             "user",
-            "app",
-            "services"
+            "app"
           ],
           "sub_keywords": [
             "application layer"
@@ -1257,9 +1198,7 @@
             "business model",
             "privacy",
             "profit",
-            "whole system",
-            "manages",
-            "profits"
+            "whole system"
           ],
           "sub_keywords": [
             "business layer"
@@ -1505,8 +1444,7 @@
           "max_points": 4,
           "main_keywords": [
             "broker",
-            "central server",
-            "brokers"
+            "central server"
           ],
           "sub_keywords": []
         },
@@ -1515,8 +1453,7 @@
           "max_points": 3,
           "main_keywords": [
             "publish",
-            "topic",
-            "publishes"
+            "topic"
           ],
           "sub_keywords": []
         },
@@ -1527,15 +1464,10 @@
             "forward",
             "deliver",
             "pass",
-            "route",
-            "forwards",
-            "delivers",
-            "passes",
-            "routes"
+            "route"
           ],
           "sub_keywords": [
-            "broker",
-            "brokers"
+            "broker"
           ]
         }
       ],
@@ -1583,9 +1515,7 @@
             "duplicate",
             "more than once",
             "resend",
-            "retransmit",
-            "duplicates",
-            "retransmits"
+            "retransmit"
           ],
           "sub_keywords": [
             "qos 1",
@@ -1625,15 +1555,11 @@
             "retransmit",
             "resend",
             "sent again",
-            "repeat",
-            "acknowledges",
-            "retransmits",
-            "repeats"
+            "repeat"
           ],
           "sub_keywords": [
             "confirmable",
-            "con",
-            "cons"
+            "con"
           ]
         },
         {
@@ -1673,8 +1599,7 @@
             "restful",
             "uri",
             "url",
-            "resource",
-            "rests"
+            "resource"
           ],
           "sub_keywords": []
         },
@@ -1686,9 +1611,7 @@
             "response code",
             "status code",
             "post",
-            "delete",
-            "posts",
-            "deletes"
+            "delete"
           ],
           "sub_keywords": []
         },
@@ -1720,8 +1643,7 @@
           "text": "All messages go through one broker",
           "max_points": 2,
           "main_keywords": [
-            "broker",
-            "brokers"
+            "broker"
           ],
           "sub_keywords": []
         },
@@ -1776,9 +1698,7 @@
           ],
           "sub_keywords": [
             "fan",
-            "command",
-            "fans",
-            "commands"
+            "command"
           ]
         }
       ],
@@ -1806,8 +1726,7 @@
           "text": "MQTT needs a broker",
           "max_points": 2,
           "main_keywords": [
-            "broker",
-            "brokers"
+            "broker"
           ],
           "sub_keywords": [
             "mqtt"
@@ -1833,8 +1752,7 @@
             "rest",
             "restful",
             "resource",
-            "uri",
-            "rests"
+            "uri"
           ],
           "sub_keywords": [
             "coap"
@@ -1847,11 +1765,7 @@
             "recommend",
             "prefer",
             "choose",
-            "pick",
-            "recommends",
-            "prefers",
-            "chooses",
-            "picks"
+            "pick"
           ],
           "sub_keywords": [
             "coap"

@@ -38,6 +38,10 @@ PYTHON_KEYWORDS = frozenset(k.lower() for k in keyword.kwlist)
 # Có trong stopwords của NLTK nhưng làm đổi nghĩa câu khi chấm → giữ lại.
 # 26/11: thêm "once" — "at most once" / "at least once" / "exactly once" (QoS MQTT) không bị rút còn "most" / "least".
 MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after", "again", "once"})
+# 26/11: dạng "-s" mà nhánh danh từ đưa về gốc vô nghĩa trong bài học ("uses" → "us" = nước Mỹ, "senses" → "sens")
+# → luôn coi là động từ khi bị gán là danh từ / tính từ. Giới hạn đã biết: "analyses" vẫn về "analysis" (danh từ số
+# nhiều hợp lệ) nên từ khóa "analyse" không khớp "X analyses data" — barem ghi thêm "analyses".
+VERB_S_FORMS = {"uses": "use", "senses": "sense"}
 # Ký hiệu lập trình được giữ; dấu câu khác bị bỏ.
 CODE_SYMBOLS = frozenset(
     {"[", "]", "(", ")", "{", "}", "=", "==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%", "+=", "-="}
@@ -123,6 +127,12 @@ def lemmatize(tokens: list[str]) -> list[str]:
         if lemma == token and pos in ("n", "a") and token.endswith(("ing", "ed")):
             # Bộ gán từ loại hay coi "looping", "modified" là danh từ / tính từ → thử dạng gốc động từ.
             lemma = lemmatizer.lemmatize(token, "v")
+        if token in VERB_S_FORMS and pos in ("n", "a"):
+            lemma = VERB_S_FORMS[token]
+        elif lemma == token and pos in ("n", "a") and token.endswith("s"):
+            # 26/11: gán từ loại SAU khi bỏ stopwords nên "sensor detects motion" → "detects" bị coi là danh từ.
+            # Từ WordNet không có danh từ nhưng có động từ gốc → dùng động từ gốc ("detects" → "detect").
+            lemma = _verb_of_s_form(token)
         if lemma == token and pos == "n":
             lemma = _strip_plural(token)
         out.append(lemma)
@@ -162,6 +172,18 @@ def _merge_operators(tokens: list[str]) -> list[str]:
 def _is_word(token: str) -> bool:
     """Từ có gạch nối / gạch dưới như "read-only", "my_list" (isalnum() trả False)."""
     return bool(re.fullmatch(r"[a-z0-9]+(?:[-_][a-z0-9]+)+", token))
+
+
+def _verb_of_s_form(word: str) -> str:
+    """Động từ ngôi 3 số ít bị gán nhầm là danh từ / tính từ → dạng gốc động từ, CHỈ khi WordNet không có danh từ
+    cho từ đó (từ vừa danh từ vừa động từ như "links", "stores" đã về đúng gốc qua nhánh danh từ). morphy xử lý cả
+    "-es" ("publishes") và "-ies" ("certifies")."""
+    from nltk.corpus import wordnet
+
+    if wordnet.synsets(word, wordnet.NOUN):
+        return word
+    base = wordnet.morphy(word, wordnet.VERB)
+    return base if base and base != word else word
 
 
 def _strip_plural(word: str) -> str:

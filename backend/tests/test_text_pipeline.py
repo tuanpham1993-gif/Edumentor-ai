@@ -8,6 +8,8 @@ import pytest
 
 from app.ai.review.text_pipeline import (
     NEGATIONS,
+    _verb_of_s_form,
+    lemmatize,
     normalize,
     preprocess,
     remove_stopwords,
@@ -141,3 +143,48 @@ def test_without_is_a_negation_and_once_is_kept():
     assert "without" in NEGATIONS
     assert preprocess("at most once") == ["most", "once"]
     assert preprocess("at least once") == ["least", "once"]
+
+
+@pytest.mark.parametrize(
+    "text, verb",
+    [
+        ("A sensor detects motion.", "detect"),
+        ("The broker delivers it to all subscribers.", "deliver"),
+        ("The network layer transmits the data.", "transmit"),
+        ("A gateway connects local devices to the internet.", "connect"),
+        ("A client publishes a message to a topic.", "publish"),
+        ("The gateway translates between protocols.", "translate"),
+        ("The client subscribes to a topic.", "subscribe"),
+        ("Assignment uses the = sign to store a value.", "use"),
+        ("It uses sensors and actuators.", "use"),
+        ("The sensor senses motion.", "sense"),
+    ],
+)
+def test_third_person_verbs_reach_base_form(text, verb):
+    """26/11: gán từ loại sau khi bỏ stopwords → động từ "-s" bị coi là danh từ ("detects"), "uses" → "us"."""
+    assert verb in preprocess(text)
+
+
+@pytest.mark.parametrize("word", ["status", "bus", "gas", "less", "always", "this", "news", "analysis", "series"])
+def test_non_verb_s_words_kept(word):
+    """Từ đuôi "s" không phải động từ ngôi 3 → giữ nguyên."""
+    assert _verb_of_s_form(word) == word
+    assert lemmatize([word]) == [word]
+
+
+def test_nouns_with_verb_sense_still_use_noun_branch():
+    """Từ vừa danh từ vừa động từ về đúng gốc qua nhánh danh từ như cũ; "users", "leaves" (lá) không bị đổi sang động từ."""
+    assert preprocess("Users like the links and switches.") == ["user", "like", "link", "and", "switch"]
+    assert "leaf" in preprocess("Green leaves need water.")
+
+
+def test_keyword_and_answer_share_the_verb_form():
+    """Từ khóa đi qua cùng hàm: "detects" / "detect" ở barem và ở bài làm phải về cùng một dạng."""
+    assert preprocess("detects") == preprocess("detect") == ["detect"]
+    assert preprocess("publishes") == ["publish"]
+    assert preprocess("delivers") == preprocess("deliver")
+
+
+def test_analyses_is_a_known_limit():
+    """Giới hạn đã biết (26/11): "analyses" về "analysis" (danh từ số nhiều hợp lệ), không về "analyse"."""
+    assert preprocess("A layer analyses data.") == ["layer", "analysis", "data"]
