@@ -30,6 +30,15 @@ Sửa bộ chấm từ khóa (`text_pipeline`, `keyword_grader_en`)? Chụp đi�
 - Câu mô tả ý theo **mức tối thiểu**, đúng một trong hai mẫu (khớp quy tắc 8, 12 của prompt chấm):
   - `"<ý> (any one of: a, b, c)."` — nêu một chi tiết là đạt; danh sách **không** dùng chữ "and".
   - `"<chủ thể> (both needed: a; b)."` — phải đủ; **không** viết câu tóm tắt ở đầu (Gemini coi nó là ý chính).
+- Từ khóa đứng riêng và từ trong câu có thể ra **dạng gốc khác nhau** (bộ gán từ loại phụ thuộc ngữ cảnh): "two
+  readings" đứng riêng → `two read`, trong câu → `two reading`; "finer" → `finer` / `fine`. Bài thử "đúng nhưng viết
+  khác" chấm thấp bất thường → so `preprocess(từ khóa)` với `preprocess(câu)` và thêm cả hai dạng.
+- Câu đúng ở **dạng phủ định** ("readings do not follow a straight line") làm từ khóa bị coi là phủ định → thêm từ khóa
+  tự mang phủ định ("not follow a straight line", "non-linear").
+- Ký hiệu đơn vị bị bỏ khi tiền xử lý ("0.1 °C" → `0.1`): ý kết quả là con số thì gắn chủ thể bằng từ ngữ cảnh
+  (resolution, temperature…), không chỉ bằng đơn vị.
+- Thuật ngữ các sách dùng **ngược nhau** (vd active / passive): đề và barem hỏi khái niệm, không bắt nhãn; có bài thử
+  cho cả hai quy ước.
 - Mỗi câu tự luận có **bài thử** (`PROBES`): bài đúng viết khác, chỉ liệt kê tên, đảo vai trò, "without"… và
   `GEMINI_PROBES` (bản A một chi tiết, ý "both" chỉ một phần; bản B chi tiết khác, ý "both" đủ).
   Chuẩn đo Gemini: ý "any one of" lệch ≤ 1 điểm với từ khóa; ý "both" bản A → Gemini không đạt.

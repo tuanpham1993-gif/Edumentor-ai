@@ -2,6 +2,7 @@
 
     python -m scripts.bank.render_review 494                     (đầy đủ: đoạn + trắc nghiệm + tự luận)
     python -m scripts.bank.render_review 494 --essays-only       (chỉ tự luận + bài thử)
+    python -m scripts.bank.render_review 494 --skills SENS RO NI (chỉ một đợt)
     python -m scripts.bank.render_review 494 --out ~/Downloads/de-494.md
 
 Mặc định ghi vào data/bank_runs/review_<id>_<giờ>.md.
@@ -28,12 +29,14 @@ HEADER = [
 ]
 
 
-def render(data: dict, course, *, essays_only: bool) -> list[str]:
+def render(data: dict, course, *, essays_only: bool, skills: list[str] | None = None) -> list[str]:
     from app.ai.review.question_gate import keyword_score, model_answer
 
     title = f"# Đề khóa {course.COURSE_ID} — {course.COURSE_TITLE}" + (" — tự luận" if essays_only else "")
     lines = [title, "", *HEADER]
     for skill, name in course.SKILL_NAMES.items():
+        if skills and skill not in skills:
+            continue
         lines += [f"## {name} — #{course.SKILLS[skill]}", ""]
         if not essays_only:
             lines += ["### Đoạn tài liệu", ""]
@@ -89,11 +92,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Xuất file duyệt Markdown")
     parser.add_argument("course_id", type=int)
     parser.add_argument("--essays-only", action="store_true")
+    parser.add_argument("--skills", nargs="+", help="chỉ các mã kỹ năng này (vd SENS RO NI cho một đợt)")
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
     quiet()
     course = load_course(args.course_id)
-    lines = render(load_bank(bank_path(args.course_id)), course, essays_only=args.essays_only)
+    lines = render(load_bank(bank_path(args.course_id)), course, essays_only=args.essays_only, skills=args.skills)
     out = args.out.expanduser() if args.out else run_file(f"review_{args.course_id}", ".md")
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("đã ghi", out, len(lines), "dòng")
