@@ -6,7 +6,7 @@ import * as reviewAdminApi from '../../../api/reviewAdmin.api.js';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
 import { LEVEL_TEXT } from '../../review/reviewFormat.js';
-import { SOURCE_TEXT, questionStatus } from '../reviewAdminFormat.js';
+import { SOURCE_TEXT, mentorChip, questionStatus } from '../reviewAdminFormat.js';
 import styles from '../styles/AdminReviewQuestions.module.css';
 import QuestionDetail from './QuestionDetail.jsx';
 import QuestionEditor from './QuestionEditor.jsx';
@@ -83,7 +83,8 @@ export default function QuestionRow({ item, skills, onChanged }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const status = questionStatus(item);
-  const canToggle = item.review_status === 'approved';
+  const mentor = mentorChip(item); // G3f (25/11): câu AI tự duyệt → trạng thái mentor duyệt
+  const canToggle = item.review_status === 'approved' || item.review_status === 'auto_approved';
 
   async function toggleOpen() {
     const next = !open;
@@ -148,6 +149,7 @@ export default function QuestionRow({ item, skills, onChanged }) {
             {status.key !== 'active' && status.key !== 'disabled' && (
               <span className={`chip ${status.chip}`}>{status.text}</span>
             )}
+            {mentor && <span className={`chip ${mentor.chip}`}>{mentor.text}</span>}
           </span>
         </td>
         <td className={styles.num}>v{item.version}</td>

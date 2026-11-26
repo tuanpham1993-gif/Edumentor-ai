@@ -66,14 +66,16 @@ function buildGraph(data) {
       },
 
       data: {
+        skillId: skill.skill_id,
         skillName: skill.skill_name,
         nodeRole: skill.node_role,
+        isTarget: skill.is_target ?? false,
         isRequired: skill.is_required,
       },
 
-      // This is a preview, so students cannot drag nodes.
+      // This is a preview, so students cannot drag nodes, but can click to inspect courses.
       draggable: false,
-      selectable: false,
+      selectable: true,
     }));
   });
 
@@ -130,7 +132,7 @@ function buildGraph(data) {
   return { nodes, edges };
 }
 
-export default function LearningPathGraph({ learningPath }) {
+export default function LearningPathGraph({ learningPath, onSelectSkill }) {
   const { nodes, edges } = useMemo(
     () => buildGraph(learningPath),
     [learningPath]
@@ -153,6 +155,10 @@ export default function LearningPathGraph({ learningPath }) {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
 
+        onNodeClick={(_, node) => {
+          onSelectSkill?.(node.data);
+        }}
+
         fitView
         fitViewOptions={{
           padding: 0.15,
@@ -160,7 +166,7 @@ export default function LearningPathGraph({ learningPath }) {
 
         nodesDraggable={false}
         nodesConnectable={false}
-        elementsSelectable={false}
+        elementsSelectable={true}
 
         minZoom={0.2}
         maxZoom={1.5}

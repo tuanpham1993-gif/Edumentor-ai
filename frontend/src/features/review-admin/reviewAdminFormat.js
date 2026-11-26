@@ -35,6 +35,14 @@ export const LEVEL_FILTERS = [
 
 export const SOURCE_TEXT = { bank: 'Ngân hàng', ai: 'AI soạn' };
 
+// G3f (25/11 — D19–D23): câu AI tự duyệt (auto_approved) → trạng thái mentor duyệt. Câu khác → null (không hiện).
+export function mentorChip(item) {
+  if (item.review_status !== 'auto_approved') return null;
+  if (item.mentor_status === 'passed') return { text: 'Mentor đã duyệt', chip: 'chip-ok' };
+  if (item.mentor_status === 'reported') return { text: 'Mentor phản ánh', chip: 'chip-danger' };
+  return { text: 'Chờ mentor', chip: 'chip-accent' };
+}
+
 // Cột mức trong bảng sẵn sàng theo kỹ năng (cùng thứ tự khung đề 6 NB + 6 TH + 2 TL dễ + 1 TL nâng cao)
 export const READINESS_LEVELS = [
   { key: 'recognize', text: 'TN nhận biết' },

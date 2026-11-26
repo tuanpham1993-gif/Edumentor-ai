@@ -89,7 +89,7 @@ def get_index(db: Session, *, force: bool = False) -> skill_search.SkillIndex:
 def question_counts(db: Session, skill_ids: list[int]) -> dict[int, tuple[int, int]]:
     """skill_id → (số câu đang bật, số câu chờ duyệt)."""
     active: dict[int, int] = {}
-    for (skill_id, _level), n in repo.bank_counts(db, skill_ids).items():
+    for (skill_id, _level), n in repo.bank_counts(db, skill_ids, include_auto=True).items():  # G3d: câu ôn kỹ năng
         active[skill_id] = active.get(skill_id, 0) + n
     pending = repo.pending_counts(db, skill_ids)
     return {s: (active.get(s, 0), pending.get(s, 0)) for s in set(skill_ids)}

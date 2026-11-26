@@ -75,17 +75,21 @@ def send_review_result_email(
     passed: bool,
     completed_course: bool,
     attempt_id: int,
+    target: str = "khóa học",
 ) -> None:
-    """Email kết quả ôn tập (module 09 · GĐ3). Router gửi SAU khi kết quả đã lưu; lỗi gửi chỉ ghi log."""
+    """Email kết quả ôn tập (module 09 · GĐ3). Router gửi SAU khi kết quả đã lưu; lỗi gửi chỉ ghi log.
+    target: "khóa học" | "kỹ năng" (ôn theo kỹ năng — G2d, 22/11); course_title là tên khóa hoặc tên kỹ năng."""
     link = f"{settings.FRONTEND_URL}/review/{attempt_id}/result"
     verdict = "ĐẠT" if passed else "CHƯA ĐẠT"
     lines = [
         f"Xin chào {full_name},\n",
-        f"Bạn vừa nộp bài ôn tập khóa học \"{course_title}\".",
+        f'Bạn vừa nộp bài ôn tập {target} "{course_title}".',
         f"Điểm: {score:g}/10 — {verdict} (ngưỡng đạt {settings.REVIEW_PASS_SCORE:g}/10).",
     ]
     if completed_course:
-        lines.append("Chúc mừng! Khóa học đã chuyển sang Hoàn thành và các kỹ năng của khóa đã thành \"Đã biết\".")
+        lines.append('Chúc mừng! Khóa học đã chuyển sang Hoàn thành và các kỹ năng của khóa đã thành "Đã biết".')
+    elif passed and target == "kỹ năng":
+        lines.append('Chúc mừng! Kỹ năng đã được ghi nhận là "Đã biết".')
     elif not passed:
         lines.append("Bạn có thể ôn lại bất cứ lúc nào — mỗi lần là một đề mới.")
     lines.append(f"\nXem chi tiết từng câu: {link}")

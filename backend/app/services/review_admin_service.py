@@ -75,8 +75,9 @@ def list_questions(
             "review_status": status,
             "used_count": used_count,
             "skill_name": skill_name,
+            "mentor_status": mentor_status,
         }
-        for question, version, family_id, status, used_count, skill_name in rows
+        for question, version, family_id, status, used_count, skill_name, mentor_status in rows
     ]
     return {"total": total, "page": page, "size": size, "items": items}
 
@@ -158,11 +159,15 @@ def update(db: Session, question_id: int, body: QuestionUpdate, admin_id: int) -
             changes.get("chunk_id", question.chunk_id),
         )
 
-    result = _commit(
-        db,
-        lambda: bank.update_question(db, question, changes, minor=body.minor, user_id=admin_id, note=body.note),
-        as_detail=False,
-    )
+    def action():
+        result = bank.update_question(db, question, changes, minor=body.minor, user_id=admin_id, note=body.note)
+        if result.changed:  # G3f (25/11): câu được sửa → phản ánh của mentor tự đóng, câu bật lại + chuông báo mentor
+            from app.services import review_report_service
+
+            review_report_service.close_on_edit(db, admin_id, question_id, result.question)
+        return result
+
+    result = _commit(db, action, as_detail=False)
     return {
         "question": _detail(db, result.question),
         "versioned": result.versioned,
@@ -286,6 +291,7 @@ def _detail(db: Session, question) -> dict:
         "family_id": meta.family_id,
         "version": meta.version,
         "review_status": meta.review_status,
+        "mentor_status": meta.mentor_status,  # G3f (25/11)
         "used_count": repo.used_count(db, question.question_id),
         "chunk_id": question.chunk_id,
         "options": question.options,

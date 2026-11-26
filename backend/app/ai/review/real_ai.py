@@ -137,6 +137,68 @@ class RealAI(ReviewAI):
         except (KeyError, IndexError, ValueError, TypeError):
             raise AIOutputError("Gemini trả về không phải JSON hợp lệ") from None
 
+    # ─────────────── phân loại phạm vi kỹ năng (G3.0, 24/11) ───────────────
+
+    def classify_skills(self, items: list[dict], *, timeout: float = 120.0):
+        """Một lô kỹ năng → JSON thô {"results": [...]} (skill_scope_service kiểm lại bằng parse_scope).
+        temperature 0 (cùng đầu vào → cùng nhãn); lô 100 kỹ năng trả chậm hơn chấm bài → timeout riêng."""
+        from app.ai.prompts.review_scope import SCOPE_SYSTEM_PROMPT, build_scope_prompt
+        from app.ai.review.scope_schema import GEMINI_SCOPE_SCHEMA
+
+        return self._call(
+            SCOPE_SYSTEM_PROMPT, build_scope_prompt(items), temperature=0.0, timeout=timeout, schema=GEMINI_SCOPE_SCHEMA
+        )
+
+    # ─────────────── viết đoạn tri thức (G3a, 24/11) ───────────────
+
+    def write_knowledge(
+        self, skill: str, courses: list[dict], n: int, existing_titles: list[str], feedback: list[str], *, timeout=120.0
+    ):
+        """→ JSON thô {"passages": [...]} (knowledge_service kiểm lại bằng check_passages). temperature 0,3: viết tự nhiên
+        nhưng ít bịa; feedback = lỗi lần trước (viết lại có phản hồi — phase 02 của thầy)."""
+        from app.ai.prompts.review_knowledge import KNOWLEDGE_SYSTEM_PROMPT, build_knowledge_prompt
+        from app.ai.review.knowledge_schema import GEMINI_KNOWLEDGE_SCHEMA
+
+        prompt = build_knowledge_prompt(skill, courses, n, existing_titles)
+        if feedback:
+            prompt += "\n\nYOUR PREVIOUS ATTEMPT WAS REJECTED BECAUSE:\n- " + "\n- ".join(feedback)
+        return self._call(
+            KNOWLEDGE_SYSTEM_PROMPT, prompt, temperature=0.3, timeout=timeout, schema=GEMINI_KNOWLEDGE_SCHEMA
+        )
+
+    # ─────────────── soạn câu ôn theo kỹ năng (G3b, 25/11) ───────────────
+
+    def write_questions(
+        self,
+        skill: str,
+        passages: list[dict],
+        kind: str,
+        need: dict[str, int],
+        existing: list[str],
+        feedback: list[str],
+        *,
+        used: list[str] = (),
+        timeout: float = 120.0,
+    ):
+        """→ JSON thô {"questions": [...]} (question_gen_service kiểm lại bằng check_questions). kind: "mcq" | "essay".
+        temperature 0,5: câu đa dạng nhưng bám tài liệu; feedback = lỗi lần trước (soạn lại có phản hồi — phase 02)."""
+        from app.ai.prompts.review_generate import GEN_SYSTEM_PROMPT, build_question_prompt
+        from app.ai.review.question_schema import GEMINI_QUESTION_SCHEMAS
+
+        prompt = build_question_prompt(skill, passages, need, existing, feedback, used)  # used: Bước A (gen-en-v5)
+        return self._call(
+            GEN_SYSTEM_PROMPT, prompt, temperature=0.5, timeout=timeout, schema=GEMINI_QUESTION_SCHEMAS[kind]
+        )
+
+    def solve_mcqs(self, skill: str, items: list[dict], *, timeout: float = 120.0):
+        """Cổng G3c — giải mù: → JSON thô {"answers": [{"id", "index"}]} (question_gate kiểm lại). temperature 0."""
+        from app.ai.prompts.review_solve import GEMINI_SOLVE_SCHEMA, SOLVE_SYSTEM_PROMPT, build_solve_prompt
+
+        return self._call(
+            SOLVE_SYSTEM_PROMPT, build_solve_prompt(skill, items), temperature=0.0, timeout=timeout,
+            schema=GEMINI_SOLVE_SCHEMA,
+        )  # fmt: skip
+
     # ─────────────── chấm tự luận ───────────────
 
     def grade_essay(self, question: dict, answer: str | None) -> list[dict]:

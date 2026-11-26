@@ -42,10 +42,11 @@ class Users(Base):  # Kế thừa Base → SQLAlchemy biết đây là một b�
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    # Ràng buộc ở tầng DB: role chỉ được là 'student' hoặc 'admin' (FR-40).
+    # Ràng buộc ở tầng DB: role chỉ được là 'student', 'mentor' hoặc 'admin' (FR-40).
     # Dù code có lỗi, DB vẫn không cho lưu role lạ như 'superuser'.
+    # 'mentor' (25/11 — docs/Review-AI-Tu-Soan-On-Tap.md D19–D23): duyệt câu ôn tập AI soạn; vẫn học như học viên.
     __table_args__ = (
-        CheckConstraint("role IN ('student', 'admin')", name="ck_users_role"),
+        CheckConstraint("role IN ('student', 'mentor', 'admin')", name="ck_users_role"),
     )
 
     # Thông tin cá nhân thêm (12/11) — bảng user_profiles, tải kèm khi đọc user (selectin: 1 truy vấn nhỏ)

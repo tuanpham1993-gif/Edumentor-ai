@@ -10,7 +10,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as reviewApi from '../../../api/review.api.js';
 import StatusPanel from '../../common/components/StatusPanel.jsx';
 import { parseApiError } from '../../../utils/errors.js';
-import { LEVEL_TEXT, OPTION_LETTERS, formatScore, isAnswered } from '../reviewFormat.js';
+import { LEVEL_TEXT, OPTION_LETTERS, formatScore, isAnswered, startUrl, targetTitle } from '../reviewFormat.js';
 import styles from '../styles/ReviewQuizPage.module.css';
 
 /** 83 → "1:23" (đồng hồ chờ nộp lại). */
@@ -171,7 +171,7 @@ export default function ReviewQuizPage() {
 
   async function leave() {
     await flush();
-    navigate(`/courses/${attempt.course_id}/review`);
+    navigate(startUrl(attempt));
   }
 
   async function submit() {
@@ -244,7 +244,7 @@ export default function ReviewQuizPage() {
     <>
       <div className={styles.topbar}>
         <p className={styles.course}>
-          Ôn tập · <b>{attempt.course_title}</b>
+          Ôn tập · <b>{targetTitle(attempt)}</b>
         </p>
         <div className={styles.topActions}>
           <span className={`small ${styles.save} ${styles[saveState] ?? ''}`} role="status" aria-live="polite">

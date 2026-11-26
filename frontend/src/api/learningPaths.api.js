@@ -118,3 +118,23 @@ export async function deleteLearningPathEdge(recordId, payload) {
     { data: payload }
   );
 }
+
+export async function enableLearningPathShare(recordId) {
+  const response = await client.post(`/learning-paths/${recordId}/share`);
+  return response.data;
+}
+
+export async function disableLearningPathShare(recordId) {
+  const response = await client.delete(`/learning-paths/${recordId}/share`);
+  return response.data;
+}
+
+export async function getSharedLearningPath(shareCode) {
+  const response = await client.get(`/learning-paths/shared/${shareCode}`);
+  return response.data;
+}
+
+export async function cloneSharedLearningPath(shareCode) {
+  const response = await client.post(`/learning-paths/shared/${shareCode}/clone`);
+  return response.data;
+}

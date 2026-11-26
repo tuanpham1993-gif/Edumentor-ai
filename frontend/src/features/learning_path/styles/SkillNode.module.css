@@ -24,6 +24,12 @@
 .skillNodeLearningGraph:hover {
     border-color: var(--accent);
     box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.25);
+    cursor: pointer;
+}
+
+.nodeSelected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent), 0 8px 20px rgba(var(--shadow-rgb), 0.28);
 }
 
 .skillContentLearningGraph {

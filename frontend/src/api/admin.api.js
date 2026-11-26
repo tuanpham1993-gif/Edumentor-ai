@@ -39,4 +39,18 @@ export const adminApi = {
     client
       .delete(`/admin/course-skill-relations/${courseId}/${skillId}`)
       .then((res) => res.data),
+
+  // 4. Quản trị Lộ trình người dùng (F14)
+  getUserPathsOverview: () =>
+    client.get('/admin/user-paths/overview').then((res) => res.data),
+
+  getUserPathUsers: ({ page = 1, pageSize = 20, search = '', searchBy = 'user', goal = '' } = {}) => {
+    const params = { page, page_size: pageSize, search_by: searchBy };
+    if (search && search.trim()) params.search = search.trim();
+    if (goal && goal.trim()) params.goal = goal.trim();
+    return client.get('/admin/user-paths/users', { params }).then((res) => res.data);
+  },
+
+  getUserPathsDetail: (userId) =>
+    client.get(`/admin/user-paths/users/${userId}`).then((res) => res.data),
 };

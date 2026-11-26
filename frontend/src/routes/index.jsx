@@ -5,6 +5,7 @@
 //   OpenRoute      — ai cũng xem được: khách có header khách, đã đăng nhập có header học viên (19/11)
 //   ProtectedRoute — phải đăng nhập (khách → /login)
 //   AdminRoute     — phải là admin
+//   MentorRoute    — mentor hoặc admin (Tuấn · G3f 25/11: duyệt câu ôn tập AI soạn)
 //   PageLayout     — thêm Header cho các trang bên trong
 // Nhóm khác thêm route của mình vào đúng nhóm bảo vệ (vd /courses, /tutor vào ProtectedRoute).
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -43,13 +44,19 @@ import AdminFeedbackPage from '../features/admin/pages/AdminFeedbackPage.jsx';
 import AdminUserPathsPage from '../features/admin/pages/AdminUserPathsPage.jsx';
 import AdminReviewQuestionsPage from '../features/review-admin/pages/AdminReviewQuestionsPage.jsx'; // Tuấn · duyệt câu AI
 import AdminReviewFlagsPage from '../features/review-admin/pages/AdminReviewFlagsPage.jsx'; // Tuấn · bài cần xem lại
+import AdminSkillScopesPage from '../features/review-admin/pages/AdminSkillScopesPage.jsx'; // Tuấn · G3.0 phạm vi kỹ năng
+import AdminReviewReportsPage from '../features/review-admin/pages/AdminReviewReportsPage.jsx'; // Tuấn · G3f câu bị phản ánh
+import AdminReviewMentorsPage from '../features/review-admin/pages/AdminReviewMentorsPage.jsx'; // Tuấn · G3f mentor ôn tập
+import MentorReviewPage from '../features/mentor-review/pages/MentorReviewPage.jsx'; // Tuấn · G3f mentor duyệt câu
 import TutorPage from '../features/tutor/pages/TutorPage.jsx';
 import AdminRoute from './AdminRoute.jsx';
+import MentorRoute from './MentorRoute.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import PublicRoute from './PublicRoute.jsx';
 import MyLearningPathsPage from '../features/learning_path/pages/MyLearningPathPage.jsx';
 import LearningPathPreviewPage from '../features/learning_path/pages/LearningPathPreviewPage.jsx';
 import LearningPathDetailPage from '../features/learning_path/pages/LearningPathDetailPage.jsx';
+import SharedLearningPathPage from '../features/learning_path/pages/SharedLearningPathPage.jsx';
 function AdminHomePlaceholder() {
   return <p className="muted">Trang quản trị (Khôi / Tâm / Hòa) — đang phát triển.</p>;
 }
@@ -69,6 +76,11 @@ export default function AppRoutes() {
       {/* Link trong email: ai cũng mở được, kể cả đang đăng nhập → để NGOÀI mọi lớp bảo vệ */}
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/reset-expired" element={<ResetExpiredPage />} />
+
+      {/* Ai cũng xem được: Lộ trình được chia sẻ */}
+      <Route element={<OpenRoute />}>
+        <Route path="/shared/learning-paths/:shareCode" element={<SharedLearningPathPage />} />
+      </Route>
 
       {/* Ai cũng xem được (19/11, G1 — BA UC-06 khách xem khóa học). Khôi: khi CoursesPage xử lý được khách
           (nút Lưu / Tham gia → navigate('/login', { state: { from } })), CHUYỂN dòng /courses ở nhóm học viên
@@ -90,6 +102,7 @@ export default function AppRoutes() {
           {/* Ôn tập — module 09 (Tuấn, GĐ4 09/11) */}
           <Route path="/me/review-history" element={<ReviewHistoryPage />} />
           <Route path="/courses/:courseId/review" element={<ReviewStartPage />} />
+          <Route path="/skills/:skillId/review" element={<ReviewStartPage />} /> {/* G2: ôn theo kỹ năng */}
           <Route path="/review/:attemptId" element={<ReviewQuizPage />} />
           <Route path="/review/:attemptId/result" element={<ReviewResultPage />} />
           {/* Khóa học — module Khôi */}
@@ -119,6 +132,13 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
+      {/* Mentor duyệt câu ôn tập AI soạn — module 09 (Tuấn, G3f 25/11) */}
+      <Route element={<MentorRoute />}>
+        <Route element={<PageLayout />}>
+          <Route path="/mentor/review" element={<MentorReviewPage />} />
+        </Route>
+      </Route>
+
       {/* Quản trị */}
       <Route element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
@@ -131,6 +151,9 @@ export default function AppRoutes() {
           <Route path="/admin/user-paths" element={<AdminUserPathsPage />} />
           <Route path="/admin/questions" element={<AdminReviewQuestionsPage />} />{/* Tuấn: duyệt câu AI (7.5c) */}
           <Route path="/admin/review-flags" element={<AdminReviewFlagsPage />} />{/* Tuấn: bài cần xem lại (17/11) */}
+          <Route path="/admin/skill-scopes" element={<AdminSkillScopesPage />} />{/* Tuấn: phạm vi kỹ năng (G3.0) */}
+          <Route path="/admin/review-reports" element={<AdminReviewReportsPage />} />{/* Tuấn: câu bị phản ánh (G3f) */}
+          <Route path="/admin/review-mentors" element={<AdminReviewMentorsPage />} />{/* Tuấn: mentor ôn tập (G3f) */}
         </Route>
       </Route>
 

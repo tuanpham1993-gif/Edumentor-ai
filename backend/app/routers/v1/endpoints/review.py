@@ -13,6 +13,11 @@ Lượt làm bài của người khác → 404 như lượt không tồn tại (
     GET   /api/me/review-history                     — lịch sử các lượt đã nộp, lọc + phân trang (GĐ3)
     GET   /api/me/review-history/{attempt_id}        — chi tiết lượt đã nộp: đáp án đúng, điểm từng ý (GĐ3)
     GET   /api/admin/review-attempts/{attempt_id}/trace — vết RAG + prompt (chỉ admin — A4) (GĐ3)
+    GET   /api/skills/{skill_id}/review              — ôn theo KỸ NĂNG: thông tin + lý do chưa thể ôn (G2d, 22/11)
+    POST  /api/skills/{skill_id}/review-attempts?path= — bắt đầu ôn theo kỹ năng (lượt dở → trả lại) (G2d);
+                                                       thiếu câu → 202 {generation} AI soạn ở nền (G3d, 25/11)
+    GET   /api/skills/{skill_id}/generation          — tiến độ việc AI soạn đề của kỹ năng (G3d)
+      → làm bài / lưu / nộp / kết quả / lịch sử dùng chung các API /review-attempts/... ở trên.
 """
 
 from fastapi import (
@@ -35,16 +40,21 @@ from app.schemas.review import (
     AttemptOut,
     AttemptResultOut,
     AttemptTraceOut,
+    GenerationOut,
+    GenerationStartOut,
     HistoryPage,
     ReviewInfoOut,
     SaveAnswersRequest,
+    SkillReviewInfoOut,
     SkillReviewsOut,
 )
-from app.services import course_gateway, review_service
+from app.services import course_gateway, review_service, skill_review_service
 
 router = APIRouter()
 
 COURSE_NOT_FOUND = "Không tìm thấy khóa học."
+SKILL_NOT_FOUND = "Không tìm thấy kỹ năng."
+PATH_NOT_FOUND = "Không tìm thấy lộ trình có kỹ năng này."
 ATTEMPT_NOT_FOUND = "Không tìm thấy bài ôn tập."
 
 
@@ -85,6 +95,50 @@ def start_review(
         return review_service.start_attempt(db, current_user, course_id)
     except review_service.CourseNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, COURSE_NOT_FOUND) from None
+    except review_service.ReviewBlockedError as err:
+        raise _blocked(err) from None
+
+
+@router.get(
+    "/skills/{skill_id}/review",
+    response_model=SkillReviewInfoOut,
+    summary="Ôn tập theo kỹ năng: thông tin + lý do chưa thể ôn (G2d)",
+)
+def read_skill_review_info(
+    skill_id: int,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        return skill_review_service.skill_review_info(db, current_user, skill_id)
+    except skill_review_service.SkillNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, SKILL_NOT_FOUND) from None
+
+
+@router.post(
+    "/skills/{skill_id}/review-attempts",
+    response_model=AttemptOut | GenerationStartOut,
+    summary="Bắt đầu ôn theo kỹ năng (đang có lượt dở → trả lại, resumed=true). ?path= lộ trình đang mở. "
+    "Thiếu câu → 202 {generation}: AI đang soạn đề ở nền (G3d)",
+)
+def start_skill_review(
+    skill_id: int,
+    response: Response,
+    path: int | None = Query(default=None, ge=1, description="learning_paths.record_id — lộ trình của chính bạn"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        return skill_review_service.start_skill_attempt(db, current_user, skill_id, path)
+    except skill_review_service.GenerationPending as pending:
+        response.status_code = status.HTTP_202_ACCEPTED
+        return {"generation": pending.job}
+    except skill_review_service.SkillNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, SKILL_NOT_FOUND) from None
+    except skill_review_service.PathNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, PATH_NOT_FOUND) from None
+    except skill_review_service.SkillBankMissingError as err:
+        raise HTTPException(status.HTTP_409_CONFLICT, err.message) from None
     except review_service.ReviewBlockedError as err:
         raise _blocked(err) from None
 
@@ -177,15 +231,17 @@ def submit_review(
         response.status_code = status.HTTP_202_ACCEPTED
         return result
     # Email gửi SAU khi trả kết quả (kết quả đã lưu xong) — lỗi gửi không ảnh hưởng bài làm.
+    title, target = review_service.email_target(result)
     background_tasks.add_task(
         send_review_result_email,
         current_user.email,
         current_user.full_name,
-        result["course_title"],
+        title,
         result["score"],
         result["passed"],
         result["completed_course"],
         attempt_id,
+        target=target,
     )
     return result
 
@@ -259,3 +315,29 @@ def read_review_trace(
         return review_service.attempt_trace(db, attempt_id)
     except review_service.AttemptNotFoundError:
         raise HTTPException(status.HTTP_404_NOT_FOUND, ATTEMPT_NOT_FOUND) from None
+
+
+@router.get(
+    "/skills/{skill_id}/generation",
+    response_model=GenerationOut,
+    summary="Tiến độ việc AI soạn đề của kỹ năng (G3d) — 404 nếu chưa có việc nào",
+)
+def read_skill_generation(
+    skill_id: int,
+    job_id: int | None = Query(default=None, ge=1, description="Việc đang chờ (phản hồi 202); trống = mới nhất"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    from app.services import review_generation_service
+
+    try:
+        info = skill_review_service.skill_readiness(db, skill_id)
+    except skill_review_service.SkillNotFoundError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, SKILL_NOT_FOUND) from None
+    if job_id is not None:  # 25/11: theo đúng việc đang chờ, không nhảy sang việc bổ sung tự tạo sau đó
+        job = review_generation_service.get_job(db, info.bank_skill_id, job_id)
+    else:
+        job = review_generation_service.latest_job(db, info.bank_skill_id)
+    if job is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Chưa có việc soạn đề nào cho kỹ năng này.")
+    return review_generation_service.job_view(job)

@@ -14,6 +14,7 @@ export const REASON_TEXT = {
   evidence_missing: 'AI không trích được bằng chứng',
   keyword_fallback: 'Chấm bằng từ khóa (AI lỗi)',
   ai_stricter: 'AI chấm chặt hơn từ khóa', // 20/11: có ý AI Không đạt mà chấm từ khóa Đạt
+  copied_model_answer: 'Bài chép bài mẫu', // G3e P4 (25/11): chỉ cờ, không đổi điểm
 };
 const LEVEL_TEXT = { easy: 'Tự luận dễ', advanced: 'Tự luận nâng cao' };
 const RESULT = {

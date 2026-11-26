@@ -15,7 +15,7 @@ import Tabs from '../../common/components/Tabs.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
 import ResultQuestion from '../components/ResultQuestion.jsx';
-import { formatScore } from '../reviewFormat.js';
+import { formatScore, startUrl, targetTitle } from '../reviewFormat.js';
 import { attemptKey, readReturn } from '../reviewReturn.js';
 import styles from '../styles/ReviewResultPage.module.css';
 
@@ -32,7 +32,7 @@ function BackToPath({ to }) {
 function GradingPanel({ result, returnTo }) {
   return (
     <section className={`card ${styles.summary}`} role="status" aria-live="polite">
-      <p className="muted">Kết quả ôn tập · {result.course_title}</p>
+      <p className="muted">Kết quả ôn tập · {targetTitle(result)}</p>
       <div className={styles.gradingSpinner} aria-hidden="true" />
       <h1 className={styles.gradingTitle}>Đang chấm bài của bạn…</h1>
       <p className="muted">
@@ -46,8 +46,8 @@ function GradingPanel({ result, returnTo }) {
         <Link to="/me/review-history" className="btn">
           Lịch sử ôn tập
         </Link>
-        <Link to={`/courses/${result.course_id}/review`} className="btn">
-          Trang ôn tập của khóa
+        <Link to={startUrl(result)} className="btn">
+          {result.course_id ? 'Trang ôn tập của khóa' : 'Trang ôn tập kỹ năng'}
         </Link>
         <BackToPath to={returnTo} />
       </div>
@@ -181,7 +181,7 @@ export default function ReviewResultPage() {
   return (
     <>
       <section className={`card ${styles.summary}`}>
-        <p className="muted">Kết quả ôn tập · {result.course_title}</p>
+        <p className="muted">Kết quả ôn tập · {targetTitle(result)}</p>
         <ScoreRing score={result.score} passed={result.passed} />
         <span className={`chip ${result.passed ? 'chip-ok' : 'chip-danger'} ${styles.verdict}`}>
           {result.passed ? 'Đạt' : 'Chưa đạt'} (điểm đạt từ {formatScore(result.pass_score)}/10)
@@ -211,7 +211,15 @@ export default function ReviewResultPage() {
               </li>
             </>
           )}
-          {result.passed && !result.completed_course && (
+          {result.skill_known && (
+            <li>
+              <span>
+                ✔ Kỹ năng được ghi nhận <b>Đã biết</b>:
+              </span>
+              <span className="chip chip-accent">{result.skill_name}</span>
+            </li>
+          )}
+          {result.passed && result.course_id && !result.completed_course && (
             <li>Bạn đã đạt khóa này trước đó — lần này được lưu vào lịch sử.</li>
           )}
           {!result.passed && <li>Bạn có thể ôn lại bất cứ lúc nào — mỗi lần là một đề mới.</li>}
@@ -222,7 +230,7 @@ export default function ReviewResultPage() {
           <a href="#chi-tiet" className="btn btn-primary">
             Xem chi tiết đáp án ↓
           </a>
-          <Link to={`/courses/${result.course_id}/review`} className="btn">
+          <Link to={startUrl(result)} className="btn">
             Làm lại
           </Link>
           <Link to="/me/review-history" className="btn">

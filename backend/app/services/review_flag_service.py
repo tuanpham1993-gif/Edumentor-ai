@@ -30,7 +30,8 @@ from app.repositories import review_repository as repo
 from app.services import review_service
 
 NEAR_PASS_MARGIN = 0.5
-REASONS = ("needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback", "ai_stricter")
+REASONS = ("needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback", "ai_stricter",
+           "copied_model_answer")  # fmt: skip
 REASON_TEXT = {
     "needs_review": "AI lệch chấm từ khóa",
     "near_pass": "Điểm sát ngưỡng đạt",
@@ -38,6 +39,7 @@ REASON_TEXT = {
     "evidence_missing": "AI không trích được bằng chứng",
     "keyword_fallback": "Chấm bằng từ khóa (AI lỗi)",
     "ai_stricter": "AI chấm chặt hơn từ khóa",
+    "copied_model_answer": "Bài chép bài mẫu",  # G3e P4 (D29) — chỉ cờ, không đổi điểm
 }
 LABEL_POINTS = {"full": 1.0, "none": 0.0}
 
@@ -77,7 +79,7 @@ def reasons_for(attempt: ReviewAttempt, position: int) -> list[str]:
         out.append("needs_review")
     if attempt.score is not None and abs(float(attempt.score) - settings.REVIEW_PASS_SCORE) <= NEAR_PASS_MARGIN:
         out.append("near_pass")
-    for flag in ("instruction_in_answer", "evidence_missing", "ai_stricter"):
+    for flag in ("instruction_in_answer", "evidence_missing", "ai_stricter", "copied_model_answer"):
         if flag in flags:
             out.append(flag)
     if position in _fallback_positions(attempt):
@@ -128,7 +130,7 @@ def list_flags(
     total = len(rows)
     rows = rows[(page - 1) * size : page * size]
     users = repo.user_names(db, [a.user_id for a, _, _ in rows])
-    titles = repo.course_titles(db, [a.course_id for a, _, _ in rows])
+    titles = review_service.target_names(db, [a for a, _, _ in rows])  # khóa + kỹ năng (G2d)
     reviewer_ids = [(_essays(a).get(ans.position, {}).get("review") or {}).get("by") for a, ans, _ in rows]
     reviewers = repo.user_names(db, [uid for uid in reviewer_ids if uid is not None])
     return {
@@ -154,8 +156,7 @@ def _item(attempt, answer, reasons, users, titles, reviewers) -> dict:
         "user_id": attempt.user_id,
         "user_name": name,
         "user_email": email,
-        "course_id": attempt.course_id,
-        "course_title": titles.get(attempt.course_id, ""),
+        **review_service.target_fields(None, attempt, titles),
         "submitted_at": attempt.submitted_at,
         "attempt_score": float(attempt.score) if attempt.score is not None else None,
         "attempt_passed": attempt.passed,
@@ -269,7 +270,7 @@ def resolve(
     db.refresh(attempt)
     reasons = reasons_for(attempt, position)
     users = repo.user_names(db, [attempt.user_id, admin.user_id])
-    titles = repo.course_titles(db, [attempt.course_id])
+    titles = review_service.target_names(db, [attempt])
     answer = next(a for a in attempt.answers if a.position == position)
     return {
         "item": _item(attempt, answer, reasons, users, titles, users),

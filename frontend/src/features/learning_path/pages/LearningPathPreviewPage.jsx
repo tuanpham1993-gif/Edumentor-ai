@@ -61,8 +61,13 @@ export default function LearningPathPreviewPage() {
                 layer: learningPath.layer,
             };
             const response = await confirmLearningPath(payload);
-            console.log('Learning path saved:', response);
-            navigate("/me")
+            if (response?.record_id) {
+                navigate(`/me/my-learning-path/details/${response.record_id}`, {
+                    state: { learningPath: response },
+                });
+            } else {
+                navigate("/me");
+            }
         // Future implementation save learning path:
         // fix here
         } catch (err) {

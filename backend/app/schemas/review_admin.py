@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 QuestionType = Literal["mcq", "essay"]
 QuestionLevel = Literal["recognize", "understand", "easy", "advanced"]
-ReviewStatus = Literal["pending", "approved", "rejected"]
+ReviewStatus = Literal["pending", "approved", "rejected", "auto_approved"]  # auto_approved: G2b · D7
 
 
 # ─────────────── vào ───────────────
@@ -91,6 +91,7 @@ class QuestionListItem(BaseModel):
     family_id: int
     version: int
     review_status: ReviewStatus
+    mentor_status: Literal["passed", "reported"] | None = None  # G3f (25/11): câu AI soạn — None = chờ mentor duyệt
     used_count: int  # số bài làm đã dùng câu này (> 0 → sửa nội dung sẽ tạo phiên bản mới)
     created_at: datetime
 
@@ -135,13 +136,33 @@ class DeleteResultOut(BaseModel):
 
 
 class ChunkOut(BaseModel):
-    """Đoạn tri thức RAG của kỹ năng — ô chọn "Đoạn tri thức" khi sửa / thêm câu (7.6)."""
+    """Đoạn tri thức RAG của kỹ năng — ô chọn "Đoạn tri thức" khi sửa / thêm câu (7.6).
+    G3a (24/11): thêm nội dung + nguồn gốc cho khối quản lý "Đoạn tài liệu" (các trường mới có mặc định → tương thích).
+    """
 
     model_config = ConfigDict(from_attributes=True)
 
     chunk_id: int
     code: str | None
     title: str | None
+    content: str = ""
+    source: Literal["manual", "ai", "admin"] = "manual"
+    source_course_ids: list[int] = []
+    has_embedding: bool = False
+    prompt_version: str | None = None
+    updated_at: datetime | None = None
+
+
+class ChunkIn(BaseModel):
+    """Admin thêm / sửa đoạn tri thức (G3a). Độ dài nội dung kiểm ở service (200–1.500 ký tự)."""
+
+    title: str | None = Field(default=None, max_length=200)
+    content: str = Field(min_length=1, max_length=5000)
+
+
+class GenerateChunksOut(BaseModel):
+    created: list[ChunkOut]  # đoạn AI vừa viết và lưu (rỗng = kỹ năng đã đủ đoạn)
+    existing: int  # số đoạn có sẵn trước khi viết
 
 
 # ─────────────── mức sẵn sàng (7.4) ───────────────
@@ -183,7 +204,8 @@ class ReadinessOut(BaseModel):
 # ─────────────── Bài cần xem lại (17/11/2026) ───────────────
 
 FlagReason = Literal[
-    "needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback", "ai_stricter"
+    "needs_review", "near_pass", "instruction_in_answer", "evidence_missing", "keyword_fallback", "ai_stricter",
+    "copied_model_answer",
 ]
 ItemLabel = Literal["full", "none"]
 
@@ -214,8 +236,10 @@ class FlagItemOut(BaseModel):
     user_id: int
     user_name: str
     user_email: str
-    course_id: int
+    course_id: int | None  # None = lượt ôn theo kỹ năng (G2d, 22/11)
     course_title: str
+    skill_id: int | None = None
+    skill_name: str | None = None
     submitted_at: datetime | None
     attempt_score: float | None
     attempt_passed: bool | None
@@ -279,3 +303,130 @@ class SkillSearchOut(BaseModel):
     confident: bool  # True = chắc chắn (khớp nguyên văn / rất gần và bỏ xa); False = để người dùng chọn
     results: list[SkillMatchOut]
 
+
+# ─────────────── Phạm vi ôn tập theo kỹ năng (G3.0, 24/11/2026) ───────────────
+
+ScopeLabel = Literal["open", "closed", "unsure"]
+ScopeCategory = Literal[
+    "programming",
+    "software_tools",
+    "data_bi",
+    "infra_security",
+    "software_process",
+    "math_science",
+    "business_domain",
+    "soft_skill",
+    "specialized_domain",
+    "other",
+]
+
+
+class SkillScopeOut(BaseModel):
+    skill_id: int
+    skill: str
+    label: ScopeLabel | None  # None = chưa có nhãn (coi như Chưa rõ → chưa mở)
+    category: ScopeCategory | None
+    reason: str | None
+    source: Literal["ai", "admin"] | None
+    model: str | None
+    prompt_version: str | None
+    updated_by_name: str | None
+    updated_at: datetime | None
+
+
+class SkillScopeCounts(BaseModel):
+    open: int
+    closed: int
+    unsure: int
+    unlabeled: int
+
+
+class SkillScopePage(BaseModel):
+    items: list[SkillScopeOut]
+    total: int
+    page: int
+    size: int
+    counts: SkillScopeCounts
+
+
+class SkillScopeUpdate(BaseModel):
+    label: ScopeLabel
+    category: ScopeCategory | None = None
+    reason: str | None = Field(default=None, max_length=200)
+
+
+# ─────────────── Mentor phản ánh câu hỏi (G3f, 25/11/2026 — D19–D23) ───────────────
+
+ReportReason = Literal["wrong_answer", "ambiguous", "wrong_knowledge", "bad_rubric", "other"]
+
+
+class ReportedQuestionOut(BaseModel):
+    question_id: int
+    code: str | None
+    skill_id: int
+    skill: str
+    type: QuestionType
+    level: QuestionLevel
+    content: str
+    options: list[str] | None
+    correct_index: int | None
+    rubric: list[dict] | None
+    explanation: str | None
+    source: str
+    review_status: ReviewStatus
+    mentor_status: Literal["passed", "reported"] | None
+    is_active: bool
+    disabled_by_report: bool  # đang tắt vì mentor phản ánh (D20) — admin bác thì bật lại
+
+
+class ReportItemOut(BaseModel):
+    report_id: int
+    user_name: str  # tên mentor phản ánh
+    reason: ReportReason
+    note: str | None
+    status: Literal["open", "resolved", "dismissed"]
+    admin_note: str | None
+    created_at: datetime
+    resolved_at: datetime | None
+
+
+class ReportGroupOut(BaseModel):
+    question: ReportedQuestionOut
+    people: int
+    reason_counts: dict[str, int]
+    latest_at: datetime
+    reports: list[ReportItemOut]
+
+
+class ReportPageOut(BaseModel):
+    items: list[ReportGroupOut]
+    total: int
+    page: int
+    size: int
+    open_total: int  # số câu đang có phản ánh chờ xử lý (số đỏ trên menu)
+
+
+class ReportResolveIn(BaseModel):
+    action: Literal["dismiss", "keep_disabled"]  # bác phản ánh (bật lại, coi như Đạt) | giữ tắt
+    note: str | None = Field(default=None, max_length=500)
+
+
+class ReportResolveOut(BaseModel):
+    question_id: int
+    closed: int
+    is_active: bool
+
+
+class MentorIn(BaseModel):
+    """D22: admin gán vai trò mentor cho tài khoản có sẵn (theo email)."""
+
+    email: str = Field(min_length=3, max_length=255)
+
+
+class MentorOut(BaseModel):
+    user_id: int
+    full_name: str
+    email: str
+    is_active: bool
+    passed: int  # số câu mentor đã bấm Đạt
+    reported: int  # số lần phản ánh

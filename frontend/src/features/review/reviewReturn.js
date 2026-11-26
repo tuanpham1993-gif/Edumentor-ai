@@ -29,4 +29,5 @@ export function readReturn(key) {
 }
 
 export const courseKey = (courseId) => `course:${courseId}`;
+export const skillKey = (skillId) => `skill:${skillId}`; // G2 (22/11): ôn theo kỹ năng
 export const attemptKey = (attemptId) => `attempt:${attemptId}`;

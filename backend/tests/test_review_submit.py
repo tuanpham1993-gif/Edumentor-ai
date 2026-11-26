@@ -124,7 +124,9 @@ def test_meeting_example_essay_scores_8_of_10(client, bank_312, student_headers,
     assert q["points"] == 1.6 and q["max_points"] == 2
     assert [r["result"] for r in q["rubric"]] == ["full", "full", "full", "full", "none"]
     assert q["rubric"][0]["evidence"] == "List thì sửa được còn tuple thì không sửa được."
-    assert q["text_answer"] == LIST_TUPLE_ANSWER and q["explanation"].startswith("Đáp án mẫu")
+    assert q["text_answer"] == LIST_TUPLE_ANSWER
+    # G3e P3 (25/11, D29): lượt chưa Đạt → ẩn bài mẫu tự luận (mặc định mcq_only); lượt Đạt mới hiện "Đáp án mẫu…"
+    assert result["passed"] is False and q["explanation"] is None and q["answer_hidden"] is True
 
 
 def test_result_reveals_answers_after_submit(client, bank_312, student_headers, db_session):

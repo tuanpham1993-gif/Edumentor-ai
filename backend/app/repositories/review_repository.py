@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.models.course import Courses
 from app.models.course_skill import CourseSkill
 from app.models.knowledge_chunk import KnowledgeChunk
+from app.models.learning_path import LearningPath, LearningPathNode
 from app.models.review_attempt import ReviewAnswer, ReviewAttempt
 from app.models.review_question import ReviewQuestion
 from app.models.review_question_meta import ReviewQuestionMeta
@@ -53,26 +54,46 @@ def course_skills_many(db: Session, course_ids: list[int]) -> dict[int, list[tup
 # ─────────────── Ngân hàng câu hỏi, đoạn tri thức ───────────────
 
 
-def bank_counts(db: Session, skill_ids: list[int]) -> dict[tuple[int, str], int]:
-    """Số câu ĐANG BẬT theo (skill_id, level)."""
+def _usable(stmt, include_auto: bool):
+    """Câu ĐƯỢC DÙNG ra đề. Ôn theo KHÓA (mặc định): chỉ câu đã duyệt / chưa có meta (nạp trước 13/11) — KHÔNG lẫn câu
+    AI tự duyệt (D2). Ôn theo KỸ NĂNG (include_auto=True, G3d): thêm câu `auto_approved`; câu soạn sẵn ban đêm
+    (origin='nightly') chỉ dùng khi mentor đã Đạt (D26)."""
+    stmt = stmt.outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+    approved = ReviewQuestionMeta.question_id.is_(None) | (ReviewQuestionMeta.review_status == "approved")
+    if not include_auto:
+        return stmt.where(approved)
+    auto = (ReviewQuestionMeta.review_status == "auto_approved") & (
+        ReviewQuestionMeta.origin.is_distinct_from("nightly") | (ReviewQuestionMeta.mentor_status == "passed")
+    )
+    return stmt.where(approved | auto)
+
+
+def bank_counts(db: Session, skill_ids: list[int], *, include_auto: bool = False) -> dict[tuple[int, str], int]:
+    """Số câu ĐANG BẬT, được dùng ra đề, theo (skill_id, level). include_auto: xem _usable."""
     if not skill_ids:
         return {}
-    rows = db.execute(
-        select(ReviewQuestion.skill_id, ReviewQuestion.level, func.count())
-        .where(ReviewQuestion.skill_id.in_(skill_ids), ReviewQuestion.is_active.is_(True))
-        .group_by(ReviewQuestion.skill_id, ReviewQuestion.level)
+    stmt = select(ReviewQuestion.skill_id, ReviewQuestion.level, func.count()).where(
+        ReviewQuestion.skill_id.in_(skill_ids), ReviewQuestion.is_active.is_(True)
     )
+    rows = db.execute(_usable(stmt, include_auto).group_by(ReviewQuestion.skill_id, ReviewQuestion.level))
     return {(skill_id, level): n for skill_id, level, n in rows}
 
 
-def bank_questions(db: Session, skill_id: int) -> list[ReviewQuestion]:
-    return list(
-        db.scalars(
-            select(ReviewQuestion)
-            .where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
-            .order_by(ReviewQuestion.question_id)
-        )
+def stocked_counts(db: Session, skill_id: int) -> dict[str, int]:
+    """G3d-3: số câu ĐANG BẬT theo mức, gồm cả câu soạn sẵn ban đêm chưa được mentor Đạt (đã soạn rồi → không soạn
+    thêm). Không tính câu chờ duyệt / bị từ chối (luôn tắt)."""
+    stmt = (
+        select(ReviewQuestion.level, func.count())
+        .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
+        .group_by(ReviewQuestion.level)
     )
+    return dict(db.execute(stmt).all())
+
+
+def bank_questions(db: Session, skill_id: int, *, include_auto: bool = False) -> list[ReviewQuestion]:
+    stmt = select(ReviewQuestion).where(ReviewQuestion.skill_id == skill_id, ReviewQuestion.is_active.is_(True))
+    return list(db.scalars(_usable(stmt, include_auto).order_by(ReviewQuestion.question_id)))
 
 
 def pending_count(db: Session, skill_id: int) -> int:
@@ -156,11 +177,20 @@ def stuck_grading_ids(db: Session, user_id: int, submitted_before) -> list[int]:
     )
 
 
-def get_in_progress(db: Session, user_id: int, course_id: int) -> ReviewAttempt | None:
+def _target(course_id: int | None, skill_id: int | None):
+    """Lượt theo khóa (course_id) hoặc theo kỹ năng (skill_id — G2c, 22/11)."""
+    if skill_id is not None:
+        return ReviewAttempt.skill_id == skill_id
+    return ReviewAttempt.course_id == course_id
+
+
+def get_in_progress(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> ReviewAttempt | None:
     return db.scalar(
         select(ReviewAttempt).where(
             ReviewAttempt.user_id == user_id,
-            ReviewAttempt.course_id == course_id,
+            _target(course_id, skill_id),
             ReviewAttempt.status == "in_progress",
         )
     )
@@ -186,12 +216,14 @@ def count_in_progress(db: Session, user_id: int) -> int:
     )
 
 
-def list_attempts(db: Session, user_id: int, course_id: int) -> list[ReviewAttempt]:
-    """Mới nhất trước."""
+def list_attempts(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> list[ReviewAttempt]:
+    """Mới nhất trước. Theo khóa, hoặc theo kỹ năng (skill_id — G2d)."""
     return list(
         db.scalars(
             select(ReviewAttempt)
-            .where(ReviewAttempt.user_id == user_id, ReviewAttempt.course_id == course_id)
+            .where(ReviewAttempt.user_id == user_id, _target(course_id, skill_id))
             .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
         )
     )
@@ -219,13 +251,77 @@ def family_questions(db: Session, question_ids: list[int]) -> list[ReviewQuestio
     )
 
 
-def last_submitted_questions(db: Session, user_id: int, course_id: int) -> list[ReviewQuestion]:
-    """Các câu của lượt ĐÃ NỘP gần nhất — để lượt mới tránh lặp (A1)."""
+def recent_submitted_question_ids(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None, attempts: int = 3
+) -> dict[int, int]:
+    """G3e P2 (D29): {question_id: mức phạt} của N lượt ĐÃ NỘP gần nhất (cùng khóa / kỹ năng). Lượt gần nhất phạt N,
+    lượt cũ nhất phạt 1 → khi phải lặp câu thì lặp câu CŨ NHẤT trước. Câu có ở nhiều lượt lấy mức phạt cao nhất."""
+    attempt_ids = list(
+        db.scalars(
+            select(ReviewAttempt.attempt_id)
+            .where(
+                ReviewAttempt.user_id == user_id, _target(course_id, skill_id), ReviewAttempt.status != "in_progress"
+            )
+            .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
+            .limit(attempts)
+        )
+    )
+    if not attempt_ids:
+        return {}
+    penalty = {aid: attempts - i for i, aid in enumerate(attempt_ids)}
+    out: dict[int, int] = {}
+    rows = db.execute(
+        select(ReviewAnswer.question_id, ReviewAnswer.attempt_id).where(ReviewAnswer.attempt_id.in_(attempt_ids))
+    )
+    for question_id, attempt_id in rows:
+        out[question_id] = max(out.get(question_id, 0), penalty[attempt_id])
+    return out
+
+
+def question_sources(db: Session, *, question_ids: list[int] | None = None, skill_id: int | None = None) -> list:
+    """Bước A chống trùng ý (25/11): (question_id, type, chunk_id, nội dung đoạn, ai_check, is_active, disabled_reason,
+    mentor_status) của câu CÓ meta (câu AI soạn / qua kho) — theo danh sách id hoặc theo kỹ năng."""
+    stmt = (
+        select(
+            ReviewQuestion.question_id, ReviewQuestion.type, ReviewQuestion.chunk_id, KnowledgeChunk.content,
+            ReviewQuestionMeta.ai_check, ReviewQuestion.is_active, ReviewQuestionMeta.disabled_reason,
+            ReviewQuestionMeta.mentor_status,
+        )  # fmt: skip
+        .join(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .outerjoin(KnowledgeChunk, KnowledgeChunk.chunk_id == ReviewQuestion.chunk_id)
+        .order_by(ReviewQuestion.question_id)
+    )
+    if question_ids is not None:
+        if not question_ids:
+            return []
+        stmt = stmt.where(ReviewQuestion.question_id.in_(question_ids))
+    if skill_id is not None:
+        stmt = stmt.where(ReviewQuestion.skill_id == skill_id)
+    return list(db.execute(stmt).all())
+
+
+def family_ids(db: Session, question_ids: list[int]) -> dict[int, int]:
+    """{question_id: family_id} — câu chưa có meta là họ của chính nó."""
+    if not question_ids:
+        return {}
+    family = func.coalesce(ReviewQuestionMeta.family_id, ReviewQuestion.question_id)
+    rows = db.execute(
+        select(ReviewQuestion.question_id, family)
+        .outerjoin(ReviewQuestionMeta, ReviewQuestionMeta.question_id == ReviewQuestion.question_id)
+        .where(ReviewQuestion.question_id.in_(question_ids))
+    )
+    return dict(rows.all())
+
+
+def last_submitted_questions(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> list[ReviewQuestion]:
+    """Các câu của lượt ĐÃ NỘP gần nhất (cùng khóa, hoặc cùng kỹ năng) — để lượt mới tránh lặp (A1)."""
     last_id = db.scalar(
         select(ReviewAttempt.attempt_id)
         .where(
             ReviewAttempt.user_id == user_id,
-            ReviewAttempt.course_id == course_id,
+            _target(course_id, skill_id),
             ReviewAttempt.status != "in_progress",
         )
         .order_by(ReviewAttempt.started_at.desc(), ReviewAttempt.attempt_id.desc())
@@ -249,6 +345,26 @@ def skill_names(db: Session, skill_ids) -> dict[int, str]:
     return dict(db.execute(select(Skills.skill_id, Skills.skill).where(Skills.skill_id.in_(ids))).all())
 
 
+def get_active_skill_name(db: Session, skill_id: int) -> str | None:
+    return db.scalar(select(Skills.skill).where(Skills.skill_id == skill_id, Skills.is_active.is_(True)))
+
+
+def path_has_skill(db: Session, path_id: int, user_id: int, skill_id: int) -> bool:
+    """Lộ trình là của người học này VÀ có node kỹ năng này (bảng của Hòa — chỉ đọc). G2c, 22/11."""
+    return (
+        db.scalar(
+            select(LearningPathNode.skill_id)
+            .join(LearningPath, LearningPath.record_id == LearningPathNode.path_id)
+            .where(
+                LearningPathNode.path_id == path_id,
+                LearningPathNode.skill_id == skill_id,
+                LearningPath.student_id == user_id,
+            )
+        )
+        is not None
+    )
+
+
 # ─────────────── "Đến hạn ôn" (21/11, Q12 guide.md) ───────────────
 
 
@@ -270,7 +386,20 @@ def skill_review_history(db: Session, user_id: int, skill_ids) -> list[tuple[int
         )
         .order_by(ReviewAttempt.submitted_at, ReviewAttempt.attempt_id)
     )
-    return [tuple(row) for row in db.execute(stmt).all()]
+    # G2d: lượt ôn THẲNG theo kỹ năng cũng là một lần ôn kỹ năng đó
+    direct = (
+        select(ReviewAttempt.skill_id, ReviewAttempt.submitted_at, ReviewAttempt.passed, ReviewAttempt.score)
+        .where(
+            ReviewAttempt.user_id == user_id,
+            ReviewAttempt.status == "graded",
+            ReviewAttempt.passed.is_not(None),
+            ReviewAttempt.submitted_at.is_not(None),
+            ReviewAttempt.skill_id.in_(ids),
+        )
+        .order_by(ReviewAttempt.submitted_at, ReviewAttempt.attempt_id)
+    )
+    rows = [tuple(r) for r in db.execute(stmt).all()] + [tuple(r) for r in db.execute(direct).all()]
+    return sorted(rows, key=lambda r: r[1])  # cũ trước
 
 
 def known_skill_ids(db: Session, user_id: int, skill_ids=None) -> set[int]:
@@ -330,23 +459,23 @@ def list_history(
     passed: bool | None = None,
     offset: int = 0,
     limit: int = 10,
-) -> tuple[list[tuple[ReviewAttempt, str]], int]:
-    """Các lượt ĐÃ NỘP của người dùng (mới nhất trước) kèm tên khóa + tổng số dòng khớp bộ lọc."""
+) -> tuple[list[ReviewAttempt], int]:
+    """Các lượt ĐÃ NỘP của người dùng (theo khóa và theo kỹ năng, mới nhất trước) + tổng số dòng khớp bộ lọc."""
     conditions = [ReviewAttempt.user_id == user_id, ReviewAttempt.status != "in_progress"]
     if course_id is not None:
         conditions.append(ReviewAttempt.course_id == course_id)
     if passed is not None:
         conditions.append(ReviewAttempt.passed.is_(passed))
     total = db.scalar(select(func.count()).select_from(ReviewAttempt).where(*conditions))
-    rows = db.execute(
-        select(ReviewAttempt, Courses.title)
-        .join(Courses, Courses.course_id == ReviewAttempt.course_id)
+    # G2d: không JOIN courses — lượt theo kỹ năng (course_id NULL) vẫn phải có trong lịch sử; tên do service lấy
+    rows = db.scalars(
+        select(ReviewAttempt)
         .where(*conditions)
         .order_by(ReviewAttempt.submitted_at.desc(), ReviewAttempt.attempt_id.desc())
         .offset(offset)
         .limit(limit)
     ).all()
-    return [(attempt, title) for attempt, title in rows], total
+    return list(rows), total
 
 
 # ─────────────── Quản trị ngân hàng câu hỏi (GĐ7 · 13/11) ───────────────
@@ -406,7 +535,7 @@ def list_questions(
 ) -> tuple[list, int]:
     """Danh sách câu hỏi cho trang quản trị + tổng số dòng khớp bộ lọc.
 
-    Mỗi dòng: (ReviewQuestion, version, family_id, review_status, used_count, skill_name).
+    Mỗi dòng: (ReviewQuestion, version, family_id, review_status, used_count, skill_name, mentor_status).
     - Câu chưa có meta (nạp trước 13/11) → coi như phiên bản 1, họ = chính nó, đã duyệt (OUTER JOIN + COALESCE).
     - used_count đếm bằng subquery GROUP BY — một truy vấn cho cả trang (không N+1).
     - latest_only: chỉ phiên bản mới nhất của mỗi họ (bản cũ xem ở "Lịch sử phiên bản" của trang chi tiết).
@@ -468,6 +597,7 @@ def list_questions(
                 status.label("review_status"),
                 func.coalesce(used.c.n, 0).label("used_count"),
                 Skills.skill.label("skill_name"),
+                ReviewQuestionMeta.mentor_status.label("mentor_status"),  # G3f (25/11): mentor duyệt câu AI soạn
             ).select_from(ReviewQuestion)
         )
         .outerjoin(used, used.c.question_id == ReviewQuestion.question_id)

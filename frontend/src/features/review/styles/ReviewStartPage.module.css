@@ -126,3 +126,36 @@
   .main { padding: 22px 18px; }
   .stats { grid-template-columns: 1fr; }
 }
+
+/* G3d-2 (25/11): màn "AI đang soạn đề…" */
+.generation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--accent-soft-border);
+  background: var(--accent-tint);
+}
+.generation p { margin: 0; }
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border, rgba(127, 127, 127, 0.25));
+  overflow: hidden;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+.genSteps { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
+.genSteps li[data-state='todo'] { color: var(--text-soft); }
+.genSteps li[data-state='now'] { font-weight: 600; }
+.genSteps li[data-state='done'] { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .progress span { transition: none; }
+}

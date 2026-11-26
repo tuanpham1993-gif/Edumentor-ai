@@ -1,13 +1,13 @@
-/* Canvas hiển thị đồ thị lộ trình Admin (FĐ Admin · F11–F14) */
+/* Canvas hiển thị đồ thị lộ trình Admin (FĐ Admin · F11–F14) — Tương thích Dark & Light Theme */
 .wrap {
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  border-radius: 12px;
-  background: var(--surface-sunk, #161514);
-  border: 1px solid var(--card-border, #2b2622);
-  padding: 16px;
-  min-height: 220px;
+  border-radius: var(--r-lg, 12px);
+  background: var(--surface-sunk);
+  border: 1px solid var(--card-border);
+  padding: 14px 16px;
+  min-height: 200px;
 }
 
 .canvas {
@@ -19,10 +19,7 @@
 
 .svg {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
@@ -31,96 +28,136 @@
 
 .edge {
   fill: none;
-  stroke: var(--line, #3a342d);
-  stroke-width: 1.6;
+  stroke: var(--edge);
+  stroke-width: 1.75;
   transition: stroke var(--d-base, 0.2s);
 }
 
 .edgeSolid {
-  stroke: #6b5a40;
+  stroke: var(--edge);
 }
 
 .edgeDashed {
   stroke-dasharray: 4 4;
-  stroke: #524738;
+  stroke: var(--text-dim);
 }
 
 .edgeHot {
-  stroke: var(--accent, #f5a524);
+  stroke: var(--accent);
   stroke-width: 2;
+}
+
+/* Đường phân tách nhóm kỹ năng bổ trợ độc lập */
+.isolatedDivider {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  border-top: 1px dashed var(--card-border);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.isolatedDivider span {
+  margin-top: -10px;
+  background: var(--surface-sunk);
+  padding: 0 8px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
 }
 
 .node {
   position: absolute;
   width: 154px;
   height: 54px;
-  padding: 0 10px;
+  padding: 4px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   text-align: center;
-  border-radius: 10px;
-  border: 1px solid var(--line, #3a342d);
-  background: var(--card-inner, #211d1a);
-  color: var(--text, #ede8e3);
+  border-radius: var(--r-md, 10px);
+  border: 1px solid var(--node-border);
+  background: var(--node-bg);
+  color: var(--text);
   font: inherit;
-  font-size: 13.5px;
-  line-height: 1.2;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.25;
   cursor: pointer;
   user-select: none;
-  transition: border-color var(--d-base, 0.2s), transform var(--d-fast, 0.15s), box-shadow var(--d-base, 0.2s);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition:
+    border-color var(--d-base, 0.2s),
+    transform var(--d-fast, 0.15s),
+    box-shadow var(--d-base, 0.2s),
+    background-color var(--d-fast, 0.15s);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.16);
 }
 
-.node:hover {
+.nodeLabel {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.node:hover,
+.node:focus-visible {
   transform: translateY(-2px);
-  border-color: var(--accent, #f5a524);
+  border-color: var(--accent);
+  outline: none;
 }
 
-/* Các trạng thái của Node */
+.nodeSelected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 6px 14px rgba(var(--shadow-rgb), 0.22);
+}
+
+/* Các trạng thái của Node (Token-driven cho cả Sáng/Tối) */
 .known {
-  background: rgba(245, 165, 36, 0.12);
-  border-color: rgba(245, 165, 36, 0.55);
-  color: var(--accent, #f5a524);
+  background: var(--accent-tint);
+  border-color: var(--accent-soft-border);
+  color: var(--accent-soft-fg);
   font-weight: 600;
 }
 
 .known .checkIcon {
-  color: var(--accent, #f5a524);
-  font-weight: bold;
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 .learning {
-  background: rgba(56, 189, 248, 0.12);
-  border-color: rgba(56, 189, 248, 0.5);
-  color: #38bdf8;
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info-fg);
   font-weight: 500;
 }
 
 .unlearned {
-  background: var(--card-inner, #211d1a);
-  border-color: var(--line, #3a342d);
-  color: var(--text-soft, #a89f91);
+  background: var(--node-bg);
+  border-color: var(--node-border);
+  color: var(--text-soft);
 }
 
 .target {
-  border: 2px solid var(--accent, #f5a524);
-  box-shadow: 0 0 18px rgba(245, 165, 36, 0.25);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-tint);
   font-weight: 600;
 }
 
 .targetLearning {
-  background: rgba(56, 189, 248, 0.12);
-  border: 2px solid var(--accent, #f5a524);
-  color: #38bdf8;
-  box-shadow: 0 0 20px rgba(245, 165, 36, 0.3);
+  background: var(--info-bg);
+  border: 2px solid var(--accent);
+  color: var(--info-fg);
   font-weight: 600;
 }
 
 .targetUnlearned {
-  border: 2px solid var(--accent, #f5a524);
-  box-shadow: 0 0 16px rgba(245, 165, 36, 0.2);
+  border: 2px solid var(--accent);
   font-weight: 600;
 }
 
@@ -128,10 +165,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 20px;
-  margin-top: 14px;
-  font-size: 12.5px;
-  color: var(--text-muted, #8a8070);
+  gap: 10px 18px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .legendItem {
@@ -140,43 +179,55 @@
   gap: 6px;
 }
 
+.legendHint {
+  margin-left: auto;
+  font-style: italic;
+  color: var(--text-dim);
+}
+
 .swatch {
   width: 13px;
   height: 13px;
   border-radius: 3px;
-  border: 1px solid var(--line, #3a342d);
+  border: 1px solid var(--node-border);
 }
 
 .swatchKnown {
-  background: rgba(245, 165, 36, 0.2);
-  border-color: var(--accent, #f5a524);
+  background: var(--accent-tint-strong);
+  border-color: var(--accent);
 }
 
 .swatchLearning {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: #38bdf8;
+  background: var(--info-bg);
+  border-color: var(--info-border);
 }
 
 .swatchUnlearned {
-  background: #211d1a;
-  border-color: #3a342d;
+  background: var(--node-bg);
+  border-color: var(--node-border);
 }
 
 .swatchTarget {
   background: transparent;
-  border: 2px solid var(--accent, #f5a524);
+  border: 2px solid var(--accent);
 }
 
 .lineSample {
   display: inline-block;
-  width: 20px;
+  width: 18px;
   height: 2px;
-  background: #6b5a40;
+  background: var(--edge);
 }
 
 .lineSampleDashed {
   display: inline-block;
-  width: 20px;
-  height: 2px;
-  border-top: 2px dashed #524738;
+  width: 18px;
+  height: 0;
+  border-top: 2px dashed var(--text-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node {
+    transition: none;
+  }
 }

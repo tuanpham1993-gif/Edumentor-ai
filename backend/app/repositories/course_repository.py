@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session, selectinload
 from app.models.course import Courses
 from app.models.course_skill import CourseSkill
 from app.models.skill import Skills
+from app.models.user_course import UserCourse
+from app.models.user_skill import UserSkill
 
 
 MAX_SEARCH_TOKENS = 8
@@ -316,3 +318,66 @@ def get_course_skills(db: Session, course_id: int) -> list[Skills] | None:
     if course is None:
         return None
     return list(course.skills_info)
+
+
+def get_skill_by_id(db: Session, skill_id: int) -> Skills | None:
+    """Lấy thông tin kỹ năng theo ID."""
+    return db.get(Skills, skill_id)
+
+
+def has_any_course_for_skill(db: Session, skill_id: int) -> bool:
+    """Kiểm tra kỹ năng có ít nhất một khóa học liên kết trực tiếp trong course_skill."""
+    stmt = select(CourseSkill.course_id).where(CourseSkill.skill_id == skill_id).limit(1)
+    return db.scalar(stmt) is not None
+
+
+def list_direct_courses_for_skill(
+    db: Session,
+    *,
+    skill_id: int,
+    level: str | None = None,
+    candidate_limit: int = 100,
+) -> list[Courses]:
+    """Lấy các khóa học liên kết trực tiếp với kỹ năng qua bảng course_skill."""
+    query = (
+        select(Courses)
+        .join(CourseSkill, Courses.course_id == CourseSkill.course_id)
+        .where(CourseSkill.skill_id == skill_id)
+        .options(selectinload(Courses.skills_info))
+    )
+    if level and level.strip():
+        query = query.where(Courses.level.ilike(level.strip()))
+
+    query = query.order_by(
+        Courses.num_reviews.desc().nullslast(),
+        Courses.rating.desc().nullslast(),
+        Courses.course_id.asc(),
+    ).limit(candidate_limit)
+
+    return list(db.scalars(query).unique().all())
+
+
+def get_user_course_statuses(
+    db: Session,
+    *,
+    user_id: int,
+    course_ids: list[int],
+) -> dict[int, str]:
+    """Lấy map {course_id: status} từ user_courses cho danh sách khóa học."""
+    if not course_ids:
+        return {}
+    stmt = select(UserCourse.course_id, UserCourse.status).where(
+        UserCourse.user_id == user_id,
+        UserCourse.course_id.in_(course_ids),
+    )
+    rows = db.execute(stmt).all()
+    return {row.course_id: row.status for row in rows}
+
+
+def get_user_skill_status(db: Session, *, user_id: int, skill_id: int) -> str | None:
+    """Lấy trạng thái kỹ năng hiện tại (known/learning) của học viên."""
+    stmt = select(UserSkill.status).where(
+        UserSkill.user_id == user_id,
+        UserSkill.skill_id == skill_id,
+    )
+    return db.scalar(stmt)

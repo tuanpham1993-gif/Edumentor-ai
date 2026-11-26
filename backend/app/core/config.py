@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+from typing import Literal
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 
@@ -32,7 +33,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str
     FRONTEND_URL: str = "http://localhost:5173"
 
-    # Ôn tập — module 09 (Tuấn, chốt 09/11). Đổi trong .env, KHÔNG ghi cứng trong code.
+    # Ôn tập Đổi trong .env, KHÔNG ghi cứng trong code.
     AI_MODE: str = "mock"                 # "mock" (giai đoạn 1, 0 đồng) | "real" (giai đoạn 2, cần LLM_API_KEY)
     REVIEW_PASS_SCORE: float = 6.0        # Đạt khi điểm (thang 10) ≥ giá trị này
     REVIEW_GRADING_TIMEOUT: int = 20      # giây chờ chấm khi nộp; quá → trạng thái "grading" (T1)
@@ -42,6 +43,21 @@ class Settings(BaseSettings):
     # số bài làm dở cùng lúc (theo khóa học; ôn theo kỹ năng sau này áp cùng quy tắc cho kỹ năng).
     REVIEW_SUBMIT_COOLDOWN: int = 120  # giây tối thiểu giữa 2 lần nộp của một người
     REVIEW_MAX_UNFINISHED: int = 5  # số bài làm dở tối đa; đủ → phải nộp hoặc bỏ bớt mới bắt đầu bài mới
+    # G3e (25/11, D29): chống học thuộc — tránh câu của N lượt nộp gần nhất (P2); lượt CHƯA ĐẠT ẩn gì (P3):
+    #   all = hiện đủ (như cũ) · mcq_only = ẩn bài mẫu tự luận · none = ẩn cả đáp án trắc nghiệm. Lượt Đạt luôn hiện đủ.
+    REVIEW_AVOID_LAST_ATTEMPTS: int = 3
+    REVIEW_REVEAL_ON_FAIL: Literal["all", "mcq_only", "none"] = "mcq_only"  # 26/11: gõ sai → lỗi khi khởi động
+    # G3c (25/11) cổng kiểm câu AI soạn — ngưỡng chốt sau hiệu chỉnh trên 263 câu soạn tay (docs mục 7.4)
+    REVIEW_GATE_LENGTH_RATIO: float = 1.5  # L1: đáp án đúng dài hơn N × lựa chọn sai dài nhất…
+    REVIEW_GATE_LENGTH_MIN_DIFF: int = 15  # …VÀ dài hơn ≥ N ký tự (bỏ qua lựa chọn ngắn như "PO" / "The Developers")
+    REVIEW_GATE_DUP_MAX: float = 0.95  # cosine với câu CÙNG LOẠI, cùng kỹ năng ≥ ngưỡng → gần trùng → loại
+    REVIEW_GATE_MODEL_MIN: float = 7.0  # bài mẫu của AI chấm bằng từ khóa phải ≥ (thang 10)
+    REVIEW_GATE_COPY_MAX: float = 5.0  # bài chép lại đề phải ≤ (thang 10)
+    REVIEW_GATE_OTHER_MAX: float = 6.0  # bài mẫu của câu tự luận khác phải ≤ (thang 10)
+    # G3d-3 (25/11, D24): soạn sẵn câu ban đêm cho kỹ năng trong lộ trình đang học. MẶC ĐỊNH TẮT (tốn lượt Gemini)
+    REVIEW_PREGEN_ENABLED: bool = False
+    REVIEW_PREGEN_PER_NIGHT: int = 20  # số kỹ năng tối đa mỗi đêm
+    REVIEW_PREGEN_HOUR: int = 2  # giờ chạy (giờ máy chủ)
     # 21/11 (Q12 guide.md) "Đến hạn ôn": khoảng nhắc giãn dần theo số lần ĐẠT liên tiếp của kỹ năng (lần 1, 2, 3+);
     # lần ôn gần nhất chưa đạt → dùng khoảng đầu. Chuông gom tối đa 1 lần / ngày, email tối đa 1 lần / tuần.
     REVIEW_DUE_INTERVALS: list[int] = [7, 30, 90]  # ngày

@@ -1,9 +1,11 @@
 """Model bảng `review_attempts` + `review_answers` — lượt làm bài ôn tập (module 09 · Tuấn · GĐ1, 10/11/2026).
 
-ReviewAttempt — một lượt làm bài của MỘT người dùng cho MỘT khóa học:
+ReviewAttempt — một lượt làm bài của MỘT người dùng cho MỘT khóa học HOẶC MỘT kỹ năng (G2b, 22/11 — docs/guide.md D1–D4):
+  - course_id (ôn theo khóa) hoặc skill_id (ôn theo kỹ năng, mở từ node lộ trình) — đúng MỘT trong hai (CHECK).
+  - path_id: lộ trình người học đang mở khi bấm ôn kỹ năng → làm xong quay lại đúng node; xóa lộ trình → NULL.
   - status: 'in_progress' (đang làm, được Tạm rời / làm tiếp) → 'grading' (đã nộp, đang chấm
     — chấm quá thời gian, T1) → 'graded' (có điểm).
-  - Mỗi người dùng + khóa có TỐI ĐA 1 lượt 'in_progress' (unique index có điều kiện bên dưới).
+  - Mỗi người dùng + khóa (hoặc + kỹ năng) có TỐI ĐA 1 lượt 'in_progress' (unique index có điều kiện bên dưới).
   - score: thang 10 (TN 12 × 0,5 + TL 1 + 1 + 2); passed = score ≥ REVIEW_PASS_SCORE.
   - is_first_pass: lượt ĐẠT ĐẦU TIÊN của khóa → lượt này làm khóa Hoàn thành + kỹ năng "Đã biết"
     (B1); các lượt đạt sau chỉ lưu lịch sử (B2).
@@ -57,21 +59,26 @@ class ReviewAttempt(Base):
     course_id = Column(
         Integer,
         ForeignKey("courses.course_id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,  # NULL = lượt ôn theo kỹ năng (D3)
         index=True,
     )
-    status = Column(
-        String(20), nullable=False, default="in_progress", server_default="in_progress"
+    skill_id = Column(  # D1
+        Integer,
+        ForeignKey("skills.skill_id", ondelete="CASCADE"),
+        nullable=True,
+        index=True,  # D4
     )
+    path_id = Column(  # D2 — learning_paths.record_id (bảng của Hòa)
+        Integer,
+        ForeignKey("learning_paths.record_id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    status = Column(String(20), nullable=False, default="in_progress", server_default="in_progress")
     score = Column(Numeric(4, 2), nullable=True)  # vd 7.70
     passed = Column(Boolean, nullable=True)  # NULL khi chưa chấm xong
-    is_first_pass = Column(
-        Boolean, nullable=False, default=False, server_default="false"
-    )
+    is_first_pass = Column(Boolean, nullable=False, default=False, server_default="false")
     trace = Column(JSON(none_as_null=True), nullable=True)
-    started_at = Column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
-    )
+    started_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     submitted_at = Column(DateTime(timezone=True), nullable=True)
 
     answers = relationship(
@@ -90,6 +97,11 @@ class ReviewAttempt(Base):
             "score IS NULL OR (score >= 0 AND score <= 10)",
             name="ck_review_attempts_score",
         ),
+        # D3: lượt thuộc ĐÚNG MỘT trong hai — khóa học hoặc kỹ năng.
+        CheckConstraint(
+            "(course_id IS NULL) <> (skill_id IS NULL)",
+            name="ck_review_attempts_target",
+        ),
         # Tối đa 1 lượt đang làm cho mỗi (người dùng, khóa) — DB tự chặn khi bấm "Bắt đầu" 2 lần.
         Index(
             "uq_review_attempts_one_in_progress",
@@ -98,6 +110,15 @@ class ReviewAttempt(Base):
             unique=True,
             postgresql_where=text("status = 'in_progress'"),
             sqlite_where=text("status = 'in_progress'"),
+        ),
+        # D4: tối đa 1 lượt đang làm cho mỗi (người dùng, kỹ năng).
+        Index(
+            "uq_review_attempts_one_in_progress_skill",
+            "user_id",
+            "skill_id",
+            unique=True,
+            postgresql_where=text("status = 'in_progress' AND skill_id IS NOT NULL"),
+            sqlite_where=text("status = 'in_progress' AND skill_id IS NOT NULL"),
         ),
     )
 
@@ -137,9 +158,7 @@ class ReviewAnswer(Base):
     __table_args__ = (
         PrimaryKeyConstraint("attempt_id", "position", name="pk_review_answers"),
         # Một câu hỏi không xuất hiện 2 lần trong cùng một đề.
-        UniqueConstraint(
-            "attempt_id", "question_id", name="uq_review_answers_question"
-        ),
+        UniqueConstraint("attempt_id", "question_id", name="uq_review_answers_question"),
         CheckConstraint("position >= 1", name="ck_review_answers_position"),
         CheckConstraint(
             "selected_index IS NULL OR selected_index BETWEEN 0 AND 3",

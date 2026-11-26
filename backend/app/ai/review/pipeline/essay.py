@@ -140,7 +140,18 @@ def node_guard(ctx: EssayContext) -> Step:
         ctx.question["rubric"], ctx.question.get("content")
     ):
         ctx.flag("vietnamese")  # vẫn chấm theo nghĩa (RATER_GUIDELINE quy tắc 2)
+    if copied_model_answer(ctx.question.get("explanation"), text):
+        ctx.flag("copied_model_answer")  # G3e P4 (D29): chỉ gắn cờ cho giáo viên xem — KHÔNG đổi điểm
     return Step(output={"flags": list(ctx.flags)})
+
+
+def copied_model_answer(explanation: str | None, text: str) -> bool:
+    """G3e P4 (D29): bài làm chép bài mẫu — ≥ 80% cụm 3 từ của bài mẫu có trong bài (cùng cách so với Verifier).
+    Bài mẫu quá ngắn (< 8 từ) thì không xét: câu trả lời đúng ngắn tự nhiên trùng bài mẫu."""
+    model = re.sub(r"^\s*model answer\s*:\s*", "", explanation or "", flags=re.IGNORECASE)
+    if len(model.split()) < 8:
+        return False
+    return evidence_in_answer(model, text)
 
 
 def node_context(ctx: EssayContext) -> Step:

@@ -28,6 +28,7 @@ from sqlalchemy.orm import Session
 
 from app.ai.prompts.review import GENERATE_SYSTEM_PROMPT, build_generation_prompt
 from app.ai.review import get_review_ai
+from app.ai.review import question_idea
 from app.ai.review.base import AIUnavailableError, GenerationRequest, ReviewAI
 from app.ai.review.mock_ai import pick_from_bank
 from app.ai.review.validator import generated_errors
@@ -209,14 +210,58 @@ def skill_reviews(db: Session, user: Users, skill_ids: list[int]) -> dict:
         return (2, str(last["submitted_at"] or last["started_at"]))
 
     due = review_due_service.due_info(db, user.user_id, wanted)  # 21/11 (Q12): "Đến hạn ôn" theo kỹ năng
+    from app.services import skill_review_service  # import vòng: skill_review_service dùng review_service
+
     items = []
     for skill_id in wanted:
         found = sorted((r["course"] for r in rows if skill_id in r["skill_ids"]), key=order)
-        items.append({"skill_id": skill_id, "courses": found, "due": due.get(skill_id)})
+        items.append(
+            {
+                "skill_id": skill_id,
+                "courses": found,
+                "due": due.get(skill_id),
+                "skill": skill_review_service.direct_review(db, user, skill_id),  # G2d: ôn thẳng theo kỹ năng
+            }
+        )
     return {"items": items}
 
 
 # ─────────────── Sinh đề ───────────────
+
+
+def recent_avoid(
+    db: Session, user_id: int, course_id: int | None = None, *, skill_id: int | None = None
+) -> tuple[list[ReviewQuestion], dict[int, int]]:
+    """G3e P2 (D29): (mọi phiên bản cùng họ với câu của REVIEW_AVOID_LAST_ATTEMPTS lượt nộp gần nhất, {question_id: mức
+    phạt}). 7.5a: tránh cả phiên bản mới của câu đã làm (v1 → v2 chỉ khác vài chữ)."""
+    recent = repo.recent_submitted_question_ids(db, user_id, course_id, skill_id=skill_id,
+                                                attempts=max(1, settings.REVIEW_AVOID_LAST_ATTEMPTS))  # fmt: skip
+    family = repo.family_questions(db, list(recent))
+    fam_of = repo.family_ids(db, list(recent) + [q.question_id for q in family])
+    fam_penalty: dict[int, int] = {}
+    for qid, p in recent.items():
+        fam_penalty[fam_of[qid]] = max(fam_penalty.get(fam_of[qid], 0), p)
+    return family, {q.question_id: fam_penalty[fam_of[q.question_id]] for q in family}
+
+
+def attach_ideas(db: Session, candidates: list[dict], avoid: dict[int, int] | set[int]) -> dict[int, int]:
+    """Bước A (25/11): gắn "idea" cho câu AI soạn (một đề không lấy 2 câu cùng ý — pick_from_bank) và trả mức phạt P2 MỚI:
+    câu khác id nhưng cùng ý (cùng loại) với câu của lượt gần đây nhận mức phạt của lượt đó → lượt sau ưu tiên ý mới."""
+    penalty = dict(avoid) if isinstance(avoid, dict) else dict.fromkeys(avoid, 1)
+    ids = sorted({c["question_id"] for c in candidates} | set(penalty))
+    ideas = {u.question_id: u for u in question_idea.from_rows(repo.question_sources(db, question_ids=ids))}
+    recent: dict[tuple, int] = {}
+    for qid, p in penalty.items():
+        if (u := ideas.get(qid)) is not None:
+            for t in u.idea:
+                recent[(u.type, *t)] = max(recent.get((u.type, *t), 0), p)
+    for c in candidates:
+        u = ideas.get(c["question_id"])
+        c["idea"] = sorted(u.idea) if u else []
+        p = max((recent.get((c["type"], *t), 0) for t in c["idea"]), default=0)
+        if p > penalty.get(c["question_id"], 0):
+            penalty[c["question_id"]] = p
+    return penalty
 
 
 def _question_dict(q: ReviewQuestion) -> dict:
@@ -273,6 +318,108 @@ def _save_pending(db: Session, skill_id: int, questions: list[dict]) -> int:
     return saved
 
 
+def _new_trace(ai: ReviewAI, avoid: set[int]) -> dict:
+    return {
+        "ai_mode": settings.AI_MODE,
+        "ai": ai.name,
+        "embedding_model": settings.REVIEW_EMBEDDING_MODEL,
+        "system_prompt": GENERATE_SYSTEM_PROMPT,
+        "avoided_question_ids": sorted(avoid),
+        "skills": [],
+    }
+
+
+def pick_questions(
+    db: Session,
+    *,
+    title: str,
+    names: dict[int, str],
+    plan: exam_builder.Plan,
+    ai: ReviewAI,
+    rng: random.Random,
+    embedder: review_rag_service.Embedder | None,
+    avoid: dict[int, int] | set[int],  # G3e: {question_id: mức phạt}
+    trace: dict,
+    include_auto: bool = False,
+) -> list[dict]:
+    """Lấy câu cho TỪNG kỹ năng của plan (RAG → AI → validator → ngân hàng dự phòng), ghi vết vào trace.
+    Dùng chung cho ôn theo khóa và theo kỹ năng (G2c). Không đủ câu → NotEnoughQuestionsError."""
+    picked: list[dict] = []
+    for skill_id, need in plan.items():
+        chunks = review_rag_service.retrieve_chunks(db, skill_id, names[skill_id], embedder=embedder)
+        prompt = build_generation_prompt(course_title=title, skill_name=names[skill_id], chunks=chunks, need=need)
+        candidates = [_question_dict(q) for q in repo.bank_questions(db, skill_id, include_auto=include_auto)]
+        skill_avoid = attach_ideas(db, candidates, avoid) if include_auto else avoid  # Bước A: chỉ ôn theo kỹ năng
+        request = GenerationRequest(
+            course_title=title,
+            skill_id=skill_id,
+            skill_name=names[skill_id],
+            need=need,
+            chunks=chunks,
+            candidates=candidates,
+            avoid_question_ids=skill_avoid,
+            system_prompt=GENERATE_SYSTEM_PROMPT,
+            prompt=prompt,
+            pending_count=repo.pending_count(db, skill_id),
+        )
+        questions, info = _generate_with_fallback(ai, request, rng)
+        new = [q for q in questions if not q.get("question_id")]
+        if new:
+            # QT6-A: câu AI soạn mới → Chờ duyệt; đề của kỹ năng này bốc câu ĐÃ DUYỆT trong ngân hàng
+            info["ai_new_pending"] = _save_pending(db, skill_id, new)
+            questions = pick_from_bank(
+                request.candidates,
+                need,
+                rng,
+                prefer_chunk_ids={c.chunk_id for c in chunks},
+                avoid_question_ids=skill_avoid,
+            )
+            if generated_errors(questions, need):
+                raise exam_builder.NotEnoughQuestionsError(f"Ngân hàng kỹ năng {skill_id} không đủ câu")
+            info["fallback"] = True
+        picked += [{**q, "skill_id": skill_id} for q in questions]
+        trace["skills"].append(
+            {
+                "skill_id": skill_id,
+                "skill": names[skill_id],
+                "need": need,
+                "chunks": [{"chunk_id": c.chunk_id, "code": c.code, "score": c.score} for c in chunks],
+                "prompt": prompt,
+                **info,
+            }
+        )
+    return picked
+
+
+def save_new_attempt(
+    db: Session,
+    attempt: ReviewAttempt,
+    picked: list[dict],
+    rng: random.Random,
+    find_existing: Callable[[], ReviewAttempt | None],
+) -> dict:
+    """Xếp đề, lưu lượt mới. Bấm "Bắt đầu" 2 lần cùng lúc: unique index chỉ cho 1 lượt đang làm → trả lại lượt kia."""
+    for item in exam_builder.order_exam(picked, rng):
+        attempt.answers.append(
+            ReviewAnswer(
+                position=item["position"],
+                question_id=item["question_id"],  # 7.5c: mọi câu trong đề đều là câu đã duyệt có sẵn trong ngân hàng
+                option_order=item.get("option_order"),
+                max_points=item["max_points"],
+            )
+        )
+    db.add(attempt)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        existing = find_existing()
+        if existing is None:
+            raise
+        return attempt_view(db, existing.attempt_id, resumed=True)
+    return attempt_view(db, attempt.attempt_id, resumed=False)
+
+
 def start_attempt(
     db: Session,
     user: Users,
@@ -303,7 +450,8 @@ def start_attempt(
     previous = repo.last_submitted_questions(db, user.user_id, course_id)
     # 7.5a (16/11): tránh MỌI phiên bản cùng họ với câu lượt trước — admin sửa câu v1 thành v2 thì lượt sau
     # cũng không ra v2 (chỉ khác vài chữ). fresh trừ phiên bản ĐANG BẬT của họ (v1 đã tắt, v2 đang bật).
-    family = repo.family_questions(db, [q.question_id for q in previous])
+    # G3e P2 (D29): tránh câu của 3 lượt nộp gần nhất (không chỉ 1); phải lặp thì lặp câu cũ nhất trước.
+    family, avoid = recent_avoid(db, user.user_id, course_id)
     available = repo.bank_counts(db, skill_ids)
     fresh = dict(available)
     for q in family:
@@ -320,82 +468,14 @@ def start_attempt(
     except exam_builder.NotEnoughQuestionsError:
         raise ReviewBlockedError("no_question_bank") from None
 
-    avoid = {q.question_id for q in family}
-    trace = {
-        "ai_mode": settings.AI_MODE,
-        "ai": ai.name,
-        "embedding_model": settings.REVIEW_EMBEDDING_MODEL,
-        "system_prompt": GENERATE_SYSTEM_PROMPT,
-        "avoided_question_ids": sorted(avoid),
-        "skills": [],
-    }
-    picked: list[dict] = []
+    trace = _new_trace(ai, avoid)
     try:
-        for skill_id, need in plan.items():
-            chunks = review_rag_service.retrieve_chunks(db, skill_id, names[skill_id], embedder=embedder)
-            prompt = build_generation_prompt(course_title=title, skill_name=names[skill_id], chunks=chunks, need=need)
-            request = GenerationRequest(
-                course_title=title,
-                skill_id=skill_id,
-                skill_name=names[skill_id],
-                need=need,
-                chunks=chunks,
-                candidates=[_question_dict(q) for q in repo.bank_questions(db, skill_id)],
-                avoid_question_ids=avoid,
-                system_prompt=GENERATE_SYSTEM_PROMPT,
-                prompt=prompt,
-                pending_count=repo.pending_count(db, skill_id),
-            )
-            questions, info = _generate_with_fallback(ai, request, rng)
-            new = [q for q in questions if not q.get("question_id")]
-            if new:
-                # QT6-A: câu AI soạn mới → Chờ duyệt; đề của kỹ năng này bốc câu ĐÃ DUYỆT trong ngân hàng
-                info["ai_new_pending"] = _save_pending(db, skill_id, new)
-                questions = pick_from_bank(
-                    request.candidates,
-                    need,
-                    rng,
-                    prefer_chunk_ids={c.chunk_id for c in chunks},
-                    avoid_question_ids=avoid,
-                )
-                if generated_errors(questions, need):
-                    raise exam_builder.NotEnoughQuestionsError(f"Ngân hàng kỹ năng {skill_id} không đủ câu")
-                info["fallback"] = True
-            picked += [{**q, "skill_id": skill_id} for q in questions]
-            trace["skills"].append(
-                {
-                    "skill_id": skill_id,
-                    "skill": names[skill_id],
-                    "need": need,
-                    "chunks": [{"chunk_id": c.chunk_id, "code": c.code, "score": c.score} for c in chunks],
-                    "prompt": prompt,
-                    **info,
-                }
-            )
+        picked = pick_questions(db, title=title, names=names, plan=plan, ai=ai, rng=rng, embedder=embedder,
+                                avoid=avoid, trace=trace)  # fmt: skip
     except exam_builder.NotEnoughQuestionsError:
         raise ReviewBlockedError("no_question_bank") from None
-
     attempt = ReviewAttempt(user_id=user.user_id, course_id=course_id, trace=trace)
-    for item in exam_builder.order_exam(picked, rng):
-        attempt.answers.append(
-            ReviewAnswer(
-                position=item["position"],
-                question_id=item["question_id"],  # 7.5c: mọi câu trong đề đều là câu đã duyệt có sẵn trong ngân hàng
-                option_order=item.get("option_order"),
-                max_points=item["max_points"],
-            )
-        )
-    db.add(attempt)
-    try:
-        db.commit()
-    except IntegrityError:
-        # Bấm "Bắt đầu" 2 lần cùng lúc: unique index chỉ cho 1 lượt đang làm → trả lại lượt kia.
-        db.rollback()
-        existing = repo.get_in_progress(db, user.user_id, course_id)
-        if existing is None:
-            raise
-        return attempt_view(db, existing.attempt_id, resumed=True)
-    return attempt_view(db, attempt.attempt_id, resumed=False)
+    return save_new_attempt(db, attempt, picked, rng, lambda: repo.get_in_progress(db, user.user_id, course_id))
 
 
 # ─────────────── Xem đề, lưu câu trả lời ───────────────
@@ -410,12 +490,11 @@ def _owned_attempt(db: Session, user: Users, attempt_id: int, *, lock: bool = Fa
 
 
 def _unfinished_view(db: Session, attempts: list[ReviewAttempt]) -> list[dict]:
-    titles = repo.course_titles(db, [a.course_id for a in attempts])
+    names = target_names(db, attempts)
     return [
         {
             "attempt_id": a.attempt_id,
-            "course_id": a.course_id,
-            "course_title": titles.get(a.course_id, ""),
+            **target_fields(db, a, names),
             "answered": sum(1 for x in a.answers if _is_answered(x)),
             "total": len(a.answers),
             "started_at": a.started_at,
@@ -436,6 +515,38 @@ def abandon_attempt(db: Session, user: Users, attempt_id: int) -> None:
 
 def _is_answered(a: ReviewAnswer) -> bool:
     return a.selected_index is not None or bool(a.text_answer and a.text_answer.strip())
+
+
+def target_names(db: Session, attempts: list[ReviewAttempt]) -> tuple[dict[int, str], dict[int, str]]:
+    """(tên khóa theo course_id, tên kỹ năng theo skill_id) cho nhiều lượt — 2 truy vấn."""
+    courses = repo.course_titles(db, [a.course_id for a in attempts if a.course_id is not None])
+    skills = repo.skill_names(db, [a.skill_id for a in attempts if a.skill_id is not None])
+    return courses, skills
+
+
+def target_fields(db: Session, attempt: ReviewAttempt, names=None) -> dict:
+    """Lượt thuộc khóa nào HOẶC kỹ năng nào (G2c/G2d, 22/11): lượt theo kỹ năng có course_id None, course_title ""."""
+    courses, skills = names or target_names(db, [attempt])
+    return {
+        "course_id": attempt.course_id,
+        "course_title": courses.get(attempt.course_id, "") if attempt.course_id is not None else "",
+        "skill_id": attempt.skill_id,
+        "skill_name": skills.get(attempt.skill_id) if attempt.skill_id is not None else None,
+        "path_id": attempt.path_id,
+    }
+
+
+def email_target(view: dict) -> tuple[str, str]:
+    """(tên, "khóa học" | "kỹ năng") cho email kết quả, từ kết quả / mục báo lỗi có course_id + course_title + skill_name."""
+    if view.get("course_id") is None:
+        return view.get("skill_name") or "", "kỹ năng"
+    return view.get("course_title") or "", "khóa học"
+
+
+def target_title(db: Session, attempt: ReviewAttempt) -> str:
+    """Tên hiển thị: tên khóa, hoặc tên kỹ năng với lượt theo kỹ năng (thông báo, email)."""
+    fields = target_fields(db, attempt)
+    return fields["course_title"] if attempt.course_id is not None else (fields["skill_name"] or "")
 
 
 def attempt_view(db: Session, attempt_id: int, *, resumed: bool = False) -> dict:
@@ -462,8 +573,7 @@ def attempt_view(db: Session, attempt_id: int, *, resumed: bool = False) -> dict
         )
     return {
         "attempt_id": attempt.attempt_id,
-        "course_id": attempt.course_id,
-        "course_title": repo.get_course_title(db, attempt.course_id) or "",
+        **target_fields(db, attempt),
         "status": attempt.status,
         "started_at": attempt.started_at,
         "resumed": resumed,
@@ -591,7 +701,14 @@ def complete_if_first_pass(db: Session, user_id: int, attempt: ReviewAttempt) ->
     """Đạt + khóa đang 'ongoing' → khóa Hoàn thành + mọi kỹ năng của khóa "Đã biết" (B1). Không commit.
     Hoàn thành = đạt + khóa đang 'ongoing' (chốt với Khôi, điểm 3 — 12/11). Khóa đã Hoàn thành không bỏ được và
     Khôi giữ nguyên 'completed' khi tham gia lại → không cần kiểm "lần đạt đầu"; bỏ khóa rồi tham gia lại (T9)
-    vẫn Hoàn thành được. Dùng chung cho nộp bài và admin chấm lại (review_flag_service, 17/11)."""
+    vẫn Hoàn thành được. Dùng chung cho nộp bài và admin chấm lại (review_flag_service, 17/11).
+    Lượt theo KỸ NĂNG (G2d, 22/11): đạt → CHỈ kỹ năng đó "Đã biết", không đụng khóa nào; is_first_pass luôn False
+    (cột này = "lượt làm khóa Hoàn thành")."""
+    if attempt.course_id is None:
+        attempt.is_first_pass = False
+        if attempt.passed and attempt.skill_id is not None:
+            user_skill_service.mark_known(db, user_id, [attempt.skill_id], source="review")
+        return False
     enrollment = course_gateway.get_enrollment_status(db, user_id, attempt.course_id)
     first_pass = bool(attempt.passed) and enrollment == course_gateway.IN_PROGRESS
     attempt.is_first_pass = first_pass
@@ -627,11 +744,12 @@ def finish_grading(
             send_review_result_email(
                 user.email,
                 user.full_name,
-                result["course_title"],
+                target_title(session, attempt),
                 result["score"],
                 result["passed"],
                 result["completed_course"],
                 attempt_id,
+                target="khóa học" if attempt.course_id is not None else "kỹ năng",
             )
     except Exception:
         logger.exception("Ôn tập: chấm nền lượt %s lỗi — chờ recover_stuck_grading", attempt_id)
@@ -659,7 +777,7 @@ def recover_stuck_grading(db: Session, user: Users) -> None:
 def _notify_result(db: Session, user: Users, attempt: ReviewAttempt, *, renew: bool = False) -> None:
     """Thông báo trên chuông: kết quả ôn tập; đạt lần đầu thì thêm \"khóa đã hoàn thành\".
     renew=True (admin chấm lại, 17/11): cập nhật thông báo kết quả cũ của lượt này + đặt lại chưa đọc."""
-    title = repo.get_course_title(db, attempt.course_id) or ""
+    title = target_title(db, attempt)
     verdict = "Đạt" if attempt.passed else "Chưa đạt"
     send = notification_service.renotify if renew else notification_service.notify
     send(
@@ -667,7 +785,7 @@ def _notify_result(db: Session, user: Users, attempt: ReviewAttempt, *, renew: b
         user.user_id,
         "review_graded",
         f"Kết quả ôn tập: {float(attempt.score):g}/10 — {verdict}",
-        body=title,
+        body=title if attempt.course_id is not None else f"Kỹ năng: {title}",
         link=f"/review/{attempt.attempt_id}/result",
         source_id=attempt.attempt_id,
     )
@@ -691,8 +809,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
         # Đang chấm (T1): chưa có điểm → chưa trả đáp án / từng câu; frontend hiện "Đang chấm" và hỏi lại sau.
         return {
             "attempt_id": attempt.attempt_id,
-            "course_id": attempt.course_id,
-            "course_title": repo.get_course_title(db, attempt.course_id) or "",
+            **target_fields(db, attempt),
             "status": attempt.status,
             "score": None,
             "passed": None,
@@ -710,6 +827,9 @@ def result_view(db: Session, attempt_id: int) -> dict:
     fallback = {f["position"] for f in grading.get("keyword_fallback", [])}
     essays = {e["position"]: e for e in grading.get("essays", [])}
     keyword_only = grading.get("ai") in ("mock", "unavailable")  # AI_MODE=mock thực chất là chấm từ khóa
+    # G3e P3 (D29): lượt CHƯA ĐẠT ẩn đáp án theo REVIEW_REVEAL_ON_FAIL (mcq_only: ẩn bài mẫu tự luận; none: ẩn cả đáp án
+    # trắc nghiệm). Ý barem + lý do chấm vẫn hiện để học viên biết mình thiếu gì. Lượt Đạt luôn hiện đủ.
+    reveal = "all" if attempt.passed else settings.REVIEW_REVEAL_ON_FAIL
     questions = []
     mcq_score = essay_score = 0.0
     for a in attempt.answers:
@@ -735,6 +855,7 @@ def result_view(db: Session, attempt_id: int) -> dict:
             "needs_review": False,
             "reviewed": False,
             "feedback": None,
+            "answer_hidden": False,
         }
         if q.type == "mcq":
             mcq_score += points
@@ -744,8 +865,12 @@ def result_view(db: Session, attempt_id: int) -> dict:
                 correct_index=review_grader.displayed_correct_index(a),
                 is_correct=review_grader.is_mcq_correct(a),
             )
+            if reveal == "none":
+                item.update(correct_index=None, explanation=None, answer_hidden=True)
         else:
             essay_score += points
+            if reveal in ("mcq_only", "none") and q.explanation:
+                item.update(explanation=None, answer_hidden=True)
             results = a.rubric_result or [{} for _ in q.rubric]
             item.update(
                 text_answer=a.text_answer,
@@ -772,15 +897,16 @@ def result_view(db: Session, attempt_id: int) -> dict:
         questions.append(item)
     return {
         "attempt_id": attempt.attempt_id,
-        "course_id": attempt.course_id,
-        "course_title": repo.get_course_title(db, attempt.course_id) or "",
+        **target_fields(db, attempt),
         "status": attempt.status,
         "score": float(attempt.score) if attempt.score is not None else None,
         "passed": attempt.passed,
         "pass_score": settings.REVIEW_PASS_SCORE,
         "mcq_score": round(mcq_score, 2),
         "essay_score": round(essay_score, 2),
+        "answers_hidden": any(item["answer_hidden"] for item in questions),
         "completed_course": attempt.is_first_pass,
+        "skill_known": bool(attempt.passed) and attempt.skill_id is not None,
         "started_at": attempt.started_at,
         "submitted_at": attempt.submitted_at,
         "questions": questions,
@@ -803,11 +929,9 @@ def history_list(
     rows, total = repo.list_history(
         db, user.user_id, course_id=course_id, passed=passed, offset=(page - 1) * size, limit=size
     )
+    names = target_names(db, rows)
     return {
-        "items": [
-            {**_summary(a), "course_id": a.course_id, "course_title": title, "completed_course": a.is_first_pass}
-            for a, title in rows
-        ],
+        "items": [{**_summary(a), **target_fields(db, a, names), "completed_course": a.is_first_pass} for a in rows],
         "total": total,
         "page": page,
         "size": size,
@@ -833,6 +957,7 @@ def attempt_trace(db: Session, attempt_id: int) -> dict:
         "attempt_id": attempt.attempt_id,
         "user_id": attempt.user_id,
         "course_id": attempt.course_id,
+        "skill_id": attempt.skill_id,
         "status": attempt.status,
         "score": float(attempt.score) if attempt.score is not None else None,
         "started_at": attempt.started_at,

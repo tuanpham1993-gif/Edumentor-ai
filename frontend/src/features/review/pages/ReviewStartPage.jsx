@@ -4,21 +4,30 @@
 //   - Chưa thể ôn (chưa tham gia / đã bỏ khóa / chưa có đề) → hiện lý do, ẩn nút Bắt đầu.
 //   - 20/11: vào từ huy hiệu trên đồ thị lộ trình → nút "← Quay lại lộ trình" (reviewReturn.js).
 //   - 19/11: đủ 5 bài làm dở (khóa khác) → danh sách bài dở với Tiếp tục / Bỏ bài; bài dở của khóa này có "Bỏ bài này".
-import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+//   - G2 (22/11): route /skills/:skillId/review?path= — ôn theo KỸ NĂNG (mở từ huy hiệu node lộ trình): 15 câu của
+//     cùng kỹ năng, không cần tham gia khóa; đạt → chỉ kỹ năng này "Đã biết".
+//   - G3d-2 (25/11): kỹ năng thiếu câu → bấm Bắt đầu, backend trả 202 → màn "AI đang soạn đề… bước x/4", hỏi tiến độ
+//     3 giây / lần; xong → tự bắt đầu lại và mở đề; lỗi → nút Thử lại (chỉ soạn phần còn thiếu). Không chuông (D28).
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import * as reviewApi from '../../../api/review.api.js';
 import StatusPanel from '../../common/components/StatusPanel.jsx';
 import { parseApiError } from '../../../utils/errors.js';
 import { formatDateTime } from '../../../utils/formatters.js';
 import AbandonAttemptButton from '../components/AbandonAttemptButton.jsx';
+import GenerationProgress from '../components/GenerationProgress.jsx';
 import TempJoinCourseButton from '../components/TempJoinCourseButton.jsx'; // TẠM — xóa khi Khôi có trang khóa học
-import { formatScore } from '../reviewFormat.js';
-import { attemptKey, courseKey, readReturn, saveReturn } from '../reviewReturn.js';
+import { formatScore, targetTitle } from '../reviewFormat.js';
+import { attemptKey, courseKey, readReturn, saveReturn, skillKey } from '../reviewReturn.js';
 import styles from '../styles/ReviewStartPage.module.css';
+
+const POLL_MS = 3000;
+const RUNNING = ['queued', 'running'];
 
 const BLOCK_TITLES = {
   no_question_bank: 'Bài ôn tập chưa sẵn sàng',
+  // G2: kỹ năng chưa đủ câu → AI soạn khi thiếu là bước sau (G3)
   too_many_unfinished: 'Bạn đang có nhiều bài làm dở',
 };
 
@@ -31,46 +40,88 @@ function CheckIcon() {
 }
 
 export default function ReviewStartPage() {
-  const { courseId } = useParams();
+  const { courseId, skillId } = useParams();
+  const isSkill = Boolean(skillId); // G2: ôn theo kỹ năng
+  const pathId = Number(useSearchParams()[0].get('path')) || null;
   const navigate = useNavigate();
   const [info, setInfo] = useState(null);
   const [loadError, setLoadError] = useState(null); // { status, message }
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState('');
-  const returnTo = readReturn(courseKey(courseId)); // bấm "Ôn tập" từ huy hiệu trên đồ thị lộ trình
+  const [generation, setGeneration] = useState(null); // G3d: việc AI soạn đề đang theo dõi
+  const opening = useRef(false); // đã tự mở đề khi soạn xong (tránh mở 2 lần)
+  const returnTo = readReturn(isSkill ? skillKey(skillId) : courseKey(courseId)); // bấm từ huy hiệu trên đồ thị
 
   const load = useCallback(async () => {
     setLoadError(null);
     try {
-      setInfo(await reviewApi.getReviewInfo(courseId));
+      const data = await (isSkill ? reviewApi.getSkillReviewInfo(skillId) : reviewApi.getReviewInfo(courseId));
+      setInfo(data);
+      // G3d: vào lại trang khi AI vẫn đang soạn → hiện tiến độ tiếp (việc đã lỗi từ trước thì không hiện lại)
+      if (data.generation && RUNNING.includes(data.generation.status)) setGeneration(data.generation);
     } catch (error) {
       setLoadError(parseApiError(error));
     }
-  }, [courseId]);
+  }, [courseId, skillId, isSkill]);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  async function handleStart() {
+  const handleStart = useCallback(async () => {
     setStarting(true);
     setStartError('');
     try {
-      const attempt = await reviewApi.startReview(courseId);
+      const result = await (isSkill ? reviewApi.startSkillReview(skillId, pathId) : reviewApi.startReview(courseId));
+      if (result.generation) {
+        // G3d: thiếu câu → AI đang soạn ở nền
+        opening.current = false;
+        setGeneration(result.generation);
+        setStarting(false);
+        return;
+      }
       // 20/11: đến từ đồ thị lộ trình → chép địa chỉ lộ trình sang bài làm (màn Kết quả có nút quay lại)
-      if (returnTo) saveReturn(attemptKey(attempt.attempt_id), returnTo);
-      navigate(`/review/${attempt.attempt_id}`, { state: { attempt } });
+      if (returnTo) saveReturn(attemptKey(result.attempt_id), returnTo);
+      navigate(`/review/${result.attempt_id}`, { state: { attempt: result } });
     } catch (error) {
       setStartError(parseApiError(error).message);
+      setGeneration(null);
       setStarting(false);
     }
-  }
+  }, [isSkill, skillId, pathId, courseId, returnTo, navigate]);
+
+  // G3d: đang soạn → hỏi tiến độ; xong → tự bắt đầu (mở đề) một lần
+  useEffect(() => {
+    if (!generation) return undefined;
+    if (generation.status === 'done') {
+      if (!opening.current) {
+        opening.current = true;
+        handleStart();
+      }
+      return undefined;
+    }
+    if (!RUNNING.includes(generation.status)) return undefined;
+    const timer = setTimeout(async () => {
+      try {
+        setGeneration(await reviewApi.getSkillGeneration(skillId, generation.job_id)); // 25/11: đúng việc đang chờ
+      } catch {
+        setGeneration((g) => ({ ...g })); // lỗi mạng tạm thời → hỏi lại lần sau
+      }
+    }, POLL_MS);
+    return () => clearTimeout(timer);
+  }, [generation, skillId, handleStart]);
 
   if (loadError) {
     return (
       <StatusPanel
         icon={loadError.status === 404 ? 'search' : 'server'}
-        title={loadError.status === 404 ? 'Không tìm thấy khóa học' : 'Không tải được thông tin ôn tập'}
+        title={
+          loadError.status === 404
+            ? isSkill
+              ? 'Không tìm thấy kỹ năng'
+              : 'Không tìm thấy khóa học'
+            : 'Không tải được thông tin ôn tập'
+        }
         actions={
           <>
             {loadError.status !== 404 && (
@@ -101,11 +152,12 @@ export default function ReviewStartPage() {
   const { structure } = info;
   const graded = info.attempts.filter((a) => a.status !== 'in_progress');
   const resumable = Boolean(info.in_progress_attempt_id);
+  const title = isSkill ? info.skill : info.course_title;
 
   return (
     <>
       <nav className="crumb" aria-label="Đường dẫn">
-        <Link to="/me/review-history">Ôn tập</Link> / <span>{info.course_title}</span>
+        <Link to="/me/review-history">Ôn tập</Link> / <span>{title}</span>
       </nav>
 
       <div className={styles.layout}>
@@ -113,22 +165,30 @@ export default function ReviewStartPage() {
           <span className={`chip ${info.can_start ? 'chip-info' : 'chip-danger'}`}>
             {info.can_start ? 'Có thể ôn tập' : 'Chưa thể ôn tập'}
           </span>
-          <h1 className={styles.title}>Ôn tập: {info.course_title}</h1>
-          <p className="muted">Kỹ năng khóa học dạy:</p>
-          <ul className={styles.skills}>
-            {info.skills.map((s) => (
-              <li key={s.skill_id} className="chip">
-                {s.skill}
-              </li>
-            ))}
-          </ul>
+          <h1 className={styles.title}>
+            {isSkill ? 'Ôn kỹ năng' : 'Ôn tập'}: {title}
+          </h1>
+          {isSkill ? (
+            <p className="muted">Bài ôn tập gồm các câu hỏi của riêng kỹ năng này — không cần tham gia khóa học.</p>
+          ) : (
+            <>
+              <p className="muted">Kỹ năng khóa học dạy:</p>
+              <ul className={styles.skills}>
+                {info.skills.map((s) => (
+                  <li key={s.skill_id} className="chip">
+                    {s.skill}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
           <div className={styles.stats}>
             <div className={styles.stat}>
               <strong>{structure.total_questions}</strong>
               <span>
                 câu: {structure.recognize + structure.understand} trắc nghiệm + {structure.easy + structure.advanced} tự
-                luận, chia theo kỹ năng
+                luận{isSkill ? '' : ', chia theo kỹ năng'}
               </span>
             </div>
             <div className={styles.stat}>
@@ -144,9 +204,15 @@ export default function ReviewStartPage() {
           <ul className={styles.notes}>
             <li>
               <CheckIcon />
-              <span>
-                Đạt lần đầu: khóa học chuyển sang <b>Hoàn thành</b> và các kỹ năng trên được ghi nhận <b>Đã biết</b>.
-              </span>
+              {isSkill ? (
+                <span>
+                  Đạt: kỹ năng <b>{title}</b> được ghi nhận <b>Đã biết</b> (không ảnh hưởng khóa học nào).
+                </span>
+              ) : (
+                <span>
+                  Đạt lần đầu: khóa học chuyển sang <b>Hoàn thành</b> và các kỹ năng trên được ghi nhận <b>Đã biết</b>.
+                </span>
+              )}
             </li>
             <li>
               <CheckIcon />
@@ -171,8 +237,15 @@ export default function ReviewStartPage() {
             </p>
           )}
 
+          {generation && <GenerationProgress generation={generation} onRetry={handleStart} retrying={starting} />}
+          {!generation && info.will_generate && (
+            <p className="muted small" style={{ margin: 0 }}>
+              Kỹ năng này chưa có sẵn đề — bấm Bắt đầu, AI sẽ soạn đề mới cho bạn (khoảng 1 phút).
+            </p>
+          )}
+
           <div className={styles.actions}>
-            {info.can_start && (
+            {info.can_start && !generation && (
               <button type="button" className="btn btn-primary btn-lg" onClick={handleStart} disabled={starting}>
                 {starting ? 'Đang tạo đề…' : resumable ? 'Tiếp tục bài đang làm →' : 'Bắt đầu ôn tập →'}
               </button>
@@ -192,7 +265,7 @@ export default function ReviewStartPage() {
           <section className={`card ${styles.panel}`}>
             <div className={styles.panelHead}>
               <h2>Các lần trước</h2>
-              <Link to={`/me/review-history?course=${info.course_id}`} className="small">
+              <Link to={isSkill ? '/me/review-history' : `/me/review-history?course=${info.course_id}`} className="small">
                 Lịch sử
               </Link>
             </div>
@@ -222,13 +295,15 @@ export default function ReviewStartPage() {
             <section className={`card ${styles.panel}`} role="status">
               <h2>Khi chưa thể ôn tập</h2>
               <div className={styles.blocked}>
-                <strong>{BLOCK_TITLES[info.blocked.code] ?? 'Bạn chưa thể ôn khóa này'}</strong>
+                <strong>
+                  {BLOCK_TITLES[info.blocked.code] ?? (isSkill ? 'Bạn chưa thể ôn kỹ năng này' : 'Bạn chưa thể ôn khóa này')}
+                </strong>
                 <p className="muted small">{info.blocked.message}</p>
                 {info.blocked.code === 'too_many_unfinished' && (
                   <ul className={styles.unfinished}>
                     {info.unfinished_attempts.map((a) => (
                       <li key={a.attempt_id}>
-                        <span className={styles.unfinishedTitle}>{a.course_title}</span>
+                        <span className={styles.unfinishedTitle}>{targetTitle(a)}</span>
                         <span className="muted small">
                           Đã làm {a.answered}/{a.total} câu · bắt đầu {formatDateTime(a.started_at)}
                         </span>
@@ -242,7 +317,7 @@ export default function ReviewStartPage() {
                     ))}
                   </ul>
                 )}
-                {['not_enrolled', 'abandoned'].includes(info.blocked.code) && (
+                {!isSkill && ['not_enrolled', 'abandoned'].includes(info.blocked.code) && (
                   <TempJoinCourseButton courseId={courseId} rejoin={info.blocked.code === 'abandoned'} onJoined={load} />
                 )}
               </div>

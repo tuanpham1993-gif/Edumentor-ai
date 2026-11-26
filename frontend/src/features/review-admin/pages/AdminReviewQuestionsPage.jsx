@@ -5,12 +5,13 @@
 // (bật / tắt, xem đáp án / barem, lịch sử phiên bản) · duyệt / từ chối câu AI soạn (7.5c: câu AI chỉ vào đề sau khi duyệt).
 // P2 (16/11): sửa câu ngay trong dòng — lưu phiên bản mới / sửa nhỏ (QuestionEditor). Đợt sau: thêm câu (P3), chấm thử (P4).
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import * as reviewAdminApi from '../../../api/reviewAdmin.api.js';
 import { parseApiError } from '../../../utils/errors.js';
 import QuestionEditor, { blankQuestion } from '../components/QuestionEditor.jsx';
 import QuestionRow from '../components/QuestionRow.jsx';
+import ChunkManager from '../components/ChunkManager.jsx'; // G3a (24/11): đoạn tài liệu của kỹ năng đang lọc
 import ReadinessPanel from '../components/ReadinessPanel.jsx';
 import SkillSearchBox from '../components/SkillSearchBox.jsx';
 import { LEVEL_FILTERS, STATUS_FILTERS, TYPE_FILTERS } from '../reviewAdminFormat.js';
@@ -32,8 +33,12 @@ function toParams(filters, page) {
 }
 
 export default function AdminReviewQuestionsPage() {
-  const [filters, setFilters] = useState(EMPTY_FILTERS);
-  const [search, setSearch] = useState(''); // ô tìm — đẩy vào filters sau SEARCH_DELAY_MS
+  // G3f (24/11): mở từ "Câu bị phản ánh" → ?skill=&skill_name=&q= lọc sẵn đúng câu
+  const [urlParams] = useSearchParams();
+  const linkedSkill = urlParams.get('skill') || '';
+  const linkedQ = urlParams.get('q') || '';
+  const [filters, setFilters] = useState(() => ({ ...EMPTY_FILTERS, skill: linkedSkill, q: linkedQ }));
+  const [search, setSearch] = useState(linkedQ); // ô tìm — đẩy vào filters sau SEARCH_DELAY_MS
   const [page, setPage] = useState(1);
   const [data, setData] = useState(null); // null = đang tải
   const [summary, setSummary] = useState(null); // mức sẵn sàng mọi khóa (tóm tắt)
@@ -44,16 +49,24 @@ export default function AdminReviewQuestionsPage() {
   const [newQuestion, setNewQuestion] = useState(null); // P3: câu trống đang soạn trong form "Thêm câu hỏi"
   const [reloadKey, setReloadKey] = useState(0); // tăng → tải lại bảng (sau khi thêm câu)
   // G1 (21/11): kỹ năng chọn từ ô "Tìm kỹ năng" — lọc / thêm câu không cần chọn khóa trước
-  const [pickedSkill, setPickedSkill] = useState(null);
+  const [pickedSkill, setPickedSkill] = useState(() =>
+    linkedSkill ? { skill_id: Number(linkedSkill), skill: urlParams.get('skill_name') || `Kỹ năng #${linkedSkill}` } : null,
+  );
 
   const loadCounts = useCallback(async () => {
     try {
-      const [active, pending, flags] = await Promise.all([
+      const [active, pending, flags, reports] = await Promise.all([
         reviewAdminApi.listQuestions({ is_active: true, size: 1 }),
         reviewAdminApi.listQuestions({ review_status: 'pending', size: 1 }),
         reviewAdminApi.listFlags({ status: 'open', size: 1 }).catch(() => null),
+        reviewAdminApi.countReports().catch(() => null), // G3f (24/11)
       ]);
-      setCounts({ active: active.total, pending: pending.total, flags: flags?.open_total ?? 0 });
+      setCounts({
+        active: active.total,
+        pending: pending.total,
+        flags: flags?.open_total ?? 0,
+        reports: reports?.open_total ?? 0,
+      });
     } catch {
       // chỉ là số trên tiêu đề — lỗi thật sẽ hiện ở bảng
     }
@@ -65,7 +78,7 @@ export default function AdminReviewQuestionsPage() {
       setSummary(result);
       // lần đầu: chọn sẵn khóa đứng đầu (ôn được, nhiều câu nhất) như demo
       setFilters((f) =>
-        f.course || !result.courses.length ? f : { ...f, course: String(result.courses[0].course_id) },
+        f.course || f.skill || !result.courses.length ? f : { ...f, course: String(result.courses[0].course_id) },
       );
     } catch (err) {
       setError(parseApiError(err).message);
@@ -173,6 +186,9 @@ export default function AdminReviewQuestionsPage() {
           </p>
         </div>
         <div className={styles.buttons}>
+          <Link to="/admin/review-reports" className={`btn btn-sm ${counts.reports ? 'btn-soft' : ''}`}>
+            Câu bị phản ánh{counts.reports ? ` (${counts.reports})` : ''}
+          </Link>
           <Link to="/admin/review-flags" className={`btn btn-sm ${counts.flags ? 'btn-soft' : ''}`}>
             Kết Quả - AI Chấm{counts.flags ? ` (${counts.flags})` : ''}
           </Link>
@@ -202,6 +218,13 @@ export default function AdminReviewQuestionsPage() {
       />
 
       <SkillSearchBox onPick={pickSkill} />
+
+      {filters.skill && (
+        <ChunkManager
+          skillId={Number(filters.skill)}
+          skillName={skills.find((s) => String(s.skill_id) === filters.skill)?.skill || `Kỹ năng #${filters.skill}`}
+        />
+      )}
 
       <div className={`card ${styles.filters}`}>
         <select

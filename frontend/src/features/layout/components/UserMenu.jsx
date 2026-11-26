@@ -59,6 +59,7 @@ export default function UserMenu() {
     { to: '/me/password', text: 'Cài đặt tài khoản', icon: 'settings' }, // 12/11: mở thẳng trang Đổi mật khẩu
     { to: '/me/appearance', text: 'Giao diện', icon: 'appearance' },
     { to: '/me/email-notifications', text: 'Thông báo qua email', icon: 'mail' },
+    ...(user?.role === 'mentor' ? [{ to: '/mentor/review', text: 'Duyệt câu hỏi', icon: 'admin' }] : []), // G3f 25/11
     ...(user?.role === 'admin' ? [{ to: '/admin', text: 'Quản trị', icon: 'admin' }] : []),
   ];
 

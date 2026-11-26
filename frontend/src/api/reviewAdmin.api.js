@@ -97,3 +97,80 @@ export async function searchSkills(q, limit = 8) {
   const response = await client.get('/admin/review/skills/search', { params: { q, limit } });
   return response.data;
 }
+
+// ─── Phạm vi ôn tập theo kỹ năng (G3.0, 24/11/2026) ───
+// GET /admin/review/skill-scopes → { items: [{ skill_id, skill, label, category, reason, source, model, prompt_version,
+//   updated_by_name, updated_at }], total, page, size, counts: { open, closed, unsure, unlabeled } }
+//   params: label ('open' | 'closed' | 'unsure' | 'unlabeled'), category, source ('ai' | 'admin'), q, skill_id, page, size
+export async function listSkillScopes(params = {}) {
+  const response = await client.get('/admin/review/skill-scopes', { params });
+  return response.data;
+}
+
+// PATCH /admin/review/skill-scopes/{skill_id} — body { label, category?, reason? } → nguồn "admin"
+export async function updateSkillScope(skillId, body) {
+  const response = await client.patch(`/admin/review/skill-scopes/${skillId}`, body);
+  return response.data;
+}
+
+// ─── Kho đoạn tài liệu (G3a, 24/11/2026) ───
+// POST /admin/review/skills/{skill_id}/chunks — body { title?, content } (200–1.500 ký tự) → đoạn mới (nguồn "admin")
+export async function createSkillChunk(skillId, body) {
+  const response = await client.post(`/admin/review/skills/${skillId}/chunks`, body);
+  return response.data;
+}
+
+// POST /admin/review/skills/{skill_id}/chunks/generate → { created: [đoạn], existing }
+//   AI viết các đoạn còn thiếu (tối đa 3 / kỹ năng), mất 10–30 giây → timeout riêng 120 giây
+export async function generateSkillChunks(skillId) {
+  const response = await client.post(`/admin/review/skills/${skillId}/chunks/generate`, null, { timeout: 120000 });
+  return response.data;
+}
+
+// PATCH /admin/review/chunks/{chunk_id} — body { title?, content } → đoạn đã sửa (tính lại vector)
+export async function updateChunk(chunkId, body) {
+  const response = await client.patch(`/admin/review/chunks/${chunkId}`, body);
+  return response.data;
+}
+
+// DELETE /admin/review/chunks/{chunk_id} → 204; đoạn đang là nguồn của câu hỏi → 409
+export async function deleteChunk(chunkId) {
+  await client.delete(`/admin/review/chunks/${chunkId}`);
+}
+
+// ─── Mentor phản ánh câu hỏi + tài khoản mentor (G3f, 25/11/2026 — D19–D23) ───
+// GET /admin/review/reports → { items: [{ question, people, reason_counts, latest_at, reports: [...] }], total, page,
+//   size, open_total }   params: status ('open' | 'handled' | 'all'), reason, skill_id, page, size
+export async function listReports(params = {}) {
+  const response = await client.get('/admin/review/reports', { params });
+  return response.data;
+}
+
+// GET /admin/review/reports/count → { open_total } (số câu đang chờ xử lý)
+export async function countReports() {
+  const response = await client.get('/admin/review/reports/count');
+  return response.data;
+}
+
+// POST /admin/review/reports/{question_id}/resolve — body { action: 'dismiss' (bác, bật lại) | 'keep_disabled', note? }
+export async function resolveReports(questionId, action, note) {
+  const response = await client.post(`/admin/review/reports/${questionId}/resolve`, { action, note: note || null });
+  return response.data;
+}
+
+// GET /admin/review/mentors → [{ user_id, full_name, email, is_active, passed, reported }]
+export async function listMentors() {
+  const response = await client.get('/admin/review/mentors');
+  return response.data;
+}
+
+// POST /admin/review/mentors — body { email } → 201 mentor · 404 không có tài khoản · 409 đã là mentor / là admin
+export async function addMentor(email) {
+  const response = await client.post('/admin/review/mentors', { email });
+  return response.data;
+}
+
+// DELETE /admin/review/mentors/{user_id} → 204 (về học viên)
+export async function removeMentor(userId) {
+  await client.delete(`/admin/review/mentors/${userId}`);
+}

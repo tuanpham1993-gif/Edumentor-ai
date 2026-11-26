@@ -52,8 +52,11 @@ class UnfinishedAttemptOut(BaseModel):
     """Bài làm dở ở khóa khác (19/11) — hiện khi đủ số bài dở tối đa để người học Tiếp tục / Bỏ bớt."""
 
     attempt_id: int
-    course_id: int
-    course_title: str
+    course_id: int | None  # None = lượt ôn theo KỸ NĂNG (G2d, 22/11)
+    course_title: str  # "" với lượt theo kỹ năng
+    skill_id: int | None = None  # lượt theo kỹ năng: kỹ năng đã ôn (node lộ trình)
+    skill_name: str | None = None
+    path_id: int | None = None  # lộ trình mở bài này → làm xong quay lại đúng node
     answered: int
     total: int
     started_at: datetime
@@ -87,8 +90,11 @@ class AttemptQuestionOut(BaseModel):
 
 class AttemptOut(BaseModel):
     attempt_id: int
-    course_id: int
-    course_title: str
+    course_id: int | None  # None = lượt ôn theo KỸ NĂNG (G2d, 22/11)
+    course_title: str  # "" với lượt theo kỹ năng
+    skill_id: int | None = None  # lượt theo kỹ năng: kỹ năng đã ôn (node lộ trình)
+    skill_name: str | None = None
+    path_id: int | None = None  # lộ trình mở bài này → làm xong quay lại đúng node
     status: AttemptStatus
     started_at: datetime
     resumed: bool = False  # True = trả lại lượt đang làm dở thay vì tạo đề mới
@@ -150,12 +156,17 @@ class ResultQuestionOut(BaseModel):
     needs_review: bool = False  # D8/D10: điểm AI và từ khóa vẫn lệch sau khi chấm lại → điểm tính tạm, đang xem lại
     reviewed: bool = False  # 17/11: giáo viên đã xem lại / chấm lại câu này (trang admin "Bài cần xem lại")
     feedback: str | None = None  # nhận xét chung của AI (B7)
+    answer_hidden: bool = False  # G3e P3 (D29): lượt chưa Đạt → ẩn bài mẫu (và đáp án TN nếu cấu hình "none")
 
 
 class AttemptResultOut(BaseModel):
     attempt_id: int
-    course_id: int
-    course_title: str
+    answers_hidden: bool = False  # G3e P3: có câu bị ẩn đáp án vì lượt chưa Đạt
+    course_id: int | None  # None = lượt ôn theo KỸ NĂNG (G2d, 22/11)
+    course_title: str  # "" với lượt theo kỹ năng
+    skill_id: int | None = None  # lượt theo kỹ năng: kỹ năng đã ôn (node lộ trình)
+    skill_name: str | None = None
+    path_id: int | None = None  # lộ trình mở bài này → làm xong quay lại đúng node
     status: AttemptStatus
     score: float | None
     passed: bool | None
@@ -163,14 +174,18 @@ class AttemptResultOut(BaseModel):
     mcq_score: float | None  # None khi status="grading" (đang chấm — T1)
     essay_score: float | None
     completed_course: bool  # lượt này làm khóa Hoàn thành + kỹ năng "Đã biết" (đạt lần đầu — B1)
+    skill_known: bool = False  # lượt theo kỹ năng ĐẠT → kỹ năng thành "Đã biết" (G2d)
     started_at: datetime
     submitted_at: datetime | None
     questions: list[ResultQuestionOut]
 
 
 class HistoryItemOut(AttemptSummaryOut):
-    course_id: int
-    course_title: str
+    course_id: int | None  # None = lượt ôn theo KỸ NĂNG (G2d, 22/11)
+    course_title: str  # "" với lượt theo kỹ năng
+    skill_id: int | None = None  # lượt theo kỹ năng: kỹ năng đã ôn (node lộ trình)
+    skill_name: str | None = None
+    path_id: int | None = None  # lộ trình mở bài này → làm xong quay lại đúng node
     completed_course: bool
 
 
@@ -196,14 +211,59 @@ class SkillDueOut(BaseModel):
     interval_days: int  # 7 / 30 / 90 (cấu hình REVIEW_DUE_INTERVALS)
 
 
+class GenerationOut(BaseModel):
+    """Việc AI soạn đề ở nền (G3d, 25/11) — màn "Đang soạn đề… bước x/4"."""
+
+    job_id: int
+    skill_id: int  # kỹ năng giữ ngân hàng câu (có thể là tên trùng khác id của node)
+    kind: Literal["exam", "topup", "nightly"]
+    status: Literal["queued", "running", "done", "failed"]
+    step: int  # 1 đoạn tài liệu · 2 trắc nghiệm · 3 tự luận · 4 lưu
+    steps: int
+    saved: int
+    error: str | None
+
+
+class GenerationStartOut(BaseModel):
+    """POST /skills/{id}/review-attempts khi thiếu câu và AI đang soạn → 202."""
+
+    generation: GenerationOut
+
+
+class SkillReviewDirectOut(BaseModel):
+    """Ôn THẲNG theo kỹ năng (G2d, 22/11 — docs/guide.md mục 1): không cần tham gia khóa."""
+
+    ready: bool  # đủ câu trong ngân hàng (kể cả của tên trùng) để ráp đề 15 câu
+    can_generate: bool = False  # G3d: chưa đủ câu nhưng AI soạn được khi bấm ôn
+    in_progress_attempt_id: int | None
+    last_attempt: AttemptSummaryOut | None
+
+
 class SkillReviewOut(BaseModel):
     skill_id: int
     courses: list[SkillReviewCourseOut]  # rỗng = kỹ năng chưa có khóa nào để ôn → không hiện huy hiệu
+    skill: SkillReviewDirectOut | None = None  # None = kỹ năng không tồn tại / ngừng dùng
     due: SkillDueOut | None = None  # None = không xét (Đang học, tự khai chưa ôn, chưa từng đạt)
 
 
 class SkillReviewsOut(BaseModel):
     items: list[SkillReviewOut]  # đúng thứ tự skill_ids gửi lên (bỏ trùng)
+
+
+class SkillReviewInfoOut(BaseModel):
+    """GET /skills/{id}/review (G2d) — thông tin ôn tập theo kỹ năng."""
+
+    skill_id: int
+    skill: str
+    structure: ReviewStructureOut
+    pass_score: float
+    can_start: bool
+    blocked: ReviewBlockedOut | None
+    in_progress_attempt_id: int | None
+    unfinished_attempts: list[UnfinishedAttemptOut] = []
+    attempts: list[AttemptSummaryOut]
+    will_generate: bool = False  # G3d: chưa đủ câu, bấm Bắt đầu → AI soạn đề ở nền
+    generation: GenerationOut | None = None  # việc soạn gần nhất của kỹ năng (đang chạy / lỗi gần đây)
 
 
 class HistoryPage(BaseModel):
@@ -216,7 +276,8 @@ class HistoryPage(BaseModel):
 class AttemptTraceOut(BaseModel):
     attempt_id: int
     user_id: int
-    course_id: int
+    course_id: int | None
+    skill_id: int | None = None
     status: AttemptStatus
     score: float | None
     started_at: datetime

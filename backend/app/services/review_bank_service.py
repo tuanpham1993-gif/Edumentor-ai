@@ -154,9 +154,7 @@ def update_question(
     if minor:
         not_minor = sorted(set(changed) - set(MINOR_FIELDS))
         if not_minor:
-            raise MinorEditNotAllowedError(
-                f"Sửa nhỏ không được đổi: {', '.join(not_minor)} — hãy lưu phiên bản mới"
-            )
+            raise MinorEditNotAllowedError(f"Sửa nhỏ không được đổi: {', '.join(not_minor)} — hãy lưu phiên bản mới")
         if "content" in changed:
             ratio = SequenceMatcher(None, question.content, changed["content"]).ratio()
             if ratio < CONTENT_TYPO_RATIO:
@@ -232,8 +230,9 @@ def set_active(db: Session, question: ReviewQuestion, active: bool) -> ReviewQue
     """Công tắc bật / tắt. Bật: chỉ câu đã duyệt và là phiên bản mới nhất của họ."""
     if active:
         meta = ensure_meta(db, question)
-        if meta.review_status != "approved":
+        if meta.review_status not in ("approved", "auto_approved"):  # auto_approved: câu AI tự duyệt (G2b / G3)
             raise ActivationNotAllowedError("Câu chưa được duyệt — hãy duyệt trước khi bật")
+        meta.disabled_reason = None  # G3f: admin bật tay → bỏ dấu "tắt do mentor phản ánh"
         if not is_latest(db, question):
             raise ActivationNotAllowedError("Câu đã có phiên bản mới hơn — hãy bật phiên bản mới nhất")
     question.is_active = active
