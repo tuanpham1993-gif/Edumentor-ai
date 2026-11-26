@@ -34,7 +34,8 @@ Sửa bộ chấm từ khóa (`text_pipeline`, `keyword_grader_en`)? Chụp đi�
   `GEMINI_PROBES` (bản A một chi tiết, ý "both" chỉ một phần; bản B chi tiết khác, ý "both" đủ).
   Chuẩn đo Gemini: ý "any one of" lệch ≤ 1 điểm với từ khóa; ý "both" bản A → Gemini không đạt.
 - Giới hạn đã biết của bộ chấm từ khóa: đảo vai trò trong **cùng một vế câu** vẫn lọt (bài thử ghi `"c"`); ý "both"
-  nêu thiếu vẫn được từ khóa cho đạt (→ cờ `ai_stricter` cho giáo viên); "analyses" về "analysis".
+  nêu thiếu vẫn được từ khóa cho đạt (→ cờ `ai_stricter` cho giáo viên); câu ngắn gồm toàn từ của đề (vd "I
+  recommend CoAP.") bị luật chép đề L7 bỏ dù đúng; "analyses" về "analysis". Giữ bài thử cho từng giới hạn (nhãn `"c"`).
 
 ## Xóa lượt thử — `delete_test_attempt`
 

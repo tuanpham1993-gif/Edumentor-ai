@@ -190,7 +190,7 @@ def test_gemini_method_is_registered_and_records_model(monkeypatch):
     _, _, version = ev.METHODS["gemini"]
     monkeypatch.setitem(ev.METHODS, "gemini", (lambda q, t: ["full"] * len(q["rubric"]), "REVIEW_LLM_MODEL", version))
     rows = ev.run(model_answers()[:1], SPLIT, "gemini", run_id="g")
-    assert {r["model"] for r in rows} == {"gemini-x"} and {r["prompt_version"] for r in rows} == {"grade-en-v3"}
+    assert {r["model"] for r in rows} == {"gemini-x"} and {r["prompt_version"] for r in rows} == {"grade-en-v4"}
 
 
 def test_model_b_methods_use_bank_chunks_of_the_same_skill(monkeypatch):
@@ -204,4 +204,4 @@ def test_model_b_methods_use_bank_chunks_of_the_same_skill(monkeypatch):
     assert chunks[0]["code"] == q["chunk"] and all(c["code"].startswith("PY-") for c in chunks)
     assert len(chunks) == rag.GRADING_TOP_K
     assert {"gemini", "gemini-rag", "pipeline", "pipeline-rag"} <= set(ev.METHODS)
-    assert ev.METHODS["gemini-rag"][2] == "grade-en-v3+rag"
+    assert ev.METHODS["gemini-rag"][2] == "grade-en-v4+rag"

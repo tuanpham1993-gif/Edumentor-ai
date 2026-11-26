@@ -6,8 +6,9 @@ Câu mô tả theo MỨC TỐI THIỂU, hai mẫu cố định (Tuấn duyệt 2
   "<chủ thể> (both needed: a; b)."   phải đủ; KHÔNG có câu tóm tắt ở đầu (Gemini coi nó là ý chính)
 Từ khóa chính = phần giải thích / cách xử lý; tên khái niệm làm chủ thể (sub) khi cần gắn đúng đối tượng.
 
-PROBES: bài thử bộ chấm từ khóa — (nhãn, bài, điều kiện ">=7" / "<=3" / "c"); "c" = giới hạn đã biết (c)
-        (đảo vai trò trong cùng một vế câu), chỉ in ra.
+PROBES: bài thử bộ chấm từ khóa — (nhãn, bài, điều kiện ">=7" / "<=3" / "c"); "c" = GIỚI HẠN ĐÃ BIẾT của bộ
+        chấm từ khóa, chỉ in ra (đảo vai trò trong cùng một vế câu — chờ (c); câu ngắn toàn từ của đề bị luật chép
+        đề L7 bỏ dù đúng).
 GEMINI_PROBES: (bản A, bản B) cho probe_gemini.py — A: mỗi ý đúng 1 chi tiết, ý "both" chỉ 1 phần
         (mong Gemini none); B: chi tiết khác, ý "both" đủ 2 phần.
 """
@@ -902,6 +903,17 @@ PROBES = {
     ],
     "MSG-TL-06": [
         (
+            "câu đề xuất ngắn toàn từ của đề — luật chép đề (L7) bỏ câu, ý 5 mất điểm",
+            "MQTT runs over TCP. MQTT needs a broker. CoAP runs over UDP. CoAP follows the REST style. I recommend CoAP.",
+            "c",
+        ),
+        (
+            "đủ 5 ý, câu đề xuất tự nhiên",
+            "MQTT runs over TCP. MQTT needs a broker. CoAP runs over UDP. CoAP follows the REST style. For this sensor I "
+            "recommend CoAP because it is lighter.",
+            ">=10",
+        ),
+        (
             "đúng, chữ khác (lỗi Tuấn nêu)",
             "MQTT uses TCP and a broker. CoAP uses UDP and is resource based. I recommend using CoAP for this device.",
             ">=7",
@@ -1030,7 +1042,8 @@ GEMINI_PROBES = {
         "commands use QoS 2.",
     ),
     "MSG-TL-06": (
-        "MQTT runs over TCP. MQTT needs a broker. CoAP runs over UDP. CoAP follows the REST style. I recommend CoAP.",
+        "MQTT runs over TCP. MQTT needs a broker. CoAP runs over UDP. CoAP follows the REST style. For this sensor I "
+        "recommend CoAP because it is lighter.",
         "MQTT uses a TCP connection. MQTT clients talk through a broker. CoAP has a small 4-byte header. CoAP reads "
         "resources with GET. I would choose CoAP for this device.",
     ),

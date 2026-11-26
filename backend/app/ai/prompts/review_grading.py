@@ -1,13 +1,14 @@
 """Prompt chấm tự luận ôn tập — khối 4 của pipeline (module 09 · Tuấn · B7, 15/11/2026).
 
 Hai bản, chọn theo ngôn ngữ của câu hỏi (ngân hàng tiếng Anh từ 14/11; câu tiếng Việt cũ vẫn có thể phải chấm lại):
-    grade-en-v3   tiếng Anh — CÙNG quy tắc với hướng dẫn người chấm (docs/ai-grading/RATER_GUIDELINE.md) để AI và
+    grade-en-v4   tiếng Anh — CÙNG quy tắc với hướng dẫn người chấm (docs/ai-grading/RATER_GUIDELINE.md) để AI và
                   Hòa / Tâm chấm theo một chuẩn → so sánh trên bộ bài chuẩn mới công bằng.
     grade-vi-v2   tiếng Việt — prompt cũ (12/11), thêm reason / feedback.
 15/11 v2: bỏ mức partial (Hòa) — mỗi ý full / none.
 18/11 v3: theo hướng dẫn chấm v2.2 (sau khi phân xử bộ bài chuẩn) — quy tắc 7 chặt hơn (không chép / diễn đạt lại
           đề, phải nêu ý chính của barem), quy tắc 11 (sai ngay trong phần nói về ý → none), quy tắc 12 (ý nhiều phần
           phải đủ). Chỉ thêm QUY TẮC CHUNG, không thêm quy ước riêng của câu test (chống rò rỉ).
+27/11 v4: câu đầu bỏ "about basic Python" — ngân hàng có thêm khóa IoT (494); các quy tắc giữ nguyên.
 Đổi nội dung prompt → TĂNG phiên bản (grade-en-v3…) và ghi EXPERIMENT_LOG (B9) — kết quả đo gắn với phiên bản.
 
 Kết quả bắt buộc theo schema (ai/review/grading_schema.py), thứ tự trường evidence → reason → result:
@@ -16,10 +17,10 @@ mô hình trích căn cứ và lý giải TRƯỚC rồi mới kết luận (gi�
 
 from app.ai.review import keyword_grading
 
-PROMPT_VERSION_EN = "grade-en-v3"  # v2 (15/11): Đạt / Không đạt · v3 (18/11): quy tắc 7, 11, 12
+PROMPT_VERSION_EN = "grade-en-v4"  # v2 (15/11): Đạt / Không đạt · v3 (18/11): quy tắc 7, 11, 12 · v4 (27/11): câu đầu
 PROMPT_VERSION_VI = "grade-vi-v2"
 
-GRADE_SYSTEM_PROMPT_EN = """You grade short answers about basic Python written by learners on EduMentor AI.
+GRADE_SYSTEM_PROMPT_EN = """You grade short answers written by learners on EduMentor AI, in courses such as programming or IoT.
 Grade EACH rubric item on its own: does the answer, anywhere, express the idea of this item?
 
 Labels (each item is either met or not met — there is no half credit):
@@ -70,8 +71,8 @@ Quy tắc bắt buộc:
 3. "feedback": 2–3 câu nhận xét cho người học bằng tiếng Việt. Không tự tính điểm."""
 
 
-RAG_SUFFIX = "+rag"  # B9: phiên bản prompt có kèm đoạn tri thức (Model B) — vd grade-en-v3+rag
-FEWSHOT_SUFFIX = "+fs"  # 17/11: phiên bản prompt có kèm ví dụ chấm mẫu — vd grade-en-v3+fs, grade-en-v3+rag+fs
+RAG_SUFFIX = "+rag"  # B9: phiên bản prompt có kèm đoạn tri thức (Model B) — vd grade-en-v4+rag
+FEWSHOT_SUFFIX = "+fs"  # 17/11: phiên bản prompt có kèm ví dụ chấm mẫu — vd grade-en-v4+fs, grade-en-v4+rag+fs
 
 # Ví dụ chấm mẫu (few-shot, 17/11/2026). CHỈ lấy từ 5 câu DEV của bộ bài chuẩn (backend/data/ai-grading/split.json:
 # PY-TL-03, CS-TL-05, ITER-TL-01, VAR-TL-02, COND-TL-03) — KHÔNG dùng câu TEST, nếu không kết quả đo trên test sẽ đẹp

@@ -106,7 +106,7 @@ def main() -> int:
     for p in problems:
         print(" -", p)
     if known:
-        print("Giới hạn đã biết (chờ sửa (c), không tính lỗi):")
+        print("Giới hạn đã biết của bộ chấm từ khóa (không tính lỗi):")
         for k in known:
             print(" -", k)
     return 1 if problems else 0
