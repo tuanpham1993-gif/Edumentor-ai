@@ -92,8 +92,14 @@ def cap_by_ideas(need: dict[str, int], free: dict[str, int]) -> dict[str, int]:
 
 
 def ideas_short(need: dict[str, int], free: dict[str, int]) -> int:
-    """Bước B: số ý còn THIẾU (loại thiếu nhiều nhất) để soạn đủ `need`."""
-    return max((sum(need.get(lv, 0) for lv in levels) - free.get(kind, 0) for kind, levels in KINDS.items()), default=0)
+    """Bước B: số ý còn THIẾU (loại thiếu nhiều nhất) để soạn đủ `need`, có DƯ để AI còn chọn: cần n câu → muốn
+    ≥ max(2n, n + 2) ý trống (đo 26/11: Power BI còn đúng 1 ý cho 1 câu → AI soạn 4 lần đều hỏng)."""
+    shorts = []
+    for kind, levels in KINDS.items():
+        n = sum(need.get(lv, 0) for lv in levels)
+        if n > 0:
+            shorts.append(max(2 * n, n + 2) - free.get(kind, 0))
+    return max(shorts, default=0)
 
 
 def existing_contents(db: Session, skill_id: int) -> list[str]:

@@ -384,7 +384,11 @@ def test_free_ideas_and_cap(gdb):  # noqa: F811
     assert free == {"mcq": 5, "essay": 6}
     assert qgen.cap_by_ideas({"recognize": 4, "understand": 4, "easy": 2}, free) == {
         "recognize": 4, "understand": 1, "easy": 2}  # fmt: skip
-    assert qgen.ideas_short({"recognize": 4, "understand": 4, "easy": 2}, free) == 3
+    # cần 8 TN → muốn ≥ 16 ý trống (dư để AI chọn), có 5 → thiếu 11; tự luận cần 2 → muốn 4, có 6 → đủ
+    assert qgen.ideas_short({"recognize": 4, "understand": 4, "easy": 2}, free) == 11
+    # ca Power BI 26/11: cần đúng 1 câu, còn đúng 1 ý → vẫn tính THIẾU (muốn ≥ 3) → viết thêm đoạn
+    assert qgen.ideas_short({"understand": 1}, {"mcq": 1, "essay": 9}) == 2
+    assert qgen.ideas_short({}, free) == 0
 
 
 def test_topup_writes_more_chunks_when_out_of_ideas(gdb):  # noqa: F811
@@ -429,3 +433,25 @@ def test_extra_chunks_failure_keeps_old_chunks(gdb):  # noqa: F811
     d = gen.Deps(write_knowledge=knowledge_writer(seen, fail=True), write_questions=None, solve=None, embed=None)
     gen._ensure_ideas(gdb, job, d)  # AI viết lỗi → không ném lỗi, soạn tiếp bằng đoạn cũ
     assert len(seen) == 2 and gdb.query(KnowledgeChunk).filter_by(skill_id=SKILL).count() == 2
+
+
+def test_exam_short_writes_one_more_chunk_and_retries(gdb, sync_jobs):  # noqa: F811
+    """Bước B dự phòng (26/11): soạn đề vẫn thiếu sau các vòng → viết thêm 1 đoạn rồi soạn thêm 1 vòng."""
+    from app.models import Courses, CourseSkill, KnowledgeChunk
+
+    gdb.add(Courses(course_id=70, title="Docker Basics", num_enrolled=10, description="Docker images. " * 40))
+    gdb.flush()
+    gdb.add(CourseSkill(course_id=70, skill_id=SKILL))
+    gdb.commit()
+    bad = {"questions": [essay("easy", 1) | {"passage": 9}]}  # luôn hỏng
+    good = {"questions": [essay("easy", 1), essay("easy", 2), essay("advanced")]}
+    mcqs = {"questions": [mcq("recognize", i) for i in range(6)] + [mcq("understand", i) for i in range(6)]}
+    sync_jobs["ai"] = FakeAI({"mcq": [mcqs], "essay": [bad] * 6 + [good]})
+    seen = []
+    d = gen.Deps(write_knowledge=knowledge_writer(seen), write_questions=sync_jobs["ai"], solve=None, embed=None)
+    job = ReviewGenerationJob(skill_id=SKILL, kind="exam")
+    gdb.add(job)
+    gdb.commit()
+    gen.run_job(job.job_id, lambda: _same_session(gdb), d)
+    assert job.status == "done" and job.saved == 14
+    assert [x["n"] for x in seen] == [1] and gdb.query(KnowledgeChunk).filter_by(skill_id=SKILL).count() == 3

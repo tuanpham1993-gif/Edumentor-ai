@@ -297,23 +297,10 @@ def run_job(job_id: int, session_factory, deps: Deps | None) -> None:
             _ensure_ideas(db, job, deps)
             # 2) trắc nghiệm, 3) tự luận — G3b soạn + G3c cổng. Lưu NGAY sau mỗi vòng (vòng sau biết câu vừa lưu, không
             #    soạn trùng). Còn thiếu → thêm một vòng (tự luận hay hỏng phép "bài mẫu ≥ 7" — đo 25/11).
-            for step, levels in ((2, ("recognize", "understand")), (3, ("easy", "advanced"))):
-                _set(db, job, step=step)
-                for _round in range(ROUNDS):
-                    need = missing_for(db, job.skill_id, job.kind)
-                    if job.kind != "exam":  # Bước B: bổ sung / ban đêm không soạn quá số ý còn trống
-                        need = question_gen_service.cap_by_ideas(
-                            need, question_gen_service.free_ideas(db, job.skill_id)
-                        )
-                    part = {lv: need[lv] for lv in levels if need.get(lv)}
-                    if not part:
-                        break
-                    result = _with_waits(question_gen_service.generate, db, job.skill_id, write=deps.write_questions,
-                                         need=part, model=deps.model, solve=deps.solve, embed=deps.embed)  # fmt: skip
-                    job.calls += result["calls"] + result.get("solve_calls", 0)
-                    origin = "nightly" if job.kind == "nightly" else "on_demand"
-                    job.saved += save_questions(db, job.skill_id, result["questions"], origin)
-                    db.commit()
+            _generate_steps(db, job, deps, ROUNDS)
+            # Bước B dự phòng (26/11): soạn đề vẫn thiếu → viết thêm 1 đoạn (chưa đủ MAX_CHUNKS) rồi soạn thêm 1 vòng
+            if job.kind == "exam" and missing_for_exam(db, job.skill_id) and _add_chunk(db, job, deps):
+                _generate_steps(db, job, deps, 1)
             # 4) kiểm đủ đề (soạn bổ sung / ban đêm: thiếu một ít vẫn tính xong — lần sau soạn tiếp)
             _set(db, job, step=4)
             if job.kind == "exam" and missing_for_exam(db, job.skill_id):
@@ -324,16 +311,56 @@ def run_job(job_id: int, session_factory, deps: Deps | None) -> None:
             if job.kind == "exam" and TOPUP_ENABLED and missing_for(db, job.skill_id, "topup"):
                 _request_topup(db, job.skill_id)
         except Exception as err:  # việc nền: mọi lỗi phải thành 'failed', không làm treo màn chờ
-            db.rollback()
-            job = db.get(ReviewGenerationJob, job_id)
-            if isinstance(err, AIUnavailableError):
-                message = FAILED_AI
-            elif isinstance(err, GenerationError) and err.code == "short":
-                message = FAILED_SHORT
-            else:
-                message = FAILED_OTHER
-                logger.exception("Soạn đề lỗi: kỹ năng %s", job.skill_id)
-            _set(db, job, status="failed", error=message, finished_at=datetime.now(UTC))
+            _fail(db, job_id, err)
+
+
+def _add_chunk(db: Session, job: ReviewGenerationJob, deps: Deps) -> bool:
+    """Bước B dự phòng: viết thêm MỘT đoạn chủ đề con khác. Đã đủ MAX_CHUNKS / AI lỗi / không có nguồn → False."""
+    from app.services import knowledge_service
+
+    count = len(knowledge_repository.chunks_for_skill(db, job.skill_id))
+    if count >= MAX_CHUNKS or deps.write_knowledge is None:
+        return False
+    _set(db, job, step=1)
+    try:
+        _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
+                    embed=deps.embed or (lambda _t: None), model=deps.model, target=count + 1)  # fmt: skip
+    except knowledge_service.KnowledgeError:
+        logger.warning("Soạn đề: không viết thêm được đoạn dự phòng (kỹ năng %s)", job.skill_id)
+        return False
+    return True
+
+
+def _generate_steps(db: Session, job: ReviewGenerationJob, deps: Deps, rounds: int) -> None:
+    """Bước 2 (trắc nghiệm) và 3 (tự luận): mỗi bước tối đa `rounds` vòng soạn, lưu câu đạt ngay sau mỗi vòng."""
+    for step, levels in ((2, ("recognize", "understand")), (3, ("easy", "advanced"))):
+        _set(db, job, step=step)
+        for _round in range(rounds):
+            need = missing_for(db, job.skill_id, job.kind)
+            if job.kind != "exam":  # Bước B: bổ sung / ban đêm không soạn quá số ý còn trống
+                need = question_gen_service.cap_by_ideas(need, question_gen_service.free_ideas(db, job.skill_id))
+            part = {lv: need[lv] for lv in levels if need.get(lv)}
+            if not part:
+                break
+            result = _with_waits(question_gen_service.generate, db, job.skill_id, write=deps.write_questions,
+                                 need=part, model=deps.model, solve=deps.solve, embed=deps.embed)  # fmt: skip
+            job.calls += result["calls"] + result.get("solve_calls", 0)
+            origin = "nightly" if job.kind == "nightly" else "on_demand"
+            job.saved += save_questions(db, job.skill_id, result["questions"], origin)
+            db.commit()
+
+
+def _fail(db: Session, job_id: int, err: Exception) -> None:
+    db.rollback()
+    job = db.get(ReviewGenerationJob, job_id)
+    if isinstance(err, AIUnavailableError):
+        message = FAILED_AI
+    elif isinstance(err, GenerationError) and err.code == "short":
+        message = FAILED_SHORT
+    else:
+        message = FAILED_OTHER
+        logger.exception("Soạn đề lỗi: kỹ năng %s", job.skill_id)
+    _set(db, job, status="failed", error=message, finished_at=datetime.now(UTC))
 
 
 def _request_topup(db: Session, skill_id: int) -> None:

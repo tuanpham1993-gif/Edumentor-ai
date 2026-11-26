@@ -398,7 +398,19 @@ P2 / P3 đúng; mentor Đạt / Phản ánh / admin bác đúng. Phát hiện:
   - Bổ sung / ban đêm không soạn quá số ý còn trống; đủ 6 đoạn mà hết ý → `missing_for(topup)` rỗng (không tạo việc vô ích),
     việc đang chạy kết thúc `done`
   - Test `test_generation_jobs.py` +4 (tổng 23)
-- [ ] Đo thật Bước A / B: 25/11 tối Gemini quá tải 503 liên tục (Linux, SQL thất bại cả 2 lượt) → đo lại sau
+- [x] Commit Bước B `e262457` (26/11)
+- [x] **Đo thật Bước A / B (26/11, Gemini ổn)** — 25/11 tối 503 liên tục nên dời:
+  - Linux #357: đề xong 15 giây (3 lần gọi, có sẵn 12 TN); bổ sung +11 câu (13 lần gọi). Đề 12 TN / 12 câu trích khác nhau
+  - SQL #305: đề 15 câu 71 giây (6 lần gọi); bổ sung +12 (14 lần gọi). Đề 12 / 12 khác nhau
+  - Kubernetes #193 (đã dọn, hết ý TN): bổ sung **AI viết thêm 2 đoạn** (3 → 5: "Core Components of a Kubernetes Cluster",
+    "Exposing Applications Using Kubernetes Services"), +10 câu, 11 lần gọi → **24 TN / 24 câu trích, 6 TL / 6** — đủ ~30
+  - Power BI #1542: soạn đề **thất bại 2 lần** (0 câu, 12 lần gọi mỗi lần) — 3 đoạn chỉ 12 câu, còn ĐÚNG 1 ý TN cho 1 câu
+    Thông hiểu → Bước B coi là đủ, không viết thêm; AI 4 lần soạn đều hỏng
+- [x] **Sửa (Tuấn duyệt 26/11):** (1) `ideas_short` giữ dư ý: cần n câu → muốn ≥ max(2n, n + 2) ý trống; (2) soạn đề vẫn
+  thiếu sau các vòng → `_add_chunk` viết thêm 1 đoạn (chưa đủ 6) rồi soạn thêm 1 vòng (`_generate_steps(…, 1)`). Test +1
+  (tổng `test_generation_jobs.py` 24); toàn bộ 1.225 qua. Đo lại Power BI: viết thêm "Writing DAX Measures in Power BI",
+  **đề xong, 2 lần gọi**, 12 TN / 12 câu trích
+- [ ] Commit phần sửa (khi Tuấn bảo)
 - [ ] Commit (khi Tuấn bảo)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp
