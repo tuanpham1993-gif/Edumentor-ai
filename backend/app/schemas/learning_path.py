@@ -1,12 +1,19 @@
-from pydantic import BaseModel, ConfigDict
+from datetime import datetime
 from typing import Literal
 
+from pydantic import BaseModel, ConfigDict
+
 RelationType = Literal["prerequisite", "related", "extension"]
+
+
 class SkillSummary(BaseModel):
     skill_id: int
     skill: str
     model_config = ConfigDict(from_attributes=True)
-#**************************************************
+
+
+# **************************************************
+
 
 ######################################################
 class LearningPathNodeBase(BaseModel):
@@ -17,12 +24,16 @@ class LearningPathNodeBase(BaseModel):
     is_required: bool
     display_order: int
 
-class LearningPathNodeCreate(LearningPathNodeBase): pass
+
+class LearningPathNodeCreate(LearningPathNodeBase):
+    pass
+
 
 class LearningPathNodeResponse(LearningPathNodeBase):
     path_id: int
     skill: SkillSummary
     model_config = ConfigDict(from_attributes=True)
+
 
 class LearningPathNodeInsert(BaseModel):
     skill_id: int
@@ -35,9 +46,11 @@ class LearningPathNodeInsert(BaseModel):
     is_target: bool = False
     is_required: bool = False
 
+
 class LearningPathNodeUpdate(BaseModel):
     node_role: RelationType | None = None
     passed_test: bool | None = None
+
 
 ######################################################
 class LearningPathEdgeBase(BaseModel):
@@ -45,19 +58,26 @@ class LearningPathEdgeBase(BaseModel):
     to_skill_id: int
     relation_type: Literal["prerequisite", "related", "extension"]
 
-class LearningPathEdgeCreate(LearningPathEdgeBase): pass
 
-class LearningPathEdgeUpdate(LearningPathEdgeBase): pass
+class LearningPathEdgeCreate(LearningPathEdgeBase):
+    pass
+
+
+class LearningPathEdgeUpdate(LearningPathEdgeBase):
+    pass
+
 
 class LearningPathEdgeRemove(BaseModel):
     from_skill_id: int
     to_skill_id: int
+
 
 class LearningPathEdgeResponse(LearningPathEdgeBase):
     path_id: int
     from_skill: SkillSummary
     to_skill: SkillSummary
     model_config = ConfigDict(from_attributes=True)
+
 
 ######################################################
 class LearningPathBase(BaseModel):
@@ -66,17 +86,63 @@ class LearningPathBase(BaseModel):
     goal_type: Literal["career", "project"]
     status: Literal["completed", "ongoing", "abandoned"]
 
+
 class LearningPathCreate(BaseModel):
     original_query: str
     goal_type: Literal["career", "project"]
     nodes: list[LearningPathNodeCreate]
     edges: list[LearningPathEdgeCreate]
 
+
+class AuthorSummary(BaseModel):
+    user_id: int
+    full_name: str
+    avatar_url: str | None = None
+    role: str = "student"
+    model_config = ConfigDict(from_attributes=True)
+
+
 class LearningPathResponse(LearningPathBase):
     record_id: int
+    is_shared: bool = False
+    share_code: str | None = None
+    shared_at: datetime | None = None
+    clone_count: int = 0
+    cloned_from_id: int | None = None
     nodes: list[LearningPathNodeResponse]
     edges: list[LearningPathEdgeResponse]
     model_config = ConfigDict(from_attributes=True)
+
+
+class LearningPathShareResponse(BaseModel):
+    record_id: int
+    is_shared: bool
+    share_code: str | None = None
+    share_url: str | None = None
+    shared_at: datetime | None = None
+    clone_count: int = 0
+
+
+class SharedLearningPathDetailResponse(BaseModel):
+    record_id: int
+    original_query: str
+    goal_type: str
+    status: str
+    share_code: str
+    shared_at: datetime | None = None
+    clone_count: int = 0
+    is_owner: bool = False
+    author: AuthorSummary | None = None
+    nodes: list[LearningPathNodeResponse]
+    edges: list[LearningPathEdgeResponse]
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CloneLearningPathResponse(BaseModel):
+    new_record_id: int
+    message: str
+    learning_path: LearningPathResponse
+
 
 class LearningPathListResponse(BaseModel):
     total: int
@@ -84,6 +150,7 @@ class LearningPathListResponse(BaseModel):
     limit: int
     current_total: int
     data: list[LearningPathResponse]
+
 
 """
 sample output

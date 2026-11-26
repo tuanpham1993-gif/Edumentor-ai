@@ -56,6 +56,7 @@ import PublicRoute from './PublicRoute.jsx';
 import MyLearningPathsPage from '../features/learning_path/pages/MyLearningPathPage.jsx';
 import LearningPathPreviewPage from '../features/learning_path/pages/LearningPathPreviewPage.jsx';
 import LearningPathDetailPage from '../features/learning_path/pages/LearningPathDetailPage.jsx';
+import SharedLearningPathPage from '../features/learning_path/pages/SharedLearningPathPage.jsx';
 function AdminHomePlaceholder() {
   return <p className="muted">Trang quản trị (Khôi / Tâm / Hòa) — đang phát triển.</p>;
 }
@@ -75,6 +76,11 @@ export default function AppRoutes() {
       {/* Link trong email: ai cũng mở được, kể cả đang đăng nhập → để NGOÀI mọi lớp bảo vệ */}
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/reset-expired" element={<ResetExpiredPage />} />
+
+      {/* Ai cũng xem được: Lộ trình được chia sẻ */}
+      <Route element={<OpenRoute />}>
+        <Route path="/shared/learning-paths/:shareCode" element={<SharedLearningPathPage />} />
+      </Route>
 
       {/* Ai cũng xem được (19/11, G1 — BA UC-06 khách xem khóa học). Khôi: khi CoursesPage xử lý được khách
           (nút Lưu / Tham gia → navigate('/login', { state: { from } })), CHUYỂN dòng /courses ở nhóm học viên

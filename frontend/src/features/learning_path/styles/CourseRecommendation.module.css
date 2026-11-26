@@ -2,74 +2,431 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 400px;
+  min-height: 440px;
 }
 
 .recommendationHeader {
-  padding: 22px 20px;
-
+  padding: 18px 20px 14px;
   border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .sectionLabel {
   color: var(--accent);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 1px;
 }
 
+.skillStatusBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+}
+
+.skillKnown {
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  border: 1px solid var(--ok-border);
+}
+
+.skillLearning {
+  background: var(--info-bg);
+  color: var(--info-fg);
+  border: 1px solid var(--info-border);
+}
+
 .recommendationHeader h2 {
-  margin: 10px 0 0;
+  margin: 0;
   color: var(--text);
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
-.recommendationHeader p {
-  margin: 7px 0 0;
+.headerSub {
+  margin: 0;
   color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.levelFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.levelChip {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--surface-sunk);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--d-fast) var(--e-std);
+}
+
+.levelChip:hover,
+.levelChip:focus-visible {
+  color: var(--text);
+  border-color: var(--card-border);
+  outline: none;
+}
+
+.levelChipActive {
+  background: var(--accent-soft-bg);
+  border-color: var(--accent-soft-border);
+  color: var(--accent-soft-fg);
+}
+
+.actionBanner {
+  margin: 10px 16px 0;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: var(--ok-bg);
+  border: 1px solid var(--ok-border);
+  color: var(--ok-fg);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .recommendationContent {
   flex: 1;
-  padding: 20px;
+  padding: 14px 16px 18px;
+  overflow-y: auto;
+  max-height: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.emptyCourses {
-  min-height: 250px;
+.resultMeta {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
 
+.resultMeta strong {
+  color: var(--text);
+}
+
+.courseList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.courseCard {
+  padding: 12px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: var(--surface-sunk);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color var(--d-fast) var(--e-std);
+}
+
+.courseCard:hover {
+  border-color: var(--accent-soft-border);
+}
+
+.cardMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.thumbBox {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.monogramText {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.cardInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardBadges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.levelBadge {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--chip-bg);
+  color: var(--text-soft);
+  border: 1px solid var(--line);
+}
+
+.statusOngoing {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--info-bg);
+  color: var(--info-fg);
+  border: 1px solid var(--info-border);
+}
+
+.statusCompleted {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
+  border: 1px solid var(--ok-border);
+}
+
+.courseTitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.courseMetaLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.ratingMeta {
+  color: var(--accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.relevanceReason {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.detailBtn {
+  padding: 6px 11px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detailBtn:hover,
+.detailBtn:focus-visible {
+  color: var(--text);
+  border-color: var(--accent-soft-border);
+  outline: none;
+}
+
+.bookmarkBtn {
+  width: 32px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.bookmarkBtn:hover,
+.bookmarkBtn:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent-soft-border);
+  outline: none;
+}
+
+.bookmarkBtnActive {
+  color: var(--accent);
+  background: var(--accent-tint);
+  border-color: var(--accent-soft-border);
+}
+
+.joinBtn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--d-fast) var(--e-std);
+}
+
+.joinBtn:hover:not(:disabled),
+.joinBtn:focus-visible:not(:disabled) {
+  background: var(--accent-hover);
+  outline: none;
+}
+
+.joinBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.emptyCourses,
+.errorBox {
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
+  gap: 10px;
   padding: 20px;
   text-align: center;
-
   border: 1px dashed var(--card-border);
   border-radius: var(--r-lg);
   background: var(--surface-sunk);
 }
 
-.emptyIcon {
-  margin-bottom: 12px;
-  color: var(--text-dim);
-  font-size: 30px;
+.errorBox {
+  border-style: solid;
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger-fg);
 }
 
 .emptyCourses h3 {
   margin: 0;
   color: var(--text);
-  font-size: 15px;
+  font-size: 14.5px;
 }
 
-.emptyCourses p {
-  max-width: 230px;
-  margin: 8px 0 0;
-
+.emptyCourses p,
+.errorBox p {
+  max-width: 260px;
+  margin: 0;
   color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.errorBox p {
+  color: var(--danger-fg);
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.retryBtn,
+.browseLink {
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
   font-size: 12px;
-  line-height: 1.6;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.retryBtn:hover,
+.browseLink:hover {
+  border-color: var(--accent);
+}
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonCard {
+  height: 112px;
+  border-radius: var(--r-lg);
+  background: var(--skeleton-hi);
+  border: 1px solid var(--line);
+  animation: coursePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes coursePulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonCard {
+    animation: none;
+  }
 }

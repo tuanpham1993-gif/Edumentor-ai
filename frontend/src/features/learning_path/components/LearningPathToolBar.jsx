@@ -3,10 +3,12 @@ import AddNodeModal from './modals/AddNodeModal';
 import UpdateNodeModal from './modals/UpdateNodeModal';
 import DeleteNodeModal from './modals/DeleteNodeModal';
 import RelationshipModal from './modals/RelationshipModal';
+import ShareLearningPathModal from './modals/ShareLearningPathModal';
 import { useState } from 'react';
 
 export default function LearningPathToolbar({
   recordId,
+  learningPath,
   selectedSkill,
   nodes,
   edges,
@@ -73,6 +75,14 @@ export default function LearningPathToolbar({
           onClick={() => openModal('remove-relationship')}>
           Gỡ quan hệ
         </button>
+
+        <button
+          type="button"
+          className="btn btn-soft"
+          onClick={() => openModal('share-path')}
+          title="Chia sẻ lộ trình này cho người khác">
+          🔗 Chia sẻ
+        </button>
       </div>
       {activeModal === 'add-node' && (
         <AddNodeModal
@@ -109,6 +119,15 @@ export default function LearningPathToolbar({
           selectedSkill={selectedSkill}
           nodes={nodes}
           edges={edges}
+          onClose={closeModal}
+          onSuccess={onRefresh}
+        />
+      )}
+
+      {activeModal === 'share-path' && (
+        <ShareLearningPathModal
+          recordId={recordId}
+          learningPath={learningPath}
           onClose={closeModal}
           onSuccess={onRefresh}
         />

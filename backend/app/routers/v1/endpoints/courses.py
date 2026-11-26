@@ -1,16 +1,45 @@
-from typing import Literal
+from typing import Annotated, Literal
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.dependencies import get_current_user_optional
+from app.models.user import Users
 from app.schemas.course import (
     CourseDetailResponse,
     CourseListResponse,
+    CourseRecommendationResponse,
     CourseSkillItem,
 )
 from app.services import course_service
 
 router = APIRouter()
+
+
+@router.get(
+    "/recommendations",
+    response_model=CourseRecommendationResponse,
+    summary="Gợi ý khóa học cho một node kỹ năng",
+    description="Truy xuất theo yêu cầu khi người dùng chọn 1 node kỹ năng; xếp hạng ưu tiên mức độ liên quan kỹ năng.",
+)
+def get_recommended_courses_for_skill(
+    skill_id: Annotated[int, Query(ge=1, description="Mã kỹ năng cần gợi ý khóa học")],
+    db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[Users | None, Depends(get_current_user_optional)],
+    level: Annotated[
+        Literal["beginner", "intermediate", "advanced"] | None,
+        Query(description="Lọc theo độ khó"),
+    ] = None,
+    limit: Annotated[int, Query(ge=1, le=20, description="Số khóa học tối đa")] = 8,
+):
+    return course_service.recommend_courses_for_skill(
+        db=db,
+        skill_id=skill_id,
+        level=level,
+        limit=limit,
+        user_id=current_user.user_id if current_user else None,
+    )
 
 
 @router.get(

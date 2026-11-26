@@ -8,12 +8,13 @@ import SkillReviewBadge from '../../review/components/SkillReviewBadge.jsx';
 // nhầm là "đã biết").
 const STATUS_CLASS = { known: styles.statusKnown, learning: styles.statusLearning };
 
-export default function SkillNode({ data }) {
+export default function SkillNode({ data, selected }) {
     const className = [
         styles.skillNodeLearningGraph,
         STATUS_CLASS[data.status],
         data.isTarget && styles.roleTarget,
         !data.isTarget && data.nodeRole === 'extension' && styles.roleExtension,
+        selected && styles.nodeSelected,
     ].filter(Boolean).join(' ');
 
     return (<>
