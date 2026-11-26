@@ -319,3 +319,113 @@ def test_seconds_until_next_run():
 
     assert _seconds_until(2, datetime(2026, 11, 25, 1, 0)) == 3600
     assert _seconds_until(2, datetime(2026, 11, 25, 3, 0)) == 23 * 3600
+
+
+# ─────────────── Bước B (25/11): số câu theo số ý, hết ý thì AI viết thêm đoạn ───────────────
+
+
+def _small_chunks(db, mcq_facts=(1, 2, 3, 4), essay_facts=(201, 202)):
+    """Đoạn ngắn: mỗi câu là một fact riêng → biết chính xác số ý. Thêm khóa nguồn để AI viết được đoạn mới."""
+    from app.models import Courses, CourseSkill, KnowledgeChunk
+
+    db.get(KnowledgeChunk, 11).content = " ".join(f"{fact(k)}." for k in essay_facts)
+    db.get(KnowledgeChunk, 12).content = " ".join(f"{fact(k)}." for k in mcq_facts)
+    db.add(
+        Courses(course_id=70, title="Docker Basics", num_enrolled=10, description="Docker images and containers. " * 20)
+    )
+    db.flush()
+    db.add(CourseSkill(course_id=70, skill_id=SKILL))
+    db.commit()
+
+
+def _ai_q(db, qid, quote, *, kind="mcq", level="recognize", active=True, reason=None, chunk=12):
+    shape = ({"options": ["a", "b", "c", "d"], "correct_index": 0} if kind == "mcq" else
+             {"rubric": essay()["rubric"], "explanation": "Model answer: x"})  # fmt: skip
+    db.add(ReviewQuestion(question_id=qid, skill_id=SKILL, chunk_id=chunk, type=kind, level=level,
+                          content=f"AI {qid}?", source="ai", is_active=active, **shape))  # fmt: skip
+    db.flush()
+    db.add(ReviewQuestionMeta(question_id=qid, family_id=qid, review_status="auto_approved", origin="on_demand",
+                              disabled_reason=reason, ai_check={"gen": {"source_quote": quote}}))  # fmt: skip
+
+
+def knowledge_writer(seen: list, start: int = 300, fail: bool = False):
+    """AI viết đoạn giả: mỗi đoạn 5 câu (5 ý mới)."""
+    from app.ai.review.grading_schema import AIOutputError
+
+    counter = [start]
+
+    def write(skill, courses, n, existing_titles, feedback):
+        seen.append({"n": n, "existing_titles": list(existing_titles)})
+        if fail:
+            raise AIOutputError("bad json")
+        out = []
+        for _ in range(n):
+            k = counter[0]
+            counter[0] += 5
+            body = " ".join(
+                f"{fact(k + i)} and explains one more useful detail about containers today." for i in range(5)
+            )
+            out.append({"title": f"Subtopic {k}", "content": body, "course_ids": [70]})
+        return {"passages": out}
+
+    return write
+
+
+def test_free_ideas_and_cap(gdb):  # noqa: F811
+    from app.services import question_gen_service as qgen
+
+    _small_chunks(gdb, mcq_facts=(1, 2, 3, 4), essay_facts=(201, 202, 203))  # 7 câu nguồn
+    _ai_q(gdb, 701, fact(1))
+    _ai_q(gdb, 702, fact(1), kind="essay", level="easy")  # khác loại → không trừ ý của trắc nghiệm
+    _ai_q(gdb, 703, fact(2), active=False, reason="duplicate_idea")  # tắt vì trùng → vẫn tính đã dùng
+    _ai_q(gdb, 704, fact(3), active=False, reason="mentor_report")  # tắt vì lỗi → trả lại ý
+    gdb.commit()
+    free = qgen.free_ideas(gdb, SKILL)
+    assert free == {"mcq": 5, "essay": 6}
+    assert qgen.cap_by_ideas({"recognize": 4, "understand": 4, "easy": 2}, free) == {
+        "recognize": 4, "understand": 1, "easy": 2}  # fmt: skip
+    assert qgen.ideas_short({"recognize": 4, "understand": 4, "easy": 2}, free) == 3
+
+
+def test_topup_writes_more_chunks_when_out_of_ideas(gdb):  # noqa: F811
+    from app.models import KnowledgeChunk
+
+    _small_chunks(gdb)  # 4 + 2 = 6 ý / loại, bổ sung cần ~29 câu
+    seen = []
+    job = ReviewGenerationJob(skill_id=SKILL, kind="topup")
+    gdb.add(job)
+    gdb.commit()
+    d = gen.Deps(write_knowledge=knowledge_writer(seen), write_questions=None, solve=None, embed=None, model="fake")
+    gen._ensure_ideas(gdb, job, d)
+    assert len(gdb.query(KnowledgeChunk).filter_by(skill_id=SKILL).all()) == gen.MAX_CHUNKS  # 2 → 6, không vượt
+    assert seen[0]["n"] == 4 and seen[0]["existing_titles"] == ["Images", "Dockerfile"]  # chủ đề con khác
+    assert len(seen) == 1  # đã tối đa → không gọi lần 2
+
+
+def test_topup_stops_when_max_chunks_and_no_ideas(gdb, sync_jobs, monkeypatch):  # noqa: F811
+    _small_chunks(gdb, mcq_facts=(1, 2), essay_facts=(201, 202))
+    for i, k in enumerate((1, 2, 201, 202)):
+        _ai_q(
+            gdb, 710 + i, fact(k), level="understand", chunk=12 if k < 200 else 11
+        )  # trắc nghiệm đã dùng hết 4 câu nguồn
+    gdb.commit()
+    monkeypatch.setattr(gen, "MAX_CHUNKS", 2)  # đã đủ đoạn → không viết thêm
+    gap = gen.missing_for(gdb, SKILL, "topup")
+    assert "recognize" not in gap and "understand" not in gap  # hết ý trắc nghiệm
+    assert sum(gap.values()) == 4  # tự luận còn 4 câu nguồn trống
+    sync_jobs["ai"] = FakeAI({"essay": [{"questions": []}] * 6})
+    job = gen.request(gdb, SKILL, None, kind="topup")
+    assert job.status == "done" and {c["kind"] for c in sync_jobs["ai"].calls} == {"essay"}  # không soạn trắc nghiệm
+
+
+def test_extra_chunks_failure_keeps_old_chunks(gdb):  # noqa: F811
+    from app.models import KnowledgeChunk
+
+    _small_chunks(gdb)
+    seen = []
+    job = ReviewGenerationJob(skill_id=SKILL, kind="topup")
+    gdb.add(job)
+    gdb.commit()
+    d = gen.Deps(write_knowledge=knowledge_writer(seen, fail=True), write_questions=None, solve=None, embed=None)
+    gen._ensure_ideas(gdb, job, d)  # AI viết lỗi → không ném lỗi, soạn tiếp bằng đoạn cũ
+    assert len(seen) == 2 and gdb.query(KnowledgeChunk).filter_by(skill_id=SKILL).count() == 2

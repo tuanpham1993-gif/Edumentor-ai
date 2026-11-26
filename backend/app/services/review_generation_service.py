@@ -22,6 +22,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from math import ceil
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -44,6 +45,9 @@ TOPUP_ENABLED = True  # D25: đủ đề → tự soạn bổ sung tới ~30 câ
 # 25/11: làm lại ngay sau một việc bổ sung đã kết thúc (xong mà vẫn thiếu / lỗi) → không tạo việc mới trong N phút, ráp
 # đề lặp một phần. Chặn vòng "xong → bấm lại → vẫn thiếu → soạn tiếp" tốn lượt Gemini mãi.
 TOPUP_RETRY_MINUTES = 10
+# Bước B (25/11, sửa D25): số câu theo số ý trong tài liệu — hết ý thì AI viết thêm đoạn (chủ đề con khác), tối đa N đoạn.
+MAX_CHUNKS = 6
+SENTENCES_PER_CHUNK = 5  # ước lượng số câu (ý) mỗi đoạn AI viết (80–200 từ) khi tính số đoạn cần viết thêm
 _sleep = time.sleep  # test thay bằng hàm không chờ
 ACTIVE = ("queued", "running")
 FAILED_AI = "Chưa soạn được đề vì AI đang quá tải, bạn thử lại sau ít phút."
@@ -173,11 +177,42 @@ def missing_for_exam(db: Session, skill_id: int) -> dict[str, int]:
 
 def missing_for(db: Session, skill_id: int, kind: str) -> dict[str, int]:
     """exam: đủ 1 đề · topup: tới ~30 câu dùng được (D25) · nightly: tới ~30 câu ĐÃ SOẠN (kể cả câu soạn sẵn chờ mentor
-    — không soạn lại mỗi đêm khi mentor chưa kịp duyệt)."""
+    — không soạn lại mỗi đêm khi mentor chưa kịp duyệt).
+    Bước B (25/11, sửa D25): đã đủ MAX_CHUNKS đoạn → không vượt số ý còn trống (hết ý = không cần soạn thêm)."""
     if kind == "exam":
         return missing_for_exam(db, skill_id)
     have = repo.stocked_counts(db, skill_id) if kind == "nightly" else usable_counts(db, skill_id)
-    return _gap(question_gen_service.SKILL_TARGET, have)
+    gap = _gap(question_gen_service.SKILL_TARGET, have)
+    if gap and len(knowledge_repository.chunks_for_skill(db, skill_id)) >= MAX_CHUNKS:
+        gap = question_gen_service.cap_by_ideas(gap, question_gen_service.free_ideas(db, skill_id))
+    return gap
+
+
+def _ensure_ideas(db: Session, job: ReviewGenerationJob, deps: Deps) -> None:
+    """Bước 1 (G3a + Bước B): chưa có đoạn → AI viết TARGET_CHUNKS đoạn; thiếu ý cho số câu cần soạn → viết thêm
+    ceil(thiếu / SENTENCES_PER_CHUNK) đoạn chủ đề con KHÁC (ensure_chunks gửi kèm tên đoạn đã có), tối đa MAX_CHUNKS.
+    Viết thêm lỗi khi đã có đoạn → vẫn soạn tiếp bằng đoạn cũ (không làm hỏng việc)."""
+    from app.services import knowledge_service
+
+    for _ in range(2):  # lần 2: sau khi viết đoạn đầu tiên mà vẫn thiếu ý
+        chunks = knowledge_repository.chunks_for_skill(db, job.skill_id)
+        if not chunks:
+            target = knowledge_service.TARGET_CHUNKS
+        else:
+            short = question_gen_service.ideas_short(
+                missing_for(db, job.skill_id, job.kind), question_gen_service.free_ideas(db, job.skill_id)
+            )
+            target = min(MAX_CHUNKS, len(chunks) + ceil(short / SENTENCES_PER_CHUNK)) if short > 0 else len(chunks)
+        if target <= len(chunks):
+            return
+        try:
+            _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
+                        embed=deps.embed or (lambda _t: None), model=deps.model, target=target)  # fmt: skip
+        except knowledge_service.KnowledgeError:
+            if not chunks:
+                raise
+            logger.warning("Soạn đề: không viết thêm được đoạn tài liệu (kỹ năng %s) — dùng đoạn cũ", job.skill_id)
+            return
 
 
 # ─────────────── tạo việc ───────────────
@@ -250,8 +285,6 @@ def _set(db: Session, job: ReviewGenerationJob, **fields) -> None:
 
 def run_job(job_id: int, session_factory, deps: Deps | None) -> None:
     """Chạy một việc soạn (luồng nền). Mọi lỗi đều kết thúc bằng 'failed' + thông báo dễ hiểu."""
-    from app.services import knowledge_service
-
     with session_factory() as db:
         job = db.get(ReviewGenerationJob, job_id)
         if job is None or job.status != "queued":
@@ -260,16 +293,18 @@ def run_job(job_id: int, session_factory, deps: Deps | None) -> None:
         try:
             if deps is None:
                 raise GenerationError("ai_off", "ai_off")
-            # 1) đoạn tài liệu (G3a)
-            if not knowledge_repository.chunks_for_skill(db, job.skill_id):
-                _with_waits(knowledge_service.ensure_chunks, db, job.skill_id, write=deps.write_knowledge,
-                            embed=deps.embed or (lambda _t: None), model=deps.model)  # fmt: skip
+            # 1) đoạn tài liệu (G3a) — thiếu ý thì viết thêm (Bước B)
+            _ensure_ideas(db, job, deps)
             # 2) trắc nghiệm, 3) tự luận — G3b soạn + G3c cổng. Lưu NGAY sau mỗi vòng (vòng sau biết câu vừa lưu, không
             #    soạn trùng). Còn thiếu → thêm một vòng (tự luận hay hỏng phép "bài mẫu ≥ 7" — đo 25/11).
             for step, levels in ((2, ("recognize", "understand")), (3, ("easy", "advanced"))):
                 _set(db, job, step=step)
                 for _round in range(ROUNDS):
                     need = missing_for(db, job.skill_id, job.kind)
+                    if job.kind != "exam":  # Bước B: bổ sung / ban đêm không soạn quá số ý còn trống
+                        need = question_gen_service.cap_by_ideas(
+                            need, question_gen_service.free_ideas(db, job.skill_id)
+                        )
                     part = {lv: need[lv] for lv in levels if need.get(lv)}
                     if not part:
                         break

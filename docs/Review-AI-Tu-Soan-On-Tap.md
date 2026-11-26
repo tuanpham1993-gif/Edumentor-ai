@@ -46,7 +46,7 @@ Không thể soạn tay hay duyệt tay cho ~5.880 kỹ năng còn lại (≈ 88
 | D22 | **Admin gán vai trò `mentor`** cho tài khoản có sẵn (thêm `mentor` vào CHECK `users.role` — module 01) | 25/11 | Cần BA/SRS |
 | D23 | Mentor **xem** câu hỏi, đáp án, barem, đoạn tài liệu; bấm **Đạt / Phản ánh lỗi**. **Không** sửa, xóa, bật / tắt câu (việc của admin) | 25/11 | |
 | D24 | **Sinh câu theo cách C — kết hợp (P16, Tuấn chốt 25/11):** (1) **việc chạy nền theo lịch** (giống nhắc "Đến hạn ôn", **mặc định tắt**, bật bằng cấu hình); mỗi đêm soạn cho **N kỹ năng** (ví dụ 20, giới hạn để không vượt hạn mức Gemini) theo ưu tiên: kỹ năng có trong **lộ trình đang hoạt động** → kỹ năng **sắp hết câu chưa làm** → kỹ năng **bị mentor tắt câu** làm thiếu ngân hàng; (2) câu sinh sẵn qua cổng kiểm tra rồi **vào hàng chờ mentor duyệt**; (3) kỹ năng **chưa sinh sẵn** mà học viên bấm ôn thì vẫn **sinh khi cần** (luồng D1/D9), không ai gặp "Chưa có đề" | 25/11 | Trả lời câu thầy "bao lâu sinh đề mới". Số liệu 25/11: 693 kỹ năng vừa trong lộ trình vừa Mở ≈ 4.500 lần gọi Gemini, chia nhiều đêm. Thuộc G3d (thêm ½–1 ngày). Câu sinh sẵn lâu ngày có thể lỗi thời → kiểm lại định kỳ (khi mentor duyệt). Số câu mỗi kỹ năng theo **D25** |
-| D25 | **Giữ khoảng 30 câu mỗi kỹ năng (P1, Tuấn chốt 25/11 — thay D10):** lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới ~30 câu** (mục tiêu có dư câu tự luận: ~4 dễ + ~2 nâng cao); lượt làm lại chỉ mở khi đủ câu chưa làm, chưa đủ → "Đề mới đang được soạn" | 25/11 | Chống học thuộc (gap G5), người làm cùng lúc nhận tổ hợp câu khác nhau, chống chép theo nội dung. Thuộc G3d |
+| D25 | **Giữ khoảng 30 câu mỗi kỹ năng (P1, Tuấn chốt 25/11 — thay D10):** lần đầu soạn đủ 15 câu để mở đề ngay, **rồi soạn tiếp ở nền tới ~30 câu** (mục tiêu có dư câu tự luận: ~4 dễ + ~2 nâng cao); lượt làm lại chỉ mở khi đủ câu chưa làm, chưa đủ → "Đề mới đang được soạn". **Sửa 25/11 (Bước B, mục 7.7):** ~30 là mức tối đa — không vượt số ý trong tài liệu; hết ý thì AI viết thêm đoạn, tối đa 6 đoạn / kỹ năng | 25/11 | Chống học thuộc (gap G5), người làm cùng lúc nhận tổ hợp câu khác nhau, chống chép theo nội dung. Thuộc G3d |
 | D26 | **Câu sinh sẵn chỉ dùng khi mentor đã bấm "Đạt"** (P16 tùy chọn 4, Tuấn chốt 25/11). Câu **sinh khi cần** (học viên bấm ôn mà chưa có câu) vẫn **dùng ngay** như D1 | 25/11 | Câu sinh sẵn luôn có người chuyên môn xem trước. Mentor duyệt chậm → câu nằm chờ, kỹ năng đó vẫn sinh khi cần được. Cần phân biệt nguồn "sinh sẵn" / "sinh khi cần" trong `review_question_meta` |
 | D27 | **Chi tiết G3f mentor (Tuấn duyệt "theo đề xuất" 25/11):** viết lại migration `0005` (chưa commit); **admin vào được trang mentor** để kiểm tra; admin **bác phản ánh hoặc sửa câu → câu bật lại và coi như Đạt**; hàng chờ ưu tiên kỹ năng có nhiều lượt ôn; Claude soạn nháp BA/SRS | 25/11 | Mục 7.2 |
 | D28 | **G3d (Tuấn duyệt "theo đề xuất" 25/11):** chia 3 bước G3d-1 (luồng nền + lưu câu + vá lỗ hổng) → G3d-2 (giao diện màn chờ) → G3d-3 (bổ sung ~30 câu, làm lại khi hết câu mới, soạn sẵn ban đêm); **ôn theo khóa chỉ dùng câu đã duyệt** (vá D2); **không gửi chuông** khi soạn xong (học viên ở lại trang thì đề tự mở, rời trang thì bấm lại là có đề); **P12 làm cùng G3d-1**; **P8 để sau G3** | 25/11 | Mục 7.5 |
@@ -388,7 +388,17 @@ P2 / P3 đúng; mentor Đạt / Phản ánh / admin bác đúng. Phát hiện:
   - Test `test_question_idea.py` (9); dữ liệu giả của test cũ mỗi câu trích một câu nguồn riêng; toàn bộ 1.220 qua
   - Đo thật 25/11 (Gemini quá tải 503 liên tục): Linux **12 TN / 12 câu trích khác nhau** sau 2 lần soạn + 2 lần giải mù
     (trước: Power BI 12 TN / 9 câu trích); tự luận Linux và SQL chưa đo được vì 503 → đo lại khi Gemini ổn
-- [ ] Bước B — số câu theo số ý (sửa D25), AI viết thêm đoạn tài liệu khi hết ý: chờ Tuấn chốt
+- [x] `dedupe_question_ideas --apply` (Tuấn duyệt 25/11): Kubernetes tắt 10 (còn 20), Power BI tắt 4 (còn 11 — thiếu cho
+  1 đề: Thông hiểu 3/6, TL dễ 1/2 → lần ôn sau tự soạn bổ sung)
+- [x] **Bước B — số câu theo số ý** (Tuấn duyệt 25/11, **sửa D25**: tối đa ~30 câu / kỹ năng, không vượt số ý trong tài
+  liệu, tối đa `MAX_CHUNKS=6` đoạn / kỹ năng)
+  - `question_gen_service.free_ideas` (số câu nguồn chưa có câu cùng loại dùng tới), `cap_by_ideas`, `ideas_short`
+  - Bước 1 của việc soạn (`_ensure_ideas`): chưa có đoạn → viết 3 đoạn; thiếu ý → viết thêm ceil(thiếu / 5) đoạn chủ đề
+    con khác (gửi kèm tên đoạn đã có), tối đa 6; viết thêm lỗi khi đã có đoạn → soạn tiếp bằng đoạn cũ
+  - Bổ sung / ban đêm không soạn quá số ý còn trống; đủ 6 đoạn mà hết ý → `missing_for(topup)` rỗng (không tạo việc vô ích),
+    việc đang chạy kết thúc `done`
+  - Test `test_generation_jobs.py` +4 (tổng 23)
+- [ ] Đo thật Bước A / B: 25/11 tối Gemini quá tải 503 liên tục (Linux, SQL thất bại cả 2 lượt) → đo lại sau
 - [ ] Commit (khi Tuấn bảo)
 
 **Tiêu chí nghiệm thu** (lấy từ thầy): test không gọi mạng; số liệu chấm B10 giữ nguyên; 6 lượt liên tiếp không lặp

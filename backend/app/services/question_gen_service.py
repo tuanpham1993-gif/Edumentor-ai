@@ -70,6 +70,32 @@ def existing_ideas(db: Session, skill_id: int) -> list[question_idea.UsedIdea]:
     return question_idea.from_rows(r for r in rows if r.is_active or r.disabled_reason == DUPLICATE_IDEA)
 
 
+def free_ideas(db: Session, skill_id: int) -> dict[str, int]:
+    """Bước B (25/11): số câu của các đoạn tài liệu CHƯA có câu hỏi cùng loại dùng tới → {"mcq": n, "essay": n}."""
+    chunks = knowledge_repository.chunks_for_skill(db, skill_id)
+    total = {(c.chunk_id, i) for c in chunks for i in range(len(question_idea.sentences(c.content)))}
+    used = existing_ideas(db, skill_id)
+    return {kind: len(total - set().union(*(u.idea for u in used if u.type == kind))) for kind in KINDS}
+
+
+def cap_by_ideas(need: dict[str, int], free: dict[str, int]) -> dict[str, int]:
+    """Bước B: không soạn quá số ý còn trống của từng loại (mức đầu trong KINDS được ưu tiên)."""
+    out: dict[str, int] = {}
+    for kind, levels in KINDS.items():
+        left = free.get(kind, 0)
+        for level in levels:
+            n = min(need.get(level, 0), left)
+            if n > 0:
+                out[level] = n
+                left -= n
+    return out
+
+
+def ideas_short(need: dict[str, int], free: dict[str, int]) -> int:
+    """Bước B: số ý còn THIẾU (loại thiếu nhiều nhất) để soạn đủ `need`."""
+    return max((sum(need.get(lv, 0) for lv in levels) - free.get(kind, 0) for kind, levels in KINDS.items()), default=0)
+
+
 def existing_contents(db: Session, skill_id: int) -> list[str]:
     return [content for _, content, _ in existing_questions(db, skill_id)]
 
