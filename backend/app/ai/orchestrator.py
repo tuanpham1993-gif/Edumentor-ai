@@ -5,6 +5,7 @@ and Response Service with session state, multi-query aggregation, and history pe
 """
 
 import json
+import re
 from typing import Any
 from uuid import UUID
 
@@ -12,11 +13,63 @@ from sqlalchemy.orm import Session
 
 from app.ai.handlers.code_handler import code_handler
 from app.ai.handlers.knowledge_handler import knowledge_handler
+from app.ai.handlers.curriculum_handler import course_curriculum_advisor
+from app.ai.handlers.recommendation_handler import recommendation_handler
 from app.ai.handlers.reinforcement_handler import reinforcement_handler
 from app.ai.handlers.search_handler import search_handler
 from app.ai.query_router import route_query
+from app.ai.query_router.normalizer import is_generic_entity, normalize_text
 from app.ai.response_service import response_service
 from app.models.chat_message import ChatMessage
+from app.services import sql_retrieval
+
+
+def resolve_numbered_course_reference(user_content: str, history: list, db: Session) -> str | None:
+    """
+    Nhận diện yêu cầu chọn khóa học theo thứ tự (ví dụ: 'chi tiết khóa học số 4', 'khóa 1', 'thứ 2')
+    từ danh sách khóa học được trợ lý đề xuất gần nhất.
+    """
+    norm = normalize_text(user_content)
+    m_num = re.search(r"(?:khoa\s*hoc|khoa|course|mon\s*hoc|mon)?\s*(?:so|thu)\s*([0-9]+)\b", norm)
+    if not m_num:
+        m_num = re.search(r"\b(?:khoa|course)\s+([0-9]+)\b", norm)
+    if not m_num:
+        m_num = re.search(r"(?:chi\s*tiet|xem|chon|thong\s*tin)\s+(?:khoa\s*hoc\s+|khoa\s+|course\s+)?(?:so\s*)?([0-9]+)\b", norm)
+
+    word_to_num = {"nhat": 1, "mot": 1, "hai": 2, "nhi": 2, "ba": 3, "bon": 4, "tu": 4, "nam": 5}
+    target_idx = None
+    if m_num:
+        try:
+            target_idx = int(m_num.group(1))
+        except ValueError:
+            pass
+    else:
+        for w, num_val in word_to_num.items():
+            if re.search(rf"(?:khoa\s*hoc|khoa|course)?\s*thu\s*{w}\b", norm):
+                target_idx = num_val
+                break
+
+    if target_idx is not None and target_idx >= 1 and history:
+        for prev_message in reversed(history):
+            if prev_message.role == "assistant" and prev_message.content:
+                bold_titles = re.findall(r"\*\*([^*]+)\*\*", prev_message.content)
+                valid_courses = []
+                for cand in bold_titles:
+                    cand_clean = cand.strip()
+                    if len(cand_clean) > 3 and not any(
+                        kw in cand_clean.lower()
+                        for kw in ["luu y", "chu y", "tong quan", "goi y", "de xuat", "module", "tuan", "rating", "danh gia", "thong tin"]
+                    ):
+                        c = sql_retrieval.find_course(db, cand_clean)
+                        if c:
+                            valid_courses.append(c.title if hasattr(c, "title") else c["title"])
+                        else:
+                            cands = sql_retrieval.search_courses(db, cand_clean, limit=1)
+                            if cands:
+                                valid_courses.append(cands[0]["title"])
+                if valid_courses and 1 <= target_idx <= len(valid_courses):
+                    return valid_courses[target_idx - 1]
+    return None
 
 
 def format_assistant_history(saved_response: dict) -> str:
@@ -53,6 +106,8 @@ class ChatOrchestrator:
         self.knowledge_handler = knowledge_handler
         self.code_handler = code_handler
         self.reinforcement_handler = reinforcement_handler
+        self.recommendation_handler = recommendation_handler
+        self.course_curriculum_advisor = course_curriculum_advisor
         self.response_service = response_service
 
     def _generate_retrieval_fallback(self, retrieval_context: dict[str, Any], error: Exception) -> str:
@@ -183,24 +238,94 @@ class ChatOrchestrator:
         # ======================================
         route_result = route_query(user_content, custom_api_key=custom_api_key)
 
+        # 0. Check numbered course reference first (ví dụ: "chi tiết khóa học số 4", "khóa 1")
+        numbered_course = resolve_numbered_course_reference(user_content, history, db)
+        if numbered_course:
+            route_result["entity_name"] = numbered_course
+            route_result["entity_type"] = "course"
+            route_result["intent"] = "course_web_search"
+            route_result["task_type"] = "course_web_search"
+            route_result["source"] = "conversation_context"
+            if route_result.get("sub_queries"):
+                route_result["sub_queries"][0]["entity_name"] = numbered_course
+                route_result["sub_queries"][0]["entity_type"] = "course"
+                route_result["sub_queries"][0]["intent"] = "course_web_search"
+                route_result["sub_queries"][0]["task_type"] = "course_web_search"
+                route_result["sub_queries"][0]["source"] = "conversation_context"
+
         # Context inheritance (anaphoric references)
-        if route_result.get("entity_name") is None and history:
-            for prev_message in reversed(history):
-                if prev_message.role == "user" and prev_message.content:
-                    try:
-                        prev_route = route_query(prev_message.content, custom_api_key=custom_api_key)
-                        if prev_route.get("entity_name"):
-                            route_result["entity_name"] = prev_route["entity_name"]
-                            if route_result.get("entity_type") in ("none", None):
-                                route_result["entity_type"] = prev_route.get("entity_type", "skill")
-                            route_result["source"] = "conversation_context"
-                            if route_result.get("sub_queries"):
-                                route_result["sub_queries"][0]["entity_name"] = route_result["entity_name"]
-                                route_result["sub_queries"][0]["entity_type"] = route_result["entity_type"]
-                                route_result["sub_queries"][0]["source"] = "conversation_context"
-                            break
-                    except Exception:  # noqa: BLE001
-                        pass
+        elif (route_result.get("entity_name") is None or is_generic_entity(str(route_result.get("entity_name")))) and history:
+            is_course_query = (
+                route_result.get("entity_type") == "course"
+                or route_result.get("intent") in (
+                    "course_web_search",
+                    "course_recommendation",
+                    "course_question",
+                    "course_review",
+                    "course_enrollment_link",
+                )
+                or any(kw in user_content.lower() for kw in ["khoa hoc", "khoa", "course", "module", "giao trinh"])
+            )
+
+            # 1. Nếu là câu hỏi về khóa học, ưu tiên tìm khóa học đã được nhắc tới trong tin nhắn của trợ lý
+            if is_course_query:
+                for prev_message in reversed(history):
+                    if prev_message.role == "assistant" and prev_message.content:
+                        try:
+                            bold_titles = re.findall(r"\*\*([^*]+)\*\*", prev_message.content)
+                            for cand in bold_titles:
+                                cand_clean = cand.strip()
+                                if len(cand_clean) > 3 and not any(
+                                    kw in cand_clean.lower()
+                                    for kw in ["luu y", "chu y", "tong quan", "goi y", "de xuat", "module", "tuan", "rating", "danh gia", "thong tin"]
+                                ):
+                                    found = sql_retrieval.find_course(db, cand_clean)
+                                    found_dict = sql_retrieval.course_to_dict(found) if hasattr(found, "course_id") else found
+                                    if not found_dict:
+                                        cands = sql_retrieval.search_courses(db, cand_clean, limit=1)
+                                        if cands:
+                                            found_dict = cands[0]
+                                    if found_dict:
+                                        route_result["entity_name"] = found_dict["title"]
+                                        route_result["entity_type"] = "course"
+                                        route_result["source"] = "conversation_context"
+                                        if route_result.get("sub_queries"):
+                                            route_result["sub_queries"][0]["entity_name"] = route_result["entity_name"]
+                                            route_result["sub_queries"][0]["entity_type"] = route_result["entity_type"]
+                                            route_result["sub_queries"][0]["source"] = "conversation_context"
+                                        break
+                            if route_result.get("entity_name") and not is_generic_entity(str(route_result.get("entity_name"))):
+                                break
+                        except Exception:  # noqa: BLE001
+                            pass
+
+            # 2. Nếu vẫn chưa có entity, kiểm tra tin nhắn trước của người dùng
+            if route_result.get("entity_name") is None or is_generic_entity(str(route_result.get("entity_name"))):
+                for prev_message in reversed(history):
+                    if prev_message.role == "user" and prev_message.content:
+                        try:
+                            prev_route = route_query(prev_message.content, custom_api_key=custom_api_key)
+                            if prev_route.get("entity_name") and not is_generic_entity(str(prev_route["entity_name"])):
+                                route_result["entity_name"] = prev_route["entity_name"]
+                                if route_result.get("entity_type") in ("none", None):
+                                    route_result["entity_type"] = prev_route.get("entity_type", "skill")
+                                route_result["source"] = "conversation_context"
+                                if route_result.get("sub_queries"):
+                                    route_result["sub_queries"][0]["entity_name"] = route_result["entity_name"]
+                                    route_result["sub_queries"][0]["entity_type"] = route_result["entity_type"]
+                                    route_result["sub_queries"][0]["source"] = "conversation_context"
+                                break
+                        except Exception:  # noqa: BLE001
+                            pass
+
+        # Điều hướng câu hỏi chi tiết/modules sang course_web_search handler
+        if any(kw in user_content.lower() for kw in ["chi tiet", "module", "moudule", "moudle", "giao trinh", "de cuong", "thoi gian hoan thanh"]):
+            if route_result.get("entity_type") == "course" or route_result.get("intent") in ("course_question", "general_question"):
+                route_result["intent"] = "course_web_search"
+                route_result["task_type"] = "course_web_search"
+                if route_result.get("sub_queries"):
+                    route_result["sub_queries"][0]["intent"] = "course_web_search"
+                    route_result["sub_queries"][0]["task_type"] = "course_web_search"
 
         print("\n========== QUERY ROUTER ==========")
         print(json.dumps(route_result, ensure_ascii=False, indent=2))
@@ -243,7 +368,24 @@ class ChatOrchestrator:
                     sub_context = sub_search_res["retrieval_context"]
 
                     # Dispatch to appropriate handler
-                    if sub_task_type in ("code_analysis", "code_fix") or sub_intent in (
+                    if sub_intent == "course_recommendation" or sub_task_type == "course_recommendation":
+                        raw_sub = self.recommendation_handler.handle(
+                            db=db,
+                            user_query=sub_query_text,
+                            route_result=sub_route,
+                            conversation_history=conversation,
+                            custom_api_key=custom_api_key,
+                        )
+                    elif sub_intent == "course_web_search" or sub_task_type == "course_web_search":
+                        raw_sub = self.course_curriculum_advisor.handle(
+                            db=db,
+                            course_name=sub_route.get("entity_name"),
+                            user_query=sub_query_text,
+                            organization=sub_route.get("organization"),
+                            conversation_history=conversation,
+                            custom_api_key=custom_api_key,
+                        )
+                    elif sub_task_type in ("code_analysis", "code_fix") or sub_intent in (
                         "code_help",
                         "code_analysis",
                         "code_fix",
@@ -318,7 +460,26 @@ class ChatOrchestrator:
             intent = route_result.get("intent", "general_question")
 
             try:
-                if task_type in ("code_analysis", "code_fix") or intent in (
+                if intent == "course_recommendation" or task_type == "course_recommendation":
+                    print("\n========== ROUTED TO RECOMMENDATION HANDLER ==========")
+                    raw_response = self.recommendation_handler.handle(
+                        db=db,
+                        user_query=user_content,
+                        route_result=route_result,
+                        conversation_history=conversation,
+                        custom_api_key=custom_api_key,
+                    )
+                elif intent == "course_web_search" or task_type == "course_web_search":
+                    print("\n========== ROUTED TO COURSE CURRICULUM ADVISOR (WEB SEARCH) ==========")
+                    raw_response = self.course_curriculum_advisor.handle(
+                        db=db,
+                        course_name=route_result.get("entity_name"),
+                        user_query=user_content,
+                        organization=route_result.get("organization"),
+                        conversation_history=conversation,
+                        custom_api_key=custom_api_key,
+                    )
+                elif task_type in ("code_analysis", "code_fix") or intent in (
                     "code_help",
                     "code_analysis",
                     "code_fix",

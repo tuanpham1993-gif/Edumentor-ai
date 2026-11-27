@@ -51,6 +51,10 @@ class Settings(BaseSettings):
     # Mô hình embedding cho RAG — ĐA NGÔN NGỮ (tài liệu tri thức viết tiếng Việt). Đổi mô hình → chạy lại
     # scripts/build_embeddings.py --all (vector cũ và mới không so được với nhau).
     REVIEW_EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    # Tavily Web Search API (khóa tìm kiếm thông tin khóa học)
+    TAVILY_API_KEY: str = ""
+
+    # AI
     # Khóa LLM dùng chung với chatbot (Tâm). Để trống: server vẫn chạy, AI_MODE=real sẽ báo thiếu khóa.
     LLM_API_KEY: str = ""
     LLM_MODEL: str = ""

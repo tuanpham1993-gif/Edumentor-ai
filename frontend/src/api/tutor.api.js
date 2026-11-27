@@ -1,21 +1,67 @@
 import client from './client.js';
+import { getAccessToken } from './tokenStorage.js';
 
 export const API_KEY_STORAGE_KEY = 'edumentor_gemini_api_key';
 
-export function getStoredApiKey() {
+/**
+ * Trích xuất ID người dùng hiện tại từ JWT access token.
+ * Trả về chuỗi ID (ví dụ: "1", "2") hoặc null nếu chưa đăng nhập.
+ */
+export function getCurrentUserId() {
   try {
-    return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
+    const token = getAccessToken();
+    if (!token) return null;
+    const parts = token.split('.');
+    if (parts.length >= 2) {
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const data = JSON.parse(jsonPayload);
+      return data.sub ? String(data.sub) : null;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+/**
+ * Tạo khóa lưu trữ riêng biệt theo ID người dùng:
+ * Mỗi người dùng có một khóa riêng 'edumentor_gemini_api_key_user_<id>',
+ * tránh việc các tài khoản dùng chung hoặc nhìn thấy API key của nhau.
+ */
+export function getApiKeyStorageKey(userId = null) {
+  const uid = userId ? String(userId) : getCurrentUserId();
+  if (uid) {
+    return `edumentor_gemini_api_key_user_${uid}`;
+  }
+  return 'edumentor_gemini_api_key_guest';
+}
+
+export function getStoredApiKey(userId = null) {
+  try {
+    // Tự động dọn dẹp key dùng chung cũ nếu còn tồn tại trong trình duyệt
+    if (localStorage.getItem(API_KEY_STORAGE_KEY)) {
+      localStorage.removeItem(API_KEY_STORAGE_KEY);
+    }
+    const storageKey = getApiKeyStorageKey(userId);
+    return localStorage.getItem(storageKey) || '';
   } catch {
     return '';
   }
 }
 
-export function setStoredApiKey(key) {
+export function setStoredApiKey(key, userId = null) {
   try {
+    const storageKey = getApiKeyStorageKey(userId);
     if (key && key.trim()) {
-      localStorage.setItem(API_KEY_STORAGE_KEY, key.trim());
+      localStorage.setItem(storageKey, key.trim());
     } else {
-      localStorage.removeItem(API_KEY_STORAGE_KEY);
+      localStorage.removeItem(storageKey);
     }
   } catch (err) {
     console.error('Không thể lưu API Key vào localStorage:', err);
@@ -78,7 +124,17 @@ export async function sendChatMessage(sessionId, content, apiKey = null) {
 }
 
 /**
- * 6. Xóa một phiên chat
+ * 6. Đổi tên phiên chat
+ * @param {string} sessionId
+ * @param {string} topic
+ */
+export async function renameChatSession(sessionId, topic) {
+  const response = await client.patch(`/chat/sessions/${sessionId}`, { topic });
+  return response.data;
+}
+
+/**
+ * 7. Xóa một phiên chat
  * @param {string} sessionId
  */
 export async function deleteChatSession(sessionId) {

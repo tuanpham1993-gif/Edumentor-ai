@@ -32,7 +32,7 @@ Quy tắc bắt buộc:
 5. Giữ nguyên cấu trúc JSON của SYSTEM PROMPT.
 6. LIÊN KẾT & HƯỚNG DẪN SANG TÍNH NĂNG AI LỘ TRÌNH:
    - Trong answer, giới thiệu và nhắc người học truy cập:
-     `http://localhost:5173/ai-learning-path` (hoặc tab "Lộ trình" trên Navbar).
+     `http://localhost:5173/me/my-learning-path` (hoặc tab "Lộ trình" trên Navbar).
    - Hướng dẫn người học bấm "+ Tạo lộ trình mới với AI" (+ Create New Path with AI).
 7. BẮT BUỘC GỢI Ý (SUGGESTIONS) CHUYỂN SANG AI LỘ TRÌNH:
    Trong suggestions, có ít nhất 1 gợi ý kết nối với AI Lộ trình:
@@ -60,21 +60,41 @@ Quy tắc bắt buộc:
 """
 
 
-def build_system_operation_response(retrieval_context: dict) -> dict | None:
+def build_system_operation_response(retrieval_context: dict, query_text: str = "") -> dict | None:
     """Trả lời trực tiếp yêu cầu lấy đường dẫn hợp lệ hoặc từ chối link không chắc chắn."""
     target_route = retrieval_context.get("target_route")
+
+    # Fallback: phát hiện route trực tiếp từ query nếu target_route trong context bị thiếu
+    if not target_route:
+        candidate_text = query_text or retrieval_context.get("expanded_query") or ""
+        if candidate_text:
+            from app.ai.query_router.config import ROUTE_KEYWORDS
+            from app.ai.query_router.normalizer import normalize_text
+            normalized = normalize_text(candidate_text)
+            for route, keywords in ROUTE_KEYWORDS.items():
+                for kw in keywords:
+                    if kw in normalized:
+                        target_route = route
+                        break
+                if target_route:
+                    break
 
     allowed_links = {
         "/login": ("Đăng nhập", "http://localhost:5173/login"),
         "/register": ("Đăng ký", "http://localhost:5173/register"),
-        "/ai-learning-path": ("AI Lộ trình", "http://localhost:5173/ai-learning-path"),
+        "/ai-learning-path": ("AI Lộ trình", "http://localhost:5173/me/my-learning-path"),
     }
 
     if target_route in allowed_links:
         title, url = allowed_links[target_route]
+        other_suggestions = [
+            {"label": name, "prompt": f"Cho tôi link {name}"}
+            for r, (name, _) in allowed_links.items()
+            if r != target_route
+        ]
         return {
             "answer": f"Bạn có thể truy cập trang **{title}** của EduMentor tại đường dẫn sau:\n{url}",
-            "suggestions": [],
+            "suggestions": other_suggestions,
         }
 
     # Nếu hỏi direct_link của bất kỳ trang nào khác hoặc không có route cụ thể:
@@ -85,11 +105,61 @@ def build_system_operation_response(retrieval_context: dict) -> dict | None:
             "Bạn vui lòng nhìn lên thanh menu điều hướng (Navbar) ở phía trên màn hình và bấm vào mục tương ứng để truy cập nhé!"
         ),
         "suggestions": [
+            {"label": "Đăng ký", "prompt": "Cho tôi link đăng ký"},
+            {"label": "Đăng nhập", "prompt": "Cho tôi link đăng nhập"},
             {"label": "AI Lộ trình", "prompt": "Hướng dẫn tôi tạo lộ trình trên trang AI Lộ trình"}
         ],
     }
 
 
+
+
+def check_out_of_scope_subject(text: str) -> dict | None:
+    """Kiểm tra câu hỏi thuộc chủ đề ngoài phạm vi đào tạo CNTT của EduMentor."""
+    from app.ai.query_router.normalizer import normalize_text
+    normalized = normalize_text(text)
+
+    out_of_scope_categories = [
+        (
+            "chứng khoán / tài chính",
+            [
+                "chung khoan",
+                "trung khoan",
+                "co phieu",
+                "trai phieu",
+                "forex",
+                "dau tu tai chinh",
+                "bat dong san",
+                "tien ao",
+                "crypto",
+                "bitcoin",
+            ],
+        ),
+        ("nấu ăn / ẩm thực", ["nau an", "cong thuc nau", "mon an ngon", "am thuc"]),
+        ("tử vi / phong thủy", ["tu vi", "boi toan", "phong thuy", "xem boi", "cung hoang dao"]),
+        ("làm đẹp / thẩm mỹ", ["lam dep", "trang diem", "phau thuat tham my"]),
+        ("giải trí / showbiz", ["showbiz", "nguoi noi tieng", "tin tuc ngoi sao"]),
+    ]
+
+    for category_name, keywords in out_of_scope_categories:
+        for kw in keywords:
+            if kw in normalized:
+                return {
+                    "answer": (
+                        f"Xin lỗi bạn, EduMentor là trợ lý học tập và phát triển kỹ năng chuyên sâu về "
+                        f"**Lập trình, Khoa học máy tính và Công nghệ thông tin**.\n\n"
+                        f"Hệ thống hiện tại chỉ hỗ trợ các câu hỏi liên quan đến kiến thức học tập, lập trình, công nghệ hoặc thông tin trên nền tảng EduMentor. "
+                        f"Mình không thể hỗ trợ các chủ đề thuộc lĩnh vực **{category_name}** nằm ngoài phạm vi này được ạ.\n\n"
+                        f"Nếu bạn cần hỗ trợ về lộ trình học hoặc các kỹ năng công nghệ như **Python, JavaScript, SQL, "
+                        f"Cấu trúc dữ liệu, Machine Learning**... bạn cứ nhắn cho mình nhé!"
+                    ),
+                    "suggestions": [
+                        {"label": "Học Python", "prompt": "Gợi ý lộ trình học Python cho người mới"},
+                        {"label": "Học Web Frontend", "prompt": "Người mới nên học lập trình Web từ đâu?"},
+                        {"label": "AI Lộ trình", "prompt": "Hướng dẫn tôi tạo lộ trình trên trang AI Lộ trình"},
+                    ],
+                }
+    return None
 
 
 class KnowledgeHandler:
@@ -109,9 +179,19 @@ class KnowledgeHandler:
         Xử lý câu hỏi kiến thức bằng Gemini hoặc trả lời trực tiếp cho direct link.
         Trả về chuỗi JSON raw từ LLM hoặc dict trực tiếp.
         """
-        # Kiểm tra direct link cho system_operation
+        query_text = route_result.get("query") or ""
+
+        # 1. Kiểm tra câu hỏi ngoài phạm vi hỗ trợ (chứng khoán, tài chính, nấu ăn, tử vi, showbiz...)
+        out_of_scope = check_out_of_scope_subject(query_text)
+        if out_of_scope is not None:
+            return out_of_scope
+
+        # 2. Kiểm tra direct link cho system_operation
         if route_result.get("intent") == "system_operation" and route_result.get("operation_type") == "direct_link":
-            direct_resp = build_system_operation_response(retrieval_context)
+            direct_resp = build_system_operation_response(
+                retrieval_context,
+                query_text=query_text,
+            )
             if direct_resp is not None:
                 return direct_resp
 
@@ -156,12 +236,13 @@ INSTRUCTIONS
    - CHỈ ĐƯỢC PHÉP trả về tối đa 3 link này:
      * Đăng nhập: http://localhost:5173/login
      * Đăng ký: http://localhost:5173/register
-     * AI Lộ trình: http://localhost:5173/ai-learning-path
+     * AI Lộ trình: http://localhost:5173/me/my-learning-path
    - TUYỆT ĐỐI KHÔNG BỊA LINK KHÁC (như link trang Ôn tập, Đánh giá, Khóa học của tôi,...).
    - Nếu người học hỏi về trang Ôn tập, Đánh giá hoặc các trang khác, hãy xin lỗi lịch sự vì không có link trực tiếp và hướng dẫn người học nhìn lên thanh Navbar phía trên để bấm vào mục tương ứng.
 5. Nếu có SQL_DATA:
    - Sử dụng dữ liệu này khi trả lời câu hỏi về Course và Skill.
    - Không tự tạo Course hoặc Skill không tồn tại trong dữ liệu.
+   - Nếu câu hỏi liên quan đến số lượng module, bài học, tuần học của khóa học, hãy kiểm tra kỹ trường 'modules' và 'description' trong dữ liệu Course để trả lời chính xác, TUYỆT ĐỐI không nói rằng hệ thống không lưu trữ hoặc phỏng đoán số lượng module khác khi dữ liệu đã có.
    - Nếu found = false, thông báo rằng hệ thống không tìm thấy dữ liệu phù hợp.
 6. Nếu có RAG_DATA:
    - Ưu tiên nội dung tài liệu được truy xuất.

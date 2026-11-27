@@ -572,6 +572,12 @@ def extract_entity_by_rules(user_message: str, intent: str) -> dict:
     if intent == "course_search":
         return extract_course_search_entity(user_message)
 
+    if intent == "course_web_search":
+        return extract_course_web_search_entity(user_message)
+
+    if intent == "course_recommendation":
+        return extract_course_recommendation_entity(user_message)
+
     if intent == "skill_review":
         return extract_skill_review_entity(user_message)
 
@@ -690,4 +696,164 @@ Câu hỏi:
     return {
         "entity_type": entity_type,
         "entity_name": entity_name,
+    }
+
+
+def extract_course_web_search_entity(user_message: str) -> dict:
+    """
+    Trích xuất tên khóa học và tổ chức trong các câu hỏi về giáo trình, module, bài học, chi tiết khóa học.
+    """
+    text = normalize_text(user_message)
+    MODULE_KW = r"(?:modules?|moudules?|moudles?|moduls?)"
+
+    # 0. Mẫu "chi tiết [về] khóa [học] <Tên>"
+    m_detail = re.search(
+        r"(?:chi\s*tiet|thong\s*tin\s*chi\s*tiet|noi\s*dung\s*chi\s*tiet)\s+(?:ve\s+)?(?:khoa\s*hoc|khoa|course|courses)?\s*(.+?)[?.!]*$",
+        text,
+        flags=re.IGNORECASE,
+    )
+    if m_detail:
+        c_raw = m_detail.group(1).strip()
+        c_raw = re.sub(r"^(?:ve\s+|cho\s+|khoa\s*hoc\s+|khoa\s+|course\s+)+", "", c_raw, flags=re.IGNORECASE).strip()
+        c_name = finalize_entity(c_raw)
+        if c_name and not is_generic_entity(c_name):
+            return {
+                "entity_type": "course",
+                "entity_name": c_name,
+                "organization": None,
+            }
+
+    # 0.1 Mẫu "các module / bài học [có] trong [khóa học] <Tên>"
+    m_mod = re.search(
+        r"(?:cac\s+|nhung\s+)?(?:" + MODULE_KW + r"|bai hoc|tuan hoc|giao trinh|de cuong)\s+(?:co\s+)?(?:trong|cua)\s+(?:khoa\s*hoc|khoa|course|courses)?\s*(.+?)(?:\s+(?:cua|boi|tu)\s+([a-z0-9\s]+?))?[?.!]*$",
+        text,
+        flags=re.IGNORECASE,
+    )
+    if m_mod:
+        c_raw = m_mod.group(1).strip()
+        c_raw = re.sub(r"^(?:khoa\s*hoc|khoa|course|courses|nay|do|ve)\s+", "", c_raw, flags=re.IGNORECASE).strip()
+        c_name = finalize_entity(c_raw)
+        org_name = m_mod.group(2).strip() if m_mod.group(2) else None
+        if c_name and not is_generic_entity(c_name):
+            return {
+                "entity_type": "course",
+                "entity_name": c_name,
+                "organization": org_name,
+            }
+
+    # 1. Thử bóc tách theo mẫu "khóa [học] <Tên> [của <Tổ chức>] [gồm/có...]"
+    m = re.search(
+        r"(?:khoa\s*hoc|khoa|course|courses)\s+(.+?)(?:\s+(?:cua|boi|tu)\s+([a-z0-9\s]+?))?\s+(?:co\s+nhung|gom\s+nhung|co\s+may|co|gom|chua|la|syllabus|curriculum|module|modules|tuan|bai hoc)\b",
+        text,
+        flags=re.IGNORECASE,
+    )
+    if m:
+        c_raw = m.group(1).strip()
+        c_raw = re.sub(r"^(?:nay\s+|do\s+|ve\s+)+", "", c_raw, flags=re.IGNORECASE).strip()
+        c_name = finalize_entity(c_raw)
+        org_name = m.group(2).strip() if m.group(2) else None
+        if c_name and not is_generic_entity(c_name):
+            return {
+                "entity_type": "course",
+                "entity_name": c_name,
+                "organization": org_name,
+            }
+
+    # 2. Mẫu "giao trinh / syllabus [cua] khoa [hoc] <Tên> [của <Tổ chức>] [gồm...]"
+    m2 = re.search(
+        r"(?:giao trinh|syllabus|curriculum|de cuong|cac " + MODULE_KW + r"|nhung " + MODULE_KW + r"|lo trinh bai hoc|cac bai hoc|danh sach bai hoc|bai giang|noi dung chi tiet cac tuan|noi dung cac tuan)\s+(?:cua\s+)?(?:khoa\s*hoc|khoa|course|courses)?\s*(.+?)(?:\s+(?:cua|boi|tu)\s+([a-z0-9\s]+?))?(?:\s+(?:co|gom|chua|la|nhu|de)[?.!]*$|[?.!]*$)",
+        text,
+        flags=re.IGNORECASE,
+    )
+    if m2:
+        c_raw = m2.group(1).strip()
+        c_raw = re.sub(r"^(?:khoa\s*hoc|khoa|course|courses|nay|do|ve)\s+", "", c_raw, flags=re.IGNORECASE).strip()
+        c_name = finalize_entity(c_raw)
+        org_name = m2.group(2).strip() if m2.group(2) else None
+        if c_name and not is_generic_entity(c_name):
+            return {
+                "entity_type": "course",
+                "entity_name": c_name,
+                "organization": org_name,
+            }
+
+    # 3. Loại bỏ các từ khóa syllabus/curriculum rồi tìm tên khóa
+    cleaned = re.sub(
+        r"\b(?:giao trinh|syllabus|curriculum|de cuong chi tiet|de cuong|cac " + MODULE_KW + r"|nhung " + MODULE_KW + r"|" + MODULE_KW + r"|cac tuan hoc|tuan hoc|tuan|lo trinh bai hoc|cac bai hoc|danh sach bai hoc|bai hoc|noi dung chi tiet|noi dung cac tuan|gom nhung gi|co nhung gi|co gi|la gi|nhu the nao|gom nhung module nao|co nhung module nao|co may module|bao nhieu module|co bao nhieu module|may module|co may|co bao nhieu|bao nhieu|may|cho toi biet|cho minh biet|cho hoi|hoi|xem|co trong|trong|cua|ve|nay|do|kia|a|ha|nhi|the|vay|chi tiet|thong tin chi tiet|thong tin|noi dung)\b",
+        "",
+        text,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(r"\b(?:khoa\s*hoc|khoa|course|courses|so|thu)\b", "", cleaned, flags=re.IGNORECASE).strip(" ?:.,!")
+    c_final = finalize_entity(cleaned)
+    return {
+        "entity_type": "course",
+        "entity_name": c_final if c_final and not is_generic_entity(c_final) else None,
+        "organization": None,
+    }
+
+
+def extract_course_recommendation_entity(user_message: str) -> dict:
+    """
+    Trích xuất mục tiêu học tập, trình độ hoặc kỹ năng trong các câu hỏi gợi ý khóa học.
+    Ví dụ:
+    - Tôi mới học lập trình, nên bắt đầu với khóa học nào? -> entity: Lập trình, level: Beginner
+    - Tôi muốn trở thành Backend Developer, nên học những khóa học nào? -> entity: Backend Developer
+    - Tôi đã biết Python, nên học khóa nào tiếp theo? -> entity: Python, known: Python
+    """
+    text = normalize_text(user_message)
+
+    # Nhận diện cấp độ người học
+    level = None
+    if any(k in text for k in ["moi hoc", "chua biet gi", "chua biet bat dau", "bat dau tu dau", "nguoi moi", "nhap mon", "co ban", "beginner"]):
+        level = "Beginner"
+    elif any(k in text for k in ["nang cao", "chuyen sau", "advanced", "da co kinh nghiem"]):
+        level = "Advanced"
+    elif any(k in text for k in ["trung cap", "intermediate", "da biet co ban"]):
+        level = "Intermediate"
+
+    # Nhận diện vai trò hoặc kỹ năng mục tiêu
+    target_role = None
+    role_match = re.search(
+        r"(?:tro thanh|lam|theo huong|dinh huong)\s+([A-Za-z0-9\s\+\#\.]+?)(?:\s+(?:thi|nen|can|nen hoc|hoc|khoa hoc)|[?.!]*$)",
+        user_message,
+        flags=re.IGNORECASE,
+    )
+    if role_match:
+        target_role = role_match.group(1).strip()
+
+    # Nhận diện kỹ năng đã biết
+    known_skill = None
+    known_match = re.search(
+        r"(?:da biet|da hoc|biet ve|thao tac duoc voi)\s+([A-Za-z0-9\s\+\#\.]+?)(?:\s+(?:thi|nen|roi|can|nen hoc|hoc|khoa hoc)|[?.!]*$)",
+        user_message,
+        flags=re.IGNORECASE,
+    )
+    if known_match:
+        known_skill = known_match.group(1).strip()
+
+    # Lọc entity chính
+    main_entity = target_role or known_skill
+    if not main_entity:
+        for skill in sorted(COMMON_TECH_SKILLS, key=len, reverse=True):
+            if re.search(r"\b" + re.escape(skill) + r"\b", text):
+                main_entity = skill
+                break
+
+    if not main_entity:
+        gen_m = re.search(
+            r"(?:khoa hoc|khoa|course|courses)\s+(?:ve|cho|lien quan den)\s+([A-Za-z0-9\s\+\#\.]+?)[?.!]*$",
+            user_message,
+            flags=re.IGNORECASE,
+        )
+        if gen_m:
+            main_entity = gen_m.group(1).strip()
+
+    final_name = finalize_entity(main_entity) if main_entity else None
+    return {
+        "entity_type": "course" if final_name else "none",
+        "entity_name": final_name if final_name and not is_generic_entity(final_name) else None,
+        "level": level,
+        "target_role": target_role,
+        "known_skill": known_skill,
     }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../../hooks/useAuth.js';
 import { getStoredApiKey } from '../../../api/tutor.api.js';
 import ApiKeyModal from './ApiKeyModal.jsx';
 import styles from '../styles/TutorHeader.module.css';
@@ -9,18 +10,38 @@ import styles from '../styles/TutorHeader.module.css';
  * @param {string} props.topic - Tên chủ đề của phiên
  * @param {string} [props.subtitle] - Ghi chú phụ
  * @param {() => void} [props.onToggleSidebar] - Mở sidebar trên mobile
+ * @param {string} [props.activeSessionId] - ID của phiên hiện tại
+ * @param {(sessionId: string, newTopic: string) => void} [props.onRenameSession] - Hàm đổi tên phiên
  */
 export default function TutorHeader({
   topic = 'Phiên học tập mới',
   subtitle = 'AI Tutor nhớ ngữ cảnh trong phiên này',
   onToggleSidebar,
+  activeSessionId,
+  onRenameSession,
 }) {
+  const { user } = useAuth();
   const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
   const [hasCustomKey, setHasCustomKey] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [headerTitle, setHeaderTitle] = useState(topic);
 
   useEffect(() => {
-    setHasCustomKey(Boolean(getStoredApiKey()));
-  }, []);
+    setHasCustomKey(Boolean(getStoredApiKey(user?.user_id)));
+  }, [user]);
+
+  useEffect(() => {
+    setHeaderTitle(topic);
+    setIsEditingTitle(false);
+  }, [topic, activeSessionId]);
+
+  const handleSaveHeaderRename = () => {
+    const clean = headerTitle.trim();
+    if (clean && clean !== topic && onRenameSession && activeSessionId) {
+      onRenameSession(activeSessionId, clean);
+    }
+    setIsEditingTitle(false);
+  };
 
   return (
     <>
@@ -38,7 +59,66 @@ export default function TutorHeader({
             </button>
           )}
           <div className={styles.textGroup}>
-            <h1 className={styles.topicTitle}>{topic}</h1>
+            {isEditingTitle ? (
+              <div className={styles.headerEditRow}>
+                <input
+                  type="text"
+                  className={styles.headerRenameInput}
+                  value={headerTitle}
+                  onChange={(e) => setHeaderTitle(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveHeaderRename();
+                    if (e.key === 'Escape') {
+                      setHeaderTitle(topic);
+                      setIsEditingTitle(false);
+                    }
+                  }}
+                  onBlur={handleSaveHeaderRename}
+                  autoFocus
+                  maxLength={100}
+                />
+                <button
+                  type="button"
+                  className={styles.headerSaveBtn}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={handleSaveHeaderRename}
+                  title="Lưu tên"
+                  aria-label="Lưu tên"
+                >
+                  ✓
+                </button>
+              </div>
+            ) : (
+              <div className={styles.titleWithEdit}>
+                <h1 className={styles.topicTitle} title={topic}>{topic}</h1>
+                {onRenameSession && activeSessionId && (
+                  <button
+                    type="button"
+                    className={styles.headerRenameBtn}
+                    onClick={() => {
+                      setHeaderTitle(topic);
+                      setIsEditingTitle(true);
+                    }}
+                    title="Đổi tên phiên chat"
+                    aria-label="Đổi tên phiên chat"
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            )}
             <p className={styles.subtitle}>{subtitle}</p>
           </div>
         </div>
@@ -61,6 +141,7 @@ export default function TutorHeader({
         isOpen={isKeyModalOpen}
         onClose={() => setIsKeyModalOpen(false)}
         onKeyChanged={(hasKey) => setHasCustomKey(hasKey)}
+        userId={user?.user_id}
       />
     </>
   );

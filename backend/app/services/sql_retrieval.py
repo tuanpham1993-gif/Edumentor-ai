@@ -44,6 +44,8 @@ def course_to_dict(course: Courses) -> dict:
         "rating": course.rating,
         "num_reviews": course.num_reviews,
         "num_enrolled": course.num_enrolled,
+        "modules": getattr(course, "modules", None),
+        "schedule": getattr(course, "schedule", None),
         "url": course.url,
         "image": course.image,
     }
@@ -237,17 +239,15 @@ def search_skills(
 # 4. TÌM MỘT COURSE
 # ==========================================
 
-def find_course(db: Session, course_name: str):
-
-    if not isinstance(course_name, str) or not course_name.strip():
+def find_course(db: Session, course_name: str = "", title: str | None = None):
+    name = (title if title is not None else course_name).strip()
+    if not name:
         return None
-
-    course_name = course_name.strip()
 
     # Ưu tiên tên chính xác
     course = db.execute(
         select(Courses).where(
-            Courses.title.ilike(course_name)
+            Courses.title.ilike(name)
         )
     ).scalars().first()
 
@@ -258,7 +258,7 @@ def find_course(db: Session, course_name: str):
     return db.execute(
         select(Courses)
         .where(
-            Courses.title.ilike(f"%{course_name}%")
+            Courses.title.ilike(f"%{name}%")
         )
         .order_by(Courses.title)
         .limit(1)
@@ -426,30 +426,30 @@ def get_related_skills(
 
 def search_courses(
     db: Session,
-    keyword: str,
+    keyword: str = "",
+    query: str | None = None,
     limit: int = MAX_COURSES,
 ) -> list:
-
-    if not isinstance(keyword, str) or not keyword.strip():
+    kw = (query if query is not None else keyword).strip()
+    if not kw:
         return []
 
-    keyword = keyword.strip()
     limit = max(1, min(limit, MAX_COURSES))
 
     clean_kw = re.sub(
         r"\(.*?\)",
         "",
-        keyword,
+        kw,
     ).strip()
 
     if not clean_kw:
-        clean_kw = keyword
+        clean_kw = kw
 
     courses = db.execute(
         select(Courses)
         .where(
             or_(
-                Courses.title.ilike(f"%{keyword}%"),
+                Courses.title.ilike(f"%{kw}%"),
                 Courses.title.ilike(f"%{clean_kw}%"),
             )
         )

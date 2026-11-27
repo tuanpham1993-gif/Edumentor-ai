@@ -37,7 +37,7 @@ const DEFAULT_WELCOME_MESSAGE = {
 export default function TutorFloatingWidget() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { status } = useAuth();
+  const { status, user } = useAuth();
   const isAuthenticated = status === 'authenticated';
 
   const [isOpen, setIsOpen] = useState(false);
@@ -51,8 +51,8 @@ export default function TutorFloatingWidget() {
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    setHasCustomKey(Boolean(tutorApi.getStoredApiKey()));
-  }, []);
+    setHasCustomKey(Boolean(tutorApi.getStoredApiKey(user?.user_id)));
+  }, [user]);
 
   // Tự động cuộn xuống đáy khi có tin nhắn mới
   useEffect(() => {
@@ -317,6 +317,7 @@ export default function TutorFloatingWidget() {
         isOpen={isKeyModalOpen}
         onClose={() => setIsKeyModalOpen(false)}
         onKeyChanged={(hasKey) => setHasCustomKey(hasKey)}
+        userId={user?.user_id}
       />
     </>
   );

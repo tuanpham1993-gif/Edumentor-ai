@@ -105,7 +105,24 @@ export default function TutorPage() {
     }
   };
 
-  // 5. Gửi tin nhắn (từ Input Bar hoặc từ Suggested Prompts)
+  // 5. Đổi tên phiên trò chuyện
+  const handleRenameSession = async (sessionId, newTopic) => {
+    const trimmed = (newTopic || '').trim();
+    if (!trimmed) return;
+    try {
+      const updated = await tutorApi.renameChatSession(sessionId, trimmed);
+      setSessions((prev) =>
+        prev.map((s) => (s.session_id === sessionId ? { ...s, topic: updated.topic } : s))
+      );
+      if (activeSessionId === sessionId) {
+        setActiveSession((prev) => (prev ? { ...prev, topic: updated.topic } : prev));
+      }
+    } catch (err) {
+      console.error('Không thể đổi tên phiên chat:', err);
+    }
+  };
+
+  // 6. Gửi tin nhắn (từ Input Bar hoặc từ Suggested Prompts)
   const handleSendMessage = async (userText) => {
     if (!userText.trim() || isLoading) return;
 
@@ -149,7 +166,7 @@ export default function TutorPage() {
       };
       setMessages((prev) => [...prev, assistantMsg]);
 
-      // Nếu phiên đang mang tên mặc định, đổi tiêu đề theo câu hỏi đầu tiên
+      // Nếu phiên đang mang tên mặc định, đổi tiêu đề theo câu hỏi đầu tiên và lưu vào DB
       if (
         activeSession?.topic === 'Phiên học tập mới' ||
         sessions.find((s) => s.session_id === targetSessionId)?.topic === 'Phiên học tập mới'
@@ -161,6 +178,7 @@ export default function TutorPage() {
           )
         );
         setActiveSession((prev) => (prev ? { ...prev, topic: newTopic } : prev));
+        tutorApi.renameChatSession(targetSessionId, newTopic).catch(() => {});
       }
     } catch (err) {
       console.error('Lỗi khi trò chuyện với AI Tutor:', err);
@@ -191,6 +209,7 @@ export default function TutorPage() {
         }}
         onCreateNewSession={handleCreateNewSession}
         onDeleteSession={handleDeleteSession}
+        onRenameSession={handleRenameSession}
         isOpenMobile={isOpenMobile}
         onCloseMobile={() => setIsOpenMobile(false)}
       />
@@ -201,6 +220,8 @@ export default function TutorPage() {
           topic={activeSession?.topic || 'AI Tutor - Trợ lý học tập'}
           subtitle="AI Tutor nhớ ngữ cảnh trong phiên này"
           onToggleSidebar={() => setIsOpenMobile((prev) => !prev)}
+          activeSessionId={activeSessionId}
+          onRenameSession={handleRenameSession}
         />
 
         {/* Khung cuộn tin nhắn */}

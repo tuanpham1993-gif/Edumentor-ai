@@ -13,6 +13,8 @@ ALLOWED_INTENTS = {
     "course_question",
     "course_review",
     "course_search",
+    "course_recommendation",
+    "course_web_search",
     "course_enrollment_link",
     "system_operation",
     "code_help",
@@ -59,6 +61,8 @@ TASK_TYPES = {
     "knowledge_question",
     "course_name_search",
     "course_semantic_search",
+    "course_recommendation",
+    "course_web_search",
     "skill_name_search",
     "skill_semantic_search",
     "organization_search",
@@ -93,6 +97,8 @@ ENTITY_REQUIRED_INTENTS = {
     "course_question",
     "course_review",
     "course_search",
+    "course_recommendation",
+    "course_web_search",
     "course_enrollment_link",
 }
 
@@ -106,6 +112,8 @@ RETRIEVAL_STRATEGIES = {
     "sql_qdrant",
     "sql_gemini",
     "qdrant_gemini",
+    "sql_qdrant_gemini",
+    "sql_web_gemini",
 }
 
 # Unified mapping from strategy to modes
@@ -116,6 +124,8 @@ STRATEGY_TO_MODES = {
     "sql_qdrant": ["sql", "qdrant"],
     "sql_gemini": ["sql", "gemini"],
     "qdrant_gemini": ["qdrant", "gemini"],
+    "sql_qdrant_gemini": ["sql", "qdrant", "gemini"],
+    "sql_web_gemini": ["sql", "web", "gemini"],
 }
 
 # Legacy retrieval modes map for backward compatibility
@@ -126,6 +136,8 @@ RETRIEVAL_MAP = {
     "course_question": ["sql", "gemini"],
     "course_review": ["sql", "gemini"],
     "course_search": ["sql", "qdrant"],
+    "course_recommendation": ["sql", "qdrant", "gemini"],
+    "course_web_search": ["sql", "web", "gemini"],
     "course_enrollment_link": ["sql"],
     "system_operation": ["gemini"],
     "code_help": ["gemini"],
@@ -248,6 +260,22 @@ GENERIC_ENTITIES = {
     "ha",
     "nhi",
     "vay",
+    "may",
+    "bao nhieu",
+    "co may",
+    "co bao nhieu",
+    "may module",
+    "bao nhieu module",
+    "may tuan",
+    "bao nhieu tuan",
+    "module",
+    "modules",
+    "tuan",
+    "bai hoc",
+    "chuong",
+    "phan",
+    "nay co may",
+    "do co may",
 }
 
 # ==========================================

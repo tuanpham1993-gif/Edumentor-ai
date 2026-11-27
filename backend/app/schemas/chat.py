@@ -6,6 +6,10 @@ class ChatSessionCreate(BaseModel):
     topic: str | None = None
 
 
+class ChatSessionUpdate(BaseModel):
+    topic: str = Field(min_length=1, max_length=255)
+
+
 class ChatMessageCreate(BaseModel):
     content: str = Field(min_length=1, max_length=5000)
     api_key: str | None = Field(default=None, max_length=200)

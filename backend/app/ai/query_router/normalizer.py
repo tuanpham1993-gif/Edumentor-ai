@@ -29,6 +29,10 @@ def normalize_text(text: str) -> str:
     # Tách khoảng cách nếu dấu câu/ngoặc bị viết liền với từ (ví dụ: (a11y)trong -> (a11y) trong)
     text = re.sub(r"([)\]}>,;!?])([a-zA-Z0-9_À-ỹ])", r"\1 \2", text)
     text = re.sub(r"([a-zA-Z0-9_À-ỹ])([(<\[{])", r"\1 \2", text)
+    # Tách từ nếu bị dính liền với từ khóa khóa học (ví dụ: khoahocBusiness -> khoa hoc Business)
+    text = re.sub(r"(khoa\s*hoc)([A-Za-zÀ-ỹ])", r"\1 \2", text, flags=re.IGNORECASE)
+    text = re.sub(r"(course|courses)([A-Za-zÀ-ỹ])", r"\1 \2", text, flags=re.IGNORECASE)
+    text = re.sub(r"(mon\s*hoc)([A-Za-zÀ-ỹ])", r"\1 \2", text, flags=re.IGNORECASE)
     text = text.lower().strip()
     text = remove_accents(text)
     text = re.sub(r"\s+", " ", text)
@@ -137,6 +141,11 @@ def clean_entity_name(entity_name: str) -> str:
     leading_particles = [
         r"^(?:con\s+|co\s+)?(?:ky\s+nang|skill|skills)\s+",
         r"^(?:con\s+|co\s+)?(?:khoa\s+hoc|course|courses)\s+",
+        r"^(?:co\s+trong|co\s+o|trong|o|tai)\s+",
+        r"^(?:thong\s+tin\s+chi\s+tiet|chi\s+tiet)\s+(?:ve\s+)?(?:khoa\s+hoc|khoa|course)?\s*",
+        r"^(?:cac\s+|nhung\s+)?(?:modules?|moudules?|moudles?|moduls?)\s+(?:co\s+trong|trong|cua)\s*",
+        r"^(?:cac\s+|nhung\s+)?(?:modules?|moudules?|moudles?|moduls?)\s+",
+        r"^hoc\s*",
         r"^(?:co\s+|con\s+|chua\s+|day\s+|giang\s+day\s+|chuyen\s+ve\s+|ve\s+|cho\s+|lien\s+quan\s+(?:den|toi|ve)\s+|lien\s+quan\s+)",
         r"^(?:related\s+to\s+|related\s+|about\s+|on\s+|for\s+)",
         r"^(?:skills?\s+(?:related\s+to|about|on)\s+)",
@@ -197,6 +206,11 @@ def clean_entity_name(entity_name: str) -> str:
         "chua",
         "the",
         "vay",
+        "hoc",
+        "so",
+        "thu",
+        "chi tiet",
+        "thong tin",
     }
     if remove_accents(name).strip() in standalone_noise:
         return ""
@@ -210,6 +224,10 @@ def is_generic_entity(entity_name: str) -> bool:
         return True
     normalized = normalize_text(entity_name)
     if normalized in GENERIC_ENTITIES:
+        return True
+    if re.search(r"^(?:so|thu)?\s*[0-9]+$", normalized):
+        return True
+    if normalized in ("hoc", "so", "thu", "may", "bao nhieu", "khoa", "khoa hoc"):
         return True
     generic_patterns = [
         "phu hop",

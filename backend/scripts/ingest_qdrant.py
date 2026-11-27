@@ -1,17 +1,16 @@
 """
 EduMentor AI - Data Ingestion Service
-Rebuilds Qdrant vector databases for Courses and Skills from raw JSON datasets.
-
-Collections:
-- edumentor_courses: Vector representation of courses (title, level, org, skills, description)
-- edumentor_skills: Vector representation of skills enriched with related course context
+Directly ingests embeddings from PostgreSQL database tables into Qdrant collections:
+- `courses` table (Model: Courses) -> `edumentor_courses`
+- `skills` table (Model: Skills) -> `edumentor_skills` & `tutor_skills`
+- `course_skill` table (Model: CourseSkill)
+- `skill_relation` table (Model: SkillRelation)
 
 Embedding Model:
-- sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 (dim=384, cosine)
+- sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 (dim=384, Cosine)
 """
 
 import argparse
-import json
 import logging
 import os
 import sys
@@ -21,10 +20,16 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, PointStruct, VectorParams
+from qdrant_client.models import Distance, Filter, PointStruct, VectorParams
 from sentence_transformers import SentenceTransformer
 
-# Setup basic logging
+# Add backend directory to sys.path
+_current_file_dir = Path(__file__).resolve().parent
+_backend_dir = _current_file_dir.parent
+if str(_backend_dir) not in sys.path:
+    sys.path.insert(0, str(_backend_dir))
+
+# Setup logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -40,9 +45,18 @@ MAX_SEQ_LENGTH = 128
 DEFAULT_BATCH_SIZE = 128
 
 COURSE_COLLECTION_NAME = "edumentor_courses"
-SKILL_COLLECTION_NAME = "tutor_skills"
+SKILL_COLLECTION_NAME = "edumentor_skills"
+TUTOR_SKILL_COLLECTION_NAME = "tutor_skills"
 
-# Stable Point ID Generators
+TABLE_COURSES = "courses"
+TABLE_SKILLS = "skills"
+TABLE_COURSE_SKILL = "course_skill"
+TABLE_SKILL_RELATION = "skill_relation"
+
+
+# ==========================================
+# STABLE POINT ID GENERATORS (UUID5)
+# ==========================================
 def generate_course_point_id(course_id: int) -> str:
     """Generate deterministic UUID for course point based on course_id."""
     return str(uuid5(NAMESPACE_URL, f"edumentor-course:{course_id}"))
@@ -54,220 +68,179 @@ def generate_skill_point_id(skill_id: int) -> str:
 
 
 # ==========================================
-# PATH RESOLUTION & DATA LOADING
+# POSTGRESQL DATA LOADING (EXCLUSIVE SOURCE)
 # ==========================================
-def find_data_dir() -> Path:
+def load_datasets_from_postgres(db_session=None) -> dict[str, Any]:
     """
-    Locates the directory containing the 4 JSON datasets.
-    Supports DATA_DIR env var, Docker paths (/app/datajson, /app/data),
-    and local development paths.
+    Loads all datasets directly from PostgreSQL database tables:
+    - courses
+    - skills
+    - course_skill
+    - skill_relation
     """
-    env_dir = os.environ.get("DATA_DIR")
-    if env_dir:
-        p = Path(env_dir)
-        if p.is_dir():
-            return p
+    from app.core.database import SessionLocal
+    from app.models.course import Courses
+    from app.models.skill import Skills
+    from app.models.course_skill import CourseSkill
+    from app.models.skill_relation import SkillRelation
 
-    current_file_dir = Path(__file__).resolve().parent  # backend/scripts
-    backend_dir = current_file_dir.parent               # backend
-    project_root = backend_dir.parent                  # repo root
+    close_session = False
+    if db_session is None:
+        db_session = SessionLocal()
+        close_session = True
 
-    candidate_dirs = [
-        Path("/app/datajson"),
-        Path("/app/data"),
-        project_root / "datajson",
-        project_root / "data",
-        backend_dir / "datajson",
-        backend_dir / "data",
-        Path("datajson"),
-        Path("../datajson"),
-        Path("data"),
-        Path("../data"),
-    ]
+    try:
+        logger.info(f"Reading from PostgreSQL table '{TABLE_COURSES}'...")
+        c_records = db_session.query(Courses).all()
+        courses_raw = [
+            {
+                "course_id": c.course_id,
+                "title": c.title,
+                "num_enrolled": c.num_enrolled,
+                "rating": c.rating,
+                "num_reviews": c.num_reviews,
+                "instructor": c.instructor,
+                "organization": c.organization,
+                "description": c.description,
+                "modules": c.modules,
+                "level": c.level,
+                "schedule": c.schedule,
+                "url": c.url,
+                "image": c.image,
+            }
+            for c in c_records
+        ]
 
-    for candidate in candidate_dirs:
-        if candidate.is_dir():
-            has_course = (candidate / "course_table.json").is_file() or (candidate / "courses.json").is_file()
-            has_skill = (candidate / "skill_table.json").is_file() or (candidate / "skills.json").is_file()
-            if has_course and has_skill:
-                return candidate.resolve()
+        logger.info(f"Reading from PostgreSQL table '{TABLE_SKILLS}'...")
+        s_records = db_session.query(Skills).all()
+        skills_raw = [
+            {
+                "skill_id": s.skill_id,
+                "skill": s.skill,
+                "is_active": s.is_active,
+            }
+            for s in s_records
+        ]
 
-    raise FileNotFoundError(
-        f"Could not locate data directory with course and skill JSON files. "
-        f"Checked candidates: {[str(c) for c in candidate_dirs]}"
-    )
+        logger.info(f"Reading from PostgreSQL table '{TABLE_COURSE_SKILL}'...")
+        cs_records = db_session.query(CourseSkill).all()
+        cs_raw = [
+            {"course_id": cs.course_id, "skill_id": cs.skill_id}
+            for cs in cs_records
+        ]
 
+        logger.info(f"Reading from PostgreSQL table '{TABLE_SKILL_RELATION}'...")
+        sr_records = db_session.query(SkillRelation).all()
+        sr_raw = [
+            {
+                "from_skill_id": sr.from_skill_id,
+                "to_skill_id": sr.to_skill_id,
+                "relation_type": sr.relation_type,
+            }
+            for sr in sr_records
+        ]
 
-def load_single_json(directory: Path, primary_name: str, fallback_name: str) -> tuple[list[dict[str, Any]], str]:
-    """Loads a JSON file with primary or fallback name from directory."""
-    p1 = directory / primary_name
-    if p1.is_file():
-        with open(p1, "r", encoding="utf-8") as f:
-            return json.load(f), primary_name
-
-    p2 = directory / fallback_name
-    if p2.is_file():
-        with open(p2, "r", encoding="utf-8") as f:
-            return json.load(f), fallback_name
-
-    raise FileNotFoundError(
-        f"Neither '{primary_name}' nor '{fallback_name}' found in {directory}"
-    )
-
-
-def load_all_datasets(data_dir: Path) -> dict[str, Any]:
-    """Loads all 4 datasets from the target directory."""
-    courses_raw, c_name = load_single_json(data_dir, "course_table.json", "courses.json")
-    skills_raw, s_name = load_single_json(data_dir, "skill_table.json", "skills.json")
-    cs_raw, cs_name = load_single_json(data_dir, "course_skill_relation.json", "course_skills.json")
-    sr_raw, sr_name = load_single_json(data_dir, "skill_relation.json", "skill_relationships.json")
-
-    return {
-        "courses": courses_raw,
-        "skills": skills_raw,
-        "course_skills": cs_raw,
-        "skill_relations": sr_raw,
-        "filenames": {
-            "courses": c_name,
-            "skills": s_name,
-            "course_skills": cs_name,
-            "skill_relations": sr_name,
-        },
-    }
+        return {
+            "courses": courses_raw,
+            "skills": skills_raw,
+            "course_skill": cs_raw,
+            "skill_relation": sr_raw,
+            # Convenient aliases
+            "course_skills": cs_raw,
+            "skill_relations": sr_raw,
+            "source": "postgresql",
+        }
+    finally:
+        if close_session:
+            db_session.close()
 
 
 # ==========================================
-# VALIDATION
+# VALIDATION & INTEGRITY CHECKING
 # ==========================================
 def validate_datasets(datasets: dict[str, Any]) -> dict[str, Any]:
     """
-    Validates integrity of the 4 datasets:
-    - Unique IDs
-    - Presence of required fields
-    - Foreign key referential integrity
-    Returns organized mappings for embedding construction.
+    Validates integrity of database records and constructs relational mappings:
+    - course_to_skills
+    - skill_to_courses
+    - skill_relations_map
     """
-    courses_raw = datasets["courses"]
-    skills_raw = datasets["skills"]
-    cs_raw = datasets["course_skills"]
-    sr_raw = datasets["skill_relations"]
+    courses_raw = datasets.get("courses") or []
+    skills_raw = datasets.get("skills") or []
+    cs_raw = datasets.get("course_skill") or datasets.get("course_skills") or []
+    sr_raw = datasets.get("skill_relation") or datasets.get("skill_relations") or []
 
-    if not isinstance(courses_raw, list) or not courses_raw:
-        raise ValueError("courses dataset must be a non-empty list.")
-    if not isinstance(skills_raw, list) or not skills_raw:
-        raise ValueError("skills dataset must be a non-empty list.")
+    if not courses_raw:
+        raise ValueError(f"Table '{TABLE_COURSES}' has no records.")
+    if not skills_raw:
+        raise ValueError(f"Table '{TABLE_SKILLS}' has no records.")
 
-    # 1. Validate Courses
+    # 1. Index Courses by ID
     courses_by_id: dict[int, dict[str, Any]] = {}
-    missing_course_id = 0
-    missing_course_title = 0
-
-    for idx, c in enumerate(courses_raw):
+    for c in courses_raw:
         cid = c.get("course_id")
-        if cid is None:
-            missing_course_id += 1
-            continue
-        try:
-            cid = int(cid)
-        except (ValueError, TypeError):
-            missing_course_id += 1
-            continue
+        if cid is not None and c.get("title"):
+            courses_by_id[int(cid)] = c
 
-        if cid in courses_by_id:
-            logger.warning(f"Duplicate course_id detected: {cid}. Overwriting.")
-
-        if not c.get("title"):
-            missing_course_title += 1
-
-        courses_by_id[cid] = c
-
-    if missing_course_id > 0:
-        logger.warning(f"Found {missing_course_id} course records with missing/invalid course_id.")
-    if missing_course_title > 0:
-        logger.warning(f"Found {missing_course_title} course records with empty title.")
-
-    # 2. Validate Skills
+    # 2. Index Skills by ID
     skills_by_id: dict[int, dict[str, Any]] = {}
-    missing_skill_id = 0
-    missing_skill_name = 0
-
-    for idx, s in enumerate(skills_raw):
+    for s in skills_raw:
         sid = s.get("skill_id")
-        if sid is None:
-            missing_skill_id += 1
-            continue
-        try:
-            sid = int(sid)
-        except (ValueError, TypeError):
-            missing_skill_id += 1
-            continue
+        if sid is not None and s.get("skill"):
+            skills_by_id[int(sid)] = s
 
-        sname = s.get("skill")
-        if not sname or not str(sname).strip():
-            missing_skill_name += 1
-
-        skills_by_id[sid] = s
-
-    if missing_skill_id > 0:
-        logger.warning(f"Found {missing_skill_id} skill records with missing/invalid skill_id.")
-    if missing_skill_name > 0:
-        logger.warning(f"Found {missing_skill_name} skill records with empty skill name.")
-
-    # 3. Validate Course-Skill Relations & Build Bi-directional Mappings
+    # 3. Build Course <-> Skill Mappings
     course_to_skills: dict[int, list[str]] = {}
     skill_to_courses: dict[int, list[dict[str, Any]]] = {}
-    invalid_cs_cid = 0
-    invalid_cs_sid = 0
-
     for cs in cs_raw:
         cid = cs.get("course_id")
         sid = cs.get("skill_id")
-        sname = cs.get("skill")
-
+        if cid is None or sid is None:
+            continue
         try:
-            cid = int(cid) if cid is not None else None
-            sid = int(sid) if sid is not None else None
+            cid, sid = int(cid), int(sid)
         except (ValueError, TypeError):
             continue
 
-        if cid is None or cid not in courses_by_id:
-            invalid_cs_cid += 1
-            continue
-        if sid is None or sid not in skills_by_id:
-            invalid_cs_sid += 1
-            continue
+        if cid in courses_by_id and sid in skills_by_id:
+            sname = skills_by_id[sid].get("skill")
+            if sname:
+                course_to_skills.setdefault(cid, []).append(sname)
+            skill_to_courses.setdefault(sid, []).append(courses_by_id[cid])
 
-        skill_text = sname or skills_by_id[sid].get("skill") or ""
-        if skill_text:
-            course_to_skills.setdefault(cid, []).append(skill_text)
-
-        course_obj = courses_by_id[cid]
-        skill_to_courses.setdefault(sid, []).append(course_obj)
-
-    # 4. Validate Skill Relationships
-    invalid_sr_refs = 0
+    # 4. Build Skill Relationships Map
+    skill_relations_map: dict[int, dict[str, list[str]]] = {}
     for sr in sr_raw:
         fid = sr.get("from_skill_id")
         tid = sr.get("to_skill_id")
-        try:
-            fid = int(fid) if fid is not None else None
-            tid = int(tid) if tid is not None else None
-        except (ValueError, TypeError):
-            invalid_sr_refs += 1
+        rtype = str(sr.get("relation_type") or "related").strip().lower()
+        if fid is None or tid is None:
             continue
-        if fid not in skills_by_id or tid not in skills_by_id:
-            invalid_sr_refs += 1
+        try:
+            fid, tid = int(fid), int(tid)
+        except (ValueError, TypeError):
+            continue
+
+        if fid in skills_by_id and tid in skills_by_id:
+            tname = skills_by_id[tid].get("skill")
+            if tname:
+                skill_relations_map.setdefault(fid, {"prerequisites": [], "related": []})
+                if rtype == "prerequisite":
+                    skill_relations_map[fid]["prerequisites"].append(tname)
+                else:
+                    skill_relations_map[fid]["related"].append(tname)
 
     return {
         "courses_by_id": courses_by_id,
         "skills_by_id": skills_by_id,
         "course_to_skills": course_to_skills,
         "skill_to_courses": skill_to_courses,
+        "skill_relations_map": skill_relations_map,
         "stats": {
             "valid_courses": len(courses_by_id),
             "valid_skills": len(skills_by_id),
-            "valid_course_skills": len(cs_raw) - invalid_cs_cid - invalid_cs_sid,
-            "valid_skill_relations": len(sr_raw) - invalid_sr_refs,
+            "valid_course_skill": len(cs_raw),
+            "valid_skill_relation": len(sr_raw),
             "skills_with_courses": len(skill_to_courses),
             "skills_without_courses": len(skills_by_id) - len(skill_to_courses),
         },
@@ -275,7 +248,7 @@ def validate_datasets(datasets: dict[str, Any]) -> dict[str, Any]:
 
 
 # ==========================================
-# EMBEDDING TEXT BUILDERS WITH TOKEN CONTROL
+# EMBEDDING TEXT BUILDERS (TOKEN-BUDGET CONTROLLED)
 # ==========================================
 def build_course_embedding_text(
     course: dict[str, Any],
@@ -283,30 +256,12 @@ def build_course_embedding_text(
     tokenizer: Any,
     max_tokens: int = MAX_SEQ_LENGTH,
 ) -> str:
-    """
-    Builds Course embedding text following Section 4:
-    Course: [title]
-
-    Description:
-    [description]
-
-    Level:
-    [level]
-
-    Organization:
-    [organization]
-
-    Related Skills:
-    [Danh sách Skill liên kết thực tế]
-
-    Strictly manages token length with tokenizer to never exceed max_tokens.
-    """
+    """Builds Course embedding text conforming to the token limit."""
     title = str(course.get("title") or "").strip()
     level = str(course.get("level") or "N/A").strip()
     org = str(course.get("organization") or "N/A").strip()
     desc = str(course.get("description") or "").strip()
 
-    # Deduplicate skills preserving order
     unique_skills = list(dict.fromkeys(related_skills))
     skills_str = ", ".join(unique_skills) if unique_skills else "N/A"
 
@@ -315,26 +270,24 @@ def build_course_embedding_text(
 
     prefix_tokens = tokenizer(prefix, add_special_tokens=False, truncation=False)["input_ids"]
     suffix_tokens = tokenizer(suffix, add_special_tokens=False, truncation=False)["input_ids"]
-    fixed_token_count = len(prefix_tokens) + len(suffix_tokens) + 2  # +2 for CLS and SEP
+    fixed_count = len(prefix_tokens) + len(suffix_tokens) + 2
 
-    # If fixed fields exceed token limit, trim skills until it fits
-    if fixed_token_count >= max_tokens:
+    if fixed_count >= max_tokens:
         trimmed_skills = list(unique_skills)
-        while trimmed_skills and fixed_token_count >= max_tokens:
+        while trimmed_skills and fixed_count >= max_tokens:
             trimmed_skills.pop()
             skills_str = ", ".join(trimmed_skills) if trimmed_skills else "N/A"
             suffix = f"\n\nLevel:\n{level}\n\nOrganization:\n{org}\n\nRelated Skills:\n{skills_str}"
             suffix_tokens = tokenizer(suffix, add_special_tokens=False, truncation=False)["input_ids"]
-            fixed_token_count = len(prefix_tokens) + len(suffix_tokens) + 2
-        desc_token_budget = max(0, max_tokens - fixed_token_count)
+            fixed_count = len(prefix_tokens) + len(suffix_tokens) + 2
+        desc_budget = max(0, max_tokens - fixed_count)
     else:
-        desc_token_budget = max_tokens - fixed_token_count
+        desc_budget = max_tokens - fixed_count
 
-    # Truncate description to fit exactly in remaining token budget
-    if desc and desc_token_budget > 0:
+    if desc and desc_budget > 0:
         desc_tokens = tokenizer(desc, add_special_tokens=False, truncation=False)["input_ids"]
-        if len(desc_tokens) > desc_token_budget:
-            truncated_desc = tokenizer.decode(desc_tokens[:desc_token_budget], skip_special_tokens=True).strip()
+        if len(desc_tokens) > desc_budget:
+            truncated_desc = tokenizer.decode(desc_tokens[:desc_budget], skip_special_tokens=True).strip()
         else:
             truncated_desc = desc
     else:
@@ -349,22 +302,7 @@ def build_skill_embedding_text(
     tokenizer: Any,
     max_tokens: int = MAX_SEQ_LENGTH,
 ) -> str:
-    """
-    Builds Skill embedding text following Section 5:
-    Skill: [Skill name]
-
-    Related Courses:
-
-    1. [Course Title]
-
-    Description:
-    [Course Description]
-
-    2. ...
-
-    If skill has no related courses:
-    Skill: [Skill name]
-    """
+    """Builds Skill embedding text conforming to the token limit."""
     skill_name = str(skill_name or "").strip()
     if not related_courses:
         return f"Skill: {skill_name}"
@@ -377,19 +315,15 @@ def build_skill_embedding_text(
         return f"Skill: {skill_name}"
 
     body_parts = []
-    # Deduplicate courses by course_id
     seen_cids = set()
-    unique_courses = []
-    for c in related_courses:
+    for idx, c in enumerate(related_courses, start=1):
         cid = c.get("course_id")
-        if cid not in seen_cids:
-            seen_cids.add(cid)
-            unique_courses.append(c)
+        if cid in seen_cids:
+            continue
+        seen_cids.add(cid)
 
-    for idx, c in enumerate(unique_courses, start=1):
         ctitle = str(c.get("title") or "").strip()
         cdesc = str(c.get("description") or "").strip()
-
         c_prefix = f"{idx}. {ctitle}\n\nDescription:\n"
         c_prefix_tokens = tokenizer(c_prefix, add_special_tokens=False, truncation=False)["input_ids"]
 
@@ -402,7 +336,6 @@ def build_skill_embedding_text(
         if len(cdesc_tokens) > desc_budget:
             trunc_cdesc = tokenizer.decode(cdesc_tokens[:desc_budget], skip_special_tokens=True).strip()
             body_parts.append(f"{c_prefix}{trunc_cdesc}\n\n")
-            budget = 0
             break
         else:
             body_parts.append(f"{c_prefix}{cdesc}\n\n")
@@ -411,17 +344,14 @@ def build_skill_embedding_text(
                 break
 
     body = "".join(body_parts).strip()
-    if not body:
-        return f"Skill: {skill_name}"
-
-    return f"{header}{body}".strip()
+    return f"{header}{body}".strip() if body else f"Skill: {skill_name}"
 
 
 # ==========================================
 # QDRANT OPERATIONS
 # ==========================================
 def wait_for_qdrant(qdrant_url: str, timeout_seconds: int = 60) -> QdrantClient:
-    """Waits until Qdrant is responsive and healthy."""
+    """Connects to Qdrant and verifies health."""
     client = QdrantClient(url=qdrant_url)
     start_time = time.time()
     last_err = None
@@ -436,37 +366,40 @@ def wait_for_qdrant(qdrant_url: str, timeout_seconds: int = 60) -> QdrantClient:
             last_err = e
             time.sleep(2)
 
-    raise ConnectionError(f"Failed to connect to Qdrant at {qdrant_url} within {timeout_seconds}s. Error: {last_err}")
+    raise ConnectionError(f"Failed to connect to Qdrant at {qdrant_url}: {last_err}")
+
+
+def backup_collection(client: QdrantClient, collection_name: str) -> str | None:
+    """Creates a snapshot backup of the collection if it exists."""
+    try:
+        collections = {c.name for c in client.get_collections().collections}
+        if collection_name in collections:
+            snapshot = client.create_snapshot(collection_name=collection_name, wait=True)
+            snapshot_name = getattr(snapshot, "name", str(snapshot))
+            logger.info(f"Backup snapshot created for '{collection_name}': {snapshot_name}")
+            return str(snapshot_name)
+    except Exception as e:
+        logger.warning(f"Could not create backup snapshot for '{collection_name}': {e}")
+    return None
 
 
 def ensure_collection(client: QdrantClient, collection_name: str, vector_size: int = EMBEDDING_DIMENSION) -> None:
-    """
-    Ensures a Qdrant collection exists with proper VectorParams.
-    If already exists, validates configuration without deleting it.
-    """
-    collections = client.get_collections().collections
-    existing_names = {c.name for c in collections}
-
-    if collection_name in existing_names:
-        info = client.get_collection(collection_name)
-        existing_size = info.config.params.vectors.size
-        existing_distance = info.config.params.vectors.distance
-        if existing_size != vector_size or existing_distance != Distance.COSINE:
-            raise ValueError(
-                f"Collection '{collection_name}' exists but has mismatching configuration: "
-                f"size={existing_size} (expected {vector_size}), distance={existing_distance} (expected COSINE)."
-            )
-        logger.info(f"Collection '{collection_name}' already exists and is valid.")
+    """Ensures collection exists with Cosine distance and correct vector size."""
+    collections = {c.name for c in client.get_collections().collections}
+    if collection_name in collections:
         return
 
     client.create_collection(
         collection_name=collection_name,
-        vectors_config=VectorParams(
-            size=vector_size,
-            distance=Distance.COSINE,
-        ),
+        vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
     )
-    logger.info(f"Created collection '{collection_name}' (size={vector_size}, distance=COSINE).")
+    logger.info(f"Created collection '{collection_name}' (dim={vector_size}, distance=COSINE).")
+
+
+def clear_collection_points(client: QdrantClient, collection_name: str) -> None:
+    """Deletes all existing points from collection while preserving configuration."""
+    logger.info(f"Clearing points in collection '{collection_name}'...")
+    client.delete(collection_name=collection_name, points_selector=Filter(), wait=True)
 
 
 def upsert_points_in_batches(
@@ -475,65 +408,75 @@ def upsert_points_in_batches(
     points: list[PointStruct],
     batch_size: int = DEFAULT_BATCH_SIZE,
 ) -> int:
-    """Upserts points into Qdrant collection in batches."""
-    total = len(points)
-    for start in range(0, total, batch_size):
+    """Upserts points into Qdrant in batches."""
+    for start in range(0, len(points), batch_size):
         batch = points[start : start + batch_size]
-        client.upsert(
-            collection_name=collection_name,
-            points=batch,
-            wait=True,
-        )
-    return total
+        client.upsert(collection_name=collection_name, points=batch, wait=True)
+    return len(points)
 
 
 # ==========================================
-# MAIN INGESTION PIPELINE
+# MAIN INGESTION PIPELINE (PURE POSTGRESQL)
 # ==========================================
 def run_ingestion(
     qdrant_url: str | None = None,
-    data_dir_override: str | None = None,
     batch_size: int = DEFAULT_BATCH_SIZE,
     test_search: bool = False,
+    sync_tutor_skills: bool = True,
+    clear_points: bool = True,
 ) -> int:
     """
-    Executes the full EduMentor AI Data Ingestion pipeline.
+    Executes PostgreSQL -> Qdrant ingestion:
+    1. Read datasets directly from PostgreSQL tables.
+    2. Validate records and build relationships.
+    3. Ensure Qdrant collections exist and clear old points.
+    4. Encode embeddings and upsert deterministic points.
+    5. Verify counts and test search.
     """
     qdrant_url = qdrant_url or os.environ.get("QDRANT_URL", "http://localhost:6335")
 
-    print("\n========== EDUMENTOR DATA INGESTION ==========\n")
+    print("\n=======================================================")
+    print("   EDUMENTOR AI - POSTGRESQL TO QDRANT INGESTION       ")
+    print("=======================================================\n")
 
-    # [1] Loading JSON datasets...
-    print("[1] Loading JSON datasets...")
-    data_dir = Path(data_dir_override) if data_dir_override else find_data_dir()
-    print(f"    Source directory: {data_dir}")
-    datasets = load_all_datasets(data_dir)
-    print(f"    Loaded: {datasets['filenames']['courses']} ({len(datasets['courses'])} records)")
-    print(f"    Loaded: {datasets['filenames']['skills']} ({len(datasets['skills'])} records)")
-    print(f"    Loaded: {datasets['filenames']['course_skills']} ({len(datasets['course_skills'])} relations)")
-    print(f"    Loaded: {datasets['filenames']['skill_relations']} ({len(datasets['skill_relations'])} relations)")
+    # 1. Read PostgreSQL
+    print("[1] Loading datasets from PostgreSQL tables...")
+    datasets = load_datasets_from_postgres()
+    print(f"    - Table '{TABLE_COURSES}':       {len(datasets['courses'])} rows")
+    print(f"    - Table '{TABLE_SKILLS}':        {len(datasets['skills'])} rows")
+    print(f"    - Table '{TABLE_COURSE_SKILL}':  {len(datasets['course_skill'])} rows")
+    print(f"    - Table '{TABLE_SKILL_RELATION}': {len(datasets['skill_relation'])} rows")
 
-    # [2] Validating source records...
-    print("[2] Validating source records...")
+    # 2. Validate
+    print("\n[2] Validating records and building relationships...")
     validated = validate_datasets(datasets)
-    stats = validated["stats"]
-    print(f"    Valid Courses: {stats['valid_courses']}")
-    print(f"    Valid Skills: {stats['valid_skills']}")
-    print(f"    Skills with linked courses: {stats['skills_with_courses']}")
-    print(f"    Skills without linked courses: {stats['skills_without_courses']}")
+    courses_by_id = validated["courses_by_id"]
+    skills_by_id = validated["skills_by_id"]
+    print(f"    - Valid courses: {len(courses_by_id)}")
+    print(f"    - Valid skills:  {len(skills_by_id)}")
 
-    # [5] Loading embedding model early for tokenizer in steps [3] & [4]
-    print("[5] Loading embedding model...")
-    print(f"    Model: {EMBEDDING_MODEL_NAME}")
+    # 3. Connect to Qdrant & Prepare Collections
+    print("\n[3] Connecting to Qdrant...")
+    qdrant_client = wait_for_qdrant(qdrant_url)
+    target_collections = [COURSE_COLLECTION_NAME, SKILL_COLLECTION_NAME]
+    if sync_tutor_skills:
+        target_collections.append(TUTOR_SKILL_COLLECTION_NAME)
+
+    for col in target_collections:
+        backup_collection(qdrant_client, col)
+        ensure_collection(qdrant_client, col, vector_size=EMBEDDING_DIMENSION)
+        if clear_points:
+            clear_collection_points(qdrant_client, col)
+
+    # 4. Load Embedding Model
+    print(f"\n[4] Loading embedding model: {EMBEDDING_MODEL_NAME}...")
     model = SentenceTransformer(EMBEDDING_MODEL_NAME)
     tokenizer = model.tokenizer
-    print(f"    Tokenizer max_seq_length: {model.max_seq_length}, Dimension: {EMBEDDING_DIMENSION}")
 
-    # [3] Building Course embedding texts...
-    print("[3] Building Course embedding texts...")
-    course_items = []
-    course_texts = []
-    for cid, c in validated["courses_by_id"].items():
+    # 5. Ingest Courses
+    print(f"\n[5] Encoding and upserting Courses into '{COURSE_COLLECTION_NAME}'...")
+    course_items, course_texts = [], []
+    for cid, c in courses_by_id.items():
         skills = validated["course_to_skills"].get(cid, [])
         text = build_course_embedding_text(c, skills, tokenizer, max_tokens=MAX_SEQ_LENGTH)
         payload = {
@@ -542,127 +485,81 @@ def run_ingestion(
             "level": str(c.get("level") or "N/A"),
             "organization": str(c.get("organization") or "N/A"),
             "instructor": str(c.get("instructor") or "N/A"),
+            "rating": float(c.get("rating")) if c.get("rating") is not None else None,
+            "num_reviews": int(c.get("num_reviews")) if c.get("num_reviews") is not None else None,
+            "description": str(c.get("description") or ""),
+            "modules": str(c.get("modules") or ""),
+            "schedule": str(c.get("schedule") or ""),
             "url": str(c.get("url") or ""),
+            "skills": skills,
             "num_skills": len(skills),
         }
         course_items.append((cid, payload))
         course_texts.append(text)
-    print(f"    Built {len(course_texts)} course texts.")
 
-    # [4] Building Skill embedding texts...
-    print("[4] Building Skill embedding texts...")
-    skill_items = []
-    skill_texts = []
-    for sid, s in validated["skills_by_id"].items():
+    course_embeddings = model.encode(course_texts, batch_size=batch_size, normalize_embeddings=True, show_progress_bar=False)
+    course_points = [
+        PointStruct(id=generate_course_point_id(cid), vector=emb.tolist(), payload=payload)
+        for (cid, payload), emb in zip(course_items, course_embeddings)
+    ]
+    upserted_courses = upsert_points_in_batches(qdrant_client, COURSE_COLLECTION_NAME, course_points, batch_size=batch_size)
+    print(f"    Upserted {upserted_courses} points to '{COURSE_COLLECTION_NAME}'.")
+
+    # 6. Ingest Skills
+    print(f"\n[6] Encoding and upserting Skills into '{SKILL_COLLECTION_NAME}'...")
+    skill_items, skill_texts = [], []
+    for sid, s in skills_by_id.items():
         sname = str(s.get("skill") or "")
         related_courses = validated["skill_to_courses"].get(sid, [])
         text = build_skill_embedding_text(sname, related_courses, tokenizer, max_tokens=MAX_SEQ_LENGTH)
+        rel_info = validated["skill_relations_map"].get(sid, {})
         payload = {
             "skill_id": sid,
             "skill": sname,
+            "is_active": s.get("is_active", True),
             "num_courses": len(related_courses),
+            "prerequisites": rel_info.get("prerequisites", []),
+            "related_skills": rel_info.get("related", []),
+            "top_courses": [c.get("title") for c in related_courses[:5]],
         }
         skill_items.append((sid, payload))
         skill_texts.append(text)
-    print(f"    Built {len(skill_texts)} skill texts.")
 
-    # [6] Creating/checking Qdrant collections...
-    print("[6] Creating/checking Qdrant collections...")
-    qdrant_client = wait_for_qdrant(qdrant_url)
-    ensure_collection(qdrant_client, COURSE_COLLECTION_NAME, vector_size=EMBEDDING_DIMENSION)
-    ensure_collection(qdrant_client, SKILL_COLLECTION_NAME, vector_size=EMBEDDING_DIMENSION)
-
-    # [7] Upserting Course vectors...
-    print("[7] Upserting Course vectors...")
-    logger.info("Encoding course texts into embeddings...")
-    course_embeddings = model.encode(
-        course_texts,
-        batch_size=batch_size,
-        normalize_embeddings=True,
-        show_progress_bar=False,
-    )
-    course_points = [
-        PointStruct(
-            id=generate_course_point_id(cid),
-            vector=embedding.tolist(),
-            payload=payload,
-        )
-        for (cid, payload), embedding in zip(course_items, course_embeddings)
-    ]
-    upserted_courses = upsert_points_in_batches(
-        qdrant_client,
-        COURSE_COLLECTION_NAME,
-        course_points,
-        batch_size=batch_size,
-    )
-    print(f"    Upserted {upserted_courses} course points into '{COURSE_COLLECTION_NAME}'.")
-
-    # [8] Upserting Skill vectors...
-    print("[8] Upserting Skill vectors...")
-    logger.info("Encoding skill texts into embeddings...")
-    skill_embeddings = model.encode(
-        skill_texts,
-        batch_size=batch_size,
-        normalize_embeddings=True,
-        show_progress_bar=False,
-    )
+    skill_embeddings = model.encode(skill_texts, batch_size=batch_size, normalize_embeddings=True, show_progress_bar=False)
     skill_points = [
-        PointStruct(
-            id=generate_skill_point_id(sid),
-            vector=embedding.tolist(),
-            payload=payload,
-        )
-        for (sid, payload), embedding in zip(skill_items, skill_embeddings)
+        PointStruct(id=generate_skill_point_id(sid), vector=emb.tolist(), payload=payload)
+        for (sid, payload), emb in zip(skill_items, skill_embeddings)
     ]
-    upserted_skills = upsert_points_in_batches(
-        qdrant_client,
-        SKILL_COLLECTION_NAME,
-        skill_points,
-        batch_size=batch_size,
-    )
-    print(f"    Upserted {upserted_skills} skill points into '{SKILL_COLLECTION_NAME}'.")
+    upserted_skills = upsert_points_in_batches(qdrant_client, SKILL_COLLECTION_NAME, skill_points, batch_size=batch_size)
+    print(f"    Upserted {upserted_skills} points to '{SKILL_COLLECTION_NAME}'.")
 
-    # [9] Verifying Qdrant collections...
-    print("[9] Verifying Qdrant collections...")
-    course_count = qdrant_client.count(collection_name=COURSE_COLLECTION_NAME).count
-    skill_count = qdrant_client.count(collection_name=SKILL_COLLECTION_NAME).count
-    print(f"    Verified '{COURSE_COLLECTION_NAME}' point count: {course_count}")
-    print(f"    Verified '{SKILL_COLLECTION_NAME}' point count: {skill_count}")
+    if sync_tutor_skills:
+        upsert_points_in_batches(qdrant_client, TUTOR_SKILL_COLLECTION_NAME, skill_points, batch_size=batch_size)
+        print(f"    Synced {upserted_skills} points to '{TUTOR_SKILL_COLLECTION_NAME}'.")
 
-    # Optional semantic search test
+    # 7. Verification
+    print("\n[7] Verifying collection point counts...")
+    c_count = qdrant_client.count(collection_name=COURSE_COLLECTION_NAME).count
+    s_count = qdrant_client.count(collection_name=SKILL_COLLECTION_NAME).count
+    print(f"    '{COURSE_COLLECTION_NAME}': {c_count} points")
+    print(f"    '{SKILL_COLLECTION_NAME}':  {s_count} points")
+
     if test_search:
-        print("\n--- Testing Semantic Search (Vietnamese & English) ---")
-        test_queries = [
-            ("Lập trình Python và trí tuệ nhân tạo cho người mới bắt đầu", COURSE_COLLECTION_NAME),
-            ("Phát triển ứng dụng di động Android", COURSE_COLLECTION_NAME),
-            ("machine learning", SKILL_COLLECTION_NAME),
-            ("quản lý cơ sở dữ liệu quan hệ", SKILL_COLLECTION_NAME),
-        ]
-        for query_text, coll in test_queries:
+        print("\n[8] Running sample semantic search queries...")
+        for query_text, coll in [
+            ("Lập trình Python và AI", COURSE_COLLECTION_NAME),
+            ("machine learning and deep learning", SKILL_COLLECTION_NAME),
+        ]:
             q_emb = model.encode([query_text], normalize_embeddings=True)[0].tolist()
-            res = qdrant_client.query_points(
-                collection_name=coll,
-                query=q_emb,
-                limit=2,
-                with_payload=True,
-            )
+            res = qdrant_client.query_points(collection_name=coll, query=q_emb, limit=2, with_payload=True)
             print(f"Query [{coll}]: '{query_text}'")
             for p in res.points:
-                score = round(p.score, 4)
                 name = p.payload.get("title") or p.payload.get("skill")
-                print(f"  -> score={score} | {name}")
+                print(f"  -> [{round(p.score, 4)}] {name}")
 
-    print("\n========== INGESTION RESULT ==========\n")
-    print(f"Courses source records: {len(datasets['courses'])}")
-    print(f"Courses indexed:        {course_count}")
-    print()
-    print(f"Skills source records:  {len(datasets['skills'])}")
-    print(f"Skills indexed:         {skill_count}")
-    print()
-    print(f"Course collection:      {COURSE_COLLECTION_NAME}")
-    print(f"Skill collection:       {SKILL_COLLECTION_NAME}")
-    print("\nINGESTION COMPLETED SUCCESSFULLY\n")
-
+    print("\n=======================================================")
+    print("         POSTGRESQL INGESTION COMPLETED!               ")
+    print("=======================================================\n")
     return 0
 
 
@@ -670,24 +567,26 @@ def run_ingestion(
 # CLI ENTRYPOINT
 # ==========================================
 def main() -> None:
-    parser = argparse.ArgumentParser(description="EduMentor AI Qdrant Data Ingestion")
-    parser.add_argument("--qdrant-url", type=str, default=None, help="Qdrant service URL")
-    parser.add_argument("--data-dir", type=str, default=None, help="Override path to data directory")
+    parser = argparse.ArgumentParser(description="EduMentor AI Qdrant Data Ingestion - Pure PostgreSQL")
+    parser.add_argument("--qdrant-url", type=str, default=None, help="Qdrant URL (defaults to QDRANT_URL env)")
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE, help="Batch size for encoding & upserting")
     parser.add_argument("--test-search", action="store_true", help="Run semantic search tests after ingestion")
+    parser.add_argument("--no-clear", action="store_true", help="Skip clearing existing points")
+    parser.add_argument("--no-tutor-sync", action="store_true", help="Skip syncing to tutor_skills collection")
 
     args = parser.parse_args()
 
     try:
         exit_code = run_ingestion(
             qdrant_url=args.qdrant_url,
-            data_dir_override=args.data_dir,
             batch_size=args.batch_size,
             test_search=args.test_search,
+            sync_tutor_skills=not args.no_tutor_sync,
+            clear_points=not args.no_clear,
         )
         sys.exit(exit_code)
     except Exception as e:
-        logger.exception("Ingestion failed with unhandled exception")
+        logger.exception("Ingestion failed")
         print(f"\n[ERROR] Ingestion failed: {e}\n", file=sys.stderr)
         sys.exit(1)
 

@@ -10,7 +10,7 @@ from app.core.dependencies import get_current_user
 from app.models.user import Users
 from app.models.chat_session import ChatSession
 from app.models.chat_message import ChatMessage
-from app.schemas.chat import ChatSessionCreate, ChatMessageCreate
+from app.schemas.chat import ChatSessionCreate, ChatSessionUpdate, ChatMessageCreate
 from app.services.tutor_service import process_chat_message
 
 
@@ -93,6 +93,8 @@ def create_session(
         "session_id": session.session_id,
         "topic": session.topic,
         "status": session.status,
+        "created_at": session.created_at,
+        "updated_at": session.updated_at,
     }
 
 
@@ -174,6 +176,8 @@ def list_sessions(
             "session_id": session.session_id,
             "topic": session.topic,
             "status": session.status,
+            "created_at": session.created_at,
+            "updated_at": session.updated_at,
         }
         for session in sessions
     ]
@@ -260,7 +264,45 @@ def list_messages(
 
 
 # ==========================================
-# 6. XÓA PHIÊN CHAT
+# 6. ĐỔI TÊN PHIÊN CHAT (RENAME)
+# ==========================================
+
+@router.patch("/{session_id}")
+@router.put("/{session_id}")
+def update_session(
+    session_id: UUID,
+    data: ChatSessionUpdate,
+    db: Session = Depends(get_db),
+    current_user: Users = Depends(get_current_user),
+):
+    session = get_owned_session(
+        db=db,
+        session_id=session_id,
+        user_id=current_user.user_id,
+    )
+
+    clean_topic = (data.topic or "").strip()
+    if not clean_topic:
+        raise HTTPException(
+            status_code=422,
+            detail="Tên phiên chat không được để trống",
+        )
+
+    session.topic = clean_topic
+    db.commit()
+    db.refresh(session)
+
+    return {
+        "session_id": session.session_id,
+        "topic": session.topic,
+        "status": session.status,
+        "created_at": session.created_at,
+        "updated_at": session.updated_at,
+    }
+
+
+# ==========================================
+# 7. XÓA PHIÊN CHAT
 # ==========================================
 
 @router.delete("/{session_id}")

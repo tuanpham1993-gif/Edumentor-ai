@@ -1,6 +1,7 @@
 """
 Handlers package for EduMentor AI Chatbot.
-Provides specialized handlers for search, knowledge, code, and reinforcement.
+Provides specialized handlers for search, knowledge, code, reinforcement,
+recommendation, and curriculum web search.
 """
 
 from app.ai.handlers.code_handler import CodeHandler, code_handler
@@ -15,11 +16,22 @@ from app.ai.handlers.reinforcement_handler import (
     ReinforcementHandler,
     reinforcement_handler,
 )
+from app.ai.handlers.recommendation_handler import (
+    RecommendationHandler,
+    recommendation_handler,
+)
+from app.ai.handlers.curriculum_handler import (
+    CourseCurriculumAdvisor,
+    course_curriculum_advisor,
+    curriculum_handler,
+)
 from app.ai.handlers.search_handler import SearchHandler, search_handler
 
 __all__ = [
     "CodeHandler",
     "KnowledgeHandler",
+    "RecommendationHandler",
+    "CourseCurriculumAdvisor",
     "ReinforcementHandler",
     "SearchHandler",
     "build_learning_path_instructions",
@@ -27,6 +39,9 @@ __all__ = [
     "build_system_operation_response",
     "code_handler",
     "knowledge_handler",
+    "recommendation_handler",
+    "course_curriculum_advisor",
+    "curriculum_handler",
     "reinforcement_handler",
     "search_handler",
 ]

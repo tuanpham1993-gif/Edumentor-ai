@@ -197,6 +197,11 @@ class SearchHandler:
         task_type = route_result.get("task_type", "")
         intent = route_result.get("intent", "")
 
+        expanded_query, target_route, target_category = self.build_expanded_rag_query(
+            user_content=user_content,
+            route_result=route_result,
+        )
+
         context: dict[str, Any] = {
             "intent": intent,
             "task_type": task_type,
@@ -204,9 +209,9 @@ class SearchHandler:
             "entity_type": route_result.get("entity_type"),
             "entity_name": route_result.get("entity_name"),
             "routing_source": route_result.get("source"),
-            "target_route": None,
-            "target_category": None,
-            "expanded_query": user_content,
+            "target_route": target_route,
+            "target_category": target_category,
+            "expanded_query": expanded_query,
             "sql_data": None,
             "qdrant_data": [],
             "rag_data": [],

@@ -40,6 +40,14 @@ def _determine_task_type_and_strategy(
     norm_msg = normalize_text(user_message) if user_message else ""
     is_relation_search = "lien quan" in norm_msg or "related" in norm_msg
 
+    if intent == "course_recommendation":
+        strategy = "sql_qdrant_gemini"
+        return "course_recommendation", strategy, STRATEGY_TO_MODES[strategy].copy()
+
+    if intent == "course_web_search":
+        strategy = "sql_web_gemini"
+        return "course_web_search", strategy, STRATEGY_TO_MODES[strategy].copy()
+
     if intent == "course_search":
         if entity_type == "organization":
             strategy = "sql"
@@ -193,7 +201,13 @@ def _route_single_query(user_message: str, custom_api_key: str | None = None) ->
     elif intent == "course_search":
         if entity_type not in {"organization", "instructor", "rating", "level", "popular"}:
             entity_type = "skill"
-    elif intent in {"course_question", "course_review", "course_enrollment_link"}:
+    elif intent in {
+        "course_question",
+        "course_review",
+        "course_enrollment_link",
+        "course_web_search",
+        "course_recommendation",
+    }:
         entity_type = "course"
     elif intent == "learning_path_request":
         entity_type = "skill" if entity_name else "none"
@@ -221,6 +235,11 @@ def _route_single_query(user_message: str, custom_api_key: str | None = None) ->
     if intent == "system_operation":
         operation_type = detect_operation_type(user_message)
 
+    organization = result.get("organization") or (entity.get("organization") if isinstance(entity, dict) else None)
+    level = result.get("level") or (entity.get("level") if isinstance(entity, dict) else None)
+    target_role = result.get("target_role") or (entity.get("target_role") if isinstance(entity, dict) else None)
+    known_skill = result.get("known_skill") or (entity.get("known_skill") if isinstance(entity, dict) else None)
+
     return {
         "intent": intent,
         "task_type": task_type,
@@ -229,6 +248,10 @@ def _route_single_query(user_message: str, custom_api_key: str | None = None) ->
         "retrieval_modes": retrieval_modes,
         "entity_type": entity_type,
         "entity_name": entity_name,
+        "organization": organization,
+        "level": level,
+        "target_role": target_role,
+        "known_skill": known_skill,
         "source": source,
         "query": user_message,
     }

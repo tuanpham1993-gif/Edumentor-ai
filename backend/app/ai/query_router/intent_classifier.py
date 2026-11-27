@@ -15,8 +15,10 @@ from app.ai.query_router.config import (
 from app.ai.query_router.entity_extractor import (
     detect_entity_type,
     extract_course_enrollment_entity,
+    extract_course_recommendation_entity,
     extract_course_review_entity,
     extract_course_search_entity,
+    extract_course_web_search_entity,
     extract_learning_path_entity,
     extract_skill_review_entity,
     extract_skill_search_entity,
@@ -244,21 +246,77 @@ def classify_by_rules(user_message: str) -> dict | None:
                 "entity_name": entity.get("entity_name"),
             }
 
-        if any(k in text for k in review_keywords):
-            if entity_type == "course" or has_course_kw:
-                entity = extract_course_review_entity(user_message)
-                return {
-                    "intent": "course_review",
-                    "entity_type": "course",
-                    "entity_name": entity["entity_name"],
-                }
-            entity = extract_skill_review_entity(user_message)
-            return {
-                "intent": "skill_review",
-                "entity_type": "skill",
-                "entity_name": entity.get("entity_name"),
-            }
+    # --------------------------------------
+    # 4.3 COURSE WEB SEARCH (SYLLABUS / MODULES / LESSONS)
+    # --------------------------------------
+    MODULE_KW = r"(?:modules?|moudules?|moudles?|moduls?)"
+    web_curriculum_patterns = [
+        r"(?:chi\s+tiet|thong\s+tin\s+chi\s+tiet|noi\s+dung\s+chi\s+tiet)\s+(?:ve\s+)?(?:khoa\s*hoc|khoa|course|courses)\b",
+        r"(?:khoa\s*hoc|khoa|course|courses)\s+(?:so|thu)?\s*[0-9]+\b",
+        r"(?:giao trinh|syllabus|curriculum|de cuong chi tiet|de cuong|cac " + MODULE_KW + r"|nhung " + MODULE_KW + r"|co nhung " + MODULE_KW + r" nao|" + MODULE_KW + r" nao|cac tuan hoc|nhung tuan hoc|tuan hoc|lo trinh bai hoc|cac bai hoc|danh sach bai hoc|bai giang|noi dung chi tiet cac tuan|noi dung cac tuan).*(?:khoa\s*hoc|khoa|course|courses)",
+        r"(?:khoa\s*hoc|khoa|course|courses).*(?:giao trinh|syllabus|curriculum|de cuong|cac " + MODULE_KW + r"|nhung " + MODULE_KW + r"|co nhung " + MODULE_KW + r" nao|" + MODULE_KW + r" nao|cac tuan hoc|nhung tuan hoc|tuan hoc|lo trinh bai hoc|cac bai hoc|danh sach bai hoc|bai giang|noi dung chi tiet cac tuan|noi dung cac tuan)",
+        r"(?:khoa\s*hoc|khoa|course|courses)\s*.+?\s*(?:co\s+)?(?:nhung\s+)?" + MODULE_KW + r"\s+nao",
+        r"(?:khoa\s*hoc|khoa|course|courses)\s*.+?\s*(?:co\s+)?(?:nhung\s+)?tuan\s+hoc\s+nao",
+        r"(?:khoa|khoa\s*hoc)\s*.+?\s*gom\s+(?:nhung\s+)?tuan\s+hoc\s+nao",
+        r"noi dung chi tiet cac tuan",
+        r"(?:co\s+)?(?:may|bao nhieu|nhung|cac)\s+" + MODULE_KW + r".*?(?:trong|cua)?\s*(?:khoa\s*hoc|khoa|course|courses)?\b",
+        r"(?:may|bao nhieu)\s+(?:" + MODULE_KW + r"|bai|chu de|tuan).*?(?:trong|cua)?\s*(?:khoa\s*hoc|khoa|course|courses)?\b",
+        r"(?:" + MODULE_KW + r")\s+(?:co\s+)?(?:trong|cua)\s+(?:khoa\s*hoc|khoa|course|courses)?\b",
+        r"(?:khoa\s*hoc|khoa|course|courses).*?(?:co\s+)?(?:may|bao nhieu)\s+" + MODULE_KW + r"\b",
+        r"(?:co\s+)?(?:may|bao nhieu)\s+" + MODULE_KW + r"\b",
+        r"(?:co\s+)?(?:may|bao nhieu)\s+(?:tuan|chuong|phan)\s+(?:trong\s+)?(?:khoa\s*hoc|khoa|course|courses)\b",
+        r"(?:" + MODULE_KW + r")\s+(?:co\s+trong|trong|cua)\b",
+        r"(?:cac|nhung|danh sach)?\s*(?:" + MODULE_KW + r")\s+(?:co\s+trong|trong|cua)\b",
+        r"(?:cac|nhung|danh sach)\s+(?:" + MODULE_KW + r")\b",
+    ]
+    if any(re.search(p, text, flags=re.IGNORECASE) for p in web_curriculum_patterns):
+        c_web_ent = extract_course_web_search_entity(user_message)
+        return {
+            "intent": "course_web_search",
+            "entity_type": "course",
+            "entity_name": c_web_ent.get("entity_name"),
+            "organization": c_web_ent.get("organization"),
+        }
 
+    # --------------------------------------
+    # 4.4 COURSE RECOMMENDATION
+    # --------------------------------------
+    recommendation_patterns = [
+        r"(?:goi y|de xuat|tu van)\s+(?:cho toi\s+|cho minh\s+)?(?:khoa hoc|khoa|course|courses)\b",
+        r"(?:nen\s+)?(?:hoc|bat dau|chon)(?:\s+voi|\s+bang)?\s+(?:nhung\s+)?(?:khoa hoc|khoa|course|courses)\s+(?:nao|gi)\b",
+        r"(?:khoa hoc|khoa|course|courses)\s+nao\s+phu hop\b",
+        r"(?:moi hoc|chua biet gi|chua biet bat dau|nguoi moi|bat dau hoc|nhap mon).*?(?:nen\s+)?(?:hoc|chon|bat dau)(?:\s+voi|\s+bang)?\s+(?:nhung\s+)?(?:khoa|khoa hoc|course|courses)\b",
+        r"(?:muon tro thanh|dinh huong lam|muon lam)\s+.+?(?:nen\s+)?(?:hoc|chon)\s+(?:nhung\s+)?(?:khoa|khoa hoc|course|courses)\b",
+        r"(?:da biet|da hoc|biet ve)\s+.+?(?:nen\s+hoc\s+(?:nhung\s+)?khoa\s+nao\s+tiep\s+theo|nen\s+hoc\s+gi\s+tiep\s+theo|hoc\s+khoa\s+nao\s+tiep\b)",
+        r"(?:tim|kiem)\s+(?:khoa hoc|khoa)\s+phu hop\s+voi\b",
+        r"(?:phu hop voi)\s+(?:trinh do|ky nang|kha nang)\s+(?:cua toi|cua minh|hien tai)\b",
+        r"(?:chua biet bat dau tu dau|chua biet hoc tu dau)\b",
+    ]
+    if any(re.search(p, text, flags=re.IGNORECASE) for p in recommendation_patterns):
+        c_rec_ent = extract_course_recommendation_entity(user_message)
+        return {
+            "intent": "course_recommendation",
+            "entity_type": "course",
+            "entity_name": c_rec_ent.get("entity_name"),
+            "level": c_rec_ent.get("level"),
+            "target_role": c_rec_ent.get("target_role"),
+            "known_skill": c_rec_ent.get("known_skill"),
+        }
+
+    if not has_link_request_review and any(k in text for k in review_keywords):
+        if entity_type == "course" or has_course_kw:
+            entity = extract_course_review_entity(user_message)
+            return {
+                "intent": "course_review",
+                "entity_type": "course",
+                "entity_name": entity["entity_name"],
+            }
+        entity = extract_skill_review_entity(user_message)
+        return {
+            "intent": "skill_review",
+            "entity_type": "skill",
+            "entity_name": entity.get("entity_name"),
+        }
 
     # --------------------------------------
     # 4.5 SKILLS ASSOCIATED WITH A COURSE

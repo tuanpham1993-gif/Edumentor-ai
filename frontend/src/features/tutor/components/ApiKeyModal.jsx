@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../../hooks/useAuth.js';
 import { getStoredApiKey, setStoredApiKey } from '../../../api/tutor.api.js';
 import styles from '../styles/ApiKeyModal.module.css';
 
@@ -8,8 +9,12 @@ import styles from '../styles/ApiKeyModal.module.css';
  * @param {boolean} props.isOpen - Trạng thái hiển thị modal
  * @param {() => void} props.onClose - Hàm đóng modal
  * @param {(hasKey: boolean) => void} [props.onKeyChanged] - Callback khi key thay đổi
+ * @param {number|string} [props.userId] - ID người dùng
  */
-export default function ApiKeyModal({ isOpen, onClose, onKeyChanged }) {
+export default function ApiKeyModal({ isOpen, onClose, onKeyChanged, userId }) {
+  const { user } = useAuth();
+  const effectiveUserId = userId !== undefined ? userId : user?.user_id;
+
   const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
   const [hasExistingKey, setHasExistingKey] = useState(false);
@@ -17,21 +22,21 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyChanged }) {
 
   useEffect(() => {
     if (isOpen) {
-      const stored = getStoredApiKey();
+      const stored = getStoredApiKey(effectiveUserId);
       setApiKey(stored);
       setHasExistingKey(Boolean(stored));
       setNotification('');
       setShowKey(false);
     }
-  }, [isOpen]);
+  }, [isOpen, effectiveUserId]);
 
   if (!isOpen) return null;
 
   const handleSave = () => {
     const trimmed = apiKey.trim();
-    setStoredApiKey(trimmed);
+    setStoredApiKey(trimmed, effectiveUserId);
     setHasExistingKey(Boolean(trimmed));
-    setNotification(trimmed ? 'Đã lưu API Key thành công!' : 'Đã xóa API Key, dùng key hệ thống.');
+    setNotification(trimmed ? 'Đã lưu API Key riêng thành công!' : 'Đã xóa API Key riêng, dùng key hệ thống.');
     if (onKeyChanged) onKeyChanged(Boolean(trimmed));
     setTimeout(() => {
       onClose();
@@ -40,9 +45,9 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyChanged }) {
 
   const handleClear = () => {
     setApiKey('');
-    setStoredApiKey('');
+    setStoredApiKey('', effectiveUserId);
     setHasExistingKey(false);
-    setNotification('Đã xóa API Key.');
+    setNotification('Đã xóa API Key riêng.');
     if (onKeyChanged) onKeyChanged(false);
   };
 
@@ -68,8 +73,13 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyChanged }) {
         {/* Body */}
         <div className={styles.modalBody}>
           <p className={styles.desc}>
-            Nhập Google Gemini API Key của bạn để trò chuyện trực tiếp với AI Tutor mà không phụ thuộc vào giới hạn hệ thống.
+            Nhập Google Gemini API Key riêng của bạn để trò chuyện trực tiếp với AI Tutor mà không dùng chung hay ảnh hưởng đến tài khoản khác.
           </p>
+          {user && (
+            <div style={{ fontSize: '12px', color: 'var(--text-dim, #8f897f)', marginBottom: '12px' }}>
+              👤 Đang cấu hình riêng cho: <strong style={{ color: 'var(--text, #f3efe8)' }}>{user.full_name || user.email}</strong>
+            </div>
+          )}
 
           {/* Status Indicator */}
           <div
@@ -80,7 +90,7 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyChanged }) {
             <span>{hasExistingKey ? '✅' : 'ℹ️'}</span>
             <span>
               {hasExistingKey
-                ? 'Đang kích hoạt: Sử dụng API Key cá nhân của bạn'
+                ? 'Đang kích hoạt: Sử dụng API Key riêng của bạn'
                 : 'Chưa cài đặt: Đang dùng API Key mặc định của EduMentor'}
             </span>
           </div>
