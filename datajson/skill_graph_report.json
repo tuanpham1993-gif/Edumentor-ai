@@ -1,0 +1,2403 @@
+{
+  "limits": {
+    "max_depth": 8,
+    "max_nodes": 100
+  },
+  "roles_total": 151,
+  "roles_failed": 0,
+  "largest_graphs": [
+    {
+      "role": "Enterprise Architect",
+      "nodes": 34,
+      "max_depth": 4
+    },
+    {
+      "role": "ML Platform Engineer",
+      "nodes": 30,
+      "max_depth": 5
+    },
+    {
+      "role": "DevSecOps Engineer",
+      "nodes": 30,
+      "max_depth": 5
+    },
+    {
+      "role": "AI Engineer",
+      "nodes": 28,
+      "max_depth": 4
+    },
+    {
+      "role": "Chief Technology Officer",
+      "nodes": 28,
+      "max_depth": 3
+    },
+    {
+      "role": "MLOps Engineer",
+      "nodes": 27,
+      "max_depth": 5
+    },
+    {
+      "role": "Solutions Architect",
+      "nodes": 25,
+      "max_depth": 4
+    },
+    {
+      "role": "Backend Developer",
+      "nodes": 24,
+      "max_depth": 4
+    },
+    {
+      "role": "Full Stack Developer",
+      "nodes": 24,
+      "max_depth": 3
+    },
+    {
+      "role": "API Developer",
+      "nodes": 24,
+      "max_depth": 3
+    }
+  ],
+  "roles": [
+    {
+      "role_id": 1,
+      "role_name": "Frontend Developer",
+      "targets": 6,
+      "nodes": 14,
+      "edges": 16,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 2,
+      "role_name": "Backend Developer",
+      "targets": 6,
+      "nodes": 24,
+      "edges": 30,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 3,
+      "role_name": "Full Stack Developer",
+      "targets": 6,
+      "nodes": 24,
+      "edges": 31,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 4,
+      "role_name": "Software Engineer",
+      "targets": 6,
+      "nodes": 20,
+      "edges": 24,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 5,
+      "role_name": "Web Developer",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 17,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 6,
+      "role_name": "API Developer",
+      "targets": 6,
+      "nodes": 24,
+      "edges": 33,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 7,
+      "role_name": "Android Developer",
+      "targets": 5,
+      "nodes": 14,
+      "edges": 14,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 8,
+      "role_name": "iOS Developer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 11,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 9,
+      "role_name": "Mobile Application Developer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 10,
+      "role_name": "Cross-Platform Mobile Developer",
+      "targets": 4,
+      "nodes": 17,
+      "edges": 21,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 11,
+      "role_name": "Game Developer",
+      "targets": 5,
+      "nodes": 12,
+      "edges": 13,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 12,
+      "role_name": "Gameplay Programmer",
+      "targets": 4,
+      "nodes": 13,
+      "edges": 14,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 13,
+      "role_name": "Game Engine Developer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 10,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 14,
+      "role_name": "Embedded Software Engineer",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 13,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 15,
+      "role_name": "Firmware Engineer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 11,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 16,
+      "role_name": "IoT Engineer",
+      "targets": 5,
+      "nodes": 20,
+      "edges": 26,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 17,
+      "role_name": "Software Architect",
+      "targets": 6,
+      "nodes": 22,
+      "edges": 32,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 18,
+      "role_name": "Solutions Architect",
+      "targets": 5,
+      "nodes": 25,
+      "edges": 39,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 19,
+      "role_name": "Enterprise Architect",
+      "targets": 5,
+      "nodes": 34,
+      "edges": 46,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 20,
+      "role_name": "QA Engineer",
+      "targets": 5,
+      "nodes": 12,
+      "edges": 13,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 21,
+      "role_name": "Automation Test Engineer",
+      "targets": 6,
+      "nodes": 15,
+      "edges": 17,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 22,
+      "role_name": "Performance Test Engineer",
+      "targets": 4,
+      "nodes": 18,
+      "edges": 20,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 23,
+      "role_name": "Manual Tester",
+      "targets": 5,
+      "nodes": 10,
+      "edges": 9,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 24,
+      "role_name": "DevOps Engineer",
+      "targets": 7,
+      "nodes": 17,
+      "edges": 22,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 25,
+      "role_name": "Site Reliability Engineer",
+      "targets": 5,
+      "nodes": 18,
+      "edges": 23,
+      "max_depth": 4,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 26,
+      "role_name": "Platform Engineer",
+      "targets": 5,
+      "nodes": 16,
+      "edges": 19,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 27,
+      "role_name": "Infrastructure Engineer",
+      "targets": 5,
+      "nodes": 12,
+      "edges": 14,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 28,
+      "role_name": "Release Engineer",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 13,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 29,
+      "role_name": "Cloud Engineer",
+      "targets": 6,
+      "nodes": 13,
+      "edges": 17,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 30,
+      "role_name": "Cloud Architect",
+      "targets": 5,
+      "nodes": 18,
+      "edges": 26,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 31,
+      "role_name": "System Administrator",
+      "targets": 5,
+      "nodes": 10,
+      "edges": 11,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 32,
+      "role_name": "IT Support Specialist",
+      "targets": 4,
+      "nodes": 15,
+      "edges": 16,
+      "max_depth": 4,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 33,
+      "role_name": "Help Desk Technician",
+      "targets": 3,
+      "nodes": 7,
+      "edges": 7,
+      "max_depth": 1,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 34,
+      "role_name": "IT Operations Engineer",
+      "targets": 4,
+      "nodes": 17,
+      "edges": 19,
+      "max_depth": 4,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 35,
+      "role_name": "Technical Support Engineer",
+      "targets": 4,
+      "nodes": 19,
+      "edges": 20,
+      "max_depth": 4,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 36,
+      "role_name": "Network Engineer",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 16,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 37,
+      "role_name": "Network Administrator",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 17,
+      "max_depth": 4,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 38,
+      "role_name": "Network Architect",
+      "targets": 4,
+      "nodes": 19,
+      "edges": 25,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 39,
+      "role_name": "Database Administrator",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 19,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 40,
+      "role_name": "Database Developer",
+      "targets": 5,
+      "nodes": 11,
+      "edges": 12,
+      "max_depth": 4,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 41,
+      "role_name": "Database Architect",
+      "targets": 5,
+      "nodes": 24,
+      "edges": 31,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 42,
+      "role_name": "Data Engineer",
+      "targets": 6,
+      "nodes": 16,
+      "edges": 20,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 43,
+      "role_name": "Analytics Engineer",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 18,
+      "max_depth": 5,
+      "start_nodes": [
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 44,
+      "role_name": "Data Architect",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 18,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 45,
+      "role_name": "ETL Developer",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 15,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 46,
+      "role_name": "Data Warehouse Engineer",
+      "targets": 5,
+      "nodes": 14,
+      "edges": 18,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 47,
+      "role_name": "Data Analyst",
+      "targets": 6,
+      "nodes": 16,
+      "edges": 15,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 48,
+      "role_name": "BI Analyst",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 14,
+      "max_depth": 5,
+      "start_nodes": [
+        "Communication Skills",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 49,
+      "role_name": "BI Developer",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 19,
+      "max_depth": 5,
+      "start_nodes": [
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 50,
+      "role_name": "Data Scientist",
+      "targets": 6,
+      "nodes": 13,
+      "edges": 16,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 51,
+      "role_name": "Research Data Scientist",
+      "targets": 5,
+      "nodes": 16,
+      "edges": 19,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 52,
+      "role_name": "Quantitative Analyst",
+      "targets": 5,
+      "nodes": 12,
+      "edges": 13,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 53,
+      "role_name": "Machine Learning Engineer",
+      "targets": 6,
+      "nodes": 23,
+      "edges": 28,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 54,
+      "role_name": "AI Engineer",
+      "targets": 6,
+      "nodes": 28,
+      "edges": 32,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 55,
+      "role_name": "NLP Engineer",
+      "targets": 5,
+      "nodes": 14,
+      "edges": 16,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 56,
+      "role_name": "Computer Vision Engineer",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 18,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 57,
+      "role_name": "Deep Learning Engineer",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 14,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 58,
+      "role_name": "AI Research Scientist",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 15,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 59,
+      "role_name": "MLOps Engineer",
+      "targets": 5,
+      "nodes": 27,
+      "edges": 34,
+      "max_depth": 5,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 60,
+      "role_name": "ML Platform Engineer",
+      "targets": 4,
+      "nodes": 30,
+      "edges": 38,
+      "max_depth": 5,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 61,
+      "role_name": "Cybersecurity Analyst",
+      "targets": 5,
+      "nodes": 11,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 62,
+      "role_name": "Security Engineer",
+      "targets": 5,
+      "nodes": 23,
+      "edges": 33,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 63,
+      "role_name": "SOC Analyst",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 16,
+      "max_depth": 4,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 64,
+      "role_name": "Security Architect",
+      "targets": 5,
+      "nodes": 21,
+      "edges": 28,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 65,
+      "role_name": "Cloud Security Engineer",
+      "targets": 5,
+      "nodes": 20,
+      "edges": 25,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 66,
+      "role_name": "Application Security Engineer",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 22,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 67,
+      "role_name": "Penetration Tester",
+      "targets": 5,
+      "nodes": 20,
+      "edges": 28,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 68,
+      "role_name": "Red Team Specialist",
+      "targets": 4,
+      "nodes": 16,
+      "edges": 19,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 69,
+      "role_name": "Vulnerability Analyst",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 14,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 70,
+      "role_name": "Incident Response Analyst",
+      "targets": 4,
+      "nodes": 14,
+      "edges": 15,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 71,
+      "role_name": "Digital Forensics Analyst",
+      "targets": 4,
+      "nodes": 15,
+      "edges": 17,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 72,
+      "role_name": "IT Project Manager",
+      "targets": 5,
+      "nodes": 8,
+      "edges": 7,
+      "max_depth": 1,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 73,
+      "role_name": "IT Manager",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 13,
+      "max_depth": 2,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 74,
+      "role_name": "Engineering Manager",
+      "targets": 4,
+      "nodes": 16,
+      "edges": 18,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 75,
+      "role_name": "Scrum Master",
+      "targets": 4,
+      "nodes": 8,
+      "edges": 6,
+      "max_depth": 2,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 76,
+      "role_name": "Product Owner",
+      "targets": 4,
+      "nodes": 8,
+      "edges": 7,
+      "max_depth": 3,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 77,
+      "role_name": "Business Analyst",
+      "targets": 5,
+      "nodes": 12,
+      "edges": 10,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 78,
+      "role_name": "Systems Analyst",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 11,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 79,
+      "role_name": "Technical Business Analyst",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 15,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 80,
+      "role_name": "Product Manager",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 13,
+      "max_depth": 3,
+      "start_nodes": [
+        "Communication Skills",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 81,
+      "role_name": "UX Designer",
+      "targets": 5,
+      "nodes": 7,
+      "edges": 6,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 82,
+      "role_name": "UI Designer",
+      "targets": 4,
+      "nodes": 8,
+      "edges": 8,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 83,
+      "role_name": "Product Designer",
+      "targets": 5,
+      "nodes": 10,
+      "edges": 10,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 84,
+      "role_name": "UX Researcher",
+      "targets": 4,
+      "nodes": 10,
+      "edges": 8,
+      "max_depth": 4,
+      "start_nodes": [
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 85,
+      "role_name": "ERP Consultant",
+      "targets": 4,
+      "nodes": 10,
+      "edges": 9,
+      "max_depth": 3,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 86,
+      "role_name": "SAP Consultant",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 12,
+      "max_depth": 4,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 87,
+      "role_name": "Salesforce Developer",
+      "targets": 4,
+      "nodes": 9,
+      "edges": 9,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 88,
+      "role_name": "Technical Writer",
+      "targets": 3,
+      "nodes": 9,
+      "edges": 9,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 89,
+      "role_name": "Documentation Engineer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 11,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 90,
+      "role_name": "IT Consultant",
+      "targets": 5,
+      "nodes": 22,
+      "edges": 29,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 91,
+      "role_name": "Digital Transformation Consultant",
+      "targets": 5,
+      "nodes": 19,
+      "edges": 20,
+      "max_depth": 4,
+      "start_nodes": [
+        "Communication Skills",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 92,
+      "role_name": "Blockchain Developer",
+      "targets": 5,
+      "nodes": 14,
+      "edges": 15,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 93,
+      "role_name": "Robotics Engineer",
+      "targets": 5,
+      "nodes": 22,
+      "edges": 28,
+      "max_depth": 5,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 94,
+      "role_name": "Chief Technology Officer",
+      "targets": 5,
+      "nodes": 28,
+      "edges": 38,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 95,
+      "role_name": "Chief Information Officer",
+      "targets": 5,
+      "nodes": 21,
+      "edges": 26,
+      "max_depth": 3,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 96,
+      "role_name": "Chief Information Security Officer",
+      "targets": 4,
+      "nodes": 8,
+      "edges": 8,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 97,
+      "role_name": "IT Director",
+      "targets": 4,
+      "nodes": 15,
+      "edges": 19,
+      "max_depth": 3,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 98,
+      "role_name": "React Developer",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 15,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 99,
+      "role_name": "Angular Developer",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 14,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 100,
+      "role_name": "Node.js Developer",
+      "targets": 5,
+      "nodes": 19,
+      "edges": 23,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 101,
+      "role_name": "Python Developer",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 17,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 102,
+      "role_name": "Java Developer",
+      "targets": 5,
+      "nodes": 24,
+      "edges": 33,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 103,
+      "role_name": ".NET Developer",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 19,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 104,
+      "role_name": "PHP Developer",
+      "targets": 4,
+      "nodes": 14,
+      "edges": 17,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 105,
+      "role_name": "Ruby on Rails Developer",
+      "targets": 4,
+      "nodes": 16,
+      "edges": 18,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 106,
+      "role_name": "Go Developer",
+      "targets": 4,
+      "nodes": 18,
+      "edges": 22,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 107,
+      "role_name": "Rust Developer",
+      "targets": 3,
+      "nodes": 7,
+      "edges": 7,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 108,
+      "role_name": "C++ Developer",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 11,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 109,
+      "role_name": "JavaScript Developer",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 14,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 110,
+      "role_name": "WordPress Developer",
+      "targets": 4,
+      "nodes": 14,
+      "edges": 15,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 111,
+      "role_name": "Web Designer",
+      "targets": 4,
+      "nodes": 8,
+      "edges": 8,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 112,
+      "role_name": "Unity Developer",
+      "targets": 4,
+      "nodes": 10,
+      "edges": 10,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 113,
+      "role_name": "Unreal Engine Developer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 11,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 114,
+      "role_name": "AR/VR Developer",
+      "targets": 3,
+      "nodes": 11,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 115,
+      "role_name": "Game Designer",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 12,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 116,
+      "role_name": "AWS Cloud Engineer",
+      "targets": 6,
+      "nodes": 16,
+      "edges": 20,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 117,
+      "role_name": "Azure Cloud Engineer",
+      "targets": 5,
+      "nodes": 15,
+      "edges": 19,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 118,
+      "role_name": "Google Cloud Engineer",
+      "targets": 4,
+      "nodes": 22,
+      "edges": 26,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 119,
+      "role_name": "Kubernetes Administrator",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 13,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 120,
+      "role_name": "DevSecOps Engineer",
+      "targets": 6,
+      "nodes": 30,
+      "edges": 40,
+      "max_depth": 5,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 121,
+      "role_name": "Cloud Network Engineer",
+      "targets": 4,
+      "nodes": 13,
+      "edges": 18,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 122,
+      "role_name": "Network Security Engineer",
+      "targets": 5,
+      "nodes": 13,
+      "edges": 17,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 123,
+      "role_name": "Cloud Data Engineer",
+      "targets": 5,
+      "nodes": 23,
+      "edges": 30,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 124,
+      "role_name": "Data Visualization Specialist",
+      "targets": 4,
+      "nodes": 11,
+      "edges": 10,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 125,
+      "role_name": "Power BI Developer",
+      "targets": 4,
+      "nodes": 15,
+      "edges": 15,
+      "max_depth": 5,
+      "start_nodes": [
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 126,
+      "role_name": "Tableau Developer",
+      "targets": 4,
+      "nodes": 14,
+      "edges": 13,
+      "max_depth": 5,
+      "start_nodes": [
+        "Communication Skills",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 127,
+      "role_name": "Generative AI Engineer",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 18,
+      "max_depth": 5,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 128,
+      "role_name": "LLM Engineer",
+      "targets": 5,
+      "nodes": 19,
+      "edges": 20,
+      "max_depth": 6,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 129,
+      "role_name": "Prompt Engineer",
+      "targets": 4,
+      "nodes": 16,
+      "edges": 16,
+      "max_depth": 6,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 130,
+      "role_name": "Chatbot Developer",
+      "targets": 4,
+      "nodes": 17,
+      "edges": 18,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 131,
+      "role_name": "AI Product Manager",
+      "targets": 5,
+      "nodes": 17,
+      "edges": 16,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 132,
+      "role_name": "Data Governance Analyst",
+      "targets": 4,
+      "nodes": 7,
+      "edges": 6,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 133,
+      "role_name": "FPGA Engineer",
+      "targets": 4,
+      "nodes": 6,
+      "edges": 5,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 134,
+      "role_name": "Malware Analyst",
+      "targets": 3,
+      "nodes": 10,
+      "edges": 10,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 135,
+      "role_name": "Threat Intelligence Analyst",
+      "targets": 3,
+      "nodes": 10,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 136,
+      "role_name": "GRC Analyst",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 137,
+      "role_name": "Salesforce Administrator",
+      "targets": 3,
+      "nodes": 4,
+      "edges": 3,
+      "max_depth": 1,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 138,
+      "role_name": "Power Platform Developer",
+      "targets": 4,
+      "nodes": 5,
+      "edges": 4,
+      "max_depth": 1,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 139,
+      "role_name": "RPA Developer",
+      "targets": 4,
+      "nodes": 10,
+      "edges": 8,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 140,
+      "role_name": "Agile Coach",
+      "targets": 4,
+      "nodes": 8,
+      "edges": 6,
+      "max_depth": 2,
+      "start_nodes": [
+        "Communication Skills",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 141,
+      "role_name": "GIS Analyst",
+      "targets": 3,
+      "nodes": 11,
+      "edges": 11,
+      "max_depth": 4,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 142,
+      "role_name": "Computer Graphics Programmer",
+      "targets": 3,
+      "nodes": 9,
+      "edges": 8,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 143,
+      "role_name": "Systems Programmer",
+      "targets": 4,
+      "nodes": 14,
+      "edges": 16,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 144,
+      "role_name": "Mainframe Developer",
+      "targets": 4,
+      "nodes": 9,
+      "edges": 8,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 145,
+      "role_name": "Quantum Computing Developer",
+      "targets": 3,
+      "nodes": 9,
+      "edges": 10,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 146,
+      "role_name": "IT Auditor",
+      "targets": 3,
+      "nodes": 10,
+      "edges": 12,
+      "max_depth": 2,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 147,
+      "role_name": "Embedded Linux Engineer",
+      "targets": 3,
+      "nodes": 11,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 148,
+      "role_name": "Statistician",
+      "targets": 5,
+      "nodes": 8,
+      "edges": 6,
+      "max_depth": 2,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 149,
+      "role_name": "NOC Technician",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 12,
+      "max_depth": 3,
+      "start_nodes": [
+        "IT Fundamentals"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 150,
+      "role_name": "Speech Recognition Engineer",
+      "targets": 4,
+      "nodes": 12,
+      "edges": 13,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    },
+    {
+      "role_id": 151,
+      "role_name": "Recommendation Systems Engineer",
+      "targets": 4,
+      "nodes": 14,
+      "edges": 16,
+      "max_depth": 3,
+      "start_nodes": [
+        "Computer Programming",
+        "Mathematics"
+      ],
+      "status": "ok",
+      "problems": []
+    }
+  ],
+  "sample_learners": [
+    {
+      "sample_id": "G1_000001",
+      "raw_target_role": "data engineer",
+      "role_match": {
+        "status": "matched",
+        "method": "exact",
+        "candidates": []
+      },
+      "outside_graph_target_technologies": [],
+      "matched_role": "Data Engineer",
+      "targets": [
+        "Data Engineering",
+        "Data Pipelines",
+        "Data Warehousing",
+        "Apache Spark",
+        "Apache Airflow",
+        "Data Modeling"
+      ],
+      "unresolved_target_technologies": [],
+      "graph_nodes": 16,
+      "known_in_graph": [
+        "SQL",
+        "Python"
+      ],
+      "strict": {
+        "remaining_to_learn": 13,
+        "eligible_now": [
+          "IT Fundamentals"
+        ]
+      },
+      "closure": {
+        "remaining_to_learn": 10,
+        "eligible_now": [
+          "Big Data",
+          "Normalization"
+        ]
+      }
+    },
+    {
+      "sample_id": "G1_000002",
+      "raw_target_role": "cybersecurity analyst",
+      "role_match": {
+        "status": "matched",
+        "method": "exact",
+        "candidates": []
+      },
+      "outside_graph_target_technologies": [],
+      "matched_role": "Cybersecurity Analyst",
+      "targets": [
+        "Network Security",
+        "Security Information And Event Management (SIEM)",
+        "Vulnerability Management",
+        "Cyber Incident Response",
+        "Cyber Threat Intelligence"
+      ],
+      "unresolved_target_technologies": [],
+      "graph_nodes": 11,
+      "known_in_graph": [],
+      "strict": {
+        "remaining_to_learn": 11,
+        "eligible_now": [
+          "IT Fundamentals"
+        ]
+      },
+      "closure": {
+        "remaining_to_learn": 11,
+        "eligible_now": [
+          "IT Fundamentals"
+        ]
+      }
+    },
+    {
+      "sample_id": "G1_000003",
+      "raw_target_role": "data analyst",
+      "role_match": {
+        "status": "matched",
+        "method": "exact",
+        "candidates": []
+      },
+      "outside_graph_target_technologies": [],
+      "matched_role": "Data Analyst",
+      "targets": [
+        "Data Analysis",
+        "Advanced SQL",
+        "Data Visualization",
+        "Power BI",
+        "Exploratory Data Analysis",
+        "Pandas"
+      ],
+      "unresolved_target_technologies": [],
+      "graph_nodes": 16,
+      "known_in_graph": [
+        "Python"
+      ],
+      "strict": {
+        "remaining_to_learn": 14,
+        "eligible_now": [
+          "Mathematics",
+          "IT Fundamentals"
+        ]
+      },
+      "closure": {
+        "remaining_to_learn": 13,
+        "eligible_now": [
+          "Database (DBMS)",
+          "Mathematics"
+        ]
+      }
+    },
+    {
+      "sample_id": "G1_000004",
+      "raw_target_role": "Android developer",
+      "role_match": {
+        "status": "matched",
+        "method": "exact",
+        "candidates": []
+      },
+      "outside_graph_target_technologies": [],
+      "matched_role": "Android Developer",
+      "targets": [
+        "Android Development",
+        "Kotlin",
+        "REST APIs",
+        "Sqlite",
+        "Unit Testing"
+      ],
+      "unresolved_target_technologies": [],
+      "graph_nodes": 14,
+      "known_in_graph": [
+        "Object-Oriented Programming",
+        "Kotlin"
+      ],
+      "strict": {
+        "remaining_to_learn": 12,
+        "eligible_now": [
+          "Computer Programming",
+          "IT Fundamentals",
+          "Mobile App Development"
+        ]
+      },
+      "closure": {
+        "remaining_to_learn": 11,
+        "eligible_now": [
+          "Unit Testing",
+          "IT Fundamentals",
+          "Mobile App Development"
+        ]
+      }
+    },
+    {
+      "sample_id": "G1_000005",
+      "raw_target_role": null,
+      "role_match": {
+        "status": "unresolved",
+        "method": null,
+        "candidates": []
+      },
+      "outside_graph_target_technologies": [],
+      "matched_role": null,
+      "targets": [
+        "React",
+        "Firebase"
+      ],
+      "unresolved_target_technologies": [],
+      "graph_nodes": 12,
+      "known_in_graph": [
+        "HTML",
+        "CSS"
+      ],
+      "strict": {
+        "remaining_to_learn": 10,
+        "eligible_now": [
+          "Computer Programming",
+          "IT Fundamentals"
+        ]
+      },
+      "closure": {
+        "remaining_to_learn": 9,
+        "eligible_now": [
+          "Computer Programming",
+          "Database (DBMS)",
+          "Computer Network"
+        ]
+      }
+    },
+    {
+      "sample_id": "G1_000006",
+      "raw_target_role": "cloud architect",
+      "role_match": {
+        "status": "matched",
+        "method": "exact",
+        "candidates": []
+      },
+      "outside_graph_target_technologies": [],
+      "matched_role": "Cloud Architect",
+      "targets": [
+        "Cloud Architecture",
+        "Multi-Cloud",
+        "Cloud Security",
+        "Cloud Networking",
+        "Systems Design"
+      ],
+      "unresolved_target_technologies": [],
+      "graph_nodes": 18,
+      "known_in_graph": [],
+      "strict": {
+        "remaining_to_learn": 18,
+        "eligible_now": [
+          "Computer Programming",
+          "IT Fundamentals"
+        ]
+      },
+      "closure": {
+        "remaining_to_learn": 17,
+        "eligible_now": [
+          "IT Fundamentals",
+          "Object-Oriented Programming"
+        ]
+      }
+    }
+  ]
+}

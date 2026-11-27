@@ -17,3 +17,7 @@ class Skills(Base):
     learning_path_edges_from = relationship("LearningPathEdge",foreign_keys="LearningPathEdge.from_skill_id",back_populates="from_skill",)
 
     learning_path_edges_to = relationship("LearningPathEdge",foreign_keys="LearningPathEdge.to_skill_id",back_populates="to_skill",)
+
+
+# Skill aliases live in Qdrant (collection edumentor_skills, points with kind="alias"),
+# managed by app/services/ai_reference_service.py.

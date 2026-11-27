@@ -80,11 +80,17 @@ def init_db() -> None:
         review_autoseed.run(SessionLocal)
     except Exception as e:
         print(f"[WARNING] Review bank auto-seed failed: {e}")
+    try:
+        # learning_path2 form options: certifications, technical domains
+        from app.core.seed_data.seed_profile_reference import seed_profile_reference
+        seed_profile_reference(SessionLocal())
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARNING] Seed profile reference failed: {e}")
     index_skills_to_qdrant()
 
 
 def index_skills_to_qdrant() -> None:
-    """Hòa: đánh chỉ mục tên kỹ năng vào Qdrant (lần đầu tạo collection) để gợi ý lộ trình tìm kỹ năng gần nghĩa.
+    """ đánh chỉ mục tên kỹ năng vào Qdrant (lần đầu tạo collection) để gợi ý lộ trình tìm kỹ năng gần nghĩa.
     Import mô hình + Qdrant NGAY TRONG HÀM (không ở đầu file) và bọc try: máy không chạy Qdrant / chưa cài
     sentence-transformers thì server vẫn khởi động, chỉ in cảnh báo (gộp nhánh 13/11)."""
     try:
@@ -105,6 +111,15 @@ def index_skills_to_qdrant() -> None:
             qdrant_skill_service.index_skill(skills, embedding)
     except Exception as e:  # noqa: BLE001 — tính năng phụ, không được làm sập server
         print(f"[WARNING] Bỏ qua đánh chỉ mục kỹ năng vào Qdrant: {e}")
+        return
+    try:
+        # AI learning path: skill aliases, job roles, role aliases, role candidate skills -> Qdrant
+        from app.core.seed_data.seed_ai_data import seed_ai_data
+        seed_ai_data(SessionLocal())
+    except FileNotFoundError as e:
+        print(f"[WARNING] AI reference data file not found, skipping: {e}")
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARNING] Bỏ qua nạp dữ liệu AI (alias, vai trò) vào Qdrant: {e}")
 
 
 def get_db():

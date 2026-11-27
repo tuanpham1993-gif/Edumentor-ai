@@ -1,0 +1,4309 @@
+[
+  {
+    "sample_id": "G1_002251",
+    "input": {
+      "original_query": "So far: 2nd-year cybersecurity student, 4-month internship at a managed SOC where I wrote Splunk queries and tuned alert rules, plus the CompTIA Security+. Target: detection engineer by May 31, 2028. Time: about 12 hours a week.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "So far: 2nd-year cybersecurity student, 4-month internship at a managed SOC where I wrote Splunk queries and tuned alert rules, plus the CompTIA Security+. Target: detection engineer by May 31, 2028. Time: about 12 hours a week.",
+        "target_role": {
+          "raw_name": "detection engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "student",
+        "current_job_title": null,
+        "industry": "managed SOC",
+        "technical_domains": [
+          "Cybersecurity"
+        ],
+        "certifications": [
+          "CompTIA Security+"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "4 months"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Splunk",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Alert Tuning",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Wrote Splunk queries and tuned alert rules during a 4-month internship at a managed SOC.",
+          "related_skills": [
+            "Splunk",
+            "Alert Tuning"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 12,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "fixed_date",
+          "target_date": "2028-05-31",
+          "duration_value": null,
+          "duration_unit": null
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "current_job_title"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002252",
+    "input": {
+      "original_query": "Em biết Python khá, OpenCV cơ bản, đã dùng YOLOv8 để đếm xe trong video cho bài tập lớn. Em muốn làm computer vision engineer.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "student",
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [
+          "Artificial Intelligence"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 12,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Em biết Python khá, OpenCV cơ bản, đã dùng YOLOv8 để đếm xe trong video cho bài tập lớn. Em muốn làm computer vision engineer.",
+        "target_role": {
+          "raw_name": "computer vision engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "student",
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [
+          "Artificial Intelligence"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Python",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "OpenCV",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "YOLOv8",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Dùng YOLOv8 để đếm xe trong video cho bài tập lớn.",
+          "related_skills": [
+            "YOLOv8"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 12,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "current_job_title",
+        "industry",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_skills",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002253",
+    "input": {
+      "original_query": "I'm a student and want to build a browser extension that blocks distracting sites during study sessions, using TypeScript and the Chrome Extensions API, done before exams on December 1, 2027.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a student and want to build a browser extension that blocks distracting sites during study sessions, using TypeScript and the Chrome Extensions API, done before exams on December 1, 2027.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "TypeScript",
+          "Chrome Extensions API"
+        ],
+        "goal_type": "project"
+      },
+      "career_background": {
+        "career_level": "student",
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": {
+          "deadline_type": "fixed_date",
+          "target_date": "2027-12-01",
+          "duration_value": null,
+          "duration_unit": null
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "target_role",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications",
+        "available_study_time"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_projects",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002254",
+    "input": {
+      "original_query": "Em là sinh viên năm cuối, đang làm part-time content cho kênh YouTube dạy lập trình, viết code mẫu bằng Python và quay video hướng dẫn. Em muốn trở thành developer advocate.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": "10 months",
+        "industry": null,
+        "technical_domains": [
+          "Developer Relations"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 10,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Em là sinh viên năm cuối, đang làm part-time content cho kênh YouTube dạy lập trình, viết code mẫu bằng Python và quay video hướng dẫn. Em muốn trở thành developer advocate.",
+        "target_role": {
+          "raw_name": "developer advocate",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "student",
+        "current_job_title": "part-time content",
+        "industry": null,
+        "technical_domains": [
+          "Developer Relations"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "10 months"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Python",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Technical Content Creation",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Viết code mẫu bằng Python và quay video hướng dẫn cho kênh YouTube dạy lập trình.",
+          "related_skills": [
+            "Python",
+            "Technical Content Creation"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 10,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "industry",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_role",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002255",
+    "input": {
+      "original_query": "I'm studying business IT. I'm interested in both ERP consulting and data analytics. Which one should I prepare for?",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "student",
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [
+          {
+            "skill_name": "Excel",
+            "proficiency_level": "advanced",
+            "experience_duration": null
+          },
+          {
+            "skill_name": "SQL",
+            "proficiency_level": "basic",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 8,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm studying business IT. I'm interested in both ERP consulting and data analytics. Which one should I prepare for?",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "student",
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Excel",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        },
+        {
+          "skill_name": "SQL",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        }
+      ],
+      "status": "needs_clarification",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 8,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": null
+      },
+      "clarification_required": [
+        {
+          "field": "goal.target_role",
+          "question": "Which role do you want to prepare for?",
+          "options": [
+            "ERP Consultant",
+            "Data Analyst",
+            "Help me compare"
+          ]
+        }
+      ],
+      "unknown_fields": [
+        "target_role",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "conflicting_or_ambiguous",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002256",
+    "input": {
+      "original_query": "Em là fresher kỹ sư kiểm thử 8 tháng ở công ty phần mềm Nhật, viết automation test bằng Selenium và Python, chạy trên Jenkins mỗi đêm. Em có ISTQB Foundation Level. Em muốn trở thành SDET trong 6 tháng, học thêm Playwright, mỗi tuần 10 tiếng.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Em là fresher kỹ sư kiểm thử 8 tháng ở công ty phần mềm Nhật, viết automation test bằng Selenium và Python, chạy trên Jenkins mỗi đêm. Em có ISTQB Foundation Level. Em muốn trở thành SDET trong 6 tháng, học thêm Playwright, mỗi tuần 10 tiếng.",
+        "target_role": {
+          "raw_name": "SDET",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Playwright"
+        ],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "fresher",
+        "current_job_title": "kỹ sư kiểm thử",
+        "industry": "phần mềm Nhật",
+        "technical_domains": [
+          "Quality Assurance"
+        ],
+        "certifications": [
+          "ISTQB Foundation Level"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "8 months"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Selenium",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Python",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Jenkins",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Viết automation test bằng Selenium và Python, chạy trên Jenkins mỗi đêm.",
+          "related_skills": [
+            "Selenium",
+            "Python",
+            "Jenkins"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 10,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 6,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": []
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002257",
+    "input": {
+      "original_query": "I'm basic in R and intermediate in SQL, and I built a few Shiny dashboards during my internship. I want to become a biostatistics programmer.",
+      "learner_input": {
+        "current_job_title": "Statistics Intern",
+        "career_level": "intern",
+        "relevant_it_work_experience": "4 months",
+        "industry": "Pharmaceutical",
+        "technical_domains": [
+          "Biostatistics"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 3,
+            "unit": "hours",
+            "period": "per_day"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 8,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm basic in R and intermediate in SQL, and I built a few Shiny dashboards during my internship. I want to become a biostatistics programmer.",
+        "target_role": {
+          "raw_name": "biostatistics programmer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "intern",
+        "current_job_title": "Statistics Intern",
+        "industry": "Pharmaceutical",
+        "technical_domains": [
+          "Biostatistics"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "4 months"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "R",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "SQL",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Shiny",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Built a few Shiny dashboards during an internship.",
+          "related_skills": [
+            "Shiny"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_day"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 8,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_skills",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002258",
+    "input": {
+      "original_query": "Em là fresher, đã đi làm 9 tháng ở vị trí frontend developer. Em muốn trở thành full stack developer trong 1 năm.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": "Agency",
+        "technical_domains": [],
+        "skill_profiles": [
+          {
+            "skill_name": "React",
+            "proficiency_level": "intermediate",
+            "experience_duration": null
+          },
+          {
+            "skill_name": "JavaScript",
+            "proficiency_level": "intermediate",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 10,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Em là fresher, đã đi làm 9 tháng ở vị trí frontend developer. Em muốn trở thành full stack developer trong 1 năm.",
+        "target_role": {
+          "raw_name": "full stack developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "fresher",
+        "current_job_title": "frontend developer",
+        "industry": "Agency",
+        "technical_domains": [
+          "Frontend Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "9 months"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "React",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        },
+        {
+          "skill_name": "JavaScript",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 10,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_career_level_and_experience",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002259",
+    "input": {
+      "original_query": "I'm a fresher with the Google Data Analytics Professional Certificate and the Microsoft PL-300. I'd like to become a business intelligence developer.",
+      "learner_input": {
+        "current_job_title": "Reporting Assistant",
+        "career_level": null,
+        "relevant_it_work_experience": "5 months",
+        "industry": "Logistics",
+        "technical_domains": [
+          "Business Intelligence"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 10,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 6,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a fresher with the Google Data Analytics Professional Certificate and the Microsoft PL-300. I'd like to become a business intelligence developer.",
+        "target_role": {
+          "raw_name": "business intelligence developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "fresher",
+        "current_job_title": "Reporting Assistant",
+        "industry": "Logistics",
+        "technical_domains": [
+          "Business Intelligence"
+        ],
+        "certifications": [
+          "Google Data Analytics Professional Certificate",
+          "Microsoft PL-300"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "5 months"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 10,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 6,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "skill_profiles"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_certifications",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002260",
+    "input": {
+      "original_query": "Em ước mơ trở thành kỹ sư phần mềm nhúng cho ô tô.",
+      "learner_input": {
+        "current_job_title": "Embedded Intern",
+        "career_level": "intern",
+        "relevant_it_work_experience": "3 months",
+        "industry": null,
+        "technical_domains": [
+          "Embedded Systems"
+        ],
+        "skill_profiles": [
+          {
+            "skill_name": "C",
+            "proficiency_level": "intermediate",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Em ước mơ trở thành kỹ sư phần mềm nhúng cho ô tô.",
+        "target_role": {
+          "raw_name": "kỹ sư phần mềm nhúng",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "intern",
+        "current_job_title": "Embedded Intern",
+        "industry": null,
+        "technical_domains": [
+          "Embedded Systems"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "3 months"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "C",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "industry",
+        "certifications",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_only",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "sample_id": "G1_002261",
+    "input": {
+      "original_query": "I'm a junior technical artist at a mobile game studio (1 year), writing shaders in HLSL and Python tools for Maya. I want to become a senior technical artist within 18 months and learn Houdini, about 6 hours a week.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a junior technical artist at a mobile game studio (1 year), writing shaders in HLSL and Python tools for Maya. I want to become a senior technical artist within 18 months and learn Houdini, about 6 hours a week.",
+        "target_role": {
+          "raw_name": "senior technical artist",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Houdini"
+        ],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "technical artist",
+        "industry": "mobile game studio",
+        "technical_domains": [
+          "Game Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1 year"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "HLSL",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Python",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Maya",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Writes shaders in HLSL and Python tools for Maya at a mobile game studio.",
+          "related_skills": [
+            "HLSL",
+            "Python",
+            "Maya"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 6,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 18,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002262",
+    "input": {
+      "original_query": "Mình là junior frontend 2 năm ở công ty fintech, làm dashboard bằng React và Recharts, viết test bằng Cypress. Mình muốn trở thành senior frontend developer trong 1 năm, mỗi tuần 6 tiếng.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "fresher",
+        "relevant_it_work_experience": "1.5 years",
+        "industry": null,
+        "technical_domains": [
+          "Frontend Development"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 4,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là junior frontend 2 năm ở công ty fintech, làm dashboard bằng React và Recharts, viết test bằng Cypress. Mình muốn trở thành senior frontend developer trong 1 năm, mỗi tuần 6 tiếng.",
+        "target_role": {
+          "raw_name": "senior frontend developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "fresher",
+        "current_job_title": "frontend",
+        "industry": "fintech",
+        "technical_domains": [
+          "Frontend Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1.5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "React",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Recharts",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Cypress",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Làm dashboard bằng React và Recharts, viết test bằng Cypress.",
+          "related_skills": [
+            "React",
+            "Recharts",
+            "Cypress"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 4,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "sample_id": "G1_002263",
+    "input": {
+      "original_query": "I'm a junior database administrator at a university, handling MySQL backups, user permissions and slow-query tuning. I want to become a database reliability engineer.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": "1.5 years",
+        "industry": null,
+        "technical_domains": [
+          "Database Administration"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 5,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a junior database administrator at a university, handling MySQL backups, user permissions and slow-query tuning. I want to become a database reliability engineer.",
+        "target_role": {
+          "raw_name": "database reliability engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "database administrator",
+        "industry": "university",
+        "technical_domains": [
+          "Database Administration"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1.5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "MySQL",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Query Optimization",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Handles MySQL backups, user permissions and slow-query tuning at a university.",
+          "related_skills": [
+            "MySQL",
+            "Query Optimization"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 5,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_role",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002264",
+    "input": {
+      "original_query": "Mình biết Kotlin mức trung bình, Jetpack Compose cơ bản, Coroutines khá. Mình muốn trở thành Android developer giỏi.",
+      "learner_input": {
+        "current_job_title": "Android Developer",
+        "career_level": "junior",
+        "relevant_it_work_experience": "1.5 years",
+        "industry": "Thương mại điện tử",
+        "technical_domains": [
+          "Mobile Development"
+        ],
+        "skill_profiles": [
+          {
+            "skill_name": "Coroutines",
+            "proficiency_level": "basic",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 6,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 9,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình biết Kotlin mức trung bình, Jetpack Compose cơ bản, Coroutines khá. Mình muốn trở thành Android developer giỏi.",
+        "target_role": {
+          "raw_name": "Android developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "Android Developer",
+        "industry": "Thương mại điện tử",
+        "technical_domains": [
+          "Mobile Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1.5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Coroutines",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        },
+        {
+          "skill_name": "Kotlin",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Jetpack Compose",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 6,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 9,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_skills",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "sample_id": "G1_002265",
+    "input": {
+      "original_query": "I'm a junior data engineer and I want to build an open-source pipeline that ingests public weather data with Dagster and stores it in DuckDB, in 6 weeks.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": "1 year",
+        "industry": null,
+        "technical_domains": [
+          "Data Engineering"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 6,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a junior data engineer and I want to build an open-source pipeline that ingests public weather data with Dagster and stores it in DuckDB, in 6 weeks.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Dagster",
+          "DuckDB"
+        ],
+        "goal_type": "project"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "data engineer",
+        "industry": null,
+        "technical_domains": [
+          "Data Engineering"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1 year"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 6,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 6,
+          "duration_unit": "weeks"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "target_role",
+        "industry",
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_projects",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002266",
+    "input": {
+      "original_query": "Mình là junior developer 1.5 năm ở công ty bất động sản, làm hệ thống quản lý dự án căn hộ bằng Laravel. Mình muốn trở thành proptech developer.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [
+          "Web Development"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 5,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là junior developer 1.5 năm ở công ty bất động sản, làm hệ thống quản lý dự án căn hộ bằng Laravel. Mình muốn trở thành proptech developer.",
+        "target_role": {
+          "raw_name": "proptech developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "developer",
+        "industry": "bất động sản",
+        "technical_domains": [
+          "Web Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1.5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Laravel",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Làm hệ thống quản lý dự án căn hộ bằng Laravel.",
+          "related_skills": [
+            "Laravel"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 5,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_industry_or_domain",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002267",
+    "input": {
+      "original_query": "I'm a junior cloud engineer. My lead says I should go into FinOps, but I'm more interested in security. Not sure what to do.",
+      "learner_input": {
+        "current_job_title": "Cloud Engineer",
+        "career_level": null,
+        "relevant_it_work_experience": "1.5 years",
+        "industry": "SaaS",
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 5,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a junior cloud engineer. My lead says I should go into FinOps, but I'm more interested in security. Not sure what to do.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "Cloud Engineer",
+        "industry": "SaaS",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1.5 years"
+      },
+      "skill_profiles": [],
+      "status": "needs_clarification",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 5,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": null
+      },
+      "clarification_required": [
+        {
+          "field": "goal.target_role",
+          "question": "Which direction do you want to plan for?",
+          "options": [
+            "FinOps Analyst",
+            "Cloud Security Engineer",
+            "Help me compare"
+          ]
+        }
+      ],
+      "unknown_fields": [
+        "target_role",
+        "technical_domains",
+        "skill_profiles",
+        "certifications",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "conflicting_or_ambiguous",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002268",
+    "input": {
+      "original_query": "Mình muốn trở thành data engineer trước 1/10/2027, mỗi tuần học 9 tiếng.",
+      "learner_input": {
+        "current_job_title": "Data Analyst",
+        "career_level": "junior",
+        "relevant_it_work_experience": "1.5 years",
+        "industry": null,
+        "technical_domains": [
+          "Data Analytics"
+        ],
+        "skill_profiles": [
+          {
+            "skill_name": "SQL",
+            "proficiency_level": "advanced",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình muốn trở thành data engineer trước 1/10/2027, mỗi tuần học 9 tiếng.",
+        "target_role": {
+          "raw_name": "data engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "junior",
+        "current_job_title": "Data Analyst",
+        "industry": null,
+        "technical_domains": [
+          "Data Analytics"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "1.5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "SQL",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 9,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "fixed_date",
+          "target_date": "2027-10-01",
+          "duration_value": null,
+          "duration_unit": null
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "industry",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_constraints",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "sample_id": "G1_002269",
+    "input": {
+      "original_query": "I'm a product manager with 5 years at a B2B logistics SaaS, running discovery interviews and writing PRDs in Notion; I also write SQL in Metabase to check feature adoption. I want to become a group product manager within 18 months, around 4 hours a week.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "middle",
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [
+          "Pragmatic Institute PMC-III"
+        ],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a product manager with 5 years at a B2B logistics SaaS, running discovery interviews and writing PRDs in Notion; I also write SQL in Metabase to check feature adoption. I want to become a group product manager within 18 months, around 4 hours a week.",
+        "target_role": {
+          "raw_name": "group product manager",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "middle",
+        "current_job_title": "product manager",
+        "industry": "B2B logistics SaaS",
+        "technical_domains": [
+          "Product Management"
+        ],
+        "certifications": [
+          "Pragmatic Institute PMC-III"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Notion",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "SQL",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Metabase",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Customer Discovery",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Runs discovery interviews and writes PRDs in Notion.",
+          "related_skills": [
+            "Customer Discovery",
+            "Notion"
+          ],
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "description": "Writes SQL in Metabase to check feature adoption.",
+          "related_skills": [
+            "SQL",
+            "Metabase"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 4,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 18,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": []
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002270",
+    "input": {
+      "original_query": "Mình là kỹ sư hệ thống 5 năm ở công ty bảo hiểm, quản trị Active Directory, Exchange và Intune cho 2.000 nhân viên. Mình có chứng chỉ Microsoft 365 Certified: Enterprise Administrator Expert. Mình muốn trở thành cloud identity architect trong 1 năm, mỗi tuần 4 tiếng.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là kỹ sư hệ thống 5 năm ở công ty bảo hiểm, quản trị Active Directory, Exchange và Intune cho 2.000 nhân viên. Mình có chứng chỉ Microsoft 365 Certified: Enterprise Administrator Expert. Mình muốn trở thành cloud identity architect trong 1 năm, mỗi tuần 4 tiếng.",
+        "target_role": {
+          "raw_name": "cloud identity architect",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": "kỹ sư hệ thống",
+        "industry": "bảo hiểm",
+        "technical_domains": [
+          "IT Infrastructure"
+        ],
+        "certifications": [
+          "Microsoft 365 Certified: Enterprise Administrator Expert"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Active Directory",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Exchange",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Intune",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Quản trị Active Directory, Exchange và Intune cho 2.000 nhân viên.",
+          "related_skills": [
+            "Active Directory",
+            "Exchange",
+            "Intune"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 4,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002271",
+    "input": {
+      "original_query": "C++ advanced, Qt advanced, Python intermediate, CUDA basic. Goal: GPU software engineer.",
+      "learner_input": {
+        "current_job_title": "Software Engineer",
+        "career_level": "middle",
+        "relevant_it_work_experience": "6 years",
+        "industry": "Medical Imaging",
+        "technical_domains": [
+          "Embedded Systems"
+        ],
+        "skill_profiles": [
+          {
+            "skill_name": "CUDA",
+            "proficiency_level": "intermediate",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 5,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "C++ advanced, Qt advanced, Python intermediate, CUDA basic. Goal: GPU software engineer.",
+        "target_role": {
+          "raw_name": "GPU software engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "middle",
+        "current_job_title": "Software Engineer",
+        "industry": "Medical Imaging",
+        "technical_domains": [
+          "Embedded Systems"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "6 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "CUDA",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        },
+        {
+          "skill_name": "C++",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Qt",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Python",
+          "proficiency_level": "intermediate",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 5,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_skills",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "sample_id": "G1_002272",
+    "input": {
+      "original_query": "Mình đang là chuyên viên phân tích nghiệp vụ ở công ty chứng khoán, làm việc với dữ liệu giao dịch và viết đặc tả cho hệ thống margin. Mình muốn trở thành product owner mảng giao dịch.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "middle",
+        "relevant_it_work_experience": "5 years",
+        "industry": null,
+        "technical_domains": [
+          "Business Analysis"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 4,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình đang là chuyên viên phân tích nghiệp vụ ở công ty chứng khoán, làm việc với dữ liệu giao dịch và viết đặc tả cho hệ thống margin. Mình muốn trở thành product owner mảng giao dịch.",
+        "target_role": {
+          "raw_name": "product owner",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "middle",
+        "current_job_title": "chuyên viên phân tích nghiệp vụ",
+        "industry": "chứng khoán",
+        "technical_domains": [
+          "Business Analysis"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "5 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Requirements Documentation",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Làm việc với dữ liệu giao dịch và viết đặc tả cho hệ thống margin.",
+          "related_skills": [
+            "Requirements Documentation"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 4,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_role",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002273",
+    "input": {
+      "original_query": "Mid-level SRE, 5 years. Want to be a senior SRE by next year.",
+      "learner_input": {
+        "current_job_title": "Site Reliability Engineer",
+        "career_level": "senior",
+        "relevant_it_work_experience": "6 years",
+        "industry": "Gaming",
+        "technical_domains": [
+          "Site Reliability Engineering"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mid-level SRE, 5 years. Want to be a senior SRE by next year.",
+        "target_role": {
+          "raw_name": "senior SRE",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "senior",
+        "current_job_title": "Site Reliability Engineer",
+        "industry": "Gaming",
+        "technical_domains": [
+          "Site Reliability Engineering"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "6 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "skill_profiles",
+        "certifications",
+        "available_study_time"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_career_level_and_experience",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "sample_id": "G1_002274",
+    "input": {
+      "original_query": "Mình có chứng chỉ CompTIA CySA+ và GIAC GCIH. Mình muốn trở thành incident response lead.",
+      "learner_input": {
+        "current_job_title": "SOC Analyst",
+        "career_level": "middle",
+        "relevant_it_work_experience": "5 years",
+        "industry": "Ngân hàng",
+        "technical_domains": [
+          "Cybersecurity"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 5,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình có chứng chỉ CompTIA CySA+ và GIAC GCIH. Mình muốn trở thành incident response lead.",
+        "target_role": {
+          "raw_name": "incident response lead",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "middle",
+        "current_job_title": "SOC Analyst",
+        "industry": "Ngân hàng",
+        "technical_domains": [
+          "Cybersecurity"
+        ],
+        "certifications": [
+          "CompTIA CySA+",
+          "GIAC GCIH"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "5 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 5,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": null
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "skill_profiles",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_certifications",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002275",
+    "input": {
+      "original_query": "I'm a .NET developer with 6 years. Should I double down on Azure and become a cloud architect, or switch to Go and modern backend work?",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "middle",
+        "relevant_it_work_experience": null,
+        "industry": "Insurance",
+        "technical_domains": [
+          "Backend Development"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 4,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a .NET developer with 6 years. Should I double down on Azure and become a cloud architect, or switch to Go and modern backend work?",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "middle",
+        "current_job_title": ".NET developer",
+        "industry": "Insurance",
+        "technical_domains": [
+          "Backend Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "6 years"
+      },
+      "skill_profiles": [],
+      "status": "needs_clarification",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 4,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": null
+      },
+      "clarification_required": [
+        {
+          "field": "goal.target_role",
+          "question": "Which path do you want to plan for?",
+          "options": [
+            "Azure Cloud Architect",
+            "Go Backend Engineer",
+            "Help me compare"
+          ]
+        }
+      ],
+      "unknown_fields": [
+        "target_role",
+        "skill_profiles",
+        "certifications",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "conflicting_or_ambiguous",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002276",
+    "input": {
+      "original_query": "Anh là senior BI developer 10 năm ở tập đoàn bán lẻ, xây kho dữ liệu trên SQL Server và hệ thống báo cáo Power BI cho 800 cửa hàng. Anh có chứng chỉ DP-600 Fabric Analytics Engineer. Anh muốn trở thành data architect trên Microsoft Fabric, trong 1 năm, mỗi tuần 3 tiếng.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Anh là senior BI developer 10 năm ở tập đoàn bán lẻ, xây kho dữ liệu trên SQL Server và hệ thống báo cáo Power BI cho 800 cửa hàng. Anh có chứng chỉ DP-600 Fabric Analytics Engineer. Anh muốn trở thành data architect trên Microsoft Fabric, trong 1 năm, mỗi tuần 3 tiếng.",
+        "target_role": {
+          "raw_name": "data architect",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Microsoft Fabric"
+        ],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "senior",
+        "current_job_title": "BI developer",
+        "industry": "bán lẻ",
+        "technical_domains": [
+          "Business Intelligence"
+        ],
+        "certifications": [
+          "DP-600 Fabric Analytics Engineer"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "10 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "SQL Server",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Power BI",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Data Warehousing",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Xây kho dữ liệu trên SQL Server và hệ thống báo cáo Power BI cho 800 cửa hàng.",
+          "related_skills": [
+            "Data Warehousing",
+            "SQL Server",
+            "Power BI"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": []
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002277",
+    "input": {
+      "original_query": "Senior software engineer with 12 years in aviation, building crew-planning optimizers in Java. I want to become a technical director for an airline IT department.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [
+          "Backend Development"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 3,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 2,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Senior software engineer with 12 years in aviation, building crew-planning optimizers in Java. I want to become a technical director for an airline IT department.",
+        "target_role": {
+          "raw_name": "technical director",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "senior",
+        "current_job_title": "software engineer",
+        "industry": "aviation",
+        "technical_domains": [
+          "Backend Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "12 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Java",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Optimization Modeling",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "inferred_from_context"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Builds crew-planning optimizers in Java.",
+          "related_skills": [
+            "Java",
+            "Optimization Modeling"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 2,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_industry_or_domain",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002278",
+    "input": {
+      "original_query": "Anh dùng Python expert, Django nâng cao, AWS trung bình, Terraform cơ bản. Anh muốn trở thành solution architect.",
+      "learner_input": {
+        "current_job_title": "Senior Backend Developer",
+        "career_level": "senior",
+        "relevant_it_work_experience": "11 years",
+        "industry": "Giáo dục",
+        "technical_domains": [
+          "Backend Development"
+        ],
+        "skill_profiles": [
+          {
+            "skill_name": "AWS",
+            "proficiency_level": "advanced",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 1,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Anh dùng Python expert, Django nâng cao, AWS trung bình, Terraform cơ bản. Anh muốn trở thành solution architect.",
+        "target_role": {
+          "raw_name": "solution architect",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "senior",
+        "current_job_title": "Senior Backend Developer",
+        "industry": "Giáo dục",
+        "technical_domains": [
+          "Backend Development"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "11 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "AWS",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        },
+        {
+          "skill_name": "Python",
+          "proficiency_level": "expert",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Django",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Terraform",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 1,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications",
+        "available_study_time"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_skills",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "sample_id": "G1_002279",
+    "input": {
+      "original_query": "I want to build an internal service catalog with SLO tracking using Backstage and Prometheus, rolled out within 3 months. I'm a senior SRE with 10 years of experience.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": "Fintech",
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 4,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I want to build an internal service catalog with SLO tracking using Backstage and Prometheus, rolled out within 3 months. I'm a senior SRE with 10 years of experience.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Backstage",
+          "Prometheus"
+        ],
+        "goal_type": "project"
+      },
+      "career_background": {
+        "career_level": "senior",
+        "current_job_title": "SRE",
+        "industry": "Fintech",
+        "technical_domains": [
+          "Site Reliability Engineering"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "10 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 4,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 3,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "target_role",
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_projects",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002280",
+    "input": {
+      "original_query": "Anh muốn trở thành kiến trúc sư giải pháp đám mây.",
+      "learner_input": {
+        "current_job_title": "Senior Cloud Engineer",
+        "career_level": "senior",
+        "relevant_it_work_experience": "11 years",
+        "industry": "Viễn thông",
+        "technical_domains": [
+          "Cloud Computing"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Anh muốn trở thành kiến trúc sư giải pháp đám mây.",
+        "target_role": {
+          "raw_name": "kiến trúc sư giải pháp đám mây",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "senior",
+        "current_job_title": "Senior Cloud Engineer",
+        "industry": "Viễn thông",
+        "technical_domains": [
+          "Cloud Computing"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "11 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "skill_profiles",
+        "certifications",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_only",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "sample_id": "G1_002281",
+    "input": {
+      "original_query": "I'm a tech lead at a national e-government agency, with 13 years in software and a team of 8. We built the citizen identity portal with Java, Keycloak and PostgreSQL. I want to become a government enterprise architect within 2 years, about 3 hours a week.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a tech lead at a national e-government agency, with 13 years in software and a team of 8. We built the citizen identity portal with Java, Keycloak and PostgreSQL. I want to become a government enterprise architect within 2 years, about 3 hours a week.",
+        "target_role": {
+          "raw_name": "government enterprise architect",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "lead",
+        "current_job_title": "tech lead",
+        "industry": "e-government agency",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "13 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Java",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Keycloak",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "PostgreSQL",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Built the citizen identity portal with Java, Keycloak and PostgreSQL.",
+          "related_skills": [
+            "Java",
+            "Keycloak",
+            "PostgreSQL"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 2,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "technical_domains",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002282",
+    "input": {
+      "original_query": "Mình là trưởng nhóm SRE ở công ty thương mại điện tử, quản lý 6 người và hệ thống giám sát bằng Prometheus, Grafana. Mình muốn trở thành head of reliability.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "lead",
+        "relevant_it_work_experience": "11 years",
+        "industry": null,
+        "technical_domains": [
+          "Site Reliability Engineering"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 3,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 18,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là trưởng nhóm SRE ở công ty thương mại điện tử, quản lý 6 người và hệ thống giám sát bằng Prometheus, Grafana. Mình muốn trở thành head of reliability.",
+        "target_role": {
+          "raw_name": "head of reliability",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "lead",
+        "current_job_title": "trưởng nhóm SRE",
+        "industry": "thương mại điện tử",
+        "technical_domains": [
+          "Site Reliability Engineering"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "11 years"
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Prometheus",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Grafana",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Quản lý 6 người và hệ thống giám sát bằng Prometheus, Grafana.",
+          "related_skills": [
+            "Prometheus",
+            "Grafana"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 18,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_role",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002283",
+    "input": {
+      "original_query": "I've managed engineering teams for 5 years, 16 years in tech overall. I want to become a CTO.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": "Healthcare",
+        "technical_domains": [
+          "Software Engineering"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 3,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 2,
+            "duration_unit": "years"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I've managed engineering teams for 5 years, 16 years in tech overall. I want to become a CTO.",
+        "target_role": {
+          "raw_name": "CTO",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": "Healthcare",
+        "technical_domains": [
+          "Software Engineering"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "16 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 2,
+          "duration_unit": "years"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level",
+        "current_job_title",
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_career_level_and_experience",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002284",
+    "input": {
+      "original_query": "Mình là data lead, công ty vừa mở mảng AI và mình phân vân nên chuyển sang dẫn team AI hay giữ mảng data platform.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "lead",
+        "relevant_it_work_experience": "11 years",
+        "industry": "Bảo hiểm",
+        "technical_domains": [
+          "Data Engineering"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là data lead, công ty vừa mở mảng AI và mình phân vân nên chuyển sang dẫn team AI hay giữ mảng data platform.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "lead",
+        "current_job_title": "data lead",
+        "industry": "Bảo hiểm",
+        "technical_domains": [
+          "Data Engineering"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "11 years"
+      },
+      "skill_profiles": [],
+      "status": "needs_clarification",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [
+        {
+          "field": "goal.target_role",
+          "question": "Bạn muốn lên kế hoạch cho vai trò nào?",
+          "options": [
+            "AI Engineering Lead",
+            "Data Platform Lead",
+            "Giúp mình so sánh"
+          ]
+        }
+      ],
+      "unknown_fields": [
+        "target_role",
+        "skill_profiles",
+        "certifications",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "conflicting_or_ambiguous",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002285",
+    "input": {
+      "original_query": "I need to become a certified enterprise architect by June 30, 2027, and I can only give it 3 hours a week.",
+      "learner_input": {
+        "current_job_title": "Solutions Architect",
+        "career_level": "architect",
+        "relevant_it_work_experience": "14 years",
+        "industry": "Insurance",
+        "technical_domains": [
+          "Software Architecture"
+        ],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I need to become a certified enterprise architect by June 30, 2027, and I can only give it 3 hours a week.",
+        "target_role": {
+          "raw_name": "enterprise architect",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "architect",
+        "current_job_title": "Solutions Architect",
+        "industry": "Insurance",
+        "technical_domains": [
+          "Software Architecture"
+        ],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": "14 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 3,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "fixed_date",
+          "target_date": "2027-06-30",
+          "duration_value": null,
+          "duration_unit": null
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_constraints",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002286",
+    "input": {
+      "original_query": "Mình là chuyên viên marketing 6 năm ở công ty mỹ phẩm, chạy Google Ads và phân tích bằng Google Analytics 4, 5 tháng nay tự học SQL và BigQuery. Mình muốn chuyển sang marketing analytics engineer, mỗi tuần 10 tiếng trong 8 tháng.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là chuyên viên marketing 6 năm ở công ty mỹ phẩm, chạy Google Ads và phân tích bằng Google Analytics 4, 5 tháng nay tự học SQL và BigQuery. Mình muốn chuyển sang marketing analytics engineer, mỗi tuần 10 tiếng trong 8 tháng.",
+        "target_role": {
+          "raw_name": "marketing analytics engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": "chuyên viên marketing",
+        "industry": "mỹ phẩm",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Google Ads",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Google Analytics 4",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "SQL",
+          "proficiency_level": null,
+          "experience_duration": "5 months",
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "BigQuery",
+          "proficiency_level": null,
+          "experience_duration": "5 months",
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Chạy Google Ads và phân tích bằng Google Analytics 4.",
+          "related_skills": [
+            "Google Ads",
+            "Google Analytics 4"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 10,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 8,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002287",
+    "input": {
+      "original_query": "Former chef of 12 years, now 8 months into learning Python and Django; I built a recipe-costing web app for my old restaurant. I'm switching careers to become a backend developer within 6 months, studying 20 hours a week.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Former chef of 12 years, now 8 months into learning Python and Django; I built a recipe-costing web app for my old restaurant. I'm switching careers to become a backend developer within 6 months, studying 20 hours a week.",
+        "target_role": {
+          "raw_name": "backend developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [
+          "chef"
+        ],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Python",
+          "proficiency_level": null,
+          "experience_duration": "8 months",
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Django",
+          "proficiency_level": null,
+          "experience_duration": "8 months",
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Built a recipe-costing web app for a restaurant with Python and Django.",
+          "related_skills": [
+            "Python",
+            "Django"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 20,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 6,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002288",
+    "input": {
+      "original_query": "Mình là nhân viên kho vận, dùng Excel thành thạo, biết SQL cơ bản và đã làm báo cáo tồn kho bằng Power BI. Mình muốn chuyển sang supply chain analyst.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": "career_switcher",
+        "relevant_it_work_experience": null,
+        "industry": "Logistics",
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 8,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 6,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là nhân viên kho vận, dùng Excel thành thạo, biết SQL cơ bản và đã làm báo cáo tồn kho bằng Power BI. Mình muốn chuyển sang supply chain analyst.",
+        "target_role": {
+          "raw_name": "supply chain analyst",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": "nhân viên kho vận",
+        "industry": "Logistics",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Excel",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "SQL",
+          "proficiency_level": "basic",
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        },
+        {
+          "skill_name": "Power BI",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Làm báo cáo tồn kho bằng Power BI.",
+          "related_skills": [
+            "Power BI"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 8,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 6,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_skills",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002289",
+    "input": {
+      "original_query": "I'm a lab technician at a hospital, and I'm the go-to person for our LIS software and the barcode printers. I want to switch into healthcare IT as an application analyst.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 6,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 6,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I'm a lab technician at a hospital, and I'm the go-to person for our LIS software and the barcode printers. I want to switch into healthcare IT as an application analyst.",
+        "target_role": {
+          "raw_name": "application analyst",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": "lab technician",
+        "industry": "hospital",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "LIS",
+          "proficiency_level": null,
+          "experience_duration": null,
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Go-to person for the hospital's LIS software and barcode printers.",
+          "related_skills": [
+            "LIS"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 6,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 6,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_role",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002290",
+    "input": {
+      "original_query": "Mình là giáo viên piano, muốn tự làm app quản lý học viên và lịch dạy bằng Glide trong 2 tuần.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là giáo viên piano, muốn tự làm app quản lý học viên và lịch dạy bằng Glide trong 2 tuần.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Glide"
+        ],
+        "goal_type": "project"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": "giáo viên piano",
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 2,
+          "duration_unit": "weeks"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "target_role",
+        "career_level",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications",
+        "available_study_time"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_projects",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002291",
+    "input": {
+      "original_query": "I've been a fashion buyer for 7 years and want to switch into e-commerce merchandising analytics.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [
+          {
+            "skill_name": "Excel",
+            "proficiency_level": "advanced",
+            "experience_duration": null
+          }
+        ],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 6,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 8,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I've been a fashion buyer for 7 years and want to switch into e-commerce merchandising analytics.",
+        "target_role": {
+          "raw_name": "e-commerce merchandising analytics",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": "fashion buyer",
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Excel",
+          "proficiency_level": "advanced",
+          "experience_duration": null,
+          "evidence_type": "user_provided_structured"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 6,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 8,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_industry_or_domain",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002292",
+    "input": {
+      "original_query": "Mình là kỹ sư xây dựng, đã có Autodesk Revit Certified Professional và Google Project Management. Mình muốn chuyển sang làm BIM manager.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình là kỹ sư xây dựng, đã có Autodesk Revit Certified Professional và Google Project Management. Mình muốn chuyển sang làm BIM manager.",
+        "target_role": {
+          "raw_name": "BIM manager",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": "kỹ sư xây dựng",
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [
+          "Autodesk Revit Certified Professional",
+          "Google Project Management"
+        ],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_certifications",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002293",
+    "input": {
+      "original_query": "I want to become a cybersecurity analyst.",
+      "learner_input": {
+        "current_job_title": "Police Officer",
+        "career_level": "career_switcher",
+        "relevant_it_work_experience": null,
+        "industry": "Public Safety",
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I want to become a cybersecurity analyst.",
+        "target_role": {
+          "raw_name": "cybersecurity analyst",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": "career_switcher",
+        "current_job_title": "Police Officer",
+        "industry": "Public Safety",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_only",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "sample_id": "G1_002294",
+    "input": {
+      "original_query": "Mình chưa từng làm IT, nhưng 6 tháng nay học Flutter qua khóa online, làm app ghi chép chi tiêu và đưa lên Google Play. Mình muốn trở thành mobile developer trong 8 tháng, mỗi tuần 12 tiếng.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình chưa từng làm IT, nhưng 6 tháng nay học Flutter qua khóa online, làm app ghi chép chi tiêu và đưa lên Google Play. Mình muốn trở thành mobile developer trong 8 tháng, mỗi tuần 12 tiếng.",
+        "target_role": {
+          "raw_name": "mobile developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [
+        {
+          "skill_name": "Flutter",
+          "proficiency_level": null,
+          "experience_duration": "6 months",
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "status": "ready",
+      "practical_experience": [
+        {
+          "description": "Làm app ghi chép chi tiêu bằng Flutter và đưa lên Google Play.",
+          "related_skills": [
+            "Flutter"
+          ],
+          "evidence_type": "explicitly_reported"
+        }
+      ],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 12,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 8,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "mixed_information",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002295",
+    "input": {
+      "original_query": "Goal: become a frontend developer in 10 months. I can study 2 hours every day.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Goal: become a frontend developer in 10 months. I can study 2 hours every day.",
+        "target_role": {
+          "raw_name": "frontend developer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 2,
+          "unit": "hours",
+          "period": "per_day"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 10,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_constraints",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "sample_id": "G1_002296",
+    "input": {
+      "original_query": "Mình từng làm system admin 3 năm, sau đó ra ngoài kinh doanh 5 năm. Giờ mình muốn quay lại làm DevOps engineer.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 10,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 8,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình từng làm system admin 3 năm, sau đó ra ngoài kinh doanh 5 năm. Giờ mình muốn quay lại làm DevOps engineer.",
+        "target_role": {
+          "raw_name": "DevOps engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [
+          "system admin"
+        ],
+        "relevant_it_work_experience": "3 years"
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 10,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 8,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_career_level_and_experience",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002297",
+    "input": {
+      "original_query": "I work in a dental lab and want to become a 3D printing software specialist for dentistry.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": {
+            "value": 5,
+            "unit": "hours",
+            "period": "per_week"
+          },
+          "deadline": {
+            "deadline_type": "relative_duration",
+            "target_date": null,
+            "duration_value": 9,
+            "duration_unit": "months"
+          }
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I work in a dental lab and want to become a 3D printing software specialist for dentistry.",
+        "target_role": {
+          "raw_name": "3D printing software specialist",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": "dental lab",
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": {
+          "value": 5,
+          "unit": "hours",
+          "period": "per_week"
+        },
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 9,
+          "duration_unit": "months"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level",
+        "current_job_title",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_industry_or_domain",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002298",
+    "input": {
+      "original_query": "Mình muốn đi làm remote ngành IT, nên học gì để có việc trong năm nay?",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình muốn đi làm remote ngành IT, nên học gì để có việc trong năm nay?",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "needs_clarification",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [
+        {
+          "field": "goal.target_role",
+          "question": "Bạn muốn làm vị trí nào?",
+          "options": [
+            "Frontend Developer",
+            "QA Tester",
+            "Data Analyst",
+            "Chưa biết"
+          ]
+        }
+      ],
+      "unknown_fields": [
+        "target_role",
+        "career_level",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "conflicting_or_ambiguous",
+      "difficulty": "normal"
+    }
+  },
+  {
+    "sample_id": "G1_002299",
+    "input": {
+      "original_query": "I want to build a family photo-sharing website with Next.js and Cloudinary, in 3 weeks.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "I want to build a family photo-sharing website with Next.js and Cloudinary, in 3 weeks.",
+        "target_role": {
+          "raw_name": null,
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [
+          "Next.js",
+          "Cloudinary"
+        ],
+        "goal_type": "project"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": {
+          "deadline_type": "relative_duration",
+          "target_date": null,
+          "duration_value": 3,
+          "duration_unit": "weeks"
+        }
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "target_role",
+        "career_level",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications",
+        "available_study_time"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_with_projects",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "sample_id": "G1_002300",
+    "input": {
+      "original_query": "Mình muốn làm data engineer.",
+      "learner_input": {
+        "current_job_title": null,
+        "career_level": null,
+        "relevant_it_work_experience": null,
+        "industry": null,
+        "technical_domains": [],
+        "skill_profiles": [],
+        "certifications": [],
+        "learning_constraints": {
+          "available_study_time": null,
+          "deadline": null
+        }
+      }
+    },
+    "expected_output": {
+      "goal": {
+        "original_query": "Mình muốn làm data engineer.",
+        "target_role": {
+          "raw_name": "data engineer",
+          "canonical_name": null,
+          "role_id": null
+        },
+        "target_technologies": [],
+        "goal_type": "career"
+      },
+      "career_background": {
+        "career_level": null,
+        "current_job_title": null,
+        "industry": null,
+        "technical_domains": [],
+        "certifications": [],
+        "previous_job_roles": [],
+        "relevant_it_work_experience": null
+      },
+      "skill_profiles": [],
+      "status": "ready",
+      "practical_experience": [],
+      "learning_constraints": {
+        "available_study_time": null,
+        "deadline": null
+      },
+      "clarification_required": [],
+      "unknown_fields": [
+        "career_level",
+        "current_job_title",
+        "industry",
+        "technical_domains",
+        "relevant_it_work_experience",
+        "skill_profiles",
+        "certifications",
+        "available_study_time",
+        "deadline"
+      ]
+    },
+    "metadata": {
+      "scenario_type": "goal_only",
+      "difficulty": "easy"
+    }
+  }
+]

@@ -74,3 +74,5 @@ nltk
 # Gemini API
 # ==========================================
 google-genai
+huggingface_hub
+python-dotenv

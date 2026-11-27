@@ -1,0 +1,452 @@
+[
+  {
+    "sample_id": "G1_001151",
+    "lang": "en",
+    "persona": "student",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 6
+  },
+  {
+    "sample_id": "G1_001152",
+    "lang": "vi",
+    "persona": "student",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 2
+  },
+  {
+    "sample_id": "G1_001153",
+    "lang": "en",
+    "persona": "student",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 5
+  },
+  {
+    "sample_id": "G1_001154",
+    "lang": "vi",
+    "persona": "student",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 10
+  },
+  {
+    "sample_id": "G1_001155",
+    "lang": "en",
+    "persona": "student",
+    "input_pattern": "query_only",
+    "status": "needs_clarification",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001156",
+    "lang": "vi",
+    "persona": "intern_fresher",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 10
+  },
+  {
+    "sample_id": "G1_001157",
+    "lang": "en",
+    "persona": "intern_fresher",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 6
+  },
+  {
+    "sample_id": "G1_001158",
+    "lang": "vi",
+    "persona": "intern_fresher",
+    "input_pattern": "mostly_structured",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 1
+  },
+  {
+    "sample_id": "G1_001159",
+    "lang": "en",
+    "persona": "intern_fresher",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 5
+  },
+  {
+    "sample_id": "G1_001160",
+    "lang": "vi",
+    "persona": "intern_fresher",
+    "input_pattern": "conflict",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001161",
+    "lang": "en",
+    "persona": "junior",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 11
+  },
+  {
+    "sample_id": "G1_001162",
+    "lang": "vi",
+    "persona": "junior",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 9
+  },
+  {
+    "sample_id": "G1_001163",
+    "lang": "en",
+    "persona": "junior",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001164",
+    "lang": "vi",
+    "persona": "junior",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001165",
+    "lang": "en",
+    "persona": "junior",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "project",
+    "query_facts": 7
+  },
+  {
+    "sample_id": "G1_001166",
+    "lang": "vi",
+    "persona": "junior",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 7
+  },
+  {
+    "sample_id": "G1_001167",
+    "lang": "en",
+    "persona": "junior",
+    "input_pattern": "query_only",
+    "status": "needs_clarification",
+    "goal_type": "career",
+    "query_facts": 5
+  },
+  {
+    "sample_id": "G1_001168",
+    "lang": "vi",
+    "persona": "junior",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001169",
+    "lang": "en",
+    "persona": "middle",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 9
+  },
+  {
+    "sample_id": "G1_001170",
+    "lang": "vi",
+    "persona": "middle",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001171",
+    "lang": "en",
+    "persona": "middle",
+    "input_pattern": "conflict",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 7
+  },
+  {
+    "sample_id": "G1_001172",
+    "lang": "vi",
+    "persona": "middle",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001173",
+    "lang": "en",
+    "persona": "middle",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 6
+  },
+  {
+    "sample_id": "G1_001174",
+    "lang": "vi",
+    "persona": "middle",
+    "input_pattern": "conflict",
+    "status": "ready",
+    "goal_type": "project",
+    "query_facts": 7
+  },
+  {
+    "sample_id": "G1_001175",
+    "lang": "en",
+    "persona": "middle",
+    "input_pattern": "complementary",
+    "status": "needs_clarification",
+    "goal_type": "career",
+    "query_facts": 2
+  },
+  {
+    "sample_id": "G1_001176",
+    "lang": "vi",
+    "persona": "senior",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 11
+  },
+  {
+    "sample_id": "G1_001177",
+    "lang": "en",
+    "persona": "senior",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 7
+  },
+  {
+    "sample_id": "G1_001178",
+    "lang": "vi",
+    "persona": "senior",
+    "input_pattern": "query_only",
+    "status": "needs_clarification",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001179",
+    "lang": "en",
+    "persona": "senior",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001180",
+    "lang": "vi",
+    "persona": "senior",
+    "input_pattern": "mostly_structured",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 1
+  },
+  {
+    "sample_id": "G1_001181",
+    "lang": "en",
+    "persona": "lead_arch_mgr",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 9
+  },
+  {
+    "sample_id": "G1_001182",
+    "lang": "vi",
+    "persona": "lead_arch_mgr",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 5
+  },
+  {
+    "sample_id": "G1_001183",
+    "lang": "en",
+    "persona": "lead_arch_mgr",
+    "input_pattern": "conflict",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001184",
+    "lang": "vi",
+    "persona": "lead_arch_mgr",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001185",
+    "lang": "en",
+    "persona": "lead_arch_mgr",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "project",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001186",
+    "lang": "vi",
+    "persona": "switcher",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 7
+  },
+  {
+    "sample_id": "G1_001187",
+    "lang": "en",
+    "persona": "switcher",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 6
+  },
+  {
+    "sample_id": "G1_001188",
+    "lang": "vi",
+    "persona": "switcher",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001189",
+    "lang": "en",
+    "persona": "switcher",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001190",
+    "lang": "vi",
+    "persona": "switcher",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 5
+  },
+  {
+    "sample_id": "G1_001191",
+    "lang": "en",
+    "persona": "switcher",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "project",
+    "query_facts": 6
+  },
+  {
+    "sample_id": "G1_001192",
+    "lang": "vi",
+    "persona": "switcher",
+    "input_pattern": "complementary",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001193",
+    "lang": "en",
+    "persona": "switcher",
+    "input_pattern": "query_only",
+    "status": "needs_clarification",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001194",
+    "lang": "vi",
+    "persona": "unknown",
+    "input_pattern": "conflict",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 5
+  },
+  {
+    "sample_id": "G1_001195",
+    "lang": "en",
+    "persona": "unknown",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 1
+  },
+  {
+    "sample_id": "G1_001196",
+    "lang": "vi",
+    "persona": "unknown",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 4
+  },
+  {
+    "sample_id": "G1_001197",
+    "lang": "en",
+    "persona": "unknown",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001198",
+    "lang": "vi",
+    "persona": "unknown",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  },
+  {
+    "sample_id": "G1_001199",
+    "lang": "en",
+    "persona": "unknown",
+    "input_pattern": "query_only",
+    "status": "needs_clarification",
+    "goal_type": "career",
+    "query_facts": 1
+  },
+  {
+    "sample_id": "G1_001200",
+    "lang": "vi",
+    "persona": "unknown",
+    "input_pattern": "query_only",
+    "status": "ready",
+    "goal_type": "career",
+    "query_facts": 3
+  }
+]

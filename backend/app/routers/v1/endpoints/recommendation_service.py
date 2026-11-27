@@ -17,6 +17,17 @@ from app.schemas.learning_path import LearningPathResponse
 from app.services import learning_path_service as path_service
 from app.core.dependencies import get_llm_client, get_current_user
 from app.services.skill_extraction_service import generate_skill_result
+from app.utils.learner_analyzer.inference import LLMInferenceError, generate_g1_response
+from app.utils.learner_analyzer.prompt import build_messages
+from app.utils.learner_analyzer.schemas import G1Input, G1Output
+from app.schemas.learning_path_generation_v2 import (
+    LearningPathConfirm2Request,
+    LearningPathConfirm2Response,
+    LearningPathFormOptions,
+    LearningPathPreview2Response,
+)
+from app.services import learning_path_generation_v2_service as lp2_service
+from pydantic import ValidationError
 import httpx
 import logging
 from starlette.concurrency import run_in_threadpool
@@ -110,6 +121,99 @@ async def generate_learning_path(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+
+
+async def _run_g1(request: G1Input, client: httpx.AsyncClient) -> G1Output:
+    """Call the fine-tuned Qwen3 (llama.cpp + LoRA) and validate its JSON against G1Output."""
+    messages = build_messages(request)
+    try:
+        raw_response = await generate_g1_response(messages, client)
+        return G1Output.model_validate_json(raw_response)
+    except LLMInferenceError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=str(exc),
+        ) from exc
+    except ValidationError as exc:
+        logger.exception("G1 LLM output validation error")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="The LLM returned an invalid G1 output structure.",
+        ) from exc
+
+
+@router.post(
+    "/generate_ai_2",
+    response_model=LearningPathPreview2Response,
+    status_code=status.HTTP_200_OK,
+    summary="AI learning path v2: G1 profile extraction -> targets -> personalized prerequisite graph (preview)",
+)
+async def generate_ai_2(
+    request: G1Input,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    client: httpx.AsyncClient = Depends(get_llm_client),
+):
+    """Nothing is saved here. status="needs_clarification" means the goal could not be turned
+    into target skills (or is ambiguous): show clarification_required to the learner. When
+    nodes is not empty the preview can still be accepted with /confirm-2."""
+    g1 = await _run_g1(request, client)
+    try:
+        return await run_in_threadpool(lp2_service.build_preview, db, current_user.user_id, g1)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+
+@router.post(
+    "/generate_ai_2/raw",
+    response_model=G1Output,
+    status_code=status.HTTP_200_OK,
+    summary="Raw G1 LLM output (testing the GGUF adapter; no linking, no graph)",
+)
+async def generate_ai_2_raw(
+    request: G1Input,
+    client: httpx.AsyncClient = Depends(get_llm_client),
+):
+    return await _run_g1(request, client)
+
+
+@router.get(
+    "/options",
+    response_model=LearningPathFormOptions,
+    summary="Options for the Make learning path form (career levels, proficiency, certifications, domains)",
+)
+def get_learning_path_form_options(db: Session = Depends(get_db)):
+    return lp2_service.form_options(db)
+
+
+@router.post(
+    "/confirm-2",
+    response_model=LearningPathConfirm2Response | LearningPathRejectedResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Accept (save path + learner profile + graph) or reject an AI learning path v2 preview",
+)
+def confirm_learning_path_2(
+    request: LearningPathConfirm2Request,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not request.confirmed:
+        return LearningPathRejectedResponse(
+            confirmed=False,
+            message=(
+                "Thank you for your feedback. "
+                "Could you provide more information about your learning goals, "
+                "current skills, or preferred learning direction? "
+                "This will help us generate a more suitable learning path."
+            ),
+            next_action="provide_more_information",
+        )
+    try:
+        return lp2_service.confirm(db, current_user.user_id, request)
+    except ValueError as exc:   # also pydantic ValidationError (a ValueError) from the profile snapshot
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+
 # ======================================================
 # Confirm learning path preview
 # ======================================================

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from app.core.dependencies import require_admin
+from app.routers.admin.ai_reference import router as admin_ai_reference_router
 from app.routers.admin.course_skill_relations import (
     router as admin_course_skill_relations_router,
 )
@@ -31,4 +32,8 @@ admin_router.include_router(
     admin_user_paths_router,
     prefix="/user-paths",
     tags=["Admin User Paths"],
+)
+admin_router.include_router(
+    admin_ai_reference_router,
+    tags=["Admin AI Reference (Qdrant: job roles, aliases)"],
 )

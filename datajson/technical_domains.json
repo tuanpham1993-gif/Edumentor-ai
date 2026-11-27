@@ -1,0 +1,346 @@
+[
+  {
+    "domain_id": 1,
+    "name": "Agile"
+  },
+  {
+    "domain_id": 2,
+    "name": "Analytics Engineering"
+  },
+  {
+    "domain_id": 3,
+    "name": "Artificial Intelligence"
+  },
+  {
+    "domain_id": 4,
+    "name": "Automotive Software"
+  },
+  {
+    "domain_id": 5,
+    "name": "Backend Development"
+  },
+  {
+    "domain_id": 6,
+    "name": "Banking Technology"
+  },
+  {
+    "domain_id": 7,
+    "name": "Big Data"
+  },
+  {
+    "domain_id": 8,
+    "name": "Bioinformatics"
+  },
+  {
+    "domain_id": 9,
+    "name": "Biostatistics"
+  },
+  {
+    "domain_id": 10,
+    "name": "Blockchain"
+  },
+  {
+    "domain_id": 11,
+    "name": "Business Analysis"
+  },
+  {
+    "domain_id": 12,
+    "name": "Business Intelligence"
+  },
+  {
+    "domain_id": 13,
+    "name": "Cloud Computing"
+  },
+  {
+    "domain_id": 14,
+    "name": "Collaboration Platforms"
+  },
+  {
+    "domain_id": 15,
+    "name": "Computer Vision"
+  },
+  {
+    "domain_id": 16,
+    "name": "CRM"
+  },
+  {
+    "domain_id": 17,
+    "name": "Cybersecurity"
+  },
+  {
+    "domain_id": 18,
+    "name": "Data Analytics"
+  },
+  {
+    "domain_id": 19,
+    "name": "Data Engineering"
+  },
+  {
+    "domain_id": 20,
+    "name": "Data Governance"
+  },
+  {
+    "domain_id": 21,
+    "name": "Data Science"
+  },
+  {
+    "domain_id": 22,
+    "name": "Data Warehousing"
+  },
+  {
+    "domain_id": 23,
+    "name": "Database Administration"
+  },
+  {
+    "domain_id": 24,
+    "name": "Database Development"
+  },
+  {
+    "domain_id": 25,
+    "name": "Developer Relations"
+  },
+  {
+    "domain_id": 26,
+    "name": "DevOps"
+  },
+  {
+    "domain_id": 27,
+    "name": "DevSecOps"
+  },
+  {
+    "domain_id": 28,
+    "name": "Digital Transformation"
+  },
+  {
+    "domain_id": 29,
+    "name": "Distributed Systems"
+  },
+  {
+    "domain_id": 30,
+    "name": "E-commerce"
+  },
+  {
+    "domain_id": 31,
+    "name": "EdTech"
+  },
+  {
+    "domain_id": 32,
+    "name": "Embedded Systems"
+  },
+  {
+    "domain_id": 33,
+    "name": "Enterprise Architecture"
+  },
+  {
+    "domain_id": 34,
+    "name": "Enterprise Integration"
+  },
+  {
+    "domain_id": 35,
+    "name": "Enterprise Software"
+  },
+  {
+    "domain_id": 36,
+    "name": "ERP"
+  },
+  {
+    "domain_id": 37,
+    "name": "Financial Technology"
+  },
+  {
+    "domain_id": 38,
+    "name": "Frontend Development"
+  },
+  {
+    "domain_id": 39,
+    "name": "Full Stack Development"
+  },
+  {
+    "domain_id": 40,
+    "name": "Game Development"
+  },
+  {
+    "domain_id": 41,
+    "name": "Geographic Information Systems"
+  },
+  {
+    "domain_id": 42,
+    "name": "Health Informatics"
+  },
+  {
+    "domain_id": 43,
+    "name": "HR Technology"
+  },
+  {
+    "domain_id": 44,
+    "name": "Information Security"
+  },
+  {
+    "domain_id": 45,
+    "name": "IoT"
+  },
+  {
+    "domain_id": 46,
+    "name": "IT Audit"
+  },
+  {
+    "domain_id": 47,
+    "name": "IT Infrastructure"
+  },
+  {
+    "domain_id": 48,
+    "name": "IT Management"
+  },
+  {
+    "domain_id": 49,
+    "name": "IT Operations"
+  },
+  {
+    "domain_id": 50,
+    "name": "IT Risk Management"
+  },
+  {
+    "domain_id": 51,
+    "name": "IT Service Management"
+  },
+  {
+    "domain_id": 52,
+    "name": "IT Support"
+  },
+  {
+    "domain_id": 53,
+    "name": "Legacy Modernization"
+  },
+  {
+    "domain_id": 54,
+    "name": "Low-Code Development"
+  },
+  {
+    "domain_id": 55,
+    "name": "Machine Learning"
+  },
+  {
+    "domain_id": 56,
+    "name": "MLOps"
+  },
+  {
+    "domain_id": 57,
+    "name": "Mobile Development"
+  },
+  {
+    "domain_id": 58,
+    "name": "Natural Language Processing"
+  },
+  {
+    "domain_id": 59,
+    "name": "Network Monitoring"
+  },
+  {
+    "domain_id": 60,
+    "name": "Networking"
+  },
+  {
+    "domain_id": 61,
+    "name": "OT Systems"
+  },
+  {
+    "domain_id": 62,
+    "name": "Performance Testing"
+  },
+  {
+    "domain_id": 63,
+    "name": "Platform Engineering"
+  },
+  {
+    "domain_id": 64,
+    "name": "Product Analytics"
+  },
+  {
+    "domain_id": 65,
+    "name": "Product Management"
+  },
+  {
+    "domain_id": 66,
+    "name": "Project Management"
+  },
+  {
+    "domain_id": 67,
+    "name": "Quality Assurance"
+  },
+  {
+    "domain_id": 68,
+    "name": "Release Management"
+  },
+  {
+    "domain_id": 69,
+    "name": "Retail Technology"
+  },
+  {
+    "domain_id": 70,
+    "name": "Robotics"
+  },
+  {
+    "domain_id": 71,
+    "name": "Semiconductor Design"
+  },
+  {
+    "domain_id": 72,
+    "name": "Site Reliability Engineering"
+  },
+  {
+    "domain_id": 73,
+    "name": "Software Architecture"
+  },
+  {
+    "domain_id": 74,
+    "name": "Software Engineering"
+  },
+  {
+    "domain_id": 75,
+    "name": "Supply Chain"
+  },
+  {
+    "domain_id": 76,
+    "name": "Systems Administration"
+  },
+  {
+    "domain_id": 77,
+    "name": "Technical Support"
+  },
+  {
+    "domain_id": 78,
+    "name": "Technical Writing"
+  },
+  {
+    "domain_id": 79,
+    "name": "Telecommunications"
+  },
+  {
+    "domain_id": 80,
+    "name": "Test Automation"
+  },
+  {
+    "domain_id": 81,
+    "name": "UI Design"
+  },
+  {
+    "domain_id": 82,
+    "name": "UX Design"
+  },
+  {
+    "domain_id": 83,
+    "name": "UX Research"
+  },
+  {
+    "domain_id": 84,
+    "name": "Web Analytics"
+  },
+  {
+    "domain_id": 85,
+    "name": "Web Development"
+  },
+  {
+    "domain_id": 86,
+    "name": "XR Development"
+  }
+]

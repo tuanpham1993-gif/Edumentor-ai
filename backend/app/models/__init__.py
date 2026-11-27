@@ -18,6 +18,13 @@ from app.models.learning_path import (
     LearningPathEdge,
 )
 
+# Model AI learning path: hồ sơ học viên theo từng lộ trình.
+# Job roles, role aliases, role candidate skills và skill aliases nằm trong Qdrant
+# (app/services/ai_reference_service.py), không còn là bảng Postgres.
+from app.models.learner_profile import LearnerProfile
+from app.models.learning_path_graph import LearningPathGraph
+from app.models.profile_reference import Certification, TechnicalDomain
+
 # Model ôn tập của Tuấn
 from app.models.knowledge_chunk import KnowledgeChunk
 from app.models.review_question import ReviewQuestion
@@ -55,6 +62,12 @@ __all__ = [
     "LearningPath",
     "LearningPathNode",
     "LearningPathEdge",
+
+    # AI learning path
+    "LearnerProfile",
+    "LearningPathGraph",
+    "Certification",
+    "TechnicalDomain",
 
     # Ôn tập
     "KnowledgeChunk",
