@@ -232,3 +232,17 @@ def test_at_most_once_needs_once():
     assert keyword_grader_en.grade_essay(MQTT_RUBRIC, "Most messages arrive quickly with QoS 0 in practice.")[1][
         "result"
     ] == "none"
+
+
+NUMBER_RUBRIC = [
+    {"text": "Result 17 kWh", "max_points": 5, "main_keywords": ["17"], "sub_keywords": ["kwh", "energy"]},
+    {"text": "1000 readings", "max_points": 5, "main_keywords": ["1"], "sub_keywords": []},
+]
+
+
+def test_number_with_unit_matches_plain_keyword():
+    """27/11: "17.0 kWh" khớp từ khóa "17"; "1,000" là một số, không khớp nhầm từ khóa "1"."""
+    out = keyword_grader_en.grade_essay(NUMBER_RUBRIC, "The predicted energy use is 17.0 kWh for that day.")
+    assert out[0]["result"] == "full"
+    out = keyword_grader_en.grade_essay(NUMBER_RUBRIC, "The logger stored 1,000 readings during the whole test.")
+    assert out[1]["result"] == "none"

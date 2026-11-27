@@ -69,9 +69,15 @@ lượt là đủ; nộp liên tiếp phải cách nhau `REVIEW_SUBMIT_COOLDOWN`
 
 ## Việc để sau (đã ghi nhận khi soạn đề 494)
 
-- **Chuẩn hóa số trong bộ chấm từ khóa**: "17.0" khác "17", "0,1" (dấu phẩy) bị tách thành hai số; ký hiệu đơn vị như
-  "°C" bị bỏ hẳn khi tiền xử lý. Hiện vá bằng cách ghi thêm dạng ("17", "17.0") và gắn chủ thể bằng từ ngữ cảnh. Sửa
-  tận gốc trong `text_pipeline` (giống lỗi "-s"), có so điểm cũ / mới.
+- ~~Chuẩn hóa số~~ — **xong 27/11**: số đi kèm đơn vị được chuẩn hóa ("17.0 kWh" → `17 kwh`, "0,1 °C" → `0.1 degc`,
+  "17kWh" → `17 kwh`); số đứng một mình / trong code giữ nguyên ("3.0" ≠ "3"); "1,000" / "4,096" giữ một token (không
+  đoán) → **barem ghi số hàng nghìn không dấu phẩy (1000) và số kết quả không có số 0 thừa (17, không 17.0)** — check báo.
+- **Đưa đề cũ 312, 743, 1855 về cùng dạng với 494** — **CHỜ LỆNH TUẤN** (ghi 27/11). Hai bước, thứ tự 312 → 743
+  → 1855 (312 trước vì nằm trong bộ bài chuẩn đo AI):
+  1. Chuyển **nguyên trạng**: tạo `courses/course_<id>/` sao cho `build` ra file JSON **giống hệt từng byte** file hiện
+     có → server và bài làm cũ không bị ảnh hưởng.
+  2. Sau đó mới viết bài thử (~54 câu tự luận). Bài thử có thể lộ lỗi barem như đợt 1 của 494 (chỉ ghi tên vẫn đủ điểm,
+     thiếu từ đồng nghĩa); sửa barem là **một đợt duyệt riêng**, vì câu đã có bài làm sẽ sinh phiên bản 2.
 - **(c)** gán từ khóa cho chủ thể gần nhất (đảo vai trò trong cùng một vế câu).
 - **Nhóm loại trừ (7.5b)**: cột `exclusion_group` đã có nhưng bộ ráp đề chưa dùng, và file đề JSON chưa nạp cột này.
   Đến khi làm xong, câu trắc nghiệm lộ đáp án câu tự luận phải **viết lại** (đợt 3 đã viết lại DA-TN-14, DAT-TN-09, 11,

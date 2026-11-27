@@ -16,6 +16,11 @@ from scripts.bank.common import bank_path, load_bank, load_course, quiet
 ANY_ONE = re.compile(r"\(any one of:([^)]*)\)")
 BOTH = re.compile(r"\(both needed:([^)]*)\)")
 _PARENS = re.compile(r"\([^)]*\)")
+TRAILING_ZERO = re.compile(r"\d+\.\d*0")  # "17.0", "0.10": text_pipeline chuẩn hóa số kèm đơn vị thành "17", "0.1"
+
+
+def _strip_zero(num: str) -> str:
+    return num.strip().rstrip("0").rstrip(".")
 
 
 def template_problems(code: str, i: int, text: str) -> list[str]:
@@ -80,6 +85,12 @@ def check(data: dict, probes: dict | None = None) -> tuple[list[str], list[str],
             problems.append(f"{code}: đề lộ ý barem {leaked}")
         for i, item in enumerate(q["rubric"], start=1):
             problems += template_problems(code, i, item["text"])
+            for kw in item["main_keywords"] + item["sub_keywords"]:
+                if TRAILING_ZERO.fullmatch(kw.strip()):
+                    problems.append(
+                        f"{code} ý {i}: từ khóa số '{kw}' có số 0 thừa — ghi '{_strip_zero(kw)}' (bài làm kèm đơn vị "
+                        "được chuẩn hóa bỏ số 0 thừa)"
+                    )
             for kw in item["main_keywords"]:
                 toks = _kw(kw)
                 if not toks:

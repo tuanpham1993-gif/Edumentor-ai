@@ -188,3 +188,66 @@ def test_keyword_and_answer_share_the_verb_form():
 def test_analyses_is_a_known_limit():
     """Giới hạn đã biết (26/11): "analyses" về "analysis" (danh từ số nhiều hợp lệ), không về "analyse"."""
     assert preprocess("A layer analyses data.") == ["layer", "analysis", "data"]
+
+
+# ─────────────── 27/11: số đi kèm đơn vị đo (Tuấn duyệt) ───────────────
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("17 kWh", ["17", "kwh"]),
+        ("17.0 kWh", ["17", "kwh"]),
+        ("17kWh", ["17", "kwh"]),
+        ("0.10 V", ["0.1", "v"]),
+        ("1mV", ["1", "mv"]),
+        ("5V supply", ["5", "v", "supply"]),
+        ("0,1 °C", ["0.1", "degc"]),
+        ("10 °C", ["10", "degc"]),
+        ("sample every 2 s", ["sample", "every", "2", "sec"]),
+        ("70 %RH", ["70", "%", "rh"]),
+    ],
+)
+def test_numbers_with_units_are_normalised(text, expected):
+    assert preprocess(text) == expected
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("print(3.0)", ["print", "(", "3.0", ")"]),  # số không đơn vị: "3.0" khác "3" trong Python
+        ("3.0%2", ["3.0", "%", "2"]),  # % là phép chia lấy dư, không phải đơn vị
+        ("x%2", ["x", "%", "2"]),
+        ("10%3", ["10", "%", "3"]),
+        ("2s complement", ["2s", "complement"]),  # đơn vị một chữ phải cách số
+        ("5mins", ["5mins"]),  # đơn vị phải hết từ
+        ("0x1A", ["0x1a"]),
+        ("x1m = 3", ["x1m", "=", "3"]),
+        ("1e5", ["1e5"]),
+        ("2f", ["2f"]),
+        ("x = 1,5", ["x", "=", "1", "5"]),  # tuple, không phải 1.5
+    ],
+)
+def test_code_numbers_are_not_touched(text, expected):
+    assert preprocess(text) == expected
+
+
+def test_digits_around_commas_are_kept():
+    """Trước 27/11 "range(1,5)" mất cả hai số (word_tokenize giữ "1,5" thành một từ rồi bị bỏ)."""
+    assert preprocess("range(1,5)") == preprocess("range(1, 5)") == ["range", "(", "1", "5", ")"]
+    assert preprocess("[1,2,3]") == ["[", "1", "2", "3", "]"]
+
+
+def test_thousands_style_numbers_stay_one_token():
+    """"1,000" / "4,096" giữ nguyên — không đoán hàng nghìn hay thập phân; không tách thành "1" và "000"."""
+    assert preprocess("1,000 readings") == ["1,000", "reading"]
+    assert preprocess("4,096 V") == ["4,096", "v"]
+    assert "1" not in preprocess("1,000 readings")
+
+
+def test_keywords_go_through_the_same_normalisation():
+    assert preprocess("17 kwh") == preprocess("17.0 kWh")
+    assert preprocess("0.1 degc") == preprocess("0,1 °C")
+    assert preprocess("2 s") == preprocess("2 s") == ["2", "sec"]
+    # Từ khóa số KHÔNG kèm đơn vị giữ nguyên dạng → barem ghi "17", không ghi "17.0" (check.py báo)
+    assert preprocess("17.0") == ["17.0"]
