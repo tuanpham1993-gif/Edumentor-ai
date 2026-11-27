@@ -51,6 +51,20 @@ Sửa bộ chấm từ khóa (`text_pipeline`, `keyword_grader_en`)? Chụp đi�
   nêu thiếu vẫn được từ khóa cho đạt (→ cờ `ai_stricter` cho giáo viên); câu ngắn gồm toàn từ của đề (vd "I
   recommend CoAP.") bị luật chép đề L7 bỏ dù đúng; "analyses" về "analysis". Giữ bài thử cho từng giới hạn (nhãn `"c"`).
 
+## Nhóm loại trừ và ngân hàng đủ mục tiêu D25 (27/11)
+
+- Mục tiêu mỗi kỹ năng (D25, `question_gen_service.SKILL_TARGET`): **12 nhận biết + 12 thông hiểu + 4 tự luận dễ + 2
+  nâng cao = 30 câu**; mỗi lượt làm bài 12 trắc nghiệm + 3 tự luận. Ngân hàng thiếu mục tiêu → học viên làm lại là hệ
+  thống gọi AI soạn bổ sung. Câu trắc nghiệm bổ sung đặt trong `MCQ_EXTRA` (mã nối tiếp, build xoay vị trí đáp án SAU
+  câu cũ → câu cũ không đổi, không sinh phiên bản 2).
+- `EXCLUSION = {mã câu: nhóm}`: câu trắc nghiệm lộ đáp án một câu tự luận → chung nhóm với câu tự luận đó. Quy tắc
+  (Tuấn duyệt 27/11): **câu tự luận đã chọn chặn mọi câu cùng nhóm**; câu trắc nghiệm cùng nhóm với nhau vẫn được cùng
+  đề (không lộ gì cho nhau). Ràng buộc mềm: thiếu câu thì vẫn ra đủ đề.
+- `check` vét cạn MỌI tổ hợp tự luận của một đề: mức trắc nghiệm nào cũng phải còn đủ câu không bị chặn. Test tự động
+  thêm giả lập 20 học viên × 3 lượt: 0 đề lộ đáp án.
+- `python -m scripts.bank.simulate_exams <id>`: giả lập 200 học viên × 5 lượt (G3e + nhóm). Đã chấp nhận (Tuấn 27/11):
+  lượt 2 lặp 2–4 câu trắc nghiệm — cái giá của việc chặn lộ đáp án.
+
 ## Xóa lượt thử — `delete_test_attempt`
 
 ```

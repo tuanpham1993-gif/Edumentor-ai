@@ -16,8 +16,9 @@ import pytest
 import scripts.bank.courses as courses_pkg
 from app.ai.review.question_gate import keyword_score
 from scripts.bank.build import build
-from scripts.bank.check import template_problems
+from scripts.bank.check import exclusion_shortfalls, template_problems
 from scripts.bank.common import bank_path
+from scripts.bank.simulate_exams import simulate
 
 COURSES = {
     int(m.name.removeprefix("course_")): importlib.import_module(f"scripts.bank.courses.{m.name}")
@@ -73,3 +74,18 @@ def test_rubric_text_templates(course_id):
 def test_every_essay_has_probes(course_id):
     course = COURSES[course_id]
     assert sorted(_essays(course)) == sorted(course.PROBES)
+
+
+@pytest.mark.parametrize("course_id", sorted(COURSES))
+def test_no_essay_combination_forces_a_leak(course_id):
+    """Vét cạn mọi tổ hợp tự luận của một đề: mức trắc nghiệm nào cũng còn đủ câu không bị nhóm loại trừ chặn."""
+    assert exclusion_shortfalls(build(COURSES[course_id])) == []
+
+
+@pytest.mark.parametrize("course_id", sorted(COURSES))
+def test_simulated_students_never_get_a_leaked_pair(course_id):
+    """Giả lập 20 học viên × 3 lượt mỗi kỹ năng: không đề nào có câu tự luận cùng nhóm với một câu khác (lộ đáp án)."""
+    bank = build(COURSES[course_id])
+    for skill in bank["skills"]:
+        result = simulate(bank, skill, attempts=3, students=20, avoid_last=3)
+        assert result["clashes"] == 0 and result["incomplete"] == 0, (skill, result)

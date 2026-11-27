@@ -59,7 +59,7 @@ def pick_from_bank(
                 continue
             chosen.append(q)
             used |= keys
-            if group:
+            if group and q.get("type") == "essay":  # chỉ câu TỰ LUẬN đã chọn chặn nhóm của nó
                 groups.add(group)
         fill = skipped[: count - len(chosen)]
         if any(q.get("exclusion_group") in groups for q in fill):

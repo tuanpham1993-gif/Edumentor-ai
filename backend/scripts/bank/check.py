@@ -39,6 +39,30 @@ def template_problems(code: str, i: int, text: str) -> list[str]:
     return out
 
 
+def exclusion_shortfalls(data: dict) -> list[str]:
+    """Nhóm loại trừ (7.5b, quy tắc 27/11: câu TỰ LUẬN đã chọn chặn mọi câu cùng nhóm). Vét cạn MỌI tổ hợp tự luận của
+    một đề (2 dễ + 1 nâng cao, theo FULL_EXAM): mức trắc nghiệm nào còn ít câu không bị chặn hơn số cần → ràng buộc mềm
+    sẽ phải lấy câu cùng nhóm (lộ đáp án). Rỗng = không tổ hợp nào lọt."""
+    from itertools import combinations, product
+
+    from app.services.question_gen_service import FULL_EXAM
+
+    out = []
+    for skill in data["skills"]:
+        qs = [q for q in data["questions"] if q["skill"] == skill]
+        essays = {lv: [q for q in qs if q["level"] == lv] for lv in ("easy", "advanced")}
+        if len(essays["easy"]) < FULL_EXAM["easy"] or len(essays["advanced"]) < FULL_EXAM["advanced"]:
+            continue
+        for easy, adv in product(combinations(essays["easy"], FULL_EXAM["easy"]), essays["advanced"]):
+            blocked = {q.get("exclusion_group") for q in (*easy, adv)} - {None}
+            for lv in ("recognize", "understand"):
+                free = sum(1 for q in qs if q["level"] == lv and q.get("exclusion_group") not in blocked)
+                if free < FULL_EXAM[lv]:
+                    codes = ", ".join(q["code"] for q in (*easy, adv))
+                    out.append(f"{skill}: đề có {codes} chỉ còn {free} câu {lv} không bị chặn (cần {FULL_EXAM[lv]})")
+    return out
+
+
 def both_items(data: dict) -> list[str]:
     """Các ý "both needed": bộ chấm từ khóa chỉ cần một từ khóa → lệch Gemini có chủ đích khi bài nêu thiếu."""
     return [
@@ -60,6 +84,7 @@ def check(data: dict, probes: dict | None = None) -> tuple[list[str], list[str],
     from app.core.seed_data.seed_review import check_against_db, validate_bank
 
     problems = [f"khung: {e}" for e in validate_bank(data)]
+    problems += [f"nhóm loại trừ: {e}" for e in exclusion_shortfalls(data)]
     with SessionLocal() as db:
         problems += [f"DB: {e}" for e in check_against_db(db, data)]
     essays = [q for q in data["questions"] if q["type"] == "essay"]

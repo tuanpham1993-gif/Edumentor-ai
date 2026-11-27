@@ -1114,3 +1114,263 @@ MCQ = {
         ),
     ],
 }
+
+
+# Bổ sung lên mục tiêu D25 (SKILL_TARGET: 12 nhận biết + 12 thông hiểu / kỹ năng) — Tuấn duyệt hướng B 27/11.
+# Mã nối tiếp TN-15… ; build xoay vị trí đáp án của MCQ_EXTRA SAU mọi câu cũ → câu cũ giữ nguyên từng byte.
+MCQ_EXTRA = {
+    "IOT": [
+        (
+            1,
+            "recognize",
+            "Which key characteristic of IoT refers to systems with billions of connected devices?",
+            ["Very large scale", "Unique identity", "Heterogeneity", "Connectivity"],
+            "Very large scale means IoT systems can contain billions of devices.",
+        ),
+        (
+            1,
+            "recognize",
+            "Which of these is an example of a thing sensing its environment?",
+            [
+                "A sensor measuring the light level in a room",
+                "A cloud server storing last month's readings",
+                "A phone app showing a chart of temperatures",
+                "A router forwarding packets to the internet",
+            ],
+            "Things sense their environment, for example temperature, motion or light.",
+        ),
+        (
+            2,
+            "recognize",
+            "In a smart home, which task can a rule automate?",
+            [
+                "Turning off the lights when nobody is in a room",
+                "Choosing the vendor of each new device",
+                "Writing the firmware for the door lock",
+                "Replacing the batteries of every sensor",
+            ],
+            "Rules automate devices, such as turning off lights when nobody is in a room.",
+        ),
+        (
+            2,
+            "recognize",
+            "Which smart-city service helps drivers find free spaces?",
+            ["Smart parking", "Air quality monitoring", "Predictive maintenance", "Remote health monitoring"],
+            "Smart parking shows drivers where free spaces are.",
+        ),
+        (
+            3,
+            "recognize",
+            "What can attackers build from many hijacked IoT devices?",
+            ["A botnet", "A gateway", "A dashboard", "A sensor network"],
+            "Attackers can take devices over and combine them into a botnet.",
+        ),
+        (
+            1,
+            "understand",
+            "A sensor sleeps for an hour to save energy and then rejoins the network. Which IoT "
+            "characteristic does this illustrate?",
+            ["Dynamic change", "Unique identity", "Very large scale", "Sensing"],
+            "Devices joining, leaving, moving or sleeping is dynamic change.",
+        ),
+        (
+            2,
+            "understand",
+            "A city mounts sensors on lampposts to measure pollution levels. Which IoT application is this?",
+            ["Air quality monitoring", "Smart parking", "Predictive maintenance", "Home automation"],
+            "Measuring pollution in a city is air quality monitoring.",
+        ),
+        (
+            3,
+            "understand",
+            "A platform must manage millions of devices and handle large volumes of data. Which IoT "
+            "challenge is this mainly about?",
+            ["Scalability", "Privacy", "Interoperability", "Sensing"],
+            "Scalability is about managing very many devices and large volumes of data.",
+        ),
+        (
+            2,
+            "understand",
+            "From work, a homeowner checks on a phone whether the front door is locked. Which smart-home "
+            "capability is this?",
+            [
+                "Monitoring and controlling devices remotely from a phone",
+                "Predicting failures of the door motor",
+                "Translating between two radio protocols",
+                "Measuring the vibration of the door",
+            ],
+            "Smart-home devices such as door locks can be monitored and controlled from a phone.",
+        ),
+        (
+            1,
+            "understand",
+            "A smart blind closes automatically when a light sensor detects strong sun. Which device "
+            "acts on the physical world?",
+            ["The motor that moves the blind", "The light sensor", "The phone app", "The Wi-Fi router"],
+            "Actuators such as motors act on the physical world; the light sensor only senses.",
+        ),
+    ],
+    "IOTM": [
+        (
+            1,
+            "recognize",
+            "Besides translating between protocols, what else can an IoT gateway do with the data?",
+            [
+                "Filter or aggregate it",
+                "Generate it from scratch",
+                "Encrypt the sensors' firmware",
+                "Replace the cloud platform",
+            ],
+            "A gateway can translate between protocols and filter or aggregate data.",
+        ),
+        (
+            1,
+            "recognize",
+            "Which component of an IoT system lets people see the data and send commands?",
+            [
+                "The application or user interface, such as a mobile app",
+                "The microcontroller inside each node",
+                "The radio that sends readings to the gateway",
+                "The actuator that switches a relay",
+            ],
+            "An application or user interface such as a mobile app or dashboard lets people see data and send commands.",
+        ),
+        (
+            2,
+            "recognize",
+            "In the five-layer architecture, which layer manages business models and user privacy?",
+            ["Business layer", "Processing layer", "Network layer", "Perception layer"],
+            "The business layer on top manages the whole system, including business models and user privacy.",
+        ),
+        (
+            2,
+            "recognize",
+            "What is another name for the perception layer?",
+            ["The sensing (device) layer", "The middleware layer", "The business layer", "The transport layer"],
+            "The perception layer is also called the sensing or device layer.",
+        ),
+        (
+            3,
+            "recognize",
+            "Which IoT design goal means each device should be cheap to produce?",
+            ["Low cost per device", "Scalability", "Reliability", "Interoperability"],
+            "Low cost per device is one of the design goals of IoT systems.",
+        ),
+        (
+            3,
+            "understand",
+            "A patient-monitoring device must keep working even if one network link fails. Which design goal is this?",
+            ["Reliability", "Low cost per device", "Low power consumption", "Back-end data sharing"],
+            "Reliability means the system keeps working correctly even when parts fail.",
+        ),
+        (
+            3,
+            "understand",
+            "A company builds protection of users' data into a product from the start instead of adding "
+            "it later. Which design goal is this?",
+            ["Security and privacy by design", "Scalability", "Low cost per device", "Interoperability"],
+            "Security and privacy by design build protection in from the start.",
+        ),
+        (
+            1,
+            "understand",
+            "In the home automation example described in this course, a motion sensor's event passes through the "
+            "hub to which place, where a rule turns on the light?",
+            ["The cloud", "The motion sensor itself", "The light bulb's battery", "The Wi-Fi router"],
+            "In the example, the motion sensor sends an event through a hub (gateway) to the cloud, and a rule there "
+            "turns on the light. Other systems may run such rules on the hub or at the edge.",
+        ),
+        (
+            1,
+            "understand",
+            "When a rule fires, a motor opens a window. Which IoT component is the motor?",
+            ["An actuator", "A sensor", "A gateway", "A cloud platform"],
+            "Actuators change the physical world, for example by turning a motor.",
+        ),
+        (
+            3,
+            "understand",
+            "A weather station uploads its readings straight to a cloud service over its own Wi-Fi. "
+            "Which communication model is this?",
+            ["Device-to-cloud", "Device-to-device", "Device-to-gateway", "Back-end data sharing"],
+            "Connecting directly to a cloud service over the internet is the device-to-cloud model.",
+        ),
+    ],
+    "MSG": [
+        (
+            1,
+            "recognize",
+            "Which port is used for MQTT over TLS?",
+            ["8883", "1883", "5683", "8080"],
+            "MQTT uses port 1883 by default and 8883 over TLS.",
+        ),
+        (
+            2,
+            "recognize",
+            "Which packet does an MQTT client send to show the broker it is still connected?",
+            ["PINGREQ", "PUBACK", "PUBREC", "SUBSCRIBE"],
+            "During the keep-alive interval the client sends PINGREQ packets.",
+        ),
+        (
+            2,
+            "recognize",
+            "How many steps does the MQTT QoS 2 handshake use?",
+            ["Four", "One", "Two", "Three"],
+            "QoS 2 uses PUBLISH, PUBREC, PUBREL and PUBCOMP.",
+        ),
+        (
+            3,
+            "recognize",
+            "What is CoAP's default port?",
+            ["5683", "1883", "8883", "443"],
+            "CoAP runs over UDP, by default on port 5683.",
+        ),
+        (
+            3,
+            "recognize",
+            "Which CoAP message type indicates that a received message could not be processed?",
+            ["Reset (RST)", "Acknowledgement (ACK)", "Confirmable (CON)", "Non-confirmable (NON)"],
+            "A Reset (RST) message indicates that a received message could not be processed.",
+        ),
+        (
+            1,
+            "understand",
+            "Which MQTT subscription is NOT valid?",
+            ["home/#/temperature", "home/#", "home/+/temperature", "home/kitchen/temperature"],
+            "The hash sign must be the last character of a topic filter.",
+        ),
+        (
+            3,
+            "understand",
+            "A CoAP client requests /humidity, but the server has no such resource. Which response code is typical?",
+            ["4.04 Not Found", "2.05 Content", "2.01 Created", "5.00 Internal Server Error"],
+            "CoAP response codes are similar to HTTP: 4.04 Not Found for a missing resource.",
+        ),
+        (
+            2,
+            "understand",
+            "Why does QoS 2 create more network traffic than QoS 0?",
+            [
+                "It uses a four-step handshake to deliver exactly once",
+                "It sends every message to every topic",
+                "It needs a separate TLS connection for each topic",
+                "It repeats each message until a GET arrives",
+            ],
+            "QoS 2 delivers exactly once through a four-step handshake, at the cost of more overhead.",
+        ),
+        (
+            1,
+            "understand",
+            "How many levels does the MQTT topic factory/line1/motor3/temp have?",
+            ["4", "1", "3", "5"],
+            "Topic levels are separated by slashes: factory, line1, motor3 and temp.",
+        ),
+        (
+            3,
+            "understand",
+            "A CoAP client wants to change the value of an existing resource on a server. Which method fits best?",
+            ["PUT", "GET", "DELETE", "Observe"],
+            "Like HTTP, CoAP uses PUT to update a resource; GET reads it and DELETE removes it.",
+        ),
+    ],
+}

@@ -47,6 +47,33 @@ def test_essay_is_picked_first_so_the_mcq_gives_way():
         assert ids == {2, 3, 9}
 
 
+def test_mcqs_of_one_group_may_share_an_exam():
+    """Quy tắc 27/11: chỉ câu TỰ LUẬN đã chọn chặn nhóm; trắc nghiệm cùng nhóm không lộ gì cho nhau → được cùng đề."""
+    pool = [cand(1, "recognize", "g"), cand(2, "recognize", "g"), cand(9, "advanced")]
+    picked = pick_from_bank(pool, {"recognize": 2, "advanced": 1}, random.Random(0))
+    assert sorted(q["question_id"] for q in picked) == [1, 2, 9]
+
+
+def test_chosen_essay_blocks_every_question_of_its_group():
+    pool = [
+        cand(1, "recognize", "g"),
+        cand(2, "understand", "g"),
+        cand(3, "recognize"),
+        cand(4, "understand"),
+        cand(5, "recognize"),
+        cand(6, "understand"),
+        cand(8, "easy", "g"),
+        cand(9, "easy", "g"),
+        cand(10, "easy"),
+    ]
+    for seed in range(100):
+        picked = pick_from_bank(pool, {"recognize": 2, "understand": 2, "easy": 1}, random.Random(seed))
+        essay = next(q for q in picked if q["level"] == "easy")
+        if essay["exclusion_group"] == "g":
+            others = {q["question_id"] for q in picked} - {essay["question_id"]}
+            assert others & {1, 2, 8, 9} == set()  # cả TN lẫn tự luận cùng nhóm bị chặn
+
+
 def test_soft_constraint_still_fills_the_exam():
     """Không đủ câu khác nhóm → vẫn ra đủ số câu (không chặn người học)."""
     pool = [cand(1, "recognize", "g"), cand(2, "recognize", "g"), cand(9, "advanced", "g")]

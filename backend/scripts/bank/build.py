@@ -64,6 +64,27 @@ def build(course) -> dict:
                     "explanation": "Model answer: " + answer,
                 }
             )
+    # Câu trắc nghiệm BỔ SUNG (MCQ_EXTRA, 27/11): mã nối tiếp, xoay vị trí đáp án tiếp từ `slot` — câu cũ không đổi
+    for skill in course.SKILLS:
+        start = len(course.MCQ.get(skill, []))
+        for i, (c, level, content, options, expl) in enumerate(getattr(course, "MCQ_EXTRA", {}).get(skill, []), 1):
+            target = slot % 4
+            slot += 1
+            opts = options[1:]
+            opts.insert(target, options[0])
+            questions.append(
+                {
+                    "code": f"{skill}-TN-{start + i:02d}",
+                    "skill": skill,
+                    "chunk": chunk_codes[(skill, c)],
+                    "type": "mcq",
+                    "level": level,
+                    "content": content,
+                    "options": opts,
+                    "correct_index": target,
+                    "explanation": expl,
+                }
+            )
     exclusion = getattr(course, "EXCLUSION", None)
     if exclusion is not None:  # 7.5b: khóa có khai EXCLUSION → MỌI câu có trường (null = không nhóm, seed bỏ nhóm cũ)
         unknown = set(exclusion) - {q["code"] for q in questions}
