@@ -16,6 +16,11 @@ vì có thể chứa bài làm của học viên. Key Gemini chỉ đọc từ `
 | 6. Nạp DB | `python -m app.core.seed_data.seed_review --file data/review/course_<id>_en.json [--apply-changes]` | rồi `python -m app.core.seed_data.build_embeddings` |
 | 7. Thử trên server | tài khoản thử | xong thì xóa lượt thử (dưới) |
 
+**Kiểm tự động** (`tests/test_bank_probes.py`, chạy trong bộ test chung, không gọi Gemini, không chạm DB): file đề
+`data/review/course_<id>_en.json` phải khớp nguồn (sửa đề thì sửa nguồn rồi `build`, không sửa tay JSON); mọi bài thử
+`PROBES` (trừ nhãn `"c"`) đạt điều kiện; mọi câu mô tả ý đúng mẫu; câu tự luận nào cũng có bài thử. Khóa mới chỉ cần
+thêm thư mục `courses/course_<id>/` là test tự nhận.
+
 Sửa bộ chấm từ khóa (`text_pipeline`, `keyword_grader_en`)? Chụp điểm trước và sau rồi so:
 `python -m scripts.bank.regrade_compare snapshot` (trước), sửa code, `snapshot` (sau),
 `python -m scripts.bank.regrade_compare compare <trước> <sau>`. **Không được có bài GIẢM điểm.**

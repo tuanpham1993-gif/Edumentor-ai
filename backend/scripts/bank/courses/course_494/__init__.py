@@ -3,32 +3,10 @@
 Đợt 3 (27/11/2026): Data analysis for IoT, Data Analysis Techniques (module 4 "Data Analysis for IoT").
 Soạn: Claude · duyệt: Tuấn. Dựng: python -m scripts.bank.build 494"""
 
-from scripts.bank.courses.course_494.chunks import CHUNKS as CHUNKS_B1
-from scripts.bank.courses.course_494.chunks_b2 import CHUNKS_B2
-from scripts.bank.courses.course_494.chunks_b3 import CHUNKS_B3
-from scripts.bank.courses.course_494.essays import ESSAY as ESSAY_B1
-from scripts.bank.courses.course_494.essays import GEMINI_PROBES as GEMINI_PROBES_B1
-from scripts.bank.courses.course_494.essays import PROBES as PROBES_B1
-from scripts.bank.courses.course_494.essays_b2 import ESSAY_B2, GEMINI_PROBES_B2, PROBES_B2
-from scripts.bank.courses.course_494.essays_b3 import ESSAY_B3, GEMINI_PROBES_B3, PROBES_B3
-from scripts.bank.courses.course_494.mcq import MCQ as MCQ_B1
-from scripts.bank.courses.course_494.mcq_b2 import MCQ_B2
-from scripts.bank.courses.course_494.mcq_b3 import MCQ_B3
-from scripts.bank.courses.course_494.vn_notes import VN_CHUNK as VN_CHUNK_B1
-from scripts.bank.courses.course_494.vn_notes import VN_ESSAY as VN_ESSAY_B1
-from scripts.bank.courses.course_494.vn_notes import VN_MCQ as VN_MCQ_B1
-from scripts.bank.courses.course_494.vn_notes_b2 import VN_CHUNK_B2, VN_ESSAY_B2, VN_MCQ_B2
-from scripts.bank.courses.course_494.vn_notes_b3 import VN_CHUNK_B3, VN_ESSAY_B3, VN_MCQ_B3
-
-# Kỹ năng mới xếp SAU đợt 1 → vị trí đáp án đúng của đợt 1 không đổi khi dựng lại
-CHUNKS = CHUNKS_B1 + CHUNKS_B2 + CHUNKS_B3
-MCQ = {**MCQ_B1, **MCQ_B2, **MCQ_B3}
-ESSAY = {**ESSAY_B1, **ESSAY_B2, **ESSAY_B3}
-PROBES = {**PROBES_B1, **PROBES_B2, **PROBES_B3}
-GEMINI_PROBES = {**GEMINI_PROBES_B1, **GEMINI_PROBES_B2, **GEMINI_PROBES_B3}
-VN_CHUNK = {**VN_CHUNK_B1, **VN_CHUNK_B2, **VN_CHUNK_B3}
-VN_MCQ = {**VN_MCQ_B1, **VN_MCQ_B2, **VN_MCQ_B3}
-VN_ESSAY = {**VN_ESSAY_B1, **VN_ESSAY_B2, **VN_ESSAY_B3}
+from scripts.bank.courses.course_494.chunks import CHUNKS
+from scripts.bank.courses.course_494.essays import ESSAY, GEMINI_PROBES, PROBES
+from scripts.bank.courses.course_494.mcq import MCQ
+from scripts.bank.courses.course_494.vn_notes import VN_CHUNK, VN_ESSAY, VN_MCQ
 
 COURSE_ID = 494
 COURSE_TITLE = "Introduction to Internet of Things"
