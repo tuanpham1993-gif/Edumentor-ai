@@ -1,14 +1,16 @@
 {
   "course_id": 494,
   "course_title": "Introduction to Internet of Things",
-  "note": "English bank (drafted by Claude, reviewed by Tuấn). Batch 1 (26/11/2026): IoT, Model and Components of IoT, Messaging Protocols. Batch 2 (27/11/2026): Sensors, Sensor Readout, Readout Non-Idealities (course module 2 'Sensors & Interfaces'). Each skill: 20 questions (14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 3 knowledge chunks. Batch 3: Data analysis for IoT, Data Analysis Techniques. Content: well-established IoT basics, MQTT (OASIS standard), CoAP (RFC 7252), introductory sensors and readout electronics. Load with: python -m app.core.seed_data.seed_review --file data/review/course_494_en.json",
+  "note": "English bank (drafted by Claude, reviewed by Tuấn). Batch 1 (26/11/2026): IoT, Model and Components of IoT, Messaging Protocols. Batch 2 (27/11/2026): Sensors, Sensor Readout, Readout Non-Idealities (course module 2 'Sensors & Interfaces'). Each skill: 20 questions (14 MCQ = 7 recognize + 7 understand, 6 essays = 4 easy + 2 advanced) + 3 knowledge chunks. Batch 3 (27/11/2026): Data analysis for IoT, Data Analysis Techniques (course module 4). Content: well-established IoT basics, MQTT (OASIS standard), CoAP (RFC 7252), introductory sensors and readout electronics. Load with: python -m app.core.seed_data.seed_review --file data/review/course_494_en.json",
   "skills": {
     "IOT": 1109,
     "IOTM": 1112,
     "MSG": 1108,
     "SENS": 1106,
     "RO": 1110,
-    "NI": 1113
+    "NI": 1113,
+    "DA": 1111,
+    "DAT": 1107
   },
   "chunks": [
     {
@@ -118,6 +120,42 @@
       "skill": "NI",
       "title": "Other opamp non-idealities",
       "content": "Input offset voltage is a small DC voltage, typically microvolts to a few millivolts, that acts as if it were added to the input: the output is not exactly zero when the input is zero. The amplifier multiplies the offset by its gain, so a 1 mV offset with a gain of 100 gives a 0.1 V error at the output. Input bias current is the small current that flows into the opamp's input pins; flowing through the sensor's source resistance, it creates an extra error voltage, which is significant for high-resistance sensors. Because the open-loop gain is finite, the closed-loop gain of an amplifier is slightly lower than the value set by its resistors. The bandwidth is limited: the gain-bandwidth product is roughly constant, so the higher the gain, the lower the frequency at which the gain starts to fall. The slew rate is the maximum rate at which the output voltage can change; faster, large signals are distorted. Finally, the output cannot swing beyond the supply voltages, so a too-large signal saturates."
+    },
+    {
+      "code": "DA-K01",
+      "skill": "DA",
+      "title": "Why data analysis for IoT",
+      "content": "IoT systems produce very large amounts of data: many sensors report readings continuously, often every few seconds, and the data comes in many forms, such as temperatures, vibrations, images and logs. Raw readings are of little use until they are analysed. Data analysis turns them into information and decisions. Typical goals are monitoring (showing the current state of a system on a dashboard), prediction (for example predicting a machine failure before it happens, called predictive maintenance, or forecasting energy demand), anomaly detection (finding readings that do not fit the normal pattern, such as a sudden temperature spike that may mean a fault or an attack) and automation (letting the system act by itself, such as switching irrigation on when the soil is predicted to be dry). Because the rules behind the data are often unknown or too complex to write by hand, IoT data analysis often uses machine learning, which learns a model from the data itself."
+    },
+    {
+      "code": "DA-K02",
+      "skill": "DA",
+      "title": "Components and feasibility of learning",
+      "content": "Learning from data can be described with a few components. There is an unknown target function f that maps an input x (for example the vibration readings of a motor) to an output y (for example whether the motor will fail soon). We do not know f, but we have a data set of examples (x, y) collected in the past. A learning algorithm searches a hypothesis set, the family of candidate models it is allowed to choose from (for example all straight lines), and picks the final hypothesis g that fits the data best, hoping that g is close to f. Learning is feasible, in a probabilistic sense, when the data are representative of the situations where the model will be used and there are enough examples: then a model that does well on the training data is likely to do well on new data too. The error on the training data is the in-sample error; the error on new, unseen data is the out-of-sample error. These terms (target function, hypothesis set, final hypothesis, in-sample and out-of-sample error) come from the widely used Learning From Data framework; other courses may simply call the final hypothesis the trained model. A model that is too complex can fit the training data almost perfectly, including its noise, yet perform badly on new data; this is called overfitting."
+    },
+    {
+      "code": "DA-K03",
+      "skill": "DA",
+      "title": "Types of learning and data-driven techniques",
+      "content": "There are three main types of learning. In supervised learning, every training example has the correct answer (a label): if the output is a number it is regression, for example predicting tomorrow's energy use, and if it is a category it is classification, for example faulty or normal. In unsupervised learning, the data has no labels and the algorithm looks for structure by itself, for example clustering similar devices. In reinforcement learning, an agent learns by trial and error from rewards, for example a thermostat that learns a schedule from comfort feedback. A data-driven project follows a pipeline: collect the data; clean it by handling missing values and removing or correcting outliers caused by faulty sensors; choose or compute features, such as the average vibration over a minute; split the data into a training set to fit the model and a test set, kept aside, to check how well it works on unseen data; train the model; and evaluate it. In Python, NumPy handles arrays of numbers, pandas handles tables of data such as sensor logs, scikit-learn provides models such as linear regression and k-means, and matplotlib draws plots."
+    },
+    {
+      "code": "DAT-K01",
+      "skill": "DAT",
+      "title": "Linear regression",
+      "content": "Linear regression models the relationship between an input x and a numeric output y with a straight line, y = w0 + w1 x, where w0 is the intercept (the value of y when x is 0) and w1 is the slope (how much y changes when x increases by 1). The line is fitted by least squares: the weights are chosen to minimise the mean squared error (MSE), the average of the squared differences between the predicted and the actual values. For example, if the fitted line is y = 1.5 + 0.2 x, an input of x = 10 gives a prediction of 1.5 + 0.2 x 10 = 3.5. The model is evaluated on test data, for example with the MSE: a smaller MSE means better predictions. A fitted line should only be trusted within the range of inputs it was trained on; predicting far outside that range is extrapolation and can be badly wrong, because the relationship may not stay linear."
+    },
+    {
+      "code": "DAT-K02",
+      "skill": "DAT",
+      "title": "Time-series data and models",
+      "content": "A time series is a sequence of measurements taken in time order, usually at regular intervals, such as a temperature reading every hour. A time series is often described by three components: the trend, a long-term increase or decrease; seasonality, a pattern that repeats with a fixed period, such as a daily or weekly cycle; and noise, the random variation that is left. A moving average, the mean of the last few values, smooths out noise so the trend is easier to see. An autoregressive (AR) model predicts the next value as a weighted sum of previous values; to capture a daily cycle in hourly data, it can also use the value from 24 hours earlier. Because the order of the data matters, a time series must not be shuffled before splitting: the model is trained on the earlier part and tested on the later part, so that it is never tested on the past using knowledge of the future."
+    },
+    {
+      "code": "DAT-K03",
+      "skill": "DAT",
+      "title": "Clustering",
+      "content": "Clustering is an unsupervised technique that groups data points so that points in the same group (cluster) are similar and points in different groups are different. The most common algorithm is k-means. First choose the number of clusters k and pick k starting centres (centroids). Then repeat two steps: assign every point to its nearest centroid, and move each centroid to the mean of the points assigned to it. Stop when the assignments no longer change. The value of k is often chosen with the elbow method: plot the total distance of points to their centroids for several values of k and pick the k where adding more clusters stops giving a large improvement. Because k-means uses distances, features with large numeric ranges would dominate, so the features are usually scaled (standardised) first. In IoT, clustering can group households by their energy-use profiles or sensors by their behaviour, and a reading that is far from every centroid can be flagged as an anomaly."
     }
   ],
   "questions": [
@@ -3407,6 +3445,1128 @@
         }
       ],
       "explanation": "Model answer: The input resistance, or equivalently a very low input bias current, matters most. With a 10 MOhm source, any current the opamp draws makes a large voltage drop across the sensor resistance and a large error. The bandwidth and slew rate matter least, because the signal changes slowly over minutes, so it is a very low frequency signal."
+    },
+    {
+      "code": "DA-TN-01",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Predicting that a machine will fail before it actually happens, using its sensor data, is called what?",
+      "options": [
+        "Predictive maintenance",
+        "Anomaly logging",
+        "Data compression",
+        "Edge routing"
+      ],
+      "correct_index": 0,
+      "explanation": "Predicting failures before they happen from sensor data is predictive maintenance."
+    },
+    {
+      "code": "DA-TN-02",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which goal of IoT data analysis means finding readings that do not fit the normal pattern?",
+      "options": [
+        "Monitoring",
+        "Anomaly detection",
+        "Forecasting",
+        "Automation"
+      ],
+      "correct_index": 1,
+      "explanation": "Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike."
+    },
+    {
+      "code": "DA-TN-03",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In the components of learning, what is the hypothesis set?",
+      "options": [
+        "The unknown function that truly maps inputs to outputs",
+        "The table of past input and output examples collected",
+        "The family of candidate models the algorithm may choose from",
+        "The error the final model makes on new, unseen data"
+      ],
+      "correct_index": 2,
+      "explanation": "The hypothesis set is the family of candidate models, for example all straight lines."
+    },
+    {
+      "code": "DA-TN-04",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the error of a model on new, unseen data called?",
+      "options": [
+        "In-sample error",
+        "Quantization error",
+        "Training error",
+        "Out-of-sample error"
+      ],
+      "correct_index": 3,
+      "explanation": "In-sample error is on the training data; out-of-sample error is on new, unseen data."
+    },
+    {
+      "code": "DA-TN-05",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which type of learning uses training examples that each come with the correct answer?",
+      "options": [
+        "Supervised learning",
+        "Unsupervised learning",
+        "Reinforcement learning",
+        "Clustering"
+      ],
+      "correct_index": 0,
+      "explanation": "Supervised learning uses labelled examples; unsupervised learning has no labels."
+    },
+    {
+      "code": "DA-TN-06",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which type of learning lets an agent learn by trial and error from rewards?",
+      "options": [
+        "Supervised learning",
+        "Reinforcement learning",
+        "Unsupervised learning",
+        "Linear regression"
+      ],
+      "correct_index": 1,
+      "explanation": "Reinforcement learning learns from rewards, such as a thermostat learning from comfort feedback."
+    },
+    {
+      "code": "DA-TN-07",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which Python library is mainly used to handle tables of data, such as sensor logs?",
+      "options": [
+        "matplotlib",
+        "NumPy",
+        "pandas",
+        "scikit-learn"
+      ],
+      "correct_index": 2,
+      "explanation": "pandas handles tables; NumPy handles arrays, scikit-learn provides models and matplotlib draws plots."
+    },
+    {
+      "code": "DA-TN-08",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Why does IoT data analysis often use machine learning instead of hand-written rules?",
+      "options": [
+        "Machine learning models need no data at all to make their predictions",
+        "Hand-written rules cannot run on any computer connected to the internet",
+        "Machine learning always gives perfect predictions on every sensor",
+        "The rules behind the data are often unknown or too complex to write by hand"
+      ],
+      "correct_index": 3,
+      "explanation": "Machine learning learns a model from the data when the underlying rules are unknown or too complex."
+    },
+    {
+      "code": "DA-TN-09",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A model fits its training data almost perfectly but makes large errors on new data. What is this called?",
+      "options": [
+        "Overfitting",
+        "Underfitting",
+        "Feature scaling",
+        "Seasonality"
+      ],
+      "correct_index": 0,
+      "explanation": "Fitting the training data including its noise but failing on new data is overfitting."
+    },
+    {
+      "code": "DA-TN-10",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "According to the idea of feasibility of learning, when is a model that does well on its training data likely to do well on new data too?",
+      "options": [
+        "When the model is as complex as possible so it fits every point",
+        "When the data are representative and there are enough examples",
+        "When the training data come from a single day of measurements",
+        "When the test data were also used to train the same model"
+      ],
+      "correct_index": 1,
+      "explanation": "Learning is feasible when the data represent the situations of use and there are enough examples."
+    },
+    {
+      "code": "DA-TN-11",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Predicting tomorrow's energy use in kWh from past readings is which kind of task?",
+      "options": [
+        "Supervised classification",
+        "Unsupervised clustering",
+        "Supervised regression",
+        "Reinforcement learning"
+      ],
+      "correct_index": 2,
+      "explanation": "The output is a number and past answers are known, so it is supervised regression."
+    },
+    {
+      "code": "DA-TN-12",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Labelling each motor as 'faulty' or 'normal' from its vibration features is which kind of task?",
+      "options": [
+        "Supervised regression",
+        "Unsupervised clustering",
+        "Time-series smoothing",
+        "Supervised classification"
+      ],
+      "correct_index": 3,
+      "explanation": "The output is a category learned from labelled examples, so it is classification."
+    },
+    {
+      "code": "DA-TN-13",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A temperature sensor occasionally reports 999 degC because of a loose wire. Which pipeline step should deal with this?",
+      "options": [
+        "Data cleaning: remove or correct the outliers",
+        "Feature scaling before clustering",
+        "Splitting the data into training and test sets",
+        "Choosing the number of clusters k"
+      ],
+      "correct_index": 0,
+      "explanation": "Impossible values from faulty sensors are outliers, handled in the cleaning step."
+    },
+    {
+      "code": "DA-TN-14",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Computing the average vibration of a motor over each minute, to feed into a model, is which pipeline step?",
+      "options": [
+        "Cleaning outliers from the data",
+        "Choosing or computing features",
+        "Collecting labels for past failures",
+        "Clustering the motors into groups"
+      ],
+      "correct_index": 1,
+      "explanation": "Turning raw readings into inputs such as a one-minute average is feature computation."
+    },
+    {
+      "code": "DA-TL-01",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain why raw IoT sensor readings need to be analysed, and what predictive maintenance and anomaly detection each achieve.",
+      "rubric": [
+        {
+          "text": "Raw readings are of little use until analysed (any one of: huge amounts of data, must be turned into information, needed for decisions).",
+          "max_points": 3,
+          "main_keywords": [
+            "large amount",
+            "huge amount",
+            "too much data",
+            "little use",
+            "information",
+            "decision",
+            "insight"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Predictive maintenance predicts failures before they happen (any one of: repair in time, avoid breakdowns).",
+          "max_points": 4,
+          "main_keywords": [
+            "before it happen",
+            "before they happen",
+            "before fail",
+            "before failing",
+            "predict failure",
+            "predicts failure",
+            "in time",
+            "avoid breakdown"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Anomaly detection finds readings that do not fit the normal pattern (any one of: unusual readings, a sudden spike, a sign of a fault or attack).",
+          "max_points": 3,
+          "main_keywords": [
+            "unusual",
+            "normal pattern",
+            "abnormal",
+            "spike",
+            "do not fit",
+            "does not fit",
+            "fault",
+            "attack"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Raw sensor readings arrive in huge amounts and are of little use until they are analysed and turned into information and decisions. Predictive maintenance predicts machine failures before they happen, so repairs can be made in time. Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike that may mean a fault or an attack."
+    },
+    {
+      "code": "DA-TL-02",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Describe the components of learning from data: what is unknown, what we have, and what the learning algorithm produces.",
+      "rubric": [
+        {
+          "text": "An unknown target function maps inputs to outputs (any one of: target function, true function f, the real relationship we cannot see).",
+          "max_points": 3,
+          "main_keywords": [
+            "target function",
+            "true function",
+            "unknown function",
+            "real relationship",
+            "maps input",
+            "map input",
+            "not see",
+            "not known",
+            "not know"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "We have a data set of past examples (any one of: data set, examples of input with output, training data).",
+          "max_points": 3,
+          "main_keywords": [
+            "data set",
+            "dataset",
+            "example",
+            "examples",
+            "past data",
+            "training data",
+            "sample",
+            "samples"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The algorithm picks a final hypothesis from a hypothesis set (any one of: chooses the best candidate model, the final model approximates the target function).",
+          "max_points": 4,
+          "main_keywords": [
+            "hypothesis set",
+            "final hypothesis",
+            "candidate model",
+            "approximate",
+            "close to the target",
+            "best fit",
+            "fits the data best"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: There is an unknown target function f that maps inputs to outputs. What we have is a data set of past examples of inputs with their outputs. The learning algorithm searches a hypothesis set of candidate models and picks the final hypothesis g that fits the data best, so that it approximates f."
+    },
+    {
+      "code": "DA-TL-03",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "How do supervised, unsupervised and reinforcement learning differ in the kind of feedback the learner gets?",
+      "rubric": [
+        {
+          "text": "Supervised: every example has the correct answer (any one of: labels, labelled data, known outputs).",
+          "max_points": 4,
+          "main_keywords": [
+            "label",
+            "labels",
+            "labelled",
+            "labeled",
+            "correct answer",
+            "known answer",
+            "known output"
+          ],
+          "sub_keywords": [
+            "supervised"
+          ]
+        },
+        {
+          "text": "Unsupervised: no labels, finds structure by itself (any one of: no labels, groups similar data, finds patterns).",
+          "max_points": 3,
+          "main_keywords": [
+            "no label",
+            "no labels",
+            "without label",
+            "without labels",
+            "unlabelled",
+            "unlabeled",
+            "structure",
+            "group",
+            "pattern"
+          ],
+          "sub_keywords": [
+            "unsupervised"
+          ]
+        },
+        {
+          "text": "Reinforcement: learns from rewards (any one of: reward, learning by trial, feedback on actions).",
+          "max_points": 3,
+          "main_keywords": [
+            "reward",
+            "rewards",
+            "trial and error",
+            "feedback"
+          ],
+          "sub_keywords": [
+            "reinforcement"
+          ]
+        }
+      ],
+      "explanation": "Model answer: In supervised learning every training example comes with the correct answer, a label. In unsupervised learning there are no labels, so the algorithm finds structure, such as groups, by itself. In reinforcement learning the agent learns by trial and error from rewards."
+    },
+    {
+      "code": "DA-TL-04",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Why is the data split into a training set and a test set before building a model?",
+      "rubric": [
+        {
+          "text": "The test set checks performance on data the model has not seen (any one of: unseen data, new data, how it will work in practice).",
+          "max_points": 5,
+          "main_keywords": [
+            "unseen",
+            "new data",
+            "not seen",
+            "never seen",
+            "has not seen",
+            "in practice",
+            "real use"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "So the test set must be kept separate from training (any one of: kept aside, never used to fit the model, held out).",
+          "max_points": 5,
+          "main_keywords": [
+            "kept aside",
+            "keep aside",
+            "held-out",
+            "not used for training",
+            "never used",
+            "not used to train"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: The training set is used to fit the model, and the test set checks how well the model works on data it has not seen, which is how it will be used in practice. For that, the test set must be kept aside and never used for training."
+    },
+    {
+      "code": "DA-TL-05",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A factory wants to predict motor failures from vibration sensors. Describe the data-driven pipeline from raw data to an action: how the data is prepared, which type of learning fits and why, and what the system does with a prediction.",
+      "rubric": [
+        {
+          "text": "Collect past data with labels (any one of: record which motors failed, labelled history).",
+          "max_points": 2,
+          "main_keywords": [
+            "label",
+            "labels",
+            "labelled",
+            "labeled",
+            "history",
+            "past failure",
+            "record"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Clean the data (any one of: handle missing values, remove outliers from faulty sensors).",
+          "max_points": 2,
+          "main_keywords": [
+            "missing",
+            "outlier",
+            "outliers",
+            "clean",
+            "faulty reading"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Compute features (any one of: average vibration, RMS, peak value over a time window).",
+          "max_points": 2,
+          "main_keywords": [
+            "feature",
+            "features",
+            "average",
+            "rms",
+            "mean",
+            "peak"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Type of learning (both needed: supervised classification or a classifier; because the past failures are labelled).",
+          "max_points": 2,
+          "main_keywords": [
+            "supervised",
+            "classification",
+            "classifier",
+            "classify"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Action (any one of: raise an alert, schedule maintenance before failure, notify a technician).",
+          "max_points": 2,
+          "main_keywords": [
+            "alert",
+            "schedule",
+            "maintenance",
+            "repair",
+            "warn",
+            "notify"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: First collect past vibration data and record which motors failed, so the data are labelled. Clean the data by handling missing values and removing outliers from faulty sensors. Compute features such as the average and peak vibration over each minute. Because the past failures are labelled, supervised classification fits. When the model predicts a failure, the system raises an alert and schedules maintenance before the motor breaks."
+    },
+    {
+      "code": "DA-TL-06",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A model that predicts a greenhouse's humidity was trained only on summer data. It works well in summer but makes large errors in winter. Using the idea of feasibility of learning, explain why, and suggest how to fix it.",
+      "rubric": [
+        {
+          "text": "The training data are not representative of winter (any one of: only summer conditions, the model never saw winter).",
+          "max_points": 3,
+          "main_keywords": [
+            "not representative",
+            "representative",
+            "only summer",
+            "never saw",
+            "never seen",
+            "different conditions",
+            "does not cover",
+            "not cover"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Low error on training data does not guarantee low error on new data (any one of: in-sample vs out-of-sample error, generalisation fails).",
+          "max_points": 2,
+          "main_keywords": [
+            "in-sample",
+            "out-of-sample",
+            "training error",
+            "generalis",
+            "generaliz",
+            "generalize",
+            "generalise",
+            "not generalize",
+            "not generalise"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Fix: collect data from all seasons, then retrain (any one of: whole year of data, add winter data, retrain).",
+          "max_points": 3,
+          "main_keywords": [
+            "all season",
+            "all seasons",
+            "every season",
+            "whole year",
+            "add winter",
+            "include winter",
+            "collect winter",
+            "retrain",
+            "more data"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Check the model on winter test data before using it (any one of: test on winter, validate on new conditions).",
+          "max_points": 2,
+          "main_keywords": [
+            "test on winter",
+            "winter test",
+            "winter data",
+            "winter reading",
+            "winter readings",
+            "winter"
+          ],
+          "sub_keywords": [
+            "test",
+            "evaluate",
+            "validate",
+            "check"
+          ]
+        }
+      ],
+      "explanation": "Model answer: Learning is only feasible when the training data are representative of the situations where the model is used; this model only saw summer conditions, so winter is not represented. Its low in-sample error does not guarantee a low out-of-sample error. To fix it, collect data from all seasons and retrain, then check the model on winter test data before using it."
+    },
+    {
+      "code": "DAT-TN-01",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In the linear regression model y = w0 + w1 x, what does w1 represent?",
+      "options": [
+        "The value of y when x is 0",
+        "The mean squared error of the fitted line",
+        "The slope: how much y changes when x increases by 1",
+        "The number of training examples used"
+      ],
+      "correct_index": 2,
+      "explanation": "w1 is the slope; w0 is the intercept, the value of y when x is 0."
+    },
+    {
+      "code": "DAT-TN-02",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "How are the weights of a linear regression line chosen?",
+      "options": [
+        "By maximising the number of clusters",
+        "By averaging the last few values of the series",
+        "By sorting the data by time before fitting",
+        "By minimising the mean squared error (least squares)"
+      ],
+      "correct_index": 3,
+      "explanation": "Least squares chooses the weights that minimise the mean squared error."
+    },
+    {
+      "code": "DAT-TN-03",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which component of a time series is a pattern that repeats with a fixed period, such as a daily cycle?",
+      "options": [
+        "Seasonality",
+        "Trend",
+        "Noise",
+        "Intercept"
+      ],
+      "correct_index": 0,
+      "explanation": "Seasonality repeats with a fixed period; the trend is a long-term increase or decrease."
+    },
+    {
+      "code": "DAT-TN-04",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does a moving average do to a time series?",
+      "options": [
+        "It removes the time order of the readings",
+        "It smooths out noise so the trend is easier to see",
+        "It groups the readings into k clusters",
+        "It turns the readings into labels"
+      ],
+      "correct_index": 1,
+      "explanation": "A moving average averages the last few values, which smooths noise."
+    },
+    {
+      "code": "DAT-TN-05",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does an autoregressive (AR) model use to predict the next value?",
+      "options": [
+        "The distance to the nearest cluster centre",
+        "Only the value of a different, unrelated sensor",
+        "A weighted sum of previous values of the series",
+        "A random value drawn from the training data"
+      ],
+      "correct_index": 2,
+      "explanation": "An AR model predicts the next value from previous values."
+    },
+    {
+      "code": "DAT-TN-06",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Clustering is which type of learning?",
+      "options": [
+        "Supervised",
+        "Reinforcement",
+        "Regression",
+        "Unsupervised"
+      ],
+      "correct_index": 3,
+      "explanation": "Clustering groups unlabelled data, so it is unsupervised."
+    },
+    {
+      "code": "DAT-TN-07",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In k-means, what is each point assigned to in every iteration?",
+      "options": [
+        "Its nearest centroid",
+        "The largest cluster",
+        "A random cluster",
+        "The cluster with the oldest data"
+      ],
+      "correct_index": 0,
+      "explanation": "Each point is assigned to its nearest centroid, then the centroids move to the mean of their points."
+    },
+    {
+      "code": "DAT-TN-08",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A line fitted as y = 1.5 + 0.2 x is used with x = 10. What is the prediction?",
+      "options": [
+        "2.0",
+        "3.5",
+        "1.7",
+        "15.2"
+      ],
+      "correct_index": 1,
+      "explanation": "1.5 + 0.2 x 10 = 3.5."
+    },
+    {
+      "code": "DAT-TN-09",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "For the fitted line y = 1.5 + 0.2 x, what does the number 1.5 mean?",
+      "options": [
+        "The change in y when x increases by 1",
+        "The mean squared error of the line",
+        "The predicted y when x is 0",
+        "The largest x used in training"
+      ],
+      "correct_index": 2,
+      "explanation": "1.5 is the intercept w0, the value of y when x is 0."
+    },
+    {
+      "code": "DAT-TN-10",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Model A has a test MSE of 4.0 and model B has a test MSE of 9.0. Which predicts better?",
+      "options": [
+        "Model B",
+        "They are equally good",
+        "It cannot be compared with MSE",
+        "Model A"
+      ],
+      "correct_index": 3,
+      "explanation": "A smaller MSE means the predictions are closer to the actual values."
+    },
+    {
+      "code": "DAT-TN-11",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A 24-hour moving average is drawn over three months of hourly temperatures. What does it mainly show?",
+      "options": [
+        "The slow long-term movement, with the daily cycle smoothed out",
+        "Every individual daily peak more sharply than the raw data",
+        "Only the random noise left after removing the trend",
+        "The temperature forecast for the next three months"
+      ],
+      "correct_index": 0,
+      "explanation": "Averaging a full day smooths the daily cycle and the noise, leaving the slow long-term movement."
+    },
+    {
+      "code": "DAT-TN-12",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "To capture a daily cycle in hourly temperature data, which extra input helps an AR model?",
+      "options": [
+        "The value from 24 days earlier",
+        "The value from 24 hours earlier",
+        "The value of a random other hour",
+        "The total number of readings"
+      ],
+      "correct_index": 1,
+      "explanation": "In hourly data the daily cycle repeats every 24 values, so the value 24 hours earlier helps."
+    },
+    {
+      "code": "DAT-TN-13",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "After clustering households by energy use, one new reading is far from every centroid. How can it be treated?",
+      "options": [
+        "As the centre of a new largest cluster",
+        "As proof that k must be reduced to one",
+        "As a possible anomaly worth checking",
+        "As a reading that belongs to every cluster"
+      ],
+      "correct_index": 2,
+      "explanation": "A point far from all centroids does not fit any normal group, so it can be flagged as an anomaly."
+    },
+    {
+      "code": "DAT-TN-14",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "In the elbow method, which k is usually chosen?",
+      "options": [
+        "The largest k that was tried",
+        "The k that gives exactly one point per cluster",
+        "The k equal to the number of features",
+        "The k after which more clusters stop giving a large improvement"
+      ],
+      "correct_index": 3,
+      "explanation": "The elbow is where adding clusters stops reducing the total distance much."
+    },
+    {
+      "code": "DAT-TL-01",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "essay",
+      "level": "easy",
+      "content": "What does linear regression find, and how is the line fitted to the data?",
+      "rubric": [
+        {
+          "text": "It finds a straight line relating the input to the output (any one of: a slope with an intercept, y = w0 + w1 x, a linear relationship).",
+          "max_points": 5,
+          "main_keywords": [
+            "straight line",
+            "line",
+            "slope",
+            "intercept",
+            "w0",
+            "w1"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "The line is fitted by least squares (any one of: minimise the mean squared error, minimise squared differences, MSE).",
+          "max_points": 5,
+          "main_keywords": [
+            "least squares",
+            "squared error",
+            "squared difference",
+            "mse",
+            "minimise",
+            "minimize",
+            "minimises",
+            "minimizes"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Linear regression finds a straight line y = w0 + w1 x that describes how the output changes with the input. The line is fitted by least squares, choosing the weights that minimise the mean squared error between the predicted and actual values."
+    },
+    {
+      "code": "DAT-TL-02",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "essay",
+      "level": "easy",
+      "content": "Explain the three components that a time series is often described by.",
+      "rubric": [
+        {
+          "text": "Trend: a long-term rise or fall (any one of: long-term increase, long-term decrease, overall direction).",
+          "max_points": 4,
+          "main_keywords": [
+            "long-term",
+            "long term",
+            "increase",
+            "decrease",
+            "overall direction",
+            "rise",
+            "fall"
+          ],
+          "sub_keywords": [
+            "trend"
+          ]
+        },
+        {
+          "text": "Seasonality: a pattern that repeats with a fixed period (any one of: daily cycle, weekly cycle, repeating pattern).",
+          "max_points": 3,
+          "main_keywords": [
+            "repeat",
+            "repeats",
+            "repeating",
+            "cycle",
+            "period",
+            "daily",
+            "weekly"
+          ],
+          "sub_keywords": [
+            "seasonality",
+            "seasonal"
+          ]
+        },
+        {
+          "text": "Noise: the random variation that is left (any one of: random, irregular, unpredictable).",
+          "max_points": 3,
+          "main_keywords": [
+            "random",
+            "irregular",
+            "unpredictable",
+            "remaining",
+            "leftover"
+          ],
+          "sub_keywords": [
+            "noise"
+          ]
+        }
+      ],
+      "explanation": "Model answer: The trend is the long-term increase or decrease. Seasonality is a pattern that repeats with a fixed period, such as a daily cycle. Noise is the random variation that is left over."
+    },
+    {
+      "code": "DAT-TL-03",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Describe how the k-means algorithm groups data points once k starting centroids are chosen.",
+      "rubric": [
+        {
+          "text": "Assign every point to its nearest centroid (any one of: nearest, closest).",
+          "max_points": 4,
+          "main_keywords": [
+            "nearest",
+            "closest",
+            "close",
+            "shortest distance"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Move each centroid to the mean of its points (any one of: mean, average, update the centroid).",
+          "max_points": 3,
+          "main_keywords": [
+            "mean",
+            "average",
+            "update",
+            "move"
+          ],
+          "sub_keywords": [
+            "centroid",
+            "centre",
+            "center"
+          ]
+        },
+        {
+          "text": "Repeat until the assignments stop changing (any one of: repeat, converge, stable).",
+          "max_points": 3,
+          "main_keywords": [
+            "repeat",
+            "converge",
+            "no longer change",
+            "stop changing",
+            "stable",
+            "iterate"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Each point is assigned to its nearest centroid. Then each centroid is moved to the mean of the points assigned to it. These two steps are repeated until the assignments no longer change."
+    },
+    {
+      "code": "DAT-TL-04",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "essay",
+      "level": "easy",
+      "content": "Why should features usually be scaled before running k-means clustering?",
+      "rubric": [
+        {
+          "text": "k-means groups points by distance (any one of: distance, how far apart points are).",
+          "max_points": 5,
+          "main_keywords": [
+            "distance",
+            "distances",
+            "far apart"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Unscaled, the feature with the larger range dominates (any one of: dominate, outweigh, gets more weight).",
+          "max_points": 5,
+          "main_keywords": [
+            "dominate",
+            "dominates",
+            "outweigh",
+            "more weight",
+            "larger range",
+            "large range",
+            "bigger values",
+            "larger values"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: k-means groups points by their distance to the centroids. If the features are not scaled, the feature with the larger numeric range dominates the distances and the other features hardly matter."
+    },
+    {
+      "code": "DAT-TL-05",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "essay",
+      "level": "advanced",
+      "content": "A building's daily energy use was modelled from outdoor temperatures between 10 and 35 degC as E = 2 + 0.5 T, with E in kWh and T in degC. Predict the energy use at 30 degC, showing your method; explain what the number 0.5 means; and say whether you would trust a prediction for 60 degC.",
+      "rubric": [
+        {
+          "text": "Method: substitute T = 30 into the line (any one of: 2 + 0.5 x 30, 0.5 times 30 plus 2).",
+          "max_points": 2,
+          "main_keywords": [
+            "0.5 x 30",
+            "0.5 * 30",
+            "0.5 × 30",
+            "0.5 times 30",
+            "2 + 15",
+            "substitute",
+            "plug",
+            "put 30"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Result: 17 kWh.",
+          "max_points": 3,
+          "main_keywords": [
+            "17",
+            "17.0"
+          ],
+          "sub_keywords": [
+            "kwh",
+            "energy",
+            "predict",
+            "prediction",
+            "use"
+          ]
+        },
+        {
+          "text": "0.5 is the slope (any one of: energy rises 0.5 kWh per degree, per 1 degC increase).",
+          "max_points": 2,
+          "main_keywords": [
+            "per degree",
+            "per degc",
+            "one degree",
+            "1 degc",
+            "0.5 kwh",
+            "slope"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "60 degC is extrapolation, not to be trusted (any one of: outside the 10 to 35 range, beyond the data, the line may not stay linear).",
+          "max_points": 3,
+          "main_keywords": [
+            "extrapolation",
+            "extrapolate",
+            "outside",
+            "beyond",
+            "not trust",
+            "not reliable",
+            "not stay linear"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: Substituting T = 30 gives E = 2 + 0.5 x 30 = 17 kWh. The number 0.5 is the slope: the energy use rises by 0.5 kWh per degree. I would not trust a prediction for 60 degC, because it is outside the 10 to 35 degC range of the data; that is extrapolation, and the relationship may not stay linear."
+    },
+    {
+      "code": "DAT-TL-06",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "essay",
+      "level": "advanced",
+      "content": "You must forecast the next hour's temperature in a greenhouse from hourly readings collected over three months, and the temperature has a clear daily cycle. How would you split the data for training and testing, which inputs would your model use, and why?",
+      "rubric": [
+        {
+          "text": "Split in time order: train on the earlier part, test on the later part.",
+          "max_points": 3,
+          "main_keywords": [
+            "earlier",
+            "later",
+            "first",
+            "last",
+            "older",
+            "oldest",
+            "most recent",
+            "newest",
+            "first part",
+            "last part",
+            "time order",
+            "chronological",
+            "chronologically"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Why (any one of: do not shuffle, the future must not leak into training, never test on the past using the future).",
+          "max_points": 2,
+          "main_keywords": [
+            "not shuffle",
+            "no shuffling",
+            "without shuffling",
+            "future",
+            "leak"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Inputs: previous hours' values (any one of: last few readings, autoregressive, lagged values).",
+          "max_points": 2,
+          "main_keywords": [
+            "previous",
+            "past value",
+            "past values",
+            "autoregressive",
+            "lag",
+            "lagged"
+          ],
+          "sub_keywords": []
+        },
+        {
+          "text": "Daily cycle: also the value from 24 hours earlier (any one of: 24-hour lag, same hour yesterday).",
+          "max_points": 3,
+          "main_keywords": [
+            "24",
+            "same hour yesterday",
+            "yesterday"
+          ],
+          "sub_keywords": []
+        }
+      ],
+      "explanation": "Model answer: I would split the data in time order: train on the first two and a half months and test on the later part, and not shuffle, so the future never leaks into training. The model would be autoregressive, using the previous few hours' values, plus the value from 24 hours earlier to capture the daily cycle."
     }
   ]
 }

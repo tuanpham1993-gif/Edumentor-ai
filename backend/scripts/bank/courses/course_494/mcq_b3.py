@@ -1,0 +1,281 @@
+# ruff: noqa: ISC004 — dữ liệu đề: chuỗi dài ngắt dòng trong danh sách là cố ý
+"""Trắc nghiệm khóa 494 — ĐỢT 3 (27/11/2026). (đoạn số, mức, đề, [ĐÚNG, sai, sai, sai], giải thích).
+Đoạn số tính trong từng kỹ năng: DA-K01..K03, DAT-K01..K03.
+27/11 (review Tuấn): DA-TN-14, DAT-TN-09, 11, 13 viết lại vì lộ đáp án tự luận (DA-TL-04, DAT-TL-05, 06, 04) —
+exclusion_group chưa được bộ ráp đề dùng (hạng mục 7.5b)."""
+
+MCQ_B3 = {
+    "DA": [
+        (
+            1,
+            "recognize",
+            "Predicting that a machine will fail before it actually happens, using its sensor data, is called what?",
+            ["Predictive maintenance", "Anomaly logging", "Data compression", "Edge routing"],
+            "Predicting failures before they happen from sensor data is predictive maintenance.",
+        ),
+        (
+            1,
+            "recognize",
+            "Which goal of IoT data analysis means finding readings that do not fit the normal pattern?",
+            ["Anomaly detection", "Monitoring", "Forecasting", "Automation"],
+            "Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike.",
+        ),
+        (
+            2,
+            "recognize",
+            "In the components of learning, what is the hypothesis set?",
+            [
+                "The family of candidate models the algorithm may choose from",
+                "The unknown function that truly maps inputs to outputs",
+                "The table of past input and output examples collected",
+                "The error the final model makes on new, unseen data",
+            ],
+            "The hypothesis set is the family of candidate models, for example all straight lines.",
+        ),
+        (
+            2,
+            "recognize",
+            "What is the error of a model on new, unseen data called?",
+            ["Out-of-sample error", "In-sample error", "Quantization error", "Training error"],
+            "In-sample error is on the training data; out-of-sample error is on new, unseen data.",
+        ),
+        (
+            3,
+            "recognize",
+            "Which type of learning uses training examples that each come with the correct answer?",
+            ["Supervised learning", "Unsupervised learning", "Reinforcement learning", "Clustering"],
+            "Supervised learning uses labelled examples; unsupervised learning has no labels.",
+        ),
+        (
+            3,
+            "recognize",
+            "Which type of learning lets an agent learn by trial and error from rewards?",
+            ["Reinforcement learning", "Supervised learning", "Unsupervised learning", "Linear regression"],
+            "Reinforcement learning learns from rewards, such as a thermostat learning from comfort feedback.",
+        ),
+        (
+            3,
+            "recognize",
+            "Which Python library is mainly used to handle tables of data, such as sensor logs?",
+            ["pandas", "matplotlib", "NumPy", "scikit-learn"],
+            "pandas handles tables; NumPy handles arrays, scikit-learn provides models and matplotlib draws plots.",
+        ),
+        (
+            1,
+            "understand",
+            "Why does IoT data analysis often use machine learning instead of hand-written rules?",
+            [
+                "The rules behind the data are often unknown or too complex to write by hand",
+                "Machine learning models need no data at all to make their predictions",
+                "Hand-written rules cannot run on any computer connected to the internet",
+                "Machine learning always gives perfect predictions on every sensor",
+            ],
+            "Machine learning learns a model from the data when the underlying rules are unknown or too complex.",
+        ),
+        (
+            2,
+            "understand",
+            "A model fits its training data almost perfectly but makes large errors on new data. What is this called?",
+            ["Overfitting", "Underfitting", "Feature scaling", "Seasonality"],
+            "Fitting the training data including its noise but failing on new data is overfitting.",
+        ),
+        (
+            2,
+            "understand",
+            "According to the idea of feasibility of learning, when is a model that does well on its training data "
+            "likely to do well on new data too?",
+            [
+                "When the data are representative and there are enough examples",
+                "When the model is as complex as possible so it fits every point",
+                "When the training data come from a single day of measurements",
+                "When the test data were also used to train the same model",
+            ],
+            "Learning is feasible when the data represent the situations of use and there are enough examples.",
+        ),
+        (
+            3,
+            "understand",
+            "Predicting tomorrow's energy use in kWh from past readings is which kind of task?",
+            ["Supervised regression", "Supervised classification", "Unsupervised clustering", "Reinforcement learning"],
+            "The output is a number and past answers are known, so it is supervised regression.",
+        ),
+        (
+            3,
+            "understand",
+            "Labelling each motor as 'faulty' or 'normal' from its vibration features is which kind of task?",
+            ["Supervised classification", "Supervised regression", "Unsupervised clustering", "Time-series smoothing"],
+            "The output is a category learned from labelled examples, so it is classification.",
+        ),
+        (
+            3,
+            "understand",
+            "A temperature sensor occasionally reports 999 degC because of a loose wire. Which pipeline step should "
+            "deal with this?",
+            [
+                "Data cleaning: remove or correct the outliers",
+                "Feature scaling before clustering",
+                "Splitting the data into training and test sets",
+                "Choosing the number of clusters k",
+            ],
+            "Impossible values from faulty sensors are outliers, handled in the cleaning step.",
+        ),
+        (
+            3,
+            "understand",
+            "Computing the average vibration of a motor over each minute, to feed into a model, is which pipeline step?",
+            [
+                "Choosing or computing features",
+                "Cleaning outliers from the data",
+                "Collecting labels for past failures",
+                "Clustering the motors into groups",
+            ],
+            "Turning raw readings into inputs such as a one-minute average is feature computation.",
+        ),
+    ],
+    "DAT": [
+        (
+            1,
+            "recognize",
+            "In the linear regression model y = w0 + w1 x, what does w1 represent?",
+            [
+                "The slope: how much y changes when x increases by 1",
+                "The value of y when x is 0",
+                "The mean squared error of the fitted line",
+                "The number of training examples used",
+            ],
+            "w1 is the slope; w0 is the intercept, the value of y when x is 0.",
+        ),
+        (
+            1,
+            "recognize",
+            "How are the weights of a linear regression line chosen?",
+            [
+                "By minimising the mean squared error (least squares)",
+                "By maximising the number of clusters",
+                "By averaging the last few values of the series",
+                "By sorting the data by time before fitting",
+            ],
+            "Least squares chooses the weights that minimise the mean squared error.",
+        ),
+        (
+            2,
+            "recognize",
+            "Which component of a time series is a pattern that repeats with a fixed period, such as a daily cycle?",
+            ["Seasonality", "Trend", "Noise", "Intercept"],
+            "Seasonality repeats with a fixed period; the trend is a long-term increase or decrease.",
+        ),
+        (
+            2,
+            "recognize",
+            "What does a moving average do to a time series?",
+            [
+                "It smooths out noise so the trend is easier to see",
+                "It removes the time order of the readings",
+                "It groups the readings into k clusters",
+                "It turns the readings into labels",
+            ],
+            "A moving average averages the last few values, which smooths noise.",
+        ),
+        (
+            2,
+            "recognize",
+            "What does an autoregressive (AR) model use to predict the next value?",
+            [
+                "A weighted sum of previous values of the series",
+                "The distance to the nearest cluster centre",
+                "Only the value of a different, unrelated sensor",
+                "A random value drawn from the training data",
+            ],
+            "An AR model predicts the next value from previous values.",
+        ),
+        (
+            3,
+            "recognize",
+            "Clustering is which type of learning?",
+            ["Unsupervised", "Supervised", "Reinforcement", "Regression"],
+            "Clustering groups unlabelled data, so it is unsupervised.",
+        ),
+        (
+            3,
+            "recognize",
+            "In k-means, what is each point assigned to in every iteration?",
+            ["Its nearest centroid", "The largest cluster", "A random cluster", "The cluster with the oldest data"],
+            "Each point is assigned to its nearest centroid, then the centroids move to the mean of their points.",
+        ),
+        (
+            1,
+            "understand",
+            "A line fitted as y = 1.5 + 0.2 x is used with x = 10. What is the prediction?",
+            ["3.5", "2.0", "1.7", "15.2"],
+            "1.5 + 0.2 x 10 = 3.5.",
+        ),
+        (
+            1,
+            "understand",
+            "For the fitted line y = 1.5 + 0.2 x, what does the number 1.5 mean?",
+            [
+                "The predicted y when x is 0",
+                "The change in y when x increases by 1",
+                "The mean squared error of the line",
+                "The largest x used in training",
+            ],
+            "1.5 is the intercept w0, the value of y when x is 0.",
+        ),
+        (
+            1,
+            "understand",
+            "Model A has a test MSE of 4.0 and model B has a test MSE of 9.0. Which predicts better?",
+            ["Model A", "Model B", "They are equally good", "It cannot be compared with MSE"],
+            "A smaller MSE means the predictions are closer to the actual values.",
+        ),
+        (
+            2,
+            "understand",
+            "A 24-hour moving average is drawn over three months of hourly temperatures. What does it mainly show?",
+            [
+                "The slow long-term movement, with the daily cycle smoothed out",
+                "Every individual daily peak more sharply than the raw data",
+                "Only the random noise left after removing the trend",
+                "The temperature forecast for the next three months",
+            ],
+            "Averaging a full day smooths the daily cycle and the noise, leaving the slow long-term movement.",
+        ),
+        (
+            2,
+            "understand",
+            "To capture a daily cycle in hourly temperature data, which extra input helps an AR model?",
+            [
+                "The value from 24 hours earlier",
+                "The value from 24 days earlier",
+                "The value of a random other hour",
+                "The total number of readings",
+            ],
+            "In hourly data the daily cycle repeats every 24 values, so the value 24 hours earlier helps.",
+        ),
+        (
+            3,
+            "understand",
+            "After clustering households by energy use, one new reading is far from every centroid. How can it be "
+            "treated?",
+            [
+                "As a possible anomaly worth checking",
+                "As the centre of a new largest cluster",
+                "As proof that k must be reduced to one",
+                "As a reading that belongs to every cluster",
+            ],
+            "A point far from all centroids does not fit any normal group, so it can be flagged as an anomaly.",
+        ),
+        (
+            3,
+            "understand",
+            "In the elbow method, which k is usually chosen?",
+            [
+                "The k after which more clusters stop giving a large improvement",
+                "The largest k that was tried",
+                "The k that gives exactly one point per cluster",
+                "The k equal to the number of features",
+            ],
+            "The elbow is where adding clusters stops reducing the total distance much.",
+        ),
+    ],
+}

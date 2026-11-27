@@ -1,0 +1,56 @@
+"""Ghi chú tiếng Việt cho file duyệt — ĐỢT 3 (27/11/2026)."""
+
+VN_CHUNK_B3 = {
+    "DA-K01": "Vì sao phân tích dữ liệu IoT: dữ liệu cảm biến rất nhiều, liên tục, đa dạng; dữ liệu thô ít giá trị cho tới khi được phân tích. Mục tiêu: giám sát, dự đoán (bảo trì dự đoán, dự báo năng lượng), phát hiện bất thường, tự động hóa. Quy luật thường chưa biết → dùng học máy.",
+    "DA-K02": "Thành phần của việc học: hàm mục tiêu f chưa biết, tập dữ liệu (x, y), tập giả thuyết, thuật toán học → giả thuyết cuối g ≈ f. Học được (theo xác suất) khi dữ liệu đại diện và đủ nhiều. Sai số trong mẫu / ngoài mẫu; overfitting. Ghi rõ đây là thuật ngữ của khung Learning From Data (khóa khác có thể gọi là 'mô hình đã huấn luyện').",
+    "DA-K03": "Kiểu học: có giám sát (có nhãn: hồi quy / phân loại), không giám sát (không nhãn: phân cụm), tăng cường (học từ phần thưởng). Quy trình: thu thập → làm sạch (giá trị thiếu, ngoại lai) → đặc trưng → chia train/test → huấn luyện → đánh giá. Python: NumPy, pandas, scikit-learn, matplotlib.",
+    "DAT-K01": "Hồi quy tuyến tính y = w0 + w1 x (w0 hệ số chặn, w1 độ dốc); khớp bằng bình phương tối thiểu (cực tiểu MSE); vd y = 1,5 + 0,2x, x = 10 → 3,5; đánh giá bằng MSE trên tập test; ngoại suy ngoài dải dữ liệu dễ sai.",
+    "DAT-K02": "Chuỗi thời gian: trend (xu hướng dài hạn), seasonality (lặp theo chu kỳ cố định), noise (dao động ngẫu nhiên). Trung bình trượt làm mượt; mô hình AR dự đoán từ các giá trị trước (thêm giá trị 24 giờ trước cho chu kỳ ngày). Không xáo trộn: train phần đầu, test phần sau.",
+    "DAT-K03": "Phân cụm (không giám sát), k-means: chọn k và tâm ban đầu → gán điểm về tâm gần nhất → dời tâm về trung bình → lặp tới khi ổn định; chọn k bằng elbow; chuẩn hóa đặc trưng vì dùng khoảng cách; ứng dụng IoT: nhóm hộ theo kiểu dùng điện, điểm xa mọi tâm = bất thường.",
+}
+
+VN_MCQ_B3 = {
+    "DA-TN-01": "Dự đoán máy hỏng trước khi xảy ra từ dữ liệu cảm biến → bảo trì dự đoán.",
+    "DA-TN-02": "Mục tiêu tìm số đọc không khớp mẫu bình thường → phát hiện bất thường.",
+    "DA-TN-03": "Tập giả thuyết là gì? → họ các mô hình ứng viên thuật toán được chọn.",
+    "DA-TN-04": "Sai số trên dữ liệu mới chưa thấy → sai số ngoài mẫu.",
+    "DA-TN-05": "Kiểu học có đáp án đúng cho mỗi ví dụ → có giám sát.",
+    "DA-TN-06": "Kiểu học thử–sai theo phần thưởng → tăng cường.",
+    "DA-TN-07": "Thư viện Python xử lý bảng dữ liệu → pandas.",
+    "DA-TN-08": "Vì sao dùng học máy thay luật viết tay → quy luật chưa biết / quá phức tạp.",
+    "DA-TN-09": "Khớp gần hoàn hảo dữ liệu huấn luyện, sai nhiều dữ liệu mới → overfitting.",
+    "DA-TN-10": "Khi nào mô hình tốt trên dữ liệu huấn luyện cũng tốt trên dữ liệu mới → dữ liệu đại diện và đủ nhiều.",
+    "DA-TN-11": "Dự đoán kWh ngày mai từ dữ liệu cũ → hồi quy có giám sát.",
+    "DA-TN-12": "Gán nhãn động cơ 'hỏng' / 'bình thường' → phân loại có giám sát.",
+    "DA-TN-13": "Cảm biến thỉnh thoảng báo 999 °C do lỏng dây → bước làm sạch (bỏ / sửa ngoại lai).",
+    "DA-TN-14": "Tính trung bình rung mỗi phút để đưa vào mô hình → bước tính đặc trưng (thay câu cũ lộ đáp án DA-TL-04).",
+    "DAT-TN-01": "Trong y = w0 + w1 x, w1 là gì → độ dốc.",
+    "DAT-TN-02": "Chọn trọng số hồi quy thế nào → cực tiểu MSE (bình phương tối thiểu).",
+    "DAT-TN-03": "Thành phần lặp theo chu kỳ cố định → seasonality.",
+    "DAT-TN-04": "Trung bình trượt làm gì → làm mượt nhiễu, dễ thấy xu hướng.",
+    "DAT-TN-05": "Mô hình AR dùng gì → tổng có trọng số các giá trị trước.",
+    "DAT-TN-06": "Phân cụm là kiểu học nào → không giám sát.",
+    "DAT-TN-07": "k-means gán mỗi điểm vào đâu → tâm gần nhất.",
+    "DAT-TN-08": "y = 1,5 + 0,2x với x = 10 → 3,5.",
+    "DAT-TN-09": "y = 1,5 + 0,2x: số 1,5 nghĩa là gì → y khi x = 0, hệ số chặn (thay câu cũ lộ ý ngoại suy của DAT-TL-05).",
+    "DAT-TN-10": "MSE test 4,0 và 9,0 → mô hình A tốt hơn.",
+    "DAT-TN-11": "Trung bình trượt 24 giờ trên 3 tháng cho thấy gì → xu hướng chậm, chu kỳ ngày bị làm mượt (thay câu cũ lộ DAT-TL-06).",
+    "DAT-TN-12": "Dữ liệu theo giờ có chu kỳ ngày → thêm giá trị 24 giờ trước.",
+    "DAT-TN-13": "Điểm mới xa mọi tâm cụm → coi là bất thường cần kiểm (thay câu cũ lộ DAT-TL-04).",
+    "DAT-TN-14": "Elbow chọn k nào → k mà thêm cụm không còn cải thiện nhiều.",
+}
+
+VN_ESSAY_B3 = {
+    "DA-TL-01": "Vì sao dữ liệu cảm biến thô cần phân tích; bảo trì dự đoán và phát hiện bất thường mỗi cái đạt được gì (đề ghi rõ hai mục tiêu, không cho chọn tự do).",
+    "DA-TL-02": "Các thành phần của việc học: cái chưa biết (hàm mục tiêu), cái đang có (dữ liệu), thuật toán tạo ra gì (giả thuyết cuối từ tập giả thuyết).",
+    "DA-TL-03": "Ba kiểu học khác nhau ở loại phản hồi (nhãn / không nhãn / phần thưởng). Có chủ thể để chặn bài viết đảo supervised / unsupervised.",
+    "DA-TL-04": "Vì sao chia train / test: kiểm tra trên dữ liệu chưa thấy; tập test phải để riêng. KHÔNG hỏi overfitting (nằm ở DA-TL-06).",
+    "DA-TL-05": "(Nâng cao) Quy trình bảo trì dự đoán từ dữ liệu rung: gán nhãn, làm sạch, đặc trưng, chọn kiểu học (có giám sát, phân loại), hành động. Không có ý 'đánh giá' (tránh trùng DA-TL-04).",
+    "DA-TL-06": "(Nâng cao) Mô hình học dữ liệu mùa hè sai vào mùa đông: dữ liệu không đại diện, sai số trong mẫu thấp không bảo đảm ngoài mẫu, cách khắc phục, kiểm trên dữ liệu mùa đông.",
+    "DAT-TL-01": "Hồi quy tuyến tính tìm gì (đường thẳng, độ dốc, hệ số chặn) và khớp thế nào (bình phương tối thiểu).",
+    "DAT-TL-02": "Ba thành phần chuỗi thời gian kèm giải thích; chủ thể gắn từng thành phần (bài đảo không được điểm).",
+    "DAT-TL-03": "Các bước k-means sau khi chọn k tâm: gán về tâm gần nhất, dời tâm về trung bình, lặp tới khi ổn định.",
+    "DAT-TL-04": "Vì sao chuẩn hóa đặc trưng trước k-means: dùng khoảng cách, đặc trưng dải lớn lấn át.",
+    "DAT-TL-05": "(Nâng cao, tính toán) E = 2 + 0,5T, dải dữ liệu 10–35 °C: dự đoán ở 30 °C = 17 kWh (ý cách làm / ý kết quả tách riêng), ý nghĩa 0,5, không tin dự đoán 60 °C (ngoại suy). Bài thử thay sai 60 → 32 trượt ý kết quả.",
+    "DAT-TL-06": "(Nâng cao, thiết kế) Dự báo nhiệt độ giờ tới: chia theo thời gian không xáo trộn, đầu vào là các giờ trước và giá trị 24 giờ trước.",
+}

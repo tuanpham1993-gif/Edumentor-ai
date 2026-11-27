@@ -34,6 +34,17 @@ def template_problems(code: str, i: int, text: str) -> list[str]:
     return out
 
 
+def both_items(data: dict) -> list[str]:
+    """Các ý "both needed": bộ chấm từ khóa chỉ cần một từ khóa → lệch Gemini có chủ đích khi bài nêu thiếu."""
+    return [
+        f"{q['code']} ý {i}"
+        for q in data["questions"]
+        if q["type"] == "essay"
+        for i, item in enumerate(q["rubric"], start=1)
+        if BOTH.search(item["text"])
+    ]
+
+
 def check(data: dict, probes: dict | None = None) -> tuple[list[str], list[str], dict]:
     """→ (vấn đề, giới hạn đã biết (c), vị trí đáp án đúng). Cần DB (khớp mã kỹ năng)."""
     from app.ai.review.keyword_grader_en import _kw
@@ -109,6 +120,13 @@ def main() -> int:
         print("Giới hạn đã biết của bộ chấm từ khóa (không tính lỗi):")
         for k in known:
             print(" -", k)
+    both = both_items(data)
+    if both:
+        print(
+            f"Lệch có chủ đích — ý 'both needed' ({len(both)}): bài nêu thiếu một phần thì Gemini không đạt, từ khóa "
+            "vẫn đạt → cờ ai_stricter cho giáo viên (đúng thiết kế):"
+        )
+        print("   " + ", ".join(both))
     return 1 if problems else 0
 
 

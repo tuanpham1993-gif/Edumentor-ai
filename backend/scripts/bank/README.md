@@ -61,3 +61,14 @@ Email kết quả đã gửi thì không rút lại được.
 Lưu ý khi thử trên server: luật chống học thuộc (tránh câu của 3 lượt gần nhất) với ngân hàng nhỏ sẽ khiến lượt thứ
 2–3 **kích hoạt job sinh đề bổ sung** (Gemini soạn câu `auto_approved`). Dùng bài đánh dấu cho MỌI câu tự luận để một
 lượt là đủ; nộp liên tiếp phải cách nhau `REVIEW_SUBMIT_COOLDOWN` (120 s).
+
+## Việc để sau (đã ghi nhận khi soạn đề 494)
+
+- **Chuẩn hóa số trong bộ chấm từ khóa**: "17.0" khác "17", "0,1" (dấu phẩy) bị tách thành hai số; ký hiệu đơn vị như
+  "°C" bị bỏ hẳn khi tiền xử lý. Hiện vá bằng cách ghi thêm dạng ("17", "17.0") và gắn chủ thể bằng từ ngữ cảnh. Sửa
+  tận gốc trong `text_pipeline` (giống lỗi "-s"), có so điểm cũ / mới.
+- **(c)** gán từ khóa cho chủ thể gần nhất (đảo vai trò trong cùng một vế câu).
+- **Nhóm loại trừ (7.5b)**: cột `exclusion_group` đã có nhưng bộ ráp đề chưa dùng, và file đề JSON chưa nạp cột này.
+  Đến khi làm xong, câu trắc nghiệm lộ đáp án câu tự luận phải **viết lại** (đợt 3 đã viết lại DA-TN-14, DAT-TN-09, 11,
+  13). Nên rà lại đợt 1–2 theo cùng tiêu chí.
+

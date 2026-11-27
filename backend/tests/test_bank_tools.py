@@ -144,3 +144,23 @@ def test_judge_rules():
     assert judge({"both": True, "variant": "A", "gemini": 5, "keyword": 5}) == "LỆCH"
     assert judge({"both": False, "variant": "A", "gemini": 0, "keyword": 3}) == "LỆCH"
     assert judge({"both": False, "variant": "B", "gemini": 2, "keyword": 2}) == "OK"
+
+
+def test_both_items_lists_intended_gaps():
+    """check in danh sách ý "both needed" (lệch Gemini có chủ đích khi bài nêu thiếu) — 27/11."""
+    from scripts.bank.check import both_items
+
+    data = {
+        "questions": [
+            {
+                "code": "X-TL-01",
+                "type": "essay",
+                "rubric": [
+                    {"text": "QoS 0 (both needed: at most once; may be lost)."},
+                    {"text": "Uses UDP (any one of: UDP, small header)."},
+                ],
+            },
+            {"code": "X-TN-01", "type": "mcq"},
+        ]
+    }
+    assert both_items(data) == ["X-TL-01 ý 1"]
