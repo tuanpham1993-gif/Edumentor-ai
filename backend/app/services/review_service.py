@@ -349,6 +349,9 @@ def pick_questions(
         chunks = review_rag_service.retrieve_chunks(db, skill_id, names[skill_id], embedder=embedder)
         prompt = build_generation_prompt(course_title=title, skill_name=names[skill_id], chunks=chunks, need=need)
         candidates = [_question_dict(q) for q in repo.bank_questions(db, skill_id, include_auto=include_auto)]
+        groups = repo.exclusion_groups(db, [c["question_id"] for c in candidates])  # 7.5b: nhóm loại trừ
+        for c in candidates:
+            c["exclusion_group"] = groups.get(c["question_id"])
         skill_avoid = attach_ideas(db, candidates, avoid) if include_auto else avoid  # Bước A: chỉ ôn theo kỹ năng
         request = GenerationRequest(
             course_title=title,

@@ -38,20 +38,20 @@ def bank_questions() -> dict[str, dict]:
 
 def test_without_flag_prompt_is_unchanged():
     system, _, version = grading_prompt(QUESTION, "print shows text")
-    assert system == GRADE_SYSTEM_PROMPT_EN and version == "grade-en-v3"
+    assert system == GRADE_SYSTEM_PROMPT_EN and version == "grade-en-v4"
 
 
 def test_few_shot_adds_examples_to_system_prompt_and_version():
     system, user, version = grading_prompt({**QUESTION, "few_shot": True}, "print shows text")
     assert system == GRADE_SYSTEM_PROMPT_EN + FEWSHOT_EN and "CALIBRATION EXAMPLES" in system
-    assert version == "grade-en-v3+fs"
+    assert version == "grade-en-v4+fs"
     assert "CALIBRATION" not in user  # ví dụ cố định ở system prompt, user prompt chỉ có câu đang chấm
 
 
 def test_few_shot_with_rag_version():
     chunks = [{"title": "print", "content": "print() writes to the screen."}]
     _, _, version = grading_prompt({**QUESTION, "few_shot": True, "context_chunks": chunks}, "x")
-    assert version == "grade-en-v3+rag+fs"
+    assert version == "grade-en-v4+rag+fs"
 
 
 def test_vietnamese_prompt_has_no_english_examples():

@@ -1,0 +1,3660 @@
+[
+  {
+    "role_id": 1,
+    "role_name": "Frontend Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 2870,
+        "skill": "Frontend Development"
+      },
+      {
+        "skill_id": 363,
+        "skill": "React"
+      },
+      {
+        "skill_id": 4582,
+        "skill": "Typescript"
+      },
+      {
+        "skill_id": 1066,
+        "skill": "Responsive Web Design"
+      },
+      {
+        "skill_id": 5870,
+        "skill": "Web Accessibility"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 2,
+    "role_name": "Backend Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 5086,
+        "skill": "Back End (Software Engineering)"
+      },
+      {
+        "skill_id": 377,
+        "skill": "Database (DB) Design"
+      },
+      {
+        "skill_id": 775,
+        "skill": "Object Relational Mapping (ORM)"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 3,
+    "role_name": "Full Stack Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 2136,
+        "skill": "Full Stack Development"
+      },
+      {
+        "skill_id": 363,
+        "skill": "React"
+      },
+      {
+        "skill_id": 1141,
+        "skill": "Node.js"
+      },
+      {
+        "skill_id": 3623,
+        "skill": "Express API"
+      },
+      {
+        "skill_id": 377,
+        "skill": "Database (DB) Design"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      }
+    ]
+  },
+  {
+    "role_id": 4,
+    "role_name": "Software Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 158,
+        "skill": "Software Engineering"
+      },
+      {
+        "skill_id": 187,
+        "skill": "Algorithms"
+      },
+      {
+        "skill_id": 1804,
+        "skill": "Design Patterns"
+      },
+      {
+        "skill_id": 2276,
+        "skill": "Test-Driven Development"
+      },
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      },
+      {
+        "skill_id": 2697,
+        "skill": "Systems Design"
+      }
+    ]
+  },
+  {
+    "role_id": 5,
+    "role_name": "Web Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 111,
+        "skill": "Web Development"
+      },
+      {
+        "skill_id": 2870,
+        "skill": "Frontend Development"
+      },
+      {
+        "skill_id": 1066,
+        "skill": "Responsive Web Design"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      },
+      {
+        "skill_id": 152,
+        "skill": "MySQL"
+      }
+    ]
+  },
+  {
+    "role_id": 6,
+    "role_name": "API Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      },
+      {
+        "skill_id": 2100,
+        "skill": "OpenAPI specifications"
+      },
+      {
+        "skill_id": 5828,
+        "skill": "API Testing"
+      },
+      {
+        "skill_id": 3521,
+        "skill": "API Documentation"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      },
+      {
+        "skill_id": 365,
+        "skill": "Web Application Security"
+      }
+    ]
+  },
+  {
+    "role_id": 7,
+    "role_name": "Android Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 4073,
+        "skill": "Android Development"
+      },
+      {
+        "skill_id": 3573,
+        "skill": "Kotlin"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      },
+      {
+        "skill_id": 349,
+        "skill": "Sqlite"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 8,
+    "role_name": "iOS Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 685,
+        "skill": "iOS App Development"
+      },
+      {
+        "skill_id": 1257,
+        "skill": "Swift and SwiftUI"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 9,
+    "role_name": "Mobile Application Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 3875,
+        "skill": "Mobile App Development"
+      },
+      {
+        "skill_id": 4073,
+        "skill": "Android Development"
+      },
+      {
+        "skill_id": 685,
+        "skill": "iOS App Development"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 10,
+    "role_name": "Cross-Platform Mobile Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 4072,
+        "skill": "Cross-Platform Mobile Development"
+      },
+      {
+        "skill_id": 1887,
+        "skill": "React Native"
+      },
+      {
+        "skill_id": 3874,
+        "skill": ".NET MAUI (Multi-Platform App UI)"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 11,
+    "role_name": "Game Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 2685,
+        "skill": "Game Programming"
+      },
+      {
+        "skill_id": 537,
+        "skill": "Unity"
+      },
+      {
+        "skill_id": 467,
+        "skill": "Unreal Engine"
+      },
+      {
+        "skill_id": 189,
+        "skill": "Computer Graphics (CG)"
+      },
+      {
+        "skill_id": 539,
+        "skill": "Game Design"
+      }
+    ]
+  },
+  {
+    "role_id": 12,
+    "role_name": "Gameplay Programmer",
+    "candidate_skills": [
+      {
+        "skill_id": 2685,
+        "skill": "Game Programming"
+      },
+      {
+        "skill_id": 537,
+        "skill": "Unity"
+      },
+      {
+        "skill_id": 467,
+        "skill": "Unreal Engine"
+      },
+      {
+        "skill_id": 187,
+        "skill": "Algorithms"
+      }
+    ]
+  },
+  {
+    "role_id": 13,
+    "role_name": "Game Engine Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1802,
+        "skill": "Modern C++"
+      },
+      {
+        "skill_id": 189,
+        "skill": "Computer Graphics (CG)"
+      },
+      {
+        "skill_id": 5437,
+        "skill": "Concurrent Programming"
+      },
+      {
+        "skill_id": 515,
+        "skill": "Computer Architecture"
+      }
+    ]
+  },
+  {
+    "role_id": 14,
+    "role_name": "Embedded Software Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 5701,
+        "skill": "Embedded C"
+      },
+      {
+        "skill_id": 2646,
+        "skill": "Real-Time Operating System (RTOS)"
+      },
+      {
+        "skill_id": 3557,
+        "skill": "Microcontroller Programming"
+      },
+      {
+        "skill_id": 2647,
+        "skill": "Linux On Embedded Systems"
+      }
+    ]
+  },
+  {
+    "role_id": 15,
+    "role_name": "Firmware Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 5701,
+        "skill": "Embedded C"
+      },
+      {
+        "skill_id": 3557,
+        "skill": "Microcontroller Programming"
+      },
+      {
+        "skill_id": 2646,
+        "skill": "Real-Time Operating System (RTOS)"
+      },
+      {
+        "skill_id": 678,
+        "skill": "Digital Circuit Design"
+      }
+    ]
+  },
+  {
+    "role_id": 16,
+    "role_name": "IoT Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1109,
+        "skill": "Internet of Things (IoT)"
+      },
+      {
+        "skill_id": 5065,
+        "skill": "IoT Architectures"
+      },
+      {
+        "skill_id": 1714,
+        "skill": "Raspberry Pi"
+      },
+      {
+        "skill_id": 1357,
+        "skill": "Arduino"
+      },
+      {
+        "skill_id": 2700,
+        "skill": "IoT Security"
+      }
+    ]
+  },
+  {
+    "role_id": 17,
+    "role_name": "Software Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 1967,
+        "skill": "Software Architecture"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      },
+      {
+        "skill_id": 5071,
+        "skill": "Event-driven architectures"
+      },
+      {
+        "skill_id": 367,
+        "skill": "Scalable Architecture"
+      },
+      {
+        "skill_id": 1507,
+        "skill": "Cloud Architecture"
+      },
+      {
+        "skill_id": 1804,
+        "skill": "Design Patterns"
+      }
+    ]
+  },
+  {
+    "role_id": 18,
+    "role_name": "Solutions Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 1507,
+        "skill": "Cloud Architecture"
+      },
+      {
+        "skill_id": 2697,
+        "skill": "Systems Design"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      },
+      {
+        "skill_id": 3526,
+        "skill": "Architecting on AWS"
+      },
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      }
+    ]
+  },
+  {
+    "role_id": 19,
+    "role_name": "Enterprise Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 2428,
+        "skill": "Information Technology (IT) Architecture"
+      },
+      {
+        "skill_id": 4418,
+        "skill": "Service-Oriented Architecture"
+      },
+      {
+        "skill_id": 1507,
+        "skill": "Cloud Architecture"
+      },
+      {
+        "skill_id": 253,
+        "skill": "Data Architecture"
+      },
+      {
+        "skill_id": 65,
+        "skill": "Business Analysis"
+      }
+    ]
+  },
+  {
+    "role_id": 20,
+    "role_name": "QA Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 137,
+        "skill": "Software Testing"
+      },
+      {
+        "skill_id": 3147,
+        "skill": "Test Plan"
+      },
+      {
+        "skill_id": 139,
+        "skill": "Test Automation"
+      },
+      {
+        "skill_id": 5828,
+        "skill": "API Testing"
+      },
+      {
+        "skill_id": 4155,
+        "skill": "Integration Testing (I&T)"
+      }
+    ]
+  },
+  {
+    "role_id": 21,
+    "role_name": "Automation Test Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 139,
+        "skill": "Test Automation"
+      },
+      {
+        "skill_id": 2234,
+        "skill": "Selenium (Software)"
+      },
+      {
+        "skill_id": 3656,
+        "skill": "Cross Browser Automation Testing"
+      },
+      {
+        "skill_id": 5828,
+        "skill": "API Testing"
+      },
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 22,
+    "role_name": "Performance Test Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 4847,
+        "skill": "System Testing"
+      },
+      {
+        "skill_id": 139,
+        "skill": "Test Automation"
+      },
+      {
+        "skill_id": 778,
+        "skill": "Observability"
+      },
+      {
+        "skill_id": 5029,
+        "skill": "Database Optimization"
+      }
+    ]
+  },
+  {
+    "role_id": 23,
+    "role_name": "Manual Tester",
+    "candidate_skills": [
+      {
+        "skill_id": 4156,
+        "skill": "Manual Testing"
+      },
+      {
+        "skill_id": 2235,
+        "skill": "Test Case"
+      },
+      {
+        "skill_id": 3147,
+        "skill": "Test Plan"
+      },
+      {
+        "skill_id": 4847,
+        "skill": "System Testing"
+      },
+      {
+        "skill_id": 1215,
+        "skill": "Usability Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 24,
+    "role_name": "DevOps Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 591,
+        "skill": "DevOps"
+      },
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      },
+      {
+        "skill_id": 193,
+        "skill": "Kubernetes"
+      },
+      {
+        "skill_id": 2937,
+        "skill": "Terraform"
+      },
+      {
+        "skill_id": 1052,
+        "skill": "Ansible"
+      },
+      {
+        "skill_id": 778,
+        "skill": "Observability"
+      }
+    ]
+  },
+  {
+    "role_id": 25,
+    "role_name": "Site Reliability Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 3842,
+        "skill": "Site Reliability Engineering"
+      },
+      {
+        "skill_id": 193,
+        "skill": "Kubernetes"
+      },
+      {
+        "skill_id": 778,
+        "skill": "Observability"
+      },
+      {
+        "skill_id": 755,
+        "skill": "Linux system administration"
+      },
+      {
+        "skill_id": 2937,
+        "skill": "Terraform"
+      }
+    ]
+  },
+  {
+    "role_id": 26,
+    "role_name": "Platform Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 193,
+        "skill": "Kubernetes"
+      },
+      {
+        "skill_id": 5704,
+        "skill": "Helm management in Kubernetes"
+      },
+      {
+        "skill_id": 2937,
+        "skill": "Terraform"
+      },
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      },
+      {
+        "skill_id": 778,
+        "skill": "Observability"
+      }
+    ]
+  },
+  {
+    "role_id": 27,
+    "role_name": "Infrastructure Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 755,
+        "skill": "Linux system administration"
+      },
+      {
+        "skill_id": 554,
+        "skill": "Virtualization"
+      },
+      {
+        "skill_id": 2937,
+        "skill": "Terraform"
+      },
+      {
+        "skill_id": 1052,
+        "skill": "Ansible"
+      },
+      {
+        "skill_id": 2936,
+        "skill": "Cloud Networking"
+      }
+    ]
+  },
+  {
+    "role_id": 28,
+    "role_name": "Release Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      },
+      {
+        "skill_id": 1055,
+        "skill": "Jenkins"
+      },
+      {
+        "skill_id": 2975,
+        "skill": "GitHub Actions"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      }
+    ]
+  },
+  {
+    "role_id": 29,
+    "role_name": "Cloud Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2172,
+        "skill": "Cloud Engineering"
+      },
+      {
+        "skill_id": 2936,
+        "skill": "Cloud Networking"
+      },
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      },
+      {
+        "skill_id": 2569,
+        "skill": "Infrastructure as Code (IaC)"
+      },
+      {
+        "skill_id": 491,
+        "skill": "Serverless Computing"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      }
+    ]
+  },
+  {
+    "role_id": 30,
+    "role_name": "Cloud Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 1507,
+        "skill": "Cloud Architecture"
+      },
+      {
+        "skill_id": 5464,
+        "skill": "Multi-Cloud"
+      },
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      },
+      {
+        "skill_id": 2936,
+        "skill": "Cloud Networking"
+      },
+      {
+        "skill_id": 2697,
+        "skill": "Systems Design"
+      }
+    ]
+  },
+  {
+    "role_id": 31,
+    "role_name": "System Administrator",
+    "candidate_skills": [
+      {
+        "skill_id": 204,
+        "skill": "System Administration"
+      },
+      {
+        "skill_id": 755,
+        "skill": "Linux system administration"
+      },
+      {
+        "skill_id": 461,
+        "skill": "Windows Servers and Workloads"
+      },
+      {
+        "skill_id": 1283,
+        "skill": "Shell Scripting"
+      },
+      {
+        "skill_id": 2541,
+        "skill": "Data Back-up and Recovery"
+      }
+    ]
+  },
+  {
+    "role_id": 32,
+    "role_name": "IT Support Specialist",
+    "candidate_skills": [
+      {
+        "skill_id": 5681,
+        "skill": "Information Technology (IT) Support"
+      },
+      {
+        "skill_id": 2318,
+        "skill": "Computer Troubleshooting"
+      },
+      {
+        "skill_id": 156,
+        "skill": "Network Troubleshooting"
+      },
+      {
+        "skill_id": 3344,
+        "skill": "ITIL service management"
+      }
+    ]
+  },
+  {
+    "role_id": 33,
+    "role_name": "Help Desk Technician",
+    "candidate_skills": [
+      {
+        "skill_id": 5681,
+        "skill": "Information Technology (IT) Support"
+      },
+      {
+        "skill_id": 2318,
+        "skill": "Computer Troubleshooting"
+      },
+      {
+        "skill_id": 3344,
+        "skill": "ITIL service management"
+      }
+    ]
+  },
+  {
+    "role_id": 34,
+    "role_name": "IT Operations Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 4530,
+        "skill": "Information Technology (IT) Operations"
+      },
+      {
+        "skill_id": 755,
+        "skill": "Linux system administration"
+      },
+      {
+        "skill_id": 1356,
+        "skill": "Network Monitoring"
+      },
+      {
+        "skill_id": 1283,
+        "skill": "Shell Scripting"
+      }
+    ]
+  },
+  {
+    "role_id": 35,
+    "role_name": "Technical Support Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 5681,
+        "skill": "Information Technology (IT) Support"
+      },
+      {
+        "skill_id": 156,
+        "skill": "Network Troubleshooting"
+      },
+      {
+        "skill_id": 305,
+        "skill": "SQL"
+      },
+      {
+        "skill_id": 1782,
+        "skill": "Linux command line"
+      }
+    ]
+  },
+  {
+    "role_id": 36,
+    "role_name": "Network Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1620,
+        "skill": "Network Configuration"
+      },
+      {
+        "skill_id": 4337,
+        "skill": "Network Routing"
+      },
+      {
+        "skill_id": 2441,
+        "skill": "Cisco networking"
+      },
+      {
+        "skill_id": 104,
+        "skill": "Network Security"
+      },
+      {
+        "skill_id": 156,
+        "skill": "Network Troubleshooting"
+      }
+    ]
+  },
+  {
+    "role_id": 37,
+    "role_name": "Network Administrator",
+    "candidate_skills": [
+      {
+        "skill_id": 1620,
+        "skill": "Network Configuration"
+      },
+      {
+        "skill_id": 1356,
+        "skill": "Network Monitoring"
+      },
+      {
+        "skill_id": 156,
+        "skill": "Network Troubleshooting"
+      },
+      {
+        "skill_id": 2910,
+        "skill": "Firewall"
+      },
+      {
+        "skill_id": 711,
+        "skill": "Domain Name System (DNS)"
+      }
+    ]
+  },
+  {
+    "role_id": 38,
+    "role_name": "Network Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 596,
+        "skill": "Network Architecture"
+      },
+      {
+        "skill_id": 1560,
+        "skill": "Software-Defined Networking"
+      },
+      {
+        "skill_id": 2936,
+        "skill": "Cloud Networking"
+      },
+      {
+        "skill_id": 104,
+        "skill": "Network Security"
+      }
+    ]
+  },
+  {
+    "role_id": 39,
+    "role_name": "Database Administrator",
+    "candidate_skills": [
+      {
+        "skill_id": 658,
+        "skill": "Database Administration"
+      },
+      {
+        "skill_id": 5029,
+        "skill": "Database Optimization"
+      },
+      {
+        "skill_id": 3087,
+        "skill": "Database Security"
+      },
+      {
+        "skill_id": 2541,
+        "skill": "Data Back-up and Recovery"
+      },
+      {
+        "skill_id": 3432,
+        "skill": "PostgreSQL"
+      }
+    ]
+  },
+  {
+    "role_id": 40,
+    "role_name": "Database Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 3879,
+        "skill": "Advanced SQL"
+      },
+      {
+        "skill_id": 377,
+        "skill": "Database (DB) Design"
+      },
+      {
+        "skill_id": 5029,
+        "skill": "Database Optimization"
+      },
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      },
+      {
+        "skill_id": 3432,
+        "skill": "PostgreSQL"
+      }
+    ]
+  },
+  {
+    "role_id": 41,
+    "role_name": "Database Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      },
+      {
+        "skill_id": 5029,
+        "skill": "Database Optimization"
+      },
+      {
+        "skill_id": 517,
+        "skill": "NoSQL"
+      },
+      {
+        "skill_id": 253,
+        "skill": "Data Architecture"
+      },
+      {
+        "skill_id": 3087,
+        "skill": "Database Security"
+      }
+    ]
+  },
+  {
+    "role_id": 42,
+    "role_name": "Data Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2435,
+        "skill": "Data Engineering"
+      },
+      {
+        "skill_id": 706,
+        "skill": "Data Pipelines"
+      },
+      {
+        "skill_id": 265,
+        "skill": "Data Warehousing"
+      },
+      {
+        "skill_id": 117,
+        "skill": "Apache Spark"
+      },
+      {
+        "skill_id": 1630,
+        "skill": "Apache Airflow"
+      },
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      }
+    ]
+  },
+  {
+    "role_id": 43,
+    "role_name": "Analytics Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      },
+      {
+        "skill_id": 265,
+        "skill": "Data Warehousing"
+      },
+      {
+        "skill_id": 3879,
+        "skill": "Advanced SQL"
+      },
+      {
+        "skill_id": 1427,
+        "skill": "Data Quality"
+      },
+      {
+        "skill_id": 3213,
+        "skill": "Business Intelligence (BI)"
+      }
+    ]
+  },
+  {
+    "role_id": 44,
+    "role_name": "Data Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 253,
+        "skill": "Data Architecture"
+      },
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      },
+      {
+        "skill_id": 653,
+        "skill": "Data Governance"
+      },
+      {
+        "skill_id": 4639,
+        "skill": "Data Lake"
+      },
+      {
+        "skill_id": 265,
+        "skill": "Data Warehousing"
+      }
+    ]
+  },
+  {
+    "role_id": 45,
+    "role_name": "ETL Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1628,
+        "skill": "Extract Transform and Load (ETL)"
+      },
+      {
+        "skill_id": 1200,
+        "skill": "Data Integration"
+      },
+      {
+        "skill_id": 265,
+        "skill": "Data Warehousing"
+      },
+      {
+        "skill_id": 3879,
+        "skill": "Advanced SQL"
+      },
+      {
+        "skill_id": 1427,
+        "skill": "Data Quality"
+      }
+    ]
+  },
+  {
+    "role_id": 46,
+    "role_name": "Data Warehouse Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 265,
+        "skill": "Data Warehousing"
+      },
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      },
+      {
+        "skill_id": 2436,
+        "skill": "Snowflake"
+      },
+      {
+        "skill_id": 1628,
+        "skill": "Extract Transform and Load (ETL)"
+      },
+      {
+        "skill_id": 3879,
+        "skill": "Advanced SQL"
+      }
+    ]
+  },
+  {
+    "role_id": 47,
+    "role_name": "Data Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 44,
+        "skill": "Data Analysis"
+      },
+      {
+        "skill_id": 3879,
+        "skill": "Advanced SQL"
+      },
+      {
+        "skill_id": 240,
+        "skill": "Data Visualization"
+      },
+      {
+        "skill_id": 1542,
+        "skill": "Power BI"
+      },
+      {
+        "skill_id": 241,
+        "skill": "Exploratory Data Analysis"
+      },
+      {
+        "skill_id": 299,
+        "skill": "Pandas"
+      }
+    ]
+  },
+  {
+    "role_id": 48,
+    "role_name": "BI Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 3213,
+        "skill": "Business Intelligence (BI)"
+      },
+      {
+        "skill_id": 1542,
+        "skill": "Power BI"
+      },
+      {
+        "skill_id": 5055,
+        "skill": "Tableau"
+      },
+      {
+        "skill_id": 1524,
+        "skill": "Data Analysis Expressions (DAX)"
+      },
+      {
+        "skill_id": 2922,
+        "skill": "Data Storytelling"
+      }
+    ]
+  },
+  {
+    "role_id": 49,
+    "role_name": "BI Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 3213,
+        "skill": "Business Intelligence (BI)"
+      },
+      {
+        "skill_id": 265,
+        "skill": "Data Warehousing"
+      },
+      {
+        "skill_id": 1524,
+        "skill": "Data Analysis Expressions (DAX)"
+      },
+      {
+        "skill_id": 1542,
+        "skill": "Power BI"
+      },
+      {
+        "skill_id": 1628,
+        "skill": "Extract Transform and Load (ETL)"
+      }
+    ]
+  },
+  {
+    "role_id": 50,
+    "role_name": "Data Scientist",
+    "candidate_skills": [
+      {
+        "skill_id": 64,
+        "skill": "Data Science"
+      },
+      {
+        "skill_id": 51,
+        "skill": "Machine Learning"
+      },
+      {
+        "skill_id": 108,
+        "skill": "Statistical Inference"
+      },
+      {
+        "skill_id": 5492,
+        "skill": "Feature Engineering for AI Systems"
+      },
+      {
+        "skill_id": 299,
+        "skill": "Pandas"
+      },
+      {
+        "skill_id": 240,
+        "skill": "Data Visualization"
+      }
+    ]
+  },
+  {
+    "role_id": 51,
+    "role_name": "Research Data Scientist",
+    "candidate_skills": [
+      {
+        "skill_id": 64,
+        "skill": "Data Science"
+      },
+      {
+        "skill_id": 85,
+        "skill": "Deep Learning"
+      },
+      {
+        "skill_id": 541,
+        "skill": "Bayesian Statistics"
+      },
+      {
+        "skill_id": 1203,
+        "skill": "Statistical Hypothesis Testing"
+      },
+      {
+        "skill_id": 146,
+        "skill": "Mathematical Optimization"
+      }
+    ]
+  },
+  {
+    "role_id": 52,
+    "role_name": "Quantitative Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 525,
+        "skill": "Time Series Analysis And Forecasting"
+      },
+      {
+        "skill_id": 108,
+        "skill": "Statistical Inference"
+      },
+      {
+        "skill_id": 146,
+        "skill": "Mathematical Optimization"
+      },
+      {
+        "skill_id": 51,
+        "skill": "Machine Learning"
+      },
+      {
+        "skill_id": 109,
+        "skill": "R Programming"
+      }
+    ]
+  },
+  {
+    "role_id": 53,
+    "role_name": "Machine Learning Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 51,
+        "skill": "Machine Learning"
+      },
+      {
+        "skill_id": 85,
+        "skill": "Deep Learning"
+      },
+      {
+        "skill_id": 1350,
+        "skill": "Scikit-Learn"
+      },
+      {
+        "skill_id": 1644,
+        "skill": "PyTorch"
+      },
+      {
+        "skill_id": 5615,
+        "skill": "MLOps (Machine Learning Operations)"
+      },
+      {
+        "skill_id": 2060,
+        "skill": "Machine Learning Model Evaluation and Optimization"
+      }
+    ]
+  },
+  {
+    "role_id": 54,
+    "role_name": "AI Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 262,
+        "skill": "Large Language Models"
+      },
+      {
+        "skill_id": 85,
+        "skill": "Deep Learning"
+      },
+      {
+        "skill_id": 1438,
+        "skill": "LangChain"
+      },
+      {
+        "skill_id": 4604,
+        "skill": "Vector Database"
+      },
+      {
+        "skill_id": 5615,
+        "skill": "MLOps (Machine Learning Operations)"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 55,
+    "role_name": "NLP Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 3162,
+        "skill": "NLP"
+      },
+      {
+        "skill_id": 2399,
+        "skill": "Transformer Architecture"
+      },
+      {
+        "skill_id": 3497,
+        "skill": "Bidirectional Representation for Transformers (BERT)"
+      },
+      {
+        "skill_id": 4888,
+        "skill": "Hugging Face"
+      },
+      {
+        "skill_id": 262,
+        "skill": "Large Language Models"
+      }
+    ]
+  },
+  {
+    "role_id": 56,
+    "role_name": "Computer Vision Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 231,
+        "skill": "Computer Vision"
+      },
+      {
+        "skill_id": 4811,
+        "skill": "Convolutional Neural Networks"
+      },
+      {
+        "skill_id": 4206,
+        "skill": "OpenCV"
+      },
+      {
+        "skill_id": 740,
+        "skill": "Object Detection"
+      },
+      {
+        "skill_id": 1644,
+        "skill": "PyTorch"
+      }
+    ]
+  },
+  {
+    "role_id": 57,
+    "role_name": "Deep Learning Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 85,
+        "skill": "Deep Learning"
+      },
+      {
+        "skill_id": 1644,
+        "skill": "PyTorch"
+      },
+      {
+        "skill_id": 1509,
+        "skill": "TensorFlow"
+      },
+      {
+        "skill_id": 4811,
+        "skill": "Convolutional Neural Networks"
+      },
+      {
+        "skill_id": 2399,
+        "skill": "Transformer Architecture"
+      }
+    ]
+  },
+  {
+    "role_id": 58,
+    "role_name": "AI Research Scientist",
+    "candidate_skills": [
+      {
+        "skill_id": 85,
+        "skill": "Deep Learning"
+      },
+      {
+        "skill_id": 2399,
+        "skill": "Transformer Architecture"
+      },
+      {
+        "skill_id": 1692,
+        "skill": "Reinforcement Learning Applications"
+      },
+      {
+        "skill_id": 146,
+        "skill": "Mathematical Optimization"
+      },
+      {
+        "skill_id": 1691,
+        "skill": "Generative Adversarial Networks (GANs)"
+      }
+    ]
+  },
+  {
+    "role_id": 59,
+    "role_name": "MLOps Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 5615,
+        "skill": "MLOps (Machine Learning Operations)"
+      },
+      {
+        "skill_id": 114,
+        "skill": "Machine Learning Pipelines"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      },
+      {
+        "skill_id": 193,
+        "skill": "Kubernetes"
+      },
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      }
+    ]
+  },
+  {
+    "role_id": 60,
+    "role_name": "ML Platform Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 5615,
+        "skill": "MLOps (Machine Learning Operations)"
+      },
+      {
+        "skill_id": 193,
+        "skill": "Kubernetes"
+      },
+      {
+        "skill_id": 114,
+        "skill": "Machine Learning Pipelines"
+      },
+      {
+        "skill_id": 2937,
+        "skill": "Terraform"
+      }
+    ]
+  },
+  {
+    "role_id": 61,
+    "role_name": "Cybersecurity Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 104,
+        "skill": "Network Security"
+      },
+      {
+        "skill_id": 5005,
+        "skill": "Security Information And Event Management (SIEM)"
+      },
+      {
+        "skill_id": 863,
+        "skill": "Vulnerability Management"
+      },
+      {
+        "skill_id": 1615,
+        "skill": "Cyber Incident Response"
+      },
+      {
+        "skill_id": 3968,
+        "skill": "Cyber Threat Intelligence"
+      }
+    ]
+  },
+  {
+    "role_id": 62,
+    "role_name": "Security Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1513,
+        "skill": "Security Engineering"
+      },
+      {
+        "skill_id": 104,
+        "skill": "Network Security"
+      },
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      },
+      {
+        "skill_id": 1472,
+        "skill": "Application Security"
+      },
+      {
+        "skill_id": 1512,
+        "skill": "Security Automation"
+      }
+    ]
+  },
+  {
+    "role_id": 63,
+    "role_name": "SOC Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 2130,
+        "skill": "Security Operations Center (SOC)"
+      },
+      {
+        "skill_id": 5005,
+        "skill": "Security Information And Event Management (SIEM)"
+      },
+      {
+        "skill_id": 1615,
+        "skill": "Cyber Incident Response"
+      },
+      {
+        "skill_id": 3969,
+        "skill": "Cyber Threat Hunting"
+      },
+      {
+        "skill_id": 581,
+        "skill": "Wireshark"
+      }
+    ]
+  },
+  {
+    "role_id": 64,
+    "role_name": "Security Architect",
+    "candidate_skills": [
+      {
+        "skill_id": 4482,
+        "skill": "zero-trust architectures"
+      },
+      {
+        "skill_id": 1513,
+        "skill": "Security Engineering"
+      },
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      },
+      {
+        "skill_id": 2940,
+        "skill": "Cybersecurity Governance"
+      },
+      {
+        "skill_id": 596,
+        "skill": "Network Architecture"
+      }
+    ]
+  },
+  {
+    "role_id": 65,
+    "role_name": "Cloud Security Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      },
+      {
+        "skill_id": 4482,
+        "skill": "zero-trust architectures"
+      },
+      {
+        "skill_id": 4804,
+        "skill": "AWS IAM"
+      },
+      {
+        "skill_id": 2982,
+        "skill": "Azure Active Directory"
+      },
+      {
+        "skill_id": 1512,
+        "skill": "Security Automation"
+      }
+    ]
+  },
+  {
+    "role_id": 66,
+    "role_name": "Application Security Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1472,
+        "skill": "Application Security"
+      },
+      {
+        "skill_id": 955,
+        "skill": "Open Web Application Security Project (OWASP)"
+      },
+      {
+        "skill_id": 2273,
+        "skill": "Secure Coding"
+      },
+      {
+        "skill_id": 2169,
+        "skill": "Security Testing"
+      },
+      {
+        "skill_id": 3271,
+        "skill": "Burp Suite"
+      }
+    ]
+  },
+  {
+    "role_id": 67,
+    "role_name": "Penetration Tester",
+    "candidate_skills": [
+      {
+        "skill_id": 1738,
+        "skill": "Penetration Testing"
+      },
+      {
+        "skill_id": 2217,
+        "skill": "Nmap"
+      },
+      {
+        "skill_id": 3271,
+        "skill": "Burp Suite"
+      },
+      {
+        "skill_id": 450,
+        "skill": "Kali Linux"
+      },
+      {
+        "skill_id": 5664,
+        "skill": "Vulnerability Assessment"
+      }
+    ]
+  },
+  {
+    "role_id": 68,
+    "role_name": "Red Team Specialist",
+    "candidate_skills": [
+      {
+        "skill_id": 1738,
+        "skill": "Penetration Testing"
+      },
+      {
+        "skill_id": 2810,
+        "skill": "Malware Analysis"
+      },
+      {
+        "skill_id": 450,
+        "skill": "Kali Linux"
+      },
+      {
+        "skill_id": 3968,
+        "skill": "Cyber Threat Intelligence"
+      }
+    ]
+  },
+  {
+    "role_id": 69,
+    "role_name": "Vulnerability Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 5664,
+        "skill": "Vulnerability Assessment"
+      },
+      {
+        "skill_id": 863,
+        "skill": "Vulnerability Management"
+      },
+      {
+        "skill_id": 2217,
+        "skill": "Nmap"
+      },
+      {
+        "skill_id": 5196,
+        "skill": "Cyber Risk Management"
+      }
+    ]
+  },
+  {
+    "role_id": 70,
+    "role_name": "Incident Response Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 1615,
+        "skill": "Cyber Incident Response"
+      },
+      {
+        "skill_id": 2663,
+        "skill": "Digital Forensics"
+      },
+      {
+        "skill_id": 5005,
+        "skill": "Security Information And Event Management (SIEM)"
+      },
+      {
+        "skill_id": 2810,
+        "skill": "Malware Analysis"
+      }
+    ]
+  },
+  {
+    "role_id": 71,
+    "role_name": "Digital Forensics Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 2663,
+        "skill": "Digital Forensics"
+      },
+      {
+        "skill_id": 1669,
+        "skill": "Network Forensics"
+      },
+      {
+        "skill_id": 2810,
+        "skill": "Malware Analysis"
+      },
+      {
+        "skill_id": 1615,
+        "skill": "Cyber Incident Response"
+      }
+    ]
+  },
+  {
+    "role_id": 72,
+    "role_name": "IT Project Manager",
+    "candidate_skills": [
+      {
+        "skill_id": 245,
+        "skill": "Project Management"
+      },
+      {
+        "skill_id": 3289,
+        "skill": "Agile Project Management"
+      },
+      {
+        "skill_id": 673,
+        "skill": "Stakeholder Management"
+      },
+      {
+        "skill_id": 175,
+        "skill": "Scrum"
+      },
+      {
+        "skill_id": 2574,
+        "skill": "Software Development Lifecycle (SDLC)"
+      }
+    ]
+  },
+  {
+    "role_id": 73,
+    "role_name": "IT Manager",
+    "candidate_skills": [
+      {
+        "skill_id": 1927,
+        "skill": "Information Technology (IT) Management"
+      },
+      {
+        "skill_id": 3344,
+        "skill": "ITIL service management"
+      },
+      {
+        "skill_id": 245,
+        "skill": "Project Management"
+      },
+      {
+        "skill_id": 5196,
+        "skill": "Cyber Risk Management"
+      }
+    ]
+  },
+  {
+    "role_id": 74,
+    "role_name": "Engineering Manager",
+    "candidate_skills": [
+      {
+        "skill_id": 3289,
+        "skill": "Agile Project Management"
+      },
+      {
+        "skill_id": 1967,
+        "skill": "Software Architecture"
+      },
+      {
+        "skill_id": 673,
+        "skill": "Stakeholder Management"
+      },
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      }
+    ]
+  },
+  {
+    "role_id": 75,
+    "role_name": "Scrum Master",
+    "candidate_skills": [
+      {
+        "skill_id": 1171,
+        "skill": "Scrum Master"
+      },
+      {
+        "skill_id": 4671,
+        "skill": "Scrum and Kanban"
+      },
+      {
+        "skill_id": 1459,
+        "skill": "Agile Methodology"
+      },
+      {
+        "skill_id": 673,
+        "skill": "Stakeholder Management"
+      }
+    ]
+  },
+  {
+    "role_id": 76,
+    "role_name": "Product Owner",
+    "candidate_skills": [
+      {
+        "skill_id": 175,
+        "skill": "Scrum"
+      },
+      {
+        "skill_id": 533,
+        "skill": "Product Management"
+      },
+      {
+        "skill_id": 1120,
+        "skill": "Requirements Analysis"
+      },
+      {
+        "skill_id": 673,
+        "skill": "Stakeholder Management"
+      }
+    ]
+  },
+  {
+    "role_id": 77,
+    "role_name": "Business Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 65,
+        "skill": "Business Analysis"
+      },
+      {
+        "skill_id": 1120,
+        "skill": "Requirements Analysis"
+      },
+      {
+        "skill_id": 5591,
+        "skill": "Business Process Mapping"
+      },
+      {
+        "skill_id": 1377,
+        "skill": "Unified Modeling Language (UML)"
+      },
+      {
+        "skill_id": 305,
+        "skill": "SQL"
+      }
+    ]
+  },
+  {
+    "role_id": 78,
+    "role_name": "Systems Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 2923,
+        "skill": "Systems Analysis"
+      },
+      {
+        "skill_id": 1120,
+        "skill": "Requirements Analysis"
+      },
+      {
+        "skill_id": 1377,
+        "skill": "Unified Modeling Language (UML)"
+      },
+      {
+        "skill_id": 377,
+        "skill": "Database (DB) Design"
+      }
+    ]
+  },
+  {
+    "role_id": 79,
+    "role_name": "Technical Business Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 65,
+        "skill": "Business Analysis"
+      },
+      {
+        "skill_id": 305,
+        "skill": "SQL"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      },
+      {
+        "skill_id": 5591,
+        "skill": "Business Process Mapping"
+      },
+      {
+        "skill_id": 44,
+        "skill": "Data Analysis"
+      }
+    ]
+  },
+  {
+    "role_id": 80,
+    "role_name": "Product Manager",
+    "candidate_skills": [
+      {
+        "skill_id": 533,
+        "skill": "Product Management"
+      },
+      {
+        "skill_id": 131,
+        "skill": "A/B Testing"
+      },
+      {
+        "skill_id": 3490,
+        "skill": "User Experience (UX) Design"
+      },
+      {
+        "skill_id": 44,
+        "skill": "Data Analysis"
+      },
+      {
+        "skill_id": 1459,
+        "skill": "Agile Methodology"
+      }
+    ]
+  },
+  {
+    "role_id": 81,
+    "role_name": "UX Designer",
+    "candidate_skills": [
+      {
+        "skill_id": 3490,
+        "skill": "User Experience (UX) Design"
+      },
+      {
+        "skill_id": 1216,
+        "skill": "UX Research"
+      },
+      {
+        "skill_id": 1361,
+        "skill": "Website Wireframe"
+      },
+      {
+        "skill_id": 969,
+        "skill": "Prototyping"
+      },
+      {
+        "skill_id": 1215,
+        "skill": "Usability Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 82,
+    "role_name": "UI Designer",
+    "candidate_skills": [
+      {
+        "skill_id": 1362,
+        "skill": "User Interface Design (UI Design)"
+      },
+      {
+        "skill_id": 97,
+        "skill": "Figma (Design Software)"
+      },
+      {
+        "skill_id": 821,
+        "skill": "UI/UX Design Systems"
+      },
+      {
+        "skill_id": 4033,
+        "skill": "Accessibility in Design"
+      }
+    ]
+  },
+  {
+    "role_id": 83,
+    "role_name": "Product Designer",
+    "candidate_skills": [
+      {
+        "skill_id": 4586,
+        "skill": "UI/UX Design"
+      },
+      {
+        "skill_id": 969,
+        "skill": "Prototyping"
+      },
+      {
+        "skill_id": 1216,
+        "skill": "UX Research"
+      },
+      {
+        "skill_id": 97,
+        "skill": "Figma (Design Software)"
+      },
+      {
+        "skill_id": 821,
+        "skill": "UI/UX Design Systems"
+      }
+    ]
+  },
+  {
+    "role_id": 84,
+    "role_name": "UX Researcher",
+    "candidate_skills": [
+      {
+        "skill_id": 1216,
+        "skill": "UX Research"
+      },
+      {
+        "skill_id": 1215,
+        "skill": "Usability Testing"
+      },
+      {
+        "skill_id": 3484,
+        "skill": "User Journey Mapping"
+      },
+      {
+        "skill_id": 131,
+        "skill": "A/B Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 85,
+    "role_name": "ERP Consultant",
+    "candidate_skills": [
+      {
+        "skill_id": 5752,
+        "skill": "Enterprise Resource Planning (ERP)"
+      },
+      {
+        "skill_id": 5591,
+        "skill": "Business Process Mapping"
+      },
+      {
+        "skill_id": 305,
+        "skill": "SQL"
+      },
+      {
+        "skill_id": 65,
+        "skill": "Business Analysis"
+      }
+    ]
+  },
+  {
+    "role_id": 86,
+    "role_name": "SAP Consultant",
+    "candidate_skills": [
+      {
+        "skill_id": 3413,
+        "skill": "SAP S/4HANA functional modules"
+      },
+      {
+        "skill_id": 5752,
+        "skill": "Enterprise Resource Planning (ERP)"
+      },
+      {
+        "skill_id": 3114,
+        "skill": "Sap Hana"
+      },
+      {
+        "skill_id": 5591,
+        "skill": "Business Process Mapping"
+      }
+    ]
+  },
+  {
+    "role_id": 87,
+    "role_name": "Salesforce Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 975,
+        "skill": "Salesforce"
+      },
+      {
+        "skill_id": 977,
+        "skill": "Salesforce Lightning"
+      },
+      {
+        "skill_id": 2763,
+        "skill": "Customer Relationship Management (CRM)"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 88,
+    "role_name": "Technical Writer",
+    "candidate_skills": [
+      {
+        "skill_id": 1876,
+        "skill": "system documentation"
+      },
+      {
+        "skill_id": 3521,
+        "skill": "API Documentation"
+      },
+      {
+        "skill_id": 2574,
+        "skill": "Software Development Lifecycle (SDLC)"
+      }
+    ]
+  },
+  {
+    "role_id": 89,
+    "role_name": "Documentation Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 3521,
+        "skill": "API Documentation"
+      },
+      {
+        "skill_id": 1876,
+        "skill": "system documentation"
+      },
+      {
+        "skill_id": 2100,
+        "skill": "OpenAPI specifications"
+      },
+      {
+        "skill_id": 3819,
+        "skill": "Git (Version Control System)"
+      }
+    ]
+  },
+  {
+    "role_id": 90,
+    "role_name": "IT Consultant",
+    "candidate_skills": [
+      {
+        "skill_id": 2428,
+        "skill": "Information Technology (IT) Architecture"
+      },
+      {
+        "skill_id": 52,
+        "skill": "Cloud Computing"
+      },
+      {
+        "skill_id": 65,
+        "skill": "Business Analysis"
+      },
+      {
+        "skill_id": 5196,
+        "skill": "Cyber Risk Management"
+      },
+      {
+        "skill_id": 245,
+        "skill": "Project Management"
+      }
+    ]
+  },
+  {
+    "role_id": 91,
+    "role_name": "Digital Transformation Consultant",
+    "candidate_skills": [
+      {
+        "skill_id": 1747,
+        "skill": "Digital Transformation"
+      },
+      {
+        "skill_id": 52,
+        "skill": "Cloud Computing"
+      },
+      {
+        "skill_id": 5591,
+        "skill": "Business Process Mapping"
+      },
+      {
+        "skill_id": 5849,
+        "skill": "Workflow Automation"
+      },
+      {
+        "skill_id": 1262,
+        "skill": "Data Analytics"
+      }
+    ]
+  },
+  {
+    "role_id": 92,
+    "role_name": "Blockchain Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 921,
+        "skill": "Blockchain"
+      },
+      {
+        "skill_id": 919,
+        "skill": "Solidity"
+      },
+      {
+        "skill_id": 288,
+        "skill": "Smart Contract"
+      },
+      {
+        "skill_id": 1974,
+        "skill": "Decentralized Applications"
+      },
+      {
+        "skill_id": 2058,
+        "skill": "Ethereum"
+      }
+    ]
+  },
+  {
+    "role_id": 93,
+    "role_name": "Robotics Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 188,
+        "skill": "Robotics"
+      },
+      {
+        "skill_id": 4921,
+        "skill": "Robot Programming"
+      },
+      {
+        "skill_id": 231,
+        "skill": "Computer Vision"
+      },
+      {
+        "skill_id": 2207,
+        "skill": "Embedded Systems"
+      },
+      {
+        "skill_id": 2646,
+        "skill": "Real-Time Operating System (RTOS)"
+      }
+    ]
+  },
+  {
+    "role_id": 94,
+    "role_name": "Chief Technology Officer",
+    "candidate_skills": [
+      {
+        "skill_id": 1967,
+        "skill": "Software Architecture"
+      },
+      {
+        "skill_id": 1507,
+        "skill": "Cloud Architecture"
+      },
+      {
+        "skill_id": 1927,
+        "skill": "Information Technology (IT) Management"
+      },
+      {
+        "skill_id": 1747,
+        "skill": "Digital Transformation"
+      },
+      {
+        "skill_id": 2940,
+        "skill": "Cybersecurity Governance"
+      }
+    ]
+  },
+  {
+    "role_id": 95,
+    "role_name": "Chief Information Officer",
+    "candidate_skills": [
+      {
+        "skill_id": 1927,
+        "skill": "Information Technology (IT) Management"
+      },
+      {
+        "skill_id": 1747,
+        "skill": "Digital Transformation"
+      },
+      {
+        "skill_id": 3344,
+        "skill": "ITIL service management"
+      },
+      {
+        "skill_id": 2940,
+        "skill": "Cybersecurity Governance"
+      },
+      {
+        "skill_id": 653,
+        "skill": "Data Governance"
+      }
+    ]
+  },
+  {
+    "role_id": 96,
+    "role_name": "Chief Information Security Officer",
+    "candidate_skills": [
+      {
+        "skill_id": 2940,
+        "skill": "Cybersecurity Governance"
+      },
+      {
+        "skill_id": 5196,
+        "skill": "Cyber Risk Management"
+      },
+      {
+        "skill_id": 3726,
+        "skill": "Cybersecurity Compliance"
+      },
+      {
+        "skill_id": 1617,
+        "skill": "NIST Cybersecurity Framework (CSF)"
+      }
+    ]
+  },
+  {
+    "role_id": 97,
+    "role_name": "IT Director",
+    "candidate_skills": [
+      {
+        "skill_id": 1927,
+        "skill": "Information Technology (IT) Management"
+      },
+      {
+        "skill_id": 245,
+        "skill": "Project Management"
+      },
+      {
+        "skill_id": 3344,
+        "skill": "ITIL service management"
+      },
+      {
+        "skill_id": 1747,
+        "skill": "Digital Transformation"
+      }
+    ]
+  },
+  {
+    "role_id": 98,
+    "role_name": "React Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 363,
+        "skill": "React"
+      },
+      {
+        "skill_id": 4653,
+        "skill": "Redux"
+      },
+      {
+        "skill_id": 4582,
+        "skill": "Typescript"
+      },
+      {
+        "skill_id": 2870,
+        "skill": "Frontend Development"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 99,
+    "role_name": "Angular Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 373,
+        "skill": "Building an Angular Application"
+      },
+      {
+        "skill_id": 4582,
+        "skill": "Typescript"
+      },
+      {
+        "skill_id": 2870,
+        "skill": "Frontend Development"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 100,
+    "role_name": "Node.js Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1141,
+        "skill": "Node.js"
+      },
+      {
+        "skill_id": 3623,
+        "skill": "Express API"
+      },
+      {
+        "skill_id": 1027,
+        "skill": "MongoDB"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 101,
+    "role_name": "Python Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 2787,
+        "skill": "Python"
+      },
+      {
+        "skill_id": 771,
+        "skill": "Django (Web Framework)"
+      },
+      {
+        "skill_id": 773,
+        "skill": "Flask"
+      },
+      {
+        "skill_id": 3432,
+        "skill": "PostgreSQL"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 102,
+    "role_name": "Java Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 199,
+        "skill": "Java"
+      },
+      {
+        "skill_id": 2139,
+        "skill": "Spring Boot"
+      },
+      {
+        "skill_id": 775,
+        "skill": "Object Relational Mapping (ORM)"
+      },
+      {
+        "skill_id": 2216,
+        "skill": "Junit"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      }
+    ]
+  },
+  {
+    "role_id": 103,
+    "role_name": ".NET Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 2822,
+        "skill": "C#"
+      },
+      {
+        "skill_id": 1462,
+        "skill": "Asp.Net Core"
+      },
+      {
+        "skill_id": 700,
+        "skill": "SQL Server"
+      },
+      {
+        "skill_id": 775,
+        "skill": "Object Relational Mapping (ORM)"
+      },
+      {
+        "skill_id": 120,
+        "skill": "Unit Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 104,
+    "role_name": "PHP Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 190,
+        "skill": "Hypertext Preprocessor (PHP)"
+      },
+      {
+        "skill_id": 2752,
+        "skill": "Laravel"
+      },
+      {
+        "skill_id": 152,
+        "skill": "MySQL"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 105,
+    "role_name": "Ruby on Rails Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 5232,
+        "skill": "Ruby on Rails"
+      },
+      {
+        "skill_id": 3432,
+        "skill": "PostgreSQL"
+      },
+      {
+        "skill_id": 2276,
+        "skill": "Test-Driven Development"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 106,
+    "role_name": "Go Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 2097,
+        "skill": "Golang Fundamentals"
+      },
+      {
+        "skill_id": 1463,
+        "skill": "Microservices Architecture"
+      },
+      {
+        "skill_id": 5437,
+        "skill": "Concurrent Programming"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      }
+    ]
+  },
+  {
+    "role_id": 107,
+    "role_name": "Rust Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1625,
+        "skill": "Rust (Programming Language)"
+      },
+      {
+        "skill_id": 203,
+        "skill": "System Programming"
+      },
+      {
+        "skill_id": 5437,
+        "skill": "Concurrent Programming"
+      }
+    ]
+  },
+  {
+    "role_id": 108,
+    "role_name": "C++ Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1802,
+        "skill": "Modern C++"
+      },
+      {
+        "skill_id": 187,
+        "skill": "Algorithms"
+      },
+      {
+        "skill_id": 5437,
+        "skill": "Concurrent Programming"
+      },
+      {
+        "skill_id": 1804,
+        "skill": "Design Patterns"
+      }
+    ]
+  },
+  {
+    "role_id": 109,
+    "role_name": "JavaScript Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1889,
+        "skill": "JavaScript ES6"
+      },
+      {
+        "skill_id": 5356,
+        "skill": "Asynchronous Javascript"
+      },
+      {
+        "skill_id": 4582,
+        "skill": "Typescript"
+      },
+      {
+        "skill_id": 1141,
+        "skill": "Node.js"
+      },
+      {
+        "skill_id": 2870,
+        "skill": "Frontend Development"
+      }
+    ]
+  },
+  {
+    "role_id": 110,
+    "role_name": "WordPress Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 3518,
+        "skill": "Wordpress"
+      },
+      {
+        "skill_id": 190,
+        "skill": "Hypertext Preprocessor (PHP)"
+      },
+      {
+        "skill_id": 152,
+        "skill": "MySQL"
+      },
+      {
+        "skill_id": 1066,
+        "skill": "Responsive Web Design"
+      }
+    ]
+  },
+  {
+    "role_id": 111,
+    "role_name": "Web Designer",
+    "candidate_skills": [
+      {
+        "skill_id": 358,
+        "skill": "Web Design"
+      },
+      {
+        "skill_id": 1066,
+        "skill": "Responsive Web Design"
+      },
+      {
+        "skill_id": 1362,
+        "skill": "User Interface Design (UI Design)"
+      },
+      {
+        "skill_id": 97,
+        "skill": "Figma (Design Software)"
+      }
+    ]
+  },
+  {
+    "role_id": 112,
+    "role_name": "Unity Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 537,
+        "skill": "Unity"
+      },
+      {
+        "skill_id": 2822,
+        "skill": "C#"
+      },
+      {
+        "skill_id": 2685,
+        "skill": "Game Programming"
+      },
+      {
+        "skill_id": 189,
+        "skill": "Computer Graphics (CG)"
+      }
+    ]
+  },
+  {
+    "role_id": 113,
+    "role_name": "Unreal Engine Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 467,
+        "skill": "Unreal Engine"
+      },
+      {
+        "skill_id": 1802,
+        "skill": "Modern C++"
+      },
+      {
+        "skill_id": 2685,
+        "skill": "Game Programming"
+      },
+      {
+        "skill_id": 189,
+        "skill": "Computer Graphics (CG)"
+      }
+    ]
+  },
+  {
+    "role_id": 114,
+    "role_name": "AR/VR Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 5083,
+        "skill": "Virtual Reality (VR) and Augmented Reality (AR)"
+      },
+      {
+        "skill_id": 537,
+        "skill": "Unity"
+      },
+      {
+        "skill_id": 189,
+        "skill": "Computer Graphics (CG)"
+      }
+    ]
+  },
+  {
+    "role_id": 115,
+    "role_name": "Game Designer",
+    "candidate_skills": [
+      {
+        "skill_id": 539,
+        "skill": "Game Design"
+      },
+      {
+        "skill_id": 1293,
+        "skill": "Video Game Level Design"
+      },
+      {
+        "skill_id": 1292,
+        "skill": "Game Testing"
+      },
+      {
+        "skill_id": 537,
+        "skill": "Unity"
+      }
+    ]
+  },
+  {
+    "role_id": 116,
+    "role_name": "AWS Cloud Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2747,
+        "skill": "AWS EC2"
+      },
+      {
+        "skill_id": 250,
+        "skill": "AWS Lambda"
+      },
+      {
+        "skill_id": 3307,
+        "skill": "AWS VPC"
+      },
+      {
+        "skill_id": 4804,
+        "skill": "AWS IAM"
+      },
+      {
+        "skill_id": 5070,
+        "skill": "AWS CloudFormation"
+      },
+      {
+        "skill_id": 5244,
+        "skill": "AWS RDS"
+      }
+    ]
+  },
+  {
+    "role_id": 117,
+    "role_name": "Azure Cloud Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2862,
+        "skill": "Azure Virtual Machines"
+      },
+      {
+        "skill_id": 2863,
+        "skill": "Azure Functions"
+      },
+      {
+        "skill_id": 2982,
+        "skill": "Azure Active Directory"
+      },
+      {
+        "skill_id": 5441,
+        "skill": "Azure Networking"
+      },
+      {
+        "skill_id": 2240,
+        "skill": "Azure DevOps"
+      }
+    ]
+  },
+  {
+    "role_id": 118,
+    "role_name": "Google Cloud Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1278,
+        "skill": "Google App Engine (GAE)"
+      },
+      {
+        "skill_id": 4219,
+        "skill": "BigQuery"
+      },
+      {
+        "skill_id": 732,
+        "skill": "Vertex AI"
+      },
+      {
+        "skill_id": 2569,
+        "skill": "Infrastructure as Code (IaC)"
+      }
+    ]
+  },
+  {
+    "role_id": 119,
+    "role_name": "Kubernetes Administrator",
+    "candidate_skills": [
+      {
+        "skill_id": 193,
+        "skill": "Kubernetes"
+      },
+      {
+        "skill_id": 5704,
+        "skill": "Helm management in Kubernetes"
+      },
+      {
+        "skill_id": 755,
+        "skill": "Linux system administration"
+      },
+      {
+        "skill_id": 778,
+        "skill": "Observability"
+      }
+    ]
+  },
+  {
+    "role_id": 120,
+    "role_name": "DevSecOps Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 930,
+        "skill": "CI/CD"
+      },
+      {
+        "skill_id": 1512,
+        "skill": "Security Automation"
+      },
+      {
+        "skill_id": 2273,
+        "skill": "Secure Coding"
+      },
+      {
+        "skill_id": 192,
+        "skill": "Docker"
+      },
+      {
+        "skill_id": 2103,
+        "skill": "Cloud Security"
+      },
+      {
+        "skill_id": 2169,
+        "skill": "Security Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 121,
+    "role_name": "Cloud Network Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2936,
+        "skill": "Cloud Networking"
+      },
+      {
+        "skill_id": 3307,
+        "skill": "AWS VPC"
+      },
+      {
+        "skill_id": 5441,
+        "skill": "Azure Networking"
+      },
+      {
+        "skill_id": 104,
+        "skill": "Network Security"
+      }
+    ]
+  },
+  {
+    "role_id": 122,
+    "role_name": "Network Security Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 104,
+        "skill": "Network Security"
+      },
+      {
+        "skill_id": 2910,
+        "skill": "Firewall"
+      },
+      {
+        "skill_id": 2774,
+        "skill": "Intrusion Detection Systems (IDS)"
+      },
+      {
+        "skill_id": 1288,
+        "skill": "Virtual Private Network (VPN)"
+      },
+      {
+        "skill_id": 4482,
+        "skill": "zero-trust architectures"
+      }
+    ]
+  },
+  {
+    "role_id": 123,
+    "role_name": "Cloud Data Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 706,
+        "skill": "Data Pipelines"
+      },
+      {
+        "skill_id": 247,
+        "skill": "AWS Glue"
+      },
+      {
+        "skill_id": 4640,
+        "skill": "Data Factory"
+      },
+      {
+        "skill_id": 2163,
+        "skill": "Databricks"
+      },
+      {
+        "skill_id": 2436,
+        "skill": "Snowflake"
+      }
+    ]
+  },
+  {
+    "role_id": 124,
+    "role_name": "Data Visualization Specialist",
+    "candidate_skills": [
+      {
+        "skill_id": 240,
+        "skill": "Data Visualization"
+      },
+      {
+        "skill_id": 5055,
+        "skill": "Tableau"
+      },
+      {
+        "skill_id": 2922,
+        "skill": "Data Storytelling"
+      },
+      {
+        "skill_id": 2797,
+        "skill": "Plotly"
+      }
+    ]
+  },
+  {
+    "role_id": 125,
+    "role_name": "Power BI Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1542,
+        "skill": "Power BI"
+      },
+      {
+        "skill_id": 1524,
+        "skill": "Data Analysis Expressions (DAX)"
+      },
+      {
+        "skill_id": 1241,
+        "skill": "Data Modeling"
+      },
+      {
+        "skill_id": 3213,
+        "skill": "Business Intelligence (BI)"
+      }
+    ]
+  },
+  {
+    "role_id": 126,
+    "role_name": "Tableau Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 5055,
+        "skill": "Tableau"
+      },
+      {
+        "skill_id": 2922,
+        "skill": "Data Storytelling"
+      },
+      {
+        "skill_id": 3879,
+        "skill": "Advanced SQL"
+      },
+      {
+        "skill_id": 3213,
+        "skill": "Business Intelligence (BI)"
+      }
+    ]
+  },
+  {
+    "role_id": 127,
+    "role_name": "Generative AI Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 162,
+        "skill": "Generative AI"
+      },
+      {
+        "skill_id": 262,
+        "skill": "Large Language Models"
+      },
+      {
+        "skill_id": 5040,
+        "skill": "Stable Diffusion"
+      },
+      {
+        "skill_id": 1438,
+        "skill": "LangChain"
+      },
+      {
+        "skill_id": 2398,
+        "skill": "AI Prompting"
+      }
+    ]
+  },
+  {
+    "role_id": 128,
+    "role_name": "LLM Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 262,
+        "skill": "Large Language Models"
+      },
+      {
+        "skill_id": 4885,
+        "skill": "Fine-tuning LLMs"
+      },
+      {
+        "skill_id": 4888,
+        "skill": "Hugging Face"
+      },
+      {
+        "skill_id": 1438,
+        "skill": "LangChain"
+      },
+      {
+        "skill_id": 4604,
+        "skill": "Vector Database"
+      }
+    ]
+  },
+  {
+    "role_id": 129,
+    "role_name": "Prompt Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2398,
+        "skill": "AI Prompting"
+      },
+      {
+        "skill_id": 262,
+        "skill": "Large Language Models"
+      },
+      {
+        "skill_id": 162,
+        "skill": "Generative AI"
+      },
+      {
+        "skill_id": 733,
+        "skill": "Responsible AI"
+      }
+    ]
+  },
+  {
+    "role_id": 130,
+    "role_name": "Chatbot Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1248,
+        "skill": "Chatbot Development"
+      },
+      {
+        "skill_id": 3162,
+        "skill": "NLP"
+      },
+      {
+        "skill_id": 262,
+        "skill": "Large Language Models"
+      },
+      {
+        "skill_id": 857,
+        "skill": "REST APIs"
+      }
+    ]
+  },
+  {
+    "role_id": 131,
+    "role_name": "AI Product Manager",
+    "candidate_skills": [
+      {
+        "skill_id": 533,
+        "skill": "Product Management"
+      },
+      {
+        "skill_id": 96,
+        "skill": "Artificial Intelligence"
+      },
+      {
+        "skill_id": 733,
+        "skill": "Responsible AI"
+      },
+      {
+        "skill_id": 131,
+        "skill": "A/B Testing"
+      },
+      {
+        "skill_id": 51,
+        "skill": "Machine Learning"
+      }
+    ]
+  },
+  {
+    "role_id": 132,
+    "role_name": "Data Governance Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 653,
+        "skill": "Data Governance"
+      },
+      {
+        "skill_id": 1427,
+        "skill": "Data Quality"
+      },
+      {
+        "skill_id": 654,
+        "skill": "Data Privacy"
+      },
+      {
+        "skill_id": 4108,
+        "skill": "General Data Protection Regulation (GDPR)"
+      }
+    ]
+  },
+  {
+    "role_id": 133,
+    "role_name": "FPGA Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1323,
+        "skill": "FPGA Architecture and Design"
+      },
+      {
+        "skill_id": 677,
+        "skill": "VHDL Programming"
+      },
+      {
+        "skill_id": 5242,
+        "skill": "Writing Code in Verilog"
+      },
+      {
+        "skill_id": 678,
+        "skill": "Digital Circuit Design"
+      }
+    ]
+  },
+  {
+    "role_id": 134,
+    "role_name": "Malware Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 2810,
+        "skill": "Malware Analysis"
+      },
+      {
+        "skill_id": 2663,
+        "skill": "Digital Forensics"
+      },
+      {
+        "skill_id": 3968,
+        "skill": "Cyber Threat Intelligence"
+      }
+    ]
+  },
+  {
+    "role_id": 135,
+    "role_name": "Threat Intelligence Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 3968,
+        "skill": "Cyber Threat Intelligence"
+      },
+      {
+        "skill_id": 3969,
+        "skill": "Cyber Threat Hunting"
+      },
+      {
+        "skill_id": 5005,
+        "skill": "Security Information And Event Management (SIEM)"
+      }
+    ]
+  },
+  {
+    "role_id": 136,
+    "role_name": "GRC Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 3726,
+        "skill": "Cybersecurity Compliance"
+      },
+      {
+        "skill_id": 5196,
+        "skill": "Cyber Risk Management"
+      },
+      {
+        "skill_id": 1617,
+        "skill": "NIST Cybersecurity Framework (CSF)"
+      },
+      {
+        "skill_id": 4108,
+        "skill": "General Data Protection Regulation (GDPR)"
+      }
+    ]
+  },
+  {
+    "role_id": 137,
+    "role_name": "Salesforce Administrator",
+    "candidate_skills": [
+      {
+        "skill_id": 975,
+        "skill": "Salesforce"
+      },
+      {
+        "skill_id": 2763,
+        "skill": "Customer Relationship Management (CRM)"
+      },
+      {
+        "skill_id": 5849,
+        "skill": "Workflow Automation"
+      }
+    ]
+  },
+  {
+    "role_id": 138,
+    "role_name": "Power Platform Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 1242,
+        "skill": "Microsoft Power Apps"
+      },
+      {
+        "skill_id": 3358,
+        "skill": "Microsoft Dataverse"
+      },
+      {
+        "skill_id": 3355,
+        "skill": "Power Virtual Agents"
+      },
+      {
+        "skill_id": 5849,
+        "skill": "Workflow Automation"
+      }
+    ]
+  },
+  {
+    "role_id": 139,
+    "role_name": "RPA Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 3848,
+        "skill": "robotic process automation"
+      },
+      {
+        "skill_id": 5849,
+        "skill": "Workflow Automation"
+      },
+      {
+        "skill_id": 5591,
+        "skill": "Business Process Mapping"
+      },
+      {
+        "skill_id": 2787,
+        "skill": "Python"
+      }
+    ]
+  },
+  {
+    "role_id": 140,
+    "role_name": "Agile Coach",
+    "candidate_skills": [
+      {
+        "skill_id": 1459,
+        "skill": "Agile Methodology"
+      },
+      {
+        "skill_id": 4671,
+        "skill": "Scrum and Kanban"
+      },
+      {
+        "skill_id": 1171,
+        "skill": "Scrum Master"
+      },
+      {
+        "skill_id": 673,
+        "skill": "Stakeholder Management"
+      }
+    ]
+  },
+  {
+    "role_id": 141,
+    "role_name": "GIS Analyst",
+    "candidate_skills": [
+      {
+        "skill_id": 1572,
+        "skill": "Geographic Information System (GIS)"
+      },
+      {
+        "skill_id": 5427,
+        "skill": "Geospatial Data Science"
+      },
+      {
+        "skill_id": 5428,
+        "skill": "Geovisualization"
+      }
+    ]
+  },
+  {
+    "role_id": 142,
+    "role_name": "Computer Graphics Programmer",
+    "candidate_skills": [
+      {
+        "skill_id": 189,
+        "skill": "Computer Graphics (CG)"
+      },
+      {
+        "skill_id": 1802,
+        "skill": "Modern C++"
+      },
+      {
+        "skill_id": 5437,
+        "skill": "Concurrent Programming"
+      }
+    ]
+  },
+  {
+    "role_id": 143,
+    "role_name": "Systems Programmer",
+    "candidate_skills": [
+      {
+        "skill_id": 203,
+        "skill": "System Programming"
+      },
+      {
+        "skill_id": 1634,
+        "skill": "Linux Kernel"
+      },
+      {
+        "skill_id": 5437,
+        "skill": "Concurrent Programming"
+      },
+      {
+        "skill_id": 401,
+        "skill": "Compiler"
+      }
+    ]
+  },
+  {
+    "role_id": 144,
+    "role_name": "Mainframe Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 3417,
+        "skill": "COBOL coding"
+      },
+      {
+        "skill_id": 759,
+        "skill": "Customer Information Control System (CICS)"
+      },
+      {
+        "skill_id": 4069,
+        "skill": "z systems"
+      },
+      {
+        "skill_id": 305,
+        "skill": "SQL"
+      }
+    ]
+  },
+  {
+    "role_id": 145,
+    "role_name": "Quantum Computing Developer",
+    "candidate_skills": [
+      {
+        "skill_id": 422,
+        "skill": "Qiskit"
+      },
+      {
+        "skill_id": 3292,
+        "skill": "Quantum Algorithms"
+      },
+      {
+        "skill_id": 130,
+        "skill": "Linear Algebra"
+      }
+    ]
+  },
+  {
+    "role_id": 146,
+    "role_name": "IT Auditor",
+    "candidate_skills": [
+      {
+        "skill_id": 3726,
+        "skill": "Cybersecurity Compliance"
+      },
+      {
+        "skill_id": 5196,
+        "skill": "Cyber Risk Management"
+      },
+      {
+        "skill_id": 4530,
+        "skill": "Information Technology (IT) Operations"
+      }
+    ]
+  },
+  {
+    "role_id": 147,
+    "role_name": "Embedded Linux Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 2647,
+        "skill": "Linux On Embedded Systems"
+      },
+      {
+        "skill_id": 1634,
+        "skill": "Linux Kernel"
+      },
+      {
+        "skill_id": 5701,
+        "skill": "Embedded C"
+      }
+    ]
+  },
+  {
+    "role_id": 148,
+    "role_name": "Statistician",
+    "candidate_skills": [
+      {
+        "skill_id": 108,
+        "skill": "Statistical Inference"
+      },
+      {
+        "skill_id": 541,
+        "skill": "Bayesian Statistics"
+      },
+      {
+        "skill_id": 110,
+        "skill": "Regression Analysis"
+      },
+      {
+        "skill_id": 109,
+        "skill": "R Programming"
+      },
+      {
+        "skill_id": 1203,
+        "skill": "Statistical Hypothesis Testing"
+      }
+    ]
+  },
+  {
+    "role_id": 149,
+    "role_name": "NOC Technician",
+    "candidate_skills": [
+      {
+        "skill_id": 1356,
+        "skill": "Network Monitoring"
+      },
+      {
+        "skill_id": 156,
+        "skill": "Network Troubleshooting"
+      },
+      {
+        "skill_id": 3344,
+        "skill": "ITIL service management"
+      },
+      {
+        "skill_id": 3547,
+        "skill": "Simple Network Management Protocol (SNMP)"
+      }
+    ]
+  },
+  {
+    "role_id": 150,
+    "role_name": "Speech Recognition Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 1969,
+        "skill": "Speech Recognition"
+      },
+      {
+        "skill_id": 85,
+        "skill": "Deep Learning"
+      },
+      {
+        "skill_id": 3162,
+        "skill": "NLP"
+      },
+      {
+        "skill_id": 1644,
+        "skill": "PyTorch"
+      }
+    ]
+  },
+  {
+    "role_id": 151,
+    "role_name": "Recommendation Systems Engineer",
+    "candidate_skills": [
+      {
+        "skill_id": 353,
+        "skill": "Recommender Systems"
+      },
+      {
+        "skill_id": 51,
+        "skill": "Machine Learning"
+      },
+      {
+        "skill_id": 5492,
+        "skill": "Feature Engineering for AI Systems"
+      },
+      {
+        "skill_id": 131,
+        "skill": "A/B Testing"
+      }
+    ]
+  }
+]

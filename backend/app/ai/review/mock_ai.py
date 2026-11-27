@@ -5,10 +5,14 @@ mà RAG vừa truy xuất (A4: RAG quyết định thật sự đề gồm nhữ
 pick_from_bank() cũng là "ngân hàng dự phòng" (A6) khi AI lỗi: bốc không cần ưu tiên đoạn RAG.
 """
 
+import logging
 import random
 
 from app.ai.review import keyword_grading
 from app.ai.review.base import GenerationRequest, ReviewAI
+
+logger = logging.getLogger(__name__)
+ESSAY_FIRST = {"advanced": 0, "easy": 1}  # thứ tự BỐC câu (7.5b); mức khác bốc sau, giữ thứ tự trong `need`
 
 
 def pick_from_bank(
@@ -29,9 +33,13 @@ def pick_from_bank(
     prefer = prefer_chunk_ids or set()
     avoid = avoid_question_ids or set()
     penalty = avoid if isinstance(avoid, dict) else dict.fromkeys(avoid, 1)
-    picked = []
+    by_level: dict[str, list[dict]] = {}
     used: set[tuple] = set()
-    for level, count in need.items():
+    groups: set[str] = set()
+    # 7.5b (27/11): bốc TỰ LUẬN trước (ít câu: 2 dễ + 1 nâng cao) rồi mới trắc nghiệm — câu trắc nghiệm cùng nhóm loại
+    # trừ với câu tự luận đã chọn dễ né hơn (12 câu / ngân hàng lớn hơn). Kết quả vẫn trả theo thứ tự `need`.
+    for level in sorted(need, key=lambda lv: ESSAY_FIRST.get(lv, len(ESSAY_FIRST))):
+        count = need[level]
         pool = [q for q in candidates if q["level"] == level]
         rng.shuffle(pool)
         pool.sort(
@@ -45,13 +53,20 @@ def pick_from_bank(
             if len(chosen) == count:
                 break
             keys = {(q.get("type"), *t) for t in q.get("idea") or ()}
-            if keys & used:
+            group = q.get("exclusion_group")
+            if keys & used or (group and group in groups):
                 skipped.append(q)
                 continue
             chosen.append(q)
             used |= keys
-        picked += chosen + skipped[: count - len(chosen)]
-    return picked
+            if group and q.get("type") == "essay":  # chỉ câu TỰ LUẬN đã chọn chặn nhóm của nó
+                groups.add(group)
+        fill = skipped[: count - len(chosen)]
+        if any(q.get("exclusion_group") in groups for q in fill):
+            # Ràng buộc MỀM: thiếu câu khác nhóm thì vẫn ra đủ đề, không chặn người học — chỉ ghi lại
+            logger.warning("Ráp đề: mức %s thiếu câu khác nhóm loại trừ — lấy %d câu trùng nhóm", level, len(fill))
+        by_level[level] = chosen + fill
+    return [q for level in need for q in by_level.get(level, [])]
 
 
 class MockAI(ReviewAI):

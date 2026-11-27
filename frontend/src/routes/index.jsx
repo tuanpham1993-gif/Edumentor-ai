@@ -57,6 +57,10 @@ import MyLearningPathsPage from '../features/learning_path/pages/MyLearningPathP
 import LearningPathPreviewPage from '../features/learning_path/pages/LearningPathPreviewPage.jsx';
 import LearningPathDetailPage from '../features/learning_path/pages/LearningPathDetailPage.jsx';
 import SharedLearningPathPage from '../features/learning_path/pages/SharedLearningPathPage.jsx';
+// Lộ trình AI v2 (Hòa): learning_path2 thay cho learning_path (v1 giữ lại, không còn gắn route)
+import MyLearningPaths2Page from '../features/learning_path2/pages/MyLearningPaths2Page.jsx';
+import PathPreview2Page from '../features/learning_path2/pages/PathPreview2Page.jsx';
+import PathDetail2Page from '../features/learning_path2/pages/PathDetail2Page.jsx';
 function AdminHomePlaceholder() {
   return <p className="muted">Trang quản trị (Khôi / Tâm / Hòa) — đang phát triển.</p>;
 }
@@ -115,9 +119,9 @@ export default function AppRoutes() {
               Nhóm làm xong: thêm <Route path="..." element={<TrangThat />} /> PHÍA TRÊN dòng này
               (React Router chọn route khớp cụ thể nhất, route thật sẽ được dùng). */}
           {/*<Route path="/me/learning-paths" element={<ComingSoon feature={item.text} backTo="/me"/>}*/}
-          <Route path="/me/make-learning-path-generate" element={<LearningPathPreviewPage/>}/>
-          <Route path="/me/my-learning-path" element={<MyLearningPathsPage/>}/> 
-          <Route path="/me/my-learning-path/details/:recordId" element={<LearningPathDetailPage/>}/>   
+          <Route path="/me/make-learning-path-generate" element={<PathPreview2Page/>}/>
+          <Route path="/me/my-learning-path" element={<MyLearningPaths2Page/>}/>
+          <Route path="/me/my-learning-path/details/:recordId" element={<PathDetail2Page/>}/>
            {MAIN_NAV
             .filter((item) => item.to !== "/me/my-learning-path")
             .map((item) => (

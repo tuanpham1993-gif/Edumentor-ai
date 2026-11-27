@@ -45,7 +45,15 @@ _CODE_COMMA_BEFORE = re.compile(r"(?:^|\W)\w{1,2}\s*$")
 _CODE_COMMA_AFTER = re.compile(r"^\s*\w{1,2}(?:\W|$)")
 
 
+_THOUSANDS_COMMA_BEFORE = re.compile(r"(?:^|[^\w.,])\d{1,3}(?:,\d{3})*$")
+_THOUSANDS_COMMA_AFTER = re.compile(r"^\d{3}(?!\d)")
+
+
 def _is_code_comma(raw: str, pos: int) -> bool:
+    """Dấu phẩy KHÔNG tách vế: dấu phẩy của code ("a, b = b, a") và — 27/11 — dấu phẩy trong số "1,000", "4,096"
+    (text_pipeline giữ nguyên một token; tách vế ở đây thì "1" và "000" thành hai số, từ khóa "1" khớp nhầm)."""
+    if _THOUSANDS_COMMA_BEFORE.search(raw[:pos]) and _THOUSANDS_COMMA_AFTER.match(raw[pos + 1 :]):
+        return True
     return bool(_CODE_COMMA_BEFORE.search(raw[:pos]) and _CODE_COMMA_AFTER.match(raw[pos + 1 :]))
 
 

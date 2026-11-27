@@ -1,0 +1,2938 @@
+[
+  {
+    "skill_id": 4,
+    "skill": "JavaScript",
+    "aliases": [
+      "JS",
+      "ECMAScript",
+      "Vanilla JavaScript",
+      "Vanilla JS",
+      "JavaScript language"
+    ]
+  },
+  {
+    "skill_id": 44,
+    "skill": "Data Analysis",
+    "aliases": [
+      "Analyzing data",
+      "Analysing data"
+    ]
+  },
+  {
+    "skill_id": 49,
+    "skill": "Microsoft Azure",
+    "aliases": [
+      "MS Azure",
+      "Azure cloud platform",
+      "Windows Azure"
+    ]
+  },
+  {
+    "skill_id": 51,
+    "skill": "Machine Learning",
+    "aliases": [
+      "ML",
+      "Machine-learning",
+      "Statistical learning"
+    ]
+  },
+  {
+    "skill_id": 62,
+    "skill": "NumPy",
+    "aliases": [
+      "Numerical Python",
+      "numpy library"
+    ]
+  },
+  {
+    "skill_id": 78,
+    "skill": "Solution Architecture",
+    "aliases": [
+      "Solutions architecture"
+    ]
+  },
+  {
+    "skill_id": 85,
+    "skill": "Deep Learning",
+    "aliases": [
+      "DL",
+      "Deep neural networks"
+    ]
+  },
+  {
+    "skill_id": 87,
+    "skill": "Database (DBMS)",
+    "aliases": [
+      "DBMS",
+      "Database Management System"
+    ]
+  },
+  {
+    "skill_id": 104,
+    "skill": "Network Security",
+    "aliases": [
+      "Netsec"
+    ]
+  },
+  {
+    "skill_id": 107,
+    "skill": "Probability And Statistics",
+    "aliases": [
+      "Probability & Statistics",
+      "Prob and Stats"
+    ]
+  },
+  {
+    "skill_id": 108,
+    "skill": "Statistical Inference",
+    "aliases": [
+      "Inferential statistics"
+    ]
+  },
+  {
+    "skill_id": 109,
+    "skill": "R Programming",
+    "aliases": [
+      "R",
+      "R lang",
+      "GNU R"
+    ]
+  },
+  {
+    "skill_id": 111,
+    "skill": "Web Development",
+    "aliases": [
+      "Web dev",
+      "Website development"
+    ]
+  },
+  {
+    "skill_id": 117,
+    "skill": "Apache Spark",
+    "aliases": [
+      "Spark framework",
+      "Apache Spark framework"
+    ]
+  },
+  {
+    "skill_id": 120,
+    "skill": "Unit Testing",
+    "aliases": [
+      "Unit tests"
+    ]
+  },
+  {
+    "skill_id": 131,
+    "skill": "A/B Testing",
+    "aliases": [
+      "AB testing",
+      "Split testing"
+    ]
+  },
+  {
+    "skill_id": 137,
+    "skill": "Software Testing",
+    "aliases": [
+      "QA testing",
+      "Software QA",
+      "Quality assurance testing"
+    ]
+  },
+  {
+    "skill_id": 152,
+    "skill": "MySQL",
+    "aliases": [
+      "My SQL"
+    ]
+  },
+  {
+    "skill_id": 158,
+    "skill": "Software Engineering",
+    "aliases": [
+      "SWE",
+      "Software engineering principles"
+    ]
+  },
+  {
+    "skill_id": 159,
+    "skill": "Software Development",
+    "aliases": [
+      "Software dev",
+      "Application software development"
+    ]
+  },
+  {
+    "skill_id": 162,
+    "skill": "Generative AI",
+    "aliases": [
+      "Gen-AI"
+    ]
+  },
+  {
+    "skill_id": 163,
+    "skill": "AppSheet",
+    "aliases": [
+      "Google AppSheet"
+    ]
+  },
+  {
+    "skill_id": 166,
+    "skill": "No-code application development",
+    "aliases": [
+      "No-code development"
+    ]
+  },
+  {
+    "skill_id": 170,
+    "skill": "Computer Science",
+    "aliases": [
+      "CS",
+      "CompSci"
+    ]
+  },
+  {
+    "skill_id": 175,
+    "skill": "Scrum",
+    "aliases": [
+      "Scrum framework"
+    ]
+  },
+  {
+    "skill_id": 186,
+    "skill": "3d computer graphics",
+    "aliases": [
+      "3D graphics"
+    ]
+  },
+  {
+    "skill_id": 188,
+    "skill": "Robotics",
+    "aliases": [
+      "Robotics engineering"
+    ]
+  },
+  {
+    "skill_id": 189,
+    "skill": "Computer Graphics (CG)",
+    "aliases": [
+      "Computer graphics",
+      "CG"
+    ]
+  },
+  {
+    "skill_id": 190,
+    "skill": "Hypertext Preprocessor (PHP)",
+    "aliases": [
+      "PHP",
+      "PHP programming",
+      "PHP 8"
+    ]
+  },
+  {
+    "skill_id": 192,
+    "skill": "Docker",
+    "aliases": [
+      "Docker platform",
+      "Docker CE",
+      "Docker Desktop"
+    ]
+  },
+  {
+    "skill_id": 193,
+    "skill": "Kubernetes",
+    "aliases": [
+      "K8s",
+      "K8",
+      "Kubernetes container orchestration"
+    ]
+  },
+  {
+    "skill_id": 199,
+    "skill": "Java",
+    "aliases": [
+      "Java language",
+      "Java SE",
+      "Core Java",
+      "Java programming language",
+      "Java 8",
+      "Java 17"
+    ]
+  },
+  {
+    "skill_id": 204,
+    "skill": "System Administration",
+    "aliases": [
+      "Sysadmin"
+    ]
+  },
+  {
+    "skill_id": 225,
+    "skill": "Networking",
+    "aliases": [
+      "Computer networking"
+    ]
+  },
+  {
+    "skill_id": 231,
+    "skill": "Computer Vision",
+    "aliases": [
+      "Machine vision",
+      "Image recognition"
+    ]
+  },
+  {
+    "skill_id": 240,
+    "skill": "Data Visualization",
+    "aliases": [
+      "Data viz",
+      "DataViz",
+      "Data visualisation"
+    ]
+  },
+  {
+    "skill_id": 241,
+    "skill": "Exploratory Data Analysis",
+    "aliases": [
+      "EDA"
+    ]
+  },
+  {
+    "skill_id": 247,
+    "skill": "AWS Glue",
+    "aliases": [
+      "Glue ETL"
+    ]
+  },
+  {
+    "skill_id": 250,
+    "skill": "AWS Lambda",
+    "aliases": [
+      "Lambda functions"
+    ]
+  },
+  {
+    "skill_id": 251,
+    "skill": "AWS OpenSearch",
+    "aliases": [
+      "OpenSearch",
+      "Amazon OpenSearch Service"
+    ]
+  },
+  {
+    "skill_id": 265,
+    "skill": "Data Warehousing",
+    "aliases": [
+      "DWH",
+      "Data warehouse development"
+    ]
+  },
+  {
+    "skill_id": 280,
+    "skill": "Video Game Development",
+    "aliases": [
+      "Game development",
+      "Gamedev",
+      "Game dev"
+    ]
+  },
+  {
+    "skill_id": 297,
+    "skill": "Angularjs",
+    "aliases": [
+      "AngularJS 1.x",
+      "Angular.js"
+    ]
+  },
+  {
+    "skill_id": 299,
+    "skill": "Pandas",
+    "aliases": [
+      "pandas library",
+      "Python pandas"
+    ]
+  },
+  {
+    "skill_id": 302,
+    "skill": "Big Data",
+    "aliases": [
+      "Big data processing",
+      "Large-scale data processing"
+    ]
+  },
+  {
+    "skill_id": 304,
+    "skill": "Microsoft Excel",
+    "aliases": [
+      "Excel",
+      "MS Excel",
+      "Excel spreadsheets"
+    ]
+  },
+  {
+    "skill_id": 305,
+    "skill": "SQL",
+    "aliases": [
+      "Structured Query Language",
+      "SQL language",
+      "SQL querying"
+    ]
+  },
+  {
+    "skill_id": 316,
+    "skill": "Google Cloud Platform",
+    "aliases": [
+      "GCP",
+      "Google Cloud Services"
+    ]
+  },
+  {
+    "skill_id": 331,
+    "skill": "Software As A Service (SAAS)",
+    "aliases": [
+      "SaaS"
+    ]
+  },
+  {
+    "skill_id": 338,
+    "skill": "Dataflow",
+    "aliases": [
+      "Google Cloud Dataflow"
+    ]
+  },
+  {
+    "skill_id": 343,
+    "skill": "Data Mining",
+    "aliases": [
+      "Knowledge discovery in databases",
+      "KDD"
+    ]
+  },
+  {
+    "skill_id": 346,
+    "skill": "Google Analytics 4",
+    "aliases": [
+      "GA4"
+    ]
+  },
+  {
+    "skill_id": 349,
+    "skill": "Sqlite",
+    "aliases": [
+      "SQLite3",
+      "SQLite database"
+    ]
+  },
+  {
+    "skill_id": 353,
+    "skill": "Recommender Systems",
+    "aliases": [
+      "Recommendation engines"
+    ]
+  },
+  {
+    "skill_id": 357,
+    "skill": "Linux",
+    "aliases": [
+      "GNU/Linux",
+      "Linux OS"
+    ]
+  },
+  {
+    "skill_id": 358,
+    "skill": "Web Design",
+    "aliases": [
+      "Website design"
+    ]
+  },
+  {
+    "skill_id": 363,
+    "skill": "React",
+    "aliases": [
+      "ReactJS",
+      "React JS",
+      "React library",
+      "React framework"
+    ]
+  },
+  {
+    "skill_id": 373,
+    "skill": "Building an Angular Application",
+    "aliases": [
+      "Angular",
+      "Angular framework",
+      "Angular 2+"
+    ]
+  },
+  {
+    "skill_id": 377,
+    "skill": "Database (DB) Design",
+    "aliases": [
+      "Database design",
+      "DB design",
+      "Schema design"
+    ]
+  },
+  {
+    "skill_id": 401,
+    "skill": "Compiler",
+    "aliases": [
+      "Compilers",
+      "Compiler design"
+    ]
+  },
+  {
+    "skill_id": 455,
+    "skill": "Cybersecurity",
+    "aliases": [
+      "Cybersec",
+      "Cyber-security"
+    ]
+  },
+  {
+    "skill_id": 462,
+    "skill": "Virtualization with Hyper-V",
+    "aliases": [
+      "Hyper-V"
+    ]
+  },
+  {
+    "skill_id": 486,
+    "skill": "HTML",
+    "aliases": [
+      "HyperText Markup Language",
+      "HTML markup"
+    ]
+  },
+  {
+    "skill_id": 491,
+    "skill": "Serverless Computing",
+    "aliases": [
+      "FaaS",
+      "Function as a Service"
+    ]
+  },
+  {
+    "skill_id": 498,
+    "skill": "api gateway",
+    "aliases": [
+      "Amazon API Gateway"
+    ]
+  },
+  {
+    "skill_id": 499,
+    "skill": "C++",
+    "aliases": [
+      "CPP",
+      "C plus plus",
+      "Cplusplus",
+      "C++ language"
+    ]
+  },
+  {
+    "skill_id": 515,
+    "skill": "Computer Architecture",
+    "aliases": [
+      "Computer organization"
+    ]
+  },
+  {
+    "skill_id": 517,
+    "skill": "NoSQL",
+    "aliases": [
+      "Non-relational databases",
+      "NoSQL databases"
+    ]
+  },
+  {
+    "skill_id": 523,
+    "skill": "Statistical Analysis",
+    "aliases": [
+      "Statistical data analysis"
+    ]
+  },
+  {
+    "skill_id": 537,
+    "skill": "Unity",
+    "aliases": [
+      "Unity3D",
+      "Unity 3D",
+      "Unity game engine",
+      "Unity Engine"
+    ]
+  },
+  {
+    "skill_id": 541,
+    "skill": "Bayesian Statistics",
+    "aliases": [
+      "Bayesian methods"
+    ]
+  },
+  {
+    "skill_id": 546,
+    "skill": "Explainable AI (XAI)",
+    "aliases": [
+      "Explainable AI"
+    ]
+  },
+  {
+    "skill_id": 551,
+    "skill": "Operating Systems",
+    "aliases": [
+      "OS concepts"
+    ]
+  },
+  {
+    "skill_id": 554,
+    "skill": "Virtualization",
+    "aliases": [
+      "Virtualisation"
+    ]
+  },
+  {
+    "skill_id": 591,
+    "skill": "DevOps",
+    "aliases": [
+      "Dev Ops",
+      "DevOps practices",
+      "DevOps culture"
+    ]
+  },
+  {
+    "skill_id": 610,
+    "skill": "hyperparameter tuning",
+    "aliases": [
+      "Hyperparameter optimization"
+    ]
+  },
+  {
+    "skill_id": 657,
+    "skill": "Oracle Databases",
+    "aliases": [
+      "Oracle DB",
+      "Oracle Database",
+      "Oracle RDBMS"
+    ]
+  },
+  {
+    "skill_id": 658,
+    "skill": "Database Administration",
+    "aliases": [
+      "DBA",
+      "DB administration"
+    ]
+  },
+  {
+    "skill_id": 670,
+    "skill": "Information Technology",
+    "aliases": [
+      "IT"
+    ]
+  },
+  {
+    "skill_id": 677,
+    "skill": "VHDL Programming",
+    "aliases": [
+      "VHDL"
+    ]
+  },
+  {
+    "skill_id": 685,
+    "skill": "iOS App Development",
+    "aliases": [
+      "iOS development",
+      "iPhone app development"
+    ]
+  },
+  {
+    "skill_id": 686,
+    "skill": "Swift Programming",
+    "aliases": [
+      "Swift",
+      "Swift language",
+      "Apple Swift"
+    ]
+  },
+  {
+    "skill_id": 700,
+    "skill": "SQL Server",
+    "aliases": [
+      "MS SQL Server",
+      "Microsoft SQL Server",
+      "MSSQL"
+    ]
+  },
+  {
+    "skill_id": 706,
+    "skill": "Data Pipelines",
+    "aliases": [
+      "Data pipeline",
+      "Data pipeline development"
+    ]
+  },
+  {
+    "skill_id": 711,
+    "skill": "Domain Name System (DNS)",
+    "aliases": [
+      "DNS"
+    ]
+  },
+  {
+    "skill_id": 739,
+    "skill": "Security Assertion Markup Language (SAML)",
+    "aliases": [
+      "SAML"
+    ]
+  },
+  {
+    "skill_id": 741,
+    "skill": "TensorFlow.js",
+    "aliases": [
+      "TFJS"
+    ]
+  },
+  {
+    "skill_id": 755,
+    "skill": "Linux system administration",
+    "aliases": [
+      "Linux sysadmin"
+    ]
+  },
+  {
+    "skill_id": 759,
+    "skill": "Customer Information Control System (CICS)",
+    "aliases": [
+      "CICS"
+    ]
+  },
+  {
+    "skill_id": 771,
+    "skill": "Django (Web Framework)",
+    "aliases": [
+      "Django",
+      "Django framework",
+      "Python Django"
+    ]
+  },
+  {
+    "skill_id": 775,
+    "skill": "Object Relational Mapping (ORM)",
+    "aliases": [
+      "ORM"
+    ]
+  },
+  {
+    "skill_id": 790,
+    "skill": "CompTIA Cybersecurity Analyst (CySA+)",
+    "aliases": [
+      "CySA+",
+      "CySA"
+    ]
+  },
+  {
+    "skill_id": 811,
+    "skill": "Bash Scripting",
+    "aliases": [
+      "Bash scripts",
+      "Bash shell scripting"
+    ]
+  },
+  {
+    "skill_id": 857,
+    "skill": "REST APIs",
+    "aliases": [
+      "REST API",
+      "REST services",
+      "RESTful web services",
+      "REST API development"
+    ]
+  },
+  {
+    "skill_id": 862,
+    "skill": "Intrusion Prevention and Detection Software",
+    "aliases": [
+      "IPS"
+    ]
+  },
+  {
+    "skill_id": 866,
+    "skill": "Cisco Certified Network Associate Security (CCNA Security)",
+    "aliases": [
+      "CCNA Security"
+    ]
+  },
+  {
+    "skill_id": 921,
+    "skill": "Blockchain",
+    "aliases": [
+      "Blockchain technology",
+      "DLT",
+      "Distributed ledger technology"
+    ]
+  },
+  {
+    "skill_id": 930,
+    "skill": "CI/CD",
+    "aliases": [
+      "CICD",
+      "Continuous Deployment"
+    ]
+  },
+  {
+    "skill_id": 947,
+    "skill": "Bash",
+    "aliases": [
+      "GNU Bash",
+      "Bourne Again Shell"
+    ]
+  },
+  {
+    "skill_id": 955,
+    "skill": "Open Web Application Security Project (OWASP)",
+    "aliases": [
+      "OWASP",
+      "OWASP Top 10"
+    ]
+  },
+  {
+    "skill_id": 975,
+    "skill": "Salesforce",
+    "aliases": [
+      "SFDC",
+      "Salesforce CRM",
+      "Salesforce.com"
+    ]
+  },
+  {
+    "skill_id": 990,
+    "skill": "Network Planning And Design",
+    "aliases": [
+      "Network design"
+    ]
+  },
+  {
+    "skill_id": 1020,
+    "skill": "Java Concurrency",
+    "aliases": [
+      "Java multithreading"
+    ]
+  },
+  {
+    "skill_id": 1027,
+    "skill": "MongoDB",
+    "aliases": [
+      "Mongo",
+      "Mongo DB"
+    ]
+  },
+  {
+    "skill_id": 1030,
+    "skill": "Apache Hadoop",
+    "aliases": [
+      "Hadoop framework"
+    ]
+  },
+  {
+    "skill_id": 1035,
+    "skill": "Virtual Reality",
+    "aliases": [
+      "VR"
+    ]
+  },
+  {
+    "skill_id": 1036,
+    "skill": "Virtual Desktop Infrastructures",
+    "aliases": [
+      "VDI"
+    ]
+  },
+  {
+    "skill_id": 1044,
+    "skill": "Data Wrangling",
+    "aliases": [
+      "Data munging"
+    ]
+  },
+  {
+    "skill_id": 1052,
+    "skill": "Ansible",
+    "aliases": [
+      "Red Hat Ansible",
+      "Ansible automation"
+    ]
+  },
+  {
+    "skill_id": 1053,
+    "skill": "AWS",
+    "aliases": [
+      "Amazon AWS",
+      "AWS cloud platform",
+      "Amazon Cloud Services"
+    ]
+  },
+  {
+    "skill_id": 1055,
+    "skill": "Jenkins",
+    "aliases": [
+      "Jenkins CI",
+      "Jenkins CI/CD"
+    ]
+  },
+  {
+    "skill_id": 1064,
+    "skill": "Functional Programming",
+    "aliases": [
+      "FP"
+    ]
+  },
+  {
+    "skill_id": 1066,
+    "skill": "Responsive Web Design",
+    "aliases": [
+      "RWD",
+      "Responsive design"
+    ]
+  },
+  {
+    "skill_id": 1109,
+    "skill": "Internet of Things (IoT)",
+    "aliases": [
+      "IoT",
+      "Internet of Things"
+    ]
+  },
+  {
+    "skill_id": 1141,
+    "skill": "Node.js",
+    "aliases": [
+      "NodeJS",
+      "Node JS",
+      "Node.js runtime"
+    ]
+  },
+  {
+    "skill_id": 1171,
+    "skill": "Scrum Master",
+    "aliases": [
+      "Certified Scrum Master",
+      "Professional Scrum Master"
+    ]
+  },
+  {
+    "skill_id": 1181,
+    "skill": "IBM Cognos Analytics",
+    "aliases": [
+      "Cognos"
+    ]
+  },
+  {
+    "skill_id": 1184,
+    "skill": "C Programming",
+    "aliases": [
+      "C language",
+      "ANSI C",
+      "C programming language",
+      "C"
+    ]
+  },
+  {
+    "skill_id": 1203,
+    "skill": "Statistical Hypothesis Testing",
+    "aliases": [
+      "Hypothesis testing"
+    ]
+  },
+  {
+    "skill_id": 1218,
+    "skill": "Statistics",
+    "aliases": [
+      "Stats"
+    ]
+  },
+  {
+    "skill_id": 1241,
+    "skill": "Data Modeling",
+    "aliases": [
+      "Data modelling",
+      "Data model design"
+    ]
+  },
+  {
+    "skill_id": 1242,
+    "skill": "Microsoft Power Apps",
+    "aliases": [
+      "PowerApps"
+    ]
+  },
+  {
+    "skill_id": 1257,
+    "skill": "Swift and SwiftUI",
+    "aliases": [
+      "SwiftUI"
+    ]
+  },
+  {
+    "skill_id": 1278,
+    "skill": "Google App Engine (GAE)",
+    "aliases": [
+      "App Engine",
+      "GAE"
+    ]
+  },
+  {
+    "skill_id": 1283,
+    "skill": "Shell Scripting",
+    "aliases": [
+      "Shell scripts",
+      "Unix shell scripting",
+      "Linux shell scripting"
+    ]
+  },
+  {
+    "skill_id": 1286,
+    "skill": "Virtual Machine",
+    "aliases": [
+      "VM",
+      "VMs"
+    ]
+  },
+  {
+    "skill_id": 1288,
+    "skill": "Virtual Private Network (VPN)",
+    "aliases": [
+      "VPN"
+    ]
+  },
+  {
+    "skill_id": 1323,
+    "skill": "FPGA Architecture and Design",
+    "aliases": [
+      "FPGA",
+      "FPGA design"
+    ]
+  },
+  {
+    "skill_id": 1350,
+    "skill": "Scikit-Learn",
+    "aliases": [
+      "sklearn",
+      "scikit learn",
+      "SciKit"
+    ]
+  },
+  {
+    "skill_id": 1361,
+    "skill": "Website Wireframe",
+    "aliases": [
+      "Wireframing"
+    ]
+  },
+  {
+    "skill_id": 1372,
+    "skill": "Scala Programming",
+    "aliases": [
+      "Scala",
+      "Scala language"
+    ]
+  },
+  {
+    "skill_id": 1456,
+    "skill": ".NET Core",
+    "aliases": [
+      "dotnet core",
+      "Dot Net Core"
+    ]
+  },
+  {
+    "skill_id": 1459,
+    "skill": "Agile Methodology",
+    "aliases": [
+      "Agile methodologies",
+      "Agile practices",
+      "Agile development"
+    ]
+  },
+  {
+    "skill_id": 1462,
+    "skill": "Asp.Net Core",
+    "aliases": [
+      "ASPNET Core",
+      "ASP .NET Core"
+    ]
+  },
+  {
+    "skill_id": 1463,
+    "skill": "Microservices Architecture",
+    "aliases": [
+      "Microservice-based architecture",
+      "Micro-services"
+    ]
+  },
+  {
+    "skill_id": 1472,
+    "skill": "Application Security",
+    "aliases": [
+      "AppSec"
+    ]
+  },
+  {
+    "skill_id": 1489,
+    "skill": "Google Analytics",
+    "aliases": [
+      "GA"
+    ]
+  },
+  {
+    "skill_id": 1507,
+    "skill": "Cloud Architecture",
+    "aliases": [
+      "Cloud solution architecture"
+    ]
+  },
+  {
+    "skill_id": 1509,
+    "skill": "TensorFlow",
+    "aliases": [
+      "TensorFlow 2",
+      "TF2",
+      "Google TensorFlow"
+    ]
+  },
+  {
+    "skill_id": 1515,
+    "skill": "Security Operations (SecOps)",
+    "aliases": [
+      "SecOps"
+    ]
+  },
+  {
+    "skill_id": 1524,
+    "skill": "Data Analysis Expressions (DAX)",
+    "aliases": [
+      "DAX formulas"
+    ]
+  },
+  {
+    "skill_id": 1542,
+    "skill": "Power BI",
+    "aliases": [
+      "PowerBI",
+      "MS Power BI",
+      "Power BI Desktop"
+    ]
+  },
+  {
+    "skill_id": 1553,
+    "skill": "Ubuntu (Operating System)",
+    "aliases": [
+      "Ubuntu",
+      "Ubuntu Linux"
+    ]
+  },
+  {
+    "skill_id": 1560,
+    "skill": "Software-Defined Networking",
+    "aliases": [
+      "SDN"
+    ]
+  },
+  {
+    "skill_id": 1561,
+    "skill": "Network Function Virtualization",
+    "aliases": [
+      "NFV"
+    ]
+  },
+  {
+    "skill_id": 1578,
+    "skill": "Human–Computer Interaction",
+    "aliases": [
+      "HCI"
+    ]
+  },
+  {
+    "skill_id": 1589,
+    "skill": "VBA Programming",
+    "aliases": [
+      "VBA",
+      "Visual Basic for Applications"
+    ]
+  },
+  {
+    "skill_id": 1603,
+    "skill": "AWS Kinesis",
+    "aliases": [
+      "Kinesis"
+    ]
+  },
+  {
+    "skill_id": 1615,
+    "skill": "Cyber Incident Response",
+    "aliases": [
+      "Security incident response"
+    ]
+  },
+  {
+    "skill_id": 1617,
+    "skill": "NIST Cybersecurity Framework (CSF)",
+    "aliases": [
+      "NIST CSF",
+      "NIST Cybersecurity Framework"
+    ]
+  },
+  {
+    "skill_id": 1625,
+    "skill": "Rust (Programming Language)",
+    "aliases": [
+      "Rust",
+      "Rust lang",
+      "Rustlang"
+    ]
+  },
+  {
+    "skill_id": 1628,
+    "skill": "Extract Transform and Load (ETL)",
+    "aliases": [
+      "ETL",
+      "ETL processes",
+      "ETL pipelines",
+      "Extract, Transform, Load"
+    ]
+  },
+  {
+    "skill_id": 1632,
+    "skill": "Red Hat Enterprise Linux",
+    "aliases": [
+      "RHEL"
+    ]
+  },
+  {
+    "skill_id": 1644,
+    "skill": "PyTorch",
+    "aliases": [
+      "PyTorch library",
+      "Py Torch"
+    ]
+  },
+  {
+    "skill_id": 1692,
+    "skill": "Reinforcement Learning Applications",
+    "aliases": [
+      "RL"
+    ]
+  },
+  {
+    "skill_id": 1738,
+    "skill": "Penetration Testing",
+    "aliases": [
+      "Pen testing",
+      "Pentest"
+    ]
+  },
+  {
+    "skill_id": 1749,
+    "skill": "HTML5",
+    "aliases": [
+      "HTML 5"
+    ]
+  },
+  {
+    "skill_id": 1771,
+    "skill": "AWS Certified Cloud Practitioner",
+    "aliases": [
+      "AWS CCP",
+      "AWS Cloud Practitioner",
+      "CLF-C02"
+    ]
+  },
+  {
+    "skill_id": 1781,
+    "skill": "GCP ACE Certification",
+    "aliases": [
+      "Associate Cloud Engineer",
+      "GCP ACE"
+    ]
+  },
+  {
+    "skill_id": 1782,
+    "skill": "Linux command line",
+    "aliases": [
+      "Linux CLI",
+      "Linux terminal"
+    ]
+  },
+  {
+    "skill_id": 1802,
+    "skill": "Modern C++",
+    "aliases": [
+      "C++17",
+      "C++20"
+    ]
+  },
+  {
+    "skill_id": 1804,
+    "skill": "Design Patterns",
+    "aliases": [
+      "Software design patterns",
+      "GoF design patterns",
+      "Gang of Four patterns"
+    ]
+  },
+  {
+    "skill_id": 1808,
+    "skill": "AWS Command Line Interface (CLI)",
+    "aliases": [
+      "AWS CLI"
+    ]
+  },
+  {
+    "skill_id": 1851,
+    "skill": "Cloudant",
+    "aliases": [
+      "IBM Cloudant"
+    ]
+  },
+  {
+    "skill_id": 1887,
+    "skill": "React Native",
+    "aliases": [
+      "ReactNative",
+      "React Native development"
+    ]
+  },
+  {
+    "skill_id": 1889,
+    "skill": "JavaScript ES6",
+    "aliases": [
+      "ES6",
+      "ES2015",
+      "ECMAScript 6",
+      "Modern JavaScript"
+    ]
+  },
+  {
+    "skill_id": 1960,
+    "skill": ".Net",
+    "aliases": [
+      ".NET platform",
+      "dotnet",
+      "Dot Net"
+    ]
+  },
+  {
+    "skill_id": 1967,
+    "skill": "Software Architecture",
+    "aliases": [
+      "Software architecture design",
+      "Application architecture"
+    ]
+  },
+  {
+    "skill_id": 1972,
+    "skill": "Anaconda (Software)",
+    "aliases": [
+      "Anaconda",
+      "Conda"
+    ]
+  },
+  {
+    "skill_id": 2088,
+    "skill": "Json",
+    "aliases": [
+      "JavaScript Object Notation"
+    ]
+  },
+  {
+    "skill_id": 2097,
+    "skill": "Golang Fundamentals",
+    "aliases": [
+      "Golang",
+      "Go language",
+      "Go programming",
+      "Go (Programming Language)",
+      "Go"
+    ]
+  },
+  {
+    "skill_id": 2098,
+    "skill": "Apigee API Platform",
+    "aliases": [
+      "Apigee"
+    ]
+  },
+  {
+    "skill_id": 2100,
+    "skill": "OpenAPI specifications",
+    "aliases": [
+      "OpenAPI",
+      "Swagger",
+      "OAS"
+    ]
+  },
+  {
+    "skill_id": 2119,
+    "skill": "SQL Injection",
+    "aliases": [
+      "SQLi"
+    ]
+  },
+  {
+    "skill_id": 2130,
+    "skill": "Security Operations Center (SOC)",
+    "aliases": [
+      "SOC"
+    ]
+  },
+  {
+    "skill_id": 2136,
+    "skill": "Full Stack Development",
+    "aliases": [
+      "Fullstack development"
+    ]
+  },
+  {
+    "skill_id": 2163,
+    "skill": "Databricks",
+    "aliases": [
+      "Databricks platform",
+      "Databricks Lakehouse"
+    ]
+  },
+  {
+    "skill_id": 2193,
+    "skill": "Workday (Software)",
+    "aliases": [
+      "Workday HCM"
+    ]
+  },
+  {
+    "skill_id": 2198,
+    "skill": "SAS Programming",
+    "aliases": [
+      "SAS",
+      "Base SAS",
+      "SAS language"
+    ]
+  },
+  {
+    "skill_id": 2207,
+    "skill": "Embedded Systems",
+    "aliases": [
+      "Embedded development",
+      "Embedded programming"
+    ]
+  },
+  {
+    "skill_id": 2216,
+    "skill": "Junit",
+    "aliases": [
+      "JUnit 5",
+      "JUnit testing"
+    ]
+  },
+  {
+    "skill_id": 2233,
+    "skill": "Relational Database Management System (RDBMS)",
+    "aliases": [
+      "RDBMS",
+      "Relational DBMS"
+    ]
+  },
+  {
+    "skill_id": 2234,
+    "skill": "Selenium (Software)",
+    "aliases": [
+      "Selenium WebDriver"
+    ]
+  },
+  {
+    "skill_id": 2240,
+    "skill": "Azure DevOps",
+    "aliases": [
+      "Azure DevOps Services",
+      "VSTS",
+      "Visual Studio Team Services"
+    ]
+  },
+  {
+    "skill_id": 2267,
+    "skill": "Random Forest",
+    "aliases": [
+      "Random forests"
+    ]
+  },
+  {
+    "skill_id": 2273,
+    "skill": "Secure Coding",
+    "aliases": [
+      "Secure programming",
+      "Secure software development"
+    ]
+  },
+  {
+    "skill_id": 2276,
+    "skill": "Test-Driven Development",
+    "aliases": [
+      "TDD"
+    ]
+  },
+  {
+    "skill_id": 2284,
+    "skill": "Ajax (Programming Language)",
+    "aliases": [
+      "AJAX",
+      "Asynchronous JavaScript and XML"
+    ]
+  },
+  {
+    "skill_id": 2287,
+    "skill": "Cisco Certified Entry Networking Technician",
+    "aliases": [
+      "CCENT"
+    ]
+  },
+  {
+    "skill_id": 2316,
+    "skill": "Linux Cron Jobs",
+    "aliases": [
+      "cron",
+      "crontab"
+    ]
+  },
+  {
+    "skill_id": 2399,
+    "skill": "Transformer Architecture",
+    "aliases": [
+      "Transformer models"
+    ]
+  },
+  {
+    "skill_id": 2420,
+    "skill": "Progressive Web Development",
+    "aliases": [
+      "PWA",
+      "Progressive Web Apps"
+    ]
+  },
+  {
+    "skill_id": 2436,
+    "skill": "Snowflake",
+    "aliases": [
+      "Snowflake Data Cloud",
+      "Snowflake DB"
+    ]
+  },
+  {
+    "skill_id": 2612,
+    "skill": "Distributed Version Control Systems (DVCS)",
+    "aliases": [
+      "DVCS"
+    ]
+  },
+  {
+    "skill_id": 2646,
+    "skill": "Real-Time Operating System (RTOS)",
+    "aliases": [
+      "RTOS"
+    ]
+  },
+  {
+    "skill_id": 2660,
+    "skill": "Hyperledger",
+    "aliases": [
+      "Hyperledger Fabric"
+    ]
+  },
+  {
+    "skill_id": 2663,
+    "skill": "Digital Forensics",
+    "aliases": [
+      "Computer forensics",
+      "Cyber forensics"
+    ]
+  },
+  {
+    "skill_id": 2685,
+    "skill": "Game Programming",
+    "aliases": [
+      "Game coding"
+    ]
+  },
+  {
+    "skill_id": 2697,
+    "skill": "Systems Design",
+    "aliases": [
+      "System design"
+    ]
+  },
+  {
+    "skill_id": 2712,
+    "skill": "Docker Compose",
+    "aliases": [
+      "docker-compose"
+    ]
+  },
+  {
+    "skill_id": 2747,
+    "skill": "AWS EC2",
+    "aliases": [
+      "EC2",
+      "Amazon EC2",
+      "Elastic Compute Cloud"
+    ]
+  },
+  {
+    "skill_id": 2763,
+    "skill": "Customer Relationship Management (CRM)",
+    "aliases": [
+      "CRM systems"
+    ]
+  },
+  {
+    "skill_id": 2774,
+    "skill": "Intrusion Detection Systems (IDS)",
+    "aliases": [
+      "IDS",
+      "Intrusion detection"
+    ]
+  },
+  {
+    "skill_id": 2787,
+    "skill": "Python",
+    "aliases": [
+      "Python 3",
+      "Python3",
+      "Python language",
+      "Python programming language",
+      "Python development"
+    ]
+  },
+  {
+    "skill_id": 2803,
+    "skill": "SQL Fundamentals",
+    "aliases": [
+      "Basic SQL",
+      "SQL basics"
+    ]
+  },
+  {
+    "skill_id": 2808,
+    "skill": "AWS GuardDuty",
+    "aliases": [
+      "Amazon GuardDuty"
+    ]
+  },
+  {
+    "skill_id": 2821,
+    "skill": "Object-Oriented Programming",
+    "aliases": [
+      "OO programming"
+    ]
+  },
+  {
+    "skill_id": 2822,
+    "skill": "C#",
+    "aliases": [
+      "C Sharp",
+      "CSharp",
+      "C-Sharp",
+      "C# language"
+    ]
+  },
+  {
+    "skill_id": 2824,
+    "skill": "ASP.NET",
+    "aliases": [
+      "ASP .NET",
+      "ASPNET"
+    ]
+  },
+  {
+    "skill_id": 2853,
+    "skill": "using Jupyter Notebooks to program",
+    "aliases": [
+      "Jupyter",
+      "JupyterLab"
+    ]
+  },
+  {
+    "skill_id": 2863,
+    "skill": "Azure Functions",
+    "aliases": [
+      "Azure Function Apps"
+    ]
+  },
+  {
+    "skill_id": 2870,
+    "skill": "Frontend Development",
+    "aliases": [
+      "Front end development",
+      "Client-side development"
+    ]
+  },
+  {
+    "skill_id": 2906,
+    "skill": "PowerShell",
+    "aliases": [
+      "PowerShell scripting",
+      "PS scripting"
+    ]
+  },
+  {
+    "skill_id": 2914,
+    "skill": "Open AI API",
+    "aliases": [
+      "OpenAI API"
+    ]
+  },
+  {
+    "skill_id": 2923,
+    "skill": "Systems Analysis",
+    "aliases": [
+      "System analysis"
+    ]
+  },
+  {
+    "skill_id": 2937,
+    "skill": "Terraform",
+    "aliases": [
+      "HashiCorp Terraform",
+      "Terraform IaC"
+    ]
+  },
+  {
+    "skill_id": 2975,
+    "skill": "GitHub Actions",
+    "aliases": [
+      "GH Actions"
+    ]
+  },
+  {
+    "skill_id": 2982,
+    "skill": "Azure Active Directory",
+    "aliases": [
+      "Entra ID",
+      "AAD"
+    ]
+  },
+  {
+    "skill_id": 3023,
+    "skill": "Apache PySpark",
+    "aliases": [
+      "PySpark",
+      "Python Spark"
+    ]
+  },
+  {
+    "skill_id": 3162,
+    "skill": "NLP",
+    "aliases": [
+      "Computational linguistics"
+    ]
+  },
+  {
+    "skill_id": 3213,
+    "skill": "Business Intelligence (BI)",
+    "aliases": [
+      "BI"
+    ]
+  },
+  {
+    "skill_id": 3291,
+    "skill": "RSA (Cryptosystem)",
+    "aliases": [
+      "RSA encryption",
+      "RSA algorithm"
+    ]
+  },
+  {
+    "skill_id": 3307,
+    "skill": "AWS VPC",
+    "aliases": [
+      "Amazon VPC"
+    ]
+  },
+  {
+    "skill_id": 3308,
+    "skill": "AWS Solutions Architect",
+    "aliases": [
+      "AWS SAA",
+      "AWS Solutions Architect Associate",
+      "AWS Certified Solutions Architect"
+    ]
+  },
+  {
+    "skill_id": 3329,
+    "skill": "Xml",
+    "aliases": [
+      "Extensible Markup Language"
+    ]
+  },
+  {
+    "skill_id": 3338,
+    "skill": "Spring Data",
+    "aliases": [
+      "Spring Data JPA"
+    ]
+  },
+  {
+    "skill_id": 3349,
+    "skill": "React state hooks",
+    "aliases": [
+      "React Hooks"
+    ]
+  },
+  {
+    "skill_id": 3358,
+    "skill": "Microsoft Dataverse",
+    "aliases": [
+      "Dataverse",
+      "Common Data Service"
+    ]
+  },
+  {
+    "skill_id": 3417,
+    "skill": "COBOL coding",
+    "aliases": [
+      "COBOL",
+      "COBOL programming"
+    ]
+  },
+  {
+    "skill_id": 3430,
+    "skill": "Database Indexing",
+    "aliases": [
+      "DB indexing",
+      "SQL indexing"
+    ]
+  },
+  {
+    "skill_id": 3432,
+    "skill": "PostgreSQL",
+    "aliases": [
+      "Postgres",
+      "Postgre SQL",
+      "PSQL"
+    ]
+  },
+  {
+    "skill_id": 3490,
+    "skill": "User Experience (UX) Design",
+    "aliases": [
+      "UX design",
+      "UXD"
+    ]
+  },
+  {
+    "skill_id": 3527,
+    "skill": "Python Virtual Environments",
+    "aliases": [
+      "venv",
+      "virtualenv"
+    ]
+  },
+  {
+    "skill_id": 3544,
+    "skill": "Industrial Internet of Things (IIoT)",
+    "aliases": [
+      "IIoT",
+      "Industrial Internet of Things"
+    ]
+  },
+  {
+    "skill_id": 3550,
+    "skill": "Network Quality Of Service (QoS)",
+    "aliases": [
+      "QoS"
+    ]
+  },
+  {
+    "skill_id": 3557,
+    "skill": "Microcontroller Programming",
+    "aliases": [
+      "MCU programming"
+    ]
+  },
+  {
+    "skill_id": 3572,
+    "skill": "•\tWrite unit testing using Jest",
+    "aliases": [
+      "Jest",
+      "Jest testing"
+    ]
+  },
+  {
+    "skill_id": 3573,
+    "skill": "Kotlin",
+    "aliases": [
+      "Kotlin language",
+      "Kotlin programming"
+    ]
+  },
+  {
+    "skill_id": 3586,
+    "skill": "data analysis with STATA",
+    "aliases": [
+      "Stata"
+    ]
+  },
+  {
+    "skill_id": 3598,
+    "skill": "IP Security (IPSEC)",
+    "aliases": [
+      "IPsec"
+    ]
+  },
+  {
+    "skill_id": 3622,
+    "skill": "OLTP Databases",
+    "aliases": [
+      "OLTP"
+    ]
+  },
+  {
+    "skill_id": 3623,
+    "skill": "Express API",
+    "aliases": [
+      "ExpressJS"
+    ]
+  },
+  {
+    "skill_id": 3697,
+    "skill": "Spreadsheet Software",
+    "aliases": [
+      "Spreadsheets"
+    ]
+  },
+  {
+    "skill_id": 3722,
+    "skill": "Version Control Systems",
+    "aliases": [
+      "VCS"
+    ]
+  },
+  {
+    "skill_id": 3763,
+    "skill": "Cloud Service Models (IaaS, PaaS, SaaS)",
+    "aliases": [
+      "IaaS",
+      "PaaS"
+    ]
+  },
+  {
+    "skill_id": 3796,
+    "skill": "Wireless Network",
+    "aliases": [
+      "Wi-Fi networking"
+    ]
+  },
+  {
+    "skill_id": 3819,
+    "skill": "Git (Version Control System)",
+    "aliases": [
+      "Git",
+      "Git version control",
+      "Git CLI"
+    ]
+  },
+  {
+    "skill_id": 3870,
+    "skill": "Web Application Firewall (WAF)",
+    "aliases": [
+      "WAF"
+    ]
+  },
+  {
+    "skill_id": 3874,
+    "skill": ".NET MAUI (Multi-Platform App UI)",
+    "aliases": [
+      "MAUI"
+    ]
+  },
+  {
+    "skill_id": 3875,
+    "skill": "Mobile App Development",
+    "aliases": [
+      "Mobile application development"
+    ]
+  },
+  {
+    "skill_id": 3934,
+    "skill": "Azure Kubernetes Service",
+    "aliases": [
+      "AKS"
+    ]
+  },
+  {
+    "skill_id": 3943,
+    "skill": "Java Platform, Enterprise Edition",
+    "aliases": [
+      "Java EE",
+      "J2EE",
+      "Jakarta EE"
+    ]
+  },
+  {
+    "skill_id": 3952,
+    "skill": "Ruby programming",
+    "aliases": [
+      "Ruby",
+      "Ruby language"
+    ]
+  },
+  {
+    "skill_id": 3968,
+    "skill": "Cyber Threat Intelligence",
+    "aliases": [
+      "CTI"
+    ]
+  },
+  {
+    "skill_id": 3969,
+    "skill": "Cyber Threat Hunting",
+    "aliases": [
+      "Threat hunting"
+    ]
+  },
+  {
+    "skill_id": 4034,
+    "skill": "Pseudocode",
+    "aliases": [
+      "Pseudo code",
+      "Pseudo-code"
+    ]
+  },
+  {
+    "skill_id": 4062,
+    "skill": "React Jsx",
+    "aliases": [
+      "JSX"
+    ]
+  },
+  {
+    "skill_id": 4063,
+    "skill": "Tailwind CSS",
+    "aliases": [
+      "Tailwind",
+      "TailwindCSS"
+    ]
+  },
+  {
+    "skill_id": 4069,
+    "skill": "z systems",
+    "aliases": [
+      "IBM zSystems",
+      "Mainframe systems"
+    ]
+  },
+  {
+    "skill_id": 4072,
+    "skill": "Cross-Platform Mobile Development",
+    "aliases": [
+      "Cross-platform app development",
+      "Hybrid mobile development"
+    ]
+  },
+  {
+    "skill_id": 4073,
+    "skill": "Android Development",
+    "aliases": [
+      "Android app development",
+      "Android programming"
+    ]
+  },
+  {
+    "skill_id": 4108,
+    "skill": "General Data Protection Regulation (GDPR)",
+    "aliases": [
+      "GDPR"
+    ]
+  },
+  {
+    "skill_id": 4121,
+    "skill": "Cross-Site Scripting",
+    "aliases": [
+      "XSS"
+    ]
+  },
+  {
+    "skill_id": 4142,
+    "skill": "AIOps (Artificial Intelligence For IT Operations)",
+    "aliases": [
+      "AIOps"
+    ]
+  },
+  {
+    "skill_id": 4155,
+    "skill": "Integration Testing (I&T)",
+    "aliases": [
+      "Integration Testing"
+    ]
+  },
+  {
+    "skill_id": 4156,
+    "skill": "Manual Testing",
+    "aliases": [
+      "Manual QA"
+    ]
+  },
+  {
+    "skill_id": 4210,
+    "skill": "Subnetwork",
+    "aliases": [
+      "Subnets"
+    ]
+  },
+  {
+    "skill_id": 4219,
+    "skill": "BigQuery",
+    "aliases": [
+      "Google BigQuery",
+      "GCP BigQuery",
+      "BQ"
+    ]
+  },
+  {
+    "skill_id": 4225,
+    "skill": "Asynchronous programming",
+    "aliases": [
+      "Async programming"
+    ]
+  },
+  {
+    "skill_id": 4233,
+    "skill": "Julia (Programming Language)",
+    "aliases": [
+      "Julia",
+      "Julia language"
+    ]
+  },
+  {
+    "skill_id": 4318,
+    "skill": "Wi-Fi Security",
+    "aliases": [
+      "WiFi security"
+    ]
+  },
+  {
+    "skill_id": 4330,
+    "skill": "Certified in Cybersecurity (CC)",
+    "aliases": [
+      "ISC2 CC"
+    ]
+  },
+  {
+    "skill_id": 4379,
+    "skill": "TensorFlow Lite",
+    "aliases": [
+      "TFLite"
+    ]
+  },
+  {
+    "skill_id": 4381,
+    "skill": "API",
+    "aliases": [
+      "Application Programming Interface"
+    ]
+  },
+  {
+    "skill_id": 4417,
+    "skill": "Web Service",
+    "aliases": [
+      "Web services"
+    ]
+  },
+  {
+    "skill_id": 4418,
+    "skill": "Service-Oriented Architecture",
+    "aliases": [
+      "SOA"
+    ]
+  },
+  {
+    "skill_id": 4482,
+    "skill": "zero-trust architectures",
+    "aliases": [
+      "Zero Trust",
+      "ZTA",
+      "Zero-trust security"
+    ]
+  },
+  {
+    "skill_id": 4530,
+    "skill": "Information Technology (IT) Operations",
+    "aliases": [
+      "IT Ops",
+      "ITOps"
+    ]
+  },
+  {
+    "skill_id": 4549,
+    "skill": "Data Streaming",
+    "aliases": [
+      "Stream processing",
+      "Real-time data streaming"
+    ]
+  },
+  {
+    "skill_id": 4558,
+    "skill": "CompTIA Security+",
+    "aliases": [
+      "Security+",
+      "Sec+",
+      "Security Plus"
+    ]
+  },
+  {
+    "skill_id": 4575,
+    "skill": "Enterprise Data Warehouse(EDW)",
+    "aliases": [
+      "EDW"
+    ]
+  },
+  {
+    "skill_id": 4582,
+    "skill": "Typescript",
+    "aliases": [
+      "TS",
+      "TypeScript language"
+    ]
+  },
+  {
+    "skill_id": 4586,
+    "skill": "UI/UX Design",
+    "aliases": [
+      "UX/UI design",
+      "UI UX design",
+      "UI and UX design"
+    ]
+  },
+  {
+    "skill_id": 4589,
+    "skill": ".NET Framework",
+    "aliases": [
+      "Dot Net Framework"
+    ]
+  },
+  {
+    "skill_id": 4604,
+    "skill": "Vector Database",
+    "aliases": [
+      "Vector DB",
+      "Vector store"
+    ]
+  },
+  {
+    "skill_id": 4612,
+    "skill": "Scratch (Programming Language)",
+    "aliases": [
+      "Scratch",
+      "MIT Scratch"
+    ]
+  },
+  {
+    "skill_id": 4639,
+    "skill": "Data Lake",
+    "aliases": [
+      "Datalake"
+    ]
+  },
+  {
+    "skill_id": 4640,
+    "skill": "Data Factory",
+    "aliases": [
+      "Azure Data Factory",
+      "ADF"
+    ]
+  },
+  {
+    "skill_id": 4653,
+    "skill": "Redux",
+    "aliases": [
+      "Redux.js",
+      "Redux Toolkit"
+    ]
+  },
+  {
+    "skill_id": 4661,
+    "skill": "Content Delivery Networks",
+    "aliases": [
+      "CDN",
+      "CDNs"
+    ]
+  },
+  {
+    "skill_id": 4676,
+    "skill": "Natural Language Toolkit (NLTK)",
+    "aliases": [
+      "NLTK"
+    ]
+  },
+  {
+    "skill_id": 4728,
+    "skill": "Amazon Cloudfront",
+    "aliases": [
+      "CloudFront",
+      "AWS CloudFront"
+    ]
+  },
+  {
+    "skill_id": 4783,
+    "skill": "AWS Elastic MapReduce (EMR)",
+    "aliases": [
+      "Elastic MapReduce"
+    ]
+  },
+  {
+    "skill_id": 4785,
+    "skill": "AWS CloudTrail",
+    "aliases": [
+      "CloudTrail"
+    ]
+  },
+  {
+    "skill_id": 4804,
+    "skill": "AWS IAM",
+    "aliases": [
+      "Amazon IAM"
+    ]
+  },
+  {
+    "skill_id": 4807,
+    "skill": "AWS KMS",
+    "aliases": [
+      "AWS Key Management Service"
+    ]
+  },
+  {
+    "skill_id": 4809,
+    "skill": "Neural Networks",
+    "aliases": [
+      "ANN",
+      "NN"
+    ]
+  },
+  {
+    "skill_id": 4811,
+    "skill": "Convolutional Neural Networks",
+    "aliases": [
+      "ConvNets"
+    ]
+  },
+  {
+    "skill_id": 5005,
+    "skill": "Security Information And Event Management (SIEM)",
+    "aliases": [
+      "SIEM"
+    ]
+  },
+  {
+    "skill_id": 5029,
+    "skill": "Database Optimization",
+    "aliases": [
+      "Query optimization",
+      "SQL performance tuning"
+    ]
+  },
+  {
+    "skill_id": 5055,
+    "skill": "Tableau",
+    "aliases": [
+      "Tableau Desktop",
+      "Tableau Public"
+    ]
+  },
+  {
+    "skill_id": 5070,
+    "skill": "AWS CloudFormation",
+    "aliases": [
+      "CloudFormation",
+      "CFN"
+    ]
+  },
+  {
+    "skill_id": 5071,
+    "skill": "Event-driven architectures",
+    "aliases": [
+      "Event-driven architecture",
+      "event-driven design"
+    ]
+  },
+  {
+    "skill_id": 5072,
+    "skill": "AWS Cognito",
+    "aliases": [
+      "Amazon Cognito",
+      "Cognito"
+    ]
+  },
+  {
+    "skill_id": 5083,
+    "skill": "Virtual Reality (VR) and Augmented Reality (AR)",
+    "aliases": [
+      "AR/VR",
+      "XR"
+    ]
+  },
+  {
+    "skill_id": 5086,
+    "skill": "Back End (Software Engineering)",
+    "aliases": [
+      "Backend development",
+      "Server-side development",
+      "Backend engineering"
+    ]
+  },
+  {
+    "skill_id": 5109,
+    "skill": "Data Cleaning",
+    "aliases": [
+      "Data scrubbing"
+    ]
+  },
+  {
+    "skill_id": 5145,
+    "skill": "Azure CosmosDB",
+    "aliases": [
+      "Cosmos DB",
+      "Azure Cosmos DB"
+    ]
+  },
+  {
+    "skill_id": 5232,
+    "skill": "Ruby on Rails",
+    "aliases": [
+      "Rails",
+      "RoR",
+      "Rails framework"
+    ]
+  },
+  {
+    "skill_id": 5242,
+    "skill": "Writing Code in Verilog",
+    "aliases": [
+      "Verilog",
+      "Verilog HDL"
+    ]
+  },
+  {
+    "skill_id": 5244,
+    "skill": "AWS RDS",
+    "aliases": [
+      "RDS",
+      "Amazon RDS",
+      "Amazon Relational Database Service"
+    ]
+  },
+  {
+    "skill_id": 5245,
+    "skill": "Simple Linux Utility for Resource Management (SLURM) Workload Manager",
+    "aliases": [
+      "SLURM"
+    ]
+  },
+  {
+    "skill_id": 5264,
+    "skill": "Qlik Sense (Data Analytics Software)",
+    "aliases": [
+      "Qlik"
+    ]
+  },
+  {
+    "skill_id": 5353,
+    "skill": "aws bedrock",
+    "aliases": [
+      "Amazon Bedrock"
+    ]
+  },
+  {
+    "skill_id": 5355,
+    "skill": "Network Switches",
+    "aliases": [
+      "Network switching"
+    ]
+  },
+  {
+    "skill_id": 5356,
+    "skill": "Asynchronous Javascript",
+    "aliases": [
+      "Async JavaScript",
+      "JavaScript async/await"
+    ]
+  },
+  {
+    "skill_id": 5357,
+    "skill": "Cloud Firestore",
+    "aliases": [
+      "Firestore"
+    ]
+  },
+  {
+    "skill_id": 5397,
+    "skill": "Information Security",
+    "aliases": [
+      "InfoSec"
+    ]
+  },
+  {
+    "skill_id": 5578,
+    "skill": "Data Marts",
+    "aliases": [
+      "Data mart"
+    ]
+  },
+  {
+    "skill_id": 5615,
+    "skill": "MLOps (Machine Learning Operations)",
+    "aliases": [
+      "ML Ops",
+      "Machine Learning Operations"
+    ]
+  },
+  {
+    "skill_id": 5681,
+    "skill": "Information Technology (IT) Support",
+    "aliases": [
+      "IT helpdesk",
+      "Help desk"
+    ]
+  },
+  {
+    "skill_id": 5701,
+    "skill": "Embedded C",
+    "aliases": [
+      "Embedded C language",
+      "C for embedded systems"
+    ]
+  },
+  {
+    "skill_id": 5704,
+    "skill": "Helm management in Kubernetes",
+    "aliases": [
+      "Helm",
+      "Helm charts"
+    ]
+  },
+  {
+    "skill_id": 5729,
+    "skill": "CSS",
+    "aliases": [
+      "CSS3",
+      "CSS 3",
+      "Cascading Style Sheet"
+    ]
+  },
+  {
+    "skill_id": 5752,
+    "skill": "Enterprise Resource Planning (ERP)",
+    "aliases": [
+      "ERP",
+      "ERP systems"
+    ]
+  },
+  {
+    "skill_id": 5753,
+    "skill": "Cloud Spanner",
+    "aliases": [
+      "Spanner",
+      "Google Spanner"
+    ]
+  },
+  {
+    "skill_id": 5755,
+    "skill": "Cloud SQL",
+    "aliases": [
+      "Google Cloud SQL"
+    ]
+  },
+  {
+    "skill_id": 5756,
+    "skill": "Cloud BigTable",
+    "aliases": [
+      "Google Bigtable"
+    ]
+  },
+  {
+    "skill_id": 5786,
+    "skill": "Cross-Site Scripting Forgery (CSRF)",
+    "aliases": [
+      "CSRF",
+      "XSRF"
+    ]
+  },
+  {
+    "skill_id": 5809,
+    "skill": "K-Nearest Neighbors Algorithm (K-NN)",
+    "aliases": [
+      "k-NN",
+      "K nearest neighbours"
+    ]
+  },
+  {
+    "skill_id": 5870,
+    "skill": "Web Accessibility",
+    "aliases": [
+      "a11y",
+      "WCAG"
+    ]
+  },
+  {
+    "skill_id": 1630,
+    "skill": "Apache Airflow",
+    "aliases": [
+      "Airflow"
+    ]
+  },
+  {
+    "skill_id": 262,
+    "skill": "Large Language Models",
+    "aliases": [
+      "LLM"
+    ]
+  },
+  {
+    "skill_id": 704,
+    "skill": "Retrieval Augmented Generation",
+    "aliases": [
+      "RAG"
+    ]
+  },
+  {
+    "skill_id": 3624,
+    "skill": "JWT Authentication",
+    "aliases": [
+      "JWT",
+      "JSON Web Token"
+    ]
+  },
+  {
+    "skill_id": 2102,
+    "skill": "Oauth",
+    "aliases": [
+      "OAuth 2.0",
+      "OAuth2"
+    ]
+  },
+  {
+    "skill_id": 3199,
+    "skill": "Amazon S3 Buckets",
+    "aliases": [
+      "S3",
+      "AWS S3"
+    ]
+  },
+  {
+    "skill_id": 495,
+    "skill": "Amazon Aurora",
+    "aliases": [
+      "Aurora Global Database",
+      "AWS Aurora"
+    ]
+  },
+  {
+    "skill_id": 5894,
+    "skill": "Vue.js",
+    "aliases": [
+      "Vue",
+      "VueJS",
+      "Vue 3"
+    ]
+  },
+  {
+    "skill_id": 5895,
+    "skill": "Nuxt.js",
+    "aliases": [
+      "Nuxt"
+    ]
+  },
+  {
+    "skill_id": 5896,
+    "skill": "Next.js",
+    "aliases": [
+      "NextJS"
+    ]
+  },
+  {
+    "skill_id": 5903,
+    "skill": "Shopify Liquid",
+    "aliases": [
+      "Liquid"
+    ]
+  },
+  {
+    "skill_id": 5912,
+    "skill": "HTML5 Canvas",
+    "aliases": [
+      "Canvas",
+      "Canvas API"
+    ]
+  },
+  {
+    "skill_id": 5917,
+    "skill": "Nx (Monorepo)",
+    "aliases": [
+      "Nx"
+    ]
+  },
+  {
+    "skill_id": 5918,
+    "skill": "Chrome Extension Development",
+    "aliases": [
+      "Chrome extension",
+      "Chrome Extensions API",
+      "Chrome extensions"
+    ]
+  },
+  {
+    "skill_id": 5920,
+    "skill": "Socket.IO",
+    "aliases": [
+      "SocketIO"
+    ]
+  },
+  {
+    "skill_id": 5921,
+    "skill": "WebSockets",
+    "aliases": [
+      "WebSocket",
+      "redis websockets"
+    ]
+  },
+  {
+    "skill_id": 5925,
+    "skill": "Render (Cloud Platform)",
+    "aliases": [
+      "Render"
+    ]
+  },
+  {
+    "skill_id": 5928,
+    "skill": "Kotlin Multiplatform",
+    "aliases": [
+      "KMP",
+      "Kotlin Multiplatform Mobile"
+    ]
+  },
+  {
+    "skill_id": 5931,
+    "skill": "BLoC Pattern",
+    "aliases": [
+      "Bloc",
+      "Flutter Bloc"
+    ]
+  },
+  {
+    "skill_id": 5933,
+    "skill": "Combine Framework",
+    "aliases": [
+      "Combine"
+    ]
+  },
+  {
+    "skill_id": 5938,
+    "skill": "Room (Android)",
+    "aliases": [
+      "Room",
+      "Room database"
+    ]
+  },
+  {
+    "skill_id": 5946,
+    "skill": "Redis",
+    "aliases": [
+      "redis pubsub",
+      "Redis Pub/Sub"
+    ]
+  },
+  {
+    "skill_id": 5954,
+    "skill": "Telegram Bot API",
+    "aliases": [
+      "Telegram",
+      "Telegram bot"
+    ]
+  },
+  {
+    "skill_id": 5955,
+    "skill": "Slack API",
+    "aliases": [
+      "Slack"
+    ]
+  },
+  {
+    "skill_id": 5953,
+    "skill": "Zalo API",
+    "aliases": [
+      "Zalo"
+    ]
+  },
+  {
+    "skill_id": 5961,
+    "skill": "Glide (No-Code)",
+    "aliases": [
+      "Glide"
+    ]
+  },
+  {
+    "skill_id": 5962,
+    "skill": "Bubble (No-Code)",
+    "aliases": [
+      "Bubble"
+    ]
+  },
+  {
+    "skill_id": 5968,
+    "skill": "Prophet (Forecasting)",
+    "aliases": [
+      "Prophet",
+      "Facebook Prophet"
+    ]
+  },
+  {
+    "skill_id": 5973,
+    "skill": "Feast (Feature Store)",
+    "aliases": [
+      "Feast"
+    ]
+  },
+  {
+    "skill_id": 5978,
+    "skill": "dbt (Data Build Tool)",
+    "aliases": [
+      "dbt",
+      "data build tool"
+    ]
+  },
+  {
+    "skill_id": 5984,
+    "skill": "Apache Flink",
+    "aliases": [
+      "Flink"
+    ]
+  },
+  {
+    "skill_id": 5985,
+    "skill": "Apache Iceberg",
+    "aliases": [
+      "Iceberg"
+    ]
+  },
+  {
+    "skill_id": 5988,
+    "skill": "Apache Superset",
+    "aliases": [
+      "Superset"
+    ]
+  },
+  {
+    "skill_id": 5990,
+    "skill": "Cube (Semantic Layer)",
+    "aliases": [
+      "Cube",
+      "Cube.js"
+    ]
+  },
+  {
+    "skill_id": 5992,
+    "skill": "Azure Synapse Analytics",
+    "aliases": [
+      "Synapse",
+      "Azure Synapse"
+    ]
+  },
+  {
+    "skill_id": 6003,
+    "skill": "Service Level Objectives (SLO)",
+    "aliases": [
+      "SLO design",
+      "SLOs"
+    ]
+  },
+  {
+    "skill_id": 6012,
+    "skill": "Fortinet FortiGate",
+    "aliases": [
+      "Fortinet",
+      "FortiGate"
+    ]
+  },
+  {
+    "skill_id": 6013,
+    "skill": "Palo Alto Networks Firewall",
+    "aliases": [
+      "Palo Alto",
+      "Palo Alto Networks"
+    ]
+  },
+  {
+    "skill_id": 6019,
+    "skill": "Yocto Project",
+    "aliases": [
+      "Yocto"
+    ]
+  },
+  {
+    "skill_id": 6022,
+    "skill": "Photon Engine",
+    "aliases": [
+      "Photon",
+      "Photon PUN"
+    ]
+  },
+  {
+    "skill_id": 6023,
+    "skill": "Unity Netcode",
+    "aliases": [
+      "Netcode",
+      "Netcode for GameObjects"
+    ]
+  },
+  {
+    "skill_id": 6024,
+    "skill": "Houdini (3D Software)",
+    "aliases": [
+      "Houdini"
+    ]
+  },
+  {
+    "skill_id": 5949,
+    "skill": "Kong Gateway",
+    "aliases": [
+      "Kong"
+    ]
+  },
+  {
+    "skill_id": 6031,
+    "skill": "Lightning Web Components",
+    "aliases": [
+      "LWC"
+    ]
+  },
+  {
+    "skill_id": 6032,
+    "skill": "Apex (Salesforce)",
+    "aliases": [
+      "Apex"
+    ]
+  },
+  {
+    "skill_id": 6027,
+    "skill": "Domain-Driven Design",
+    "aliases": [
+      "DDD"
+    ]
+  },
+  {
+    "skill_id": 5998,
+    "skill": "Kubernetes Operators",
+    "aliases": [
+      "K8s operators"
+    ]
+  },
+  {
+    "skill_id": 6010,
+    "skill": "GitLab",
+    "aliases": [
+      "GitLab CI"
+    ]
+  }
+]

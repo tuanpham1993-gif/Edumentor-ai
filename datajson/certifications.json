@@ -1,0 +1,999 @@
+[
+  {
+    "cert_id": 1,
+    "name": "ACCA",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 2,
+    "name": "ArchiMate 3 Practitioner",
+    "issuer": "The Open Group",
+    "aliases": []
+  },
+  {
+    "cert_id": 3,
+    "name": "Autodesk Certified Professional",
+    "issuer": "Autodesk",
+    "aliases": []
+  },
+  {
+    "cert_id": 4,
+    "name": "Autodesk Revit Certified Professional",
+    "issuer": "Autodesk",
+    "aliases": []
+  },
+  {
+    "cert_id": 5,
+    "name": "AWS Certified Advanced Networking - Specialty",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 6,
+    "name": "AWS Certified Cloud Practitioner",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 7,
+    "name": "AWS Certified Data Analytics - Specialty",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 8,
+    "name": "AWS Certified Data Engineer - Associate",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 9,
+    "name": "AWS Certified Developer - Associate",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 10,
+    "name": "AWS Certified DevOps Engineer - Professional",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 11,
+    "name": "AWS Certified Machine Learning - Specialty",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 12,
+    "name": "AWS Certified Security - Specialty",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 13,
+    "name": "AWS Certified Solutions Architect - Associate",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 14,
+    "name": "AWS Certified Solutions Architect - Professional",
+    "issuer": "Amazon Web Services",
+    "aliases": [
+      "AWS Solutions Architect Professional"
+    ]
+  },
+  {
+    "cert_id": 15,
+    "name": "AWS Certified SysOps Administrator - Associate",
+    "issuer": "Amazon Web Services",
+    "aliases": []
+  },
+  {
+    "cert_id": 16,
+    "name": "Azure Data Scientist Associate",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 17,
+    "name": "CBAP",
+    "issuer": "IIBA",
+    "aliases": []
+  },
+  {
+    "cert_id": 18,
+    "name": "CCIE Enterprise Infrastructure",
+    "issuer": "Cisco",
+    "aliases": []
+  },
+  {
+    "cert_id": 19,
+    "name": "CCIE Security",
+    "issuer": "Cisco",
+    "aliases": []
+  },
+  {
+    "cert_id": 20,
+    "name": "CCIE Service Provider",
+    "issuer": "Cisco",
+    "aliases": []
+  },
+  {
+    "cert_id": 21,
+    "name": "CCNP Data Center",
+    "issuer": "Cisco",
+    "aliases": []
+  },
+  {
+    "cert_id": 22,
+    "name": "CCNP Enterprise",
+    "issuer": "Cisco",
+    "aliases": []
+  },
+  {
+    "cert_id": 23,
+    "name": "CCNP Security",
+    "issuer": "Cisco",
+    "aliases": []
+  },
+  {
+    "cert_id": 24,
+    "name": "CCSP",
+    "issuer": "ISC2",
+    "aliases": []
+  },
+  {
+    "cert_id": 25,
+    "name": "CDMP",
+    "issuer": "DAMA",
+    "aliases": []
+  },
+  {
+    "cert_id": 26,
+    "name": "CEH",
+    "issuer": "EC-Council",
+    "aliases": []
+  },
+  {
+    "cert_id": 27,
+    "name": "Certified Information Privacy Technologist (CIPT)",
+    "issuer": "IAPP",
+    "aliases": []
+  },
+  {
+    "cert_id": 28,
+    "name": "Certified Kubernetes Administrator (CKA)",
+    "issuer": "CNCF / Linux Foundation",
+    "aliases": [
+      "CKA",
+      "Certified Kubernetes Administrator"
+    ]
+  },
+  {
+    "cert_id": 29,
+    "name": "Certified Kubernetes Application Developer (CKAD)",
+    "issuer": "CNCF / Linux Foundation",
+    "aliases": [
+      "CKAD",
+      "Certified Kubernetes Application Developer"
+    ]
+  },
+  {
+    "cert_id": 30,
+    "name": "Certified Kubernetes Security Specialist (CKS)",
+    "issuer": "CNCF / Linux Foundation",
+    "aliases": [
+      "CKS"
+    ]
+  },
+  {
+    "cert_id": 31,
+    "name": "Certified ScrumMaster (CSM)",
+    "issuer": "Scrum.org",
+    "aliases": [
+      "CSM",
+      "Certified ScrumMaster"
+    ]
+  },
+  {
+    "cert_id": 32,
+    "name": "CIPP/E",
+    "issuer": "IAPP",
+    "aliases": []
+  },
+  {
+    "cert_id": 33,
+    "name": "CISA",
+    "issuer": "ISACA",
+    "aliases": []
+  },
+  {
+    "cert_id": 34,
+    "name": "Cisco CCNA",
+    "issuer": "Cisco",
+    "aliases": [
+      "CCNA"
+    ]
+  },
+  {
+    "cert_id": 35,
+    "name": "CISM",
+    "issuer": "ISACA",
+    "aliases": []
+  },
+  {
+    "cert_id": 36,
+    "name": "CISSP",
+    "issuer": "ISC2",
+    "aliases": []
+  },
+  {
+    "cert_id": 37,
+    "name": "CISSP-ISSAP",
+    "issuer": "ISC2",
+    "aliases": []
+  },
+  {
+    "cert_id": 38,
+    "name": "Collibra Data Governance",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 39,
+    "name": "CompTIA A+",
+    "issuer": "CompTIA",
+    "aliases": []
+  },
+  {
+    "cert_id": 40,
+    "name": "CompTIA CySA+",
+    "issuer": "CompTIA",
+    "aliases": []
+  },
+  {
+    "cert_id": 41,
+    "name": "CompTIA ITF+",
+    "issuer": "CompTIA",
+    "aliases": []
+  },
+  {
+    "cert_id": 42,
+    "name": "CompTIA Network+",
+    "issuer": "CompTIA",
+    "aliases": []
+  },
+  {
+    "cert_id": 43,
+    "name": "CompTIA Security+",
+    "issuer": "CompTIA",
+    "aliases": []
+  },
+  {
+    "cert_id": 44,
+    "name": "Confluent Certified Developer for Apache Kafka",
+    "issuer": "Confluent",
+    "aliases": []
+  },
+  {
+    "cert_id": 45,
+    "name": "CRISC",
+    "issuer": "ISACA",
+    "aliases": []
+  },
+  {
+    "cert_id": 46,
+    "name": "Databricks Certified Data Analyst Associate",
+    "issuer": "Databricks",
+    "aliases": []
+  },
+  {
+    "cert_id": 47,
+    "name": "Databricks Certified Data Engineer Associate",
+    "issuer": "Databricks",
+    "aliases": []
+  },
+  {
+    "cert_id": 48,
+    "name": "Databricks Certified Data Engineer Professional",
+    "issuer": "Databricks",
+    "aliases": []
+  },
+  {
+    "cert_id": 49,
+    "name": "dbt Analytics Engineering Certification",
+    "issuer": "dbt Labs",
+    "aliases": [
+      "dbt Analytics Engineering"
+    ]
+  },
+  {
+    "cert_id": 50,
+    "name": "Docker Certified Associate",
+    "issuer": "Docker",
+    "aliases": []
+  },
+  {
+    "cert_id": 51,
+    "name": "DP-600 Fabric Analytics Engineer",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 52,
+    "name": "eJPT",
+    "issuer": "INE",
+    "aliases": []
+  },
+  {
+    "cert_id": 53,
+    "name": "Esri ArcGIS Developer Associate",
+    "issuer": "Esri",
+    "aliases": []
+  },
+  {
+    "cert_id": 54,
+    "name": "Fortinet NSE 4",
+    "issuer": "Fortinet",
+    "aliases": []
+  },
+  {
+    "cert_id": 55,
+    "name": "freeCodeCamp JavaScript Algorithms and Data Structures",
+    "issuer": "freeCodeCamp",
+    "aliases": []
+  },
+  {
+    "cert_id": 56,
+    "name": "freeCodeCamp Responsive Web Design",
+    "issuer": "freeCodeCamp",
+    "aliases": []
+  },
+  {
+    "cert_id": 57,
+    "name": "GIAC GCIH",
+    "issuer": "GIAC",
+    "aliases": [
+      "GCIH"
+    ]
+  },
+  {
+    "cert_id": 58,
+    "name": "Google Advanced Data Analytics",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 59,
+    "name": "Google Analytics Individual Qualification",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 60,
+    "name": "Google Associate Android Developer",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 61,
+    "name": "Google Associate Cloud Engineer",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 62,
+    "name": "Google Cybersecurity Professional Certificate",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 63,
+    "name": "Google Data Analytics Professional Certificate",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 64,
+    "name": "Google Digital Marketing & E-commerce",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 65,
+    "name": "Google IT Automation with Python Professional Certificate",
+    "issuer": "Google",
+    "aliases": [
+      "Google IT Automation with Python"
+    ]
+  },
+  {
+    "cert_id": 66,
+    "name": "Google IT Support Professional Certificate",
+    "issuer": "Google",
+    "aliases": [
+      "Google IT Support"
+    ]
+  },
+  {
+    "cert_id": 67,
+    "name": "Google Professional Cloud Architect",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 68,
+    "name": "Google Professional Cloud DevOps Engineer",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 69,
+    "name": "Google Professional Cloud Security Engineer",
+    "issuer": "Google",
+    "aliases": [
+      "Professional Cloud Security Engineer"
+    ]
+  },
+  {
+    "cert_id": 70,
+    "name": "Google Professional Data Engineer",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 71,
+    "name": "Google Professional Machine Learning Engineer",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 72,
+    "name": "Google Project Management Professional Certificate",
+    "issuer": "Google",
+    "aliases": [
+      "Google Project Management"
+    ]
+  },
+  {
+    "cert_id": 73,
+    "name": "Google UX Design Professional Certificate",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 74,
+    "name": "HashiCorp Terraform Associate",
+    "issuer": "HashiCorp",
+    "aliases": [
+      "Terraform Associate"
+    ]
+  },
+  {
+    "cert_id": 75,
+    "name": "IBM Data Science Professional Certificate",
+    "issuer": "IBM",
+    "aliases": []
+  },
+  {
+    "cert_id": 76,
+    "name": "IC3",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 77,
+    "name": "ICDL",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 78,
+    "name": "IELTS 7.0",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 79,
+    "name": "IIBA ECBA",
+    "issuer": "IIBA",
+    "aliases": [
+      "ECBA"
+    ]
+  },
+  {
+    "cert_id": 80,
+    "name": "ISC2 Certified in Cybersecurity (CC)",
+    "issuer": "ISC2",
+    "aliases": [
+      "ISC2 Certified in Cybersecurity"
+    ]
+  },
+  {
+    "cert_id": 81,
+    "name": "ISO 13485 Lead Auditor",
+    "issuer": "ISO-accredited bodies",
+    "aliases": []
+  },
+  {
+    "cert_id": 82,
+    "name": "ISO 27001 Lead Auditor",
+    "issuer": "ISO-accredited bodies",
+    "aliases": []
+  },
+  {
+    "cert_id": 83,
+    "name": "ISO 27001 Lead Implementer",
+    "issuer": "ISO-accredited bodies",
+    "aliases": []
+  },
+  {
+    "cert_id": 84,
+    "name": "ISTQB Advanced Technical Test Analyst",
+    "issuer": "ISTQB",
+    "aliases": []
+  },
+  {
+    "cert_id": 85,
+    "name": "ISTQB Advanced Test Analyst",
+    "issuer": "ISTQB",
+    "aliases": []
+  },
+  {
+    "cert_id": 86,
+    "name": "ISTQB Advanced Test Automation Engineer",
+    "issuer": "ISTQB",
+    "aliases": []
+  },
+  {
+    "cert_id": 87,
+    "name": "ISTQB Advanced Test Manager",
+    "issuer": "ISTQB",
+    "aliases": []
+  },
+  {
+    "cert_id": 88,
+    "name": "ISTQB Foundation Level",
+    "issuer": "ISTQB",
+    "aliases": []
+  },
+  {
+    "cert_id": 89,
+    "name": "ITIL 4 Foundation",
+    "issuer": "AXELOS / PeopleCert",
+    "aliases": [
+      "ITIL 4"
+    ]
+  },
+  {
+    "cert_id": 90,
+    "name": "ITIL 4 Managing Professional",
+    "issuer": "AXELOS / PeopleCert",
+    "aliases": []
+  },
+  {
+    "cert_id": 91,
+    "name": "JLPT N1",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 92,
+    "name": "JLPT N2",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 93,
+    "name": "Juniper JNCIA-Junos",
+    "issuer": "Juniper",
+    "aliases": []
+  },
+  {
+    "cert_id": 94,
+    "name": "Kubernetes and Cloud Native Associate (KCNA)",
+    "issuer": "CNCF / Linux Foundation",
+    "aliases": []
+  },
+  {
+    "cert_id": 95,
+    "name": "Lightbend Reactive Architecture",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 96,
+    "name": "Linux Foundation LFCA",
+    "issuer": "Linux Foundation",
+    "aliases": []
+  },
+  {
+    "cert_id": 97,
+    "name": "Linux Foundation LFCS",
+    "issuer": "Linux Foundation",
+    "aliases": []
+  },
+  {
+    "cert_id": 98,
+    "name": "MB-210",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 99,
+    "name": "Meta Front-End Developer Professional Certificate",
+    "issuer": "Meta",
+    "aliases": []
+  },
+  {
+    "cert_id": 100,
+    "name": "Microsoft 365 Certified: Enterprise Administrator Expert",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 101,
+    "name": "Microsoft 365 Certified: Modern Desktop Administrator Associate",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 102,
+    "name": "Microsoft 365 Fundamentals",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 103,
+    "name": "Microsoft Azure Data Fundamentals (DP-900)",
+    "issuer": "Microsoft",
+    "aliases": [
+      "Microsoft Certified: Azure Data Fundamentals"
+    ]
+  },
+  {
+    "cert_id": 104,
+    "name": "Microsoft Azure Fundamentals (AZ-900)",
+    "issuer": "Microsoft",
+    "aliases": [
+      "AZ-900",
+      "Microsoft Azure Fundamentals"
+    ]
+  },
+  {
+    "cert_id": 105,
+    "name": "Microsoft Certified Educator",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 106,
+    "name": "Microsoft Certified: Azure Administrator Associate (AZ-104)",
+    "issuer": "Microsoft",
+    "aliases": [
+      "AZ-104",
+      "AZ-104 Azure Administrator",
+      "Azure Administrator Associate (AZ-104)",
+      "Microsoft Azure Administrator Associate"
+    ]
+  },
+  {
+    "cert_id": 107,
+    "name": "Microsoft Certified: Azure AI Engineer Associate",
+    "issuer": "Microsoft",
+    "aliases": [
+      "Azure AI Engineer Associate"
+    ]
+  },
+  {
+    "cert_id": 108,
+    "name": "Microsoft Certified: Azure Data Engineer Associate (DP-203)",
+    "issuer": "Microsoft",
+    "aliases": [
+      "Azure Data Engineer Associate (DP-203)",
+      "DP-203"
+    ]
+  },
+  {
+    "cert_id": 109,
+    "name": "Microsoft Certified: Azure Developer Associate",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 110,
+    "name": "Microsoft Certified: Azure Solutions Architect Expert",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 111,
+    "name": "Microsoft Certified: Power BI Data Analyst Associate (PL-300)",
+    "issuer": "Microsoft",
+    "aliases": [
+      "Microsoft Certified: Power BI Data Analyst Associate",
+      "Microsoft PL-300",
+      "Microsoft PL-300 Power BI Data Analyst",
+      "Microsoft Power BI Data Analyst (PL-300)",
+      "PL-300"
+    ]
+  },
+  {
+    "cert_id": 112,
+    "name": "Microsoft Excel Expert",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 113,
+    "name": "Microsoft Power Platform Fundamentals",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 114,
+    "name": "Microsoft SC-200",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 115,
+    "name": "MOS Excel",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 116,
+    "name": "MOS Expert",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 117,
+    "name": "MOS Word",
+    "issuer": "Microsoft",
+    "aliases": []
+  },
+  {
+    "cert_id": 118,
+    "name": "NN/g UX Certification",
+    "issuer": "Nielsen Norman Group",
+    "aliases": []
+  },
+  {
+    "cert_id": 119,
+    "name": "Oracle Certified Professional Java SE 11",
+    "issuer": "Oracle",
+    "aliases": []
+  },
+  {
+    "cert_id": 120,
+    "name": "Oracle Certified Professional Java SE 17",
+    "issuer": "Oracle",
+    "aliases": []
+  },
+  {
+    "cert_id": 121,
+    "name": "Oracle Database Administrator Certified Professional",
+    "issuer": "Oracle",
+    "aliases": []
+  },
+  {
+    "cert_id": 122,
+    "name": "OSCP",
+    "issuer": "OffSec",
+    "aliases": []
+  },
+  {
+    "cert_id": 123,
+    "name": "OSEP",
+    "issuer": "OffSec",
+    "aliases": []
+  },
+  {
+    "cert_id": 124,
+    "name": "PMI CAPM",
+    "issuer": "PMI",
+    "aliases": []
+  },
+  {
+    "cert_id": 125,
+    "name": "PMI-ACP",
+    "issuer": "PMI",
+    "aliases": []
+  },
+  {
+    "cert_id": 126,
+    "name": "PMI-RMP",
+    "issuer": "PMI",
+    "aliases": []
+  },
+  {
+    "cert_id": 127,
+    "name": "PMP",
+    "issuer": "PMI",
+    "aliases": []
+  },
+  {
+    "cert_id": 128,
+    "name": "Pragmatic Institute PMC-I",
+    "issuer": "Pragmatic Institute",
+    "aliases": []
+  },
+  {
+    "cert_id": 129,
+    "name": "Pragmatic Institute PMC-III",
+    "issuer": "Pragmatic Institute",
+    "aliases": []
+  },
+  {
+    "cert_id": 130,
+    "name": "PRINCE2 Practitioner",
+    "issuer": "AXELOS / PeopleCert",
+    "aliases": []
+  },
+  {
+    "cert_id": 131,
+    "name": "Professional Scrum Master I (PSM I)",
+    "issuer": "Scrum.org",
+    "aliases": [
+      "PSM I",
+      "Professional Scrum Master I"
+    ]
+  },
+  {
+    "cert_id": 132,
+    "name": "Professional Scrum Master II",
+    "issuer": "Scrum.org",
+    "aliases": []
+  },
+  {
+    "cert_id": 133,
+    "name": "Professional Scrum Product Owner I",
+    "issuer": "Scrum.org",
+    "aliases": []
+  },
+  {
+    "cert_id": 134,
+    "name": "Professional Scrum Product Owner II",
+    "issuer": "Scrum.org",
+    "aliases": []
+  },
+  {
+    "cert_id": 135,
+    "name": "Red Hat Certified Architect",
+    "issuer": "Red Hat",
+    "aliases": []
+  },
+  {
+    "cert_id": 136,
+    "name": "Red Hat Certified Engineer",
+    "issuer": "Red Hat",
+    "aliases": []
+  },
+  {
+    "cert_id": 137,
+    "name": "SAFe Agilist",
+    "issuer": "Scaled Agile",
+    "aliases": []
+  },
+  {
+    "cert_id": 138,
+    "name": "SAFe POPM",
+    "issuer": "Scaled Agile",
+    "aliases": []
+  },
+  {
+    "cert_id": 139,
+    "name": "SAFe Program Consultant",
+    "issuer": "Scaled Agile",
+    "aliases": []
+  },
+  {
+    "cert_id": 140,
+    "name": "Salesforce Certified Administrator",
+    "issuer": "Salesforce",
+    "aliases": []
+  },
+  {
+    "cert_id": 141,
+    "name": "Salesforce Certified Platform App Builder",
+    "issuer": "Salesforce",
+    "aliases": []
+  },
+  {
+    "cert_id": 142,
+    "name": "Salesforce Platform Developer I",
+    "issuer": "Salesforce",
+    "aliases": []
+  },
+  {
+    "cert_id": 143,
+    "name": "Salesforce Platform Developer II",
+    "issuer": "Salesforce",
+    "aliases": []
+  },
+  {
+    "cert_id": 144,
+    "name": "SAP Certified Application Associate - S/4HANA Financial Accounting",
+    "issuer": "SAP",
+    "aliases": []
+  },
+  {
+    "cert_id": 145,
+    "name": "SAP Certified Associate - SAP S/4HANA Sourcing and Procurement",
+    "issuer": "SAP",
+    "aliases": []
+  },
+  {
+    "cert_id": 146,
+    "name": "SAP Certified Technology Associate - SAP HANA",
+    "issuer": "SAP",
+    "aliases": []
+  },
+  {
+    "cert_id": 147,
+    "name": "SnowPro Core",
+    "issuer": "Snowflake",
+    "aliases": []
+  },
+  {
+    "cert_id": 148,
+    "name": "Tableau Desktop Specialist",
+    "issuer": "Tableau",
+    "aliases": []
+  },
+  {
+    "cert_id": 149,
+    "name": "TensorFlow Developer Certificate",
+    "issuer": "Google",
+    "aliases": []
+  },
+  {
+    "cert_id": 150,
+    "name": "TOGAF 10 Certified",
+    "issuer": "The Open Group",
+    "aliases": [
+      "TOGAF 10"
+    ]
+  },
+  {
+    "cert_id": 151,
+    "name": "TOGAF 9 Certified",
+    "issuer": "The Open Group",
+    "aliases": []
+  },
+  {
+    "cert_id": 152,
+    "name": "TOGAF 9 Foundation",
+    "issuer": "The Open Group",
+    "aliases": []
+  },
+  {
+    "cert_id": 153,
+    "name": "TOPIK 6",
+    "issuer": null,
+    "aliases": []
+  },
+  {
+    "cert_id": 154,
+    "name": "Unity Certified User: Programmer",
+    "issuer": "Unity",
+    "aliases": []
+  },
+  {
+    "cert_id": 155,
+    "name": "VMware VCP-DCV",
+    "issuer": "VMware",
+    "aliases": []
+  },
+  {
+    "cert_id": 156,
+    "name": "Vue.js Certified Developer",
+    "issuer": null,
+    "aliases": []
+  }
+]

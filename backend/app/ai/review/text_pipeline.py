@@ -30,12 +30,18 @@ from functools import lru_cache
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 
-NEGATIONS = frozenset({"not", "no", "nor", "never", "none", "nothing", "neither", "nobody", "nowhere"})
+# 26/11: thêm "without" — "without a broker" không được tính là ý "qua broker" (Tuấn review đề 494).
+NEGATIONS = frozenset({"not", "no", "nor", "never", "none", "nothing", "neither", "nobody", "nowhere", "without"})
 # Từ khóa Python (for, while, if, in, is, and, or, ...) — stopwords của NLTK có nhiều từ này; bỏ đi thì
 # "while loop" chỉ còn "loop" → không phân biệt được for / while. Giữ nguyên, KHÔNG lemmatize ("is" giữ là "is").
 PYTHON_KEYWORDS = frozenset(k.lower() for k in keyword.kwlist)
 # Có trong stopwords của NLTK nhưng làm đổi nghĩa câu khi chấm → giữ lại.
-MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after", "again"})
+# 26/11: thêm "once" — "at most once" / "at least once" / "exactly once" (QoS MQTT) không bị rút còn "most" / "least".
+MEANINGFUL = frozenset({"only", "all", "both", "same", "but", "more", "most", "before", "after", "again", "once"})
+# 26/11: dạng "-s" mà nhánh danh từ đưa về gốc vô nghĩa trong bài học ("uses" → "us" = nước Mỹ, "senses" → "sens")
+# → luôn coi là động từ khi bị gán là danh từ / tính từ. Giới hạn đã biết: "analyses" vẫn về "analysis" (danh từ số
+# nhiều hợp lệ) nên từ khóa "analyse" không khớp "X analyses data" — barem ghi thêm "analyses".
+VERB_S_FORMS = {"uses": "use", "senses": "sense"}
 # Ký hiệu lập trình được giữ; dấu câu khác bị bỏ.
 CODE_SYMBOLS = frozenset(
     {"[", "]", "(", ")", "{", "}", "=", "==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%", "+=", "-="}
@@ -44,6 +50,27 @@ CODE_SYMBOLS = frozenset(
 # word_tokenize tách "!=" → "!" "=", "**" → "*" "*", "<=" → "<" "=" — ghép lại (bỏ "!" thì "!=" thành "=": sai nghĩa).
 _JOINABLE = frozenset({"!", "<", ">", "=", "+", "-", "*", "/", "%", "//", "**"})
 _NUMBER = re.compile(r"\d+\.\d+")  # số thập phân "3.5" (isalnum() trả False)
+# 27/11 — chuẩn hóa SỐ ĐI KÈM ĐƠN VỊ ĐO (Tuấn duyệt). Số đứng một mình / trong code giữ nguyên ("3.0" ≠ "3" trong Python).
+# "1,000" / "4,096": giữ NGUYÊN một token, không đoán hàng nghìn hay thập phân kiểu Việt (barem ghi đúng dạng, vd 1000).
+_GROUPED_NUMBER = re.compile(r"\d{1,3}(?:,\d{3})+")
+# Đơn vị (chữ thường — normalize đã hạ chữ). Đơn vị dài đứng trước trong phép "|" (ms trước m, min trước m).
+_LONG_UNITS = (
+    "kwh", "mwh", "wh", "kw", "mw", "mv", "µv", "uv", "kv", "ma", "µa", "ua", "khz", "mhz", "ghz", "hz", "ms", "µs",
+    "min", "%rh", "db", "kohm", "mohm", "ohm", "kω", "mω", "ω", "kb", "mb", "gb", "mm", "cm", "km", "degc", "degf", "v",
+)  # fmt: skip
+_SHORT_UNITS = ("s", "m", "h", "w")  # một chữ: CHỈ nhận khi cách số một dấu cách ("5 s"), không nhận "2s complement"
+# "s", "m" là stopword NLTK → bị bỏ ở bước sau; đổi sang dạng đầy đủ (từ khóa đi qua cùng hàm nên vẫn khớp)
+_SHORT_UNIT_WORD = {"s": "sec", "m": "metre", "h": "hour", "w": "watt"}
+_UNIT_ALT = "|".join(re.escape(u) for u in sorted(_LONG_UNITS, key=len, reverse=True))
+_SHORT_ALT = "|".join(_SHORT_UNITS)
+_NUM = r"\d+(?:[.,]\d+)*"
+# Số không dính sau chữ / số / dấu chấm (bỏ "x1m", "0x1a"…); đơn vị phải hết từ ("5mins" không khớp).
+_NUM_UNIT = re.compile(
+    rf"(?<![\w.,])({_NUM})(?:\s?({_UNIT_ALT})|\s({_SHORT_ALT}))(?![\w%])"
+    rf"|(?<![\w.,])({_NUM})\s?(%)(?!\s*[\w(])"  # % là đơn vị chỉ khi sau nó KHÔNG có số / tên biến / "(" ("10%3", "x%2")
+)
+_DEGREE = re.compile(r"°\s*([cf])\b|°")
+_DIGIT_COMMA = re.compile(r"\d+(?:,\d+)+")
 # Tách ký hiệu toán tử khỏi chữ / số trước word_tokenize: NLTK coi "n+1", "x+=1", "tong=0" là MỘT từ rồi bị bỏ.
 # Không đụng "-" giữa hai chữ ("read-only") và "." (số thập phân, "a.append").
 _OPERATOR_CHARS = re.compile(r"([+*/%=<>!()\[\]{}]|(?<![a-z])-|-(?![a-z]))")
@@ -91,12 +118,49 @@ def tokenize(text: str) -> list[str]:
     """Tách từ bằng word_tokenize; "n't" → "not"; ghép lại toán tử bị tách ("!" "=" → "!="); giữ chữ, số
     (cả số thập phân "3.5") và ký hiệu lập trình, bỏ dấu câu."""
     tokens = []
+    text = _split_digit_commas(_normalize_quantities(text))
     for token in _merge_operators(word_tokenize(_OPERATOR_CHARS.sub(r" \1 ", text))):
         if token == "n't":
             token = "not"
-        if token.isalnum() or token in CODE_SYMBOLS or _NUMBER.fullmatch(token) or _is_word(token):
+        if (
+            token.isalnum()
+            or token in CODE_SYMBOLS
+            or _NUMBER.fullmatch(token)
+            or _GROUPED_NUMBER.fullmatch(token)
+            or _is_word(token)
+        ):
             tokens.append(token)
     return tokens
+
+
+def _canonical_number(num: str) -> str:
+    """Số đi kèm đơn vị: "0,1" → "0.1" (phẩy thập phân, 1–2 chữ số sau phẩy); "17.0" → "17", "0.10" → "0.1".
+    "1,000" / "4,096" (nhóm 3 chữ số) giữ nguyên — không đoán."""
+    if re.fullmatch(r"\d+,\d{1,2}", num):
+        num = num.replace(",", ".")
+    if "." in num and re.fullmatch(r"\d+\.\d+", num):
+        num = num.rstrip("0").rstrip(".")
+    return num
+
+
+def _normalize_quantities(text: str) -> str:
+    """27/11: "°C" → "degc"; "17kWh" → "17 kwh"; "17.0 kWh" → "17 kwh"; "0,1 °C" → "0.1 degc". CHỈ số đi kèm đơn vị."""
+    text = _DEGREE.sub(lambda m: f" deg{m.group(1)} " if m.group(1) else " deg ", text)
+    text = _SPACES.sub(" ", text)
+
+    def repl(m: re.Match) -> str:
+        if m.group(1) is not None:
+            unit = m.group(2) or _SHORT_UNIT_WORD[m.group(3)]
+            return f"{_canonical_number(m.group(1))} {unit}"
+        return f"{_canonical_number(m.group(4))} %"
+
+    return _NUM_UNIT.sub(repl, text)
+
+
+def _split_digit_commas(text: str) -> str:
+    """Dấu phẩy giữa hai số không phải nhóm hàng nghìn: "range(1,5)" → "1 , 5", "[1,2,3]" → "1 , 2 , 3" — trước 27/11
+    word_tokenize giữ "1,5" thành một từ rồi bị bỏ (mất số trong code). "1,000" giữ nguyên một token."""
+    return _DIGIT_COMMA.sub(lambda m: m.group(0) if _GROUPED_NUMBER.fullmatch(m.group(0)) else m.group(0).replace(",", " , "), text)
 
 
 def remove_stopwords(tokens: list[str]) -> list[str]:
@@ -121,6 +185,12 @@ def lemmatize(tokens: list[str]) -> list[str]:
         if lemma == token and pos in ("n", "a") and token.endswith(("ing", "ed")):
             # Bộ gán từ loại hay coi "looping", "modified" là danh từ / tính từ → thử dạng gốc động từ.
             lemma = lemmatizer.lemmatize(token, "v")
+        if token in VERB_S_FORMS and pos in ("n", "a"):
+            lemma = VERB_S_FORMS[token]
+        elif lemma == token and pos in ("n", "a") and token.endswith("s"):
+            # 26/11: gán từ loại SAU khi bỏ stopwords nên "sensor detects motion" → "detects" bị coi là danh từ.
+            # Từ WordNet không có danh từ nhưng có động từ gốc → dùng động từ gốc ("detects" → "detect").
+            lemma = _verb_of_s_form(token)
         if lemma == token and pos == "n":
             lemma = _strip_plural(token)
         out.append(lemma)
@@ -160,6 +230,18 @@ def _merge_operators(tokens: list[str]) -> list[str]:
 def _is_word(token: str) -> bool:
     """Từ có gạch nối / gạch dưới như "read-only", "my_list" (isalnum() trả False)."""
     return bool(re.fullmatch(r"[a-z0-9]+(?:[-_][a-z0-9]+)+", token))
+
+
+def _verb_of_s_form(word: str) -> str:
+    """Động từ ngôi 3 số ít bị gán nhầm là danh từ / tính từ → dạng gốc động từ, CHỈ khi WordNet không có danh từ
+    cho từ đó (từ vừa danh từ vừa động từ như "links", "stores" đã về đúng gốc qua nhánh danh từ). morphy xử lý cả
+    "-es" ("publishes") và "-ies" ("certifies")."""
+    from nltk.corpus import wordnet
+
+    if wordnet.synsets(word, wordnet.NOUN):
+        return word
+    base = wordnet.morphy(word, wordnet.VERB)
+    return base if base and base != word else word
 
 
 def _strip_plural(word: str) -> str:

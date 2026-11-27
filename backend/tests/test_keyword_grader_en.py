@@ -208,3 +208,41 @@ def test_dispatcher_turns_partial_into_none_with_zero_points():
     out = keyword_grading.grade_essay(RUBRIC, "List mutable.", "")
     assert out[0] == {"result": "none", "points": 0.0, "evidence": None}
     assert {r["result"] for r in out} <= {"full", "none"}
+
+
+MQTT_RUBRIC = [
+    {"text": "Messages go through a broker", "max_points": 5, "main_keywords": ["broker"], "sub_keywords": []},
+    {"text": "QoS 0 is at most once", "max_points": 5, "main_keywords": ["at most once"], "sub_keywords": []},
+]
+
+
+def test_without_blocks_main_keyword():
+    """26/11: "without a broker" KHÔNG được tính là ý "qua broker"."""
+    answer = "Clients send messages directly to each other without a broker in this design."
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, answer)[0]["result"] == "none"
+    answer = "Every client sends its messages to a broker that forwards them to subscribers."
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, answer)[0]["result"] == "full"
+
+
+def test_at_most_once_needs_once():
+    """26/11: "at most once" khớp nguyên cụm, không còn khớp mọi chữ "most"."""
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, "QoS 0 delivers a message at most once, it may be lost.")[1][
+        "result"
+    ] == "full"
+    assert keyword_grader_en.grade_essay(MQTT_RUBRIC, "Most messages arrive quickly with QoS 0 in practice.")[1][
+        "result"
+    ] == "none"
+
+
+NUMBER_RUBRIC = [
+    {"text": "Result 17 kWh", "max_points": 5, "main_keywords": ["17"], "sub_keywords": ["kwh", "energy"]},
+    {"text": "1000 readings", "max_points": 5, "main_keywords": ["1"], "sub_keywords": []},
+]
+
+
+def test_number_with_unit_matches_plain_keyword():
+    """27/11: "17.0 kWh" khớp từ khóa "17"; "1,000" là một số, không khớp nhầm từ khóa "1"."""
+    out = keyword_grader_en.grade_essay(NUMBER_RUBRIC, "The predicted energy use is 17.0 kWh for that day.")
+    assert out[0]["result"] == "full"
+    out = keyword_grader_en.grade_essay(NUMBER_RUBRIC, "The logger stored 1,000 readings during the whole test.")
+    assert out[1]["result"] == "none"

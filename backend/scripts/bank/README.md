@@ -1,0 +1,99 @@
+# scripts/bank — công cụ soạn ngân hàng đề tay
+
+Dùng khi soạn đề bằng tay cho một khóa (vd khóa 494 IoT). Chạy từ thư mục `backend/`.
+Kết quả chạy (sao lưu, kết quả đo Gemini, ảnh chụp điểm, file duyệt) ghi vào `data/bank_runs/` — **đã .gitignore**,
+vì có thể chứa bài làm của học viên. Key Gemini chỉ đọc từ `.env` / biến môi trường như server.
+
+## Quy trình một đợt đề
+
+| Bước | Lệnh | Ghi chú |
+|---|---|---|
+| 1. Soạn nguồn | `courses/course_<id>/` | `chunks.py`, `mcq.py`, `essays.py` (barem + bài thử), `vn_notes.py`, `__init__.py` |
+| 2. Dựng JSON | `python -m scripts.bank.build <id>` | → `data/review/course_<id>_en.json` |
+| 3. Kiểm (không gọi AI) | `python -m scripts.bank.check <id>` | phải ra **0 vấn đề** |
+| 4. Đo Gemini | `python -m scripts.bank.probe_gemini <id> --max-calls 40` | ghi model + phiên bản prompt vào kết quả |
+| 5. File duyệt | `python -m scripts.bank.render_review <id> [--essays-only] --out ~/Downloads/de.md` | gửi người duyệt |
+| 6. Nạp DB | `python -m app.core.seed_data.seed_review --file data/review/course_<id>_en.json [--apply-changes]` | rồi `python -m app.core.seed_data.build_embeddings` |
+| 7. Thử trên server | tài khoản thử | xong thì xóa lượt thử (dưới) |
+
+**Kiểm tự động** (`tests/test_bank_probes.py`, chạy trong bộ test chung, không gọi Gemini, không chạm DB): file đề
+`data/review/course_<id>_en.json` phải khớp nguồn (sửa đề thì sửa nguồn rồi `build`, không sửa tay JSON); mọi bài thử
+`PROBES` (trừ nhãn `"c"`) đạt điều kiện; mọi câu mô tả ý đúng mẫu; câu tự luận nào cũng có bài thử. Khóa mới chỉ cần
+thêm thư mục `courses/course_<id>/` là test tự nhận.
+
+Sửa bộ chấm từ khóa (`text_pipeline`, `keyword_grader_en`)? Chụp điểm trước và sau rồi so:
+`python -m scripts.bank.regrade_compare snapshot` (trước), sửa code, `snapshot` (sau),
+`python -m scripts.bank.regrade_compare compare <trước> <sau>`. **Không được có bài GIẢM điểm.**
+
+## Quy tắc barem tự luận (Tuấn chốt 26/11)
+
+- Từ khóa chính = **phần giải thích / cách xử lý**, không phải tên khái niệm. Chỉ liệt kê tên thì 0 điểm.
+- Tên khái niệm làm **chủ thể** (`sub_keywords`) khi cần gắn tính chất vào đúng đối tượng (QoS 0/1, lớp, CON/NON…).
+- Thêm từ đồng nghĩa phổ biến; từ khóa nhiều chữ không được bị rút còn 1 chữ (check báo).
+- Đề **ghi rõ đối tượng**, không cho "chọn tự do" (barem cố định không chấm được "N trong M").
+- Không để hai câu **trùng ý** (học viên chép bài câu trước); không hỏi kiến thức ngoài tài liệu của kỹ năng.
+- Câu mô tả ý theo **mức tối thiểu**, đúng một trong hai mẫu (khớp quy tắc 8, 12 của prompt chấm):
+  - `"<ý> (any one of: a, b, c)."` — nêu một chi tiết là đạt; danh sách **không** dùng chữ "and".
+  - `"<chủ thể> (both needed: a; b)."` — phải đủ; **không** viết câu tóm tắt ở đầu (Gemini coi nó là ý chính).
+- Từ khóa đứng riêng và từ trong câu có thể ra **dạng gốc khác nhau** (bộ gán từ loại phụ thuộc ngữ cảnh): "two
+  readings" đứng riêng → `two read`, trong câu → `two reading`; "finer" → `finer` / `fine`. Bài thử "đúng nhưng viết
+  khác" chấm thấp bất thường → so `preprocess(từ khóa)` với `preprocess(câu)` và thêm cả hai dạng.
+- Câu đúng ở **dạng phủ định** ("readings do not follow a straight line") làm từ khóa bị coi là phủ định → thêm từ khóa
+  tự mang phủ định ("not follow a straight line", "non-linear").
+- Ký hiệu đơn vị bị bỏ khi tiền xử lý ("0.1 °C" → `0.1`): ý kết quả là con số thì gắn chủ thể bằng từ ngữ cảnh
+  (resolution, temperature…), không chỉ bằng đơn vị.
+- Thuật ngữ các sách dùng **ngược nhau** (vd active / passive): đề và barem hỏi khái niệm, không bắt nhãn; có bài thử
+  cho cả hai quy ước.
+- Mỗi câu tự luận có **bài thử** (`PROBES`): bài đúng viết khác, chỉ liệt kê tên, đảo vai trò, "without"… và
+  `GEMINI_PROBES` (bản A một chi tiết, ý "both" chỉ một phần; bản B chi tiết khác, ý "both" đủ).
+  Chuẩn đo Gemini: ý "any one of" lệch ≤ 1 điểm với từ khóa; ý "both" bản A → Gemini không đạt.
+- Giới hạn đã biết của bộ chấm từ khóa: đảo vai trò trong **cùng một vế câu** vẫn lọt (bài thử ghi `"c"`); ý "both"
+  nêu thiếu vẫn được từ khóa cho đạt (→ cờ `ai_stricter` cho giáo viên); câu ngắn gồm toàn từ của đề (vd "I
+  recommend CoAP.") bị luật chép đề L7 bỏ dù đúng; "analyses" về "analysis". Giữ bài thử cho từng giới hạn (nhãn `"c"`).
+
+## Nhóm loại trừ và ngân hàng đủ mục tiêu D25 (27/11)
+
+- Mục tiêu mỗi kỹ năng (D25, `question_gen_service.SKILL_TARGET`): **12 nhận biết + 12 thông hiểu + 4 tự luận dễ + 2
+  nâng cao = 30 câu**; mỗi lượt làm bài 12 trắc nghiệm + 3 tự luận. Ngân hàng thiếu mục tiêu → học viên làm lại là hệ
+  thống gọi AI soạn bổ sung. Câu trắc nghiệm bổ sung đặt trong `MCQ_EXTRA` (mã nối tiếp, build xoay vị trí đáp án SAU
+  câu cũ → câu cũ không đổi, không sinh phiên bản 2).
+- `EXCLUSION = {mã câu: nhóm}`: câu trắc nghiệm lộ đáp án một câu tự luận → chung nhóm với câu tự luận đó. Quy tắc
+  (Tuấn duyệt 27/11): **câu tự luận đã chọn chặn mọi câu cùng nhóm**; câu trắc nghiệm cùng nhóm với nhau vẫn được cùng
+  đề (không lộ gì cho nhau). Ràng buộc mềm: thiếu câu thì vẫn ra đủ đề.
+- `check` vét cạn MỌI tổ hợp tự luận của một đề: mức trắc nghiệm nào cũng phải còn đủ câu không bị chặn. Test tự động
+  thêm giả lập 20 học viên × 3 lượt: 0 đề lộ đáp án.
+- `python -m scripts.bank.simulate_exams <id>`: giả lập 200 học viên × 5 lượt (G3e + nhóm). Đã chấp nhận (Tuấn 27/11):
+  lượt 2 lặp 2–4 câu trắc nghiệm — cái giá của việc chặn lộ đáp án.
+
+## Xóa lượt thử — `delete_test_attempt`
+
+```
+python -m scripts.bank.delete_test_attempt <attempt_id>            # CHẠY THỬ: chỉ in những gì sẽ xóa
+python -m scripts.bank.delete_test_attempt <attempt_id> --apply    # sao lưu → xóa (1 transaction) → kiểm còn 0 dòng
+```
+
+Rào chắn: chỉ tài khoản thử thỏa **cả hai** điều kiện — user ID có trong `scripts/bank/test_users.local.json`
+(file cục bộ, .gitignore; chép từ `test_users.example.json`) **và** email đúng mẫu tài khoản thử (`@example.com` hoặc
+bí danh `+hv<số>@`). Sao lưu bắt buộc trước khi xóa (`data/bank_runs/backups/`). Lượt đã làm khóa Hoàn thành → từ chối.
+Email kết quả đã gửi thì không rút lại được.
+
+Lưu ý khi thử trên server: luật chống học thuộc (tránh câu của 3 lượt gần nhất) với ngân hàng nhỏ sẽ khiến lượt thứ
+2–3 **kích hoạt job sinh đề bổ sung** (Gemini soạn câu `auto_approved`). Dùng bài đánh dấu cho MỌI câu tự luận để một
+lượt là đủ; nộp liên tiếp phải cách nhau `REVIEW_SUBMIT_COOLDOWN` (120 s).
+
+## Việc để sau (đã ghi nhận khi soạn đề 494)
+
+- ~~Chuẩn hóa số~~ — **xong 27/11**: số đi kèm đơn vị được chuẩn hóa ("17.0 kWh" → `17 kwh`, "0,1 °C" → `0.1 degc`,
+  "17kWh" → `17 kwh`); số đứng một mình / trong code giữ nguyên ("3.0" ≠ "3"); "1,000" / "4,096" giữ một token (không
+  đoán) → **barem ghi số hàng nghìn không dấu phẩy (1000) và số kết quả không có số 0 thừa (17, không 17.0)** — check báo.
+- **Đưa đề cũ 312, 743, 1855 về cùng dạng với 494** — **CHỜ LỆNH TUẤN** (ghi 27/11). Hai bước, thứ tự 312 → 743
+  → 1855 (312 trước vì nằm trong bộ bài chuẩn đo AI):
+  1. Chuyển **nguyên trạng**: tạo `courses/course_<id>/` sao cho `build` ra file JSON **giống hệt từng byte** file hiện
+     có → server và bài làm cũ không bị ảnh hưởng.
+  2. Sau đó mới viết bài thử (~54 câu tự luận). Bài thử có thể lộ lỗi barem như đợt 1 của 494 (chỉ ghi tên vẫn đủ điểm,
+     thiếu từ đồng nghĩa); sửa barem là **một đợt duyệt riêng**, vì câu đã có bài làm sẽ sinh phiên bản 2.
+- **(c)** gán từ khóa cho chủ thể gần nhất (đảo vai trò trong cùng một vế câu).
+- **Nhóm loại trừ (7.5b)**: cột `exclusion_group` đã có nhưng bộ ráp đề chưa dùng, và file đề JSON chưa nạp cột này.
+  Đến khi làm xong, câu trắc nghiệm lộ đáp án câu tự luận phải **viết lại** (đợt 3 đã viết lại DA-TN-14, DAT-TN-09, 11,
+  13). Nên rà lại đợt 1–2 theo cùng tiêu chí.
+

@@ -42,3 +42,7 @@ backend/data/ai-grading/private/
 powershell.cmd
 # Tuấn 21/11 (G1): vector tên kỹ năng tính lại được — không đưa vào git
 backend/data/cache/
+# Tuấn 27/11: kết quả chạy công cụ soạn đề (sao lưu lượt thử, kết quả đo Gemini, ảnh chụp điểm — có bài làm học viên)
+backend/data/bank_runs/
+# danh sách user ID tài khoản thử của từng máy (mẫu: backend/scripts/bank/test_users.example.json)
+backend/scripts/bank/*.local.json

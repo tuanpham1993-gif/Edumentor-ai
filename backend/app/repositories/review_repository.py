@@ -501,6 +501,18 @@ def get_meta(db: Session, question_id: int) -> ReviewQuestionMeta | None:
     return db.get(ReviewQuestionMeta, question_id)
 
 
+def exclusion_groups(db: Session, question_ids: list[int]) -> dict[int, str]:
+    """7.5b (27/11): {question_id: nhóm loại trừ} cho các câu CÓ nhóm — một truy vấn cho cả danh sách ứng viên."""
+    if not question_ids:
+        return {}
+    rows = db.execute(
+        select(ReviewQuestionMeta.question_id, ReviewQuestionMeta.exclusion_group).where(
+            ReviewQuestionMeta.question_id.in_(question_ids), ReviewQuestionMeta.exclusion_group.is_not(None)
+        )
+    )
+    return {qid: group for qid, group in rows if group}
+
+
 def codes_for_skill(db: Session, skill_id: int) -> list[str]:
     """Mọi mã câu (kể cả phiên bản cũ "~v1") của một kỹ năng — để gợi ý mã khi duyệt."""
     return list(

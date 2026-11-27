@@ -88,7 +88,7 @@ def test_request_uses_english_prompt_and_response_schema():
     user = body["contents"][0]["parts"][0]["text"]
     assert "RUBRIC (2 items)" in user and "Item 1 (5 points): break exits the loop" in user
     assert "MODEL ANSWER" in user and f"===\n{ANSWER}\n===" in user
-    assert grade.prompt_version == PROMPT_VERSION_EN == "grade-en-v3"
+    assert grade.prompt_version == PROMPT_VERSION_EN == "grade-en-v4"
 
 
 def test_vietnamese_question_uses_vietnamese_prompt():
@@ -185,7 +185,7 @@ def test_pipeline_records_prompt_version_attempts_and_keeps_feedback_out_of_trac
     ai = RealAI(transport=gemini("oops", GOOD))
     ctx = grade_essay(ai, QUESTION, ANSWER)
     llm = next(t for t in ctx.trace if t["node"] == "4_llm_grade")["output"]
-    assert llm["prompt_version"] == "grade-en-v3" and llm["llm_attempts"] == 2
+    assert llm["prompt_version"] == "grade-en-v4" and llm["llm_attempts"] == 2
     assert ctx.feedback == "Both ideas are correct." and ctx.results[0]["reason"] == "Same meaning as exits."
     assert "Both ideas" not in json.dumps(ctx.trace)  # feedback lưu riêng, không nằm trong trace khối
 
