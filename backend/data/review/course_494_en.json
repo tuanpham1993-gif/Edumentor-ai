@@ -173,7 +173,8 @@
         "A full desktop operating system such as Windows"
       ],
       "correct_index": 0,
-      "explanation": "Each thing needs a unique identity, such as an IP address or device ID, so that it can be found and addressed."
+      "explanation": "Each thing needs a unique identity, such as an IP address or device ID, so that it can be found and addressed.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-02",
@@ -189,7 +190,8 @@
         "Redundant devices"
       ],
       "correct_index": 1,
-      "explanation": "Devices with little memory, low processing power and battery power are called constrained devices."
+      "explanation": "Devices with little memory, low processing power and battery power are called constrained devices.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-03",
@@ -205,7 +207,8 @@
         "A broker"
       ],
       "correct_index": 2,
-      "explanation": "Actuators such as motors, valves or switches act on the physical world; sensors only measure it."
+      "explanation": "Actuators such as motors, valves or switches act on the physical world; sensors only measure it.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-04",
@@ -221,7 +224,8 @@
         "Using machine sensor data to predict failures early"
       ],
       "correct_index": 3,
-      "explanation": "Sensors measure vibration and temperature so failures can be predicted before they happen."
+      "explanation": "Sensors measure vibration and temperature so failures can be predicted before they happen.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-05",
@@ -237,7 +241,8 @@
         "Proximity sensor"
       ],
       "correct_index": 0,
-      "explanation": "Soil moisture sensors tell the irrigation system when to water crops, which saves water."
+      "explanation": "Soil moisture sensors tell the irrigation system when to water crops, which saves water.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-06",
@@ -253,7 +258,8 @@
         "Devices can be installed without any network"
       ],
       "correct_index": 1,
-      "explanation": "Interoperability is the ability of devices from different vendors, protocols and data formats to work together."
+      "explanation": "Interoperability is the ability of devices from different vendors, protocols and data formats to work together.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-07",
@@ -269,7 +275,8 @@
         "They are protected by a powerful firewall in the cloud"
       ],
       "correct_index": 2,
-      "explanation": "Many devices ship with default passwords and rarely get software updates, so attackers can take them over."
+      "explanation": "Many devices ship with default passwords and rarely get software updates, so attackers can take them over.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-08",
@@ -285,7 +292,8 @@
         "Sensing and actuating"
       ],
       "correct_index": 3,
-      "explanation": "It senses the temperature (sensor) and acts on the heater (actuator)."
+      "explanation": "It senses the temperature (sensor) and acts on the heater (actuator).",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-09",
@@ -301,7 +309,8 @@
         "Wired power and identical hardware"
       ],
       "correct_index": 0,
-      "explanation": "Devices from many vendors show heterogeneity; devices that sleep, join and leave show dynamic change."
+      "explanation": "Devices from many vendors show heterogeneity; devices that sleep, join and leave show dynamic change.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-10",
@@ -317,7 +326,8 @@
         "Predictive maintenance"
       ],
       "correct_index": 1,
-      "explanation": "Wearable devices that track heart rate and alert doctors remotely are a healthcare (remote monitoring) use."
+      "explanation": "Wearable devices that track heart rate and alert doctors remotely are a healthcare (remote monitoring) use.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-11",
@@ -333,7 +343,8 @@
         "Asking residents to report broken lights by email"
       ],
       "correct_index": 2,
-      "explanation": "Smart street lights dim when roads are empty, saving energy without leaving roads dark."
+      "explanation": "Smart street lights dim when roads are empty, saving energy without leaving roads dark.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-12",
@@ -349,7 +360,8 @@
         "Interoperability"
       ],
       "correct_index": 3,
-      "explanation": "Devices from different vendors using different protocols that cannot work together is an interoperability problem."
+      "explanation": "Devices from different vendors using different protocols that cannot work together is an interoperability problem.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-13",
@@ -365,7 +377,8 @@
         "Screen resolution"
       ],
       "correct_index": 0,
-      "explanation": "Wearables collect personal data about people's habits and health, which is a privacy concern."
+      "explanation": "Wearables collect personal data about people's habits and health, which is a privacy concern.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TN-14",
@@ -381,7 +394,8 @@
         "To store more readings in their small memory"
       ],
       "correct_index": 1,
-      "explanation": "Energy is limited for battery-powered devices, so they sleep most of the time to save it."
+      "explanation": "Energy is limited for battery-powered devices, so they sleep most of the time to save it.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TL-01",
@@ -434,7 +448,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The Internet of Things is a network of physical things that collect and exchange data over the internet. An object needs sensors, software and network connectivity. It also needs a unique identity, such as an IP address."
+      "explanation": "Model answer: The Internet of Things is a network of physical things that collect and exchange data over the internet. An object needs sensors, software and network connectivity. It also needs a unique identity, such as an IP address.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TL-02",
@@ -499,7 +514,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: In healthcare, wearable devices track a patient's heart rate or blood glucose and alert doctors remotely when something is wrong. In industry, sensors on machines measure vibration and temperature, so the company can predict failures before they happen and repair the machine in time."
+      "explanation": "Model answer: In healthcare, wearable devices track a patient's heart rate or blood glucose and alert doctors remotely when something is wrong. In industry, sensors on machines measure vibration and temperature, so the company can predict failures before they happen and repair the machine in time.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TL-03",
@@ -553,7 +569,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Many home IoT devices ship with default passwords and rarely get software updates, so attackers can take them over and use them in a botnet. Privacy is also at risk, because cameras, sensors and wearables collect personal data about people's habits and health."
+      "explanation": "Model answer: Many home IoT devices ship with default passwords and rarely get software updates, so attackers can take them over and use them in a botnet. Privacy is also at risk, because cameras, sensors and wearables collect personal data about people's habits and health.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TL-04",
@@ -607,7 +624,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Constrained means that many devices have little memory and low processing power and run on batteries. Heterogeneous means that the devices come from many vendors with different hardware and protocols. Dynamic means that devices join, leave or move all the time, so the system keeps changing."
+      "explanation": "Model answer: Constrained means that many devices have little memory and low processing power and run on batteries. Heterogeneous means that the devices come from many vendors with different hardware and protocols. Dynamic means that devices join, leave or move all the time, so the system keeps changing.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TL-05",
@@ -664,7 +682,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Soil moisture sensors are placed in the fields to measure how wet the soil is. A valve on the water pipe is the actuator that the system opens or closes. The rule is to open the valve only when the soil is dry, so the farm saves water."
+      "explanation": "Model answer: Soil moisture sensors are placed in the fields to measure how wet the soil is. A valve on the water pipe is the actuator that the system opens or closes. The rule is to open the valve only when the soil is dry, so the farm saves water.",
+      "exclusion_group": null
     },
     {
       "code": "IOT-TL-06",
@@ -731,7 +750,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: For security, every sensor should get a unique password and regular security updates. For interoperability, the city should require open standards or use gateways that translate between protocols. For energy, the sensors should use low-power radios and sleep most of the time, waking up only to send data. Energy matters so much because replacing 100,000 batteries would be slow and expensive."
+      "explanation": "Model answer: For security, every sensor should get a unique password and regular security updates. For interoperability, the city should require open standards or use gateways that translate between protocols. For energy, the sensors should use low-power radios and sleep most of the time, waking up only to send data. Energy matters so much because replacing 100,000 batteries would be slow and expensive.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-01",
@@ -747,7 +767,8 @@
         "Dashboard"
       ],
       "correct_index": 2,
-      "explanation": "A gateway connects local devices to the internet and can translate, for example, from Zigbee to Wi-Fi."
+      "explanation": "A gateway connects local devices to the internet and can translate, for example, from Zigbee to Wi-Fi.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-02",
@@ -763,7 +784,8 @@
         "A microcontroller with a radio"
       ],
       "correct_index": 3,
-      "explanation": "An IoT node is usually built around a microcontroller with a radio."
+      "explanation": "An IoT node is usually built around a microcontroller with a radio.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-03",
@@ -779,7 +801,8 @@
         "To supply power to battery-powered devices"
       ],
       "correct_index": 0,
-      "explanation": "The cloud or server platform stores and analyses the data; sensors measure and actuators act."
+      "explanation": "The cloud or server platform stores and analyses the data; sensors measure and actuators act.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-04",
@@ -795,7 +818,8 @@
         "Input, storage and output"
       ],
       "correct_index": 1,
-      "explanation": "The basic three-layer IoT architecture has a perception layer, a network layer and an application layer."
+      "explanation": "The basic three-layer IoT architecture has a perception layer, a network layer and an application layer.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-05",
@@ -811,7 +835,8 @@
         "Business layer"
       ],
       "correct_index": 2,
-      "explanation": "The perception (sensing) layer contains the sensors and actuators."
+      "explanation": "The perception (sensing) layer contains the sensors and actuators.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-06",
@@ -827,7 +852,8 @@
         "Processing layer"
       ],
       "correct_index": 3,
-      "explanation": "The five-layer architecture adds a processing layer (middleware) between the network and application layers."
+      "explanation": "The five-layer architecture adds a processing layer (middleware) between the network and application layers.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-07",
@@ -843,7 +869,8 @@
         "Back-end data sharing"
       ],
       "correct_index": 0,
-      "explanation": "In the device-to-device model, devices communicate directly with each other."
+      "explanation": "In the device-to-device model, devices communicate directly with each other.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-08",
@@ -859,7 +886,8 @@
         "A broker that routes the messages"
       ],
       "correct_index": 1,
-      "explanation": "The light changes the physical world when it receives a command, so it is an actuator."
+      "explanation": "The light changes the physical world when it receives a command, so it is an actuator.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-09",
@@ -875,7 +903,8 @@
         "A mobile app that shows the status of the bulbs"
       ],
       "correct_index": 2,
-      "explanation": "A gateway (hub) connects local devices to the internet and translates between protocols."
+      "explanation": "A gateway (hub) connects local devices to the internet and translates between protocols.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-10",
@@ -891,7 +920,8 @@
         "Network layer"
       ],
       "correct_index": 3,
-      "explanation": "The network layer transmits data using technologies such as Wi-Fi, cellular networks, Zigbee or LoRa."
+      "explanation": "The network layer transmits data using technologies such as Wi-Fi, cellular networks, Zigbee or LoRa.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-11",
@@ -907,7 +937,8 @@
         "Network layer"
       ],
       "correct_index": 0,
-      "explanation": "The processing layer (middleware) stores, analyses and processes large amounts of data."
+      "explanation": "The processing layer (middleware) stores, analyses and processes large amounts of data.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-12",
@@ -923,7 +954,8 @@
         "Processing layer"
       ],
       "correct_index": 1,
-      "explanation": "The application layer delivers services, such as a smart parking app, to users."
+      "explanation": "The application layer delivers services, such as a smart parking app, to users.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-13",
@@ -939,7 +971,8 @@
         "Back-end data sharing"
       ],
       "correct_index": 2,
-      "explanation": "The phone acts as a local gateway that forwards the band's data to the cloud."
+      "explanation": "The phone acts as a local gateway that forwards the band's data to the cloud.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TN-14",
@@ -955,7 +988,8 @@
         "Back-end data sharing"
       ],
       "correct_index": 3,
-      "explanation": "Data collected in one cloud service is shared with another authorised service: back-end data sharing."
+      "explanation": "Data collected in one cloud service is shared with another authorised service: back-end data sharing.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TL-01",
@@ -1011,7 +1045,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: Sensors measure the physical world, for example temperature. Actuators change it, for example by switching a relay. A gateway connects the local devices to the internet and translates between protocols such as Zigbee and Wi-Fi."
+      "explanation": "Model answer: Sensors measure the physical world, for example temperature. Actuators change it, for example by switching a relay. A gateway connects the local devices to the internet and translates between protocols such as Zigbee and Wi-Fi.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TL-02",
@@ -1060,7 +1095,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The lowest layer is the perception layer. It uses sensors and actuators to collect data from the physical world. The top layer is the application layer, which delivers services to users."
+      "explanation": "Model answer: The lowest layer is the perception layer. It uses sensors and actuators to collect data from the physical world. The top layer is the application layer, which delivers services to users.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TL-03",
@@ -1103,7 +1139,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: In the device-to-cloud model, the device connects directly to a cloud service over the internet, for example through Wi-Fi. In the device-to-gateway model, the device connects to a local hub or smartphone, which forwards the data to the cloud."
+      "explanation": "Model answer: In the device-to-cloud model, the device connects directly to a cloud service over the internet, for example through Wi-Fi. In the device-to-gateway model, the device connects to a local hub or smartphone, which forwards the data to the cloud.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TL-04",
@@ -1141,7 +1178,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Low power consumption matters because many devices run on batteries that must last for years. Scalability matters because a system may grow to millions of devices that produce large volumes of data."
+      "explanation": "Model answer: Low power consumption matters because many devices run on batteries that must last for years. Scalability matters because a system may grow to millions of devices that produce large volumes of data.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TL-05",
@@ -1219,7 +1257,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: A motion sensor detects a person, and a smart bulb is the actuator that switches the light. The sensor and the bulb belong to the perception layer. They talk to a hub over Zigbee, and the network layer carries the data to the cloud. The rule that turns on the light at night runs in the application layer."
+      "explanation": "Model answer: A motion sensor detects a person, and a smart bulb is the actuator that switches the light. The sensor and the bulb belong to the perception layer. They talk to a hub over Zigbee, and the network layer carries the data to the cloud. The rule that turns on the light at night runs in the application layer.",
+      "exclusion_group": null
     },
     {
       "code": "IOTM-TL-06",
@@ -1300,7 +1339,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: The perception layer has sensors and actuators that collect data. The network layer transmits the data. The processing layer, or middleware, stores and analyses large amounts of data. The application layer delivers services to users. The business layer manages the whole system, including business models and privacy."
+      "explanation": "Model answer: The perception layer has sensors and actuators that collect data. The network layer transmits the data. The processing layer, or middleware, stores and analyses large amounts of data. The application layer delivers services to users. The business layer manages the whole system, including business models and privacy.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-01",
@@ -1316,7 +1356,8 @@
         "Remote procedure call"
       ],
       "correct_index": 0,
-      "explanation": "MQTT uses a publish/subscribe model with a central broker."
+      "explanation": "MQTT uses a publish/subscribe model with a central broker.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-02",
@@ -1332,7 +1373,8 @@
         "Proxy"
       ],
       "correct_index": 1,
-      "explanation": "Clients send messages to a central server called a broker, which forwards them to subscribers."
+      "explanation": "Clients send messages to a central server called a broker, which forwards them to subscribers.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-03",
@@ -1348,7 +1390,8 @@
         "5683"
       ],
       "correct_index": 2,
-      "explanation": "MQTT uses port 1883 by default and 8883 over TLS; 5683 is the CoAP port."
+      "explanation": "MQTT uses port 1883 by default and 8883 over TLS; 5683 is the CoAP port.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-04",
@@ -1364,7 +1407,8 @@
         "QoS 2"
       ],
       "correct_index": 3,
-      "explanation": "QoS 2 uses a four-step handshake to deliver a message exactly once; there is no QoS 3."
+      "explanation": "QoS 2 uses a four-step handshake to deliver a message exactly once; there is no QoS 3.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-05",
@@ -1380,7 +1424,8 @@
         "Hides it until the publisher connects again"
       ],
       "correct_index": 0,
-      "explanation": "A retained message is stored for its topic and sent immediately to new subscribers."
+      "explanation": "A retained message is stored for its topic and sent immediately to new subscribers.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-06",
@@ -1396,7 +1441,8 @@
         "SCTP"
       ],
       "correct_index": 1,
-      "explanation": "Unlike HTTP, CoAP runs over UDP, by default on port 5683."
+      "explanation": "Unlike HTTP, CoAP runs over UDP, by default on port 5683.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-07",
@@ -1412,7 +1458,8 @@
         "Notification (NTF)"
       ],
       "correct_index": 2,
-      "explanation": "Confirmable messages must be acknowledged with an ACK and are retransmitted if no ACK arrives."
+      "explanation": "Confirmable messages must be acknowledged with an ACK and are retransmitted if no ACK arrives.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-08",
@@ -1428,7 +1475,8 @@
         "home/kitchen/temperature"
       ],
       "correct_index": 3,
-      "explanation": "The plus sign matches exactly one level, so only home/<one level>/temperature matches."
+      "explanation": "The plus sign matches exactly one level, so only home/<one level>/temperature matches.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-09",
@@ -1444,7 +1492,8 @@
         "#/home"
       ],
       "correct_index": 0,
-      "explanation": "The hash sign matches all remaining levels and must be the last character."
+      "explanation": "The hash sign matches all remaining levels and must be the last character.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-10",
@@ -1460,7 +1509,8 @@
         "QoS 3"
       ],
       "correct_index": 1,
-      "explanation": "QoS 0 (at most once) has no acknowledgement overhead; an occasional lost reading is acceptable here."
+      "explanation": "QoS 0 (at most once) has no acknowledgement overhead; an occasional lost reading is acceptable here.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-11",
@@ -1476,7 +1526,8 @@
         "QoS 3"
       ],
       "correct_index": 2,
-      "explanation": "Only QoS 2 guarantees exactly-once delivery; QoS 1 may deliver the command twice."
+      "explanation": "Only QoS 2 guarantees exactly-once delivery; QoS 1 may deliver the command twice.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-12",
@@ -1492,7 +1543,8 @@
         "Last Will and Testament"
       ],
       "correct_index": 3,
-      "explanation": "The broker publishes the Last Will message if the client disconnects unexpectedly."
+      "explanation": "The broker publishes the Last Will message if the client disconnects unexpectedly.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-13",
@@ -1508,7 +1560,8 @@
         "2.01 Created"
       ],
       "correct_index": 0,
-      "explanation": "2.05 Content returns the resource; 4.04 means it does not exist."
+      "explanation": "2.05 Content returns the resource; 4.04 means it does not exist.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TN-14",
@@ -1524,7 +1577,8 @@
         "Port 5683"
       ],
       "correct_index": 1,
-      "explanation": "With the Observe option, the server sends notifications whenever the resource changes."
+      "explanation": "With the Observe option, the server sends notifications whenever the resource changes.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TL-01",
@@ -1566,7 +1620,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: In MQTT, clients do not send messages directly to each other. A client publishes a message to a topic on a central broker, and the broker forwards it to every client that has subscribed to that topic."
+      "explanation": "Model answer: In MQTT, clients do not send messages directly to each other. A client publishes a message to a topic on a central broker, and the broker forwards it to every client that has subscribed to that topic.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TL-02",
@@ -1619,7 +1674,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: QoS 0 means at most once: the message is sent without acknowledgement, so it may be lost. QoS 1 means at least once: the sender keeps the message until it gets a PUBACK, so it arrives but may be duplicated."
+      "explanation": "Model answer: QoS 0 means at most once: the message is sent without acknowledgement, so it may be lost. QoS 1 means at least once: the sender keeps the message until it gets a PUBACK, so it arrives but may be duplicated.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TL-03",
@@ -1676,7 +1732,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: CoAP runs over UDP, which is unreliable. Confirmable messages must be acknowledged with an ACK and are retransmitted if no ACK arrives. Non-confirmable messages are not acknowledged, which saves energy and bandwidth for data that can be lost."
+      "explanation": "Model answer: CoAP runs over UDP, which is unreliable. Confirmable messages must be acknowledged with an ACK and are retransmitted if no ACK arrives. Non-confirmable messages are not acknowledged, which saves energy and bandwidth for data that can be lost.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TL-04",
@@ -1724,7 +1781,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: Like HTTP, CoAP follows the REST style and identifies resources with URIs. It also uses methods such as GET and POST and response codes similar to HTTP. Unlike HTTP, CoAP runs over UDP instead of TCP."
+      "explanation": "Model answer: Like HTTP, CoAP follows the REST style and identifies resources with URIs. It also uses methods such as GET and POST and response codes similar to HTTP. Unlike HTTP, CoAP runs over UDP instead of TCP.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TL-05",
@@ -1797,7 +1855,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: All devices connect to one broker. Each room publishes to its own topic, for example greenhouse/room1/temperature, and each fan subscribes to a command topic such as greenhouse/room1/fan. The dashboard subscribes to greenhouse/+/temperature, where the plus sign matches one level, so it gets all rooms. Sensor readings use QoS 0, because a lost reading is replaced a second later. Fan commands use QoS 1, so a command is not lost."
+      "explanation": "Model answer: All devices connect to one broker. Each room publishes to its own topic, for example greenhouse/room1/temperature, and each fan subscribes to a command topic such as greenhouse/room1/fan. The dashboard subscribes to greenhouse/+/temperature, where the plus sign matches one level, so it gets all rooms. Sensor readings use QoS 0, because a lost reading is replaced a second later. Fan commands use QoS 1, so a command is not lost.",
+      "exclusion_group": null
     },
     {
       "code": "MSG-TL-06",
@@ -1867,7 +1926,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: MQTT runs over TCP and needs a broker, and devices keep a connection open. CoAP runs over UDP with a small 4-byte header, which saves energy. CoAP follows the REST style, where a server reads a resource with GET. For a device that only answers occasional requests, I recommend CoAP, because it needs no broker and no open TCP connection."
+      "explanation": "Model answer: MQTT runs over TCP and needs a broker, and devices keep a connection open. CoAP runs over UDP with a small 4-byte header, which saves energy. CoAP follows the REST style, where a server reads a resource with GET. For a device that only answers occasional requests, I recommend CoAP, because it needs no broker and no open TCP connection.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-01",
@@ -1883,7 +1943,8 @@
         "A piezoelectric crystal"
       ],
       "correct_index": 2,
-      "explanation": "An RTD's resistance can only be read by passing a current through it; the other three generate their own signal."
+      "explanation": "An RTD's resistance can only be read by passing a current through it; the other three generate their own signal.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-02",
@@ -1899,7 +1960,8 @@
         "A thermocouple"
       ],
       "correct_index": 3,
-      "explanation": "A thermocouple produces its own small voltage from heat; resistive sensors need an excitation current."
+      "explanation": "A thermocouple produces its own small voltage from heat; resistive sensors need an excitation current.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-03",
@@ -1915,7 +1977,8 @@
         "The time of flight of an ultrasonic echo inside the chip"
       ],
       "correct_index": 0,
-      "explanation": "The proof mass moves relative to the fixed plates, which changes the capacitance between them."
+      "explanation": "The proof mass moves relative to the fixed plates, which changes the capacitance between them.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-04",
@@ -1931,7 +1994,8 @@
         "From the voltage generated at a junction of two metals"
       ],
       "correct_index": 1,
-      "explanation": "An ultrasonic sensor times the echo; the sound travels there and back, so the distance is speed x time / 2."
+      "explanation": "An ultrasonic sensor times the echo; the sound travels there and back, so the distance is speed x time / 2.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-05",
@@ -1947,7 +2011,8 @@
         "How long the output takes to settle after a change"
       ],
       "correct_index": 2,
-      "explanation": "Sensitivity is the slope of the response, for example 10 mV per degC."
+      "explanation": "Sensitivity is the slope of the response, for example 10 mV per degC.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-06",
@@ -1963,7 +2028,8 @@
         "Accuracy"
       ],
       "correct_index": 3,
-      "explanation": "Accuracy is closeness to the true value; precision is closeness of repeated readings to each other."
+      "explanation": "Accuracy is closeness to the true value; precision is closeness of repeated readings to each other.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-07",
@@ -1979,7 +2045,8 @@
         "The largest deviation of the output from a straight line"
       ],
       "correct_index": 0,
-      "explanation": "Threshold is the minimum input from zero that produces a detectable output."
+      "explanation": "Threshold is the minimum input from zero that produces a detectable output.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-08",
@@ -1995,7 +2062,8 @@
         "Non-contact, because it does not need to touch the object"
       ],
       "correct_index": 1,
-      "explanation": "A sensor that needs an excitation current to be read is an externally excited sensor."
+      "explanation": "A sensor that needs an excitation current to be read is an externally excited sensor.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-09",
@@ -2011,7 +2079,8 @@
         "A thermocouple needs no amplifier because its signal is already large"
       ],
       "correct_index": 2,
-      "explanation": "Thermocouples cover very wide ranges; thermistors are sensitive but work over a limited range."
+      "explanation": "Thermocouples cover very wide ranges; thermistors are sensitive but work over a limited range.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-10",
@@ -2027,7 +2096,8 @@
         "A plastic bottle"
       ],
       "correct_index": 3,
-      "explanation": "Inductive sensors detect metal objects through a change in inductance; plastic does not affect it."
+      "explanation": "Inductive sensors detect metal objects through a change in inductance; plastic does not affect it.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-11",
@@ -2043,7 +2113,8 @@
         "Neither accurate nor precise"
       ],
       "correct_index": 0,
-      "explanation": "The readings agree closely with each other (precise) but are about 1 degC from the true value (not accurate)."
+      "explanation": "The readings agree closely with each other (precise) but are about 1 degC from the true value (not accurate).",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-12",
@@ -2059,7 +2130,8 @@
         "A high threshold"
       ],
       "correct_index": 1,
-      "explanation": "The reading for the same input depends on the direction of change, which is hysteresis."
+      "explanation": "The reading for the same input depends on the direction of change, which is hysteresis.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-13",
@@ -2075,7 +2147,8 @@
         "Range"
       ],
       "correct_index": 2,
-      "explanation": "Specificity (selectivity) means responding only to the intended quantity."
+      "explanation": "Specificity (selectivity) means responding only to the intended quantity.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TN-14",
@@ -2091,7 +2164,8 @@
         "Its response time"
       ],
       "correct_index": 3,
-      "explanation": "Response time is how long the output takes to reach (a set fraction of) its final value after a step change."
+      "explanation": "Response time is how long the output takes to reach (a set fraction of) its final value after a step change.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TL-01",
@@ -2145,7 +2219,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: One group needs an external excitation to give an output; for example, a thermistor can only be read by passing a current through it. The other group is self-generating: it generates its own signal from the energy it measures; for example, a thermocouple produces its own small voltage from heat."
+      "explanation": "Model answer: One group needs an external excitation to give an output; for example, a thermistor can only be read by passing a current through it. The other group is self-generating: it generates its own signal from the energy it measures; for example, a thermocouple produces its own small voltage from heat.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TL-02",
@@ -2189,7 +2264,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: Accuracy is how close a reading is to the true value of the quantity. Precision is how close repeated readings of the same input are to each other, so a sensor can be precise but not accurate."
+      "explanation": "Model answer: Accuracy is how close a reading is to the true value of the quantity. Precision is how close repeated readings of the same input are to each other, so a sensor can be precise but not accurate.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TL-03",
@@ -2230,7 +2306,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Hysteresis means that the output for the same input depends on whether the input was increasing or decreasing. It is a problem because the same true value can give different readings, which adds an error."
+      "explanation": "Model answer: Hysteresis means that the output for the same input depends on whether the input was increasing or decreasing. It is a problem because the same true value can give different readings, which adds an error.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TL-04",
@@ -2290,7 +2367,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: A capacitive MEMS accelerometer has a tiny proof mass held by springs. When the device accelerates, the mass moves relative to the frame, and this changes the capacitance between the mass and the fixed plates. The readout circuit measures the change, which is proportional to the acceleration."
+      "explanation": "Model answer: A capacitive MEMS accelerometer has a tiny proof mass held by springs. When the device accelerates, the mass moves relative to the frame, and this changes the capacitance between the mass and the fixed plates. The readout circuit measures the change, which is proportional to the acceleration.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TL-05",
@@ -2366,7 +2444,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: For the cold room I would choose a thermistor, because the range is narrow and a thermistor is very sensitive, so small changes are detected. For the furnace I would choose a thermocouple, because it works over a very wide range up to more than 1000 degC, and a thermocouple with a small junction responds quickly to sudden jumps."
+      "explanation": "Model answer: For the cold room I would choose a thermistor, because the range is narrow and a thermistor is very sensitive, so small changes are detected. For the furnace I would choose a thermocouple, because it works over a very wide range up to more than 1000 degC, and a thermocouple with a small junction responds quickly to sudden jumps.",
+      "exclusion_group": null
     },
     {
       "code": "SENS-TL-06",
@@ -2439,7 +2518,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: I would choose Alpha. With Beta, the accuracy of +/-5 %RH means the fan could switch anywhere from about 65 to 75 %RH. Its hysteresis of 4 %RH means the switching point is different when humidity is rising than when it is falling. Its non-linearity means the error changes across the range, so the readings do not follow a straight line."
+      "explanation": "Model answer: I would choose Alpha. With Beta, the accuracy of +/-5 %RH means the fan could switch anywhere from about 65 to 75 %RH. Its hysteresis of 4 %RH means the switching point is different when humidity is rising than when it is falling. Its non-linearity means the error changes across the range, so the readings do not follow a straight line.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-01",
@@ -2455,7 +2535,8 @@
         "The reference voltage source inside the ADC chip"
       ],
       "correct_index": 0,
-      "explanation": "An opamp amplifier scales the small sensor voltage to the ADC's input range."
+      "explanation": "An opamp amplifier scales the small sensor voltage to the ADC's input range.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-02",
@@ -2471,7 +2552,8 @@
         "Modulation and demodulation"
       ],
       "correct_index": 1,
-      "explanation": "An ADC samples the signal at regular instants and quantizes each sample to a digital code."
+      "explanation": "An ADC samples the signal at regular instants and quantizes each sample to a digital code.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-03",
@@ -2487,7 +2569,8 @@
         "512"
       ],
       "correct_index": 2,
-      "explanation": "An N-bit ADC has 2^N codes; 2^10 = 1024."
+      "explanation": "An N-bit ADC has 2^N codes; 2^10 = 1024.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-04",
@@ -2503,7 +2586,8 @@
         "Vref / 2^N"
       ],
       "correct_index": 3,
-      "explanation": "The full-scale range Vref is divided into 2^N steps, so one LSB = Vref / 2^N."
+      "explanation": "The full-scale range Vref is divided into 2^N steps, so one LSB = Vref / 2^N.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-05",
@@ -2519,7 +2603,8 @@
         "About 10 times less than f"
       ],
       "correct_index": 0,
-      "explanation": "The Nyquist criterion requires a sampling rate of more than twice the highest signal frequency."
+      "explanation": "The Nyquist criterion requires a sampling rate of more than twice the highest signal frequency.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-06",
@@ -2535,7 +2620,8 @@
         "The full-scale range"
       ],
       "correct_index": 1,
-      "explanation": "Rounding to the nearest level gives an error of at most half an LSB."
+      "explanation": "Rounding to the nearest level gives an error of at most half an LSB.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-07",
@@ -2551,7 +2637,8 @@
         "The sampling rate doubles to follow the signal"
       ],
       "correct_index": 2,
-      "explanation": "Above full scale the ADC clips: every such input gives the maximum code."
+      "explanation": "Above full scale the ADC clips: every such input gives the maximum code.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-08",
@@ -2567,7 +2654,8 @@
         "Only about 1% of the range is used, so few codes change and resolution is poor"
       ],
       "correct_index": 3,
-      "explanation": "A small signal uses only a tiny part of the ADC range; amplifying it first improves the effective resolution."
+      "explanation": "A small signal uses only a tiny part of the ADC range; amplifying it first improves the effective resolution.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-09",
@@ -2583,7 +2671,8 @@
         "0.8 mV"
       ],
       "correct_index": 0,
-      "explanation": "2.048 V / 2^8 = 2.048 V / 256 = 8 mV."
+      "explanation": "2.048 V / 2^8 = 2.048 V / 256 = 8 mV.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-10",
@@ -2599,7 +2688,8 @@
         "250 samples per second"
       ],
       "correct_index": 1,
-      "explanation": "The rate must be more than 2 x 500 Hz = 1000 samples per second; of these choices only 1200 is high enough."
+      "explanation": "The rate must be more than 2 x 500 Hz = 1000 samples per second; of these choices only 1200 is high enough.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-11",
@@ -2615,7 +2705,8 @@
         "0.01 degC"
       ],
       "correct_index": 2,
-      "explanation": "Resolution in the measured quantity = LSB / sensitivity = 2 mV / 20 mV per degC = 0.1 degC."
+      "explanation": "Resolution in the measured quantity = LSB / sensitivity = 2 mV / 20 mV per degC = 0.1 degC.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-12",
@@ -2631,7 +2722,8 @@
         "The LSB becomes four times smaller"
       ],
       "correct_index": 3,
-      "explanation": "Two more bits give 2^2 = 4 times as many codes over the same range, so the LSB is four times smaller."
+      "explanation": "Two more bits give 2^2 = 4 times as many codes over the same range, so the LSB is four times smaller.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-13",
@@ -2647,7 +2739,8 @@
         "A lower sensitivity of the sensor itself"
       ],
       "correct_index": 0,
-      "explanation": "More bits give finer resolution but usually cost more power, conversion time, price and data."
+      "explanation": "More bits give finer resolution but usually cost more power, conversion time, price and data.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TN-14",
@@ -2663,7 +2756,8 @@
         "To make the quantization error larger than one LSB"
       ],
       "correct_index": 1,
-      "explanation": "A gain close to full scale uses most ADC codes (best resolution) while avoiding clipping."
+      "explanation": "A gain close to full scale uses most ADC codes (best resolution) while avoiding clipping.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TL-01",
@@ -2718,7 +2812,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Sensor signals are often small, only millivolts or microvolts. Fed directly into an ADC, such a signal uses only a small part of the range, so few codes change and the resolution is poor. Amplifying first scales the signal to the ADC's full range."
+      "explanation": "Model answer: Sensor signals are often small, only millivolts or microvolts. Fed directly into an ADC, such a signal uses only a small part of the range, so few codes change and the resolution is poor. Amplifying first scales the signal to the ADC's full range.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TL-02",
@@ -2752,7 +2847,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Quantization maps each sampled value to the nearest of the ADC's discrete levels, so the input becomes a staircase. With rounding to the nearest level, the quantization error is at most half an LSB."
+      "explanation": "Model answer: Quantization maps each sampled value to the nearest of the ADC's discrete levels, so the input becomes a staircase. With rounding to the nearest level, the quantization error is at most half an LSB.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TL-03",
@@ -2791,7 +2887,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The ADC must sample at more than twice the highest frequency in the signal. If it samples too slowly, fast changes are missed and the signal appears at a wrong, lower frequency, which is called aliasing."
+      "explanation": "Model answer: The ADC must sample at more than twice the highest frequency in the signal. If it samples too slowly, fast changes are missed and the signal appears at a wrong, lower frequency, which is called aliasing.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TL-04",
@@ -2834,7 +2931,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: More bits give a smaller LSB, so the resolution is finer. The cost is that the ADC usually uses more power, converts more slowly, is more expensive and produces more data."
+      "explanation": "Model answer: More bits give a smaller LSB, so the resolution is finer. The cost is that the ADC usually uses more power, converts more slowly, is more expensive and produces more data.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TL-05",
@@ -2895,7 +2993,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: The LSB is Vref / 2^N = 4.096 V / 4096 = 1 mV. The temperature resolution is the LSB divided by the sensitivity: 1 mV / 10 mV per degC = 0.1 degC."
+      "explanation": "Model answer: The LSB is Vref / 2^N = 4.096 V / 4096 = 1 mV. The temperature resolution is the LSB divided by the sensitivity: 1 mV / 10 mV per degC = 0.1 degC.",
+      "exclusion_group": null
     },
     {
       "code": "RO-TL-06",
@@ -2954,7 +3053,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The gain is the ADC range divided by the largest sensor signal: 4.096 V / 0.1 V = 40.96, so I choose a gain of 40. This uses most of the ADC range, which gives the best resolution. A higher gain such as 41 would give 4.1 V, which exceeds 4.096 V and would saturate the ADC."
+      "explanation": "Model answer: The gain is the ADC range divided by the largest sensor signal: 4.096 V / 0.1 V = 40.96, so I choose a gain of 40. This uses most of the ADC range, which gives the best resolution. A higher gain such as 41 would give 4.1 V, which exceeds 4.096 V and would saturate the ADC.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-01",
@@ -2970,7 +3070,8 @@
         "A fixed 1 mV input offset"
       ],
       "correct_index": 2,
-      "explanation": "An ideal opamp has infinite input resistance, infinite open-loop gain, infinite bandwidth and zero offset."
+      "explanation": "An ideal opamp has infinite input resistance, infinite open-loop gain, infinite bandwidth and zero offset.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-02",
@@ -2986,7 +3087,8 @@
         "A way a real opamp differs from an ideal one, adding an error to the reading"
       ],
       "correct_index": 3,
-      "explanation": "Non-idealities are the differences between a real and an ideal opamp; each adds an error."
+      "explanation": "Non-idealities are the differences between a real and an ideal opamp; each adds an error.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-03",
@@ -3002,7 +3104,8 @@
         "The opamp output cannot go beyond the voltages of its power supply"
       ],
       "correct_index": 0,
-      "explanation": "Rs and Rin form a voltage divider, so the amplifier sees only Vs x Rin / (Rs + Rin)."
+      "explanation": "Rs and Rin form a voltage divider, so the amplifier sees only Vs x Rin / (Rs + Rin).",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-04",
@@ -3018,7 +3121,8 @@
         "A larger ADC reference"
       ],
       "correct_index": 1,
-      "explanation": "A buffer has gain 1 and very high input resistance, so it draws almost no current from the sensor."
+      "explanation": "A buffer has gain 1 and very high input resistance, so it draws almost no current from the sensor.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-05",
@@ -3034,7 +3138,8 @@
         "The voltage lost across the sensor's output resistance"
       ],
       "correct_index": 2,
-      "explanation": "Offset makes the output non-zero when the input is zero."
+      "explanation": "Offset makes the output non-zero when the input is zero.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-06",
@@ -3050,7 +3155,8 @@
         "The maximum rate at which its output voltage can change"
       ],
       "correct_index": 3,
-      "explanation": "Slew rate limits how fast the output can change; faster, large signals are distorted."
+      "explanation": "Slew rate limits how fast the output can change; faster, large signals are distorted.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-07",
@@ -3066,7 +3172,8 @@
         "Higher gain means the input resistance becomes much higher"
       ],
       "correct_index": 0,
-      "explanation": "Gain x bandwidth is roughly constant, so raising the gain lowers the usable bandwidth."
+      "explanation": "Gain x bandwidth is roughly constant, so raising the gain lowers the usable bandwidth.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-08",
@@ -3082,7 +3189,8 @@
         "0.1%"
       ],
       "correct_index": 1,
-      "explanation": "Rin / (Rs + Rin) = 1000 / 1001, about 99.9%; Rin is much larger than Rs, so loading is negligible."
+      "explanation": "Rin / (Rs + Rin) = 1000 / 1001, about 99.9%; Rin is much larger than Rs, so loading is negligible.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-09",
@@ -3098,7 +3206,8 @@
         "The opamp's slew rate is too high for the slowly changing sensor signal"
       ],
       "correct_index": 2,
-      "explanation": "The amplifier loads the sensor; a buffer or a higher-input-resistance opamp fixes it."
+      "explanation": "The amplifier loads the sensor; a buffer or a higher-input-resistance opamp fixes it.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-10",
@@ -3114,7 +3223,8 @@
         "0.1 V"
       ],
       "correct_index": 3,
-      "explanation": "The offset is multiplied by the gain: 1 mV x 100 = 0.1 V."
+      "explanation": "The offset is multiplied by the gain: 1 mV x 100 = 0.1 V.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-11",
@@ -3130,7 +3240,8 @@
         "One that is read only once a day"
       ],
       "correct_index": 0,
-      "explanation": "Bias current flowing through a large source resistance creates a large error voltage."
+      "explanation": "Bias current flowing through a large source resistance creates a large error voltage.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-12",
@@ -3146,7 +3257,8 @@
         "The sensor's hysteresis"
       ],
       "correct_index": 1,
-      "explanation": "Because the open-loop gain is not infinite, the closed-loop gain is slightly lower than designed."
+      "explanation": "Because the open-loop gain is not infinite, the closed-loop gain is slightly lower than designed.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-13",
@@ -3162,7 +3274,8 @@
         "The input resistance"
       ],
       "correct_index": 2,
-      "explanation": "When the output cannot change fast enough, large fast signals are distorted by the slew rate."
+      "explanation": "When the output cannot change fast enough, large fast signals are distorted by the slew rate.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TN-14",
@@ -3178,7 +3291,8 @@
         "The output is saturating because it cannot swing beyond the supply"
       ],
       "correct_index": 3,
-      "explanation": "The output cannot go beyond the supply voltages, so a too-large signal saturates."
+      "explanation": "The output cannot go beyond the supply voltages, so a too-large signal saturates.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TL-01",
@@ -3216,7 +3330,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The input offset voltage is a small DC voltage that acts as if it were added to the input, so the output is not zero when the input is zero. The amplifier multiplies the offset by its gain, so with a large gain it becomes a large output error."
+      "explanation": "Model answer: The input offset voltage is a small DC voltage that acts as if it were added to the input, so the output is not zero when the input is zero. The amplifier multiplies the offset by its gain, so with a large gain it becomes a large output error.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TL-02",
@@ -3251,7 +3366,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The input bias current is a small current that flows into the opamp's input pins. It flows through the sensor's source resistance and creates an error voltage, which is large when the resistance is high."
+      "explanation": "Model answer: The input bias current is a small current that flows into the opamp's input pins. It flows through the sensor's source resistance and creates an error voltage, which is large when the resistance is high.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TL-03",
@@ -3284,7 +3400,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: A real opamp's open-loop gain is finite, not infinite. Because of this, the closed-loop gain of the amplifier is slightly lower than the value set by its resistors."
+      "explanation": "Model answer: A real opamp's open-loop gain is finite, not infinite. Because of this, the closed-loop gain of the amplifier is slightly lower than the value set by its resistors.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TL-04",
@@ -3324,7 +3441,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: The first limit is the bandwidth: because the gain-bandwidth product is constant, the gain falls at high frequencies. The second is the slew rate: the output can change only at a maximum rate, so large, fast signals are distorted."
+      "explanation": "Model answer: The first limit is the bandwidth: because the gain-bandwidth product is constant, the gain falls at high frequencies. The second is the slew rate: the output can change only at a maximum rate, so large, fast signals are distorted.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TL-05",
@@ -3383,7 +3501,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The output resistance and the input resistance form a voltage divider, so the amplifier sees Rin / (Rs + Rin) = 90 / (10 + 90) = 90% of the sensor voltage. Current flows through the sensor's output resistance and 10% of the voltage is lost across it, because Rin is not much larger than Rs. To fix it, put a buffer (voltage follower) with a very high input resistance between the sensor and the amplifier."
+      "explanation": "Model answer: The output resistance and the input resistance form a voltage divider, so the amplifier sees Rin / (Rs + Rin) = 90 / (10 + 90) = 90% of the sensor voltage. Current flows through the sensor's output resistance and 10% of the voltage is lost across it, because Rin is not much larger than Rs. To fix it, put a buffer (voltage follower) with a very high input resistance between the sensor and the amplifier.",
+      "exclusion_group": null
     },
     {
       "code": "NI-TL-06",
@@ -3444,7 +3563,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The input resistance, or equivalently a very low input bias current, matters most. With a 10 MOhm source, any current the opamp draws makes a large voltage drop across the sensor resistance and a large error. The bandwidth and slew rate matter least, because the signal changes slowly over minutes, so it is a very low frequency signal."
+      "explanation": "Model answer: The input resistance, or equivalently a very low input bias current, matters most. With a 10 MOhm source, any current the opamp draws makes a large voltage drop across the sensor resistance and a large error. The bandwidth and slew rate matter least, because the signal changes slowly over minutes, so it is a very low frequency signal.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-01",
@@ -3460,7 +3580,8 @@
         "Edge routing"
       ],
       "correct_index": 0,
-      "explanation": "Predicting failures before they happen from sensor data is predictive maintenance."
+      "explanation": "Predicting failures before they happen from sensor data is predictive maintenance.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-02",
@@ -3476,7 +3597,8 @@
         "Automation"
       ],
       "correct_index": 1,
-      "explanation": "Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike."
+      "explanation": "Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-03",
@@ -3492,7 +3614,8 @@
         "The error the final model makes on new, unseen data"
       ],
       "correct_index": 2,
-      "explanation": "The hypothesis set is the family of candidate models, for example all straight lines."
+      "explanation": "The hypothesis set is the family of candidate models, for example all straight lines.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-04",
@@ -3508,7 +3631,8 @@
         "Out-of-sample error"
       ],
       "correct_index": 3,
-      "explanation": "In-sample error is on the training data; out-of-sample error is on new, unseen data."
+      "explanation": "In-sample error is on the training data; out-of-sample error is on new, unseen data.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-05",
@@ -3524,7 +3648,8 @@
         "Clustering"
       ],
       "correct_index": 0,
-      "explanation": "Supervised learning uses labelled examples; unsupervised learning has no labels."
+      "explanation": "Supervised learning uses labelled examples; unsupervised learning has no labels.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-06",
@@ -3540,7 +3665,8 @@
         "Linear regression"
       ],
       "correct_index": 1,
-      "explanation": "Reinforcement learning learns from rewards, such as a thermostat learning from comfort feedback."
+      "explanation": "Reinforcement learning learns from rewards, such as a thermostat learning from comfort feedback.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-07",
@@ -3556,7 +3682,8 @@
         "scikit-learn"
       ],
       "correct_index": 2,
-      "explanation": "pandas handles tables; NumPy handles arrays, scikit-learn provides models and matplotlib draws plots."
+      "explanation": "pandas handles tables; NumPy handles arrays, scikit-learn provides models and matplotlib draws plots.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-08",
@@ -3572,7 +3699,8 @@
         "The rules behind the data are often unknown or too complex to write by hand"
       ],
       "correct_index": 3,
-      "explanation": "Machine learning learns a model from the data when the underlying rules are unknown or too complex."
+      "explanation": "Machine learning learns a model from the data when the underlying rules are unknown or too complex.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-09",
@@ -3588,7 +3716,8 @@
         "Seasonality"
       ],
       "correct_index": 0,
-      "explanation": "Fitting the training data including its noise but failing on new data is overfitting."
+      "explanation": "Fitting the training data including its noise but failing on new data is overfitting.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-10",
@@ -3604,7 +3733,8 @@
         "When the test data were also used to train the same model"
       ],
       "correct_index": 1,
-      "explanation": "Learning is feasible when the data represent the situations of use and there are enough examples."
+      "explanation": "Learning is feasible when the data represent the situations of use and there are enough examples.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-11",
@@ -3620,7 +3750,8 @@
         "Reinforcement learning"
       ],
       "correct_index": 2,
-      "explanation": "The output is a number and past answers are known, so it is supervised regression."
+      "explanation": "The output is a number and past answers are known, so it is supervised regression.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-12",
@@ -3636,7 +3767,8 @@
         "Supervised classification"
       ],
       "correct_index": 3,
-      "explanation": "The output is a category learned from labelled examples, so it is classification."
+      "explanation": "The output is a category learned from labelled examples, so it is classification.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-13",
@@ -3652,7 +3784,8 @@
         "Choosing the number of clusters k"
       ],
       "correct_index": 0,
-      "explanation": "Impossible values from faulty sensors are outliers, handled in the cleaning step."
+      "explanation": "Impossible values from faulty sensors are outliers, handled in the cleaning step.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TN-14",
@@ -3668,7 +3801,8 @@
         "Clustering the motors into groups"
       ],
       "correct_index": 1,
-      "explanation": "Turning raw readings into inputs such as a one-minute average is feature computation."
+      "explanation": "Turning raw readings into inputs such as a one-minute average is feature computation.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TL-01",
@@ -3723,7 +3857,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Raw sensor readings arrive in huge amounts and are of little use until they are analysed and turned into information and decisions. Predictive maintenance predicts machine failures before they happen, so repairs can be made in time. Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike that may mean a fault or an attack."
+      "explanation": "Model answer: Raw sensor readings arrive in huge amounts and are of little use until they are analysed and turned into information and decisions. Predictive maintenance predicts machine failures before they happen, so repairs can be made in time. Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike that may mean a fault or an attack.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TL-02",
@@ -3779,7 +3914,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: There is an unknown target function f that maps inputs to outputs. What we have is a data set of past examples of inputs with their outputs. The learning algorithm searches a hypothesis set of candidate models and picks the final hypothesis g that fits the data best, so that it approximates f."
+      "explanation": "Model answer: There is an unknown target function f that maps inputs to outputs. What we have is a data set of past examples of inputs with their outputs. The learning algorithm searches a hypothesis set of candidate models and picks the final hypothesis g that fits the data best, so that it approximates f.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TL-03",
@@ -3837,7 +3973,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: In supervised learning every training example comes with the correct answer, a label. In unsupervised learning there are no labels, so the algorithm finds structure, such as groups, by itself. In reinforcement learning the agent learns by trial and error from rewards."
+      "explanation": "Model answer: In supervised learning every training example comes with the correct answer, a label. In unsupervised learning there are no labels, so the algorithm finds structure, such as groups, by itself. In reinforcement learning the agent learns by trial and error from rewards.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TL-04",
@@ -3875,7 +4012,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: The training set is used to fit the model, and the test set checks how well the model works on data it has not seen, which is how it will be used in practice. For that, the test set must be kept aside and never used for training."
+      "explanation": "Model answer: The training set is used to fit the model, and the test set checks how well the model works on data it has not seen, which is how it will be used in practice. For that, the test set must be kept aside and never used for training.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TL-05",
@@ -3949,7 +4087,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: First collect past vibration data and record which motors failed, so the data are labelled. Clean the data by handling missing values and removing outliers from faulty sensors. Compute features such as the average and peak vibration over each minute. Because the past failures are labelled, supervised classification fits. When the model predicts a failure, the system raises an alert and schedules maintenance before the motor breaks."
+      "explanation": "Model answer: First collect past vibration data and record which motors failed, so the data are labelled. Clean the data by handling missing values and removing outliers from faulty sensors. Compute features such as the average and peak vibration over each minute. Because the past failures are labelled, supervised classification fits. When the model predicts a failure, the system raises an alert and schedules maintenance before the motor breaks.",
+      "exclusion_group": null
     },
     {
       "code": "DA-TL-06",
@@ -4025,7 +4164,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: Learning is only feasible when the training data are representative of the situations where the model is used; this model only saw summer conditions, so winter is not represented. Its low in-sample error does not guarantee a low out-of-sample error. To fix it, collect data from all seasons and retrain, then check the model on winter test data before using it."
+      "explanation": "Model answer: Learning is only feasible when the training data are representative of the situations where the model is used; this model only saw summer conditions, so winter is not represented. Its low in-sample error does not guarantee a low out-of-sample error. To fix it, collect data from all seasons and retrain, then check the model on winter test data before using it.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-01",
@@ -4041,7 +4181,8 @@
         "The number of training examples used"
       ],
       "correct_index": 2,
-      "explanation": "w1 is the slope; w0 is the intercept, the value of y when x is 0."
+      "explanation": "w1 is the slope; w0 is the intercept, the value of y when x is 0.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-02",
@@ -4057,7 +4198,8 @@
         "By minimising the mean squared error (least squares)"
       ],
       "correct_index": 3,
-      "explanation": "Least squares chooses the weights that minimise the mean squared error."
+      "explanation": "Least squares chooses the weights that minimise the mean squared error.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-03",
@@ -4073,7 +4215,8 @@
         "Intercept"
       ],
       "correct_index": 0,
-      "explanation": "Seasonality repeats with a fixed period; the trend is a long-term increase or decrease."
+      "explanation": "Seasonality repeats with a fixed period; the trend is a long-term increase or decrease.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-04",
@@ -4089,7 +4232,8 @@
         "It turns the readings into labels"
       ],
       "correct_index": 1,
-      "explanation": "A moving average averages the last few values, which smooths noise."
+      "explanation": "A moving average averages the last few values, which smooths noise.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-05",
@@ -4105,7 +4249,8 @@
         "A random value drawn from the training data"
       ],
       "correct_index": 2,
-      "explanation": "An AR model predicts the next value from previous values."
+      "explanation": "An AR model predicts the next value from previous values.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-06",
@@ -4121,7 +4266,8 @@
         "Unsupervised"
       ],
       "correct_index": 3,
-      "explanation": "Clustering groups unlabelled data, so it is unsupervised."
+      "explanation": "Clustering groups unlabelled data, so it is unsupervised.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-07",
@@ -4137,7 +4283,8 @@
         "The cluster with the oldest data"
       ],
       "correct_index": 0,
-      "explanation": "Each point is assigned to its nearest centroid, then the centroids move to the mean of their points."
+      "explanation": "Each point is assigned to its nearest centroid, then the centroids move to the mean of their points.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-08",
@@ -4153,7 +4300,8 @@
         "15.2"
       ],
       "correct_index": 1,
-      "explanation": "1.5 + 0.2 x 10 = 3.5."
+      "explanation": "1.5 + 0.2 x 10 = 3.5.",
+      "exclusion_group": "dat-linreg-substitute"
     },
     {
       "code": "DAT-TN-09",
@@ -4169,7 +4317,8 @@
         "The largest x used in training"
       ],
       "correct_index": 2,
-      "explanation": "1.5 is the intercept w0, the value of y when x is 0."
+      "explanation": "1.5 is the intercept w0, the value of y when x is 0.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-10",
@@ -4185,7 +4334,8 @@
         "Model A"
       ],
       "correct_index": 3,
-      "explanation": "A smaller MSE means the predictions are closer to the actual values."
+      "explanation": "A smaller MSE means the predictions are closer to the actual values.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-11",
@@ -4201,7 +4351,8 @@
         "The temperature forecast for the next three months"
       ],
       "correct_index": 0,
-      "explanation": "Averaging a full day smooths the daily cycle and the noise, leaving the slow long-term movement."
+      "explanation": "Averaging a full day smooths the daily cycle and the noise, leaving the slow long-term movement.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-12",
@@ -4217,7 +4368,8 @@
         "The total number of readings"
       ],
       "correct_index": 1,
-      "explanation": "In hourly data the daily cycle repeats every 24 values, so the value 24 hours earlier helps."
+      "explanation": "In hourly data the daily cycle repeats every 24 values, so the value 24 hours earlier helps.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-13",
@@ -4233,7 +4385,8 @@
         "As a reading that belongs to every cluster"
       ],
       "correct_index": 2,
-      "explanation": "A point far from all centroids does not fit any normal group, so it can be flagged as an anomaly."
+      "explanation": "A point far from all centroids does not fit any normal group, so it can be flagged as an anomaly.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TN-14",
@@ -4249,7 +4402,8 @@
         "The k after which more clusters stop giving a large improvement"
       ],
       "correct_index": 3,
-      "explanation": "The elbow is where adding clusters stops reducing the total distance much."
+      "explanation": "The elbow is where adding clusters stops reducing the total distance much.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TL-01",
@@ -4288,7 +4442,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Linear regression finds a straight line y = w0 + w1 x that describes how the output changes with the input. The line is fitted by least squares, choosing the weights that minimise the mean squared error between the predicted and actual values."
+      "explanation": "Model answer: Linear regression finds a straight line y = w0 + w1 x that describes how the output changes with the input. The line is fitted by least squares, choosing the weights that minimise the mean squared error between the predicted and actual values.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TL-02",
@@ -4346,7 +4501,8 @@
           ]
         }
       ],
-      "explanation": "Model answer: The trend is the long-term increase or decrease. Seasonality is a pattern that repeats with a fixed period, such as a daily cycle. Noise is the random variation that is left over."
+      "explanation": "Model answer: The trend is the long-term increase or decrease. Seasonality is a pattern that repeats with a fixed period, such as a daily cycle. Noise is the random variation that is left over.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TL-03",
@@ -4396,7 +4552,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Each point is assigned to its nearest centroid. Then each centroid is moved to the mean of the points assigned to it. These two steps are repeated until the assignments no longer change."
+      "explanation": "Model answer: Each point is assigned to its nearest centroid. Then each centroid is moved to the mean of the points assigned to it. These two steps are repeated until the assignments no longer change.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TL-04",
@@ -4432,7 +4589,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: k-means groups points by their distance to the centroids. If the features are not scaled, the feature with the larger numeric range dominates the distances and the other features hardly matter."
+      "explanation": "Model answer: k-means groups points by their distance to the centroids. If the features are not scaled, the feature with the larger numeric range dominates the distances and the other features hardly matter.",
+      "exclusion_group": null
     },
     {
       "code": "DAT-TL-05",
@@ -4461,8 +4619,7 @@
           "text": "Result: 17 kWh.",
           "max_points": 3,
           "main_keywords": [
-            "17",
-            "17.0"
+            "17"
           ],
           "sub_keywords": [
             "kwh",
@@ -4500,7 +4657,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: Substituting T = 30 gives E = 2 + 0.5 x 30 = 17 kWh. The number 0.5 is the slope: the energy use rises by 0.5 kWh per degree. I would not trust a prediction for 60 degC, because it is outside the 10 to 35 degC range of the data; that is extrapolation, and the relationship may not stay linear."
+      "explanation": "Model answer: Substituting T = 30 gives E = 2 + 0.5 x 30 = 17 kWh. The number 0.5 is the slope: the energy use rises by 0.5 kWh per degree. I would not trust a prediction for 60 degC, because it is outside the 10 to 35 degC range of the data; that is extrapolation, and the relationship may not stay linear.",
+      "exclusion_group": "dat-linreg-substitute"
     },
     {
       "code": "DAT-TL-06",
@@ -4566,7 +4724,8 @@
           "sub_keywords": []
         }
       ],
-      "explanation": "Model answer: I would split the data in time order: train on the first two and a half months and test on the later part, and not shuffle, so the future never leaks into training. The model would be autoregressive, using the previous few hours' values, plus the value from 24 hours earlier to capture the daily cycle."
+      "explanation": "Model answer: I would split the data in time order: train on the first two and a half months and test on the later part, and not shuffle, so the future never leaks into training. The model would be autoregressive, using the previous few hours' values, plus the value from 24 hours earlier to capture the daily cycle.",
+      "exclusion_group": null
     }
   ]
 }

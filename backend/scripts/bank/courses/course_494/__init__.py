@@ -21,6 +21,12 @@ SKILL_NAMES = {
     "DA": "Data analysis for IoT",
     "DAT": "Data Analysis Techniques",
 }
+# 7.5b (27/11): câu cùng nhóm không vào cùng một đề. Trắc nghiệm minh họa cùng cách làm với câu tự luận tính toán.
+# Rà lộ đáp án đợt 1–2: chờ Tuấn duyệt danh sách cặp rồi bổ sung vào đây.
+EXCLUSION = {
+    "DAT-TN-08": "dat-linreg-substitute",
+    "DAT-TL-05": "dat-linreg-substitute",
+}
 NOTE = (
     "English bank (drafted by Claude, reviewed by Tuấn). Batch 1 (26/11/2026): IoT, Model and Components of IoT, "
     "Messaging Protocols. Batch 2 (27/11/2026): Sensors, Sensor Readout, Readout Non-Idealities (course module 2 "
@@ -36,6 +42,7 @@ __all__ = [
     "COURSE_ID",
     "COURSE_TITLE",
     "ESSAY",
+    "EXCLUSION",
     "GEMINI_PROBES",
     "MCQ",
     "NOTE",

@@ -3,6 +3,9 @@
     python -m scripts.bank.build 494                 → data/review/course_494_en.json
     python -m scripts.bank.build 494 --out x.json
 
+Nhóm loại trừ (7.5b): khóa khai `EXCLUSION = {mã câu: tên nhóm}` → câu cùng nhóm không vào cùng một đề (bộ ráp đề
+né mềm). Khóa không khai EXCLUSION → JSON không có trường này (giữ nguyên từng byte file cũ).
+
 Trắc nghiệm: đáp án đúng viết ĐẦU TIÊN trong nguồn; ở đây xoay nó vào vị trí 0..3 (vòng tròn qua mọi kỹ năng) để
 đáp án đúng rải đều A/B/C/D. Mã câu: <KỸ NĂNG>-TN-01…, <KỸ NĂNG>-TL-01…; mã đoạn: <KỸ NĂNG>-K01…
 """
@@ -61,6 +64,13 @@ def build(course) -> dict:
                     "explanation": "Model answer: " + answer,
                 }
             )
+    exclusion = getattr(course, "EXCLUSION", None)
+    if exclusion is not None:  # 7.5b: khóa có khai EXCLUSION → MỌI câu có trường (null = không nhóm, seed bỏ nhóm cũ)
+        unknown = set(exclusion) - {q["code"] for q in questions}
+        if unknown:
+            raise ValueError(f"EXCLUSION có mã câu không tồn tại: {sorted(unknown)}")
+        for q in questions:
+            q["exclusion_group"] = exclusion.get(q["code"])
     return {
         "course_id": course.COURSE_ID,
         "course_title": course.COURSE_TITLE,

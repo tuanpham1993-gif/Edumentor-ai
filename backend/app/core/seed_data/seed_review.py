@@ -37,6 +37,7 @@ from app.services import review_bank_service
 
 # 21/11: file chuyển từ backend/scripts/ vào app/core/seed_data/ (Hòa đề nghị) → backend/ là parents[3]
 BACKEND_DIR = Path(__file__).resolve().parents[3]
+EXCLUSION_GROUP_MAX = 50  # review_question_meta.exclusion_group String(50)
 DEFAULT_FILE = BACKEND_DIR / "data" / "review" / "course_312_en.json"
 # Bản tiếng Việt khóa 312 (ngừng nạp từ 14/11): lưu trữ cho lệnh --retire, test bộ chấm tiếng Việt và
 # scripts/review_grader_holdout.py — dọn 21/11/2026.
@@ -90,6 +91,9 @@ def validate_bank(data: dict) -> list[str]:
             elif chunk_skill[q["chunk"]] != q.get("skill"):
                 errors.append(f"{where}: chunk '{q['chunk']}' thuộc kỹ năng khác")
         errors += question_errors(q, where)  # quy tắc chung với câu AI sinh (ai/review/validator.py)
+        group = q.get("exclusion_group")
+        if group is not None and not (isinstance(group, str) and 0 < len(group.strip()) <= EXCLUSION_GROUP_MAX):
+            errors.append(f"{where}: exclusion_group phải là chuỗi 1–{EXCLUSION_GROUP_MAX} ký tự")
     return errors
 
 
@@ -123,6 +127,7 @@ def seed_bank(db: Session, data: dict, *, apply_changes: bool = False) -> dict:
         "questions_differ": [],
         "questions_updated": 0,
         "questions_versioned": 0,
+        "groups_updated": 0,
     }
 
     chunk_ids = {}
@@ -155,10 +160,22 @@ def seed_bank(db: Session, data: dict, *, apply_changes: bool = False) -> dict:
         }
         row = db.query(ReviewQuestion).filter_by(code=q["code"]).one_or_none()
         if row is None:
-            review_bank_service.create_question(db, {"code": q["code"], "type": q["type"], **wanted})
+            group = {"exclusion_group": q["exclusion_group"]} if q.get("exclusion_group") else {}
+            review_bank_service.create_question(db, {"code": q["code"], "type": q["type"], **wanted, **group})
             counts["questions_added"] += 1
             continue
         differs = sorted(f for f, v in wanted.items() if getattr(row, f) != v)
+        if "exclusion_group" in q:  # 7.5b (27/11): file CÓ khai trường này mới đụng tới (null = bỏ nhóm)
+            meta = review_bank_service.ensure_meta(db, row)
+            if meta.exclusion_group != q["exclusion_group"]:
+                if apply_changes:  # nhóm là trường sửa nhỏ → sửa tại chỗ, câu đã có bài làm KHÔNG sinh phiên bản 2
+                    review_bank_service.update_question(
+                        db, row, {"exclusion_group": q["exclusion_group"]}, minor=True, note="seed: exclusion_group"
+                    )
+                    counts["groups_updated"] += 1
+                elif not differs:
+                    counts["questions_differ"].append(q["code"])
+                    continue
         if not differs:
             counts["questions_unchanged"] += 1
         elif not apply_changes:
@@ -241,7 +258,7 @@ def main() -> int:
         f"Khóa {data['course_id']}: đoạn tri thức +{counts['chunks_added']} / cập nhật "
         f"{counts['chunks_updated']}; câu hỏi +{counts['questions_added']} / giữ nguyên "
         f"{counts['questions_unchanged']} / sửa tại chỗ {counts['questions_updated']} / "
-        f"phiên bản mới {counts['questions_versioned']}"
+        f"phiên bản mới {counts['questions_versioned']} / nhóm loại trừ cập nhật {counts['groups_updated']}"
     )
     if counts["questions_differ"]:
         print(

@@ -1742,7 +1742,7 @@ ESSAY = {
                     ["0.5 x 30", "0.5 * 30", "0.5 × 30", "0.5 times 30", "2 + 15", "substitute", "plug", "put 30"],
                     [],
                 ),
-                ("Result: 17 kWh.", 3, ["17", "17.0"], ["kwh", "energy", "predict", "prediction", "use"]),
+                ("Result: 17 kWh.", 3, ["17"], ["kwh", "energy", "predict", "prediction", "use"]),
                 (
                     "0.5 is the slope (any one of: energy rises 0.5 kWh per degree, per 1 degC increase).",
                     2,
@@ -2224,7 +2224,11 @@ PROBES = {
             "The LSB is 4.096 / 4096 = 0.1 V. Dividing by the sensitivity, the resolution is 10 degC.",
             "<=5",
         ),
-        ("viết dấu phẩy thập phân", "LSB = 4.096 / 4096 = 1 mV. Then 1 mV / 10 mV per degC = 0,1 degC.", "c"),
+        (
+            "viết dấu phẩy thập phân (chuẩn hóa 27/11)",
+            "LSB = 4.096 / 4096 = 1 mV. Then 1 mV / 10 mV per degC = 0,1 degC.",
+            ">=7",
+        ),
     ],
     "RO-TL-06": [
         (
