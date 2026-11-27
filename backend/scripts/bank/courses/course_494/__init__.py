@@ -22,7 +22,7 @@ SKILL_NAMES = {
     "DAT": "Data Analysis Techniques",
 }
 # 7.5b (27/11): câu cùng nhóm không vào cùng một đề. Trắc nghiệm minh họa cùng cách làm với câu tự luận tính toán.
-# Cặp lộ đáp án trắc nghiệm ↔ tự luận đợt 1 (lượt bổ sung 1, 27/11); đợt 2 bổ sung ở lượt 2.
+# Cặp lộ đáp án trắc nghiệm ↔ tự luận đợt 1 (lượt bổ sung 1, 27/11); đợt 2 (lượt 2, 27/11); đợt 3 ở lượt 3.
 EXCLUSION = {
     # IOT
     "IOT-TN-01": "iot-identity", "IOT-TL-01": "iot-identity",
@@ -45,6 +45,29 @@ EXCLUSION = {
     "MSG-TN-08": "msg-qos-topics", "MSG-TN-10": "msg-qos-topics", "MSG-TN-11": "msg-qos-topics",
     "MSG-TL-02": "msg-qos-topics", "MSG-TL-05": "msg-qos-topics",
     "MSG-TN-06": "msg-coap-con", "MSG-TN-07": "msg-coap-con", "MSG-TL-03": "msg-coap-con",
+    # SENS (lượt 2)
+    "SENS-TN-01": "sens-groups", "SENS-TN-02": "sens-groups", "SENS-TN-08": "sens-groups", "SENS-TL-01": "sens-groups",
+    "SENS-TN-06": "sens-accprec", "SENS-TN-11": "sens-accprec", "SENS-TL-02": "sens-accprec",
+    "SENS-TN-12": "sens-hyst", "SENS-TL-03": "sens-hyst",
+    "SENS-TN-03": "sens-mems", "SENS-TL-04": "sens-mems",
+    "SENS-TN-09": "sens-tempchoice", "SENS-TL-05": "sens-tempchoice",
+    "SENS-TN-22": "sens-datasheet", "SENS-TL-06": "sens-datasheet",
+    # RO
+    "RO-TN-08": "ro-amplify", "RO-TL-01": "ro-amplify",
+    "RO-TN-06": "ro-quant", "RO-TN-18": "ro-quant", "RO-TL-02": "ro-quant",
+    "RO-TN-05": "ro-sampling", "RO-TN-10": "ro-sampling", "RO-TL-03": "ro-sampling",
+    "RO-TN-12": "ro-bits", "RO-TN-13": "ro-bits", "RO-TL-04": "ro-bits",
+    "RO-TN-04": "ro-lsb-calc", "RO-TN-11": "ro-lsb-calc", "RO-TN-21": "ro-lsb-calc", "RO-TL-05": "ro-lsb-calc",
+    "RO-TN-07": "ro-gain", "RO-TN-14": "ro-gain", "RO-TN-22": "ro-gain", "RO-TL-06": "ro-gain",
+    # NI — NI-TL-02 và NI-TL-06 chung nhóm (cùng ý bias current) → không cùng đề
+    "NI-TN-05": "ni-offset", "NI-TN-10": "ni-offset", "NI-TN-20": "ni-offset",
+    "NI-TL-01": "ni-offset",
+    "NI-TN-11": "ni-bias", "NI-TL-02": "ni-bias", "NI-TL-06": "ni-bias",
+    "NI-TN-12": "ni-gain", "NI-TL-03": "ni-gain",
+    "NI-TN-06": "ni-speed", "NI-TN-07": "ni-speed", "NI-TN-13": "ni-speed", "NI-TN-21": "ni-speed",
+    "NI-TL-04": "ni-speed",
+    "NI-TN-03": "ni-loading", "NI-TN-04": "ni-loading", "NI-TN-09": "ni-loading", "NI-TN-18": "ni-loading",
+    "NI-TN-23": "ni-loading", "NI-TL-05": "ni-loading",
     # DAT
     "DAT-TN-08": "dat-linreg-substitute", "DAT-TL-05": "dat-linreg-substitute",
 }  # fmt: skip

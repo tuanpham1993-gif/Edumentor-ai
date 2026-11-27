@@ -1944,7 +1944,7 @@
       ],
       "correct_index": 2,
       "explanation": "An RTD's resistance can only be read by passing a current through it; the other three generate their own signal.",
-      "exclusion_group": null
+      "exclusion_group": "sens-groups"
     },
     {
       "code": "SENS-TN-02",
@@ -1961,7 +1961,7 @@
       ],
       "correct_index": 3,
       "explanation": "A thermocouple produces its own small voltage from heat; resistive sensors need an excitation current.",
-      "exclusion_group": null
+      "exclusion_group": "sens-groups"
     },
     {
       "code": "SENS-TN-03",
@@ -1978,7 +1978,7 @@
       ],
       "correct_index": 0,
       "explanation": "The proof mass moves relative to the fixed plates, which changes the capacitance between them.",
-      "exclusion_group": null
+      "exclusion_group": "sens-mems"
     },
     {
       "code": "SENS-TN-04",
@@ -2029,7 +2029,7 @@
       ],
       "correct_index": 3,
       "explanation": "Accuracy is closeness to the true value; precision is closeness of repeated readings to each other.",
-      "exclusion_group": null
+      "exclusion_group": "sens-accprec"
     },
     {
       "code": "SENS-TN-07",
@@ -2063,7 +2063,7 @@
       ],
       "correct_index": 1,
       "explanation": "A sensor that needs an excitation current to be read is an externally excited sensor.",
-      "exclusion_group": null
+      "exclusion_group": "sens-groups"
     },
     {
       "code": "SENS-TN-09",
@@ -2080,7 +2080,7 @@
       ],
       "correct_index": 2,
       "explanation": "Thermocouples cover very wide ranges; thermistors are sensitive but work over a limited range.",
-      "exclusion_group": null
+      "exclusion_group": "sens-tempchoice"
     },
     {
       "code": "SENS-TN-10",
@@ -2114,7 +2114,7 @@
       ],
       "correct_index": 0,
       "explanation": "The readings agree closely with each other (precise) but are about 1 degC from the true value (not accurate).",
-      "exclusion_group": null
+      "exclusion_group": "sens-accprec"
     },
     {
       "code": "SENS-TN-12",
@@ -2131,7 +2131,7 @@
       ],
       "correct_index": 1,
       "explanation": "The reading for the same input depends on the direction of change, which is hysteresis.",
-      "exclusion_group": null
+      "exclusion_group": "sens-hyst"
     },
     {
       "code": "SENS-TN-13",
@@ -2220,7 +2220,7 @@
         }
       ],
       "explanation": "Model answer: One group needs an external excitation to give an output; for example, a thermistor can only be read by passing a current through it. The other group is self-generating: it generates its own signal from the energy it measures; for example, a thermocouple produces its own small voltage from heat.",
-      "exclusion_group": null
+      "exclusion_group": "sens-groups"
     },
     {
       "code": "SENS-TL-02",
@@ -2265,7 +2265,7 @@
         }
       ],
       "explanation": "Model answer: Accuracy is how close a reading is to the true value of the quantity. Precision is how close repeated readings of the same input are to each other, so a sensor can be precise but not accurate.",
-      "exclusion_group": null
+      "exclusion_group": "sens-accprec"
     },
     {
       "code": "SENS-TL-03",
@@ -2307,7 +2307,7 @@
         }
       ],
       "explanation": "Model answer: Hysteresis means that the output for the same input depends on whether the input was increasing or decreasing. It is a problem because the same true value can give different readings, which adds an error.",
-      "exclusion_group": null
+      "exclusion_group": "sens-hyst"
     },
     {
       "code": "SENS-TL-04",
@@ -2368,7 +2368,7 @@
         }
       ],
       "explanation": "Model answer: A capacitive MEMS accelerometer has a tiny proof mass held by springs. When the device accelerates, the mass moves relative to the frame, and this changes the capacitance between the mass and the fixed plates. The readout circuit measures the change, which is proportional to the acceleration.",
-      "exclusion_group": null
+      "exclusion_group": "sens-mems"
     },
     {
       "code": "SENS-TL-05",
@@ -2445,7 +2445,7 @@
         }
       ],
       "explanation": "Model answer: For the cold room I would choose a thermistor, because the range is narrow and a thermistor is very sensitive, so small changes are detected. For the furnace I would choose a thermocouple, because it works over a very wide range up to more than 1000 degC, and a thermocouple with a small junction responds quickly to sudden jumps.",
-      "exclusion_group": null
+      "exclusion_group": "sens-tempchoice"
     },
     {
       "code": "SENS-TL-06",
@@ -2519,7 +2519,7 @@
         }
       ],
       "explanation": "Model answer: I would choose Alpha. With Beta, the accuracy of +/-5 %RH means the fan could switch anywhere from about 65 to 75 %RH. Its hysteresis of 4 %RH means the switching point is different when humidity is rising than when it is falling. Its non-linearity means the error changes across the range, so the readings do not follow a straight line.",
-      "exclusion_group": null
+      "exclusion_group": "sens-datasheet"
     },
     {
       "code": "RO-TN-01",
@@ -2587,7 +2587,7 @@
       ],
       "correct_index": 3,
       "explanation": "The full-scale range Vref is divided into 2^N steps, so one LSB = Vref / 2^N.",
-      "exclusion_group": null
+      "exclusion_group": "ro-lsb-calc"
     },
     {
       "code": "RO-TN-05",
@@ -2604,7 +2604,7 @@
       ],
       "correct_index": 0,
       "explanation": "The Nyquist criterion requires a sampling rate of more than twice the highest signal frequency.",
-      "exclusion_group": null
+      "exclusion_group": "ro-sampling"
     },
     {
       "code": "RO-TN-06",
@@ -2621,7 +2621,7 @@
       ],
       "correct_index": 1,
       "explanation": "Rounding to the nearest level gives an error of at most half an LSB.",
-      "exclusion_group": null
+      "exclusion_group": "ro-quant"
     },
     {
       "code": "RO-TN-07",
@@ -2638,7 +2638,7 @@
       ],
       "correct_index": 2,
       "explanation": "Above full scale the ADC clips: every such input gives the maximum code.",
-      "exclusion_group": null
+      "exclusion_group": "ro-gain"
     },
     {
       "code": "RO-TN-08",
@@ -2655,7 +2655,7 @@
       ],
       "correct_index": 3,
       "explanation": "A small signal uses only a tiny part of the ADC range; amplifying it first improves the effective resolution.",
-      "exclusion_group": null
+      "exclusion_group": "ro-amplify"
     },
     {
       "code": "RO-TN-09",
@@ -2689,7 +2689,7 @@
       ],
       "correct_index": 1,
       "explanation": "The rate must be more than 2 x 500 Hz = 1000 samples per second; of these choices only 1200 is high enough.",
-      "exclusion_group": null
+      "exclusion_group": "ro-sampling"
     },
     {
       "code": "RO-TN-11",
@@ -2706,7 +2706,7 @@
       ],
       "correct_index": 2,
       "explanation": "Resolution in the measured quantity = LSB / sensitivity = 2 mV / 20 mV per degC = 0.1 degC.",
-      "exclusion_group": null
+      "exclusion_group": "ro-lsb-calc"
     },
     {
       "code": "RO-TN-12",
@@ -2723,7 +2723,7 @@
       ],
       "correct_index": 3,
       "explanation": "Two more bits give 2^2 = 4 times as many codes over the same range, so the LSB is four times smaller.",
-      "exclusion_group": null
+      "exclusion_group": "ro-bits"
     },
     {
       "code": "RO-TN-13",
@@ -2740,7 +2740,7 @@
       ],
       "correct_index": 0,
       "explanation": "More bits give finer resolution but usually cost more power, conversion time, price and data.",
-      "exclusion_group": null
+      "exclusion_group": "ro-bits"
     },
     {
       "code": "RO-TN-14",
@@ -2757,7 +2757,7 @@
       ],
       "correct_index": 1,
       "explanation": "A gain close to full scale uses most ADC codes (best resolution) while avoiding clipping.",
-      "exclusion_group": null
+      "exclusion_group": "ro-gain"
     },
     {
       "code": "RO-TL-01",
@@ -2813,7 +2813,7 @@
         }
       ],
       "explanation": "Model answer: Sensor signals are often small, only millivolts or microvolts. Fed directly into an ADC, such a signal uses only a small part of the range, so few codes change and the resolution is poor. Amplifying first scales the signal to the ADC's full range.",
-      "exclusion_group": null
+      "exclusion_group": "ro-amplify"
     },
     {
       "code": "RO-TL-02",
@@ -2848,7 +2848,7 @@
         }
       ],
       "explanation": "Model answer: Quantization maps each sampled value to the nearest of the ADC's discrete levels, so the input becomes a staircase. With rounding to the nearest level, the quantization error is at most half an LSB.",
-      "exclusion_group": null
+      "exclusion_group": "ro-quant"
     },
     {
       "code": "RO-TL-03",
@@ -2888,7 +2888,7 @@
         }
       ],
       "explanation": "Model answer: The ADC must sample at more than twice the highest frequency in the signal. If it samples too slowly, fast changes are missed and the signal appears at a wrong, lower frequency, which is called aliasing.",
-      "exclusion_group": null
+      "exclusion_group": "ro-sampling"
     },
     {
       "code": "RO-TL-04",
@@ -2932,7 +2932,7 @@
         }
       ],
       "explanation": "Model answer: More bits give a smaller LSB, so the resolution is finer. The cost is that the ADC usually uses more power, converts more slowly, is more expensive and produces more data.",
-      "exclusion_group": null
+      "exclusion_group": "ro-bits"
     },
     {
       "code": "RO-TL-05",
@@ -2994,7 +2994,7 @@
         }
       ],
       "explanation": "Model answer: The LSB is Vref / 2^N = 4.096 V / 4096 = 1 mV. The temperature resolution is the LSB divided by the sensitivity: 1 mV / 10 mV per degC = 0.1 degC.",
-      "exclusion_group": null
+      "exclusion_group": "ro-lsb-calc"
     },
     {
       "code": "RO-TL-06",
@@ -3054,7 +3054,7 @@
         }
       ],
       "explanation": "Model answer: The gain is the ADC range divided by the largest sensor signal: 4.096 V / 0.1 V = 40.96, so I choose a gain of 40. This uses most of the ADC range, which gives the best resolution. A higher gain such as 41 would give 4.1 V, which exceeds 4.096 V and would saturate the ADC.",
-      "exclusion_group": null
+      "exclusion_group": "ro-gain"
     },
     {
       "code": "NI-TN-01",
@@ -3105,7 +3105,7 @@
       ],
       "correct_index": 0,
       "explanation": "Rs and Rin form a voltage divider, so the amplifier sees only Vs x Rin / (Rs + Rin).",
-      "exclusion_group": null
+      "exclusion_group": "ni-loading"
     },
     {
       "code": "NI-TN-04",
@@ -3122,7 +3122,7 @@
       ],
       "correct_index": 1,
       "explanation": "A buffer has gain 1 and very high input resistance, so it draws almost no current from the sensor.",
-      "exclusion_group": null
+      "exclusion_group": "ni-loading"
     },
     {
       "code": "NI-TN-05",
@@ -3139,7 +3139,7 @@
       ],
       "correct_index": 2,
       "explanation": "Offset makes the output non-zero when the input is zero.",
-      "exclusion_group": null
+      "exclusion_group": "ni-offset"
     },
     {
       "code": "NI-TN-06",
@@ -3156,7 +3156,7 @@
       ],
       "correct_index": 3,
       "explanation": "Slew rate limits how fast the output can change; faster, large signals are distorted.",
-      "exclusion_group": null
+      "exclusion_group": "ni-speed"
     },
     {
       "code": "NI-TN-07",
@@ -3173,7 +3173,7 @@
       ],
       "correct_index": 0,
       "explanation": "Gain x bandwidth is roughly constant, so raising the gain lowers the usable bandwidth.",
-      "exclusion_group": null
+      "exclusion_group": "ni-speed"
     },
     {
       "code": "NI-TN-08",
@@ -3207,7 +3207,7 @@
       ],
       "correct_index": 2,
       "explanation": "The amplifier loads the sensor; a buffer or a higher-input-resistance opamp fixes it.",
-      "exclusion_group": null
+      "exclusion_group": "ni-loading"
     },
     {
       "code": "NI-TN-10",
@@ -3224,7 +3224,7 @@
       ],
       "correct_index": 3,
       "explanation": "The offset is multiplied by the gain: 1 mV x 100 = 0.1 V.",
-      "exclusion_group": null
+      "exclusion_group": "ni-offset"
     },
     {
       "code": "NI-TN-11",
@@ -3241,7 +3241,7 @@
       ],
       "correct_index": 0,
       "explanation": "Bias current flowing through a large source resistance creates a large error voltage.",
-      "exclusion_group": null
+      "exclusion_group": "ni-bias"
     },
     {
       "code": "NI-TN-12",
@@ -3258,7 +3258,7 @@
       ],
       "correct_index": 1,
       "explanation": "Because the open-loop gain is not infinite, the closed-loop gain is slightly lower than designed.",
-      "exclusion_group": null
+      "exclusion_group": "ni-gain"
     },
     {
       "code": "NI-TN-13",
@@ -3275,7 +3275,7 @@
       ],
       "correct_index": 2,
       "explanation": "When the output cannot change fast enough, large fast signals are distorted by the slew rate.",
-      "exclusion_group": null
+      "exclusion_group": "ni-speed"
     },
     {
       "code": "NI-TN-14",
@@ -3331,7 +3331,7 @@
         }
       ],
       "explanation": "Model answer: The input offset voltage is a small DC voltage that acts as if it were added to the input, so the output is not zero when the input is zero. The amplifier multiplies the offset by its gain, so with a large gain it becomes a large output error.",
-      "exclusion_group": null
+      "exclusion_group": "ni-offset"
     },
     {
       "code": "NI-TL-02",
@@ -3367,7 +3367,7 @@
         }
       ],
       "explanation": "Model answer: The input bias current is a small current that flows into the opamp's input pins. It flows through the sensor's source resistance and creates an error voltage, which is large when the resistance is high.",
-      "exclusion_group": null
+      "exclusion_group": "ni-bias"
     },
     {
       "code": "NI-TL-03",
@@ -3401,7 +3401,7 @@
         }
       ],
       "explanation": "Model answer: A real opamp's open-loop gain is finite, not infinite. Because of this, the closed-loop gain of the amplifier is slightly lower than the value set by its resistors.",
-      "exclusion_group": null
+      "exclusion_group": "ni-gain"
     },
     {
       "code": "NI-TL-04",
@@ -3442,7 +3442,7 @@
         }
       ],
       "explanation": "Model answer: The first limit is the bandwidth: because the gain-bandwidth product is constant, the gain falls at high frequencies. The second is the slew rate: the output can change only at a maximum rate, so large, fast signals are distorted.",
-      "exclusion_group": null
+      "exclusion_group": "ni-speed"
     },
     {
       "code": "NI-TL-05",
@@ -3502,7 +3502,7 @@
         }
       ],
       "explanation": "Model answer: The output resistance and the input resistance form a voltage divider, so the amplifier sees Rin / (Rs + Rin) = 90 / (10 + 90) = 90% of the sensor voltage. Current flows through the sensor's output resistance and 10% of the voltage is lost across it, because Rin is not much larger than Rs. To fix it, put a buffer (voltage follower) with a very high input resistance between the sensor and the amplifier.",
-      "exclusion_group": null
+      "exclusion_group": "ni-loading"
     },
     {
       "code": "NI-TL-06",
@@ -3564,7 +3564,7 @@
         }
       ],
       "explanation": "Model answer: The input resistance, or equivalently a very low input bias current, matters most. With a 10 MOhm source, any current the opamp draws makes a large voltage drop across the sensor resistance and a large error. The bandwidth and slew rate matter least, because the signal changes slowly over minutes, so it is a very low frequency signal.",
-      "exclusion_group": null
+      "exclusion_group": "ni-bias"
     },
     {
       "code": "DA-TN-01",
@@ -5235,6 +5235,516 @@
       ],
       "correct_index": 1,
       "explanation": "Like HTTP, CoAP uses PUT to update a resource; GET reads it and DELETE removes it.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-15",
+      "skill": "SENS",
+      "chunk": "SENS-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the physical quantity that a sensor measures called?",
+      "options": [
+        "The threshold",
+        "The excitation",
+        "The measurand",
+        "The resolution"
+      ],
+      "correct_index": 2,
+      "explanation": "A sensor detects a physical quantity, called the measurand, and converts it into a signal.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-16",
+      "skill": "SENS",
+      "chunk": "SENS-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What kind of output does a digital sensor give?",
+      "options": [
+        "A continuous voltage that an ADC must sample",
+        "A change in resistance that needs a current",
+        "A small voltage generated from heat",
+        "A digital value, for example over a serial bus"
+      ],
+      "correct_index": 3,
+      "explanation": "An analog sensor gives a continuous signal; a digital sensor already gives a digital value.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-17",
+      "skill": "SENS",
+      "chunk": "SENS-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What happens to the resistance of an NTC thermistor as the temperature rises?",
+      "options": [
+        "It falls",
+        "It rises",
+        "It stays constant",
+        "It becomes zero"
+      ],
+      "correct_index": 0,
+      "explanation": "An NTC thermistor's resistance falls as the temperature rises.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-18",
+      "skill": "SENS",
+      "chunk": "SENS-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the range of a sensor?",
+      "options": [
+        "The smallest change in input that it can detect",
+        "The span between the smallest and largest value it can measure",
+        "The change in output per unit change in input",
+        "The time it needs to reach its final output"
+      ],
+      "correct_index": 1,
+      "explanation": "Range is the span between the smallest and largest measurable value.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-19",
+      "skill": "SENS",
+      "chunk": "SENS-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is a slow change in a sensor's output for the same input over time called?",
+      "options": [
+        "Hysteresis",
+        "Threshold",
+        "Drift",
+        "Specificity"
+      ],
+      "correct_index": 2,
+      "explanation": "Stability is giving the same output over time; a slow change is called drift.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-20",
+      "skill": "SENS",
+      "chunk": "SENS-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An infrared thermometer measures a person's forehead from 5 cm away. How is it classified?",
+      "options": [
+        "Contact",
+        "Self-generating",
+        "Digital only",
+        "Non-contact"
+      ],
+      "correct_index": 3,
+      "explanation": "It measures without touching the object, so it is a non-contact sensor.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-21",
+      "skill": "SENS",
+      "chunk": "SENS-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An IC temperature sensor outputs 10 mV per degC and 0 V at 0 degC. What is its output at 25 degC?",
+      "options": [
+        "250 mV",
+        "25 mV",
+        "2.5 V",
+        "10 mV"
+      ],
+      "correct_index": 0,
+      "explanation": "The output is linear: 25 degC x 10 mV per degC = 250 mV.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-22",
+      "skill": "SENS",
+      "chunk": "SENS-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A datasheet says the output deviates at most 0.5 degC from the best straight line. What does this figure describe?",
+      "options": [
+        "The response time",
+        "The non-linearity error",
+        "The hysteresis",
+        "The threshold"
+      ],
+      "correct_index": 1,
+      "explanation": "The largest deviation from the straight line is the non-linearity error.",
+      "exclusion_group": "sens-datasheet"
+    },
+    {
+      "code": "SENS-TN-23",
+      "skill": "SENS",
+      "chunk": "SENS-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A scale shows no change for loads below 2 g but responds to heavier loads. Which characteristic is the 2 g?",
+      "options": [
+        "The range",
+        "The drift",
+        "The threshold",
+        "The sensitivity"
+      ],
+      "correct_index": 2,
+      "explanation": "Threshold is the smallest input, starting from zero, that produces a detectable output.",
+      "exclusion_group": null
+    },
+    {
+      "code": "SENS-TN-24",
+      "skill": "SENS",
+      "chunk": "SENS-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An inductive sensor cannot detect plastic bottles on a conveyor. Which proximity sensor type could detect them?",
+      "options": [
+        "A second inductive sensor",
+        "A thermocouple",
+        "An NTC thermistor",
+        "A capacitive proximity sensor"
+      ],
+      "correct_index": 3,
+      "explanation": "Inductive sensors detect only metal; capacitive sensors detect a change in capacitance from other objects.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-15",
+      "skill": "RO",
+      "chunk": "RO-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "For a resistive sensor, what does the front end of a readout chain usually do?",
+      "options": [
+        "Passes an excitation current and turns the resistance change into a voltage",
+        "Converts the digital codes back into an analog voltage",
+        "Stores the readings in the cloud for later analysis",
+        "Rounds every sample to the nearest ADC level"
+      ],
+      "correct_index": 0,
+      "explanation": "The front end turns the sensor change into a voltage, for example by passing an excitation current.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-16",
+      "skill": "RO",
+      "chunk": "RO-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which block of a readout chain finally processes the digital codes?",
+      "options": [
+        "The front end",
+        "The microcontroller",
+        "The opamp amplifier",
+        "The sensor itself"
+      ],
+      "correct_index": 1,
+      "explanation": "The microcontroller processes the codes produced by the ADC.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-17",
+      "skill": "RO",
+      "chunk": "RO-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the sampling rate of an ADC?",
+      "options": [
+        "The number of bits in each code",
+        "The size of one quantization step",
+        "The number of samples taken per second",
+        "The largest voltage it can convert"
+      ],
+      "correct_index": 2,
+      "explanation": "The sampling rate is the number of samples per second.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-18",
+      "skill": "RO",
+      "chunk": "RO-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does quantization turn a continuous input into?",
+      "options": [
+        "A smooth analog curve",
+        "A higher sampling rate",
+        "A larger reference voltage",
+        "A staircase of discrete levels"
+      ],
+      "correct_index": 3,
+      "explanation": "Quantization maps each value to the nearest discrete level, so the input becomes a staircase.",
+      "exclusion_group": "ro-quant"
+    },
+    {
+      "code": "RO-TN-19",
+      "skill": "RO",
+      "chunk": "RO-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Why is the sampling rate usually not set much higher than needed?",
+      "options": [
+        "To save power and data",
+        "To make the LSB larger",
+        "To increase the quantization error",
+        "To avoid using an amplifier"
+      ],
+      "correct_index": 0,
+      "explanation": "A sampling rate far above what is needed wastes power and produces more data.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-20",
+      "skill": "RO",
+      "chunk": "RO-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "How many output codes does a 16-bit ADC have?",
+      "options": [
+        "16",
+        "65536",
+        "256",
+        "4096"
+      ],
+      "correct_index": 1,
+      "explanation": "An N-bit ADC has 2^N codes; 2^16 = 65536.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-21",
+      "skill": "RO",
+      "chunk": "RO-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An application needs 0.5 degC resolution from a 10 mV per degC sensor. What is the largest acceptable LSB?",
+      "options": [
+        "0.5 mV",
+        "50 mV",
+        "5 mV",
+        "20 mV"
+      ],
+      "correct_index": 2,
+      "explanation": "The LSB in degC must be at most 0.5 degC: 0.5 degC x 10 mV per degC = 5 mV.",
+      "exclusion_group": "ro-lsb-calc"
+    },
+    {
+      "code": "RO-TN-22",
+      "skill": "RO",
+      "chunk": "RO-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A sensor already gives 0 to 2 V and the ADC's full scale is 2.048 V. Is extra gain useful?",
+      "options": [
+        "Yes; a gain of about 40 is needed",
+        "Yes; the ADC cannot read signals above 1 V",
+        "No; the ADC needs a signal of at least 5 V",
+        "Hardly; the signal already uses most of the ADC range"
+      ],
+      "correct_index": 3,
+      "explanation": "The signal already comes close to full scale, so more gain would risk saturation without much benefit.",
+      "exclusion_group": "ro-gain"
+    },
+    {
+      "code": "RO-TN-23",
+      "skill": "RO",
+      "chunk": "RO-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A strain gauge changes its resistance, not its voltage. What must the readout do first?",
+      "options": [
+        "Turn the resistance change into a voltage, for example with an excitation current",
+        "Send the resistance value directly to the microcontroller",
+        "Lower the sampling rate below the signal frequency",
+        "Remove the ADC and use a digital sensor instead"
+      ],
+      "correct_index": 0,
+      "explanation": "The front end must turn the resistance change into a voltage before amplification and conversion.",
+      "exclusion_group": null
+    },
+    {
+      "code": "RO-TN-24",
+      "skill": "RO",
+      "chunk": "RO-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "How does quantization error usually behave in a measurement?",
+      "options": [
+        "Like a slowly growing drift",
+        "Like a small added noise",
+        "Like a sudden saturation",
+        "Like a change of sampling rate"
+      ],
+      "correct_index": 1,
+      "explanation": "With rounding to the nearest level, quantization error behaves like a small added noise.",
+      "exclusion_group": null
+    },
+    {
+      "code": "NI-TN-15",
+      "skill": "NI",
+      "chunk": "NI-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What output resistance does an ideal opamp have?",
+      "options": [
+        "Infinite",
+        "Equal to the sensor's resistance",
+        "Zero",
+        "1 kOhm"
+      ],
+      "correct_index": 2,
+      "explanation": "An ideal opamp has zero output resistance and infinite input resistance.",
+      "exclusion_group": null
+    },
+    {
+      "code": "NI-TN-16",
+      "skill": "NI",
+      "chunk": "NI-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "A designer is choosing an opamp for a thermocouple amplifier with a gain of 500. What should be checked before buying it?",
+      "options": [
+        "Only its supply voltage, because all opamps behave alike at any gain",
+        "Only its price, because non-idealities never matter in sensor readout",
+        "Only its output current, because the input side does not affect accuracy",
+        "Its datasheet limits, such as offset, against the needs of the sensor and application"
+      ],
+      "correct_index": 3,
+      "explanation": "Designers check the opamp's datasheet limits against the sensor and application; with a gain of 500 and microvolt signals, offset and other non-idealities matter.",
+      "exclusion_group": null
+    },
+    {
+      "code": "NI-TN-17",
+      "skill": "NI",
+      "chunk": "NI-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is a typical size of an opamp's input offset voltage?",
+      "options": [
+        "Microvolts to a few millivolts",
+        "Several volts",
+        "Exactly zero",
+        "Hundreds of volts"
+      ],
+      "correct_index": 0,
+      "explanation": "Input offset voltage is typically microvolts to a few millivolts.",
+      "exclusion_group": null
+    },
+    {
+      "code": "NI-TN-18",
+      "skill": "NI",
+      "chunk": "NI-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which kind of opamp inputs gives a very high input resistance?",
+      "options": [
+        "Inputs with a 1 kOhm resistor",
+        "CMOS or FET inputs",
+        "Inputs connected to ground",
+        "Inputs with a large offset"
+      ],
+      "correct_index": 1,
+      "explanation": "Opamps with CMOS or FET inputs have a very high input resistance.",
+      "exclusion_group": "ni-loading"
+    },
+    {
+      "code": "NI-TN-19",
+      "skill": "NI",
+      "chunk": "NI-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In which situation do opamp non-idealities matter most?",
+      "options": [
+        "When the signal is large and slow",
+        "When the gain is exactly 1 and the source resistance is low",
+        "When the sensor signal is tiny",
+        "When no ADC is used"
+      ],
+      "correct_index": 2,
+      "explanation": "Errors matter most with tiny signals, large gain, high source resistance or fast signals.",
+      "exclusion_group": null
+    },
+    {
+      "code": "NI-TN-20",
+      "skill": "NI",
+      "chunk": "NI-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An amplifier with a gain of 10 uses an opamp with a 2 mV input offset. What output error does the offset cause?",
+      "options": [
+        "2 mV",
+        "0.2 mV",
+        "200 mV",
+        "20 mV"
+      ],
+      "correct_index": 3,
+      "explanation": "The offset is multiplied by the gain: 2 mV x 10 = 20 mV.",
+      "exclusion_group": "ni-offset"
+    },
+    {
+      "code": "NI-TN-21",
+      "skill": "NI",
+      "chunk": "NI-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Raising an amplifier's gain from 10 to 100 with the same opamp changes its bandwidth how?",
+      "options": [
+        "It becomes about ten times lower",
+        "It becomes about ten times higher",
+        "It stays exactly the same",
+        "It becomes zero"
+      ],
+      "correct_index": 0,
+      "explanation": "The gain-bandwidth product is roughly constant, so ten times more gain gives about ten times less bandwidth.",
+      "exclusion_group": "ni-speed"
+    },
+    {
+      "code": "NI-TN-22",
+      "skill": "NI",
+      "chunk": "NI-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An opamp on a 5 V supply is asked to output 7 V. What happens?",
+      "options": [
+        "The output reaches 7 V but slowly",
+        "The output saturates near the supply voltage",
+        "The opamp adds an offset of 2 V",
+        "The input resistance becomes zero"
+      ],
+      "correct_index": 1,
+      "explanation": "The output cannot swing beyond the supply voltages, so it saturates.",
+      "exclusion_group": null
+    },
+    {
+      "code": "NI-TN-23",
+      "skill": "NI",
+      "chunk": "NI-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A sensor with Rs = 2 kOhm feeds an amplifier with Rin = 2 kOhm. What fraction of the sensor voltage does the amplifier see?",
+      "options": [
+        "100%",
+        "25%",
+        "50%",
+        "99%"
+      ],
+      "correct_index": 2,
+      "explanation": "Rin / (Rs + Rin) = 2 / (2 + 2) = 50%.",
+      "exclusion_group": "ni-loading"
+    },
+    {
+      "code": "NI-TN-24",
+      "skill": "NI",
+      "chunk": "NI-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "An opamp has a slew rate of 1 V per microsecond. What is the shortest time its output needs to rise by 5 V?",
+      "options": [
+        "1 microsecond",
+        "0.2 microseconds",
+        "50 microseconds",
+        "5 microseconds"
+      ],
+      "correct_index": 3,
+      "explanation": "The output can change at most 1 V per microsecond, so a 5 V step needs at least 5 microseconds.",
       "exclusion_group": null
     }
   ]
