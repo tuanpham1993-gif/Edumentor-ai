@@ -134,7 +134,7 @@ export default function PathDetail2Page() {
       </header>
 
       <div className={styles.toolbarWrap}>
-        <LearningPathToolBar recordId={path.record_id} selectedSkill={selected} nodes={path.nodes}
+        <LearningPathToolBar recordId={path.record_id} learningPath={path} selectedSkill={selected} nodes={path.nodes}
           edges={path.edges} onRefresh={refresh} />
       </div>
 
