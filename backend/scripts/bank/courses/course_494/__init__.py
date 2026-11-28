@@ -22,7 +22,7 @@ SKILL_NAMES = {
     "DAT": "Data Analysis Techniques",
 }
 # 7.5b (27/11): câu cùng nhóm không vào cùng một đề. Trắc nghiệm minh họa cùng cách làm với câu tự luận tính toán.
-# Cặp lộ đáp án trắc nghiệm ↔ tự luận đợt 1 (lượt bổ sung 1, 27/11); đợt 2 (lượt 2, 27/11); đợt 3 ở lượt 3.
+# Cặp lộ đáp án trắc nghiệm ↔ tự luận đợt 1 (lượt bổ sung 1, 27/11); đợt 2 (lượt 2, 27/11); đợt 3 (lượt 3, 28/11).
 EXCLUSION = {
     # IOT
     "IOT-TN-01": "iot-identity", "IOT-TL-01": "iot-identity",
@@ -68,8 +68,27 @@ EXCLUSION = {
     "NI-TL-04": "ni-speed",
     "NI-TN-03": "ni-loading", "NI-TN-04": "ni-loading", "NI-TN-09": "ni-loading", "NI-TN-18": "ni-loading",
     "NI-TN-23": "ni-loading", "NI-TL-05": "ni-loading",
-    # DAT
-    "DAT-TN-08": "dat-linreg-substitute", "DAT-TL-05": "dat-linreg-substitute",
+    # DA (lượt 3)
+    "DA-TN-01": "da-goals", "DA-TN-02": "da-goals", "DA-TN-24": "da-goals", "DA-TL-01": "da-goals",
+    "DA-TN-03": "da-components", "DA-TN-18": "da-components", "DA-TL-02": "da-components",
+    "DA-TN-05": "da-types", "DA-TN-06": "da-types", "DA-TN-23": "da-types", "DA-TL-03": "da-types",
+    "DA-TN-19": "da-split", "DA-TN-22": "da-split", "DA-TL-04": "da-split",
+    "DA-TN-12": "da-pipeline", "DA-TN-13": "da-pipeline", "DA-TN-14": "da-pipeline", "DA-TN-21": "da-pipeline",
+    "DA-TL-05": "da-pipeline",
+    "DA-TN-04": "da-feasibility", "DA-TN-09": "da-feasibility", "DA-TN-10": "da-feasibility",
+    "DA-TL-06": "da-feasibility",
+    # DAT (lượt 3) — hồi quy tách 2 nhóm: khớp đường thẳng (TL-01) / dùng đường thẳng để tính, ngoại suy (TL-05)
+    "DAT-TN-01": "dat-linreg-fit", "DAT-TN-02": "dat-linreg-fit", "DAT-TN-10": "dat-linreg-fit",
+    "DAT-TN-21": "dat-linreg-fit",
+    "DAT-TL-01": "dat-linreg-fit",
+    "DAT-TN-08": "dat-linreg-use", "DAT-TN-18": "dat-linreg-use", "DAT-TN-20": "dat-linreg-use",
+    "DAT-TL-05": "dat-linreg-use",
+    "DAT-TN-03": "dat-components", "DAT-TN-11": "dat-components", "DAT-TN-23": "dat-components",
+    "DAT-TL-02": "dat-components",
+    "DAT-TN-07": "dat-kmeans", "DAT-TN-19": "dat-kmeans", "DAT-TN-24": "dat-kmeans", "DAT-TL-03": "dat-kmeans",
+    "DAT-TN-17": "dat-scaling", "DAT-TL-04": "dat-scaling",
+    "DAT-TN-05": "dat-forecast", "DAT-TN-12": "dat-forecast", "DAT-TN-22": "dat-forecast",
+    "DAT-TL-06": "dat-forecast",
 }  # fmt: skip
 NOTE = (
     "English bank (drafted by Claude, reviewed by Tuấn). Batch 1 (26/11/2026): IoT, Model and Components of IoT, "
