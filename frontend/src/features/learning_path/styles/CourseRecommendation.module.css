@@ -70,22 +70,22 @@
 }
 
 .levelChip {
-  padding: 4px 10px;
+  padding: 4px 11px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--line);
-  background: var(--surface-sunk);
+  border: 1px solid var(--card-border);
+  background: var(--card-inner);
   color: var(--text-muted);
   font: inherit;
-  font-size: 11.5px;
+  font-size: 0.74rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--d-fast) var(--e-std);
+  transition: background var(--d-fast) var(--e-std), border-color var(--d-fast) var(--e-std), color var(--d-fast) var(--e-std);
 }
 
 .levelChip:hover,
 .levelChip:focus-visible {
   color: var(--text);
-  border-color: var(--card-border);
+  border-color: var(--accent-soft-border);
   outline: none;
 }
 
@@ -136,15 +136,16 @@
   padding: 12px;
   border-radius: var(--r-lg);
   border: 1px solid var(--card-border);
-  background: var(--surface-sunk);
+  background: var(--card-inner);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: border-color var(--d-fast) var(--e-std);
+  transition: border-color var(--d-fast) var(--e-std), transform var(--d-fast) var(--e-std);
 }
 
 .courseCard:hover {
   border-color: var(--accent-soft-border);
+  transform: translateY(-1px);
 }
 
 .cardMain {

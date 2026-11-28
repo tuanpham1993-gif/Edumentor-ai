@@ -4,19 +4,45 @@ import {
   getSharedLearningPath,
   cloneSharedLearningPath,
 } from '../../../api/learningPaths.api';
+import { getMySkills } from '../../../api/me.api.js';
 import { useAuth } from '../../../hooks/useAuth';
-import LearningPathGraphForDetail from '../components/LearningPathGraphForDetail';
+import PathGraph2 from '../../learning_path2/components/PathGraph2.jsx';
+import { SkillReviewProvider } from '../../review/components/SkillReviewContext.jsx';
 import CourseRecommendation from '../components/CourseRecommendation';
 import { formatDate, initials } from '../../../utils/formatters';
 import { sortLearningPathNodes } from '../../../utils/sortLearningPathNodes';
 import styles from '../styles/SharedLearningPath.module.css';
 
+function deriveSharedStates(path, live) {
+  const nodes = path?.nodes ?? [];
+  const preds = new Map(nodes.map((n) => [n.skill_id, []]));
+  (path?.edges ?? []).filter((e) => (e.relation_type ?? 'prerequisite') === 'prerequisite').forEach((e) => {
+    preds.get(e.to_skill_id)?.push(e.from_skill_id);
+  });
+  const out = {};
+  nodes.forEach((n) => {
+    const id = String(n.skill_id);
+    const liveStatus = live.get(n.skill_id);
+    if (liveStatus === 'known') out[id] = 'known';
+    else if (liveStatus === 'learning') out[id] = 'learning';
+  });
+  nodes.forEach((n) => {
+    const id = String(n.skill_id);
+    if (out[id]) return;
+    const ready = (preds.get(n.skill_id) ?? []).every((p) => out[String(p)] === 'known');
+    out[id] = ready ? 'eligible' : 'locked';
+  });
+  return out;
+}
+
 export default function SharedLearningPathPage() {
   const { shareCode } = useParams();
   const navigate = useNavigate();
   const { user, status } = useAuth();
+  const isAuthenticated = status === 'authenticated';
 
   const [path, setPath] = useState(null);
+  const [live, setLive] = useState(() => new Map());
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -59,9 +85,29 @@ export default function SharedLearningPathPage() {
     };
   }, [shareCode]);
 
+  useEffect(() => {
+    let alive = true;
+    if (!isAuthenticated || !path) {
+      setLive(new Map());
+      return () => { alive = false; };
+    }
+    getMySkills()
+      .then((skills) => alive && setLive(new Map(skills.map((s) => [s.skill_id, s.status]))))
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [isAuthenticated, path]);
+
   const sortedNodes = useMemo(() => {
     return sortLearningPathNodes(path?.nodes, path?.edges);
   }, [path?.nodes, path?.edges]);
+
+  const graph = useMemo(() => ({
+    nodes: (path?.nodes ?? []).map((n) => ({ ...n, skill_name: n.skill?.skill })),
+    edges: path?.edges ?? [],
+    layer: {},
+  }), [path]);
+
+  const states = useMemo(() => deriveSharedStates(path, live), [path, live]);
 
   function handleSelectSkill(skill) {
     setSelectedSkill(skill);
@@ -105,10 +151,7 @@ export default function SharedLearningPathPage() {
   if (isLoading) {
     return (
       <main className={styles.container}>
-        <div className={styles.loadingBox}>
-          <div className={styles.spinner} />
-          <p>Đang tải lộ trình được chia sẻ...</p>
-        </div>
+        <div className={styles.skeletonWide} aria-busy="true" aria-label="Đang tải lộ trình chia sẻ" />
       </main>
     );
   }
@@ -117,7 +160,6 @@ export default function SharedLearningPathPage() {
     return (
       <main className={styles.container}>
         <div className={styles.errorBox} role="alert">
-          <div className={styles.errorIcon}>⚠️</div>
           <h2>Không tìm thấy lộ trình</h2>
           <p>{error || 'Lộ trình này không khả dụng hoặc đã bị thu hồi quyền truy cập.'}</p>
           <div className={styles.errorActions}>
@@ -139,6 +181,13 @@ export default function SharedLearningPathPage() {
 
   return (
     <main className={styles.container}>
+      <nav className={styles.crumbs}>
+        <Link to={isAuthenticated ? '/me/my-learning-path' : '/'}>
+          {isAuthenticated ? 'Lộ trình của tôi' : 'Trang chủ'}
+        </Link>{' '}
+        / <span>Lộ trình chia sẻ</span>
+      </nav>
+
       {/* Header bar */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
@@ -171,17 +220,17 @@ export default function SharedLearningPathPage() {
 
           <div className={styles.metaTags}>
             <span className={styles.tag}>
-              🎯 Mục tiêu: {path.goal_type === 'career' ? 'Nghề nghiệp' : 'Dự án'}
+              {path.goal_type === 'career' ? 'Mục tiêu: Nghề nghiệp' : 'Mục tiêu: Dự án'}
             </span>
             <span className={styles.tag}>
-              📚 {path.nodes?.length || 0} Kỹ năng
+              {path.nodes?.length || 0} kỹ năng
             </span>
             <span className={styles.tagHighlight}>
-              👥 {path.clone_count || 0} Học viên đã học theo
+              {path.clone_count || 0} học viên đã học theo
             </span>
             {isOwner && (
               <span className={styles.tagOwner}>
-                ⭐ Đây là lộ trình của bạn
+                Lộ trình của bạn
               </span>
             )}
           </div>
@@ -209,7 +258,7 @@ export default function SharedLearningPathPage() {
               onClick={handleAdoptPath}
               disabled={isCloning}
             >
-              {isCloning ? 'Đang sao chép...' : '✨ Học theo lộ trình này'}
+              {isCloning ? 'Đang sao chép...' : 'Học theo lộ trình này'}
             </button>
           )}
         </div>
@@ -218,7 +267,7 @@ export default function SharedLearningPathPage() {
       {/* Notifications */}
       {cloneSuccess && (
         <div className={styles.alertSuccess} role="status">
-          ✓ {cloneSuccess}
+          {cloneSuccess}
         </div>
       )}
 
@@ -231,14 +280,15 @@ export default function SharedLearningPathPage() {
       {/* Main content: Graph + Details */}
       <section className={styles.content}>
         <div className={styles.graphWrapper}>
-          <div className={styles.graphInstruction}>
-            💡 <span>Bấm vào từng kỹ năng trên đồ thị để xem chi tiết và các khóa học gợi ý.</span>
-          </div>
-
-          <LearningPathGraphForDetail
-            learningPath={path}
-            onSelectSkill={handleSelectSkill}
-          />
+          <SkillReviewProvider skillIds={isAuthenticated ? (path.nodes ?? []).map((n) => n.skill_id) : []}>
+            <PathGraph2
+              graph={graph}
+              states={states}
+              selectedId={selectedSkill?.skillId}
+              onSelect={handleSelectSkill}
+              height={620}
+            />
+          </SkillReviewProvider>
         </div>
 
         <aside className={styles.sidebar}>
@@ -301,7 +351,7 @@ export default function SharedLearningPathPage() {
             <strong>{path.original_query}</strong>
             <span>
               {isOwner
-                ? '⭐ Đây là lộ trình do bạn tạo'
+                ? 'Đây là lộ trình do bạn tạo'
                 : 'Muốn học theo lộ trình này? Lưu ngay về tài khoản để cá nhân hóa tiến độ.'}
             </span>
           </div>
@@ -341,7 +391,6 @@ export default function SharedLearningPathPage() {
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.loginModalIcon}>🎓</div>
             <h2>Đăng nhập để lưu lộ trình</h2>
             <p>
               Bạn cần có tài khoản EduMentor AI để sao chép lộ trình này vào mục "Lộ trình của tôi" và bắt đầu theo dõi tiến độ.
