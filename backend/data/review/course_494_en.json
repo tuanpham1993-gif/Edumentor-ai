@@ -3581,7 +3581,7 @@
       ],
       "correct_index": 0,
       "explanation": "Predicting failures before they happen from sensor data is predictive maintenance.",
-      "exclusion_group": null
+      "exclusion_group": "da-goals"
     },
     {
       "code": "DA-TN-02",
@@ -3598,7 +3598,7 @@
       ],
       "correct_index": 1,
       "explanation": "Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike.",
-      "exclusion_group": null
+      "exclusion_group": "da-goals"
     },
     {
       "code": "DA-TN-03",
@@ -3615,7 +3615,7 @@
       ],
       "correct_index": 2,
       "explanation": "The hypothesis set is the family of candidate models, for example all straight lines.",
-      "exclusion_group": null
+      "exclusion_group": "da-components"
     },
     {
       "code": "DA-TN-04",
@@ -3632,7 +3632,7 @@
       ],
       "correct_index": 3,
       "explanation": "In-sample error is on the training data; out-of-sample error is on new, unseen data.",
-      "exclusion_group": null
+      "exclusion_group": "da-feasibility"
     },
     {
       "code": "DA-TN-05",
@@ -3649,7 +3649,7 @@
       ],
       "correct_index": 0,
       "explanation": "Supervised learning uses labelled examples; unsupervised learning has no labels.",
-      "exclusion_group": null
+      "exclusion_group": "da-types"
     },
     {
       "code": "DA-TN-06",
@@ -3666,7 +3666,7 @@
       ],
       "correct_index": 1,
       "explanation": "Reinforcement learning learns from rewards, such as a thermostat learning from comfort feedback.",
-      "exclusion_group": null
+      "exclusion_group": "da-types"
     },
     {
       "code": "DA-TN-07",
@@ -3717,7 +3717,7 @@
       ],
       "correct_index": 0,
       "explanation": "Fitting the training data including its noise but failing on new data is overfitting.",
-      "exclusion_group": null
+      "exclusion_group": "da-feasibility"
     },
     {
       "code": "DA-TN-10",
@@ -3734,7 +3734,7 @@
       ],
       "correct_index": 1,
       "explanation": "Learning is feasible when the data represent the situations of use and there are enough examples.",
-      "exclusion_group": null
+      "exclusion_group": "da-feasibility"
     },
     {
       "code": "DA-TN-11",
@@ -3768,7 +3768,7 @@
       ],
       "correct_index": 3,
       "explanation": "The output is a category learned from labelled examples, so it is classification.",
-      "exclusion_group": null
+      "exclusion_group": "da-pipeline"
     },
     {
       "code": "DA-TN-13",
@@ -3785,7 +3785,7 @@
       ],
       "correct_index": 0,
       "explanation": "Impossible values from faulty sensors are outliers, handled in the cleaning step.",
-      "exclusion_group": null
+      "exclusion_group": "da-pipeline"
     },
     {
       "code": "DA-TN-14",
@@ -3802,7 +3802,7 @@
       ],
       "correct_index": 1,
       "explanation": "Turning raw readings into inputs such as a one-minute average is feature computation.",
-      "exclusion_group": null
+      "exclusion_group": "da-pipeline"
     },
     {
       "code": "DA-TL-01",
@@ -3858,7 +3858,7 @@
         }
       ],
       "explanation": "Model answer: Raw sensor readings arrive in huge amounts and are of little use until they are analysed and turned into information and decisions. Predictive maintenance predicts machine failures before they happen, so repairs can be made in time. Anomaly detection finds readings that do not fit the normal pattern, such as a sudden spike that may mean a fault or an attack.",
-      "exclusion_group": null
+      "exclusion_group": "da-goals"
     },
     {
       "code": "DA-TL-02",
@@ -3915,7 +3915,7 @@
         }
       ],
       "explanation": "Model answer: There is an unknown target function f that maps inputs to outputs. What we have is a data set of past examples of inputs with their outputs. The learning algorithm searches a hypothesis set of candidate models and picks the final hypothesis g that fits the data best, so that it approximates f.",
-      "exclusion_group": null
+      "exclusion_group": "da-components"
     },
     {
       "code": "DA-TL-03",
@@ -3974,7 +3974,7 @@
         }
       ],
       "explanation": "Model answer: In supervised learning every training example comes with the correct answer, a label. In unsupervised learning there are no labels, so the algorithm finds structure, such as groups, by itself. In reinforcement learning the agent learns by trial and error from rewards.",
-      "exclusion_group": null
+      "exclusion_group": "da-types"
     },
     {
       "code": "DA-TL-04",
@@ -4013,7 +4013,7 @@
         }
       ],
       "explanation": "Model answer: The training set is used to fit the model, and the test set checks how well the model works on data it has not seen, which is how it will be used in practice. For that, the test set must be kept aside and never used for training.",
-      "exclusion_group": null
+      "exclusion_group": "da-split"
     },
     {
       "code": "DA-TL-05",
@@ -4088,7 +4088,7 @@
         }
       ],
       "explanation": "Model answer: First collect past vibration data and record which motors failed, so the data are labelled. Clean the data by handling missing values and removing outliers from faulty sensors. Compute features such as the average and peak vibration over each minute. Because the past failures are labelled, supervised classification fits. When the model predicts a failure, the system raises an alert and schedules maintenance before the motor breaks.",
-      "exclusion_group": null
+      "exclusion_group": "da-pipeline"
     },
     {
       "code": "DA-TL-06",
@@ -4165,7 +4165,7 @@
         }
       ],
       "explanation": "Model answer: Learning is only feasible when the training data are representative of the situations where the model is used; this model only saw summer conditions, so winter is not represented. Its low in-sample error does not guarantee a low out-of-sample error. To fix it, collect data from all seasons and retrain, then check the model on winter test data before using it.",
-      "exclusion_group": null
+      "exclusion_group": "da-feasibility"
     },
     {
       "code": "DAT-TN-01",
@@ -4182,7 +4182,7 @@
       ],
       "correct_index": 2,
       "explanation": "w1 is the slope; w0 is the intercept, the value of y when x is 0.",
-      "exclusion_group": null
+      "exclusion_group": "dat-linreg-fit"
     },
     {
       "code": "DAT-TN-02",
@@ -4199,7 +4199,7 @@
       ],
       "correct_index": 3,
       "explanation": "Least squares chooses the weights that minimise the mean squared error.",
-      "exclusion_group": null
+      "exclusion_group": "dat-linreg-fit"
     },
     {
       "code": "DAT-TN-03",
@@ -4216,7 +4216,7 @@
       ],
       "correct_index": 0,
       "explanation": "Seasonality repeats with a fixed period; the trend is a long-term increase or decrease.",
-      "exclusion_group": null
+      "exclusion_group": "dat-components"
     },
     {
       "code": "DAT-TN-04",
@@ -4250,7 +4250,7 @@
       ],
       "correct_index": 2,
       "explanation": "An AR model predicts the next value from previous values.",
-      "exclusion_group": null
+      "exclusion_group": "dat-forecast"
     },
     {
       "code": "DAT-TN-06",
@@ -4284,7 +4284,7 @@
       ],
       "correct_index": 0,
       "explanation": "Each point is assigned to its nearest centroid, then the centroids move to the mean of their points.",
-      "exclusion_group": null
+      "exclusion_group": "dat-kmeans"
     },
     {
       "code": "DAT-TN-08",
@@ -4301,7 +4301,7 @@
       ],
       "correct_index": 1,
       "explanation": "1.5 + 0.2 x 10 = 3.5.",
-      "exclusion_group": "dat-linreg-substitute"
+      "exclusion_group": "dat-linreg-use"
     },
     {
       "code": "DAT-TN-09",
@@ -4335,7 +4335,7 @@
       ],
       "correct_index": 3,
       "explanation": "A smaller MSE means the predictions are closer to the actual values.",
-      "exclusion_group": null
+      "exclusion_group": "dat-linreg-fit"
     },
     {
       "code": "DAT-TN-11",
@@ -4352,7 +4352,7 @@
       ],
       "correct_index": 0,
       "explanation": "Averaging a full day smooths the daily cycle and the noise, leaving the slow long-term movement.",
-      "exclusion_group": null
+      "exclusion_group": "dat-components"
     },
     {
       "code": "DAT-TN-12",
@@ -4369,7 +4369,7 @@
       ],
       "correct_index": 1,
       "explanation": "In hourly data the daily cycle repeats every 24 values, so the value 24 hours earlier helps.",
-      "exclusion_group": null
+      "exclusion_group": "dat-forecast"
     },
     {
       "code": "DAT-TN-13",
@@ -4443,7 +4443,7 @@
         }
       ],
       "explanation": "Model answer: Linear regression finds a straight line y = w0 + w1 x that describes how the output changes with the input. The line is fitted by least squares, choosing the weights that minimise the mean squared error between the predicted and actual values.",
-      "exclusion_group": null
+      "exclusion_group": "dat-linreg-fit"
     },
     {
       "code": "DAT-TL-02",
@@ -4502,7 +4502,7 @@
         }
       ],
       "explanation": "Model answer: The trend is the long-term increase or decrease. Seasonality is a pattern that repeats with a fixed period, such as a daily cycle. Noise is the random variation that is left over.",
-      "exclusion_group": null
+      "exclusion_group": "dat-components"
     },
     {
       "code": "DAT-TL-03",
@@ -4553,7 +4553,7 @@
         }
       ],
       "explanation": "Model answer: Each point is assigned to its nearest centroid. Then each centroid is moved to the mean of the points assigned to it. These two steps are repeated until the assignments no longer change.",
-      "exclusion_group": null
+      "exclusion_group": "dat-kmeans"
     },
     {
       "code": "DAT-TL-04",
@@ -4590,7 +4590,7 @@
         }
       ],
       "explanation": "Model answer: k-means groups points by their distance to the centroids. If the features are not scaled, the feature with the larger numeric range dominates the distances and the other features hardly matter.",
-      "exclusion_group": null
+      "exclusion_group": "dat-scaling"
     },
     {
       "code": "DAT-TL-05",
@@ -4658,7 +4658,7 @@
         }
       ],
       "explanation": "Model answer: Substituting T = 30 gives E = 2 + 0.5 x 30 = 17 kWh. The number 0.5 is the slope: the energy use rises by 0.5 kWh per degree. I would not trust a prediction for 60 degC, because it is outside the 10 to 35 degC range of the data; that is extrapolation, and the relationship may not stay linear.",
-      "exclusion_group": "dat-linreg-substitute"
+      "exclusion_group": "dat-linreg-use"
     },
     {
       "code": "DAT-TL-06",
@@ -4725,7 +4725,7 @@
         }
       ],
       "explanation": "Model answer: I would split the data in time order: train on the first two and a half months and test on the later part, and not shuffle, so the future never leaks into training. The model would be autoregressive, using the previous few hours' values, plus the value from 24 hours earlier to capture the daily cycle.",
-      "exclusion_group": null
+      "exclusion_group": "dat-forecast"
     },
     {
       "code": "IOT-TN-15",
@@ -5746,6 +5746,346 @@
       "correct_index": 3,
       "explanation": "The output can change at most 1 V per microsecond, so a 5 V step needs at least 5 microseconds.",
       "exclusion_group": null
+    },
+    {
+      "code": "DA-TN-15",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which goal of IoT data analysis means showing the current state of a system on a dashboard?",
+      "options": [
+        "Monitoring",
+        "Anomaly detection",
+        "Automation",
+        "Prediction"
+      ],
+      "correct_index": 0,
+      "explanation": "Monitoring shows the current state of a system, for example on a dashboard.",
+      "exclusion_group": null
+    },
+    {
+      "code": "DA-TN-16",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Forecasting a building's energy demand for next week is an example of which analysis goal?",
+      "options": [
+        "Monitoring",
+        "Prediction",
+        "Automation",
+        "Anomaly detection"
+      ],
+      "correct_index": 1,
+      "explanation": "Forecasting what will happen, such as energy demand, is prediction.",
+      "exclusion_group": null
+    },
+    {
+      "code": "DA-TN-17",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Which Python library provides ready-made models such as linear regression and k-means?",
+      "options": [
+        "pandas",
+        "NumPy",
+        "scikit-learn",
+        "matplotlib"
+      ],
+      "correct_index": 2,
+      "explanation": "scikit-learn provides models; pandas handles tables, NumPy arrays and matplotlib plots.",
+      "exclusion_group": null
+    },
+    {
+      "code": "DA-TN-18",
+      "skill": "DA",
+      "chunk": "DA-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In the components of learning, what is the target function f?",
+      "options": [
+        "The model that the algorithm finally selects",
+        "The set of past examples used for training",
+        "The error measured on new, unseen data",
+        "The unknown mapping from inputs to outputs"
+      ],
+      "correct_index": 3,
+      "explanation": "f is the unknown function that maps inputs to outputs; the data set holds past examples of it.",
+      "exclusion_group": "da-components"
+    },
+    {
+      "code": "DA-TN-19",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is the part of the data that is used to fit the model called?",
+      "options": [
+        "Training set",
+        "Test set",
+        "Hypothesis set",
+        "Target set"
+      ],
+      "correct_index": 0,
+      "explanation": "The training set fits the model; the test set is kept aside.",
+      "exclusion_group": "da-split"
+    },
+    {
+      "code": "DA-TN-20",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A system switches irrigation on by itself when it predicts that the soil will be dry. Which analysis goal is the switching?",
+      "options": [
+        "Monitoring",
+        "Automation",
+        "Anomaly detection",
+        "Data cleaning"
+      ],
+      "correct_index": 1,
+      "explanation": "Letting the system act by itself is automation.",
+      "exclusion_group": null
+    },
+    {
+      "code": "DA-TN-21",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Which order of steps is right for a data-driven project?",
+      "options": [
+        "Collect, build features, clean, split, train, evaluate",
+        "Collect, clean, split, evaluate, build features, train",
+        "Collect, clean, build features, split, train, evaluate",
+        "Collect, clean, build features, train, split, evaluate"
+      ],
+      "correct_index": 2,
+      "explanation": "Data are collected and cleaned, turned into features, split, used for training and then evaluated.",
+      "exclusion_group": "da-pipeline"
+    },
+    {
+      "code": "DA-TN-22",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A team tries many model settings and keeps the one with the lowest error on the test set. What is wrong with this?",
+      "options": [
+        "Test error can only be computed after the features are removed",
+        "The test set must always be larger than the training set",
+        "A lower test error always means the model is overfitting",
+        "The test set helped choose the model, so it is no longer unseen"
+      ],
+      "correct_index": 3,
+      "explanation": "The test set is kept aside to check unseen data; a model picked by its test error has already used it.",
+      "exclusion_group": "da-split"
+    },
+    {
+      "code": "DA-TN-23",
+      "skill": "DA",
+      "chunk": "DA-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A utility has smart-meter data without any labels and wants to find groups of similar households. Which type of learning fits?",
+      "options": [
+        "Unsupervised learning",
+        "Supervised learning",
+        "Reinforcement learning",
+        "Regression"
+      ],
+      "correct_index": 0,
+      "explanation": "There are no labels and the algorithm must find structure itself, so it is unsupervised.",
+      "exclusion_group": "da-types"
+    },
+    {
+      "code": "DA-TN-24",
+      "skill": "DA",
+      "chunk": "DA-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A factory streams vibration readings every second, together with camera images and machine logs. What does this mainly illustrate?",
+      "options": [
+        "IoT data are useful before any analysis is done",
+        "IoT data are large in volume and come in many forms",
+        "IoT systems can only analyse numeric readings",
+        "IoT sensors usually report just once a day"
+      ],
+      "correct_index": 1,
+      "explanation": "Sensors report continuously and the data come in many forms, which is why analysis is needed.",
+      "exclusion_group": "da-goals"
+    },
+    {
+      "code": "DAT-TN-15",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is a time series?",
+      "options": [
+        "Measurements sorted by their size",
+        "Groups of similar measurements",
+        "Measurements taken in time order",
+        "Measurements with the time removed"
+      ],
+      "correct_index": 2,
+      "explanation": "A time series is a sequence of measurements in time order, usually at regular intervals.",
+      "exclusion_group": null
+    },
+    {
+      "code": "DAT-TN-16",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What does clustering aim for?",
+      "options": [
+        "Each point receives a numeric prediction from a fitted line",
+        "The next value is forecast from the values that came before",
+        "Every group contains the same number of points as the others",
+        "Similar points share a group and different points are separated"
+      ],
+      "correct_index": 3,
+      "explanation": "Clustering groups points so that points in a cluster are similar and clusters differ.",
+      "exclusion_group": null
+    },
+    {
+      "code": "DAT-TN-17",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "What is usually done to features before k-means is run?",
+      "options": [
+        "They are scaled (standardised)",
+        "They are sorted by time",
+        "They are turned into class labels",
+        "They are replaced by their cluster number"
+      ],
+      "correct_index": 0,
+      "explanation": "k-means uses distances, so features are usually scaled first.",
+      "exclusion_group": "dat-scaling"
+    },
+    {
+      "code": "DAT-TN-18",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "Predicting far outside the range of inputs used for training is called what?",
+      "options": [
+        "Interpolation",
+        "Extrapolation",
+        "Standardisation",
+        "Overfitting"
+      ],
+      "correct_index": 1,
+      "explanation": "Extrapolation can be badly wrong because the relationship may not stay linear.",
+      "exclusion_group": "dat-linreg-use"
+    },
+    {
+      "code": "DAT-TN-19",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "recognize",
+      "content": "In k-means, what must be chosen before the algorithm can start?",
+      "options": [
+        "The final group of every point",
+        "A label for every data point",
+        "The number of clusters k",
+        "The slope of a fitted line"
+      ],
+      "correct_index": 2,
+      "explanation": "First choose k and k starting centres; the groups are found by the algorithm.",
+      "exclusion_group": "dat-kmeans"
+    },
+    {
+      "code": "DAT-TN-20",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "For the fitted line y = 10 - 2 x, what happens to the prediction when x increases by 1?",
+      "options": [
+        "It increases by 10",
+        "It decreases by 10",
+        "It increases by 2",
+        "It decreases by 2"
+      ],
+      "correct_index": 3,
+      "explanation": "The slope is -2, so y falls by 2 for each increase of 1 in x.",
+      "exclusion_group": "dat-linreg-use"
+    },
+    {
+      "code": "DAT-TN-21",
+      "skill": "DAT",
+      "chunk": "DAT-K01",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A line predicts 5 and 8, while the actual values are 4 and 10. What is the mean squared error?",
+      "options": [
+        "2.5",
+        "1.5",
+        "5.0",
+        "3.0"
+      ],
+      "correct_index": 0,
+      "explanation": "The errors are 1 and −2; their squares are 1 and 4, and the mean is 2.5.",
+      "exclusion_group": "dat-linreg-fit"
+    },
+    {
+      "code": "DAT-TN-22",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "A model for hourly electricity load is trained on January to March and tested on April. Why is this a sound split?",
+      "options": [
+        "April always has less noise than the three earlier months",
+        "The model is tested on a later period that it has not seen",
+        "Testing on April shuffles the readings in a random order",
+        "The test period must be longer than the training period"
+      ],
+      "correct_index": 1,
+      "explanation": "A time series is split in time order, so training never uses knowledge of the future.",
+      "exclusion_group": "dat-forecast"
+    },
+    {
+      "code": "DAT-TN-23",
+      "skill": "DAT",
+      "chunk": "DAT-K02",
+      "type": "mcq",
+      "level": "understand",
+      "content": "Over five years, a building's average energy use climbs slowly, apart from its daily ups and downs. Which time-series component is the slow climb?",
+      "options": [
+        "Seasonality",
+        "Noise",
+        "Trend",
+        "Intercept"
+      ],
+      "correct_index": 2,
+      "explanation": "A long-term increase or decrease is the trend.",
+      "exclusion_group": "dat-components"
+    },
+    {
+      "code": "DAT-TN-24",
+      "skill": "DAT",
+      "chunk": "DAT-K03",
+      "type": "mcq",
+      "level": "understand",
+      "content": "In k-means, a cluster holds the points (2, 2), (4, 2) and (6, 5). Where does its centroid move?",
+      "options": [
+        "(4, 2)",
+        "(6, 5)",
+        "(12, 9)",
+        "(4, 3)"
+      ],
+      "correct_index": 3,
+      "explanation": "The centroid moves to the mean of its points: x = 12 / 3 = 4 and y = 9 / 3 = 3.",
+      "exclusion_group": "dat-kmeans"
     }
   ]
 }
