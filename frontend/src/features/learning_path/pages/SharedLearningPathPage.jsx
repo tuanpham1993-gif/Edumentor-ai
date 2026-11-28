@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   getSharedLearningPath,
@@ -51,6 +51,9 @@ export default function SharedLearningPathPage() {
   const [cloneError, setCloneError] = useState('');
   const [cloneSuccess, setCloneSuccess] = useState('');
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginReason, setLoginReason] = useState('adopt'); // 'adopt' | 'skill'
+  const [isHeaderCtaVisible, setIsHeaderCtaVisible] = useState(true);
+  const headerCtaRef = useRef(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -109,7 +112,23 @@ export default function SharedLearningPathPage() {
 
   const states = useMemo(() => deriveSharedStates(path, live), [path, live]);
 
+  useEffect(() => {
+    const el = headerCtaRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsHeaderCtaVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [path]);
+
   function handleSelectSkill(skill) {
+    if (!isAuthenticated || !user) {
+      setLoginReason('skill');
+      setShowLoginModal(true);
+      return;
+    }
     setSelectedSkill(skill);
   }
 
@@ -118,7 +137,8 @@ export default function SharedLearningPathPage() {
     setCloneSuccess('');
 
     // Kiểm tra đăng nhập
-    if (status !== 'authenticated' || !user) {
+    if (!isAuthenticated || !user) {
+      setLoginReason('adopt');
       setShowLoginModal(true);
       return;
     }
@@ -237,7 +257,7 @@ export default function SharedLearningPathPage() {
         </div>
 
         {/* Action button CTA at header */}
-        <div className={styles.headerRight}>
+        <div className={styles.headerRight} ref={headerCtaRef}>
           {isOwner ? (
             <div className={styles.ownerNoticeGroup}>
               <p className={styles.ownerHint}>
@@ -344,42 +364,44 @@ export default function SharedLearningPathPage() {
         </aside>
       </section>
 
-      {/* Bottom Sticky Action Bar */}
-      <footer className={styles.stickyFooter}>
-        <div className={styles.stickyFooterInner}>
-          <div className={styles.stickyFooterText}>
-            <strong>{path.original_query}</strong>
-            <span>
-              {isOwner
-                ? 'Đây là lộ trình do bạn tạo'
-                : 'Muốn học theo lộ trình này? Lưu ngay về tài khoản để cá nhân hóa tiến độ.'}
-            </span>
-          </div>
+      {/* Bottom Sticky Action Bar: chỉ hiện khi nút CTA trên hero đã cuộn khỏi khung nhìn */}
+      {!isHeaderCtaVisible && (
+        <footer className={styles.stickyFooter}>
+          <div className={styles.stickyFooterInner}>
+            <div className={styles.stickyFooterText}>
+              <strong>{path.original_query}</strong>
+              <span>
+                {isOwner
+                  ? 'Đây là lộ trình do bạn tạo'
+                  : 'Muốn học theo lộ trình này? Lưu ngay về tài khoản để cá nhân hóa tiến độ.'}
+              </span>
+            </div>
 
-          <div className={styles.stickyFooterAction}>
-            {isOwner ? (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => navigate(`/me/my-learning-path/details/${path.record_id}`)}
-              >
-                Mở chỉnh sửa
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAdoptPath}
-                disabled={isCloning}
-              >
-                {isCloning ? 'Đang sao chép...' : 'Học theo lộ trình này'}
-              </button>
-            )}
+            <div className={styles.stickyFooterAction}>
+              {isOwner ? (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => navigate(`/me/my-learning-path/details/${path.record_id}`)}
+                >
+                  Mở chỉnh sửa
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAdoptPath}
+                  disabled={isCloning}
+                >
+                  {isCloning ? 'Đang sao chép...' : 'Học theo lộ trình này'}
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
 
-      {/* Modal nhắc đăng nhập khi khách click clone */}
+      {/* Modal nhắc đăng nhập khi khách click clone hoặc bấm vào kỹ năng */}
       {showLoginModal && (
         <div
           className={styles.modalBackdrop}
@@ -391,9 +413,15 @@ export default function SharedLearningPathPage() {
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2>Đăng nhập để lưu lộ trình</h2>
+            <h2>
+              {loginReason === 'skill'
+                ? 'Đăng nhập để xem khóa học gợi ý'
+                : 'Đăng nhập để lưu lộ trình'}
+            </h2>
             <p>
-              Bạn cần có tài khoản EduMentor AI để sao chép lộ trình này vào mục "Lộ trình của tôi" và bắt đầu theo dõi tiến độ.
+              {loginReason === 'skill'
+                ? 'Bạn cần đăng nhập tài khoản EduMentor AI để xem chi tiết khóa học gợi ý và tham gia học kỹ năng trong lộ trình này.'
+                : 'Bạn cần có tài khoản EduMentor AI để sao chép lộ trình này vào mục "Lộ trình của tôi" và bắt đầu theo dõi tiến độ.'}
             </p>
             <div className={styles.loginModalActions}>
               <button

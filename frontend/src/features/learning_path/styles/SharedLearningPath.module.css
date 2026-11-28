@@ -319,6 +319,7 @@
   z-index: 10;
   padding: 14px 0 4px;
   background: linear-gradient(transparent, var(--bg) 35%);
+  animation: rise var(--d-base) var(--ease-out);
 }
 .stickyFooterInner {
   display: flex;
@@ -389,6 +390,12 @@
   margin-top: 8px;
 }
 
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
 @keyframes shimmer {
   to {
     background-position: -200% 0;
@@ -424,7 +431,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeletonWide {
+  .skeletonWide,
+  .stickyFooter {
     animation: none;
   }
 }
