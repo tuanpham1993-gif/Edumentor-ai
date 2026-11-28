@@ -661,9 +661,9 @@
 
 /* Khung chi tiết lộ trình đang chọn */
 .pathDetailCard {
-  padding: 20px;
-  border-radius: var(--r-lg, 12px);
-  background: var(--card);
+  padding: 22px;
+  border-radius: var(--r-2xl, 18px);
+  background: linear-gradient(180deg, var(--accent-tint) 0%, var(--card) 130px);
   border: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
@@ -696,20 +696,21 @@
   font-weight: 700;
   letter-spacing: 0.9px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--accent);
 }
 
 .viewModeSwitch {
   display: inline-flex;
-  padding: 3px;
-  border-radius: var(--r-sm, 8px);
-  background: var(--surface-sunk);
-  border: 1px solid var(--line);
+  padding: 4px;
+  gap: 2px;
+  border-radius: var(--r-pill, 999px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
 }
 
 .viewModeBtn {
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 14px;
+  border-radius: var(--r-pill, 999px);
   border: none;
   background: none;
   font: inherit;
@@ -726,8 +727,8 @@
 }
 
 .viewModeBtnActive {
-  background: var(--card-inner);
-  color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .pathDetailTitle {

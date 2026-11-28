@@ -116,9 +116,9 @@
 /* Khung Editor bên phải */
 .editor {
   padding: 24px;
-  border-radius: 12px;
-  background: var(--card, #1c1815);
-  border: 1px solid var(--line, #2b2622);
+  border-radius: var(--r-2xl, 18px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
   gap: 20px;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getRecommendedCoursesBySkill } from '../../../api/courses.api.js';
 import { addBookmark, joinCourse, removeBookmark } from '../../../api/courseTracking.api.js';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -64,6 +64,7 @@ function ExternalArrowIcon() {
 
 export default function CourseRecommendation({ skill, isPreviewMode = false }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { status: authStatus } = useAuth();
   const isAuthenticated = authStatus === 'authenticated';
 
@@ -201,11 +202,7 @@ export default function CourseRecommendation({ skill, isPreviewMode = false }) {
 
   async function handleJoinCourse(course) {
     if (!isAuthenticated) {
-      if (course.url) {
-        window.open(course.url, '_blank', 'noopener,noreferrer');
-      } else {
-        navigate('/login');
-      }
+      navigate('/login', { state: { from: location.pathname } });
       return;
     }
     setJoiningId(course.course_id);
@@ -413,7 +410,13 @@ export default function CourseRecommendation({ skill, isPreviewMode = false }) {
                       <button
                         type="button"
                         className={styles.detailBtn}
-                        onClick={() => setDetailCourse(course)}
+                        onClick={() => {
+                          if (!isAuthenticated) {
+                            navigate('/login', { state: { from: location.pathname } });
+                            return;
+                          }
+                          setDetailCourse(course);
+                        }}
                       >
                         Chi tiết
                       </button>

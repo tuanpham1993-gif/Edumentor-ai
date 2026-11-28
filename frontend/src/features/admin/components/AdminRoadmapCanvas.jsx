@@ -1,200 +1,202 @@
-// Component vẽ đồ thị các node kỹ năng và đường cong Bezier SVG kết nối (Admin F11–F14).
-import React, { useMemo } from 'react';
+// Component vẽ đồ thị kỹ năng Admin dùng @xyflow/react theo hệ thống thiết kế learning_path2 (F11–F14).
+import { useMemo } from 'react';
+import { Background, Controls, Handle, MarkerType, MiniMap, Panel, Position, ReactFlow } from '@xyflow/react';
 import { buildAdminRoadmapLayout } from '../../../utils/buildAdminRoadmapLayout.js';
 import styles from '../styles/AdminRoadmapCanvas.module.css';
+
+const SCALE_X = 1.48;
+const SCALE_Y = 1.48;
+
+const USER_LEGEND = [
+  { key: 'known', label: 'Đã biết' },
+  { key: 'learning', label: 'Đang học' },
+  { key: 'locked', label: 'Chưa học' },
+  { key: 'target', label: 'Mục tiêu' },
+];
+
+const TEMPLATE_LEGEND = [
+  { key: 'locked', label: 'Tiên quyết' },
+  { key: 'target', label: 'Mục tiêu' },
+];
+
+function resolveNodeVisual(node, mode) {
+  const isTarget = Boolean(
+    node.isTarget ||
+    node.is_target ||
+    node.role === 'target' ||
+    node.status === 'target_learning' ||
+    node.status === 'target_unlearned'
+  );
+
+  if (node.status === 'known') {
+    return { stateKey: 'known', stateLabel: 'Đã biết', isTarget };
+  }
+  if (node.status === 'learning' || node.status === 'target_learning') {
+    return { stateKey: 'learning', stateLabel: 'Đang học', isTarget };
+  }
+  if (mode === 'template') {
+    return {
+      stateKey: isTarget ? 'eligible' : 'locked',
+      stateLabel: isTarget ? 'Kỹ năng đích' : 'Tiên quyết',
+      isTarget,
+    };
+  }
+  return {
+    stateKey: isTarget ? 'eligible' : 'locked',
+    stateLabel: isTarget ? 'Mục tiêu' : 'Chưa học',
+    isTarget,
+  };
+}
+
+function AdminSkillNode({ data }) {
+  const className = [
+    styles.node,
+    styles[`state_${data.stateKey}`],
+    data.isTarget && styles.target,
+    data.selected && styles.selected,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <div className={className} title={data.name}>
+      <Handle type="target" position={Position.Left} isConnectable={false} className={styles.handle} />
+      {data.isTarget && <span className={styles.targetFlag}>★ Mục tiêu</span>}
+      <span className={styles.nodeName}>{data.name}</span>
+      <span className={styles.nodeState}>
+        <i className={styles.dot} aria-hidden="true" />
+        {data.stateLabel}
+      </span>
+      <Handle type="source" position={Position.Right} isConnectable={false} className={styles.handle} />
+    </div>
+  );
+}
+
+const nodeTypes = { adminSkill: AdminSkillNode };
 
 export default function AdminRoadmapCanvas({
   nodes = [],
   connections = [],
-  width = 720,
-  height = 240,
+  height = 460,
   mode = 'user', // 'user' | 'template'
   selectedNodeId = null,
   onNodeClick,
 }) {
-  const nodeWidth = 154;
-  const nodeHeight = 54;
+  const resolvedHeight = Math.max(400, Number(height) || 460);
 
-  const layout = useMemo(
-    () => buildAdminRoadmapLayout(nodes, connections),
-    [nodes, connections]
-  );
+  const { flowNodes, flowEdges, isolatedCount } = useMemo(() => {
+    const layout = buildAdminRoadmapLayout(nodes, connections);
+    const renderNodes = layout.nodes || [];
+    const renderConnections = layout.connections || [];
 
-  const renderNodes = layout.nodes;
-  const renderConnections = layout.connections;
-  const canvasWidth = layout.width ?? width;
-  const canvasHeight = layout.height ?? height;
-  const dividerY = layout.dividerY;
-  const isolatedCount = layout.isolatedCount || 0;
+    const byKey = new Map();
+    renderNodes.forEach((n) => {
+      byKey.set(String(n.id), n);
+      if (n.name) byKey.set(n.name, n);
+    });
 
-  // Bản đồ tìm kiếm node nhanh theo id hoặc tên
-  const nodeMap = new Map();
-  renderNodes.forEach((n) => {
-    nodeMap.set(n.id, n);
-    nodeMap.set(n.name, n);
-  });
+    const mappedNodes = renderNodes.map((n) => {
+      const id = String(n.id);
+      const { stateKey, stateLabel, isTarget } = resolveNodeVisual(n, mode);
+      return {
+        id,
+        type: 'adminSkill',
+        position: {
+          x: Math.round((n.x ?? 0) * SCALE_X),
+          y: Math.round((n.y ?? 0) * SCALE_Y),
+        },
+        data: {
+          name: n.name,
+          stateKey,
+          stateLabel,
+          isTarget,
+          selected: selectedNodeId !== null && String(selectedNodeId) === id,
+          rawNode: n,
+        },
+        draggable: false,
+      };
+    });
+
+    const mappedEdges = renderConnections
+      .map((c, idx) => {
+        const src = byKey.get(String(c.from));
+        const tgt = byKey.get(String(c.to));
+        if (!src || !tgt) return null;
+
+        const rel = c.type || 'prerequisite';
+        const isDashed =
+          rel === 'Mở rộng' ||
+          rel === 'extension' ||
+          rel === 'related' ||
+          rel === 'Liên quan';
+        const showArrow = rel !== 'related' && rel !== 'Liên quan' && !isDashed;
+        const fromDone = src.status === 'known';
+
+        return {
+          id: `adm-e-${src.id}-${tgt.id}-${idx}`,
+          source: String(src.id),
+          target: String(tgt.id),
+          type: 'smoothstep',
+          animated: !isDashed && !fromDone,
+          className: isDashed ? styles.edgeOther : fromDone ? styles.edgeDone : styles.edgeTodo,
+          markerEnd: showArrow ? { type: MarkerType.ArrowClosed, width: 16, height: 16 } : undefined,
+        };
+      })
+      .filter(Boolean);
+
+    return {
+      flowNodes: mappedNodes,
+      flowEdges: mappedEdges,
+      isolatedCount: layout.isolatedCount || 0,
+    };
+  }, [nodes, connections, mode, selectedNodeId]);
+
+  if (!flowNodes.length) {
+    return <div className={styles.empty}>Lộ trình chưa có kỹ năng nào.</div>;
+  }
+
+  const legendItems = mode === 'template' ? TEMPLATE_LEGEND : USER_LEGEND;
 
   return (
-    <div className={styles.wrap}>
-      <div
-        className={styles.canvas}
-        style={{ width: `${canvasWidth}px`, height: `${canvasHeight}px` }}
+    <div className={styles.canvas} style={{ height: resolvedHeight }}>
+      <ReactFlow
+        nodes={flowNodes}
+        edges={flowEdges}
+        nodeTypes={nodeTypes}
+        onNodeClick={(_, rfNode) => onNodeClick?.(rfNode.data.rawNode)}
+        nodesConnectable={false}
+        nodesDraggable={false}
+        fitView
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.2}
+        maxZoom={1.6}
+        proOptions={{ hideAttribution: true }}
       >
-        {/* Lớp SVG vẽ các đường cong nối */}
-        <svg className={styles.svg} viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}>
-          <defs>
-            <marker
-              id="arrow-solid"
-              viewBox="0 0 10 10"
-              refX="6"
-              refY="5"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto-start-reverse"
-            >
-              <path d="M 0 1 L 8 5 L 0 9 z" style={{ fill: 'var(--edge)' }} />
-            </marker>
-            <marker
-              id="arrow-accent"
-              viewBox="0 0 10 10"
-              refX="6"
-              refY="5"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto-start-reverse"
-            >
-              <path d="M 0 1 L 8 5 L 0 9 z" style={{ fill: 'var(--accent)' }} />
-            </marker>
-          </defs>
-
-          {renderConnections.map((c, i) => {
-            const sourceNode = nodeMap.get(c.from);
-            const targetNode = nodeMap.get(c.to);
-            if (!sourceNode || !targetNode) return null;
-
-            const x1 = sourceNode.x + nodeWidth;
-            const y1 = sourceNode.y + nodeHeight / 2;
-            const x2 = targetNode.x;
-            const y2 = targetNode.y + nodeHeight / 2;
-            const dx = Math.max(30, Math.abs(x2 - x1) / 2);
-
-            const pathD = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
-            const isDashed =
-              c.type === 'Mở rộng' ||
-              c.type === 'extension' ||
-              c.type === 'related' ||
-              c.type === 'Liên quan';
-            const showArrow = c.type !== 'related' && c.type !== 'Liên quan' && !isDashed;
-
-            return (
-              <path
-                key={`edge-${i}`}
-                d={pathD}
-                className={`${styles.edge} ${isDashed ? styles.edgeDashed : styles.edgeSolid}`}
-                markerEnd={showArrow ? 'url(#arrow-solid)' : ''}
+        <Background gap={22} size={1} className={styles.bg} />
+        <Controls showInteractive={false} />
+        <MiniMap
+          pannable
+          zoomable
+          className={styles.minimap}
+          nodeClassName={(n) => styles[`mini_${n.data.stateKey}`]}
+        />
+        <Panel position="top-left" className={styles.legend} aria-label="Chú thích trạng thái">
+          {legendItems.map((item) => (
+            <span key={item.key}>
+              <i
+                className={`${styles.swatch} ${
+                  item.key === 'target' ? styles.swatchTarget : styles[`state_${item.key}`]
+                }`}
+                aria-hidden="true"
               />
-            );
-          })}
-        </svg>
-
-        {/* Đường phân tách nhóm kỹ năng bổ trợ độc lập (nếu có) */}
-        {dividerY !== null && (
-          <div className={styles.isolatedDivider} style={{ top: `${dividerY}px` }}>
-            <span>Kỹ năng độc lập chưa nối nhánh ({isolatedCount})</span>
-          </div>
-        )}
-
-        {/* Các Node HTML */}
-        {renderNodes.map((node) => {
-          let stateClass = styles.unlearned;
-          let labelSuffix = '';
-          let icon = null;
-
-          if (node.status === 'known') {
-            stateClass = styles.known;
-            icon = <span className={styles.checkIcon}>✓</span>;
-          } else if (node.status === 'learning') {
-            stateClass = styles.learning;
-            labelSuffix = ' · đang học';
-          } else if (node.status === 'target_learning') {
-            stateClass = styles.targetLearning;
-            labelSuffix = ' · đang học ◎';
-          } else if (node.status === 'target_unlearned' || node.role === 'target' || node.isTarget) {
-            stateClass = styles.target;
-            labelSuffix = ' ◎';
-          } else if (node.role === 'prerequisite') {
-            stateClass = styles.unlearned;
-          }
-
-          const isSelected = selectedNodeId !== null && String(selectedNodeId) === String(node.id);
-
-          return (
-            <div
-              key={node.id}
-              title={node.name}
-              className={`${styles.node} ${stateClass} ${isSelected ? styles.nodeSelected : ''}`}
-              style={{ left: `${node.x}px`, top: `${node.y}px` }}
-              onClick={() => onNodeClick && onNodeClick(node)}
-              onKeyDown={(e) => {
-                if ((e.key === 'Enter' || e.key === ' ') && onNodeClick) {
-                  e.preventDefault();
-                  onNodeClick(node);
-                }
-              }}
-              role="button"
-              tabIndex={0}
-              aria-pressed={isSelected}
-            >
-              <span className={styles.nodeLabel}>
-                {node.name}
-                {labelSuffix}
-              </span>
-              {icon}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Chú giải (Legend) */}
-      <div className={styles.legend}>
-        {mode === 'user' ? (
-          <>
-            <span className={styles.legendItem}>
-              <span className={`${styles.swatch} ${styles.swatchKnown}`} /> Đã biết
+              {item.label}
             </span>
-            <span className={styles.legendItem}>
-              <span className={`${styles.swatch} ${styles.swatchLearning}`} /> Đang học
-            </span>
-            <span className={styles.legendItem}>
-              <span className={`${styles.swatch} ${styles.swatchUnlearned}`} /> Chưa học
-            </span>
-            <span className={styles.legendItem}>
-              <span className={`${styles.swatch} ${styles.swatchTarget}`} /> Mục tiêu
-            </span>
-            <span className={styles.legendItem}>
-              <span className={styles.lineSample} /> Tiên quyết
-            </span>
-            <span className={styles.legendItem}>
-              <span className={styles.lineSampleDashed} /> Mở rộng / Liên quan
-            </span>
-            <span className={styles.legendHint}>
-              Bấm vào một kỹ năng để xem chi tiết
-            </span>
-          </>
-        ) : (
-          <>
-            <span className={styles.legendItem}>
-              <span className={styles.lineSample} /> Tiên quyết
-            </span>
-            <span className={styles.legendItem}>
-              <span className={styles.lineSampleDashed} /> Mở rộng
-            </span>
-            <span className={styles.legendItem}>
-              <span className={`${styles.swatch} ${styles.swatchTarget}`} /> Kỹ năng mục tiêu (◎)
-            </span>
-          </>
-        )}
-      </div>
+          ))}
+          {isolatedCount > 0 && (
+            <span className={styles.isolatedHint}>{isolatedCount} kỹ năng độc lập</span>
+          )}
+        </Panel>
+      </ReactFlow>
     </div>
   );
 }
